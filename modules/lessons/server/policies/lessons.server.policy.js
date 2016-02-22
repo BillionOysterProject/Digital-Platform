@@ -38,7 +38,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
+  
   // If a lesson is being processed and the current user created it then allow any manipulation
   if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
     return next();

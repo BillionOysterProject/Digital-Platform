@@ -2,16 +2,16 @@
   'use strict';
 
   angular
-    .module('curriculum')
+    .module('units')
     .run(menuConfig);
 
   menuConfig.$inject = ['Menus'];
 
   function menuConfig(Menus) {
-    Menus.addMenuItem('topbar', {
-      title: 'Curriculum',
-      state: 'curriculum',
-      type: 'dropdown',
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'curriculum', {
+      title: 'Units',
+      state: 'units.list',
       roles: ['teacher']
     });
   }

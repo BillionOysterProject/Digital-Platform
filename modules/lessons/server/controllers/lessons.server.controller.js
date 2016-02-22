@@ -84,6 +84,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
   Lesson.find().sort('-created').populate('user', 'displayName').exec(function(err, lessons) {
     if (err) {
+      console.log(err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });

@@ -3,8 +3,8 @@
 /**
  * Module dependencies
  */
-var lessonsPolicy = require('../policies/lesson.server.policy'),
-  lessons = require('../controllers/lesson.server.controller');
+var lessonsPolicy = require('../policies/lessons.server.policy'),
+  lessons = require('../controllers/lessons.server.controller');
 
 module.exports = function (app) {
   // Lessons collection routes
