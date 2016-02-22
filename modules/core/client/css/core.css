@@ -35,3 +35,49 @@ a:hover .header-profile-image {
 .has-error .help-inline.error-text {
   display: inline;
 }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              GLOBAL
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+body {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+    background: #2C3C56;
+    border: none;
+}
+
+    .navbar-brand {
+        padding-top: 5px;
+    }
+
+        .navbar-brand > img {
+            height: 90px;
+        }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #eee;
+    }
+
+        .navbar-inverse .navbar-nav > .active > a,
+        .navbar-inverse .navbar-nav > .active > a:hover,
+        .navbar-inverse .navbar-nav > .active > a:focus,
+        .navbar-inverse .navbar-nav > .open > a,
+        .navbar-inverse .navbar-nav > .open > a:hover, 
+        .navbar-inverse .navbar-nav > .open > a:focus {
+            color: #2C3C56;
+            background: #fff;
+            box-shadow: none;
+        }
+
+.page-header {
+    padding: 50px;
+    border: 0;
+    background: #eee;
+}
