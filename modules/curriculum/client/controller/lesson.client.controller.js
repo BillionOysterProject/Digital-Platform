@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('lesson')
+    .module('curriculum')
     .controller('LessonController', LessonController);
 
   LessonController.$inject = ['$scope'];
