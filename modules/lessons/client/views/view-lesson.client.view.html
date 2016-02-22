@@ -1,3 +1,23 @@
-<div class="content" ng-controller="LessonsController">
-  <p>View Lesson</p>
-</div>
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.lesson.title"></h1>
+  </div>
+  <div class="pull-right" ng-show="vm.lesson.isCurrentUserOwner">
+    <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="vm.lesson.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.lesson.user" ng-bind="vm.lesson.user.displayName"></span>
+      <span ng-if="!vm.lesson.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.lesson.content"></p>
+</section>

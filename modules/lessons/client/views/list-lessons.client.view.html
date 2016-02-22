@@ -1,3 +1,21 @@
-<div class="content" ng-controller="LessonsListController">
-  <p>Lessons Lists</p>
-</div>
+<section>
+  <div class="page-header">
+    <h1>Lessons</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="lesson in vm.lessons" ui-sref="lessons.view({ lessonId: lesson._id })" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="lesson.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="lesson.user" ng-bind="lesson.user.displayName"></span>
+        <span ng-if="!lesson.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="lesson.title"></h4>
+      <p class="list-group-item-text" ng-bind="lesson.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="vm.lessons.$resolved && !vm.lessons.length">
+    No lessons yet, why don't you <a ui-sref="lessons.create">create one</a>?
+  </div>
+</section>
