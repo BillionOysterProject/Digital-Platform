@@ -11,14 +11,9 @@
         <li><a href="/lessons"><i class="glyphicon glyphicon-book"></i> <span class="text">Curriculum</span></a></li>
         <li><a href="/restoration-station"><i class="glyphicon glyphicon-map-marker"></i> <span class="text">Restoration Station</span></a></li>
         <li><a href="#"><i class="glyphicon glyphicon-user"></i> <span class="text">Network</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-leaf"></i> <span class="text">About</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-education"></i> <span class="text">Programs</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-heart"></i> <span class="text">Get Involved</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-calendar"></i> <span class="text">News & Events</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-piggy-bank"></i> <span class="text">Donate</span></a></li>
         <!-- END NAV ITEMS TO BE WIRED UP -->
 
-        <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
+        <!--<li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
             <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
             <ul ng-switch-when="dropdown" class="dropdown-menu">
                 <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
@@ -26,7 +21,7 @@
                 </li>
             </ul>
             <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
-        </li>
+        </li>-->
     </ul>
 </div>
 
