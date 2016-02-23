@@ -54,11 +54,11 @@ body {
 }
 
     .navbar-brand {
-        padding-top: 5px;
+        padding-top: 10px;
     }
 
         .navbar-brand > img {
-            height: 90px;
+            width: 60px;
         }
 
     .navbar-inverse .navbar-nav > li > a {
@@ -80,4 +80,51 @@ body {
     padding: 50px;
     border: 0;
     background: #eee;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              COLORS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.label-science {
+    border-color: #00BCD4;
+    background: #00BCD4;
+}
+
+.label-technology {
+    border-color: #607D8B;
+    background: #607D8B;
+}
+
+.label-engineering {
+    border-color: #9E9E9E;
+    background: #9E9E9E;
+}
+
+.label-math {
+    border-color: #4CAF50;
+    background: #4CAF50;
+}
+
+.label-socialstudies {
+    border-color: #795548;
+    background: #795548;
+}
+
+.label-english {
+    border-color: #FF5722;
+    background: #FF5722;
+}
+
+.label-music {
+    border-color: #673AB7;
+    background: #673AB7;
+}
+
+.label-art {
+    border-color: #E91E63;
+    background: #E91E63;
 }

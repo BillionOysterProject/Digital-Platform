@@ -1,23 +1,166 @@
 <section>
-  <div class="page-header">
-    <h1 ng-bind="vm.lesson.title"></h1>
-  </div>
-  <div class="pull-right" ng-show="vm.lesson.isCurrentUserOwner">
-    <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.lesson.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.lesson.user" ng-bind="vm.lesson.user.displayName"></span>
-      <span ng-if="!vm.lesson.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.lesson.content"></p>
+    <div class="page-header">
+        <div class="pull-right"><!-- ng-show="vm.lesson.isCurrentUserOwner"-->
+            <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
+                <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-primary" ng-click="vm.remove()">
+                <i class="glyphicon glyphicon-trash"></i>
+            </a>
+        </div>
+        <h2><!--ng-bind="vm.lesson.title"-->Observation & Inference</h2>
+        <h4><img ng-src="modules/users/client/img/profile/default.png" alt="Ann Fraioli" class="header-profile-image" src="modules/users/client/img/profile/default.png">Ann Fraioli</h4>
+        <p><a href="#">BOP Curriculum Team</a><br /><a href="#">Afraioli@nyharbor.org</a><br />June 23,2016</p>
+        <small>
+            <em class="text-muted">Posted on
+                <span ng-bind="vm.lesson.created | date:'mediumDate'"></span> by     
+                <span ng-if="vm.lesson.user" ng-bind="vm.lesson.user.displayName"></span>
+                <span ng-if="!vm.lesson.user">Deleted User</span>
+            </em>
+        </small>
+    </div>
+    <div class="row">
+        <div class="col col-sm-6">
+            <h4>Unit: <a href="#">NYC's Urban Ecosystem</a></h4>
+        </div>
+        <div class="col col-sm-6">
+            <h4>Protocol 1: Site Conditions</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-sm-2">
+            <h5>Grade</h5>
+            <p>6-8th Grade</p>
+        </div>
+        <div class="col col-sm-2">
+            <h5>Class Periods</h5>
+            <p>2 Periods</p>
+        </div>
+        <div class="col col-sm-2">
+            <h5>Setting</h5>
+            <p>Field</p>
+        </div>
+        <div class="col col-sm-6">
+            <h5>Subject Areas</h5>
+            <p class="lead">
+                <a href="#" class="label label-science">Science</a>
+                <a href="#" class="label label-socialstudies">Social Studies</a>
+                <a href="#" class="label label-technology">Technology</a>
+                <a href="#" class="label label-socialstudies">History</a>
+                <a href="#" class="label label-math">Math</a>
+                <a href="#" class="label label-science">Ecology</a>
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+  		<div class="col col-sm-3">
+            <ul class="nav nav-stacked">
+                <li><h4 class="highlight"><i class="glyphicon glyphicon-book"></i> Supplies </h4></li>
+                <li><a href="#">2" Dead Oyster Shells</a></li>
+                <li><a href="#">Banana Peel</a></li>
+                <li><a href="#">Beaker of Water</a></li>
+            </ul>
+            <ul class="nav nav-stacked">
+                <li><h4 class="highlight"><i class="glyphicon glyphicon-apple"></i> Teacher Resources </h4></li>
+                <li><a href="#">Resource Type</a></li>
+                <li><a href="#">School Blog</a></li>
+                <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#myModal">Harbor Video</a></li>
+            </ul>
+            <ul class="nav nav-stacked">
+                <li><h4 class="highlight"><i class="fa fa-clipboard"></i> Hand Outs </h4></li>
+                <li><a href="#"><i class="fa fa-file-word-o"></i> Student Worksheet</a></li>
+                <li><a href="#"><i class="fa fa-file-word-o"></i> Harbour Map</a></li>
+                <li><a href="#"><i class="fa fa-file-image-o"></i> Marine Animals</a></li>
+            </ul>
+        </div>
+      	<div class="col col-sm-9">
+            <div class="panel">
+                <h3>Lesson Overview</h3>
+                <div class="row">
+                    <div class="col col-sm-12">
+                        <p><!--ng-bind="vm.lesson.content"-->Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet volutpat erat nec vestibulum. Suspendisse mattis vel neque vitae malesuada. Integer sit amet finibus nibh. Vivamus feugiat, massa sed tincidunt euismod, sapien nisl tristique lectus, eu consequat orci enim pharetra augue. Nullam ac eros nec augue vestibulum sagittis sed ut tellus. Fusce euismod, eros vitae faucibus malesuada, tortor arcu consectetur sapien, at ultrices risus augue ut leo. Nullam efficitur laoreet nisi ac pellentesque. Curabitur a ullamcorper elit. Cras enim orci, varius viverra nibh id, aliquam commodo turpis. Donec lorem lorem, viverra ac volutpat ac, dictum eget mauris. Integer ac eros ligula. Praesent laoreet risus sit amet sodales ultrices. Nullam venenatis consequat ex bibendum efficitur. Quisque ornare quam sed malesuada pellentesque. Fusce sit amet sagittis dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Objectives</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Vocabulary</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Background</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet volutpat erat nec vestibulum. Suspendisse mattis vel neque vitae malesuada. Integer sit amet finibus nibh. Vivamus feugiat, massa sed tincidunt euismod, sapien nisl tristique lectus, eu consequat orci enim pharetra augue. Nullam ac eros nec augue vestibulum sagittis sed ut tellus. Fusce euismod, eros vitae faucibus malesuada, tortor arcu consectetur sapien, at ultrices risus augue ut leo. Nullam efficitur laoreet nisi ac pellentesque. Curabitur a ullamcorper elit. Cras enim orci, varius viverra nibh id, aliquam commodo turpis. Donec lorem lorem, viverra ac volutpat ac, dictum eget mauris. Integer ac eros ligula. Praesent laoreet risus sit amet sodales ultrices. Nullam venenatis consequat ex bibendum efficitur. Quisque ornare quam sed malesuada pellentesque. Fusce sit amet sagittis dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h2>Instruction Plan</h2>
+                        <h3>Engage</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Explore</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Explain</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Elaborate</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Evaluate</h3>
+                        <p>Rrem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores
+                        eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
+                        sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-sm-12">
+                <h2>Standards</h2>
+            </div>
+            <div class="col col-sm-4">
+                <h5>New York City Science Scope &amp; Sequence</h5>
+                <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">Grade 8, Unit 1: Humans and the Environment</a></span>
+            </div>
+            <div class="col col-sm-4">
+                <h5>NGSS Standards</h5>
+                <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">Grade 8, Unit 1: Humans and the Environment</a></span>
+            </div>
+            <div class="col col-sm-4">
+                <h5>Common Core ELA</h5>
+                <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">Grade 8, Unit 1: Humans and the Environment</a></span>
+            </div>
+        </div>
+    </div>
 </section>
