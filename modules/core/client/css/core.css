@@ -49,8 +49,10 @@ body {
     background: #f4f7f8;
 }
 
-.navbar {
+.navbar-default {
     background: #fff;
+    left: 80px;
+    box-shadow: none;
 }
 
 .sidebar {
@@ -105,6 +107,7 @@ body {
     .sidebar ul.nav,
     .sidebar ul.nav li {
         width: 100%;
+        margin: 0;
     }
 
         .sidebar ul.nav > li > a {
