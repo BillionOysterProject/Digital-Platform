@@ -1,5 +1,5 @@
 .content {
-  margin-top: 50px;
+  margin: 50px 20px 0 100px;
 }
 .undecorated-link:hover {
   text-decoration: none;
@@ -46,40 +46,100 @@ a:hover .header-profile-image {
 body {
     -webkit-font-smoothing: antialiased;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #f4f7f8;
 }
 
-.navbar {
+.navbar-default {
+    background: #fff;
+    left: 80px;
+    box-shadow: none;
+}
+
+.sidebar {
+    width: 80px;
+    height: 100%;
     background: #2C3C56;
     border: none;
+    z-index: 1040;
+    -webkit-transition: all 200ms ease-in-out;
+    -moz-transition: all 200ms ease-in-out;
+    -o-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
 }
 
-    .navbar-brand {
-        padding-top: 10px;
+    .sidebar .text {
+        display: none;
+        -webkit-transition: all 500ms ease-in-out;
+        -moz-transition: all 500ms ease-in-out;
+        -o-transition: all 500ms ease-in-out;
+        transition: all 500ms ease-in-out;
     }
 
-        .navbar-brand > img {
-            width: 60px;
-        }
-
-    .navbar-inverse .navbar-nav > li > a {
-        color: #eee;
+    .sidebar i {
+        font-size: 15px;
+        width: 80px;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        -webkit-transition: all 500ms ease-in-out;
+        -moz-transition: all 500ms ease-in-out;
+        -o-transition: all 500ms ease-in-out;
+        transition: all 500ms ease-in-out;
     }
 
-        .navbar-inverse .navbar-nav > .active > a,
-        .navbar-inverse .navbar-nav > .active > a:hover,
-        .navbar-inverse .navbar-nav > .active > a:focus,
-        .navbar-inverse .navbar-nav > .open > a,
-        .navbar-inverse .navbar-nav > .open > a:hover, 
-        .navbar-inverse .navbar-nav > .open > a:focus {
-            color: #2C3C56;
-            background: #fff;
-            box-shadow: none;
+    .sidebar .navbar-header {
+        width: 100%;
+    }
+
+        .sidebar .navbar-brand {
+            padding: 0;
+            margin: 20px 0;
+            height: 100px;
+            width: 100%;
+            text-align: center;
         }
 
-.page-header {
-    padding: 50px;
-    border: 0;
-    background: #eee;
+            .sidebar .navbar-brand > img {
+                width: 60px;
+                display: inline;
+            }
+
+    .sidebar ul.nav,
+    .sidebar ul.nav li {
+        width: 100%;
+        margin: 0;
+    }
+
+        .sidebar ul.nav > li > a {
+            padding: 10px 0;
+            position: relative;
+            color: #778095;
+        }
+
+    .sidebar:hover {
+        width: 220px;
+    }
+
+        .sidebar:hover .text {
+            display: block;
+            position: absolute;
+            top: 12px;
+            left: 70px;
+        }
+
+        .sidebar:hover .navbar-brand > img {
+            width: 80px;
+        }
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus,
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover, 
+.navbar-inverse .navbar-nav > .open > a:focus {
+    color: #fff;
+    background: transparent;
+    box-shadow: none;
 }
 
 
