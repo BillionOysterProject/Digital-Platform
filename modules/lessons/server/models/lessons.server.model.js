@@ -150,12 +150,15 @@ var LessonSchema = new Schema({
     ref: 'User',
     required: true
   },
-  // permissions: {
-  //   type: Array
-  // },
-  // updated: {
-  //   type: Array
-  // }
+  permissions: {
+    type: [{
+      type: String
+    }],
+    default: ['team lead']
+  },
+  updated: {
+    type: Array
+  }
 });
 
 /**

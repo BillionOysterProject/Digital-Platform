@@ -12,7 +12,7 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'Lesson',
       state: 'lessons.list',
-      roles: ['teacher']
+      roles: ['team lead']
     });
   }
   

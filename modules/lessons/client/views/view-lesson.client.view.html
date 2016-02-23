@@ -1,6 +1,6 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.lesson.title"></h1>
+    <h1 ng-bind="vm.lesson.lessonUpload.title"></h1>
   </div>
   <div class="pull-right" ng-show="vm.lesson.isCurrentUserOwner">
     <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
@@ -10,6 +10,52 @@
       <i class="glyphicon glyphicon-trash"></i>
     </a>
   </div>
+
+  <div>
+    <h3>Lesson Upload</h3>
+    <span ng-if="vm.lesson.lessonUpload.title" ng-bind="vm.lesson.lessonUpload.title"></span>
+    <span ng-if="vm.lesson.lessonUpload.unit" ng-bind="vm.lesson.lessonUpload.unit"></span>
+  </div>
+
+  <div>
+    <h3>Lesson Overview</h3>
+    <span ng-if="vm.lesson.lessonOverview.grade" ng-bind="vm.lesson.lessonOverview.grade"></span>
+    <span ng-if="vm.lesson.lessonOverview.classPeriods" ng-bind="vm.lesson.lessonOverview.classPeriods"></span>
+    <span ng-if="vm.lesson.lessonOverview.setting" ng-bind="vm.lesson.lessonOverview.setting"></span>
+    <span ng-if="vm.lesson.lessonOverview.subjectAreas" ng-bind="vm.lesson.lessonOverview.subjectAreas"></span>
+    <span ng-if="vm.lesson.lessonOverview.protocolConnections" ng-bind="vm.lesson.lessonOverview.protocolConnections"></span>
+    <span ng-if="vm.lesson.lessonOverview.lessonSummary" ng-bind="vm.lesson.lessonOverview.lessonSummary"></span>
+  </div>
+
+  <span ng-if="vm.lesson.lessonObjectives" ng-bind="vm.lesson.lessonObjectives"></span>
+
+  <div>
+    <h3>Materials Resources</h3>
+    <span ng-if="vm.lesson.materialsResources.supplies" ng-bind="vm.lesson.materialsResources.supplies"></span>
+    <span ng-if="vm.lesson.materialsResources.teacherResources" ng-bind="vm.lesson.materialsResources.teacherResources"></span>
+    <span ng-if="vm.lesson.materialsResources.handoutsFileInput" ng-bind="vm.lesson.materialsResources.handoutsFileInput"></span>
+    <span ng-if="vm.lesson.materialsResources.vocabulary" ng-bind="vm.lesson.materialsResources.vocabulary"></span>
+  </div>
+
+  <span ng-if="vm.lesson.background" ng-bind="vm.lesson.background"></span>
+
+  <div>
+    <h3>Instruction Plan</h3>
+    <span ng-if="vm.lesson.instructionPlan.engage" ng-bind="vm.lesson.instructionPlan.engage"></span>
+    <span ng-if="vm.lesson.instructionPlan.explore" ng-bind="vm.lesson.instructionPlan.explore"></span>
+    <span ng-if="vm.lesson.instructionPlan.explain" ng-bind="vm.lesson.instructionPlan.explain"></span>
+    <span ng-if="vm.lesson.instructionPlan.elaborate" ng-bind="vm.lesson.instructionPlan.elaborate"></span>
+    <span ng-if="vm.lesson.instructionPlan.evaluate" ng-bind="vm.lesson.instructionPlan.evaluate"></span>
+  </div>
+
+  <div>
+    <h3>Standards Options</h3>
+    <span ng-if="vm.lesson.standards.nycScienceScopeSequence" ng-bind="vm.lesson.standards.nycScienceScopeSequence"></span>
+    <span ng-if="vm.lesson.standards.ngssStandards" ng-bind="vm.lesson.standards.ngssStandards"></span>
+    <span ng-if="vm.lesson.standards.commonCoreEla" ng-bind="vm.lesson.standards.commonCoreEla"></span>
+    <span ng-if="vm.lesson.standards.commonCoreMath" ng-bind="vm.lesson.standards.commonCoreMath"></span>
+  </div>
+
   <small>
     <em class="text-muted">
       Posted on
@@ -19,5 +65,4 @@
       <span ng-if="!vm.lesson.user">Deleted User</span>
     </em>
   </small>
-  <p class="lead" ng-bind="vm.lesson.content"></p>
 </section>

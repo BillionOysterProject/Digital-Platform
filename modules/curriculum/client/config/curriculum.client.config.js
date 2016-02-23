@@ -12,7 +12,7 @@
       title: 'Curriculum',
       state: 'curriculum',
       type: 'dropdown',
-      roles: ['teacher']
+      roles: ['team lead']
     });
   }
 })();
