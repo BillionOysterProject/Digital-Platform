@@ -1,68 +1,151 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.lesson.lessonUpload.title"></h1>
+    <div class="pull-right" ng-show="vm.lesson.isCurrentUserOwner">
+      <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
+        <i class="glyphicon glyphicon-edit"></i>
+      </a>
+      <a class="btn btn-primary" ng-click="vm.remove()">
+        <i class="glyphicon glyphicon-trash"></i>
+      </a>
+    </div>
+    <!-- TODO: Not sure where these values go vm.lesson.lessonUpload.title -->
+    <!-- TODO: Not sure where theses values go vm.lesson.lessonUpload.unit -->
+    <!-- TODO: Not sure where these values go vm.lesson.lessonOverview.protocolConnections -->
+    <h2>Observation & Inference</h2><!-- TODO: Need to get images into user -->
+    <h4><img ng-src="modules/users/client/img/profile/default.png" alt="{{vm.lesson.user.displayName}}" class="header-profile-image" src="modules/users/client/img/profile/default.png">{{vm.lesson.user.displayName}}</h4>
+    <!-- TODO: I don't know where the team name is stored right now -->
+    <p><a href="#">BOP Curriculum Team</a><br /><a href="#">{{vm.lesson.user.email}}</a><br />{{vm.lesson.create | date:'mediumDate'}}</p>
+    <small>
+      <em class="text-muted">Posted on
+        <span ng-bind="vm.lesson.created | date:'mediumDate'"></span> by     
+        <span ng-if="vm.lesson.user" ng-bind="vm.lesson.user.displayName"></span>
+        <span ng-if="!vm.lesson.user">Deleted User</span>
+      </em>
+    </small>
   </div>
-  <div class="pull-right" ng-show="vm.lesson.isCurrentUserOwner">
-    <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
+  <div class="row">
+    <div class="col col-sm-6">
+      <h4>Unit: <a href="#">NYC's Urban Ecosystem</a></h4>
+    </div>
+    <div class="col col-sm-6">
+      <h4>Protocol 1: Site Conditions</h4>
+    </div>
   </div>
-
-  <div>
-    <h3>Lesson Upload</h3>
-    <span ng-if="vm.lesson.lessonUpload.title" ng-bind="vm.lesson.lessonUpload.title"></span>
-    <span ng-if="vm.lesson.lessonUpload.unit" ng-bind="vm.lesson.lessonUpload.unit"></span>
-  </div>
-
-  <div>
-    <h3>Lesson Overview</h3>
-    <span ng-if="vm.lesson.lessonOverview.grade" ng-bind="vm.lesson.lessonOverview.grade"></span>
-    <span ng-if="vm.lesson.lessonOverview.classPeriods" ng-bind="vm.lesson.lessonOverview.classPeriods"></span>
-    <span ng-if="vm.lesson.lessonOverview.setting" ng-bind="vm.lesson.lessonOverview.setting"></span>
-    <span ng-if="vm.lesson.lessonOverview.subjectAreas" ng-bind="vm.lesson.lessonOverview.subjectAreas"></span>
-    <span ng-if="vm.lesson.lessonOverview.protocolConnections" ng-bind="vm.lesson.lessonOverview.protocolConnections"></span>
-    <span ng-if="vm.lesson.lessonOverview.lessonSummary" ng-bind="vm.lesson.lessonOverview.lessonSummary"></span>
-  </div>
-
-  <span ng-if="vm.lesson.lessonObjectives" ng-bind="vm.lesson.lessonObjectives"></span>
-
-  <div>
-    <h3>Materials Resources</h3>
-    <span ng-if="vm.lesson.materialsResources.supplies" ng-bind="vm.lesson.materialsResources.supplies"></span>
-    <span ng-if="vm.lesson.materialsResources.teacherResources" ng-bind="vm.lesson.materialsResources.teacherResources"></span>
-    <span ng-if="vm.lesson.materialsResources.handoutsFileInput" ng-bind="vm.lesson.materialsResources.handoutsFileInput"></span>
-    <span ng-if="vm.lesson.materialsResources.vocabulary" ng-bind="vm.lesson.materialsResources.vocabulary"></span>
-  </div>
-
-  <span ng-if="vm.lesson.background" ng-bind="vm.lesson.background"></span>
-
-  <div>
-    <h3>Instruction Plan</h3>
-    <span ng-if="vm.lesson.instructionPlan.engage" ng-bind="vm.lesson.instructionPlan.engage"></span>
-    <span ng-if="vm.lesson.instructionPlan.explore" ng-bind="vm.lesson.instructionPlan.explore"></span>
-    <span ng-if="vm.lesson.instructionPlan.explain" ng-bind="vm.lesson.instructionPlan.explain"></span>
-    <span ng-if="vm.lesson.instructionPlan.elaborate" ng-bind="vm.lesson.instructionPlan.elaborate"></span>
-    <span ng-if="vm.lesson.instructionPlan.evaluate" ng-bind="vm.lesson.instructionPlan.evaluate"></span>
-  </div>
-
-  <div>
-    <h3>Standards Options</h3>
-    <span ng-if="vm.lesson.standards.nycScienceScopeSequence" ng-bind="vm.lesson.standards.nycScienceScopeSequence"></span>
-    <span ng-if="vm.lesson.standards.ngssStandards" ng-bind="vm.lesson.standards.ngssStandards"></span>
-    <span ng-if="vm.lesson.standards.commonCoreEla" ng-bind="vm.lesson.standards.commonCoreEla"></span>
-    <span ng-if="vm.lesson.standards.commonCoreMath" ng-bind="vm.lesson.standards.commonCoreMath"></span>
-  </div>
-
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.lesson.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.lesson.user" ng-bind="vm.lesson.user.displayName"></span>
-      <span ng-if="!vm.lesson.user">Deleted User</span>
-    </em>
-  </small>
+  
+    <div class="row">
+        <div class="col col-sm-2">
+            <h5>Grade</h5>
+            <p ng-bind="vm.lesson.lessonOverview.grade"></p>
+        </div>
+        <div class="col col-sm-2">
+            <h5>Class Periods</h5>
+            <p ng-bind="vm.lesson.lessonOverview.classPeriods"></p>
+        </div>
+        <div class="col col-sm-2">
+            <h5>Setting</h5>
+            <p ng-bind="vm.lesson.lessonOverview.setting"></p>
+        </div>
+        <div class="col col-sm-6">
+            <h5>Subject Areas</h5><!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
+            <p class="lead">
+                <a href="#" class="label label-science">Science</a>
+                <a href="#" class="label label-socialstudies">Social Studies</a>
+                <a href="#" class="label label-technology">Technology</a>
+                <a href="#" class="label label-socialstudies">History</a>
+                <a href="#" class="label label-math">Math</a>
+                <a href="#" class="label label-science">Ecology</a>
+            </p>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+  		<div class="col col-sm-3">
+            <ul class="nav nav-stacked"><!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.supplies -->
+                <li><h4 class="highlight"><i class="glyphicon glyphicon-book"></i> Supplies </h4></li>
+                <li><a href="#">2" Dead Oyster Shells</a></li>
+                <li><a href="#">Banana Peel</a></li>
+                <li><a href="#">Beaker of Water</a></li>
+            </ul>
+            <ul class="nav nav-stacked"><!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.teacherResources -->
+                <li><h4 class="highlight"><i class="glyphicon glyphicon-apple"></i> Teacher Resources </h4></li>
+                <li><a href="#">Resource Type</a></li>
+                <li><a href="#">School Blog</a></li>
+                <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#myModal">Harbor Video</a></li>
+            </ul>
+            <ul class="nav nav-stacked"><!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.handoutsFileInput -->
+                <li><h4 class="highlight"><i class="fa fa-clipboard"></i> Hand Outs </h4></li>
+                <li><a href="#"><i class="fa fa-file-word-o"></i> Student Worksheet</a></li>
+                <li><a href="#"><i class="fa fa-file-word-o"></i> Harbour Map</a></li>
+                <li><a href="#"><i class="fa fa-file-image-o"></i> Marine Animals</a></li>
+            </ul>
+        </div>
+      	<div class="col col-sm-9">
+            <div class="panel">
+                <h3>Lesson Overview</h3>
+                <div class="row">
+                    <div class="col col-sm-12">
+                        <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Objectives</h3>
+                        <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Vocabulary</h3>
+                        <div ng-bind-html="vm.lesson.materialsResources.vocabulary | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Background</h3>
+                        <div ng-bind-html="vm.lesson.background | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h2>Instruction Plan</h2>
+                        <h3>Engage</h3>
+                        <div ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Explore</h3>
+                        <div ng-bind-html="vm.lesson.instructionPlan.explore | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Explain</h3>
+                        <div ng-bind-html="vm.lesson.instructionPlan.explain | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Elaborate</h3>
+                        <div ng-bind-html="vm.lesson.instructionPlan.elaborate | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Evaluate</h3>
+                        <div ng-bind-html="vm.lesson.instructionPlan.evaluate | sanitize"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-sm-12">
+                <h2>Standards</h2>
+            </div>
+            <div class="col col-sm-4" ng-show="vm.lesson.standards.nycScienceScopeSequence">
+                <h5>New York City Science Scope &amp; Sequence</h5>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span>
+            </div>
+            <div class="col col-sm-4" ng-show="vm.lesson.standards.ngssStandards">
+                <h5>NGSS Standards</h5>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span>
+            </div>
+            <div class="col col-sm-4" ng-show="vm.lesson.standards.commonCoreEla">
+                <h5>Common Core ELA</h5>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span>
+            </div>
+            <div class="col col-sm-4" ng-show="vm.lesson.standards.commonCoreMath">
+                <h5>Common Core Math</h5>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span>
+            </div>
+        </div>
+    </div>
 </section>

@@ -35,3 +35,96 @@ a:hover .header-profile-image {
 .has-error .help-inline.error-text {
   display: inline;
 }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              GLOBAL
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+body {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+    background: #2C3C56;
+    border: none;
+}
+
+    .navbar-brand {
+        padding-top: 10px;
+    }
+
+        .navbar-brand > img {
+            width: 60px;
+        }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #eee;
+    }
+
+        .navbar-inverse .navbar-nav > .active > a,
+        .navbar-inverse .navbar-nav > .active > a:hover,
+        .navbar-inverse .navbar-nav > .active > a:focus,
+        .navbar-inverse .navbar-nav > .open > a,
+        .navbar-inverse .navbar-nav > .open > a:hover, 
+        .navbar-inverse .navbar-nav > .open > a:focus {
+            color: #2C3C56;
+            background: #fff;
+            box-shadow: none;
+        }
+
+.page-header {
+    padding: 50px;
+    border: 0;
+    background: #eee;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              COLORS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.label-science {
+    border-color: #00BCD4;
+    background: #00BCD4;
+}
+
+.label-technology {
+    border-color: #607D8B;
+    background: #607D8B;
+}
+
+.label-engineering {
+    border-color: #9E9E9E;
+    background: #9E9E9E;
+}
+
+.label-math {
+    border-color: #4CAF50;
+    background: #4CAF50;
+}
+
+.label-socialstudies {
+    border-color: #795548;
+    background: #795548;
+}
+
+.label-english {
+    border-color: #FF5722;
+    background: #FF5722;
+}
+
+.label-music {
+    border-color: #673AB7;
+    background: #673AB7;
+}
+
+.label-art {
+    border-color: #E91E63;
+    background: #E91E63;
+}
