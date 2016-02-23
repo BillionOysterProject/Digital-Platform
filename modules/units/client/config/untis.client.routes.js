@@ -20,7 +20,7 @@
         controller: 'UnitsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pageTitle: 'Units List'
         }
       })
@@ -33,7 +33,7 @@
           unitResolve: newUnit
         },
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pateTitle: 'Units Create'
         }
       })
@@ -46,7 +46,7 @@
           unitResolve: getUnit
         },
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pageTitle: 'Edit Unit {{ unitResolve.title }}'
         }
       })

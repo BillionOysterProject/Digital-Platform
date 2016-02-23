@@ -34,6 +34,10 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var lesson = req.lesson ? req.lesson.toJSON() : {};
 
+  // Add a custom field to the Lesson, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Lesson model.
+  lesson.isCurrentUserOwner = req.user && lesson.user && lesson.user._id.toString() === req.user._id.toString() ? true : false;
+
   res.json(lesson);
 };
 
@@ -45,7 +49,8 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
-    lesson.updated = Date.now();
+    if (!lesson.updated) lesson.updated = [];
+    lesson.updated.push(Date.now());
 
     lesson.save(function(err) {
       if (err) {
@@ -104,7 +109,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  Lesson.findById(id).populate('user', 'displayName').exec(function(err, lesson) {
+  Lesson.findById(id).populate('user', 'displayName email').exec(function(err, lesson) {
     if (err) {
       return next(err);
     } else if (!lesson) {

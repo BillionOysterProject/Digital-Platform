@@ -5,23 +5,15 @@
         </a>
     </div>
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-            
-        <!-- NAV ITEMS TO BE WIRED UP -->
-        <li><a href="#" ui-sref="home"><i class="glyphicon glyphicon-home"></i> <span class="text">Dashboard</span></a></li>
-        <li><a href="/lessons"><i class="glyphicon glyphicon-book"></i> <span class="text">Curriculum</span></a></li>
-        <li><a href="/restoration-station"><i class="glyphicon glyphicon-map-marker"></i> <span class="text">Restoration Station</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-user"></i> <span class="text">Network</span></a></li>
-        <!-- END NAV ITEMS TO BE WIRED UP -->
-
-        <!--<li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
+        <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
             <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
             <ul ng-switch-when="dropdown" class="dropdown-menu">
                 <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
-                    <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
+                    <a ui-sref="{{subitem.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="subitem.title"></a>
                 </li>
             </ul>
-            <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
-        </li>-->
+            <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
+        </li>
     </ul>
 </div>
 

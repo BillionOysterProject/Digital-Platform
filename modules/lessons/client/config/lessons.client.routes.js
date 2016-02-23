@@ -20,7 +20,7 @@
         controller: 'LessonsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pageTitle: 'Lessons List'
         }
       })
@@ -33,7 +33,7 @@
           lessonResolve: newLesson
         },
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pateTitle: 'Lessons Create'
         }
       })
@@ -46,7 +46,7 @@
           lessonResolve: getLesson
         },
         data: {
-          roles: ['teacher'],
+          roles: ['team lead'],
           pageTitle: 'Edit Lesson {{ lessonResolve.title }}'
         }
       })

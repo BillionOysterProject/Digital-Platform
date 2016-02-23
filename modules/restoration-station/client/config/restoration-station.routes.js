@@ -15,7 +15,7 @@
         controller: 'RestorationStationController',
         controllerAs: 'vm',
         data: {
-          roles: ['teacher'],
+          roles: ['user'],
           pageTitle: 'Restoration Station'
         }
       });
