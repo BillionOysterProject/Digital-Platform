@@ -1,17 +1,24 @@
-<div class="container-fluid" ng-controller="HeaderController">
+<div class="sidebar navbar navbar-fixed-top navbar-inverse" ng-controller="HeaderController">
     <div class="navbar-header">
-        <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
         <a ui-sref="home" class="navbar-brand">
             <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
         </a>
     </div>
     <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
         <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+            
+            <!-- NAV ITEMS TO BE WIRED UP -->
+            <li><a href="#" ui-sref="home"><i class="glyphicon glyphicon-home"></i> <span class="text">Dashboard</span></a></li>
+            <li><a href="/lessons"><i class="glyphicon glyphicon-book"></i> <span class="text">Curriculum</span></a></li>
+            <li><a href="/restoration-station"><i class="glyphicon glyphicon-map-marker"></i> <span class="text">Restoration Station</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-user"></i> <span class="text">Network</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-leaf"></i> <span class="text">About</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-education"></i> <span class="text">Programs</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-heart"></i> <span class="text">Get Involved</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-calendar"></i> <span class="text">News & Events</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-piggy-bank"></i> <span class="text">Donate</span></a></li>
+            <!-- END NAV ITEMS TO BE WIRED UP -->
+
             <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
                 <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
                 <ul ng-switch-when="dropdown" class="dropdown-menu">
@@ -22,6 +29,19 @@
                 <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
             </li>
         </ul>
+    </nav>
+</div>
+
+<div class="navbar navbar-fixed-top" ng-controller="HeaderController">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
         <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
             <li ui-sref-active="active">
                 <a ui-sref="authentication.signup">Sign Up</a>
