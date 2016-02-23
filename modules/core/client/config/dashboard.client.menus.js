@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('restoration-station')
+    .module('core')
     .run(menuConfig);
 
   menuConfig.$inject = ['Menus'];
@@ -10,11 +10,11 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Restoration Station',
-      state: 'restoration-station',
+      title: 'Dashboard',
+      state: 'home',
       roles: ['user'],
-      icon: 'glyphicon glyphicon-map-marker',
-      position: 2
+      icon: 'glyphicon glyphicon-home',
+      position: 0
     });
   }
 })();

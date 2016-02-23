@@ -9,10 +9,12 @@
 
   function menuConfig(Menus) {
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'curriculum', {
-      title: 'Lesson',
+    Menus.addMenuItem('topbar', {
+      title: 'Curriculum',
       state: 'lessons.list',
-      roles: ['team lead']
+      roles: ['team lead'],
+      icon: 'glyphicon glyphicon-book',
+      position: 1
     });
   }
   
