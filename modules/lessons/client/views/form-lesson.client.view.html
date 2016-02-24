@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12" in-title="Lesson Summary" ng-model="vm.lesson.lessonSummary"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Lesson Summary" ng-model="vm.lesson.lessonSummary"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -131,7 +131,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12" in-title="Objectives" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Objectives" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -163,7 +163,11 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <label for="handouts">Handouts</label>
-                                <form action="/upload-target" class="dropzone"></form>
+                                <form action="/file-upload" class="dropzone" id="lessonHandouts">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple />
+                                    </div>
+                                </form>
                             </div>
                             <div class="col-md-4">
                                 <label for="vocabulary">Vocabulary</label>
@@ -190,7 +194,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12" in-title="Background" ng-model="vm.lesson.lessonBackground"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Background" ng-model="vm.lesson.lessonBackground"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -201,37 +205,37 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <ul class="nav nav-tabs nav-tabs-right nav-justified" id="tab-4" role="tablist">
-                            <li class="active"><a href="#tab1Engage" data-toggle="tab" pg-tab role="tab">Engage</a></li>
-                            <li><a href="#tab2Explore" data-toggle="tab" pg-tab role="tab">Explore</a></li>
-                            <li><a href="#tab3Explain" data-toggle="tab" pg-tab role="tab">Explain</a></li>
-                            <li><a href="#tab4Elaborate" data-toggle="tab" pg-tab role="tab">Elaborate</a></li>
-                            <li><a href="#tab5Evaluate" data-toggle="tab" pg-tab role="tab">Evaluate</a></li>
+                        <ul class="nav nav-tabs nav-tabs-right nav-justified" id="tabs-lessonPlan" role="tablist">
+                            <li role="presentation" class="active"><a href="#engage" data-toggle="tab" aria-controls="engage" role="tab">Engage</a></li>
+                            <li role="presentation"><a href="#explore" data-toggle="tab" aria-controls="explore" role="tab">Explore</a></li>
+                            <li role="presentation"><a href="#explain" data-toggle="tab" aria-controls="explain" role="tab">Explain</a></li>
+                            <li role="presentation"><a href="#elaborate" data-toggle="tab" aria-controls="elaborate" role="tab">Elaborate</a></li>
+                            <li role="presentation"><a href="#evaluate" data-toggle="tab" aria-controls="evaluate" role="tab">Evaluate</a></li>
                         </ul>
-                        <div class="tab-content bg-white">
-                            <div class="tab-pane active" id="tab1Engage">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="engage">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12" in-title="Engage" ng-model="vm.lesson.lessonPlanEngage"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Engage" ng-model="vm.lesson.lessonPlanEngage"></wysiwyg-editor>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab2Explore">
+                            <div role="tabpanel" class="tab-pane" id="explore">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12" in-title="Explore" ng-model="vm.lesson.lessonPlanExplore"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Explore" ng-model="vm.lesson.lessonPlanExplore"></wysiwyg-editor>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab3Explain">
+                            <div role="tabpanel" class="tab-pane" id="explain">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12" in-title="Explain" ng-model="vm.lesson.lessonPlanExplain"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Explain" ng-model="vm.lesson.lessonPlanExplain"></wysiwyg-editor>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab4Elaborate">
+                            <div role="tabpanel" class="tab-pane" id="elaborate">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12" in-title="Elaborate" ng-model="vm.lesson.lessonPlanElaborate"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Elaborate" ng-model="vm.lesson.lessonPlanElaborate"></wysiwyg-editor>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab5Evaluate">
+                            <div role="tabpanel" class="tab-pane" id="evaluate">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12" in-title="Evaluate" ng-model="vm.lesson.lessonPlanEvaluate"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Evaluate" ng-model="vm.lesson.lessonPlanEvaluate"></wysiwyg-editor>
                                 </div>
                             </div>
                         </div>
@@ -441,10 +445,16 @@
     </div>
 </div>
 
+
+<link href="https://raw.githubusercontent.com/enyo/dropzone/master/dist/min/dropzone.min.css" rel="stylesheet" />
 <script type="text/javascript">
     $(function () {
         $(".select2").select2({
             tags: true
         });
     });
+    $('#myTabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
 </script>
