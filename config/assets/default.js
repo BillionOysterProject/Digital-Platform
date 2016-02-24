@@ -7,10 +7,14 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/quill/dist/quill.base.css',
-        'public/lib/quill/dist/quill.snow.css'
+        'public/lib/quill/dist/quill.snow.css',
+        'public/lib/dropzone/downloads/css/basic.css',
+        'public/lib/dropzone/downloads/css/dropzone.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css'
       ],
       js: [
         'public/lib/angular/angular.js',
+        'public/lib/jquery/dist/jquery.js',
         'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-animate/angular-animate.js',
         'public/lib/angular-messages/angular-messages.js',
@@ -20,7 +24,10 @@ module.exports = {
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/quill/dist/quill.js',
-        'public/lib/ngQuill/src/ng-quill.js'
+        'public/lib/ngQuill/src/ng-quill.js',
+        'public/lib/dropzone/downloads/dropzone.js',
+        'public/lib/angular-dropzone/lib/angular-dropzone.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
