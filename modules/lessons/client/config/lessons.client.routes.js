@@ -26,7 +26,7 @@
       })
       .state('lessons.create', {
         url: '/create',
-        templareUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
+        templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
         controller: 'LessonsController',
         controllerAs: 'vm',
         resolve: {
@@ -34,12 +34,12 @@
         },
         data: {
           roles: ['team lead'],
-          pateTitle: 'Lessons Create'
+          pageTitle: 'Lesson Create'
         }
       })
       .state('lessons.edit', {
         url: '/:lessonId/edit',
-        templateUrl: 'modules/lessons/client/view/form-lesson.client.view.html',
+        templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
         controller: 'LessonsController',
         controllerAs: 'vm',
         resolve: {

@@ -9,7 +9,7 @@
             <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
             <ul ng-switch-when="dropdown" class="dropdown-menu">
                 <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
-                    <a ui-sref="{{subitem.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="subitem.title"></a>
+                    <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
                 </li>
             </ul>
             <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
