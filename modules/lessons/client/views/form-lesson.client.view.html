@@ -2,195 +2,243 @@
     <div class="page-header">
         <h1>{{vm.lesson._id ? 'Edit Lesson' : 'New Lesson'}}</h1>
     </div>
+
     <div class="container">
         <div class="row">
-            <div class="col-mod-12">
-                <wysiwyg-editor outer-column="col-md-12" in-title="Lesson Objectives" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
-                <!-- <ng-quill-editor ng-model="vm.lesson.lessonObjectives" toolbar="true" link-tooltip="true" image-tooltip="true" toolbar-entries="font size bold list bullet italic underline strike align color background link image" editor-required="true" required="" error-class="input-error"></ng-quill-editor> -->
-            </div>
-        </div>
-        <!-- <div class="row">
-            <div class="col-md-12">
-                <form ng-submit="onSubmit" class="ng-pristine ng-valid">
-                    <div class="panel panel-default ng-scope">
+            
                         <div class="panel-heading">
                             <div class="panel-title">Lesson Upload</div>
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-8 ng-empty ng-valid ng-pristine">
+                                <div class="col-md-8">
                                     <div class="form-group">
-                                        <label for="Lesson Title">Lesson Title</label><div class="row">
+                                        <label for="lessontitle">Lesson Title</label>
+                                        <!-- Select 2 plugin -->
+
+                                        <div class="row">
                                             <div class="col-md-12">
-                                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="lessontitle " placeholder="Lesson Title" ng-model="vm.lesson.lessonOption.title" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-attachment: scroll; background-position: 98% 50%; background-repeat: no-repeat;">
+                                                <select class="js-example-basic-multiple " multiple="" style="width: 100%" id="source">
+                                                </select>
                                             </div>
                                         </div>
+
+                                        <!-- //Select 2 -->
                                     </div>
                                 </div>
-                                <div class="col-md-4 ng-not-empty ng-valid ng-pristine">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="unit">Unit</label><select class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="vm.lesson.lessonUpload.unit" selected="selected ">
-                                            <option value="Action">Action</option>
-                                            <option value="Field">Field</option>
+                                        <label for="Unit">Unit</label>
+                                        <select class="form-control"> 
+                                            <!-- TODO: This should be dynamic to pull in the units-->
+                                            <option>NYC's Urban Ecosystem</option>
+                                            <option>Oysters</option>
+                                            <option>Mobile Organisms</option>
+                                            <option>Sessile Organisms</option>
+                                            <option>Water Quality</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                            <!--/row-->
                         </div>
                     </div>
-
-                    <div class="panel panel-default ng-scope">
-                        <div class="panel-heading ">
+                    <div class="panel panel-default">
+                        <!-- Lesson Overview -->
+                        <div class="panel-heading">
                             <div class="panel-title">Lesson Overview</div>
                         </div>
                         <div id="collapseExample" class="panel-body collapse in">
-                            <div class="row ">
-                                <div class="col-md-6 ">
-                                    <div class="row ">
-                                        <div class="col-md-4 ng-not-empty ng-valid ng-pristine">
+                            <div class="row">
+                                <!-- Row nest -->
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Grade">Grade</label>
-                                                <select class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="vm.lesson.lessonOverview.grade" selected="selected ">
-                                                    <option value="6-8">6-8</option>
-                                                    <option value="4th">4th</option>
-                                                    <option value="5th">5th</option>
-                                                    <option value="6th">6th</option>
-                                                    <option value="7th">7th</option>
-                                                    <option value="8th">8th</option>
+                                                <select class="form-control">
+                                                    <option>6-8</option>
+                                                    <option>4th</option>
+                                                    <option>5th</option>
+                                                    <option>6th</option>
+                                                    <option>7th</option>
+                                                    <option>8th</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 ng-not-empty ng-valid ng-pristine">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="Class Period">Class Period</label>
-                                                <select class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="vm.lesson.lessonOverview.classPeriods" selected="selected ">
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6</option>
-                                                    <option value="7">7</option>
-                                                    <option value="8">8</option>
+                                                <label for="Grade">Class Periods</label>
+                                                <select class="form-control">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                    <option>6</option>
+                                                    <option>7</option>
+                                                    <option>8</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 ng-not-empty ng-valid ng-pristine">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="Setting">Setting</label>
-                                                <select class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="vm.lesson.lessonOverview.setting" selected="selected ">
-                                                    <option value="Classroom">Classroom</option>
-                                                    <option value="Field">Field</option>
+                                                <select class="form-control">
+                                                    <option>Classroom</option>
+                                                    <option>Field</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row ">
-                                        <div class="col-md-12 ng-empty ng-valid ng-pristine">
+                                    <div class="row">
+                                        <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for=""></label>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" id="Text1" placeholder="Lesson Title" ng-model="vm.lesson.lessonOverview.protocolConnections">
-                                                    </div>
+                                                <label for="protocolconnections">Protocol Connections</label>
+                                                <input type="text" class="form-control" id="lessontitle" placeholder="Lesson Title">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="SubjectArea">
+                                                Subject Area(s) <span class="glyphicon glyphicon-option-vertical" aria-hidden="true" data-toggle="modal" data-target="#myModal"></span>
+                                            </label>
+
+
+                                            <!-- Select 2 plugin -->
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <select class="js-example-basic-multiple" multiple="multiple" style="width: 100%" id="Select1">
+                                                        <optgroup label="Science">
+                                                            <option value="ecology">Ecology</option>
+                                                            <option value="geologyeatchscience">Geology and Earth Science </option>
+                                                            <option value="limnology">Limnology</option>
+                                                            <option value="marinebio">Marine Biology</option>
+                                                            <option value="oceanography">Oceanography</option>
+                                                        </optgroup>
+                                                        <optgroup label="Technology">
+                                                            <option value="computerscience">Computer Science</option>
+                                                        </optgroup>
+                                                        <option value="engineering">Engineering</option>
+                                                        <optgroup label="Math">
+                                                            <option value="dataanalysis">Data Analysis</option>
+                                                            <option value="graphing">Graphing</option>
+                                                            <option value="ratiosproportions">Ratios &amp; Proportions</option>
+                                                            <option value="algebra">Algebra</option>
+                                                        </optgroup>
+                                                        <optgroup label="Social Studies">
+                                                            <option value="history">History</option>
+                                                            <option value="economics">Economics</option>
+                                                        </optgroup>
+                                                        <option value="englishlanguagearts">English Language Arts</option>
+                                                        <option value="music">Music</option>
+                                                        <option value="art">Art</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 ">
-                                    <div class="col-md-12 ">
-                                        <div class="form-group ">
-                                            <label for="Subject Area(s)">
-                                                Subject Area(s)
-                                                <span class="glyphicon glyphicon-option-vertical " aria-hidden="true " data-toggle="modal " data-target="#myModal "></span>
-                                            </label>
-                                            <div class="row">
-                                                <input type="text" ng-model="vm.lesson.lessonOverview.subjectAreas" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-251-6401">
-                                                <ul class="dropdown-menu ng-isolate-scope ng-hide" ng-show="isOpen() &amp;&amp; !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px'}" role="listbox" aria-hidden="true" uib-typeahead-popup="" id="typeahead-251-6401" matches="matches" active="activeIdx" select="select(activeIdx, evt)" move-in-progress="moveInProgress" query="query" position="position" assign-is-open="assignIsOpen(isOpen)" debounce="debounceUpdate">
-                                                </ul>
-                                            </div>
+
+                                            <!-- //Select 2 -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row ">
-                                <wysiwyg-editor outer-column="col-md-12" in-title="Lesson Summary" ng-model="vm.lesson.lessonOverview.lessonSummary"></wysiwyg-editor>
+                            <!-- //Row nest -->
+                            <div class="row">
+                                <wysiwyg-editor outer-column="col-md-12" in-title="Lesson Summary" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
                             </div>
                         </div>
+                        <!--/ Pannel-body -->
                     </div>
+                    <!--/ Pannel -->
 
-                    <div class="row  ng-scope">
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="panel panel-default">
+                                <!-- Lesson Objectives -->
                                 <div class="panel-heading">
                                     <div class="panel-title">Lesson Objectives</div>
                                 </div>
-                                <div id="collapseLessonObject " class="panel-body collapse in ">
-                                    <div class="row ">
-                                        <wysiwyg-editor outer-column="col-md-12" in-title="Lesson Objectives" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
+                                <div id="collapseLessonObject" class="panel-body collapse in">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="objectives">Objectives</label>
+                                            <textarea class="form-control" rows="6"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="panel panel-default ng-scope">
-                        <div class="panel-heading ">
-                            <div class="panel-title">Materials & Resources Objectives</div>
+                    <div class="panel panel-default">
+                        <!-- Materials & Resources -->
+                        <div class="panel-heading">
+                            <div class="panel-title">Materials & Resources</div>
                         </div>
                         <div id="collapseMaterials" class="panel-body collapse in">
-                            <div class="row ">
-                                <div class="col-md-6 ">
-                                    <div class="row ">
-                                        <div class="col-md-12 ">
-                                            <wysiwyg-editor outer-column="col-md-12" in-title="Supplies" ng-model="vm.lesson.materialsResources.supplies"></wysiwyg-editor>
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="objectives">Supplies</label>
+                                            <textarea class="form-control" rows="6"></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 ">
-                                    <div class="row ">
-                                        <div class="col-md-12 ">
-                                            <wysiwyg-editor outer-column="col-md-12" in-title="Teacher Resources" ng-model="vm.lesson.materialsResources.teacherResources"></wysiwyg-editor>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="vocabulary">Teacher Resources</label>
+                                            <textarea class="form-control" rows="6" placeholder="This is a dynamic module area"></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row ">
-                                <div class="panel-body ">
-                                    <div class="row ">
-                                        <div class="col-md-8 ">
-                                            <label for="handouts ">Handouts</label>
-                                            <div class="form-group ">
-                                                <label for="exampleInputFile ">File input</label> -->
-                                                <!-- <input type="file" id="file" name="file"/> -->
-                                                <!-- <input type="file " id="exampleInputFile "> -->
+
+                            <div class="row">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <label for="handouts">Handouts</label>
+                                            <div class="form-group">
+                                                <label for="exampleInputFile">File input</label>
+                                                <!-- <input type="file" id="exampleInputFile"> -->
                                                 <!-- Change /upload-target to your upload address -->
-                                                <!-- <div class="row ">
-                                                    <div class="col-md-12 ">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <form action="/upload-target" class="dropzone"></form>
                                                     </div>
                                                 </div>
-                                                <form action="/upload-target " class="dropzone  ng-pristine ng-valid" placeholder="This is a dynamic module area "></form> -->
-                                                <!-- <p class="help-block ">Drag & Drop your Files or upload theme here</p> -->
-                                            <!-- </div>
+                                                <form action="/upload-target" class="dropzone" placeholder="This is a dynamic module area"></form>
+                                                <!-- <p class="help-block">Drag & Drop your Files or upload theme here</p> -->
+                                            </div>
                                         </div>
-                                        <div class="row ">
-                                            <div class="col-md-4 ">
-                                                <label for="vocabulary ">Vocabulary</label> -->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="vocabulary">Vocabulary</label>
                                                 <!-- Select 2 plugin -->
-                                                <!-- <div class="row ">
-                                                    <div class="col-md-12 ">
-                                                        <select class="js-example-basic-multiple col-md-12 " multiple="multiple " style="width: 95%"
-                                                            id="source ">
-                                                            <option value="art ">Art</option>
-                                                            <option value="ecosystem ">Ecosystem</option>
-                                                            <option value="hypothesis ">Hypothesis</option>
-                                                            <option value="art ">Oyster</option>
-                                                            <option value="science ">Science</option>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <select class="js-example-basic-multiple col-md-12" multiple="multiple" style="width: 95%" id="Select2">
+                                                            <option value="art">Art</option>
+                                                            <option value="ecosystem">Ecosystem</option>
+                                                            <option value="hypothesis">Hypothesis</option>
+                                                            <option value="art">Oyster</option>
+                                                            <option value="science">Science</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <!-- //Select 2 -->
                                             </div>
                                         </div>
                                     </div>
@@ -198,261 +246,387 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <!-- Background -->
+                                <div class="panel-heading">
+                                    <div class="panel-title">Background</div>
+                                </div>
+                                <div id="collapseBackground" class="panel-body collapse in">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="background">Background</label>
+                                            <textarea class="form-control" rows="6"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Lesson Objectives -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title">Instruction Plan</div>
+                                </div>
+                                <div id="collapseInstructionPlan" class="panel-body collapse in">
+
+                                    <!-- Insert panel tabs -->
+                                    <div class="col-lg-12 instruction">
+                                        <div class="panel panel-transparent">
+                                            <ul class="nav nav-tabs nav-tabs-right nav-justified" id="tab-4" role="tablist">
+                                                <li class="active"><a href="#tab1Engage" data-toggle="tab" pg-tab role="tab">Engage</a>
+                                                </li>
+                                                <li><a href="#tab2Explore" data-toggle="tab" pg-tab role="tab">Explore</a>
+                                                </li>
+                                                <li><a href="#tab3Explain" data-toggle="tab" pg-tab role="tab">Explain</a>
+                                                </li>
+                                                <li><a href="#tab4Elaborate" data-toggle="tab" pg-tab role="tab">Elaborate</a>
+                                                </li>
+                                                <li><a href="#tab5Evaluate" data-toggle="tab" pg-tab role="tab">Evaluate</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content bg-white">
+                                                <div class="tab-pane active" id="tab1Engage">
+                                                    <div class="row column-seperation">
+                                                        <div class="col-md-12">
+                                                            <label for="objectives">Engage</label>
+                                                            <textarea class="form-control" rows="6"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane " id="tab2Explore">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="objectives">Explore</label>
+                                                            <textarea class="form-control" rows="6"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="tab3Explain">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="objectives">Explain</label>
+                                                            <textarea class="form-control" rows="6"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane " id="tab4Elaborate">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="objectives">Elaborate</label>
+                                                            <textarea class="form-control" rows="6"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="tab5Evaluate">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="objectives">Evaluate</label>
+                                                            <textarea class="form-control" rows="6"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- // panel tabs -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title">Standards</div>
+                                </div>
+                                <div id="collapseBoard" class="panel-body collapse in">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12 standards">
+                                                <div class="form-group">
+                                                    <label for="nycsciencescope">New York City Science Scope & Sequence</label>
+                                                    <!-- Select 2 plugin -->
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <select class="js-example-basic-multiple " multiple="multiple" style="width: 100%" id="Select3">
+                                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS1 Earth’s Place in the Universe">
+                                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth’s </option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS2 Earth’s Systems">
+                                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                                    <option value="ess2c">ESS2C The Roles of Water in Earth’s Surface Processes</option>
+                                                                </optgroup>
+                                                                </optgroup>
+                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+
+                                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- //Select 2 -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 standards">
+                                                <div class="form-group">
+                                                    <label for="ngssstandards">NGSS Standards</label>
+                                                    <!-- Select 2 plugin -->
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <select class="js-example-basic-multiple" multiple="multiple" style="width: 100%" id="Select4">
+                                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS1 Earth’s Place in the Universe">
+                                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth’s </option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS2 Earth’s Systems">
+                                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                                    <option value="ess2c">ESS2C The Roles of Water in Earth’s Surface Processes</option>
+                                                                </optgroup>
+                                                                </optgroup>
+                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+
+                                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- //Select 2 -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 standards ">
+                                                <div class="form-group">
+                                                    <label for="commoncoreela">Common Core ELA</label>
+                                                    <!-- Select 2 plugin -->
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <select class="js-example-basic-multiple" multiple="multiple" style="width: 100%" id="Select5">
+                                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS1 Earth’s Place in the Universe">
+                                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth’s </option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS2 Earth’s Systems">
+                                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                                    <option value="ess2c">ESS2C The Roles of Water in Earth’s Surface Processes</option>
+                                                                </optgroup>
+                                                                </optgroup>
+                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+
+                                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- //Select 2 -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 standards">
+                                                <div class="form-group">
+                                                    <label for="commoncoremath">Common Core Math</label>
+                                                    <!-- Select 2 plugin -->
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <select class="js-example-basic-multiple" multiple="multiple" style="width: 100%" id="Select6">
+                                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS1 Earth’s Place in the Universe">
+                                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth’s </option>
+                                                                </optgroup>
+                                                                <optgroup label="ESS2 Earth’s Systems">
+                                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                                    <option value="ess2c">ESS2C The Roles of Water in Earth’s Surface Processes</option>
+                                                                </optgroup>
+                                                                </optgroup>
+                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+
+                                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- //Select 2 -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <a class="btn btn-primary" href="success.html" role="button">Create Lesson</a>
+                        <a class="btn btn-default" href="index.html" role="button">Cancel</a>
                 </form>
-
- -->
-                <!-- ngIf: lessonConfig[4].blockTitle==='Background' -->
-<!--                 <div class="row  ng-scope">
-                    <div class="col-md-12 ">
-                        <div class="panel panel-default ">
-                            <div class="panel-heading ">
-                                <div class="panel-title ">Background</div>
-                            </div>
-                            <div id="collapseBackground " class="panel-body collapse in ">
-                                <div class="row ">
-                                    <div class="col-md-12 ">
-                                        <wysiwyg-editor outer-column="col-md-12" in-title="Background" ng-model="vm.lesson.background"></wysiwyg-editor>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
- -->                <!-- end ngIf: lessonConfig[4].blockTitle==='Background' -->
-
-
-                <!-- ngIf: lessonConfig[5].blockTitle==='Instruction Plan' -->
-<!--                 <div class="row  ng-scope">
-                    <div class="col-md-12 ">
- -->                        <!-- Lesson Objectives -->
-<!--                         <div class="panel panel-default ">
-                            <div class="panel-heading ">
-                                <div class="panel-title ">Instruction Plan</div>
-                            </div>
-                            <div id="collapseInstructionPlan " class="panel-body collapse in ">
-
- -->                                <!-- Insert panel tabs -->
-<!--                                 <div class="col-lg-12 instruction ">
-                                    <div class="panel panel-transparent ">
- -->                                        <!-- <ul class="nav nav-tabs nav-tabs-right nav-justified " id="tab-4 " role="tablist ">
-                        <li class="active "><a href="#tab1Engage " data-toggle="tab " pg-tab role="tab ">Engage</a>
-                        </li>
-                        <li><a href="#tab2Explore " data-toggle="tab " pg-tab role="tab ">Explore</a>
-                        </li>
-                        <li><a href="#tab3Explain " data-toggle="tab " pg-tab role="tab ">Explain</a>
-                        </li>
-                        <li><a href="#tab4Elaborate " data-toggle="tab " pg-tab role="tab ">Elaborate</a>
-                        </li>
-                        <li><a href="#tab5Evaluate " data-toggle="tab " pg-tab role="tab ">Evaluate</a>
-                        </li>
-                      </ul> -->
-<!--                                         <uib-tabset>
-                                            <uib-tab heading="Engage">
-                                                <wysiwyg-editor outer-column="col-md-12" in-title="Engage" ng-model="vm.lesson.instructionPlan.engage"></wysiwyg-editor>
-                                            </uib-tab>
-                                            <uib-tab heading="Explore">
-                                                <wysiwyg-editor outer-column="col-md-12" in-title="Explore" ng-model="vm.lesson.instructionPlan.explore"></wysiwyg-editor>
-                                            </uib-tab>
-                                            <uib-tab heading="Explain">
-                                                <wysiwyg-editor outer-column="col-md-12" in-title="Explain" ng-model="vm.lesson.instructionPlan.explain"></wysiwyg-editor>
-                                            </uib-tab>
-                                            <uib-tab heading="Elaborate">
-                                                <wysiwyg-editor outer-column="col-md-12" in-title="Elaborate" ng-model="vm.lesson.instructionPlan.elaborate"></wysiwyg-editor>
-                                            </uib-tab>
-                                            <uib-tab heading="Evaluate">
-                                                <wysiwyg-editor outer-column="col-md-12" in-title="Evaluate" ng-model="vm.lesson.instructionPlan.evaluate"></wysiwyg-editor>
-                                            </uib-tab>
-                                        </uib-tabset>
-                                            
-                                    </div>
-                                </div>
- -->                                <!-- // panel tabs -->
-<!--                             </div>
-                        </div>
-                    </div>
-                </div>
- -->                <!-- end ngIf: lessonConfig[5].blockTitle==='Instruction Plan' -->
-
-
-                <!-- ngIf: lessonConfig[6].blockTitle==='Standards' -->
-<!--                 <div class="row  ng-scope">
-                    <div class="col-md-12 ">
-                        <div class="panel panel-default ">
-                            <div class="panel-heading ">
-                                <div class="panel-title ">Standards</div>
-                            </div>
-                            <div id="collapseBoard " class="panel-body collapse in ">
-                                <div class="panel-body ">
-                                    <div class="row ">
-                                        <div class="col-md-12 standards ">
-                                            <div class="form-group ">
-                                                <label for="nycsciencescope ">New York City Science Scope &amp; Sequence</label>
- -->                                                <!-- Select 2 plugin -->
-<!--                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control  ng-pristine ng-untouched ng-valid ng-empty" id="nycsciencescopeTxt " placeholder="Text input for now, select 2 in the future" ng-model="vm.lesson.standards.nycScienceScopeSequence ">
-                                                </div>
- -->                                                <!-- <div class="row ">
-                            <div class="col-md-12 ">
-                              <select class="js-example-basic-multiple " multiple="multiple " style="width: 100% " id="source ">
-                                <optgroup label="PS1 Matter and Its Interactions ">
-                                  <option value="ps1A ">PS1A Structure and Properties of matter</option>
-                                  <option value="ps1b ">PS1B Chemical Reactions</option>
-                                  <option value="ps1c ">PS1C Nuclear Processes</option>
-                                </optgroup>
-                                <optgroup label="ESS1 Earth’s Place in the Universe ">
-                                  <option value="ess1a ">ESS1A The Universe and Its Stars</option>
-                                  <option value="ess1b ">ESS1B Earth and the Solar System</option>
-                                  <option value="ess1c ">ESS1C The History of Planet Earth ESS2 Earth’s </option>
-                                </optgroup>
-                                <optgroup label="ESS2 Earth’s Systems ">
-                                  <option value="ess2a ">ESS2A Earth Materials and Systems</option>
-                                  <option value="ess2b ">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                  <option value="ess2c ">ESS2C The Roles of Water in Earth’s Surface Processes</option>
-                                </optgroup>
-                                </optgroup>
-                                <option value="g8unit ">PS1 Matter and Its Interactions</option>
-
-                                <option value="g8unit ">Grade 8, Unit1: Humans and the Environment</option>
-
-                              </select>
-                            </div>
-                          </div> -->
-
-                                                <!-- //Select 2 -->
-<!--                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-md-12 standards ">
-                                            <div class="form-group ">
-                                                <label for="ngssstandards ">NGSS Standards</label>
- -->                                                <!-- Select 2 plugin -->
-<!--                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control  ng-pristine ng-untouched ng-valid ng-empty" id="ngssstandardsTxt " placeholder="Text input for now, select 2 in the future" ng-model="vm.lesson.standards.ngssStandards ">
-                                                </div>
- -->                                                <!-- <div class="row ">
-                            <div class="col-md-12 ">
-                              <select class="js-example-basic-multiple " multiple="multiple " style="width: 100% " id="source ">
-                                <optgroup label="PS1 Matter and Its Interactions ">
-                                  <option value="ps1A ">PS1A Structure and Properties of matter</option>
-                                  <option value="ps1b ">PS1B Chemical Reactions</option>
-                                  <option value="ps1c ">PS1C Nuclear Processes</option>
-                                </optgroup>
-                                <optgroup label="ESS1 Earth’s Place in the Universe ">
-                                  <option value="ess1a ">ESS1A The Universe and Its Stars</option>
-                                  <option value="ess1b ">ESS1B Earth and the Solar System</option>
-                                  <option value="ess1c ">ESS1C The History of Planet Earth ESS2 Earth’s </option>
-                                </optgroup>
-                                <optgroup label="ESS2 Earth’s Systems ">
-                                  <option value="ess2a ">ESS2A Earth Materials and Systems</option>
-                                  <option value="ess2b ">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                  <option value="ess2c ">ESS2C The Roles of Water in Earth’s Surface Processes</option>
-                                </optgroup>
-                                </optgroup>
-                                <option value="g8unit ">PS1 Matter and Its Interactions</option>
-
-                                <option value="g8unit ">Grade 8, Unit1: Humans and the Environment</option>
-
-                              </select>
-                            </div>
-                          </div> -->
-
-                                                <!-- //Select 2 -->
-<!--                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-md-12 standards ">
-                                            <div class="form-group ">
-                                                <label for="commoncoreela ">Common Core ELA</label>
- -->                                                <!-- Select 2 plugin -->
-<!--                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control  ng-pristine ng-untouched ng-valid ng-empty" id="commoncoreelaTxt " placeholder="Text input for now, select 2 in the future" ng-model="vm.lesson.standards.commonCoreEla ">
-                                                </div>
- -->                                                <!-- <div class="row ">
-                            <div class="col-md-12 ">
-                              <select class="js-example-basic-multiple " multiple="multiple " style="width: 100% " id="source ">
-                                <optgroup label="PS1 Matter and Its Interactions ">
-                                  <option value="ps1A ">PS1A Structure and Properties of matter</option>
-                                  <option value="ps1b ">PS1B Chemical Reactions</option>
-                                  <option value="ps1c ">PS1C Nuclear Processes</option>
-                                </optgroup>
-                                <optgroup label="ESS1 Earth’s Place in the Universe ">
-                                  <option value="ess1a ">ESS1A The Universe and Its Stars</option>
-                                  <option value="ess1b ">ESS1B Earth and the Solar System</option>
-                                  <option value="ess1c ">ESS1C The History of Planet Earth ESS2 Earth’s </option>
-                                </optgroup>
-                                <optgroup label="ESS2 Earth’s Systems ">
-                                  <option value="ess2a ">ESS2A Earth Materials and Systems</option>
-                                  <option value="ess2b ">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                  <option value="ess2c ">ESS2C The Roles of Water in Earth’s Surface Processes</option>
-                                </optgroup>
-                                </optgroup>
-                                <option value="g8unit ">PS1 Matter and Its Interactions</option>
-
-                                <option value="g8unit ">Grade 8, Unit1: Humans and the Environment</option>
-
-                              </select>
-                            </div>
-                          </div> -->
-
-                                                <!-- //Select 2 -->
-<!--                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-md-12 standards ">
-                                            <div class="form-group ">
-                                                <label for="commoncoremath ">Common Core Math</label>
- -->                                                <!-- Select 2 plugin -->
-<!--                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control  ng-pristine ng-untouched ng-valid ng-empty" id="commoncoremathTxt " placeholder="Text input for now, select 2 in the future" ng-model="vm.lesson.standards.commonCoreMath ">
-                                                </div>
- -->                                                <!-- <div class="row ">
-                            <div class="col-md-12 ">
-                              <select class="js-example-basic-multiple " multiple="multiple " style="width: 100% " id="source ">
-                                <optgroup label="PS1 Matter and Its Interactions ">
-                                  <option value="ps1A ">PS1A Structure and Properties of matter</option>
-                                  <option value="ps1b ">PS1B Chemical Reactions</option>
-                                  <option value="ps1c ">PS1C Nuclear Processes</option>
-                                </optgroup>
-                                <optgroup label="ESS1 Earth’s Place in the Universe ">
-                                  <option value="ess1a ">ESS1A The Universe and Its Stars</option>
-                                  <option value="ess1b ">ESS1B Earth and the Solar System</option>
-                                  <option value="ess1c ">ESS1C The History of Planet Earth ESS2 Earth’s </option>
-                                </optgroup>
-                                <optgroup label="ESS2 Earth’s Systems ">
-                                  <option value="ess2a ">ESS2A Earth Materials and Systems</option>
-                                  <option value="ess2b ">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                  <option value="ess2c ">ESS2C The Roles of Water in Earth’s Surface Processes</option>
-                                </optgroup>
-                                </optgroup>
-                                <option value="g8unit ">PS1 Matter and Its Interactions</option>
-
-                                <option value="g8unit ">Grade 8, Unit1: Humans and the Environment</option>
-
-                              </select>
-                            </div>
-                          </div> -->
-
-                                                <!-- //Select 2 -->
-<!--                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
- -->                <!-- end ngIf: lessonConfig[6].blockTitle==='Standards' -->
-<!--             </div>
-
-        </div> -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="onSubmit()">Save</button>
+            </div>
         </div>
     </div>
-</section>
+</div>
+
+
+
+
+
+
+
+<!-- Modal -->
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Subject Area</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p>Most Common</p>
+            <ul class="subject-common">
+              <li>Science</li>
+              <li>Engineering</li>
+              <li>Math</li>
+              <li>History</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="input-group modal-search">
+                  <!-- Select 2 plugin -->
+                  
+                  <div class="row">
+                      <div class="col-md-12">
+                        <select class="js-example-basic-multiple" multiple="multiple" style="width: 250px" id="Select7">
+                          <optgroup label="Science">
+                            <option value="ecology">Ecology</option>
+                            <option value="geologyeatchscience">Geology and Earth Science </option>
+                            <option value="limnology">Limnology</option>
+                            <option value="marinebio">Marine Biology</option>
+                            <option value="oceanography">Oceanography</option>
+                          </optgroup>
+                          <optgroup label="Technology">
+                            <option value="computerscience">Computer Science</option>
+                          </optgroup>
+                          <option value="engineering">Engineering</option>
+                          <optgroup label="Math">
+                            <option value="dataanalysis">Data Analysis</option>
+                            <option value="graphing">Graphing</option>
+                            <option value="ratiosproportions">Ratios &amp; Proportions</option>
+                            <option value="algebra">Algebra</option>
+                          </optgroup>
+                          <optgroup label="Social Studies">
+                            <option value="history">History</option>
+                            <option value="economics">Economics</option>
+                          </optgroup>
+                          <option value="englishlanguagearts">English Language Arts</option>
+                          <option value="music">Music</option>
+                          <option value="art">Art</option>
+                        </select>
+                      </div>
+                  </div>
+
+                  <!-- //Select 2 --
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                  </span>
+                  <input type="text" class="form-control" placeholder="Search for...">
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div>
+            <!--<ul class="subject-cat-list">
+              <li class="subject-cat-title">A</li>
+                <ul class="subject-cat-list_subcat">
+                  <li>Art</li>
+                  <li>Algebra</li>
+                </ul>
+              <li class="subject-cat-title">B</li>
+                <ul class="subject-cat-list_subcat">
+                  <li>Biology</li>
+                </ul>
+              <li class="subject-cat-title">C</li>
+                <ul class="subject-cat-list_subcat">
+                  <li>Chemistry</li>
+                </ul>
+            </ul> -->
+          </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal">Select</button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- / Modal -->
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script>tinymce.init({ selector: 'textarea' });</script>
+<link href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css" rel="stylesheet" />
+<script src="select2.js"></script>
+<script src="dropzone.js"></script>
+<script>
+    $(function () {
+        // turn the element to select2 select style
+        $('#select2').select2();
+    });
+    $(function () {
+        // turn the element to select2 select style
+        $(".js-example-basic-multiple").select2({
+            tags: true
+        });
+    });
+</script>
