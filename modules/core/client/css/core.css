@@ -161,12 +161,13 @@ body {
 }
 
 a {
-    color: #333;
+    color: #ea6158;
+    cursor: pointer;
 }
 
     a:hover, a:focus {
         text-decoration: none;
-        color: #ea6158;
+        color: #943234;
     }
 
 .label-science {

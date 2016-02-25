@@ -8,13 +8,13 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="lessontitle">Lesson Title</label>
                             <input class="form-control" name="lessontitle" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="Unit">Unit</label>
                             <select class="form-control">
@@ -25,6 +25,13 @@
                                 <option>Sessile Organisms</option>
                                 <option>Water Quality</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <!-- TODO: Wire up a featured image for each article -->
+                            <label for="Image">Featured Image</label>
+                            <input type="file" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -42,12 +49,16 @@
                                 <div class="form-group">
                                     <label for="Grade">Grade</label>
                                     <select class="form-control">
-                                        <option>6-8</option>
-                                        <option>4th</option>
-                                        <option>5th</option>
+                                        <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
+                                        <option>6-8th</option>
                                         <option>6th</option>
                                         <option>7th</option>
                                         <option>8th</option>
+                                        <option>9th-12th</option>
+                                        <option>9th</option>
+                                        <option>10th</option>
+                                        <option>11th</option>
+                                        <option>12th</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,6 +66,7 @@
                                 <div class="form-group">
                                     <label for="Grade">Class Periods</label>
                                     <select class="form-control">
+                                        <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -63,6 +75,7 @@
                                         <option>6</option>
                                         <option>7</option>
                                         <option>8</option>
+                                        <option>9</option>
                                     </select>
                                 </div>
                             </div>
@@ -76,24 +89,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="protocolconnections">Protocol Connections</label>
-                                    <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate 
-                                        Selections should turn into "tags" using select2. Multiple selections should be able to be made.
-                                        Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
-                                    <input type="text" class="form-control" id="lessontitle" placeholder="Protocol 1: Site Conditions">
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="SubjectArea">
-                                Subject Area(s) <span class="glyphicon glyphicon-option-vertical" aria-hidden="true" data-toggle="modal" data-target="#myModal"></span>
-                            </label>
+                                Subject Area(s)
+                            </label> <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
                             <select class="select2 form-control" multiple="multiple">
                                 <optgroup label="Science">
                                     <option value="ecology">Ecology</option>
@@ -124,6 +125,17 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="protocolconnections">Protocol Connections</label>
+                            <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate 
+                                Selections should turn into "tags" using select2. Multiple selections should be able to be made.
+                                Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
+                            <select class="select2 form-control" multiple="multiple" placeholder="Protocol 1: Site Conditions"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Lesson Summary" ng-model="vm.lesson.lessonSummary"></wysiwyg-editor>
                 </div>
             </div>
@@ -145,53 +157,55 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="objectives">Supplies</label>
-                                <!-- TODO: Whatever is typed should become a tag within the textarea (select2?) -->
-                                <textarea class="form-control" rows="6"></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label for="objectives">Supplies</label>
+                            <select class="select2create form-control" multiple="multiple"></select>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="vocabulary">Teacher Resources</label>
-                                <!-- TODO: Whatever is typed should become a tag within the textarea (select2?) -->
-                                <textarea class="form-control" rows="6" placeholder="This is a dynamic module area"></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label for="vocabulary">Vocabulary</label>
+                            <small>Choose from the Glossary terms or <a data-toggle="modal" data-target="#modal-vocabulary">add a new term</a>.</small>
+                            <!-- TODO: Vocabulary items should be stored in an admin-controlled Glossary. Each vocab word has a definition
+                                stored with it. From this page, should have the option to add a vocab item with a definition to the Glossary
+                                (in a modal?) which would then update the list to choose from here -->
+                            <select class="select2 form-control" multiple="multiple">
+                                <option value="art">Art</option>
+                                <option value="ecosystem">Ecosystem</option>
+                                <option value="hypothesis">Hypothesis</option>
+                                <option value="art">Oyster</option>
+                                <option value="science">Science</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <!-- TODO: Give location for upload files to be stored in the lesson -->
-                                <label for="handouts">Handouts</label>
-                                <form action="/file-upload" class="dropzone" id="lessonHandouts">
-                                    <div class="fallback">
-                                        <input name="file" type="file" multiple />
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="vocabulary">Vocabulary</label>
-                                <!-- TODO: Vocabulary items should be stored in an admin-controlled Glossary. Each vocab word has a definition
-                                    stored with it. From this page, should have the option to add a vocab item with a definition to the Glossary
-                                    (in a modal?) which would then update the list to choose from here -->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <select class="select2 form-control" multiple="multiple">
-                                            <option value="art">Art</option>
-                                            <option value="ecosystem">Ecosystem</option>
-                                            <option value="hypothesis">Hypothesis</option>
-                                            <option value="art">Oyster</option>
-                                            <option value="science">Science</option>
-                                        </select>
-                                    </div>
+                    <div class="col-md-6">
+                        <!-- TODO: Give location for upload files to be stored in the lesson -->
+                        <div class="form-group">
+                            <label for="handouts">Handouts</label>
+                            <form action="/file-upload" class="dropzone" id="lessonHandouts">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
                                 </div>
-                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="vocabulary">Teacher Resources</label>
+                            <!-- TODO: wire up "add resource" modal, wire up table to display added resources-->
+                            <table class="table table-hover">
+                                <tr data-toggle="modal" data-target="#modal-resources">
+                                    <td>Resource Name (Video/link)</td>
+                                    <td>http://link.com</td>
+                                </tr>
+                                <tr data-toggle="modal" data-target="#modal-resources">
+                                    <td>Resource Name (File upload)</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <button class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-resources">Add Resource</button>
                         </div>
                     </div>
                 </div>
@@ -214,13 +228,14 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <ul class="nav nav-pills nav-justified" role="tablist">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li role="presentation" class="active"><a href="#engage" data-toggle="tab" aria-controls="engage" role="tab">Engage</a></li>
                             <li role="presentation"><a href="#explore" data-toggle="tab" aria-controls="explore" role="tab">Explore</a></li>
                             <li role="presentation"><a href="#explain" data-toggle="tab" aria-controls="explain" role="tab">Explain</a></li>
                             <li role="presentation"><a href="#elaborate" data-toggle="tab" aria-controls="elaborate" role="tab">Elaborate</a></li>
                             <li role="presentation"><a href="#evaluate" data-toggle="tab" aria-controls="evaluate" role="tab">Evaluate</a></li>
                         </ul>
+                        <br />
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="engage">
                                 <div class="row">
@@ -395,78 +410,74 @@
 
 
 
-<!-- OLD DATA -- Need to get modals working -- not sure if this is still needed for drilling into Subject Areas?? -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- MODALS -->
+<div class="modal fade" id="modal-resources" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Subject Area</h4>
+                <h4 class="modal-title">Add a teacher resource</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <p>Most Common</p>
-                        <ul class="subject-common">
-                            <li>Science</li>
-                            <li>Engineering</li>
-                            <li>Math</li>
-                            <li>History</li>
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#link" data-toggle="tab" aria-controls="link" role="tab">Link</a></li>
+                            <li role="presentation"><a href="#upload" data-toggle="tab" aria-controls="upload" role="tab">Upload</a></li>
                         </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="input-group modal-search">
-                                    <select class="select2 form-control" multiple="multiple">
-                                        <optgroup label="Science">
-                                            <option value="ecology">Ecology</option>
-                                            <option value="geologyeatchscience">Geology and Earth Science </option>
-                                            <option value="limnology">Limnology</option>
-                                            <option value="marinebio">Marine Biology</option>
-                                            <option value="oceanography">Oceanography</option>
-                                        </optgroup>
-                                        <optgroup label="Technology">
-                                            <option value="computerscience">Computer Science</option>
-                                        </optgroup>
-                                        <option value="engineering">Engineering</option>
-                                        <optgroup label="Math">
-                                            <option value="dataanalysis">Data Analysis</option>
-                                            <option value="graphing">Graphing</option>
-                                            <option value="ratiosproportions">Ratios &amp; Proportions</option>
-                                            <option value="algebra">Algebra</option>
-                                        </optgroup>
-                                        <optgroup label="Social Studies">
-                                            <option value="history">History</option>
-                                            <option value="economics">Economics</option>
-                                        </optgroup>
-                                        <option value="englishlanguagearts">English Language Arts</option>
-                                        <option value="music">Music</option>
-                                        <option value="art">Art</option>
-                                    </select>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="link">
+                                <br />
+                                <div class="form-group">
+                                    <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
+                                    <input type="text" class="form-control" />
                                 </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="upload">
+                                <form action="/file-upload" class="dropzone" id="lessonResources">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple />
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Select</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--END OLD DATA-->
-
-
-
-<link href="https://raw.githubusercontent.com/enyo/dropzone/master/dist/min/dropzone.min.css" rel="stylesheet" />
-<script type="text/javascript">
-    $(function () {
-        $(".select2").select2({
-            tags: true
-        });
-    });
-</script>
+<div class="modal fade" id="modal-vocabulary" tabindex="-1" role="dialog" aria-labelledby="modal-vocabulary">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add a vocabulary term to the Glossary</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Vocabulary term</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Definition</label>
+                            <textarea class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODALS-->
