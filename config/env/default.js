@@ -50,5 +50,19 @@ module.exports = {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
     }
-  }
+  },
+  // log: {
+  //   format: 'combined',
+  //   options: {
+  //     stream: {
+  //       directoryPath: 'logs',
+  //       rotatingLogs: {
+  //         fileName: 'bop.txt', 
+  //         frequency: 'daily', 
+  //         verbose: true,
+  //         active: true
+  //       }
+  //     }
+  //   }
+  // }
 };

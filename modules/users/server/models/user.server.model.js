@@ -76,6 +76,23 @@ var UserSchema = new Schema({
   },
   providerData: {},
   additionalProvidersData: {},
+  socialProfiles: {
+    twitter: {
+      type: String,
+      default: '',
+      trim: true
+    },
+    facebook: {
+      type: String,
+      default: '',
+      trim: true
+    },
+    website: {
+      type: String,
+      default: '',
+      trim: true
+    }
+  },
   roles: {
     type: [{
       type: String,
@@ -97,6 +114,29 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  schoolOrg: {
+    type: Schema.ObjectId,
+    ref: 'SchoolOrg'
+  },
+  team: {
+    type: Schema.ObjectId,
+    ref: 'Team'
+  },
+  title: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  city: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  state: {
+    type: String,
+    default: '',
+    trim: true
   }
 });
 
