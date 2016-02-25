@@ -1,36 +1,227 @@
 <section>
     <div class="page-header">
-        <h1>Lessons</h1>
-    </div>
-    <div class="row">
-        <div ng-repeat="lesson in vm.lessons" class="col-sm-6 col-md-3">
-            <a class="thumbnail" ui-sref="lessons.view({ lessonId: lesson._id })">
-                <div class="caption">
-                    <h3 class="list-group-item-heading" ng-bind="lesson.lessonUpload.title"></h3>
-                    <h5 ng-bind="lesson.lessonUpload.unit"></h5>
-                    <p class="list-group-item-text" ng-bind="lesson.content"></p>
-                    <p><!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
-                        <span class="label label-science">Science</span>
-                        <span class="label label-socialstudies">History</span>
-                        <span class="label label-math">Math</span>
-                        <span class="label label-science">Ecology</span>
-                    </p>
-                    <p class="small" ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
-                    <!-- TODO: Need to get images into user -->
-                    <p class="text-right">
-                        <span ng-if="lesson.user" ng-bind="lesson.user.displayName"></span>
-                        <img ng-src="{{imageURL}}" alt="{{vm.lesson.user.displayName}}" class="header-profile-image" />
-                    </p>
-                </div>
-            </a>
+        <div class="input-group pull-right col-md-4 col-sm-6">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search -->
+            </span>
+            <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject...">
         </div>
-        <div class="col-sm-6 col-md-3">
-            <a class="thumbnail text-center" ui-sref="lessons.create">
-                <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
-                <div class="caption">
+        <h1>Curriculum <small>Lessons</small></h1>
+    </div>
+
+    <!-- TEST: Add filtering with isotope -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="library-filter-nav">
+                <a ui-sref="lessons.create" class="btn btn-primary pull-right">Add Lesson</a>
+                <a ui-sref="units.create" class="btn btn-primary pull-right">Add Unit</a>
+                <ul class="nav navbar-nav">
+                    <li class="is-checked"><a data-filter="*">Show All</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Subject Area(s) <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-filter="*">Show All</a></li>
+                            <li class="dropdown-header cat-title"><a data-filter=".science">Science</a></li>
+                            <ul class="dropdown-sub">
+                                <li><a data-filter=".ecology">Ecology</a></li>
+                                <li><a data-filter=".geologyeatchscience">Geology and Earth Science </a></li>
+                                <li><a data-filter=".limnology">Limnology</a></li>
+                                <li><a data-filter=".marinebio">Marine Biology</a></li>
+                                <li><a data-filter=".oceanography">Oceanography</a></li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <li class="dropdown-header cat-title"><a data-filter=".technology">Technology</a></li>
+                            <ul class="dropdown-sub">
+                                <li><a data-filter=".computerscience">Computer Science</a></li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <li><a data-filter=".engineering">Engineering</a></li>
+                            <div class="dropdown-divider"></div>
+                            <li class="dropdown-header cat-title"><a data-filter=".math">Math</a></li>
+                            <ul class="dropdown-sub">
+                                <li><a data-filter=".dataanalysis">Data Analysis</a></li>
+                                <li><a data-filter=".graphing">Graphing</a></li>
+                                <li><a data-filter=".ratiosproportions">Ratios &amp; Proportions</a></li>
+                                <li><a data-filter=".algebra">Algebra</a></li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <li class="dropdown-header cat-title"><a data-filter=".socialstudies">Social Studies</a></li>
+
+                            <ul class="dropdown-sub">
+                                <li><a data-filter=".history">History</a></li>
+                                <li><a data-filter=".economics">Economics</a></li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <li><a data-filter=".englishlanguagearts">English Language Arts</a></li>
+                            <li><a data-filter=".music">Music</a></li>
+                            <li><a data-filter=".music">Art</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Setting<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-filter=".classroom">Classroom</a></li>
+                            <li><a data-filter=".field">Field</a></li>
+                            <li><a data-filter=".other">Other</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Units<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-filter=".urbaneco"><i class="fa fa-circle text-primary"></i>NYC's Urban Ecosystem</a></li>
+                            <li><a data-filter=".oysters"><i class="fa fa-circle text-success"></i>Oysters</a></li>
+                            <li><a data-filter=".mobileorganism"><i class="fa fa-circle text-default"></i>Mobile Organisms</a></li>
+                            <li><a data-filter=".sessileorganism"><i class="fa fa-circle text-warning"></i>Sessile Organisms</a></li>
+                            <li><a data-filter=".waterquality"><i class="fa fa-circle text-info"></i>Water Quality</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END TEST -->
+
+
+    <div class="row grid">
+        <div ng-repeat="lesson in vm.lessons" class="col-sm-6 col-md-4 col-lg-3 library-item science socialstudies technology history math engineering classroom urbaneco"><!-- TEST: adding these for filtering -->
+            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                <div class="panel-heading unit-red">
+                    <!-- TODO: set up colors for each unit -->
+                    <span class="pull-right" ng-bind="lesson.lessonOverview.grade"></span>
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-tint"></i>
+                        <!-- TODO: set up icons for each unit -->
+                        <span ng-bind="lesson.lessonUpload.unit"></span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <small ng-bind="lesson.lessonOverview.setting"></small>
+                    <h4 ng-bind="lesson.lessonUpload.title"></h4>
+                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                </div>
+                <div class="panel-footer">
+                    <!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
+                    <span class="label label-science" data-filter=".science">Science</span>
+                    <span class="label label-science" data-filter=".oceanography">Oceanography</span>
+                    <span class="label label-science" data-filter=".marinebio">Marine Biology</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 library-item">
+            <div class="panel panel-default" ui-sref="lessons.create">
+                <div class="panel-body text-center text-muted">
+                    <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
                     <h4 class="list-group-item-heading">Create new lesson</h4>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TEST: Add isotope (either bootstrapJS or Jquery isn't working correctly) -->
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!-- isotope -->
+	<script src="http://dev.bop.fearless.tech/js/isotope.pkgd.min.js"></script>
+    <script>
+        // Standard Isotope nav buttons
+        $( function() {
+            // init Isotope
+            var $grid = $('.grid').isotope({
+                itemSelector: '.library-item',
+                layoutMode: 'fitRows'
+            });
+            // filter functions
+            var filterFns = {
+                // show if number is greater than 50
+                numberGreaterThan50: function() {
+                    var number = $(this).find('.number').text();
+                    return parseInt( number, 10 ) > 50;
+                },
+                // show if name ends with -ium
+                ium: function() {
+                    var name = $(this).find('.name').text();
+                    return name.match( /ium$/ );
+                }
+            };
+            // bind filter button click
+            $('.filters-button-group').on( 'click', 'button', function() {
+                var filterValue = $( this ).attr('data-filter');
+                // use filterFn if matches value
+                filterValue = filterFns[ filterValue ] || filterValue;
+                $grid.isotope({ filter: filterValue });
+            });
+            // filter items when filter link is clicked
+            $('.filters-button-group a').click(function(){
+                var filterValue = $( this ).attr('data-filter');
+                // use filterFn if matches value
+                filterValue = filterFns[ filterValue ] || filterValue;
+                $grid.isotope({ filter: filterValue });
+                transformsEnabled: false //Disable transformations
+            });
+
+            <!--// THIS WAS THE CODE TO TRY AND MAKE THE PAGE STOP JUMPING ON CLICK Not WOrking $('.filters-button-group a').click(function(evt){
+            // evt.preventDefault();
+            // }); -->
+
+            // change is-checked class on buttons
+            $('.button-group').each( function( i, buttonGroup ) {
+                var $buttonGroup = $( buttonGroup );
+                $buttonGroup.on( 'click', 'button', function() {
+                    $buttonGroup.find('.is-checked').removeClass('is-checked');
+                    $( this ).addClass('is-checked');
+                });
+            });
+
+        });
+
+        // Isotope Search
+        $( function() {
+            // quick search regex
+            var qsRegex;
+
+            // init Isotope
+            var $grid = $('.grid').isotope({
+                itemSelector: '.library-item',
+                layoutMode: 'fitRows',
+                filter: function() {
+                    return qsRegex ? $(this).text().match( qsRegex ) : true;
+                }
+            });
+
+            // use value of search field to filter
+            var $quicksearch = $('.quicksearch').keyup( debounce( function() {
+                qsRegex = new RegExp( $quicksearch.val(), 'gi' );
+                $grid.isotope();
+            }, 200 ) );
+
+        });
+
+        // debounce so filtering doesn't happen every millisecond
+        function debounce( fn, threshold ) {
+            var timeout;
+            return function debounced() {
+                if ( timeout ) {
+                    clearTimeout( timeout );
+                }
+                function delayed() {
+                    fn();
+                    timeout = null;
+                }
+                timeout = setTimeout( delayed, threshold || 100 );
+            }
+        }
+	</script>
+
+    <!-- END TEST -->

@@ -160,9 +160,14 @@ body {
     font-style: normal;
 }
 
-a:hover, a:focus {
-    text-decoration: none;
+a {
+    color: #333;
 }
+
+    a:hover, a:focus {
+        text-decoration: none;
+        color: #ea6158;
+    }
 
 .label-science {
     border-color: #00BCD4;
@@ -204,12 +209,53 @@ a:hover, a:focus {
     background: #E91E63;
 }
 
+.unit-blue,
+.unit-blue.panel-heading {
+    background: #426ca9;
+    color: #fff;
+}
+
+.unit-red,
+.unit-red.panel-heading {
+    background: #ea6158;
+    color: #fff;
+}
+
+.unit-darkblue,
+.unit-darkblue.panel-heading {
+    background: #2c3c56;
+    color: #fff;
+}
+
+.unit-lightblue,
+.unit-lightblue.panel-heading {
+    background: #a0d0cb;
+    color: #fff;
+}
+
+.unit-yellow,
+.unit-yellow.panel-heading {
+    background: #fbe8ac;
+    color: #fff;
+}
+
+.unit-crimson,
+.unit-crimson.panel-heading {
+    background: #943234;
+    color: #fff;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
               FORMS
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.panel-default > .panel-heading {
+    background: #fff;
+    border: 0;
+}
 
 .advanced-wrapper {
     /* extend form-control */
@@ -232,3 +278,23 @@ a:hover, a:focus {
 .ql-snow.ql-toolbar {
     border-bottom: 1px solid #eee;
 }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              TILES
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.library-item .panel {
+    border-color: #ddd;
+    cursor: pointer;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+
+    .library-item .panel:hover,
+    .library-item .panel:active {
+        border: 1px solid #ea6158;
+    }
