@@ -15,14 +15,21 @@ var path = require('path'),
 exports.create = function(req, res) {
   var lesson = new Lesson(req.body);
   lesson.user = req.user;
-
-  lesson.save(function(err) {
-    if (err) {
+  lesson.attach('handout', req.files.handoutFile, function(error) {
+    if (error) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(error)
       });
     } else {
-      res.json(lesson);
+      lesson.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(lesson);
+        }
+      });
     }
   });
 };

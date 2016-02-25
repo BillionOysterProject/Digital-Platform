@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+  crate = require('mongoose-crate'),
+  LocalFS = require('mongoose-crate-localfs'),
   Schema = mongoose.Schema;
 
 
@@ -13,49 +15,49 @@ var mongoose = require('mongoose'),
 //TODO > make handoutsFileInput, vocabulary, nycScienceScopeSequence, ngssStandards, commonCoreEla, commonCoreMath
 var instructionPlans = {
   engage: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   },
   explore: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   },
   explain: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   },
   elaborate: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   },
   evaluate: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   }
 };
 
 var standardsOptions = {
-  nycScienceScopeSequence: {
+  nycScienceScopeSequence: [{
     type: String,
     required: false
-  },
-  ngssStandards: {
+  }],
+  ngssStandards: [{
     type: String,
     required: false
-  },
-  commonCoreEla: {
+  }],
+  commonCoreEla: [{
     type: String,
     required: false
-  },
-  commonCoreMath: {
+  }],
+  commonCoreMath: [{
     type: String,
     required: false
-  }
+  }]
 };
 
 var LessonSchema = new Schema({
@@ -63,52 +65,48 @@ var LessonSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  lessonUpload: {
-    title: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    unit: {
-      type: String,
-      required: true,
-      trim: true
-    }
+  title: {
+    type: String,
+    default: '',
+    trim: true,
+    required: 'Title cannot be blank'
+
+  },
+  unit: {
+    type: Schema.ObjectId,
+    ref: 'Unit',
+    require: 'Unit cannot be blank'
   },
   lessonOverview: {
     grade: {
       type: String,
-      required: true,
-      trim: true
+      required: true
     },
     classPeriods: {
       type: String,
-      required: true,
-      trim: true
+      required: true
     },
     setting: {
       type: String,
-      required: true,
-      trim: true
+      required: true
     },
-    subjectAreas: {
+    subjectAreas: [{
+      type: String,
+      required: true
+    }],
+    protocolConnections: [{
       type: String,
       required: true,
       trim: true
-    },
-    protocolConnections: {
-      type: String,
-      required: true,
-      trim: true
-    },
+    }],
     lessonSummary: {
-      type: String,
+      type: Buffer,
       required: true,
       trim: true
     }
   },
   lessonObjectives: {
-    type: String,
+    type: Buffer,
     required: true,
     trim: true
   },
@@ -127,13 +125,13 @@ var LessonSchema = new Schema({
       type: String,
       required: false
     },
-    vocabulary: {
+    vocabulary: [{
       type: String,
       required: false
-    }
+    }]
   },
   background: {
-    type: String,
+    type: Buffer,
     required: false,
     trim: true
   },
@@ -164,14 +162,6 @@ var LessonSchema = new Schema({
 /**
  * Validations
  */
-LessonSchema.path('lessonUpload.title').validate(function(title) {
-  return !!title;
-}, 'Title cannot be blank');
-
-LessonSchema.path('lessonUpload.unit').validate(function(unit) {
-  return !!unit;
-}, 'Unit cannot be blank');
-
 function instructionPlanValidator(value) {
   if (value.engage || value.explore || value.explain || value.elaborate || value.evaluate) {
     return true;
@@ -194,7 +184,16 @@ function standardsValidator(value) {
 LessonSchema.statics.load = function(id, cb) {
   this.findOne({
     _id: id
-  }).populate('user', 'name username').exec(cb);
+  }).populate('user', 'name username displayName').exec(cb);
 };
+
+LessonSchema.plugin(crate, {
+  storage: new LocalFS({
+    directory: 'files/'
+  }),
+  fields: {
+    handout: {}
+  }
+});
 
 mongoose.model('Lesson', LessonSchema);

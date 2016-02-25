@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * School Schema
+ * School Organization Schema
  */
 var SchoolOrgSchema = new Schema({
   created: {
