@@ -51,7 +51,8 @@
 
     $scope.$watch('$viewContentLoaded', function(event) {
       $(function () {
-        $('.select2').select2({
+        $('.select2').select2();
+        $('.select2create').select2({
           tags: true
         });
       });

@@ -15,27 +15,27 @@ var mongoose = require('mongoose'),
 //TODO > make handoutsFileInput, vocabulary, nycScienceScopeSequence, ngssStandards, commonCoreEla, commonCoreMath
 var instructionPlans = {
   engage: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },
   explore: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },
   explain: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },
   elaborate: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },
   evaluate: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   }
@@ -100,13 +100,13 @@ var LessonSchema = new Schema({
       trim: true
     }],
     lessonSummary: {
-      type: Buffer,
+      type: String,
       required: true,
       trim: true
     }
   },
   lessonObjectives: {
-    type: Buffer,
+    type: String,
     required: true,
     trim: true
   },
@@ -131,7 +131,7 @@ var LessonSchema = new Schema({
     }]
   },
   background: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },
