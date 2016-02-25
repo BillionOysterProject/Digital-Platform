@@ -1,5 +1,5 @@
 <section>
-    <div class="container">
+    <div class="container-fluid">
         <div class="page-header">
             <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
         </div>
@@ -205,7 +205,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <ul class="nav nav-tabs nav-tabs-right nav-justified" id="tabs-lessonPlan" role="tablist">
+                        <ul class="nav nav-pills nav-justified" role="tablist">
                             <li role="presentation" class="active"><a href="#engage" data-toggle="tab" aria-controls="engage" role="tab">Engage</a></li>
                             <li role="presentation"><a href="#explore" data-toggle="tab" aria-controls="explore" role="tab">Explore</a></li>
                             <li role="presentation"><a href="#explain" data-toggle="tab" aria-controls="explain" role="tab">Explain</a></li>
@@ -373,8 +373,8 @@
             </div>
         </div>
         
-        <a class="btn btn-default" href="index.html" role="button">Cancel</a>
-        <a class="btn btn-primary" href="success.html" role="button">Create Lesson</a>
+        <a class="btn btn-default" href="/lessons" role="button">Cancel</a>
+        <a class="btn btn-primary" href="/lessons" role="button">{{vm.lesson._id ? 'Update lesson' : 'Create lesson'}}</a>
     </div>
 </section>
 
@@ -453,8 +453,4 @@
             tags: true
         });
     });
-    $('#myTabs a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    })
 </script>

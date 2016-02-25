@@ -160,6 +160,10 @@ body {
     font-style: normal;
 }
 
+a:hover, a:focus {
+    text-decoration: none;
+}
+
 .label-science {
     border-color: #00BCD4;
     background: #00BCD4;

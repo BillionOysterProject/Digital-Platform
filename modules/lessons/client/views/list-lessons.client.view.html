@@ -3,29 +3,34 @@
         <h1>Lessons</h1>
     </div>
     <div class="row">
-        <a ng-repeat="lesson in vm.lessons" ui-sref="lessons.view({ lessonId: lesson._id })" class="col-sm-6 col-md-3">
-            <div class="thumbnail">
+        <div ng-repeat="lesson in vm.lessons" class="col-sm-6 col-md-3">
+            <a class="thumbnail" ui-sref="lessons.view({ lessonId: lesson._id })">
                 <div class="caption">
-                    <h3 class="list-group-item-heading" ng-bind="lesson.title"></h3>
-                    <p>
-                        <small class="list-group-item-text">Posted on
-                            <span ng-bind="lesson.created | date:'mediumDate'"></span>
-                            by
-                            <span ng-if="lesson.user" ng-bind="lesson.user.displayName"></span>
-                            <span ng-if="!lesson.user">Deleted User</span>
-                        </small>
-                    </p>
+                    <h3 class="list-group-item-heading" ng-bind="lesson.lessonUpload.title"></h3>
+                    <h5 ng-bind="lesson.lessonUpload.unit"></h5>
                     <p class="list-group-item-text" ng-bind="lesson.content"></p>
+                    <p><!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
+                        <span class="label label-science">Science</span>
+                        <span class="label label-socialstudies">History</span>
+                        <span class="label label-math">Math</span>
+                        <span class="label label-science">Ecology</span>
+                    </p>
+                    <p class="small" ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                    <!-- TODO: Need to get images into user -->
+                    <p class="text-right">
+                        <span ng-if="lesson.user" ng-bind="lesson.user.displayName"></span>
+                        <img ng-src="{{imageURL}}" alt="{{vm.lesson.user.displayName}}" class="header-profile-image" />
+                    </p>
                 </div>
-            </div>
-        </a>
-        <a class="col-sm-6 col-md-3" ui-sref="lessons.create">
-            <div class="thumbnail text-center">
+            </a>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <a class="thumbnail text-center" ui-sref="lessons.create">
                 <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
                 <div class="caption">
                     <h4 class="list-group-item-heading">Create new lesson</h4>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
 </section>
