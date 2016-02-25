@@ -34,7 +34,7 @@
         },
         data: {
           roles: ['team lead'],
-          pateTitle: 'Units Create'
+          pageTitle: 'Units Create'
         }
       })
       .state('units.edit', {

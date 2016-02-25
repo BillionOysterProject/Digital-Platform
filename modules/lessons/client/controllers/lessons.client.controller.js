@@ -14,18 +14,16 @@
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
-    vm.remove = remove;
-    vm.save = save;
 
     // Remove existing Lesson
-    function remove() {
+    vm.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
         vm.lesson.$remove($state.go('lessons.list'));
       }
     }
 
     // Save Lesson
-    function save(isValid) {
+    vm.save = function(isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
@@ -47,6 +45,10 @@
       function errorCallback(res) {
         vm.error = res.data.message;
       }
+    }
+
+    vm.cancel = function() {
+      $state.go('lessons.list');
     }
 
     $scope.$watch('$viewContentLoaded', function(event) {
