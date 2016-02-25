@@ -8,7 +8,6 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
-        'public/lib/dropzone/downloads/css/basic.css',
         'public/lib/dropzone/downloads/css/dropzone.css',
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css'
       ],
