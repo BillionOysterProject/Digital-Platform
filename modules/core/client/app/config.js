@@ -13,7 +13,8 @@ var ApplicationConfiguration = (function () {
     'ui.utils', 
     'angularFileUpload', 
     'ngQuill', 
-    'ngDropzone'];
+    'ngDropzone',
+    'iso.directives'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
