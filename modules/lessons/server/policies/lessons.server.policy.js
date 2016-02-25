@@ -16,10 +16,10 @@ exports.invokeRolesPolicies = function () {
     roles: ['admin'],
     allows: [{
       resources: '/api/lessons',
-      permissions: ['get']
+      permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId',
-      permissions: ['get']
+      permissions: ['*']
     }]
   }, {
     roles: ['team lead'],
