@@ -40,6 +40,12 @@
       state: 'settings.accounts'
     });
 
+    Menus.addSubMenuItem('account', 'settings', {
+      title: 'Manage Users',
+      state: 'admin.users',
+      roles: ['admin']
+    });
+
   }
 
 })();

@@ -24,25 +24,31 @@
 
     // Save Lesson
     vm.save = function(isValid) {
+      console.log('save');
       if (!isValid) {
+        console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
+        console.log('updating lesson');
         vm.lesson.$update(successCallback, errorCallback);
       } else {
+        console.log('saving new lesson');
         vm.lesson.$save(successCallback, errorCallback);
       }
 
       function successCallback(res) {
+        console.log('successful');
         $state.go('lessons.view', {
           lessonId: res._id
         });
       }
 
       function errorCallback(res) {
+        console.log('error: ' + res.data.message);
         vm.error = res.data.message;
       }
     }

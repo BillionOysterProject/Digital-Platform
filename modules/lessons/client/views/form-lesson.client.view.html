@@ -1,6 +1,6 @@
 <section>
     <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid)" novalidate>
-    <div class="container-fluid">
+    <div class="container-fluid">{{vm.form.lessonForm.$errors}}
         <div class="page-header">
             <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
         </div>
@@ -10,15 +10,18 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="lessontitle">Lesson Title</label>
-                            <input class="form-control" name="lessontitle" ng-model="vm.lesson.title"/>
+                        <div class="form-group" show-errors>
+                            <label for="lessonTitle">Lesson Title</label>
+                            <input class="form-control" name="lessonTitle" ng-model="vm.lesson.title" required/>
+                            <div ng-messages="vm.form.lessonForm.lessonTitle.$error" role="alert">
+                                <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="Unit">Unit</label>
-                            <select class="form-control" ng-model="vm.lesson.unit">
+                            <label for="unit">Unit</label>
+                            <select class="form-control" name="unit" ng-model="vm.lesson.unit" required>
                                 <!-- TODO: This should be dynamic to pull in the units that the admin has created elsewhere in the app -->
                                 <option>NYC's Urban Ecosystem</option>
                                 <option>Oysters</option>
@@ -26,13 +29,16 @@
                                 <option>Sessile Organisms</option>
                                 <option>Water Quality</option>
                             </select>
+                            <div ng-messages="vm.form.lessonForm.unit.$error" role="alert">
+                                <p class="help-block error-text" ng-message="required">Unit is required.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <!-- TODO: Wire up a featured image for each article -->
-                            <label for="Image">Featured Image</label>
-                            <input type="file" class="form-control" />
+                            <label for="image">Featured Image</label>
+                            <input type="file" name="image" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -48,8 +54,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="Grade">Grade</label>
-                                    <select class="form-control" ng-model="vm.lesson.lessonOverview.grade">
+                                    <label for="grade">Grade</label>
+                                    <select class="form-control" name="grade" ng-model="vm.lesson.lessonOverview.grade" required>
                                         <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                                         <option>6-8th</option>
                                         <option>6th</option>
@@ -61,12 +67,15 @@
                                         <option>11th</option>
                                         <option>12th</option>
                                     </select>
+                                    <div ng-messages="vm.form.lessonForm.grade.$error" role="alert">
+                                        <p class="help-block error-text" ng-message="required">Grade is required.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="Grade">Class Periods</label>
-                                    <select class="form-control" ng-model="vm.lesson.lessonOverview.classPeriods">
+                                    <label for="classPeriods">Class Periods</label>
+                                    <select class="form-control" name="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods" required>
                                         <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                                         <option>1</option>
                                         <option>2</option>
@@ -78,25 +87,31 @@
                                         <option>8</option>
                                         <option>9</option>
                                     </select>
+                                    <div ng-messages="vm.form.lessonForm.classPeriods.$error" role="alert">
+                                        <p class="help-block error-text" ng-message="required">Class period is required.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="Setting">Setting</label>
-                                    <select class="form-control" ng-model="vm.lesson.lessonOveriew.setting">
+                                    <label for="settings">Setting</label>
+                                    <select class="form-control" name="settings" ng-model="vm.lesson.lessonOveriew.setting" required>
                                         <option>Classroom</option>
                                         <option>Field</option>
                                     </select>
+                                    <div ng-messages="vm.form.lessonForm.title.$error" role="alert">
+                                        <p class="help-block error-text" ng-message="required">Setting is required.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="SubjectArea">
+                            <label for="subjectArea">
                                 Subject Area(s)
                             </label> <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
-                            <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.lessonOverview.subjectArea">
+                            <select class="select2 form-control" name="subjectArea" multiple="multiple" ng-model="vm.lesson.lessonOverview.subjectArea" required>
                                 <optgroup label="Science">
                                     <option value="ecology">Ecology</option>
                                     <option value="geologyeatchscience">Geology and Earth Science </option>
@@ -122,22 +137,26 @@
                                 <option value="music">Music</option>
                                 <option value="art">Art</option>
                             </select>
+                            <div ng-messages="vm.form.lessonForm.subjectArea.$error" role="alert">
+                                <p class="help-block error-text" ng-message="required">Subject area is required.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="protocolconnections">Protocol Connections</label>
+                            <label for="protocolConnections">Protocol Connections</label>
+                            <!-- TODO: should be required -->
                             <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate 
                                 Selections should turn into "tags" using select2. Multiple selections should be able to be made.
                                 Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
-                            <select class="select2 form-control" multiple="multiple" placeholder="Protocol 1: Site Conditions" ng-model="vm.lesson.lessonOverview.protocolConnections"></select>
+                            <select class="select2 form-control" name="protocolConnections" multiple="multiple" placeholder="Protocol 1: Site Conditions" ng-model="vm.lesson.lessonOverview.protocolConnections"></select>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Lesson Summary" ng-model="vm.lesson.lessonOverview.lessonSummary"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" name="lessonSummary" in-title="Lesson Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -147,7 +166,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Objectives" ng-model="vm.lesson.lessonObjectives"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" name="lessonObjectives" in-title="Objectives" ng-model="vm.lesson.lessonObjectives" required="true"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -159,8 +178,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="objectives">Supplies</label>
-                            <select class="select2create form-control" multiple="multiple" ng-model="vm.lesson.materialsResources.supplies"></select>
+                            <label for="supplies">Supplies</label>
+                            <!-- TODO: should be required, but not populated yet -->
+                            <select class="select2create form-control" name="supplies" multiple="multiple" ng-model="vm.lesson.materialsResources.supplies"></select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -170,7 +190,7 @@
                             <!-- TODO: Vocabulary items should be stored in an admin-controlled Glossary. Each vocab word has a definition
                                 stored with it. From this page, should have the option to add a vocab item with a definition to the Glossary
                                 (in a modal?) which would then update the list to choose from here -->
-                            <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.materialsResources.vocabulary">
+                            <select class="select2 form-control" name="vocabulary" multiple="multiple" ng-model="vm.lesson.materialsResources.vocabulary">
                                 <option value="art">Art</option>
                                 <option value="ecosystem">Ecosystem</option>
                                 <option value="hypothesis">Hypothesis</option>
@@ -218,7 +238,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
-                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Background" ng-model="vm.lesson.background"></wysiwyg-editor>
+                    <wysiwyg-editor outer-column="col-md-12 form-group" name="background" in-title="Background" ng-model="vm.lesson.background"></wysiwyg-editor>
                 </div>
             </div>
         </div>
@@ -240,27 +260,27 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="engage">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Engage" ng-model="vm.lesson.instructionPlan.engage"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="engage" in-title="Engage" ng-model="vm.lesson.instructionPlan.engage"></wysiwyg-editor>
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="explore">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Explore" ng-model="vm.lesson.instructionPlan.explore"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="explore" in-title="Explore" ng-model="vm.lesson.instructionPlan.explore"></wysiwyg-editor>
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="explain">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Explain" ng-model="vm.lesson.instructionPlan.explain"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="explain" in-title="Explain" ng-model="vm.lesson.instructionPlan.explain"></wysiwyg-editor>
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="elaborate">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Elaborate" ng-model="vm.lesson.instructionPlan.elaborate"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="elaborate" in-title="Elaborate" ng-model="vm.lesson.instructionPlan.elaborate"></wysiwyg-editor>
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="evaluate">
                                 <div class="row">
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Evaluate" ng-model="vm.lesson.instructionPlan.evaluate"></wysiwyg-editor>
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="evaluate" in-title="Evaluate" ng-model="vm.lesson.instructionPlan.evaluate"></wysiwyg-editor>
                                 </div>
                             </div>
                         </div>
@@ -285,7 +305,7 @@
                                 <label for="nycsciencescope">New York City Science Scope & Sequence</label>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.standards.nycScienceScopeSequence">
+                                        <select class="select2 form-control" name="nycsciencescope" multiple="multiple" ng-model="vm.lesson.standards.nycScienceScopeSequence">
                                             <optgroup label="PS1 Matter and Its Interactions">
                                                 <option value="ps1A">PS1A Structure and Properties of matter</option>
                                                 <option value="ps1b">PS1B Chemical Reactions</option>
@@ -315,7 +335,7 @@
                                 <label for="ngssstandards">NGSS Standards</label>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.standards.ngssStandards">
+                                        <select class="select2 form-control" name="ngssstandards" multiple="multiple" ng-model="vm.lesson.standards.ngssStandards">
                                             <optgroup label="PS1 Matter and Its Interactions">
                                                 <option value="ps1A">PS1A Structure and Properties of matter</option>
                                                 <option value="ps1b">PS1B Chemical Reactions</option>
@@ -345,7 +365,7 @@
                                 <label for="commoncoreela">Common Core ELA</label>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.standards.commonCoreEla">
+                                        <select class="select2 form-control" name="commoncoreela" multiple="multiple" ng-model="vm.lesson.standards.commonCoreEla">
                                             <optgroup label="PS1 Matter and Its Interactions">
                                                 <option value="ps1A">PS1A Structure and Properties of matter</option>
                                                 <option value="ps1b">PS1B Chemical Reactions</option>
@@ -375,7 +395,7 @@
                                 <label for="commoncoremath">Common Core Math</label>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <select class="select2 form-control" multiple="multiple" ng-model="vm.lesson.standards.commonCoreMath">
+                                        <select class="select2 form-control" name="commoncoremath" multiple="multiple" ng-model="vm.lesson.standards.commonCoreMath">
                                             <optgroup label="PS1 Matter and Its Interactions">
                                                 <option value="ps1A">PS1A Structure and Properties of matter</option>
                                                 <option value="ps1b">PS1B Chemical Reactions</option>
@@ -405,6 +425,9 @@
         
         <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
         <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Create lesson'}}</button>
+    </div>
+    <div ng-show="vm.error" class="text-danger">
+        <strong ng-bind="vm.error"></strong>
     </div>
 </form>
 </section>
