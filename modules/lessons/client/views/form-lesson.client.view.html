@@ -18,7 +18,7 @@
                         <div class="form-group">
                             <label for="Unit">Unit</label>
                             <select class="form-control">
-                                <!-- TODO: This should be dynamic to pull in the units-->
+                                <!-- TODO: This should be dynamic to pull in the units that the admin has created elsewhere in the app -->
                                 <option>NYC's Urban Ecosystem</option>
                                 <option>Oysters</option>
                                 <option>Mobile Organisms</option>
@@ -80,7 +80,10 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="protocolconnections">Protocol Connections</label>
-                                    <input type="text" class="form-control" id="lessontitle" placeholder="Lesson Title">
+                                    <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate 
+                                        Selections should turn into "tags" using select2. Multiple selections should be able to be made.
+                                        Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
+                                    <input type="text" class="form-control" id="lessontitle" placeholder="Protocol 1: Site Conditions">
                                 </div>
                             </div>
                         </div>
@@ -145,6 +148,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="objectives">Supplies</label>
+                                <!-- TODO: Whatever is typed should become a tag within the textarea (select2?) -->
                                 <textarea class="form-control" rows="6"></textarea>
                             </div>
                         </div>
@@ -153,6 +157,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="vocabulary">Teacher Resources</label>
+                                <!-- TODO: Whatever is typed should become a tag within the textarea (select2?) -->
                                 <textarea class="form-control" rows="6" placeholder="This is a dynamic module area"></textarea>
                             </div>
                         </div>
@@ -162,6 +167,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-8">
+                                <!-- TODO: Give location for upload files to be stored in the lesson -->
                                 <label for="handouts">Handouts</label>
                                 <form action="/file-upload" class="dropzone" id="lessonHandouts">
                                     <div class="fallback">
@@ -171,6 +177,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="vocabulary">Vocabulary</label>
+                                <!-- TODO: Vocabulary items should be stored in an admin-controlled Glossary. Each vocab word has a definition
+                                    stored with it. From this page, should have the option to add a vocab item with a definition to the Glossary
+                                    (in a modal?) which would then update the list to choose from here -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <select class="select2 form-control" multiple="multiple">
@@ -252,6 +261,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
+                                <!-- TODO: These should be search boxes that an user can start typing and get results back 
+                                    from the app searching an external API and autopopulating the field
+                                    Similar to https://select2.github.io/examples.html#data-ajax 
+                                    Users will have an option (in a modal?) to add a new Standard from a list of APIs
+                                    we have already pulled in other than these top four -->
                                 <label for="nycsciencescope">New York City Science Scope & Sequence</label>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -381,7 +395,7 @@
 
 
 
-
+<!-- OLD DATA -- Need to get modals working -- not sure if this is still needed for drilling into Subject Areas?? -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -444,6 +458,8 @@
         </div>
     </div>
 </div>
+<!--END OLD DATA-->
+
 
 
 <link href="https://raw.githubusercontent.com/enyo/dropzone/master/dist/min/dropzone.min.css" rel="stylesheet" />
