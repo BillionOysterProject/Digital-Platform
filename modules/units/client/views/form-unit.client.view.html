@@ -1,3 +1,147 @@
-<div class="content" ng-controller="LessonsController">
-  <p>Unit Form</p>
-</div>
+<section>
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>{{vm.unit._id ? 'Edit unit' : 'Create new unit'}}</h1>
+        </div>
+
+        <!-- Unit -->
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Unit Title</label>
+                            <input class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Color</label>
+                            <small>Enter a hex code to be used for the unit</small>
+                            <input type="text" class="form-control" placeholder="#426ca9" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Image">Icon</label>
+                            <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons">glyphicon</a> name</small>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
+                                    <!-- TODO: Update with their inputed selection -->
+                                </span>
+                                <input type="text" class="form-control" placeholder="glyphicon-grain" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stage 1: Desired Results -->
+        <h4>Stage 1: Desired Results</h4>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3>Enduring Understandings</h4>
+                <p>The concepts and skills students will understand and be able to use several years into the future.</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Field Work</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Science Content</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Essential Questions</label>
+                            <small>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</small>
+                            <input type="text" class="form-control">
+                            <input type="text" class="form-control">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Acquisition</label>
+                        <small>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</small>
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active"><a href="#science-cs" data-toggle="tab" aria-controls="science-cs" role="tab">Science Content/Skills</a></li>
+                            <li role="presentation"><a href="#math-cs" data-toggle="tab" aria-controls="math-cs" role="tab">Math Content/Skills</a></li>
+                            <li role="presentation"><a href="#field-cs" data-toggle="tab" aria-controls="field-cs" role="tab">Field Content/Skills</a></li>
+                        </ul>
+                        <br />
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="science-cs">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Science Content/Skills" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="math-cs">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Math Content/Skills" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="field-cs">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Field Content/Skills" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Lessons</label>
+                        <small>How will students acquire knowledge and skills?</small>
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li role="presentation" class="active"><a href="#science-l" data-toggle="tab" aria-controls="science-l" role="tab">Science Lessons</a></li>
+                            <li role="presentation"><a href="#math-l" data-toggle="tab" aria-controls="math-l" role="tab">Math Lessons</a></li>
+                            <li role="presentation"><a href="#field-l" data-toggle="tab" aria-controls="field-l" role="tab">Field Content/Skills</a></li>
+                        </ul>
+                        <br />
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="science-l">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Science Lessons" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="math-l">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Math Lessons" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="field-l">
+                                <div class="row">
+                                    <wysiwyg-editor outer-column="col-md-12 form-group" in-title="Field Lessons" ng-model=""></wysiwyg-editor>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <button class="btn btn-default">Cancel</button>
+        <button class="btn btn-primary">{{vm.lesson._id ? 'Update unit' : 'Create unit'}}</button>
+    </div>
+</section>
