@@ -20,7 +20,7 @@
       if (confirm('Are you sure you want to delete?')) {
         vm.lesson.$remove($state.go('lessons.list'));
       }
-    }
+    };
 
     // Save Lesson
     vm.save = function(isValid) {
@@ -51,11 +51,11 @@
         console.log('error: ' + res.data.message);
         vm.error = res.data.message;
       }
-    }
+    };
 
     vm.cancel = function() {
       $state.go('lessons.list');
-    }
+    };
 
     $scope.$watch('$viewContentLoaded', function(event) {
       $(function () {

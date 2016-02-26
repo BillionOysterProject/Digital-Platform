@@ -122,7 +122,7 @@ var UnitSchema = new Schema({
     type: [{
       type: String
     }],
-    default: ['team lead']
+    default: ['admin']
   },
   updated: {
     type: Array

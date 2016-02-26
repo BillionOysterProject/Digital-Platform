@@ -6,10 +6,11 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Unit = mongoose.model('Unit'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  _ = require('lodash');
 
 /**
- * Create an article
+ * Create an unit
  */
 exports.create = function (req, res) {
   var unit = new Unit(req.body);
@@ -26,39 +27,45 @@ exports.create = function (req, res) {
   });
 };
 
- /**
-  * Show the current unit
-  */
+/**
+ * Show the current unit
+ */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var unit = req.unit ? req.unit.toJSON() : {};
-
-  // Add a custom field to the Unit, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since ti doesn't exist in the Unit model.
-  unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true: false;
 
   res.json(unit);
 };
 
 /**
- * Update a unit
+ * Update an unit
  */
-exports.update = function (req, res) {
+exports.update = function(req, res) {
   var unit = req.unit;
 
-  unit.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(unit);
-    }
-  });
+  if (unit) {
+    unit = _.extend(unit, req.body);
+    if (!unit.updated) unit.updated = [];
+    unit.updated.push(Date.now());
+
+    unit.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Cannot update the unit'
+    });
+  }
 };
 
 /**
- * Delete an article
+ * Delete an unit
  */
 exports.delete = function (req, res) {
   var unit = req.unit;
@@ -75,7 +82,7 @@ exports.delete = function (req, res) {
 };
 
 /**
- *
+ * List of Units
  */
 exports.list = function (req, res) {
   Unit.find().sort('-created').populate('user', 'displayName').exec(function (err, units) {
@@ -89,8 +96,8 @@ exports.list = function (req, res) {
   });
 };
 
-/** 
- * Units middleware
+/**
+ * Unit middleware
  */
 exports.unitByID = function (req, res, next, id) {
 
@@ -105,7 +112,7 @@ exports.unitByID = function (req, res, next, id) {
       return next(err);
     } else if (!unit) {
       return res.status(404).send({
-        message: 'No unit with that indentifier has been found'
+        message: 'No unit with that identifier has been found'
       });
     }
     req.unit = unit;

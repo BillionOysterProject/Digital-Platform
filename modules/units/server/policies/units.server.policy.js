@@ -9,38 +9,38 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Articles Permissions
+ * Invoke Units Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
       resources: '/api/units',
-      permissions: ['get']
+      permissions: '*'
     }, {
       resources: '/api/units/:unitId',
-      permissions: ['get']
+      permissions: '*'
     }]
   }, {
-    roles: ['team lead'],
+    roles: ['user', 'team leader', 'team member', 'partner', 'guest'],
     allows: [{
       resources: '/api/units',
-      permissions: '*'
+      permissions: ['get']
     }, {
       resources: '/api/units/:unitId',
-      permissions: '*'
+      permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If Units Policy allows
+ * Check If Units Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If a unit is being processed and the current user create it then allow any manipulation
-  if (req.lesson && req.user && req.unit.user && req.unit.user.id === req.user.id) {
+  // If a unit is being processed and the current user created it then allow any manipulation
+  if (req.unit && req.user && req.unit.user && req.unit.user.id === req.user.id) {
     return next();
   }
 

@@ -20,33 +20,32 @@
         controller: 'UnitsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead'],
           pageTitle: 'Units List'
         }
       })
       .state('units.create', {
         url: '/create',
-        templareUrl: 'modules/units/client/views/form-unit.client.view.html',
+        templateUrl: 'modules/units/client/views/form-unit.client.view.html',
         controller: 'UnitsController',
         controllerAs: 'vm',
         resolve: {
           unitResolve: newUnit
         },
         data: {
-          roles: ['team lead'],
-          pageTitle: 'Units Create'
+          roles: ['user', 'admin'],
+          pageTitle : 'Units Create'
         }
       })
       .state('units.edit', {
         url: '/:unitId/edit',
-        templateUrl: 'modules/units/client/view/form-unit.client.view.html',
+        templateUrl: 'modules/units/client/views/form-unit.client.view.html',
         controller: 'UnitsController',
         controllerAs: 'vm',
         resolve: {
           unitResolve: getUnit
         },
         data: {
-          roles: ['team lead'],
+          roles: ['user', 'admin'],
           pageTitle: 'Edit Unit {{ unitResolve.title }}'
         }
       })
@@ -58,7 +57,7 @@
         resolve: {
           unitResolve: getUnit
         },
-        data: {
+        data:{
           pageTitle: 'Unit {{ unitResolve.title }}'
         }
       });
