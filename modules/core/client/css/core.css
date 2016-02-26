@@ -160,6 +160,17 @@ body {
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Bold-webfont.eot');
+    src: url('fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Roboto-Bold-webfont.woff') format('woff'),
+         url('fonts/Roboto-Bold-webfont.ttf') format('truetype'),
+         url('fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
 a {
     color: #ea6158;
     cursor: pointer;
@@ -258,6 +269,31 @@ a {
     border: 0;
 }
 
+.dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active {
+    background: #f4f7f8;
+}
+
+.dropdown-header {
+    padding: 0 0 5px 0;
+    font-size: 15px;
+}
+
+    .dropdown-menu > li.dropdown-header > a {
+        font-weight: bold;
+        color: #aaa;
+    }
+
 .advanced-wrapper {
     /* extend form-control */
     padding: 6px 12px;
@@ -299,3 +335,12 @@ a {
     .library-item .panel:active {
         border: 1px solid #ea6158;
     }
+
+    .library-item a {
+        color: #000;
+    }
+
+
+
+
+
