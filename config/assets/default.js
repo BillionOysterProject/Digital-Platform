@@ -31,7 +31,7 @@ module.exports = {
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.js',
         'public/lib/angular-dropzone/lib/angular-dropzone.js',
-        'public/lib/angular-ui-select2/src/select2.js'
+        'public/lib/angular-select2/dist/angular-select2.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

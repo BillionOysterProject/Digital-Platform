@@ -15,7 +15,7 @@ var ApplicationConfiguration = (function () {
     'ngQuill', 
     'ngDropzone',
     'iso.directives',
-    'ui.select2'];
+    'rt.select2'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

@@ -118,7 +118,7 @@ var LessonSchema = new Schema({
     },
     teacherResources: {
       type: String,
-      required: true,
+      //required: true, should be required, not all set up yet
       trim: true
     },
     handoutsFileInput: {
