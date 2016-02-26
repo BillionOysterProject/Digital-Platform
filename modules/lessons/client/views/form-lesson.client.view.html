@@ -108,16 +108,16 @@
                                 </div>
                             </div>
                             <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
-                            <select-optgroup outer-column="col-md-6" name="subjectArea" in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectArea" required="true" label-class="control-label required" options="{{vm.subjectAreas}}"></select-optgroup>
-                            <!-- <div class="col-md-6">
+                            <!-- <select-optgroup outer-column="col-md-6" name="subjectArea" in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas" required="true" label-class="control-label required" options="{{vm.subjectAreas}}"></select-optgroup> -->
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="subjectArea" class="control-label required">Subject Area(s)</label> 
-                                    <select2 class="col-md-12" ng-model="vm.lesson.lessonOverview.subjectArea" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true }" multiple required></select2>
-                                    <div ng-messages="vm.form.lessonForm.subjectArea.$error" role="alert">
+                                    <label for="subjectAreas" class="control-label required">Subject Area(s)</label> 
+                                    <select2 class="col-md-12" name="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true }" multiple required></select2>
+                                    <div ng-messages="vm.form.lessonForm.subjectAreas.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Subject area is required.</p>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="row">
                             <select-optgroup outer-column="col-md-12" name="protocolConnections" in-title="Protocol Connections" ng-model="vm.lesson.lessonOverview.protocolConnections" required="false" label-class="control-label" options="{{vm.protocolConnections}}"></select-optgroup>
