@@ -14,7 +14,8 @@ var ApplicationConfiguration = (function () {
     'angularFileUpload', 
     'ngQuill', 
     'ngDropzone',
-    'iso.directives'];
+    'iso.directives',
+    'ui.select2'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

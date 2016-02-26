@@ -57,6 +57,11 @@
       $state.go('lessons.list');
     };
 
+    vm.subjectAreasSet = function($event) {
+      console.log('subject area changed');
+      console.log($event);
+    };
+
     $scope.$watch('$viewContentLoaded', function(event) {
       $(function () {
         $('.select2').select2();

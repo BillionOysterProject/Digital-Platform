@@ -24,7 +24,8 @@
     "parsleyjs": "~2.3.3",
     "font-awesome": "fontawesome#^4.5.0",
     "angular-dropzone": "^0.1.2",
-    "angular-isotope": "^0.1.14"
+    "angular-isotope": "^0.1.14",
+    "angular-ui-select2": "^0.0.5"
   },
   "resolutions": {
     "angular": "~1.3"
