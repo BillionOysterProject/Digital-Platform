@@ -1,9 +1,9 @@
 <section>
   <div class="page-header">
-    <h1 ng-bind="vm.unit.stageOne.title"></h1>
+    <h1 style="color: {{vm.unit.color}}" class="glyphicons {{vm.unit.icon}}">{{vm.unit.title}}</h1>
   </div>
   <div class="pull-right">
-    <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })">
+    <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })"><!-- not working -->
       <i class="glyphicon glyphicon-edit"></i>
     </a>
     <a class="btn btn-primary" ng-click="vm.remove()">
@@ -19,4 +19,82 @@
       <span ng-if="!vm.unit.user">Deleted User</span>
     </em>
   </small>
+  <div>
+    <div>
+      <h2>Stage 1</h2>
+      <h3>Enduring Understandings</h3>
+      <p ng-bind="vm.unit.stageOne.enduringUnderstandings"></p>
+
+      <h3>Essential Questions</h3>
+      <ul ng-repeat="question in vm.unit.stageOne.essentialQuestions" class="list-group-item">
+        <li ng-bind="question"></li>
+      </ul>
+
+      <h3>Aquition</h3>
+      <div>
+        <div>
+          <h4>Science Content/Skills</h4>
+          <ul ng-repeast="scienceContent in vm.unit.stageOne.acquisition.content.science" class="list-group-item">
+            <li ng-bind="scienceContent"></li>
+          </ul>
+
+          <h4>Math Content/Skills</h4>
+          <ul ng-repeast="mathContent in vm.unit.stageOne.acquisition.content.math" class="list-group-item">
+            <li ng-bind="mathContent"></li>
+          </ul>
+
+          <h4>Field Content/Skills</h4>
+          <ul ng-repeast="fieldContent in vm.unit.stageOne.acquisition.content.field" class="list-group-item">
+            <li ng-bind="fieldContent"></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Science Lessons</h4>
+          <ul ng-repeast="scienceLesson in vm.unit.stageOne.acquisition.lessons.science" class="list-group-item">
+            <li ng-bind="scienceLesson"></li>
+          </ul>
+
+          <h4>Math Lessons</h4>
+          <ul ng-repeast="mathLesson in vm.unit.stageOne.acquisition.lessons.math" class="list-group-item">
+            <li ng-bind="mathLesson"></li>
+          </ul>
+
+          <h4>Field Lessons</h4>
+          <ul ng-repeast="fieldLesson in vm.unit.stageOne.acquisition.lessons.field" class="list-group-item">
+            <li ng-bind="fieldLesson"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>Stage 2</h2>
+      <h3>Evidence</h3>
+      <div>
+        <h4>Expectations</h4>
+        <ul ng-repeat="expectation in vm.unit.stageTwo.evidence.expectations" class="list-group-item">
+          <li ng-bind="expectation"></li>
+        </ul>
+
+        <h4>Science and Engineering</h4>
+        <p ng-bind="vm.unit.stageTwo.evidence.scienceAndEngineering"></p>
+
+        <h4>Disciplinary Core Ideas</h4>
+        <p ng-bind="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas"></p>
+
+        <h4>Cross-Cutting Concepts</h4>
+        <p ng-bind="vm.unit.stageTwo.evidence.crossCuttingConcepts"></p>
+      </div>
+      <h3>Assessment Evidence</h3>
+      <div>
+        <h4>Research Projects</h4>
+        <ul ng-repeat="project in vm.unit.stageTwo.assessmentEvidence.researchProjects" class="list-group-item">
+          <li ng-bind="project"><li>
+        </ul>
+
+        <h4>Extensions</h4>
+        <p ng-bind="vm.unit.stageTwo.assessmentEvidence.extentions"></p>
+      </div>
+
+    </div>
+  </div>
 </section>

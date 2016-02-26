@@ -17,98 +17,84 @@ var UnitSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  title: {
+    type: String,
+    required: 'Title is required',
+    default: '',
+    trim: true
+  },
+  color: {
+    type: String,
+    required: 'Color is required',
+    default: '',
+    trim: true
+  },
+  icon: {
+    type: String,
+    required: 'Icon is required',
+    default: '',
+    trim: true
+  },
   stageOne: {
-    unitTitle: {
-      lessonTitle: {
-        type: String,
-        required: true,
-        trim: true
-      }
+    enduringUnderstandings: {
+      type: String,
+      required: 'Enduring understandings is required',
+      default: '',
+      trim: true
     },
-    desiredResults: {
-      fieldWork: {
-        type: String,
-        required: false,
-        trim: true
-      },
-      scienceContent: {
-        type: String,
-        required: false,
-        trim: true
-      }
-    },
-    essentialQuestons: [{
-      question: {
-        type: Array,
-        required: false
-      }
+    essentialQuestions: [{
+      type: String,
+      trim: true
     }],
     acquisition: {
-      scienceContentSkills: {
-        type: String,
-        required: false,
-        trim: true
+      content: {
+        science: [{
+          type: String
+        }],
+        math: [{
+          type: String
+        }],
+        field: [{
+          type: String
+        }],
       },
-      mathContentSkills: {
-        type: String,
-        required: false,
-        trim: true
-      },
-      fieldContentSkills: {
-        type: String,
-        required: false,
-        trim: true
-      }
-    },
-    lessons: {
-      scienceLessons: {
-        type: String,
-        required: false,
-        trim: true
-      },
-      mathLessons: {
-        type: String,
-        required: false,
-        trim: true
-      },
-      fieldLessons: {
-        type: String,
-        required: false,
-        trim: true
+      lessons: {
+        science: [{
+         type: String
+        }],
+        math: [{
+          type: String
+        }],
+        field: [{
+          type: String
+        }]
       }
     }
   },
-  stage2: {
-    stage2Evidence: {
-      numberExpectation: {
+  stageTwo: {
+    evidence: {
+      expectations: [{
         type: String,
-        required: false
-      },
+      }],
       scienceAndEngineering: {
         type: String,
-        required: false,
         trim: true
       },
       disciplinaryCoreIdeas: {
         type: String,
-        required: false,
         trim: true
       },
       crossCuttingConcepts: {
         type: String,
-        required: false,
         trim: true
       }
     },
     assessmentEvidence: {
-      researchProject: {
+      researchProjects: [{
+        type: String
+      }],
+      extentions: {
         type: String,
-        required: false,
-        trim: true
-      },
-      extensions: {
-        type: String,
-        required: false,
         trim: true
       }
     }
@@ -146,7 +132,7 @@ var UnitSchema = new Schema({
 UnitSchema.statics.load = function(id, cb) {
   this.findOne({
     _id: id
-  }).populate('user', 'name username').exec(cb);
+  }).populate('user', 'name username displayName').exec(cb);
 };
 
 mongoose.model('Unit', UnitSchema);
