@@ -37,10 +37,18 @@ var UnitSchema = new Schema({
   },
   stageOne: {
     enduringUnderstandings: {
-      type: String,
-      required: 'Enduring understandings is required',
-      default: '',
-      trim: true
+      fieldWork: {
+        type: String,
+        required: 'Field work is required',
+        default: '',
+        trim: true
+      },
+      scienceContent: {
+        type: String,
+        required: 'Science content is required',
+        default: '',
+        trim: true
+      }
     },
     essentialQuestions: [{
       type: String,
