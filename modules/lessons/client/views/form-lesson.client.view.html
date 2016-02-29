@@ -1,6 +1,6 @@
 <section>
     <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid)" novalidate>
-      <fieldset>
+        <fieldset>
             <div class="container-fluid">
                 <div class="page-header">
                     <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
@@ -11,18 +11,18 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="lessonTitle" class="control-label required">Lesson Title</label>
-                                    <input class="form-control" name="lessonTitle" ng-model="vm.lesson.title" required/>
+                                    <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title" required/>
                                     <div ng-messages="vm.form.lessonForm.lessonTitle.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="unit" class="control-label required">Unit</label>
-                                    <select class="form-control" name="unit" ng-model="vm.lesson.unit" ng-options="unit._id as unit.title for unit in vm.units" required>
+                                    <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit" ng-options="unit._id as unit.title for unit in vm.units" required>
                                         <!-- TODO: This should be dynamic to pull in the units that the admin has created elsewhere in the app -->
                                         <!-- <option value="NYC's Urban Ecosystem">NYC's Urban Ecosystem</option>
                                         <option value="Oysters">Oysters</option>
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <!-- TODO: Wire up a featured image for each article -->
                                     <label for="image" class="control-label">Featured Image</label>
                                     <input type="file" name="image" class="form-control" />
@@ -54,9 +54,9 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                        <div class="form-group" show-errors>
                                             <label for="grade" class="control-label required">Grade</label>
-                                            <select class="form-control" name="grade" ng-model="vm.lesson.lessonOverview.grade" required>
+                                            <select class="form-control" name="grade" id="grade" ng-model="vm.lesson.lessonOverview.grade" required>
                                                 <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                                                 <option>6-8th</option>
                                                 <option>6th</option>
@@ -74,9 +74,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                        <div class="form-group" show-errors>
                                             <label for="classPeriods" class="control-label required">Class Periods</label>
-                                            <select class="form-control" name="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods" required>
+                                            <select class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods" required>
                                                 <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                                                 <option>1</option>
                                                 <option>2</option>
@@ -94,9 +94,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                        <div class="form-group" show-errors>
                                             <label for="settings" class="control-label required">Setting</label>
-                                            <select class="form-control" name="settings" ng-model="vm.lesson.lessonOverview.setting" required>
+                                            <select class="form-control" name="settings" id="settings" ng-model="vm.lesson.lessonOverview.setting" required>
                                                 <option>Classroom</option>
                                                 <option>Field</option>
                                             </select>
@@ -110,9 +110,9 @@
                             <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
                             <!-- <select-optgroup outer-column="col-md-6" name="subjectArea" in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas" required="true" label-class="control-label required" options="{{vm.subjectAreas}}"></select-optgroup> -->
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="subjectAreas" class="control-label required">Subject Area(s)</label> 
-                                    <select2 class="col-md-12" name="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true }" multiple required></select2>
+                                    <select2 class="col-md-12" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true }" multiple required></select2>
                                     <div ng-messages="vm.form.lessonForm.subjectAreas.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Subject area is required.</p>
                                     </div>
@@ -154,11 +154,11 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="supplies" class="control-label required">Supplies</label>
                                     <!-- TODO: should be required, but not populated yet -->
                                     <!-- <select class="select2create form-control" name="supplies" multiple="multiple" ng-model="vm.lesson.materialsResources.supplies"></select> -->
-                                    <textarea name="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies" required></textarea>
+                                    <textarea name="supplies" id="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies" required></textarea>
                                 </div>
                             </div>
                             <select-tags outer-column="col-md-6" name="vobalulary" in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary" label-class="control-label" options="{{vm.vocabulary}}"></select-tags>
@@ -182,7 +182,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <!-- TODO: Give location for upload files to be stored in the lesson -->
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="handouts" class="control-label">Handouts</label>
                                     <form action="/file-upload" class="dropzone" id="lessonHandouts">
                                         <div class="fallback">
@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="vocabulary" class="control-label">Teacher Resources</label>
                                     <!-- TODO: wire up "add resource" modal, wire up table to display added resources-->
                                     <table class="table table-hover">
@@ -413,13 +413,13 @@
             <div ng-show="vm.error" class="text-danger">
                 <strong ng-bind="vm.error"></strong>
             </div>
-            <ul>
+            <!-- <ul>
                 <li ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index"> <strong>{{ key }}</strong> errors
                     <ul>
                         <li ng-repeat="e in errors">{{ e.$name }} has an error: <strong>{{ key }}</strong>.</li>
                     </ul>
                 </li>
-            </ul>
+            </ul> -->
         </fieldset>
     </form>
 </section>
@@ -445,7 +445,7 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="link">
                                 <br />
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
                                     <input type="text" class="form-control" />
                                 </div>
@@ -479,11 +479,11 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group">
+                        <div class="form-group" show-errors>
                             <label>Vocabulary term</label>
                             <input type="text" class="form-control" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" show-errors>
                             <label>Definition</label>
                             <textarea class="form-control" rows="5"></textarea>
                         </div>

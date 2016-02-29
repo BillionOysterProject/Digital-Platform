@@ -68,7 +68,7 @@ var UnitSchema = new Schema({
       },
       lessons: {
         science: [{
-         type: String
+          type: String
         }],
         math: [{
           type: String

@@ -17,6 +17,13 @@
           </div>
         </div>
         <div class="form-group" show-errors>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" ng-model="user.username" placeholder="Username" lowercase required>
+          <div ng-messages="userForm.username.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Username is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
           <label for="email">Email</label>
           <input type="email" id="email" name="email" class="form-control" ng-model="user.email" placeholder="Email" lowercase required>
           <div ng-messages="userForm.email.$error" role="alert">
@@ -25,11 +32,21 @@
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control" ng-model="user.username" placeholder="Username" lowercase required>
-          <div ng-messages="userForm.username.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Username is required.</p>
-          </div>
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" class="form-control" ng-model="user.title" placeholder="Title">
+        </div>
+        <h3>Social Profiles</h3>
+        <div class="form-group" show-errors>
+          <label for="twitter">Twitter</label>
+          <input type="text" id="twitter" name="twittle" class="form-control" ng-model="user.socialProfiles.twitter" placeholder="Twitter">
+        </div>
+        <div class="form-group" show-errors>
+          <label for="facebook">Facebook</label>
+          <input type="text" id="facebook" name="facebook" class="form-control" ng-model="user.socialProfiles.facebook" placeholder="Facebook">
+        </div>
+        <div class="form-group" show-errors>
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" class="form-control" ng-model="user.socialProfiles.website" placeholder="Website">
         </div>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Save Profile</button>

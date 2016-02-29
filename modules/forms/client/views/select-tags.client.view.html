@@ -1,6 +1,6 @@
 <div class="{{outerColumn}}">
   <div class="form-group">
-    <label form="{{name}}" class="{{labelClass}}">{{inTitle}}</label>
-    <select2 class="col-md-12" ng-model="outModel" s2-options="item.value as item.name for item in {{options}}" options="{ allowClear: true }" multiple required="{{required}}"></select2>
+    <label for="{{name}}" class="{{labelClass}}">{{inTitle}}</label>
+    <select2 class="col-md-12" ng-model="outModel" s2-options="item.value as item.name for item in {{options}}" options="{ allowClear: true }" multiple required="{{required}}" name="{{name}}" id="{{name}}"></select2>
   </div>
 </div>

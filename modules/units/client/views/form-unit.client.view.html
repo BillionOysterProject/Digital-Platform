@@ -11,26 +11,26 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="unitTitle" class="control-label required">Unit Title</label>
-                                    <input class="form-control" name="unitTitle" ng-model="vm.unit.title" required/>
+                                    <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title" required/>
                                     <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alrt">
                                         <p class="help-block error-text" ng-message="required">Unit title is required.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="color" class="control-label required">Color</label>
                                     <small>Enter a hex code</small>
-                                    <input type="text" class="form-control" placeholder="#426ca9" name="color" ng-model="vm.unit.color" required/>
+                                    <input type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required/>
                                     <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="icon" class="control-label required">Icon</label>
                                     <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons">glyphicon</a> name</small>
                                     <div class="input-group">
@@ -38,7 +38,7 @@
                                             <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
                                             <!-- TODO: Update with their inputed selection -->
                                         </span>
-                                        <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" ng-model="vm.unit.icon" required/>
+                                        <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" id="icon" ng-model="vm.unit.icon" required/>
                                         <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
                                             <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                         </div>
@@ -57,15 +57,15 @@
                         <p>The concepts and skills students will understand and be able to use several years into the future.</p>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="fieldWork" class="control-label required">Field Work</label>
-                                    <input type="text" class="form-control" name="fieldWork" ng-model="vm.unit.stageOne.enduringUnderstandings.fieldWork" required/>
+                                    <input type="text" class="form-control" name="fieldWork" id="fieldWork" ng-model="vm.unit.stageOne.enduringUnderstandings.fieldWork" required/>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label form="scienceContentEU" class="control-label required">Science Content</label>
-                                    <input type="text" class="form-control" name="scienceContentEU" ng-model="vm.unit.stageOne.enduringUnderstandings.scienceContent" required/>
+                                    <input type="text" class="form-control" name="scienceContentEU" id="scienceContentEU" ng-model="vm.unit.stageOne.enduringUnderstandings.scienceContent" required/>
                                 </div>
                             </div>
                         </div>
@@ -77,17 +77,17 @@
                         <p>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</p>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="essentialQuestion1" class="control-label">Question 1</label>
-                                    <input type="text" class="form-control" name="essentialQuestion1" ng-model="vm.unit.stageOne.essentialQuestions[0]">
+                                    <input type="text" class="form-control" name="essentialQuestion1" id="essentialQuestion1" ng-model="vm.unit.stageOne.essentialQuestions[0]">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="essentialQuestion2" class="control-label">Question 2</label>
-                                    <input type="text" class="form-control" name="essentialQuestion2" ng-model="vm.unit.stageOne.essentialQuestions[1]">
+                                    <input type="text" class="form-control" name="essentialQuestion2" id="essentialQuestion2" ng-model="vm.unit.stageOne.essentialQuestions[1]">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" show-errors>
                                     <label for="essetialQuestion3" class="control-label">Question 3</label>
-                                    <input type="text" class="form-control" name="essentialQuestion3" ng-model="vm.unit.stageOne.essentialQuestions[2]">
+                                    <input type="text" class="form-control" name="essentialQuestion3" id="essentialQuestion3" ng-model="vm.unit.stageOne.essentialQuestions[2]">
                                 </div>
                             </div>
                         </div>
@@ -228,7 +228,7 @@
                 </div>
             </div>
             <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-            <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Create unit'}}</button>
+            <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.unitForm.$valid">{{vm.unit._id ? 'Update unit' : 'Create unit'}}</button>
         </fieldset>
     </form>
 </section>
