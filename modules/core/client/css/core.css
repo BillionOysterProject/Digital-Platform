@@ -294,6 +294,12 @@ a {
         color: #aaa;
     }
 
+/*---SELECT2 PLUGIN---*/
+.select2-container {
+    display: block;
+}
+
+/*---WYSIWYG EDITOR PLUGIN---*/
 .advanced-wrapper {
     /* extend form-control */
     padding: 6px 12px;
