@@ -1,14 +1,18 @@
-<section class="content">
-    <section class="container-fluid">
-        <div class="page-header">
-            <div class="input-group pull-right col-md-4 col-sm-6">
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Search for a Unit</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
                 </span>
                 <input type="text" class="form-control" placeholder="Search for a Unit...">
             </div>
-            <h1>Curriculum <small>Units</small></h1>
-        </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
         <div class="row" isotope-container="isotope-container">
             <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" ui-sref="units.view({ unitId: unit._id })">

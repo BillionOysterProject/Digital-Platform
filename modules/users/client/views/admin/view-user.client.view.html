@@ -1,11 +1,11 @@
 <section class="content">
-    <section class="container-fluid">
+    <section class="container">
       <div class="page-header">
         <div class="row">
           <div class="col-md-6">
-            <h1 ng-bind="user.username"></h1>
+            <h1>{{user.firstName}} {{user.lastName}}</h1>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 text-right">
             <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
               <i class="glyphicon glyphicon-edit"></i>
             </a>
@@ -17,35 +17,40 @@
       </div>
 
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <div class="row">
-            <div class="col-md-3"><strong>First Name</strong></div>
-            <div class="col-md-6" ng-bind="user.firstName"></div>
+            <div class="col-md-3 text-right"><strong>First Name</strong></div>
+            <div class="col-md-9" ng-bind="user.firstName"></div>
           </div>
           <hr/>
           <div class="row">
-            <div class="col-md-3"><strong>Last Name</strong></div>
-            <div class="col-md-6" ng-bind="user.lastName"></div>
+            <div class="col-md-3 text-right"><strong>Last Name</strong></div>
+            <div class="col-md-9" ng-bind="user.lastName"></div>
           </div>
           <hr/>
           <div class="row">
-            <div class="col-md-3"><strong>Email</strong></div>
-            <div class="col-md-6" ng-bind="user.email"></div>
+            <div class="col-md-3 text-right"><strong>Username</strong></div>
+            <div class="col-md-9" ng-bind="user.username"></div>
           </div>
           <hr/>
           <div class="row">
-            <div class="col-md-3"><strong>Provider</strong></div>
-            <div class="col-md-6" ng-bind="user.provider"></div>
+            <div class="col-md-3 text-right"><strong>Email</strong></div>
+            <div class="col-md-9" ng-bind="user.email"></div>
           </div>
           <hr/>
           <div class="row">
-            <div class="col-md-3"><strong>Created</strong></div>
-            <div class="col-md-6" ng-bind="user.created"></div>
+            <div class="col-md-3 text-right"><strong>Provider</strong></div>
+            <div class="col-md-9" ng-bind="user.provider"></div>
           </div>
           <hr/>
           <div class="row">
-            <div class="col-md-3"><strong>Roles</strong></div>
-            <div class="col-md-6" ng-bind="user.roles"></div>
+            <div class="col-md-3 text-right"><strong>Created</strong></div>
+            <div class="col-md-9" ng-bind="user.created"></div>
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-md-3 text-right"><strong>Roles</strong></div>
+            <div class="col-md-9" ng-bind="user.roles"></div>
           </div>
         </div>
       </div>
