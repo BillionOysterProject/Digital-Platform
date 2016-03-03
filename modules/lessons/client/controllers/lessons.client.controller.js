@@ -44,48 +44,48 @@
       { name: 'Science', value: 'science' }
     ];
     vm.nycScienceScope = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1A' },
+      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
       { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1a' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
       { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
     ];
     vm.ngssStandards = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1A' },
+      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
       { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1a' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1b' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
       { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
     ];
     vm.commonCoreEla = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1A' },
+      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
       { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1a' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
       { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
     ];
     vm.commonCoreMath = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1A' },
+      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
       { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
       { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1a' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
+      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
       { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },

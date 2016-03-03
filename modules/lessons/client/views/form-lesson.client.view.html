@@ -22,7 +22,7 @@
                             <div class="col-md-3">
                                 <div class="form-group" show-errors>
                                     <label for="unit" class="control-label required">Unit *</label>
-                                    <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit" ng-options="unit._id as unit.title for unit in vm.units" required>
+                                    <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit._id" ng-options="unit._id as unit.title for unit in vm.units" required>
                                     </select>
                                     <div ng-messages="vm.form.lessonForm.unit.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Unit is required.</p>

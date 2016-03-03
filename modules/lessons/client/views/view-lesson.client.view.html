@@ -8,7 +8,7 @@
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </div>
-        <h1>{{vm.lesson.lessonUpload.title}}</h1>
+        <h1>{{vm.lesson.title}}</h1>
         <h3><!-- TODO: Need to get images into user -->
             <img ng-src="{{imageURL}}" alt="{{vm.lesson.user.displayName}}" class="header-profile-image">
             {{vm.lesson.user.displayName}}
@@ -28,8 +28,10 @@
     </div>
     <div class="row">
         <div class="col col-sm-6">
-            <h4>Unit: <a href="#">{{vm.lesson.lessonUpload.unit}}</a></h4>
-            <h4>{{vm.lesson.lessonOverview.protocolConnections}}</h4>
+            <h4>Unit: <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a></h4>
+            <ul ng-repeat="protocol in vm.lesson.lessonOverview.protocolConnections">
+                <li ng-bind="protocol | protocolConnections"></li>
+            </ul>
         </div>
     </div>
 
@@ -48,14 +50,9 @@
         </div>
         <div class="col col-sm-6">
             <b>Subject Areas</b><!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
-            <p>
-                <a href="#" class="label label-science">Science</a>
-                <a href="#" class="label label-socialstudies">Social Studies</a>
-                <a href="#" class="label label-technology">Technology</a>
-                <a href="#" class="label label-socialstudies">History</a>
-                <a href="#" class="label label-math">Math</a>
-                <a href="#" class="label label-science">Ecology</a>
-            </p>
+            <ul ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
+                <li ng-bind="subject | subjectAreas"></li>
+            </ul>
         </div>
     </div>
     <hr />
@@ -63,10 +60,7 @@
         <div class="col col-sm-3">
             <ul class="list-unstyled">
                 <b>Supplies</b>
-                <!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.supplies -->
-                <li><a href="#">2" Dead Oyster Shells</a></li>
-                <li><a href="#">Banana Peel</a></li>
-                <li><a href="#">Beaker of Water</a></li>
+                <p ng-bind="vm.lesson.materialsResources.supplies"></p>
             </ul>
             <ul class="list-unstyled">
                 <b>Teacher Resources</b>
@@ -95,7 +89,9 @@
                 </div>
                 <div class="col col-sm-6">
                     <h3>Vocabulary</h3>
-                    <div ng-bind-html="vm.lesson.materialsResources.vocabulary | sanitize"></div>
+                    <ul ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
+                        <li ng-bind="vocabulary | vocabulary"></li>
+                    </ul>
                 </div>
                 <div class="col col-sm-12">
                     <h3>Background</h3>
@@ -131,22 +127,34 @@
             <div class="col col-sm-4" ng-show="vm.lesson.standards.nycScienceScopeSequence">
                 <h5>New York City Science Scope &amp; Sequence</h5>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span>
+                <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
+                <ul ng-repeat="standard in vm.lesson.standards.nycScienceScopeSequence">
+                    <li ng-bind="standard | nycScienceScope"></li>
+                </ul>
             </div>
             <div class="col col-sm-4" ng-show="vm.lesson.standards.ngssStandards">
                 <h5>NGSS Standards</h5>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span>
+                <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
+                <ul ng-repeat="standard in vm.lesson.standards.ngssStandards">
+                    <li ng-bind="standard | ngssStandards"></li>
+                </ul>
             </div>
             <div class="col col-sm-4" ng-show="vm.lesson.standards.commonCoreEla">
                 <h5>Common Core ELA</h5>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span>
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
+                <ul ng-repeat="standard in vm.lesson.standards.commonCoreEla">
+                    <li ng-bind="standard | commonCoreEla"></li>
+                </ul>
             </div>
             <div class="col col-sm-4" ng-show="vm.lesson.standards.commonCoreMath">
                 <h5>Common Core Math</h5>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span>
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul ng-repeat="standard in vm.lesson.standards.commonCoreMath">
+                    <li ng-bind="standard | commonCoreMath"></li>
+                </ul>
             </div>
         </div>
     </div>
