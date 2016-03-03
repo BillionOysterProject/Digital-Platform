@@ -23,12 +23,6 @@
                                 <div class="form-group" show-errors>
                                     <label for="unit" class="control-label required">Unit *</label>
                                     <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit" ng-options="unit._id as unit.title for unit in vm.units" required>
-                                        <!-- TODO: This should be dynamic to pull in the units that the admin has created elsewhere in the app -->
-                                        <!-- <option value="NYC's Urban Ecosystem">NYC's Urban Ecosystem</option>
-                                        <option value="Oysters">Oysters</option>
-                                        <option value="Module Organisms">Mobile Organisms</option>
-                                        <option value="Sessile Organisms">Sessile Organisms</option>
-                                        <option value="Water Quality">Water Quality</option> -->
                                     </select>
                                     <div ng-messages="vm.form.lessonForm.unit.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Unit is required.</p>
@@ -112,7 +106,9 @@
                             <div class="col-md-6">
                                 <div class="form-group" show-errors>
                                     <label for="subjectAreas" class="control-label required">Subject Area(s) *</label> 
+
                                     <select2 class="form-control" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true, dropdownAutoWidth: true }" multiple required></select2>
+
                                     <div ng-messages="vm.form.lessonForm.subjectAreas.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Subject area is required.</p>
                                     </div>
@@ -133,7 +129,7 @@
                             </div> -->
                         </div>
                         <div class="row">
-                            <wysiwyg-editor outer-column="col-md-12 form-group" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" label-class="control-label required"></wysiwyg-editor>
+                            <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" label-class="control-label required"></wysiwyg-editor>
                         </div>
                     </div>
                 </div>
@@ -143,7 +139,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
-                            <wysiwyg-editor outer-column="col-md-12 form-group" name="lessonObjectives" in-title="Objectives *" ng-model="vm.lesson.lessonObjectives" required="true" label-class="control-label required"></wysiwyg-editor>
+                            <wysiwyg-editor outer-column="col-md-12" name="lessonObjectives" in-title="Objectives *" ng-model="vm.lesson.lessonObjectives" required="true" label-class="control-label required"></wysiwyg-editor>
                         </div>
                     </div>
                 </div>
@@ -217,7 +213,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
-                            <wysiwyg-editor outer-column="col-md-12 form-group" name="background" in-title="Background" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
+                            <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
                         </div>
                     </div>
                 </div>
@@ -239,27 +235,27 @@
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane active" id="engage">
                                         <div class="row">
-                                            <wysiwyg-editor outer-column="col-md-12 form-group" name="engage" in-title="Engage" ng-model="vm.lesson.instructionPlan.engage" label-class="control-label"></wysiwyg-editor>
+                                            <wysiwyg-editor outer-column="col-md-12" name="engage" in-title="Engage" ng-model="vm.lesson.instructionPlan.engage" label-class="control-label"></wysiwyg-editor>
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="explore">
                                         <div class="row">
-                                            <wysiwyg-editor outer-column="col-md-12 form-group" name="explore" in-title="Explore" ng-model="vm.lesson.instructionPlan.explore" label-class="control-label"></wysiwyg-editor>
+                                            <wysiwyg-editor outer-column="col-md-12" name="explore" in-title="Explore" ng-model="vm.lesson.instructionPlan.explore" label-class="control-label"></wysiwyg-editor>
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="explain">
                                         <div class="row">
-                                            <wysiwyg-editor outer-column="col-md-12 form-group" name="explain" in-title="Explain" ng-model="vm.lesson.instructionPlan.explain" label-class="control-label"></wysiwyg-editor>
+                                            <wysiwyg-editor outer-column="col-md-12" name="explain" in-title="Explain" ng-model="vm.lesson.instructionPlan.explain" label-class="control-label"></wysiwyg-editor>
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="elaborate">
                                         <div class="row">
-                                            <wysiwyg-editor outer-column="col-md-12 form-group" name="elaborate" in-title="Elaborate" ng-model="vm.lesson.instructionPlan.elaborate" label-class="control-label"></wysiwyg-editor>
+                                            <wysiwyg-editor outer-column="col-md-12" name="elaborate" in-title="Elaborate" ng-model="vm.lesson.instructionPlan.elaborate" label-class="control-label"></wysiwyg-editor>
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="evaluate">
                                         <div class="row">
-                                            <wysiwyg-editor outer-column="col-md-12 form-group" name="evaluate" in-title="Evaluate" ng-model="vm.lesson.instructionPlan.evaluate" label-class="control-label"></wysiwyg-editor>
+                                            <wysiwyg-editor outer-column="col-md-12" name="evaluate" in-title="Evaluate" ng-model="vm.lesson.instructionPlan.evaluate" label-class="control-label"></wysiwyg-editor>
                                         </div>
                                     </div>
                                 </div>
@@ -272,137 +268,135 @@
                 <h4>Standards</h4>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="panel-body">
-                            <div class="row">
-                                <select-optgroup outer-column="col-md-12" name="nysciencescope" in-title="New York City Science Scope & Sequence" ng-model="vm.lesson.standards.nycScienceScopeSequence" label-class="control-label" options="{{vm.nycScienceScope}}"></select-optgroup>
-                                <!-- <div class="col-md-12">
-                                    <div class="form-group"> -->
-                                        <!-- TODO: These should be search boxes that an user can start typing and get results back 
-                                            from the app searching an external API and autopopulating the field
-                                            Similar to https://select2.github.io/examples.html#data-ajax 
-                                            Users will have an option (in a modal?) to add a new Standard from a list of APIs
-                                            we have already pulled in other than these top four -->
-                                        <!-- <label for="nycsciencescope" class="control-label">New York City Science Scope & Sequence</label>
-                                        <div class="row">
+                        <div class="row">
+                            <select-optgroup outer-column="col-md-12" name="nysciencescope" in-title="New York City Science Scope & Sequence" ng-model="vm.lesson.standards.nycScienceScopeSequence" label-class="control-label" options="{{vm.nycScienceScope}}"></select-optgroup>
+                            <!-- <div class="col-md-12">
+                                <div class="form-group"> -->
+                                    <!-- TODO: These should be search boxes that an user can start typing and get results back 
+                                        from the app searching an external API and autopopulating the field
+                                        Similar to https://select2.github.io/examples.html#data-ajax 
+                                        Users will have an option (in a modal?) to add a new Standard from a list of APIs
+                                        we have already pulled in other than these top four -->
+                                    <!-- <label for="nycsciencescope" class="control-label">New York City Science Scope & Sequence</label>
+                                    <div class="row">
 
-                                            <div class="col-md-12">
-                                                <select class="select2 form-control" name="nycsciencescope" multiple="multiple" ng-model="vm.lesson.standards.nycScienceScopeSequence">
-                                                    <optgroup label="PS1 Matter and Its Interactions">
-                                                        <option value="ps1A">PS1A Structure and Properties of matter</option>
-                                                        <option value="ps1b">PS1B Chemical Reactions</option>
-                                                        <option value="ps1c">PS1C Nuclear Processes</option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS1 Earth's Place in the Universe">
-                                                        <option value="ess1a">ESS1A The Universe and Its Stars</option>
-                                                        <option value="ess1b">ESS1B Earth and the Solar System</option>
-                                                        <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS2 Earth's Systems">
-                                                        <option value="ess2a">ESS2A Earth Materials and Systems</option>
-                                                        <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                                        <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
-                                                    </optgroup>
-                                                    <option value="g8unit">PS1 Matter and Its Interactions</option>
-                                                    <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </div> -->
-                            </div>
-                            <div class="row">
-                                <select-optgroup outer-column="col-md-12" name="ngssstandards" in-title="NGSS Standards" ng-model="vm.lesson.standards.ngssStandards" label-class="control-label" options="{{vm.ngssStandards}}"></select-optgroup>
-                                <!-- <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="ngssstandards" class="control-label">NGSS Standards</label>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <select class="select2 form-control" name="ngssstandards" multiple="multiple" ng-model="vm.lesson.standards.ngssStandards">
-                                                    <optgroup label="PS1 Matter and Its Interactions">
-                                                        <option value="ps1A">PS1A Structure and Properties of matter</option>
-                                                        <option value="ps1b">PS1B Chemical Reactions</option>
-                                                        <option value="ps1c">PS1C Nuclear Processes</option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS1 Earth's Place in the Universe">
-                                                        <option value="ess1a">ESS1A The Universe and Its Stars</option>
-                                                        <option value="ess1b">ESS1B Earth and the Solar System</option>
-                                                        <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS2 Earth's Systems">
-                                                        <option value="ess2a">ESS2A Earth Materials and Systems</option>
-                                                        <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                                        <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
-                                                    </optgroup>
-                                                    <option value="g8unit">PS1 Matter and Its Interactions</option>
-                                                    <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
-                                                </select>
-                                            </div>
+                                        <div class="col-md-12">
+                                            <select class="select2 form-control" name="nycsciencescope" multiple="multiple" ng-model="vm.lesson.standards.nycScienceScopeSequence">
+                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                </optgroup>
+                                                <optgroup label="ESS1 Earth's Place in the Universe">
+                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
+                                                </optgroup>
+                                                <optgroup label="ESS2 Earth's Systems">
+                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                    <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
+                                                </optgroup>
+                                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div> -->
-                            </div>
-                            <div class="row">
-                                <select-optgroup outer-column="col-md-12" name="commoncoreela" in-title="Common Core ELA" ng-model="vm.lesson.standards.commonCoreEla" label-class="control-label" options="{{vm.commonCoreEla}}"></select-optgroup>
-                                <!-- <div class="col-md-12 standards ">
-                                    <div class="form-group">
-                                        <label for="commoncoreela" class="control-label">Common Core ELA</label>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <select class="select2 form-control" name="commoncoreela" multiple="multiple" ng-model="vm.lesson.standards.commonCoreEla">
-                                                    <optgroup label="PS1 Matter and Its Interactions">
-                                                        <option value="ps1A">PS1A Structure and Properties of matter</option>
-                                                        <option value="ps1b">PS1B Chemical Reactions</option>
-                                                        <option value="ps1c">PS1C Nuclear Processes</option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS1 Earth's Place in the Universe">
-                                                        <option value="ess1a">ESS1A The Universe and Its Stars</option>
-                                                        <option value="ess1b">ESS1B Earth and the Solar System</option>
-                                                        <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS2 Earth's Systems">
-                                                        <option value="ess2a">ESS2A Earth Materials and Systems</option>
-                                                        <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                                        <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
-                                                    </optgroup>
-                                                    <option value="g8unit">PS1 Matter and Its Interactions</option>
-                                                    <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
-                                                </select>
-                                            </div>
+                                </div> 
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <select-optgroup outer-column="col-md-12" name="ngssstandards" in-title="NGSS Standards" ng-model="vm.lesson.standards.ngssStandards" label-class="control-label" options="{{vm.ngssStandards}}"></select-optgroup>
+                            <!-- <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="ngssstandards" class="control-label">NGSS Standards</label>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="select2 form-control" name="ngssstandards" multiple="multiple" ng-model="vm.lesson.standards.ngssStandards">
+                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                </optgroup>
+                                                <optgroup label="ESS1 Earth's Place in the Universe">
+                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
+                                                </optgroup>
+                                                <optgroup label="ESS2 Earth's Systems">
+                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                    <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
+                                                </optgroup>
+                                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div> -->
-                            </div>
-                            <div class="row">
-                                <select-optgroup outer-column="col-md-12" name="commoncoremath" in-title="Common Core Math" ng-model="vm.lesson.standards.commonCoreMath" label-class="control-label" options="{{vm.commonCoreMath}}"></select-optgroup>
-                                <!-- <div class="col-md-12 standards">
-                                    <div class="form-group">
-                                        <label for="commoncoremath" class="control-label">Common Core Math</label>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <select class="select2 form-control" name="commoncoremath" multiple="multiple" ng-model="vm.lesson.standards.commonCoreMath">
-                                                    <optgroup label="PS1 Matter and Its Interactions">
-                                                        <option value="ps1A">PS1A Structure and Properties of matter</option>
-                                                        <option value="ps1b">PS1B Chemical Reactions</option>
-                                                        <option value="ps1c">PS1C Nuclear Processes</option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS1 Earth's Place in the Universe">
-                                                        <option value="ess1a">ESS1A The Universe and Its Stars</option>
-                                                        <option value="ess1b">ESS1B Earth and the Solar System</option>
-                                                        <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
-                                                    </optgroup>
-                                                    <optgroup label="ESS2 Earth's Systems">
-                                                        <option value="ess2a">ESS2A Earth Materials and Systems</option>
-                                                        <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
-                                                        <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
-                                                    </optgroup>
-                                                    <option value="g8unit">PS1 Matter and Its Interactions</option>
-                                                    <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
-                                                </select>
-                                            </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <select-optgroup outer-column="col-md-12" name="commoncoreela" in-title="Common Core ELA" ng-model="vm.lesson.standards.commonCoreEla" label-class="control-label" options="{{vm.commonCoreEla}}"></select-optgroup>
+                            <!-- <div class="col-md-12 standards ">
+                                <div class="form-group">
+                                    <label for="commoncoreela" class="control-label">Common Core ELA</label>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="select2 form-control" name="commoncoreela" multiple="multiple" ng-model="vm.lesson.standards.commonCoreEla">
+                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                </optgroup>
+                                                <optgroup label="ESS1 Earth's Place in the Universe">
+                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
+                                                </optgroup>
+                                                <optgroup label="ESS2 Earth's Systems">
+                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                    <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
+                                                </optgroup>
+                                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div> -->
-                            </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <select-optgroup outer-column="col-md-12" name="commoncoremath" in-title="Common Core Math" ng-model="vm.lesson.standards.commonCoreMath" label-class="control-label" options="{{vm.commonCoreMath}}"></select-optgroup>
+                            <!-- <div class="col-md-12 standards">
+                                <div class="form-group">
+                                    <label for="commoncoremath" class="control-label">Common Core Math</label>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="select2 form-control" name="commoncoremath" multiple="multiple" ng-model="vm.lesson.standards.commonCoreMath">
+                                                <optgroup label="PS1 Matter and Its Interactions">
+                                                    <option value="ps1A">PS1A Structure and Properties of matter</option>
+                                                    <option value="ps1b">PS1B Chemical Reactions</option>
+                                                    <option value="ps1c">PS1C Nuclear Processes</option>
+                                                </optgroup>
+                                                <optgroup label="ESS1 Earth's Place in the Universe">
+                                                    <option value="ess1a">ESS1A The Universe and Its Stars</option>
+                                                    <option value="ess1b">ESS1B Earth and the Solar System</option>
+                                                    <option value="ess1c">ESS1C The History of Planet Earth ESS2 Earth's </option>
+                                                </optgroup>
+                                                <optgroup label="ESS2 Earth's Systems">
+                                                    <option value="ess2a">ESS2A Earth Materials and Systems</option>
+                                                    <option value="ess2b">ESS2B Plate Tectonics and Large-Scale System Interactions</option>
+                                                    <option value="ess2c">ESS2C The Roles of Water in Earth's Surface Processes</option>
+                                                </optgroup>
+                                                <option value="g8unit">PS1 Matter and Its Interactions</option>
+                                                <option value="g8unit">Grade 8, Unit1: Humans and the Environment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

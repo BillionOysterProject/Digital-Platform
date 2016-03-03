@@ -2,7 +2,7 @@
     <div class="page-header">
         <div class="input-group pull-right col-md-4 col-sm-6">
             <span class="input-group-addon">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search -->
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
             </span>
             <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject...">
         </div>
@@ -77,18 +77,13 @@
         </div>
     </nav>
 
-
-
-
     <div class="row" isotope-container="isotope-container">
         <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.lessonUpload.unit}}">
             <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-                <div class="panel-heading unit-red">
-                    <!-- TODO: set up colors for each unit -->
+                <div class="panel-heading" style="background: {{lesson.lessonUpload.unit.color}}">
                     <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
                     <h3 class="panel-title">
-                        <!-- TODO: set up icons for each unit -->
-                        <i class="glyphicon glyphicon-tint"></i>
+                        <i class="glyphicon {{lesson.lessonUpload.unit.icon}}"></i>
                         {{lesson.lessonUpload.unit}}
                     </h3>
                 </div>
