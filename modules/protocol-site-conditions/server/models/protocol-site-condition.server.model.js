@@ -10,6 +10,11 @@ var mongoose = require('mongoose'),
  * Site Condition Schema
  */
 var ProtocolSiteConditionSchema = new Schema({
+  expedition: {
+    type: Schema.ObjectId,
+    ref: 'Expedition',
+    required: true
+  },
   meteorologicalConditions: {
     weatherConditions: {
       type: String,

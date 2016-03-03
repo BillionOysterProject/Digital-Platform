@@ -26,10 +26,17 @@ var ExpeditionSchema = new Schema({
     type: Number,
     required: true
   },
-  dateTime: {
+  monitoringDate: {
     type: Date,
     required: true
   },
-  Notes: String
+  Notes: String,
+  created: {
+    type: Date,
+    required: true
+  },
+  updated: {
+    type: Date
+  }
 });
 mongoose.model('Expedition', ExpeditionSchema);

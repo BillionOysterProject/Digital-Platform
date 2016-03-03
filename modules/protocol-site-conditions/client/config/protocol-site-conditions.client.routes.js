@@ -17,11 +17,11 @@
       .state('protocol-site-conditions.main', {
         url: '',
         templateUrl: 'modules/protocol-site-conditions/client/views/protocol-site-conditions.client.view.html',
-        controller: 'ProtocolSiteConditionsController',
+        controller: 'ProtocolSiteConditionsMainController',
         controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'admin'],
-          pageTitle: 'Protocol Site Conditions List'
+          pageTitle: 'Protocol Site Conditions'
         }
       })
       .state('protocol-site-conditions.create', {
@@ -30,7 +30,7 @@
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'vm',
         resolve: {
-          protocolSiteConditionResolve: getProtocolSiteCondition
+          protocolSiteConditionResolve: newProtocolSiteCondition
         },
         data: {
           roles: ['team lead', 'team member', 'admin'],
