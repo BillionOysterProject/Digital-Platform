@@ -98,7 +98,7 @@
         teamId: vm.lesson.user.team
       }, function(team) {
         vm.lesson.user.team = team;
-      })
+      });
     }
 
     // Remove existing Lesson
