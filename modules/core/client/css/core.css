@@ -8,12 +8,27 @@
 body {
     -webkit-font-smoothing: antialiased;
     font-family: 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: #f4f7f8;
+    background: #fff;
+    margin-top: 51px; /* allow for navbar, so content and jumbotron can be in any order */
 }
 
 .content {
-  margin: 50px 20px 50px 100px;
+    margin: 15px 15px 15px 95px;
 }
+
+.jumbotron {
+    background: #f4f7f8;
+}
+
+    .jumbotron.dark {
+        background: #aaa;
+        color: #fff;
+    }
+
+    .jumbotron .content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
 .navbar-default {
     background: #fff;
@@ -111,34 +126,9 @@ body {
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-         TYPE / COLORS
+              COLORS
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto-Regular-webfont.eot');
-    src: url('fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/Roboto-Regular-webfont.woff') format('woff'),
-         url('fonts/Roboto-Regular-webfont.ttf') format('truetype'),
-         url('fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto-Bold-webfont.eot');
-    src: url('fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/Roboto-Bold-webfont.woff') format('woff'),
-         url('fonts/Roboto-Bold-webfont.ttf') format('truetype'),
-         url('fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-}
-
-
-/* BRAND COLORS */
 
 .blue { color: #426ca9; }
 .red { color: #ea6158; }
@@ -258,12 +248,30 @@ a {
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-          LAYOUT PIECES
+            TYPOGRAPHY
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-.jumbotron {
-    color: #fff;
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Regular-webfont.eot');
+    src: url('fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Roboto-Regular-webfont.woff') format('woff'),
+         url('fonts/Roboto-Regular-webfont.ttf') format('truetype'),
+         url('fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Bold-webfont.eot');
+    src: url('fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Roboto-Bold-webfont.woff') format('woff'),
+         url('fonts/Roboto-Bold-webfont.ttf') format('truetype'),
+         url('fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
 }
 
 .page-header {

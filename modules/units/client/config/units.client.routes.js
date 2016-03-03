@@ -74,6 +74,10 @@
   newUnit.$inject = ['UnitsService'];
 
   function newUnit(UnitsService) {
-    return new UnitsService();
+    var newUnit = new UnitsService();
+    newUnit.stageOne = {
+      essentialQuestions: []
+    };
+    return newUnit;
   }
 })();

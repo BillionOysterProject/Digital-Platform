@@ -18,40 +18,41 @@
 </div>
 
 <div class="navbar navbar-fixed-top navbar-default" ng-controller="HeaderController">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
+            <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signup">Sign Up</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signin">Sign In</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+                <li class="dropdown" uib-dropdown>
+                    <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
+                        <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
+                        <span ng-bind="authentication.user.displayName"></span><b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ui-sref-active="active" ng-repeat="item in accountMenu.items">
+                            <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/api/auth/signout" target="_self">Signout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
     </div>
-    <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
-        <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
-            <li ui-sref-active="active">
-                <a ui-sref="authentication.signup">Sign Up</a>
-            </li>
-            <li class="divider-vertical"></li>
-            <li ui-sref-active="active">
-                <a ui-sref="authentication.signin">Sign In</a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
-            <li class="dropdown" uib-dropdown>
-                <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
-                    <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
-                    <span ng-bind="authentication.user.displayName"></span><b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li ui-sref-active="active" ng-repeat="item in accountMenu.items">
-                        <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="/api/auth/signout" target="_self">Signout</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
 </div>

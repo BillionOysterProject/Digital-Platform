@@ -14,7 +14,7 @@
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
-    vm.essentialQuestions = [];
+    
     vm.scienceLessons = [
       { name: 'Ecology Lesson', value: 'ecology' },
       { name: 'Geology and Earth Science Lesson', value: 'geologyeatchscience' },
