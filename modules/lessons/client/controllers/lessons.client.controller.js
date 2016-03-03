@@ -14,6 +14,8 @@
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
+    vm.showResourceModal = false;
+    vm.showVocabularyModal = false;
 
     vm.subjectAreas = [
      { type: 'Science', name: 'Ecology', value: 'ecology' }, 
@@ -143,9 +145,14 @@
       $state.go('lessons.list');
     };
 
-    vm.subjectAreasSet = function() {
-      console.log('subject area changed');
-      console.log(vm.lesson.lessonOverview.subjectArea);
+    vm.toggleResourceModal = function() {
+      vm.showResourceModal = !vm.showResourceModal;
     };
+
+    vm.toggleVocabularyModal = function() {
+      vm.showVocabularyModal = !vm.showVocabularyModal;
+    };
+
+
   }
 })();
