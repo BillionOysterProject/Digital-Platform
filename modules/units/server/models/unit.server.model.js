@@ -56,15 +56,15 @@ var UnitSchema = new Schema({
     }],
     acquisition: {
       content: {
-        science: [{
+        science: {
           type: String
-        }],
-        math: [{
+        },
+        math: {
           type: String
-        }],
-        field: [{
+        },
+        field: {
           type: String
-        }],
+        },
       },
       lessons: {
         science: [{
