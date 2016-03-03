@@ -52,7 +52,8 @@ var UnitSchema = new Schema({
     },
     essentialQuestions: [{
       type: String,
-      trim: true
+      trim: true,
+      default: []
     }],
     acquisition: {
       content: {

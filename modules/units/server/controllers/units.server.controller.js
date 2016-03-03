@@ -16,13 +16,22 @@ exports.create = function (req, res) {
   var unit = new Unit(req.body);
   unit.user = req.user;
 
-  unit.save(function (err) {
+  unit.validate(function (err) {
     if (err) {
+      console.log(err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(unit);
+      unit.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(unit);
+        }
+      });
     }
   });
 };
