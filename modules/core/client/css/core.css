@@ -13,11 +13,15 @@ body {
 }
 
 .content {
-    margin: 15px 15px 15px 95px;
+    padding: 15px 15px 15px 95px;
 }
 
 .jumbotron {
-    background: #f4f7f8;
+    background-color: #f4f7f8;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 200px;  
 }
 
     .jumbotron.dark {
@@ -136,18 +140,18 @@ body {
 .lightblue { color: #a0d0cb; }
 .yellow { color: #fbe8ac; }
 .crimson { color: #943234; }
-
+.shaded { background-color: #f4f7f8; }
 
 /* LINK COLORS */
 
 a {
-    color: #ea6158;
+    color: #777;
     cursor: pointer;
 }
 
     a:hover, a:focus {
         text-decoration: none;
-        color: #943234;
+        color: #ea6158;
     }
 
 .btn {

@@ -6,7 +6,7 @@
     </section>
 </div>
 <section class="content">
-    <section class="container-fluid">
+    <section class="container">
         <div class="pull-right">
             <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })"><!-- not working -->
               <i class="glyphicon glyphicon-edit"></i>
@@ -30,7 +30,11 @@
         </div>
 
         <h3>Enduring Understandings</h3>
+        
+        <b>Field Work</b>
         <p ng-bind="vm.unit.stageOne.enduringUnderstandings.fieldWork"></p>
+
+        <b>Science Content</b>
         <p ng-bind="vm.unit.stageOne.enduringUnderstandings.scienceContent"></p>
 
         <h3>Essential Questions</h3>
