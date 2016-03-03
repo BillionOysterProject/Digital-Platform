@@ -25,7 +25,8 @@
     </div>
 
     <h3>Enduring Understandings</h3>
-    <p ng-bind="vm.unit.stageOne.enduringUnderstandings"></p>
+    <p ng-bind="vm.unit.stageOne.enduringUnderstandings.fieldWork"></p>
+    <p ng-bind="vm.unit.stageOne.enduringUnderstandings.scienceContent"></p>
 
     <h3>Essential Questions</h3>
     <ul ng-repeat="question in vm.unit.stageOne.essentialQuestions">
@@ -35,33 +36,27 @@
     <h3>Acquisition</h3>
 
     <b>Science Content/Skills</b>
-    <ul ng-repeast="scienceContent in vm.unit.stageOne.acquisition.content.science">
-        <li ng-bind="scienceContent"></li>
-    </ul>
+    <p ng-bind-html="vm.unit.stageOne.acquisition.content.science | sanitize"></p>
 
     <b>Math Content/Skills</b>
-    <ul ng-repeast="mathContent in vm.unit.stageOne.acquisition.content.math">
-        <li ng-bind="mathContent"></li>
-    </ul>
+    <p ng-bind-html="vm.unit.stageOne.acquisition.content.math | sanitize"></p>
 
     <b>Field Content/Skills</b>
-    <ul ng-repeast="fieldContent in vm.unit.stageOne.acquisition.content.field">
-        <li ng-bind="fieldContent"></li>
-    </ul>
+    <p ng-bind-html="vm.unit.stageOne.acquisition.content.field | sanitize"></p>
 
     <b>Science Lessons</b>
-    <ul ng-repeast="scienceLesson in vm.unit.stageOne.acquisition.lessons.science">
-        <li ng-bind="scienceLesson"></li>
+    <ul ng-repeat="scienceLesson in vm.unit.stageOne.acquisition.lessons.science">
+        <li ng-bind="scienceLesson | scienceLessons"></li>
     </ul>
 
     <b>Math Lessons</b>
-    <ul ng-repeast="mathLesson in vm.unit.stageOne.acquisition.lessons.math">
-        <li ng-bind="mathLesson"></li>
+    <ul ng-repeat="mathLesson in vm.unit.stageOne.acquisition.lessons.math">
+        <li ng-bind="mathLesson | mathLessons"></li>
     </ul>
 
     <b>Field Lessons</b>
-    <ul ng-repeast="fieldLesson in vm.unit.stageOne.acquisition.lessons.field">
-        <li ng-bind="fieldLesson"></li>
+    <ul ng-repeat="fieldLesson in vm.unit.stageOne.acquisition.lessons.field">
+        <li ng-bind="fieldLesson | fieldLessons"></li>
     </ul>
 
     <div class="page-header">
@@ -70,7 +65,7 @@
 
     <h3>Expectations</h3>
     <ul ng-repeat="expectation in vm.unit.stageTwo.evidence.expectations">
-        <li ng-bind="expectation"></li>
+        <li ng-bind="expectation | numberExpectations"></li>
     </ul>
     
     <p><b>Science and Engineering</b> <span ng-bind-html="vm.unit.stageTwo.evidence.scienceAndEngineering | sanitize"></span></p>
@@ -81,7 +76,7 @@
 
     <b>Research Projects</b>
     <ul ng-repeat="project in vm.unit.stageTwo.assessmentEvidence.researchProjects">
-      <li ng-bind="project"><li>
+        <li ng-bind="project | researchProjects"></li>
     </ul>
 
     <p><b>Extensions</b> <span ng-bind-html="vm.unit.stageTwo.assessmentEvidence.extentions | sanitize"></span></p>
