@@ -1,0 +1,23 @@
+<section>
+  <h1>Tide Times & Heights (meters)</h1>
+  <h2 ng-bind="vm.tides.stationName"></h2>
+  <div ng-repeat="tide in vm.tides.HighLowValues.item" class="col-md-12">
+    <h3 ng-bind="tide.date"></h3>
+    <div class="col-md-3" ng-show="tide.data[0]">
+      <p>{{tide.data[0].time}}</p>
+      <p>{{tide.data[0].pred}}({{tide.data[0].type}})</p>
+    </div>
+    <div class="col-md-3" ng-show="tide.data[1]">
+      <p>{{tide.data[1].time}}</p>
+      <p>{{tide.data[1].pred}}({{tide.data[1].type}})</p>
+    </div>
+    <div class="col-md-3" ng-show="tide.data[2]">
+      <p>{{tide.data[2].time}}</p>
+      <p>{{tide.data[2].pred}}({{tide.data[2].type}})</p>
+    </div>
+    <div class="col-md-3" ng-show="tide.data[3]">
+      <p>{{tide.data[3].time}}</p>
+      <p>{{tide.data[3].pred}}({{tide.data[3].type}})</p>
+    </div>
+  </div>
+</section>

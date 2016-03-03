@@ -9,7 +9,8 @@ module.exports = {
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
         'public/lib/dropzone/downloads/css/dropzone.css',
-        'public/lib/select2/select2.css'
+        'public/lib/select2/select2.css',
+        'public/lib/select2/select2-bootstrap.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',

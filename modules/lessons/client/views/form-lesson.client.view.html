@@ -39,7 +39,7 @@
                                 <div class="form-group" show-errors>
                                     <!-- TODO: Wire up a featured image for each article -->
                                     <label for="image" class="control-label">Featured Image</label>
-                                    <input type="file" name="image" class="form-control" />
+                                    <input type="file" name="image" id="image" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                             <div class="col-md-6">
                                 <div class="form-group" show-errors>
                                     <label for="subjectAreas" class="control-label required">Subject Area(s) *</label> 
-                                    <select2 class="col-md-12" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true }" multiple required></select2>
+                                    <select2 class="form-control" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true, dropdownAutoWidth: true }" multiple required></select2>
                                     <div ng-messages="vm.form.lessonForm.subjectAreas.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Subject area is required.</p>
                                     </div>
