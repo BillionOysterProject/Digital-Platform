@@ -1,4 +1,7 @@
-'use strict';
+(function (app) {
+  'use strict';
 
-// Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('protocol-site-conditions');
+  app.registerModule('protocol-site-conditions');
+  app.registerModule('protocol-site-conditions.services');
+  app.registerModule('protocol-site-conditions.routes', ['ui.router', 'protocol-site-conditions.services']);
+})(ApplicationConfiguration);
