@@ -15,7 +15,7 @@
                 </a>
             </div>
             <!-- TODO: I don't know where the team name is stored right now -->
-            <p><a href="#">Team: {{vm.lesson.user.team.name}}</a><br />
+            <p ng-show="vm.lesson.user.team"><a href="#">Team: {{vm.lesson.user.team.name }}</a><br />
                 <a href="#">{{vm.lesson.user.email}}</a><br />
                 {{vm.lesson.create | date:'mediumDate'}}
             </p>

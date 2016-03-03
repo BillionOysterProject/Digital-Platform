@@ -5,9 +5,9 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService'];
+  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService'];
 
-  function LessonsController($scope, $state, lesson, Authentication, UnitsService) {
+  function LessonsController($scope, $state, lesson, Authentication, UnitsService, TeamsService) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -92,6 +92,14 @@
       { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
     ];
     vm.units = UnitsService.query();
+
+    if (vm.lesson.user.team) {
+      TeamsService.get({
+        teamId: vm.lesson.user.team
+      }, function(team) {
+        vm.lesson.user.team = team;
+      })
+    }
 
     // Remove existing Lesson
     vm.remove = function() {

@@ -130,7 +130,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  Lesson.findById(id).populate('user', 'displayName email').populate('user.team', 'name').populate('unit', 'title color icon').exec(function(err, lesson) {
+  Lesson.findById(id).populate('user', 'displayName email team').populate('unit', 'title color icon').exec(function(err, lesson) {
     if (err) {
       return next(err);
     } else if (!lesson) {
