@@ -7,7 +7,7 @@ module.exports = {
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 8081,
   host: process.env.HOST || '0.0.0.0',
   templateEngine: 'swig',
   // Session Cookie settings
@@ -57,8 +57,8 @@ module.exports = {
   //     stream: {
   //       directoryPath: 'logs',
   //       rotatingLogs: {
-  //         fileName: 'bop.txt', 
-  //         frequency: 'daily', 
+  //         fileName: 'bop.txt',
+  //         frequency: 'daily',
   //         verbose: true,
   //         active: true
   //       }
