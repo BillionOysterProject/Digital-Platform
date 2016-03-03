@@ -11,8 +11,6 @@
     var vm = this;
 
     vm.unit = unit;
-    console.log('research projects');
-    console.log(vm.unit.stageTwo.assessmentEvidence.researchProjects);
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
