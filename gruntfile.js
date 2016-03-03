@@ -18,8 +18,14 @@ module.exports = function (grunt) {
       test: {
         NODE_ENV: 'test'
       },
+      devlocal: {
+        NODE_ENV: 'development-local'
+      },
       dev: {
         NODE_ENV: 'development'
+      },
+      staging: {
+        NODE_ENV: 'staging'
       },
       prod: {
         NODE_ENV: 'production'
@@ -311,10 +317,13 @@ module.exports = function (grunt) {
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);
 
   // Run the project in development mode
-  grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
+  grunt.registerTask('default', ['env:devlocal', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
 
   // Run the project in debug mode
-  grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
+  grunt.registerTask('debug', ['env:devlocal', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
+
+  // Run the project in server development mode
+  grunt.registerTask('dev', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
 
   // Run the project in production mode
   grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);

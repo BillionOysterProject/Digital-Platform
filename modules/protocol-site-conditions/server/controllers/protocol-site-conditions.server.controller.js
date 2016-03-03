@@ -196,6 +196,21 @@ exports.delete = function (req, res) {
 };
 
 /**
+ * List of protocol site condition
+ */
+// exports.list = function(req, res) {
+//   ProtocolSiteCondition.find().sort('-created').populate('user', 'displayName').exec(function(err, siteConditions) {
+//     if (err) {
+//       return res.status(400).send({
+//         message: errorHandler.getErrorMessage(err)
+//       });
+//     } else {
+//       res.json(siteConditions);
+//     }
+//   });
+// };
+
+/**
  * Protocol Site Condition middleware
  */
 exports.siteConditionByID = function (req, res, next, id) {

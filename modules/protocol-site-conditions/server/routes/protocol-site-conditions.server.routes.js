@@ -9,6 +9,7 @@ var siteConditionsPolicy = require('../policies/protocol-site-conditions.server.
 module.exports = function (app) {
   // Protocol Site Condition collection routes
   app.route('/api/protocol-site-conditions').all(siteConditionsPolicy.isAllowed)
+    // .get(siteConditions.list)
     .post(siteConditions.create);
 
   // Single Protocol Site Condition routes

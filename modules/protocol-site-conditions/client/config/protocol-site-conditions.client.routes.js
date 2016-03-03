@@ -14,7 +14,7 @@
         url: '/protocol-site-conditions',
         template: '<ui-view/>'
       })
-      .state('lessons.main', {
+      .state('protocol-site-conditions.main', {
         url: '',
         templateUrl: 'modules/protocol-site-conditions/client/views/protocol-site-conditions.client.view.html',
         controller: 'ProtocolSiteConditionsController',

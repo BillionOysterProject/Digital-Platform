@@ -72,10 +72,10 @@ module.exports.initMiddleware = function (app) {
   app.use(morgan(logger.getFormat(), logger.getOptions()));
 
   // Environment dependent middleware
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local') {
     // Disable views cache
     app.set('view cache', false);
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
     app.locals.cache = 'memory';
   }
 
