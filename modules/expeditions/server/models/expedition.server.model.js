@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Expedition Schema
  */
 var ExpeditionSchema = new Schema({
+  team: {
+    type: Schema.ObjectId,
+    ref: 'Team'
+  },
   teamMembers: [{
     type: Schema.ObjectId,
     ref: 'User'
@@ -30,6 +34,6 @@ var ExpeditionSchema = new Schema({
     type: Date,
     required: true
   },
-  Notes: String
+  notes: String
 });
 mongoose.model('Expedition', ExpeditionSchema);

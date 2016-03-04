@@ -30,7 +30,7 @@
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'vm',
         resolve: {
-          protocolSiteConditionResolve: getProtocolSiteCondition
+          protocolSiteConditionResolve: newProtocolSiteCondition
         },
         data: {
           roles: ['team lead', 'team member', 'admin'],
