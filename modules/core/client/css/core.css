@@ -12,9 +12,8 @@ body {
     margin-top: 51px; /* allow for navbar, so content and jumbotron can be in any order */
 }
 
-.content {
-    padding: 15px 15px 15px 95px;
-}
+.content { padding: 15px 15px 15px 95px; }
+.content-unpadded { padding-bottom: 0; }
 
 .jumbotron {
     background-color: #f4f7f8;
@@ -140,7 +139,7 @@ body {
 .lightblue { color: #a0d0cb; }
 .yellow { color: #fbe8ac; }
 .crimson { color: #943234; }
-.shaded { background-color: #f4f7f8; }
+.shaded { background-color: #eee/*#f4f7f8*/; }
 
 /* LINK COLORS */
 
@@ -276,6 +275,13 @@ a {
          url('fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
     font-weight: bold;
     font-style: normal;
+}
+
+h6, .h6 {
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: bold;
+    letter-spacing: 2px;
 }
 
 .page-header {

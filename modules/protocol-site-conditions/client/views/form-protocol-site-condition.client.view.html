@@ -1,22 +1,328 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <div class="page-header">
-        <h1>{{vm.protocolSiteCondition._id ? 'Edit Site Condition' : 'New Site Condition'}}</h1>
-      </div>
-      <div class="col-md-12">
-        <form name="vm.form.protocolSiteConditionForm" class="form-horizontal" ng-submit="vm.save(vm.form.protocolSiteConditionForm.$valid)" novalidate>
-          <fieldset>
-            <!-- -->
-            <div class="form-group">
-              <button type="submit" class="btn btn-default">{{vm.protocolSiteCondition._id ? 'Update' : 'Create'}}</button>
+<form name="vm.form.protocolSiteConditionForm" ng-submit="vm.save(vm.form.protocolSiteConditionForm.$valid)" novalidate>
+    <fieldset>
+        <section class="content shaded content-unpadded">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li role="presentation" class="active"><a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">Protocol 1: Site Conditions</a></li>
+                <li role="presentation"><a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">Protocol 2: Oyster Measurements</a></li>
+                <li role="presentation"><a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">Protocol 3: Mobile Trap</a></li>
+                <li role="presentation"><a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">Protocol 4: Settlement Tiles</a></li>
+                <li role="presentation"><a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">Protocol 5: Water Quality</a></li>
+            </ul>
+        </section>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="protocol1">
+                <section class="content">
+                    <section class="container">
+                        <h2>Protocol 1 <small>Site Conditions</small></h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="lead red">Your group is responsible for observations about the land, water and air.</p>
+                                <p>This includes weather, any recent rainfall, tide and current, as well as environmental conditions of the land and the water, pollution, and garbage.</p>
+                            </div>
+                            <div class="col-md-8">
+                                <h6>Meteorological conditions</h6>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label>Weather conditions</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>Sunny</option>
+                                            <option>Partly cloudy</option>
+                                            <option>Cloudy</option>
+                                            <option>Rain</option>
+                                            <option>Fog</option>
+                                            <option>Snow</option>
+                                            <option>Hail</option>
+                                            <option>Thunderstorm</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Air temperature (celsius)</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Humidity (%)</label>
+                                        <input class="form-control" type="number"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Wind speed (mph)</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Wind direction</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>North</option>
+                                            <option>North West</option>
+                                            <option>West</option>
+                                            <option>South West</option>
+                                            <option>South</option>
+                                            <option>South East</option>
+                                            <option>East</option>
+                                            <option>North East</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section class="content shaded">
+                    <section class="container">
+                        <div class="row">
+                            <div class="col-md-4 pull-right">
+                                <tide-table></tide-table>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Recent Rainfall</h6>
+                                <div class="form-group">
+                                    <label>Has it rained in the past <span class="red">24</span> hours?</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Has it rained in the past <span class="red">72</span> hours?</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Has it rained in the past <span class="red">7</span> days?</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Tide Conditions</h6>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Closest High Tide</label>
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Closest Low Tide</label>
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Current Speed</label>
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Current Direction</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>North</option>
+                                            <option>South</option>
+                                            <option>East</option>
+                                            <option>West</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tidal Current</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Flood current (incoming tide)</option>
+                                        <option>Slack water</option>
+                                        <option>Ebb current (outgoing tide)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section class="content">
+                    <section class="container">
+                        <h6>Water Conditions</h6>
+                        <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Describe the water color</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Light Blue</option>
+                                        <option>Dark Blue</option>
+                                        <option>Light Green</option>
+                                        <option>Dark Green</option>
+                                        <option>Light Brown</option>
+                                        <option>Dark Brown</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Is there an oil sheen present?</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Is there any garbage in the water?</label>
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <p>If there is garbage, record the extent in the water for each type of garbage.</p>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Hard Plastic</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Soft Plastic</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Metal</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Paper</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Glass</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Organic</label>
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label>Other</label>
+                                        <input class="form-control" type="text" placeholder="Type of trash" />
+                                        <select class="form-control">
+                                            <option disabled selected></option>
+                                            <option>None</option>
+                                            <option>Sporadic</option>
+                                            <option>Common</option>
+                                            <option>Extensive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
             </div>
-            <div ng-show="vm.error" class="text-danger">
-              <strong ng-bind="vm.error"></strong>
+            <div role="tabpanel" class="tab-pane" id="protocol2">
+                <section class="content">
+                    <section class="container">
+                        <h2>Protocol 2 <small>Oyster Measurements</small></h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="lead red">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
+                                <p></p>
+                            </div>
+                        </div>
+                    </section>
+                </section>
             </div>
-          </fieldset>
-        </form>
-      </div>
-    </section>
-  </section>
-</div>
+            <div role="tabpanel" class="tab-pane" id="protocol3">
+                <section class="content">
+                    <section class="container">
+                        <h2>Protocol 3 <small>Mobile Trap</small></h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="lead red">Your group is responsible for observations about the types and quantities of mobile organisms found within the two compartments of the mobile trap.</p>
+                                <p>One compartment contains mesh and the other contains oyster shells.</p>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="protocol4">
+                <section class="content">
+                    <section class="container">
+                        <h2>Protocol 4 <small>Settlement Tiles</small></h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="lead red">Your group is responsible for recording the sessile organisms growing on each of the four settlement tiles.</p>
+                                <p></p>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="protocol5">
+                <section class="content">
+                    <section class="container">
+                        <h2>Protocol 5 <small>Water Quality</small></h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
+                                <p></p>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </div>
+        <section class="content">
+            <section class="container">
+                <button type="submit" class="btn btn-default">{{vm.protocolSiteCondition._id ? 'Update' : 'Create'}}</button>
+                <div ng-show="vm.error" class="text-danger">
+                    <strong ng-bind="vm.error"></strong>
+                </div>
+            </section>
+        </section>
+    </fieldset>
+</form>
