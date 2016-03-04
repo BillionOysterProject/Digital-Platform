@@ -11,10 +11,5 @@
     var vm = this;
 
     vm.lessons = LessonsService.query();
-
-    $scope.$watch('$viewContentLoaded', function(event) {
-
-
-    });
   }
 })();

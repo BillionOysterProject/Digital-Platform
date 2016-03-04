@@ -52,19 +52,20 @@ var UnitSchema = new Schema({
     },
     essentialQuestions: [{
       type: String,
-      trim: true
+      trim: true,
+      default: []
     }],
     acquisition: {
       content: {
-        science: [{
+        science: {
           type: String
-        }],
-        math: [{
+        },
+        math: {
           type: String
-        }],
-        field: [{
+        },
+        field: {
           type: String
-        }],
+        },
       },
       lessons: {
         science: [{

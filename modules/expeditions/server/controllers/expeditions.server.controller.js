@@ -34,10 +34,6 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var expedition = req.expedition ? req.expedition.toJSON() : {};
 
-  // Add a custom field to the Lesson, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Lesson model.
-  expedition.isCurrentUserOwner = req.user && expedition.user && expedition.user._id.toString() === req.user._id.toString() ? true : false;
-
   res.json(expedition);
 };
 
@@ -106,7 +102,7 @@ exports.expeditionByID = function (req, res, next, id) {
     });
   }
 
-  Expedition.findById(id).exec(function (err, expedition) {
+  Expedition.findById(id).populate('site', 'name').exec(function (err, expedition) {
     if (err) {
       return next(err);
     } else if (!expedition) {

@@ -19,7 +19,7 @@ var TeamSchema = new Schema({
     required: 'Name cannot be blank',
     trim: true
   },
-  user: {
+  teamLead: {
     type: Schema.ObjectId,
     ref: 'User'
   }

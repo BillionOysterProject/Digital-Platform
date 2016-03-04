@@ -1,37 +1,43 @@
-<section>
-    <div class="page-header">
-        <div class="input-group pull-right col-md-4 col-sm-6">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
-            </span>
-            <input type="text" class="form-control" placeholder="Search for a Unit...">
-        </div>
-        <h1>Curriculum <small>Units</small></h1>
-    </div>
-    <div class="row" isotope-container="isotope-container">
-        <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
-            <div class="panel" ui-sref="units.view({ unitId: unit._id })">
-                <div class="panel-heading" style="background: {{unit.color}}">
-                    <span class="pull-right"></span>
-                    <h3 class="panel-title">
-                        <i class="glyphicon {{unit.icon}}"></i> {{unit.title}}
-                    </h3>
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Search for a Unit</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
+                </span>
+                <input type="text" class="form-control" placeholder="Search for a Unit...">
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <div class="row" isotope-container="isotope-container">
+            <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" ui-sref="units.view({ unitId: unit._id })">
+                    <div class="panel-heading" style="background: {{unit.color}}">
+                        <span class="pull-right"></span>
+                        <h3 class="panel-title">
+                            <i class="glyphicon {{unit.icon}}"></i> {{unit.title}}
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <p ng-bind="unit.content"></p>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <p ng-bind="unit.content"></p>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+                <div class="panel panel-default" ui-sref="units.create">
+                    <div class="panel-body text-center text-muted">
+                        <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
+                        <h4 class="list-group-item-heading">Create new unit</h4>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
-            <div class="panel panel-default" ui-sref="units.create">
-                <div class="panel-body text-center text-muted">
-                    <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
-                    <h4 class="list-group-item-heading">Create new unit</h4>
-                </div>
-            </div>
+        <div class="alert alert-warning text-center" ng-if="vm.units.$resolved && !vm.units.length">
+            No units yet, why don't you <a ui-sref="units.create">create one</a>?
         </div>
-    </div>
-    <div class="alert alert-warning text-center" ng-if="vm.units.$resolved && !vm.units.length">
-        No units yet, why don't you <a ui-sref="units.create">create one</a>?
-    </div>
+    </section>
 </section>

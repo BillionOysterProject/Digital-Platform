@@ -1,5 +1,5 @@
 <div ng-controller="AuthenticationController">
-  <h3 class="col-md-12 text-center">Or sign up using your email</h3>
+  <h3 class="col-md-12 text-center">Sign up</h3>
   <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
@@ -19,13 +19,14 @@
         </div>
         <div class="form-group" show-errors>
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email" placeholder="Email" lowercase required>
+          <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email" placeholder="email@example.com" lowercase required>
           <div ng-messages="userForm.email.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Email address is required.</p>
             <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
+          <label>Role</label>
           <select class="form-control" ng-model="credentials.userrole">
             <option value="team lead">Team Lead</option>
             <option value="team member">Team Member</option>

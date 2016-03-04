@@ -4,8 +4,6 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  crate = require('mongoose-crate'),
-  LocalFS = require('mongoose-crate-localfs'),
   Schema = mongoose.Schema;
 
 
@@ -186,14 +184,5 @@ LessonSchema.statics.load = function(id, cb) {
     _id: id
   }).populate('user', 'name username displayName').exec(cb);
 };
-
-LessonSchema.plugin(crate, {
-  storage: new LocalFS({
-    directory: 'files/'
-  }),
-  fields: {
-    handout: {}
-  }
-});
 
 mongoose.model('Lesson', LessonSchema);

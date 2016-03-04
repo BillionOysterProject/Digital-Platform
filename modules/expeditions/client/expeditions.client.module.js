@@ -1,4 +1,7 @@
-'use strict';
+(function (app) {
+  'use strict';
 
-// Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('expeditions');
+  app.registerModule('expeditions');
+  app.registerModule('expeditions.services');
+  app.registerModule('expeditions.routes', ['ui.router', 'expeditions.services']);
+})(ApplicationConfiguration);

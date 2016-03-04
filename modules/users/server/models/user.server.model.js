@@ -243,4 +243,13 @@ UserSchema.statics.generateRandomPassphrase = function () {
   });
 };
 
+/**
+ * Statics
+ */
+UserSchema.statics.load = function(id, cb) {
+  this.findOne({
+    _id: id
+  }).populate('team', 'name').populate('schoolOrg', 'name').exec(cb);
+};
+
 mongoose.model('User', UserSchema);
