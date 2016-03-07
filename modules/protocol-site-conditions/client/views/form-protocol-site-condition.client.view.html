@@ -26,7 +26,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label>Air temperature (celsius)</label>
+                            <label>Air temperature (C)</label>
                             <input class="form-control" type="text"/>
                         </div>
                         <div class="form-group col-sm-6">
@@ -132,10 +132,13 @@
     </section>
     <section class="content">
         <section class="container">
-            <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
             <div class="row">
                 <div class="col-md-4">
                     <h6>Water Conditions</h6>
+                    <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
+                    <p>You'll reference the photograph to answer the following questions.</p>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Describe the water color</label>
                         <select class="form-control">
@@ -148,98 +151,21 @@
                             <option>Dark Brown</option>
                         </select>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label>Is there an oil sheen present?</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Is there any garbage in the water?</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label>Is there an oil sheen present?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
                     </div>
-                    <!-- TODO: Only show div if answered "yes" to "Is there any garbage in the water?-->
-                    <p>Record the extent in the water for each type of garbage.</p>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label>Hard Plastic</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Soft Plastic</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Metal</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Paper</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Glass</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Organic</label>
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label>Other</label>
-                            <input class="form-control" type="text" placeholder="Type of trash" />
-                            <select class="form-control">
-                                <option disabled selected></option>
-                                <option>None</option>
-                                <option>Sporadic</option>
-                                <option>Common</option>
-                                <option>Extensive</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label>Is there any garbage in the water?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -251,30 +177,6 @@
                             <option>No</option>
                         </select>
                     </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
-                        <label>What is the location?</label>
-                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
-                    </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
-                        <label>Is there any flow through the pipe?</label>
-                        <select class="form-control">
-                            <option disabled selected></option>
-                            <option>Yes</option>
-                            <option>No</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
-                        <label>How much?</label>
-                        <select class="form-control">
-                            <option disabled selected></option>
-                            <option>Trickle</option>
-                            <option>Light Stream</option>
-                            <option>Steady Stream</option>
-                            <option>Full Flow</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4">
                     <div class="form-group">
                         <label>Are there any unmarked or other outfall pipes?</label>
                         <select class="form-control">
@@ -283,31 +185,288 @@
                             <option>No</option>
                         </select>
                     </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4"><!-- TODO: Only show div if answered "yes" to "Is there any garbage in the water?-->
+                    <p>Record the extent of each type of garbage in the water.</p>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label>Hard Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Soft Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Metal</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Paper</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Glass</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Organic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>Other</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" placeholder="Type of trash" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>None</option>
+                                        <option>Sporadic</option>
+                                        <option>Common</option>
+                                        <option>Extensive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4"><!-- TODO: Show this div if answered "yes" on "Are there any unmarked.."-->
+                    <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
+                    <div class="form-group">
                         <label>What is the location?</label>
                         <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
                     </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
+                    <div class="form-group">
                         <label>What is the approximate diameter of the pipe (cm)?</label>
                         <inpu class="form-control" type="text" />
                     </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
-                        <label>Is there any flow through the pipe?</label>
+                    <div class="row">
+                        <div class="form-group col-sm-6"><!-- TODO: Change from "col-sm-12" to "col-sm-6" if answered "yes" on "Is there any flow.."-->
+                            <label>Is there any flow through the pipe?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
+                            <label><br/>How much?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Trickle</option>
+                                <option>Light Stream</option>
+                                <option>Steady Stream</option>
+                                <option>Full Flow</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4"><!-- TODO: Show this div if answered "yes" on "Are there marked CSO pipes"-->
+                    <p>Give more information about the unmarked or other outfall pipes.</p>
+                    <div class="form-group">
+                        <label>What is the location?</label>
+                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6"><!-- TODO: Change from "col-sm-12" to "col-sm-6" if answered "yes" on "Is there any flow.."-->
+                            <label>Is there any flow through the pipe?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
+                            <label><br/>How much?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Trickle</option>
+                                <option>Light Stream</option>
+                                <option>Steady Stream</option>
+                                <option>Full Flow</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <section class="content shaded">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6>Land Conditions</h6>
+                    <p class="lead red">Take a photograph of the land with your camera in landscape orientation.</p>
+                    <p>You'll reference the photograph to answer the following questions.</p>
+                    <div class="form-group">
+                        <label>Choose shoreline type</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Bulkhead/Wall</option>
+                            <option>Fixed Pier</option>
+                            <option>Floating Dock</option>
+                            <option>Riprap/Rocky Shoreline</option>
+                            <option>Dirt/Sand</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Is there any garbage on the adjacent shoreline?</label>
                         <select class="form-control">
                             <option disabled selected></option>
                             <option>Yes</option>
                             <option>No</option>
                         </select>
                     </div>
-                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
-                        <label>How much?</label>
-                        <select class="form-control">
-                            <option disabled selected></option>
-                            <option>Trickle</option>
-                            <option>Light Stream</option>
-                            <option>Steady Stream</option>
-                            <option>Full Flow</option>
-                        </select>
+                </div>
+                <div class="col-md-4">
+                    <p>Estimate percent surface cover for the adjacent shoreline (about 500 x 500 feet)</p>
+                    
+                    <div class="form-group">
+                        <label>Impervious Surface (concrete/asphalt paths, roads, buildings etc.)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">%</span>
+                            <input type="number" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Pervious Surface (dirt, gravel etc.)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">%</span>
+                            <input type="number" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Vegetated surface (grass, shrubs, trees)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">%</span>
+                            <input type="number" class="form-control" />
+                        </div>
+                    </div>
+                    <h4 class="text-right red">= <b>28</b>%</h4><!-- TODO: Show realtime percentage as user adds percentages in the inputs above. Remove class "red" if at 100%. Show error message if the three percentages entered do not equal 100% -->
+                </div>
+                <div class="col-md-4">
+                    <!-- TODO: Only show div if answered "yes" to "Is there any garbage on the shore?"-->
+                    <p>Record the extent of each type of garbage on the adjacent shoreline.</p>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label>Hard Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Soft Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Metal</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Paper</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Glass</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Organic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>Other</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" placeholder="Type of trash" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control">
+                                        <option disabled selected></option>
+                                        <option>None</option>
+                                        <option>Sporadic</option>
+                                        <option>Common</option>
+                                        <option>Extensive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
