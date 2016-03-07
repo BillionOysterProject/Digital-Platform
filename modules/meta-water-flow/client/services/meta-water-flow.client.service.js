@@ -8,7 +8,7 @@
   WaterFlowService.$inject = ['$resource'];
 
   function WaterFlowService($resource) {
-    return $resource('api/water-flow/:waterFlowId', {
+    return $resource('api/water-flows/:waterFlowId', {
       waterFlowId: '@_id'
     }, {
       update: {
