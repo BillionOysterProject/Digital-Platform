@@ -219,7 +219,7 @@
                         <input class="form-control" type="text" placeholder="Click to mark the longitude on a map" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"/><!-- data-toggle="modal" data-target="#modal-map" -->
                     </div>
                     <div class="row">
-                        <div class="form-group" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'true', 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'false'}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'true', 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'false'}">
                             <label>Is there any flow through the pipe?</label>
                             <select class="form-control" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent">
                                 <option disabled selected></option>
@@ -245,7 +245,7 @@
                         <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"/>
                     </div>
                     <div class="row">
-                        <div class="form-group" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'true', 'col-sm-12': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'false'}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'true', 'col-sm-12': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'false'}">
                             <label>Is there any flow through the pipe?</label>
                             <select class="form-control" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent">
                                 <option disabled selected></option>
