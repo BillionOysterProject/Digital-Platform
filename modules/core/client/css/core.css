@@ -288,6 +288,11 @@ h6, .h6 {
     border-color: #ddd;
 }
 
+.table h6, .table p {
+    margin: 0;
+    display: inline-block;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
