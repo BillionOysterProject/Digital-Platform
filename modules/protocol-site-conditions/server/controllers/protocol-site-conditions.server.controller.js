@@ -7,7 +7,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  moment = require('moment');
 
 var emptyString = function(string) {
   if (!string || string === null || string === '') {
@@ -19,6 +20,15 @@ var emptyString = function(string) {
 
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
   var errorMessages = [];
+
+  if (siteCondition.tideConditions.closestHighTide && !moment(siteCondition.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').isValid()) {
+    errorMessages.push('Tide Conditions - Closest High Tide is not valid');
+  }
+
+  if (siteCondition.tideConditions.closestLowTide && !moment(siteCondition.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').isValid()) {
+    errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
+  }
+
   if (siteCondition.waterConditions.garbage.garbagePresent) {
     if (emptyString(siteCondition.waterConditions.garbage.hardPlastic)) {
       errorMessages.push('Water Condition - Hard Plastic extent is required.');
@@ -123,6 +133,10 @@ exports.create = function (req, res) {
   validateSiteCondition(req.body, 
   function() {
     var siteCondition = new ProtocolSiteCondition(req.body);
+    siteCondition.tideConditions.closestHighTide = 
+      moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+    siteCondition.tideConditions.closestLowTide = 
+      moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
     siteCondition.save(function (err) {
       if (err) {
@@ -146,6 +160,10 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
+  siteCondition.tideConditions.closestHighTide = 
+      moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
+    siteCondition.tideConditions.closestLowTide = 
+      moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
 
   res.json(siteCondition);
 };

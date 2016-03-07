@@ -12,17 +12,24 @@
     ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService, WaterFlowService, ShorelineTypesService) {
     var vm = this;
 
-    vm.protocolSiteCondition = ($stateParams.siteConditionId) ? ProtocolSiteConditionsService.get({
-      siteConditionId: $stateParams.siteConditionId
-    }).$promise : new ProtocolSiteConditionsService();
+    console.log('siteConditionId');
+    console.log($stateParams);
+    console.log($stateParams.protocolSiteConditionId);
+    vm.protocolSiteCondition = ($stateParams.protocolSiteConditionId) ? ProtocolSiteConditionsService.get({
+      siteConditionId: $stateParams.protocolSiteConditionId
+    }) : new ProtocolSiteConditionsService();
+    console.log('siteCondition');
+    console.log(vm.protocolSiteCondition);
 
-    vm.protocolSiteCondition.landConditions = {
-      shorelineSurfaceCoverEstPer: {
-        imperviousSurfacePer: 0,
-        perviousSurfacePer: 0,
-        vegetatedSurfacePer: 0
-      }
-    };
+    if (!$stateParams.protocolSiteConditionId) {
+      vm.protocolSiteCondition.landConditions = {
+        shorelineSurfaceCoverEstPer: {
+          imperviousSurfacePer: 0,
+          perviousSurfacePer: 0,
+          vegetatedSurfacePer: 0
+        }
+      };
+    }
 
     vm.weatherConditions = WeatherConditionsService.query();
     vm.waterColors = WaterColorsService.query();
