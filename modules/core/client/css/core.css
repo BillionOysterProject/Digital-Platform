@@ -15,16 +15,21 @@ body {
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
 
-.container { /* account for sidenav */
-  @media (min-width: 768px) {
-    width: 100%;
-  }
-  @media (min-width: 992px) {
-    width: 100%;
-  }
-  @media (min-width: 1200px) {
-    width: 1060px;
-  }
+/* allow for sidenav */
+@media (min-width: 768px) {
+    .container {
+        width: 100%;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        width: 100%;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 1060px;
+    }
 }
 
 .jumbotron {
@@ -300,9 +305,44 @@ h6, .h6 {
     border-color: #ddd;
 }
 
-.table h6, .table p {
+.table h1, 
+.table h2, 
+.table h3, 
+.table h4, 
+.table h5, 
+.table h6, 
+.table p {
     margin: 0;
     display: inline-block;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              MODALS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.modal-header,
+.modal-footer,
+.modal-body {
+    padding: 30px;
+}
+
+.modal-header {
+    border: none;
+}
+
+.modal-footer {
+    background: #eee;
+    border: none;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.modal-title {
+    font-size: 16pt;
+    color: #aaa;
 }
 
 

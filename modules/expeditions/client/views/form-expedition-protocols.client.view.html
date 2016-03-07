@@ -14,10 +14,10 @@
                 <form-protocol-site-condition></form-protocol-site-condition>
             </div>
             <div role="tabpanel" class="tab-pane" id="protocol2">
-                <form-protocol-mobile-trap></form-protocol-mobile-trap>
+                <form-protocol-oyster-measurement></form-protocol-oyster-measurement>
             </div>
             <div role="tabpanel" class="tab-pane" id="protocol3">
-                <form-protocol-oyster-measurement></form-protocol-oyster-measurement>
+                <form-protocol-mobile-trap></form-protocol-mobile-trap>
             </div>
             <div role="tabpanel" class="tab-pane" id="protocol4">
                 <form-protocol-settlement-tile></form-protocol-settlement-tile>
@@ -36,41 +36,3 @@
         </section>
     </fieldset>
 </form>
-
-
-
-
-
-
-
-
-
-
-
-<!-- MODALS -->
-<div class="modal fade" id="modal-map" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Mark the location on the map</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
-                        <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />
-                        <br />
-                        <div class="form-group">
-                            <label>Latitude and Longitude</label>
-                            <input type="text" class="form-control" placeholder="39.290385, -76.612189" /><!-- TODO: autopopulate input with lat/lng based on map click, if lat/lng is edited manually, adjust map pin -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
