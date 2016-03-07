@@ -5,110 +5,110 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  MetaWaterColor = mongoose.model('MetaWaterColor'),
+  MetaShorelineType = mongoose.model('MetaShorelineType'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
 /**
- * Create a water color
+ * Create a shoreline type
  */
 exports.create = function (req, res) {
-  var waterColor = new MetaWaterColor(req.body);
+  var shorelineType = new MetaShorelineType(req.body);
 
-  waterColor.save(function (err) {
+  shorelineType.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(waterColor);
+      res.json(shorelineType);
     }
   });
 };
 
 /**
- * Show the current water color
+ * Show the current shoreline type
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  var waterColor = req.waterColor ? req.waterColor.toJSON() : {};
+  var shorelineType = req.shorelineType ? req.shorelineType.toJSON() : {};
 
-  res.json(waterColor);
+  res.json(shorelineType);
 };
 
 /**
- * Update a water color
+ * Update a shoreline type
  */
 exports.update = function (req, res) {
-  var waterColor = req.waterColor;
+  var shorelineType = req.shorelineType;
 
-  if (waterColor) {
-    waterColor = _.extend(waterColor, req.body);
+  if (shorelineType) {
+    shorelineType = _.extend(shorelineType, req.body);
 
-    waterColor.save(function (err) {
+    shorelineType.save(function (err) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(waterColor);
+        res.json(shorelineType);
       }
     });
   }
 };
 
 /**
- * Delete a water color
+ * Delete a shoreline type
  */
 exports.delete = function (req, res) {
-  var waterColor = req.waterColor;
+  var shorelineType = req.shorelineType;
 
-  waterColor.remove(function (err) {
+  shorelineType.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(waterColor);
+      res.json(shorelineType);
     }
   });
 };
 
 /**
- * List of Water Colors
+ * List of Shoreline Types
  */
 exports.list = function (req, res) {
-  MetaWaterColor.find().sort('order').exec(function (err, waterColors) {
+  MetaShorelineType.find().sort('order').exec(function (err, shorelineTypes) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(waterColors);
+      res.json(shorelineTypes);
     }
   });
 };
 
 /**
- * Water Colors middleware
+ * Shoreline Types middleware
  */
-exports.waterColorByID = function (req, res, next, id) {
+exports.shorelineTypeByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Water color is invalid'
+      message: 'Shoreline type is invalid'
     });
   }
 
-  MetaWaterColor.findById(id).exec(function (err, waterColor) {
+  MetaShorelineType.findById(id).exec(function (err, shorelineType) {
     if (err) {
       return next(err);
-    } else if (!waterColor) {
+    } else if (!shorelineType) {
       return res.status(404).send({
-        message: 'No water color with that identifier has been found'
+        message: 'No shoreline type with that identifier has been found'
       });
     }
-    req.waterColor = waterColor;
+    req.shorelineType = shorelineType;
     next();
   });
 };

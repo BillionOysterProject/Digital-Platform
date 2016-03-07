@@ -7,9 +7,9 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Meta Water Color Schema
+ * Meta Shoreline Type Schema
  */
-var MetaWaterColorSchema = new Schema({
+var MetaShorelineTypeSchema = new Schema({
   order: {
     type: Number,
     required: true
@@ -24,4 +24,4 @@ var MetaWaterColorSchema = new Schema({
   }
 });
 
-mongoose.model('MetaWaterColor', MetaWaterColorSchema);
+mongoose.model('MetaShorelineType', MetaShorelineTypeSchema);

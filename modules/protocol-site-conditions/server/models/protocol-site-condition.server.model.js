@@ -13,7 +13,7 @@ var ProtocolSiteConditionSchema = new Schema({
   expedition: {
     type: Schema.ObjectId,
     ref: 'Expedition',
-    required: true
+    //required: true TODO: will be required
   },
   meteorologicalConditions: {
     weatherConditions: {

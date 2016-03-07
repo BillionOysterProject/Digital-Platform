@@ -1,5 +1,5 @@
-<form name="vm.form.protocolSiteConditionForm" ng-submit="vm.save(vm.form.protocolSiteConditionForm.$valid)" novalidate>
-    <fieldset>
+<section>
+    <section>
         <section class="content shaded content-unpadded">
             <ul class="nav nav-tabs nav-justified" role="tablist">
                 <li role="presentation" class="active"><a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">Protocol 1: Site Conditions</a></li>
@@ -26,13 +26,5 @@
                 <form-protocol-water-quality></form-protocol-water-quality>
             </div>
         </div>
-        <section class="content">
-            <section class="container">
-                <button type="submit" class="btn btn-default">{{vm.protocolSiteCondition._id ? 'Update' : 'Create'}}</button>
-                <div ng-show="vm.error" class="text-danger">
-                    <strong ng-bind="vm.error"></strong>
-                </div>
-            </section>
-        </section>
-    </fieldset>
-</form>
+    </section>
+</section>
