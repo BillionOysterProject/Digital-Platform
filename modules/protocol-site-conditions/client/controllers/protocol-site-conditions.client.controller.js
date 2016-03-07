@@ -5,12 +5,15 @@
     .module('lessons')
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
-  ProtocolSiteConditionsController.$inject = ['$scope', '$state', 'protocolSiteConditionResolve', 'Authentication'];
+  ProtocolSiteConditionsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', 'ProtocolSiteConditionsService'];
 
-  function ProtocolSiteConditionsController($scope, $state, protocolSiteCondition, Authentication) {
+  function ProtocolSiteConditionsController($scope, $state, Authentication, $stateParams, ProtocolSiteConditionsService) {
     var vm = this;
 
-    vm.protocolSiteCondition = protocolSiteCondition;
+    vm.protocolSiteCondition = ($stateParams.siteConditionId) ? ProtocolSiteConditionsService.get({
+      siteConditionId: $stateParams.siteConditionId
+    }).$promise : new ProtocolSiteConditionsService();
+
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};

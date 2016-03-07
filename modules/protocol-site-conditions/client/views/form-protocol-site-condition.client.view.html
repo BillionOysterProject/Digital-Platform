@@ -1,428 +1,316 @@
-<form name="vm.form.protocolSiteConditionForm" ng-submit="vm.save(vm.form.protocolSiteConditionForm.$valid)" novalidate>
-    <fieldset>
-        <section class="content shaded content-unpadded">
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-                <li role="presentation" class="active"><a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">Protocol 1: Site Conditions</a></li>
-                <li role="presentation"><a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">Protocol 2: Oyster Measurements</a></li>
-                <li role="presentation"><a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">Protocol 3: Mobile Trap</a></li>
-                <li role="presentation"><a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">Protocol 4: Settlement Tiles</a></li>
-                <li role="presentation"><a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">Protocol 5: Water Quality</a></li>
-            </ul>
-        </section>
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="protocol1">
-                <section class="content">
-                    <section class="container">
-                        <h2>Protocol 1 <small>Site Conditions</small></h2>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="lead red">Your group is responsible for observations about the land, water and air.</p>
-                                <p>This includes weather, any recent rainfall, tide and current, as well as environmental conditions of the land and the water, pollution, and garbage.</p>
-                            </div>
-                            <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
-                                <h6>Meteorological conditions</h6>
-                                <div class="form-group">
-                                    <label>Weather conditions</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Sunny</option>
-                                        <option>Partly cloudy</option>
-                                        <option>Cloudy</option>
-                                        <option>Rain</option>
-                                        <option>Fog</option>
-                                        <option>Snow</option>
-                                        <option>Hail</option>
-                                        <option>Thunderstorm</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label>Air temperature (celsius)</label>
-                                        <input class="form-control" type="text"/>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Humidity (%)</label>
-                                        <input class="form-control" type="number"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label>Wind speed (mph)</label>
-                                        <input class="form-control" type="text"/>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Wind direction</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>North</option>
-                                            <option>North West</option>
-                                            <option>West</option>
-                                            <option>South West</option>
-                                            <option>South</option>
-                                            <option>South East</option>
-                                            <option>East</option>
-                                            <option>North East</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
-                                <h6>Recent Rainfall</h6>
-                                <div class="form-group">
-                                    <label>Has it rained in the past <span class="red">24</span> hours?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Has it rained in the past <span class="red">72</span> hours?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Has it rained in the past <span class="red">7</span> days?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-                <section class="content shaded">
-                    <section class="container">
-                        <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
-                            <h6>Tide Conditions</h6>
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label>Closest High Tide</label>
-                                    <input class="form-control" type="text" />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label>Closest Low Tide</label>
-                                    <input class="form-control" type="text" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label>Current Speed</label>
-                                    <input class="form-control" type="text" />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label>Current Direction</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>North</option>
-                                        <option>South</option>
-                                        <option>East</option>
-                                        <option>West</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Tidal Current</label>
-                                <select class="form-control">
-                                    <option disabled selected></option>
-                                    <option>Flood current (incoming tide)</option>
-                                    <option>Slack water</option>
-                                    <option>Ebb current (outgoing tide)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <tide-table></tide-table>
-                        </div>
-                    </section>
-                </section>
-                <section class="content">
-                    <section class="container">
-                        <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h6>Water Conditions</h6>
-                                <div class="form-group">
-                                    <label>Describe the water color</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Light Blue</option>
-                                        <option>Dark Blue</option>
-                                        <option>Light Green</option>
-                                        <option>Dark Green</option>
-                                        <option>Light Brown</option>
-                                        <option>Dark Brown</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label>Is there an oil sheen present?</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>Yes</option>
-                                            <option>No</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Is there any garbage in the water?</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>Yes</option>
-                                            <option>No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!-- TODO: Only show div if answered "yes" to "Is there any garbage in the water?-->
-                                <p>Record the extent in the water for each type of garbage.</p>
-                                <div class="row">
-                                    <div class="form-group col-sm-6">
-                                        <label>Hard Plastic</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Soft Plastic</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Metal</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Paper</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Glass</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>Organic</label>
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label>Other</label>
-                                        <input class="form-control" type="text" placeholder="Type of trash" />
-                                        <select class="form-control">
-                                            <option disabled selected></option>
-                                            <option>None</option>
-                                            <option>Sporadic</option>
-                                            <option>Common</option>
-                                            <option>Extensive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
-                                    <label>What is the location?</label>
-                                    <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
-                                    <label>Is there any flow through the pipe?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
-                                    <label>How much?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Trickle</option>
-                                        <option>Light Stream</option>
-                                        <option>Steady Stream</option>
-                                        <option>Full Flow</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Are there any unmarked or other outfall pipes?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
-                                    <label>What is the location?</label>
-                                    <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
-                                    <label>What is the approximate diameter of the pipe (cm)?</label>
-                                    <inpu class="form-control" type="text" />
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
-                                    <label>Is there any flow through the pipe?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Yes</option>
-                                        <option>No</option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
-                                    <label>How much?</label>
-                                    <select class="form-control">
-                                        <option disabled selected></option>
-                                        <option>Trickle</option>
-                                        <option>Light Stream</option>
-                                        <option>Steady Stream</option>
-                                        <option>Full Flow</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="protocol2">
-                <section class="content">
-                    <section class="container">
-                        <h2>Protocol 2 <small>Oyster Measurements</small></h2>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="lead red">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
-                                <p></p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="protocol3">
-                <section class="content">
-                    <section class="container">
-                        <h2>Protocol 3 <small>Mobile Trap</small></h2>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="lead red">Your group is responsible for observations about the types and quantities of mobile organisms found within the two compartments of the mobile trap.</p>
-                                <p>One compartment contains mesh and the other contains oyster shells.</p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="protocol4">
-                <section class="content">
-                    <section class="container">
-                        <h2>Protocol 4 <small>Settlement Tiles</small></h2>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="lead red">Your group is responsible for recording the sessile organisms growing on each of the four settlement tiles.</p>
-                                <p></p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="protocol5">
-                <section class="content">
-                    <section class="container">
-                        <h2>Protocol 5 <small>Water Quality</small></h2>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
-                                <p></p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-            </div>
-        </div>
-        <section class="content">
-            <section class="container">
-                <button type="submit" class="btn btn-default">{{vm.protocolSiteCondition._id ? 'Update' : 'Create'}}</button>
-                <div ng-show="vm.error" class="text-danger">
-                    <strong ng-bind="vm.error"></strong>
+<section>
+    <section class="content">
+        <section class="container">
+            <h2>Protocol 1 <small>Site Conditions</small></h2>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="lead red">Your group is responsible for observations about the land, water and air.</p>
+                    <p>This includes weather, any recent rainfall, tide and current, as well as environmental conditions of the land and the water, pollution, and garbage.</p>
                 </div>
-            </section>
-        </section>
-    </fieldset>
-</form>
-
-
-
-
-
-
-
-
-
-
-
-<!-- MODALS -->
-<div class="modal fade" id="modal-map" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Mark the location on the map</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
-                        <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" />
+                <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
+                    <h6>Meteorological conditions</h6>
+                    <div class="form-group">
+                        <label>Weather conditions</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option value="sunny">Sunny</option>
+                            <option>Partly cloudy</option>
+                            <option>Cloudy</option>
+                            <option>Rain</option>
+                            <option>Fog</option>
+                            <option>Snow</option>
+                            <option>Hail</option>
+                            <option>Thunderstorm</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Air temperature (celsius)</label>
+                            <input class="form-control" type="text"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Humidity (%)</label>
+                            <input class="form-control" type="number"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Wind speed (mph)</label>
+                            <input class="form-control" type="text"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Wind direction</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>North</option>
+                                <option>North West</option>
+                                <option>West</option>
+                                <option>South West</option>
+                                <option>South</option>
+                                <option>South East</option>
+                                <option>East</option>
+                                <option>North East</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
+                    <h6>Recent Rainfall</h6>
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="red">72</span> hours?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="red">7</span> days?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        </section>
+    </section>
+    <section class="content shaded">
+        <section class="container">
+            <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
+                <h6>Tide Conditions</h6>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Closest High Tide</label>
+                        <input class="form-control" type="text" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Closest Low Tide</label>
+                        <input class="form-control" type="text" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Current Speed</label>
+                        <input class="form-control" type="text" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Current Direction</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>North</option>
+                            <option>South</option>
+                            <option>East</option>
+                            <option>West</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tidal Current</label>
+                    <select class="form-control">
+                        <option disabled selected></option>
+                        <option>Flood current (incoming tide)</option>
+                        <option>Slack water</option>
+                        <option>Ebb current (outgoing tide)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <tide-table></tide-table>
+            </div>
+        </section>
+    </section>
+    <section class="content">
+        <section class="container">
+            <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6>Water Conditions</h6>
+                    <div class="form-group">
+                        <label>Describe the water color</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Light Blue</option>
+                            <option>Dark Blue</option>
+                            <option>Light Green</option>
+                            <option>Dark Green</option>
+                            <option>Light Brown</option>
+                            <option>Dark Brown</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Is there an oil sheen present?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Is there any garbage in the water?</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- TODO: Only show div if answered "yes" to "Is there any garbage in the water?-->
+                    <p>Record the extent in the water for each type of garbage.</p>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Hard Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Soft Plastic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Metal</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Paper</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Glass</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Organic</label>
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>Other</label>
+                            <input class="form-control" type="text" placeholder="Type of trash" />
+                            <select class="form-control">
+                                <option disabled selected></option>
+                                <option>None</option>
+                                <option>Sporadic</option>
+                                <option>Common</option>
+                                <option>Extensive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
+                        <label>What is the location?</label>
+                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there marked CSO pipes"-->
+                        <label>Is there any flow through the pipe?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
+                        <label>How much?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Trickle</option>
+                            <option>Light Stream</option>
+                            <option>Steady Stream</option>
+                            <option>Full Flow</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any unmarked or other outfall pipes?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
+                        <label>What is the location?</label>
+                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" data-toggle="modal" data-target="#modal-map" />
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
+                        <label>What is the approximate diameter of the pipe (cm)?</label>
+                        <inpu class="form-control" type="text" />
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Are there any unmarked.."-->
+                        <label>Is there any flow through the pipe?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
+                        <label>How much?</label>
+                        <select class="form-control">
+                            <option disabled selected></option>
+                            <option>Trickle</option>
+                            <option>Light Stream</option>
+                            <option>Steady Stream</option>
+                            <option>Full Flow</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</section>

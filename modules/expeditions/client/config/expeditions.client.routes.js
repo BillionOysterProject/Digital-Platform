@@ -23,6 +23,19 @@
           pageTitle: 'Expeditions List'
         }
       })
+      .state('expeditions.create-protocols', {
+        url: '/create/protocols',
+        templateUrl: 'modules/expeditions/client/views/form-expedition-protocols.client.view.html',
+        controller: 'ExpeditionsController',
+        controllerAs: 'vm',
+        resolve: {
+          expeditionResolve: newExpedition
+        },
+        data: {
+          roles: ['team member', 'team lead'],
+          pageTitle : 'Expeditions Create'
+        }
+      })
       .state('expeditions.create', {
         url: '/create',
         templateUrl: 'modules/expeditions/client/views/form-expedition.client.view.html',
