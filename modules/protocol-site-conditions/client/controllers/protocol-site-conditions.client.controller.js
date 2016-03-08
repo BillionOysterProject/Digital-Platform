@@ -5,10 +5,10 @@
     .module('lessons')
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
-  ProtocolSiteConditionsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', 
+  ProtocolSiteConditionsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', 'FileUploader',
     'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService', 'WaterFlowService', 'ShorelineTypesService'];
 
-  function ProtocolSiteConditionsController($scope, $state, Authentication, $stateParams, 
+  function ProtocolSiteConditionsController($scope, $state, Authentication, $stateParams, FileUploader,
     ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService, WaterFlowService, ShorelineTypesService) {
     var vm = this;
 
@@ -25,6 +25,9 @@
           vegetatedSurfacePer: 0
         }
       };
+    } else {
+      //vm.waterConditionPhotoURL = vm.protocolSiteCondition.waterConditions.waterConditionPhoto;
+      //vm.landConditionPhotoURL = vm.protocolSiteCondition.landConditions.landConditionPhoto;
     }
 
     vm.weatherConditions = WeatherConditionsService.query();
@@ -57,6 +60,10 @@
 
     // Save protocol site condition
     vm.save = function(isValid) {
+      console.log('photo');
+      console.log(vm.waterConditionPhoto);
+      console.log(vm.waterConditionPhotoFilename);
+
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.protocolSiteConditionForm');
         return false;

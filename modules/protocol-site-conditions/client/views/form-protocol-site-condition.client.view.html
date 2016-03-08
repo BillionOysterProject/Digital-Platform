@@ -52,11 +52,11 @@
                         <label>Has it rained in the past <span class="red">7</span> days?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
-                    <div class="form-group"><!-- TODO: Only show this input if answered "yes" to "7 days"-->
+                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn7Days === true">
                         <label>Has it rained in the past <span class="red">72</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours"></select>
                     </div>
-                    <div class="form-group"><!-- TODO: Only show this input if answered "yes" to "72 hours"-->
+                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours === true">
                         <label>Has it rained in the past <span class="red">24</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
                     </div>
@@ -116,8 +116,20 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Take a photograph of the water with your camera in landscape orientation</label>
-                        <input class="form-control" type="file" />
+                        <!-- <drop-zone></drop-zone> -->
+                        <!-- <drop-zone file-types="[image/png, image/jpeg, image/gif]" file="vm.waterConditionPhoto" file-name="vm.waterConditionPhotoFilename"></drop-zone> -->
+                        <image-drop-zone file="vm.waterConditionPhoto" file-name="vm.waterConditionPhotoFilename" url="/test/url" alias="pictureAlias" image-url="vm.waterConditionPhotoURL" image-alt="Water Condition"></image-drop-zone>
+                        
                     </div>
+                    <!-- <div class="form-group" ng-show="vm.protocolSiteCondition.waterConditions.waterConditionPhoto">
+                        <img ng-src="{{waterConditionPhotoURL}}" alt="Water Condition" class="img-thumbnail">
+                    </div>
+                    <div class="form-group">
+                        <label>Take a photograph of the water with your camera in landscape orientation</label>
+                        <span class="btn btn-default btn-file">
+                            Select Image <input type="file" class="form-control" nv-file-select uploader="uploader" id="waterConditionPhoto" name="waterConditionPhoto" capture="camera" accept="image/*" />
+                        </span>
+                    </div> -->
                     <div class="form-group">
                         <label>Describe the water color</label>
                         <select class="form-control" ng-options="color.value as color.label for color in vm.waterColors" ng-model="vm.protocolSiteCondition.waterConditions.waterColor"></select>
@@ -190,9 +202,8 @@
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <!--TODO: Show this button rather than the input below if they have not yet put in a lat/lng
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked">Mark the location on a map</a>-->
-                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" readonly/>
+                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
+                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" ng-show="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly/>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
@@ -209,9 +220,8 @@
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <!--TODO: Show this button rather than the input below if they have not yet put in a lat/lng
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked">Mark the location on a map</a>-->
-                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" readonly/>
+                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                     </div>
                     <div class="form-group">
                         <label>What is the approximate diameter of the pipe (CM)?</label>
@@ -222,7 +232,7 @@
                             <label>Is there any flow through the pipe?</label>
                             <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent"></select>
                         </div>
-                        <div class="form-group col-sm-6" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true"><!-- TODO: Show this if answered "yes" on "Is there any flow.."-->
+                        <div class="form-group col-sm-6" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
                             <label><br/>How much?</label>
                             <select class="form-control" ng-options="flow.value as flow.label for flow in vm.waterFlows" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"></select>
                         </div>
@@ -339,31 +349,6 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
     <map-select latitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
-    <!-- <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Mark the location on the map</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />
-                        <br />
-                        <div class="form-group">
-                            <label>Latitude and Longitude</label>
-                            <input type="text" class="form-control" placeholder="39.290385" />
-                            <input type="text" class="form-control" placeholder="-76.612189" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-        </div>
-    </div> -->
 </div>
 
 <div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">

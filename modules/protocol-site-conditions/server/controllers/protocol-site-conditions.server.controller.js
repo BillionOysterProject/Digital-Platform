@@ -160,10 +160,8 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
-  siteCondition.tideConditions.closestHighTide = 
-      moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
-    siteCondition.tideConditions.closestLowTide = 
-      moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
+  siteCondition.tideConditions.closestHighTide = moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
+    siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
 
   res.json(siteCondition);
 };
