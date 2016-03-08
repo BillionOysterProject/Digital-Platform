@@ -12,15 +12,11 @@
     ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService, WaterFlowService, ShorelineTypesService) {
     var vm = this;
 
-    console.log('siteConditionId');
-    console.log($stateParams);
-    console.log($stateParams.protocolSiteConditionId);
+    // Set up Protocol Site Condition
     vm.protocolSiteCondition = ($stateParams.protocolSiteConditionId) ? ProtocolSiteConditionsService.get({
       siteConditionId: $stateParams.protocolSiteConditionId
     }) : new ProtocolSiteConditionsService();
-    console.log('siteCondition');
-    console.log(vm.protocolSiteCondition);
-
+    
     if (!$stateParams.protocolSiteConditionId) {
       vm.protocolSiteCondition.landConditions = {
         shorelineSurfaceCoverEstPer: {
@@ -45,6 +41,11 @@
       { label: 'Sporadic', value: 'sporadic' },
       { label: 'Common', value: 'common' },
       { label: 'Extensive', value: 'extensive' }
+    ];
+
+    vm.trueFalse = [
+      { label: 'Yes', value: true },
+      { label: 'No', value: false }
     ];
 
     // Remove existing protocol site condition
