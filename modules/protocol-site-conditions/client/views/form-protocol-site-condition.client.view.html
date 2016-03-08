@@ -14,20 +14,15 @@
                         <label>Weather conditions</label>
                         <select class="form-control" ng-options="weather.value as weather.label for weather in vm.weatherConditions" ng-model="vm.protocolSiteCondition.meteorologicalConditions.weatherConditions"></select>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label>Air temperature (C)</label>
-                            <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.airTemperatureC"/>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Humidity (%)</label>
-                            <input class="form-control" type="number" ng-model="vm.protocolSiteCondition.meteorologicalConditions.humidityPer"/>
-                        </div>
+                    <div class="form-group">
+                        <label>Air temperature (C)</label>
+                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label>Wind speed (mph)</label>
                             <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.windSpeedMPH"/>
+                            <span class="help-block">Method: Anemometer</span>
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Wind direction</label>
@@ -42,22 +37,28 @@
                                 <option value="east">East</option>
                                 <option value="northeast">North East</option>
                             </select>
+                            <span class="help-block">Method: Compass</span>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Humidity (%)</label>
+                        <input class="form-control" type="number" ng-model="vm.protocolSiteCondition.meteorologicalConditions.humidityPer"/>
+                        <span class="help-block">Method: Sling Psychrometer</span>
                     </div>
                 </div>
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
+                        <label>Has it rained in the past <span class="red">7</span> days?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"><!-- TODO: Only show this input if answered "yes" to "7 days"-->
                         <label>Has it rained in the past <span class="red">72</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours"></select>
                     </div>
-                    <div class="form-group">
-                        <label>Has it rained in the past <span class="red">7</span> days?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
+                    <div class="form-group"><!-- TODO: Only show this input if answered "yes" to "72 hours"-->
+                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
                     </div>
                 </div>
             </div>
@@ -110,17 +111,19 @@
     </section>
     <section class="content">
         <section class="container">
+            <h6>Water Conditions</h6>
             <div class="row">
                 <div class="col-md-4">
-                    <h6>Water Conditions</h6>
-                    <p class="lead red">Take a photograph of the water with your camera in landscape orientation.</p>
-                    <p>You'll reference the photograph to answer the following questions.</p>
-                </div>
-                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Take a photograph of the water with your camera in landscape orientation</label>
+                        <input class="form-control" type="file" />
+                    </div>
                     <div class="form-group">
                         <label>Describe the water color</label>
                         <select class="form-control" ng-options="color.value as color.label for color in vm.waterColors" ng-model="vm.protocolSiteCondition.waterConditions.waterColor"></select>
                     </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.oilSheen"></select>
@@ -187,7 +190,9 @@
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" readonly/>
+                        <!--TODO: Show this button rather than the input below if they have not yet put in a lat/lng
+                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked">Mark the location on a map</a>-->
+                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" readonly/>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
@@ -204,7 +209,9 @@
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" readonly/>
+                        <!--TODO: Show this button rather than the input below if they have not yet put in a lat/lng
+                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked">Mark the location on a map</a>-->
+                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" readonly/>
                     </div>
                     <div class="form-group">
                         <label>What is the approximate diameter of the pipe (CM)?</label>
@@ -226,11 +233,13 @@
     </section>
     <section class="content shaded">
         <section class="container">
+            <h6>Land Conditions</h6>
             <div class="row">
                 <div class="col-md-4">
-                    <h6>Land Conditions</h6>
-                    <p class="lead red">Take a photograph of the land with your camera in landscape orientation.</p>
-                    <p>You'll reference the photograph to answer the following questions.</p>
+                    <div class="form-group">
+                        <label>Take a photograph of the land with your camera in landscape orientation</label>
+                        <input class="form-control" type="file" />
+                    </div>
                     <div class="form-group">
                         <label>Choose shoreline type</label>
                         <select class="form-control" ng-options="type.value as type.label for type in vm.shorelineTypes" ng-model="vm.protocolSiteCondition.landConditions.shoreLineType"></select>
@@ -242,7 +251,9 @@
                 </div>
                 <div class="col-md-4">
                     <p>Estimate percent surface cover for the adjacent shoreline (about 500 x 500 feet)</p>
-                    
+                    <div role="alert" ng-show="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100">
+                        <p class="red">Percentages must add to 100%.</p>
+                    </div>
                     <div class="form-group">
                         <label>Impervious Surface (concrete/asphalt paths, roads, buildings etc.)</label>
                         <div class="input-group">
@@ -265,9 +276,6 @@
                         </div>
                     </div>
                     <h4 class="text-right" ng-class="{'red': vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100}">= <b>{{ vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
-                    <div role="alert" ng-show="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100">
-                        <p class="red">Percentages must add to 100%.</p>
-                    </div>
                 </div>
                 <div class="col-md-4" ng-show="vm.protocolSiteCondition.landConditions.garbage.garbagePresent === true">
                     <p>Record the extent of each type of garbage on the adjacent shoreline.</p>

@@ -15,7 +15,10 @@
                 </div>
                 <div class="col-md-6">
                     <h6>Condition of oyster cage</h6>
-                    <p class="lead red">Take a photograph of the oyster cage.</p>
+                    <div class="form-group">
+                        <label>Take a photograph of the oyster cage</label>
+                        <input class="form-control" type="file" />
+                    </div>
                     <div class="form-group">
                         <label>Bioaccumulation on cage</label>
                         <select class="form-control">
@@ -149,6 +152,14 @@
                                     <div class="col-md-6">
                                         <p class="lead red">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
                                         <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
+                                        <div class="form-group">
+                                            <label>Outer side</label>
+                                            <input class="form-control" type="file" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Inner side</label>
+                                            <input class="form-control" type="file" />
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">
@@ -169,11 +180,11 @@
                                             <label>Total Number of live oysters on shell</label>
                                             <input type="number" class="form-control" />
                                         </div>
+                                        <div class="form-group">
+                                            <label>Notes</label>
+                                            <textarea class="form-control" rows="5"></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="substrateshell-measurements">
