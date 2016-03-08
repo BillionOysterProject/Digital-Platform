@@ -187,8 +187,7 @@
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <input class="form-control" type="text" placeholder="Click to mark the latitude on a map" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"/><!-- data-toggle="modal" data-target="#modal-map" -->
-                        <input class="form-control" type="text" placeholder="Click to mark the longitude on a map" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"/><!-- data-toggle="modal" data-target="#modal-map" -->
+                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" readonly/>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
@@ -205,8 +204,7 @@
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <input class="form-control" type="text" placeholder="Click to mark the latitude on a map" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"/><!-- data-toggle="modal" data-target="#modal-map" -->
-                        <input class="form-control" type="text" placeholder="Click to mark the longitude on a map" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"/><!-- data-toggle="modal" data-target="#modal-map" -->
+                        <input class="form-control" type="text" placeholder="Click to mark the location on a map" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" readonly/>
                     </div>
                     <div class="form-group">
                         <label>What is the approximate diameter of the pipe (CM)?</label>
@@ -331,8 +329,9 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-map" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
+    <map-select latitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
+    <!-- <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -340,13 +339,13 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
+                    <div class="col-sm-12">
                         <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />
                         <br />
                         <div class="form-group">
                             <label>Latitude and Longitude</label>
                             <input type="text" class="form-control" placeholder="39.290385" />
-                            <input type="text" class="form-control" placeholder="-76.612189" /><!-- TODO: autopopulate input with lat/lng based on map click, if lat/lng is edited manually, adjust map pin -->
+                            <input type="text" class="form-control" placeholder="-76.612189" />
                         </div>
                     </div>
                 </div>
@@ -356,5 +355,9 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
             </div>
         </div>
-    </div>
+    </div> -->
+</div>
+
+<div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
+    <map-select latitude="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
 </div>
