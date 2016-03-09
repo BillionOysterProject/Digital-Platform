@@ -4,10 +4,15 @@
             <h2>Protocol 1 <small>Site Conditions</small></h2>
             <hr />
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <p class="lead red">Your group is responsible for observations about the land, water and air.</p>
+                </div>
+                <div class="col-md-6">
                     <p>This includes weather, any recent rainfall, tide and current, as well as environmental conditions of the land and the water, pollution, and garbage.</p>
                 </div>
+            </div>
+            <hr />
+            <div class="row">
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
                     <h6>Meteorological conditions</h6>
                     <div class="form-group">
@@ -18,6 +23,8 @@
                         <label>Air temperature (C)</label>
                         <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
+                </div>
+                <div class="col-md-4">
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label>Wind speed (mph)</label>
