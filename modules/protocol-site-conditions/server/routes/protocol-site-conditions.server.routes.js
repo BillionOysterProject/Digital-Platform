@@ -12,6 +12,14 @@ module.exports = function (app) {
     // .get(siteConditions.list)
     .post(siteConditions.create);
 
+  // Upload Water Condition route
+  app.route('/api/protocol-site-conditions/:siteConditionId/upload-water-condition').all(siteConditionsPolicy.isAllowed)
+    .post(siteConditions.uploadWaterConditionPicture);
+
+  // Upload Land Condition route
+  app.route('/api/protocol-site-conditions/:siteConditionId/upload-land-condition').all(siteConditionsPolicy.isAllowed)
+    .post(siteConditions.uploadLandConditionPicture);
+
   // Single Protocol Site Condition routes
   app.route('/api/protocol-site-conditions/:siteConditionId').all(siteConditionsPolicy.isAllowed)
     .get(siteConditions.read)

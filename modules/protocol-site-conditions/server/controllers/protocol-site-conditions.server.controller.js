@@ -4,10 +4,14 @@
  * Module dependencies
  */
 var path = require('path'),
+  fs = require('fs'),
+  path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config')),
   moment = require('moment');
 
 var emptyString = function(string) {
@@ -209,6 +213,81 @@ exports.delete = function (req, res) {
       res.json(siteCondition);
     }
   });
+};
+
+/**
+ * Upload images to protocol site condition
+ */
+exports.uploadWaterConditionPicture = function (req, res) {
+  var siteCondition = req.siteCondition;
+  var upload = multer(config.uploads.waterConditionUpload).single('newWaterConditionPicture');
+  var waterConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = waterConditionUploadFileFilter;
+
+  if (siteCondition) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading water condition picture'
+        });
+      } else {
+        console.log('file', req.file);
+        siteCondition.waterConditions.waterConditionPhoto = config.uploads.waterConditionUpload.dest + req.file.filename;
+
+        siteCondition.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(siteCondition);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Site condition does not exist'
+    });
+  }
+};
+
+exports.uploadLandConditionPicture = function (req, res) {
+  var siteCondition = req.siteCondition;
+  var upload = multer(config.uploads.landConditionUpload).single('newLandConditionPicture');
+  var landConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = landConditionUploadFileFilter;
+
+  if (siteCondition) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading land condition picture'
+        });
+      } else {
+        console.log('file', req.file);
+        siteCondition.landConditions.landConditionPhoto = config.uploads.landConditionUpload.dest + req.file.filename;
+
+        siteCondition.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(siteCondition);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Site condition does not exist'
+    });
+  }
 };
 
 /**

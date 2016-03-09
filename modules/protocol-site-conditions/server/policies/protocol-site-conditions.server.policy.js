@@ -18,12 +18,24 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-site-conditions',
       permissions: '*'
     }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-site-conditions/:siteConditionId',
       permissions: '*'
     }]
   }, {
     roles: ['team lead'],
     allows: [{
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      permissions: ['post']
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
+      permissions: ['post']
+    }, {
       resources: '/api/protocol-site-conditions/:siteConditionId',
       permissions: ['get', 'put']
     }]

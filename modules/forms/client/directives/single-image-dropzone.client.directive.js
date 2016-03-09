@@ -3,16 +3,13 @@
 
   angular
     .module('forms')
-    .directive('imageDropZone', function() {
+    .directive('singleImageDropZone', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/forms/client/views/image-dropzone.client.view.html',
+        templateUrl: 'modules/forms/client/views/single-image-dropzone.client.view.html',
         scope: {
-          file: '@',
-          fileName: '@',
-          url: '@',
-          alias: '@',
-          imageURL: '@',
+          uploader: '=',
+          imageUrl: '=',
           imageAlt: '@'
         }, 
         controller: 'ImageDropzoneController',

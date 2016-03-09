@@ -116,20 +116,8 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Take a photograph of the water with your camera in landscape orientation</label>
-                        <!-- <drop-zone></drop-zone> -->
-                        <!-- <drop-zone file-types="[image/png, image/jpeg, image/gif]" file="vm.waterConditionPhoto" file-name="vm.waterConditionPhotoFilename"></drop-zone> -->
-                        <image-drop-zone file="vm.waterConditionPhoto" file-name="vm.waterConditionPhotoFilename" url="/test/url" alias="pictureAlias" image-url="vm.waterConditionPhotoURL" image-alt="Water Condition"></image-drop-zone>
-                        
+                        <single-image-drop-zone uploader="vm.waterConditionUploader" image-url="vm.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
                     </div>
-                    <!-- <div class="form-group" ng-show="vm.protocolSiteCondition.waterConditions.waterConditionPhoto">
-                        <img ng-src="{{waterConditionPhotoURL}}" alt="Water Condition" class="img-thumbnail">
-                    </div>
-                    <div class="form-group">
-                        <label>Take a photograph of the water with your camera in landscape orientation</label>
-                        <span class="btn btn-default btn-file">
-                            Select Image <input type="file" class="form-control" nv-file-select uploader="uploader" id="waterConditionPhoto" name="waterConditionPhoto" capture="camera" accept="image/*" />
-                        </span>
-                    </div> -->
                     <div class="form-group">
                         <label>Describe the water color</label>
                         <select class="form-control" ng-options="color.value as color.label for color in vm.waterColors" ng-model="vm.protocolSiteCondition.waterConditions.waterColor"></select>
@@ -248,7 +236,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Take a photograph of the land with your camera in landscape orientation</label>
-                        <input class="form-control" type="file" />
+                        <single-image-drop-zone uploader="vm.landConditionUploader" image-url="vm.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
                         <label>Choose shoreline type</label>
