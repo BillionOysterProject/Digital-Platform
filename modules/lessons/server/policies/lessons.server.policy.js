@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/upload-featured-image',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
     }]
@@ -25,6 +28,9 @@ exports.invokeRolesPolicies = function () {
     roles: ['team lead'],
     allows: [{
       resources: '/api/lessons',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',

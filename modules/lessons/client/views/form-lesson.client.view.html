@@ -34,7 +34,7 @@
                                     <div class="form-group" show-errors>
                                         <!-- TODO: Wire up a featured image for each article -->
                                         <label for="image" class="control-label">Featured Image</label>
-                                        <input type="file" name="image" id="image" class="form-control" />
+                                        <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.lesson.featuredImage" image-alt="Featured Image"></single-image-drop-zone>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                                 <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
                                 <!-- <select-optgroup outer-column="col-md-6" name="subjectArea" in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas" required="true" label-class="control-label required" options="{{vm.subjectAreas}}"></select-optgroup> -->
                                 <div class="col-md-6">
-                                    <div class="form-group" show-errors>
+                                    <div class="form-group">
                                         <label for="subjectAreas" class="control-label required">Subject Area(s) *</label> 
 
                                         <select2 class="form-control" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true, dropdownAutoWidth: true }" multiple required></select2>
@@ -163,7 +163,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <!-- TODO: Give location for upload files to be stored in the lesson -->
-                                    <div class="form-group" show-errors>
+                                    <div class="form-group">
                                         <label for="handouts" class="control-label">Handouts</label>
                                         <form action="/file-upload" class="dropzone" id="lessonHandouts">
                                             <div class="fallback">
@@ -173,7 +173,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group" show-errors>
+                                    <div class="form-group">
                                         <label for="vocabulary" class="control-label">Teacher Resources</label>
                                         <!-- TODO: wire up "add resource" modal, wire up table to display added resources-->
                                         <table class="table table-hover">
@@ -305,7 +305,7 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="link">
                                 <br />
-                                <div class="form-group" show-errors>
+                                <div class="form-group">
                                     <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
                                     <input type="text" class="form-control" />
                                 </div>
@@ -339,13 +339,13 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group" show-errors>
+                        <div class="form-group">
                             <label>Vocabulary term</label>
-                            <input type="text" class="form-control" />
+                            <input type="text" name="vocab-term" class="form-control" />
                         </div>
-                        <div class="form-group" show-errors>
+                        <div class="form-group">
                             <label>Definition</label>
-                            <textarea class="form-control" rows="5"></textarea>
+                            <textarea class="form-control" name="definition" rows="5"></textarea>
                         </div>
                     </div>
                 </div>

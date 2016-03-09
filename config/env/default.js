@@ -61,6 +61,12 @@ module.exports = {
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
+    },
+    lessonFeaturedImageUpload: {
+      dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
     }
   }
 };

@@ -7,7 +7,11 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  fs = require('fs'),
+  path = require('path'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config'));
 
 /**
  * Create a Lesson
@@ -118,6 +122,44 @@ exports.list = function(req, res) {
       res.json(lessons);
     }
   });
+};
+
+/** 
+ * Upload files to lessons
+ */
+exports.uploadFeaturedImage = function (req, res) {
+  var lesson = req.lesson;
+  var upload = multer(config.uploads.lessonFeaturedImageUpload).single('newFeaturedImage');
+  var featuredImageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = featuredImageUploadFileFilter;
+
+  if (lesson) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading featured image picture'
+        });
+      } else {
+        lesson.featuredImage = config.uploads.lessonFeaturedImageUpload.dest + req.file.filename;
+
+        lesson.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(lesson);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Lesson does not exist'
+    });
+  }
 };
 
 /**

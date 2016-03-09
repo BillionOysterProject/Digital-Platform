@@ -11,13 +11,22 @@
           Drop Image Here
         </div>
       </div>
+      <div ng-show="imageUrl">
+        <span class="btn btn-default" ng-click="cancelUpload()">
+          Cancel
+        </span>
+      </div>
     </div>
     <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
     <div ng-hide="uploader.isHTML5">
       <span class="btn btn-default btn-file">
           Select Image <input type="file" nv-file-select uploader="uploader">
       </span>
+      <span class="btn btn-default" ng-click="cancelUpload()">
+        Cancel
+      </span>
     </div>
+
     <div ng-show="error" class="text-danger">
         <strong ng-bind="error"></strong>
     </div>

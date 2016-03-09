@@ -75,6 +75,9 @@ var LessonSchema = new Schema({
     ref: 'Unit',
     require: 'Unit cannot be blank'
   },
+  featuredImage: {
+    type: String
+  },
   lessonOverview: {
     grade: {
       type: String,

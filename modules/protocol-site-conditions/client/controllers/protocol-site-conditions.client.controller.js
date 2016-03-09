@@ -56,12 +56,10 @@
 
     vm.waterConditionUploader = new FileUploader({
       alias: 'newWaterConditionPicture',
-      queueLimit: 1
     });
 
     vm.landConditionUploader = new FileUploader({
       alias: 'newLandConditionPicture',
-      queueLimit: 1
     });
 
     // Remove existing protocol site condition
@@ -77,6 +75,9 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.protocolSiteConditionForm');
         return false;
       }
+
+      vm.protocolSiteCondition.waterConditions.waterConditionPhoto = vm.waterConditionPhotoURL;
+      vm.protocolSiteCondition.landConditions.landConditionPhoto = vm.landConditionPhotoURL;
 
       // TODO: move create/update logic to service
       if (vm.protocolSiteCondition._id) {

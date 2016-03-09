@@ -25,7 +25,7 @@
         }
       });
 
-    $scope.uploader.queueLimit = 1;
+    $scope.uploader.queueLimit = 2;
 
     // CALLBACKS
     $scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
@@ -46,9 +46,11 @@
         };
       }
     };
-    // $scope.uploader.onAfterAddingAll = function(addedFileItems) {
-    //   console.info('onAfterAddingAll', addedFileItems);
-    // };
+    $scope.uploader.onAfterAddingAll = function(addedFileItems) {
+      if ($scope.uploader.getNotUploadedItems().length > 1) {
+        $scope.uploader.removeFromQueue(0);
+      }
+    };
     // $scope.uploader.onBeforeUploadItem = function(item) {
     //   console.info('onBeforeUploadItem', item);
     // };

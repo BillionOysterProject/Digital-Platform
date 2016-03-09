@@ -5,9 +5,9 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService'];
+  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService', 'FileUploader'];
 
-  function LessonsController($scope, $state, lesson, Authentication, UnitsService, TeamsService) {
+  function LessonsController($scope, $state, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -103,6 +103,11 @@
       });
     }
 
+    vm.featuredImageUploader = new FileUploader({
+      alias: 'newFeaturedImage',
+      queueLimit: 1
+    });
+
     // Remove existing Lesson
     vm.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
@@ -130,8 +135,37 @@
 
       function successCallback(res) {
         console.log('successful');
-        $state.go('lessons.view', {
-          lessonId: res._id
+        var lessonId = res._id;
+
+        function goToView(lessonId) {
+          $state.go('lessons.view', {
+            lessonId: lessonId
+          });  
+        }
+
+        function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
+          if (vm.featuredImageUploader.queue > 0) {
+            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              featuredImageSuccessCallback();
+            };
+
+            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+              featuredImageErrorCallback(response.message);
+            };
+
+            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
+            };
+            vm.featuredImageUploader.uploadAll();
+          } else {
+            featuredImageSuccessCallback();
+          }
+        }
+
+        uploadFeaturedImage(lessonId, function() {
+          goToView(lessonId);
+        }, function(errorMessage) {
+          vm.error = errorMessage;
         });
       }
 

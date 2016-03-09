@@ -233,7 +233,6 @@ exports.uploadWaterConditionPicture = function (req, res) {
           message: 'Error occurred while uploading water condition picture'
         });
       } else {
-        console.log('file', req.file);
         siteCondition.waterConditions.waterConditionPhoto = config.uploads.waterConditionUpload.dest + req.file.filename;
 
         siteCondition.save(function (saveError) {
