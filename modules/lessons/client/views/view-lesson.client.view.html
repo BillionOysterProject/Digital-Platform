@@ -6,12 +6,7 @@
                 <h2>{{vm.lesson.title}}</h2>     
             </div>
             <div class="col col-xs-2 text-right" ng-show="vm.lesson.isCurrentUserOwner">
-                <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">
-                    <i class="glyphicon glyphicon-edit"></i>
-                </a>
-                <a class="btn btn-primary" ng-click="vm.remove()">
-                    <i class="glyphicon glyphicon-trash"></i>
-                </a>
+                <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
             </div>
         </div>
 

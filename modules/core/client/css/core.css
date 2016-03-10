@@ -185,6 +185,11 @@ a {
         border-color: #777;
         color: #777;
     }
+     
+    .btn-danger {
+        border-color: #ea6158;
+        color: #ea6158;
+    }
          
         .btn-primary:hover, 
         .btn-primary:focus, 
@@ -213,7 +218,21 @@ a {
         .open > .dropdown-toggle.btn-default:focus, 
         .btn-default:active.focus, 
         .btn-default.active.focus, 
-        .open > .dropdown-toggle.btn-default.focus {
+        .open > .dropdown-toggle.btn-default.focus,
+        .btn-danger:hover, 
+        .btn-danger:focus, 
+        .btn-danger:active,
+        .btn-danger.active, 
+        .open > .dropdown-toggle.btn-danger,
+        .btn-danger:active:hover, 
+        .btn-danger.active:hover, 
+        .open > .dropdown-toggle.btn-danger:hover, 
+        .btn-danger:active:focus, 
+        .btn-danger.active:focus, 
+        .open > .dropdown-toggle.btn-danger:focus, 
+        .btn-danger:active.focus, 
+        .btn-danger.active.focus, 
+        .open > .dropdown-toggle.btn-danger.focus {
             background: transparent;
             border-color: #ea6158;
             color: #ea6158;
