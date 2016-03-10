@@ -1,9 +1,6 @@
-<section class="content">
-    <section class="container">
-      <div class="page-header">
-        <h1>Edit {{user.firstName}} {{user.lastName}}'s profile</h1>
-      </div>
-      <div class="col-md-12">
+<div class="row">
+    <div class="col-md-12">
+        <h3>Edit {{user.firstName}} {{user.lastName}}'s profile</h3>
         <form name="userForm" ng-submit="update(userForm.$valid)" novalidate>
           <fieldset>
             <div class="form-group" show-errors>
@@ -37,6 +34,5 @@
             </div>
           </fieldset>
         </form>
-      </div>
-    </section>
-</section>
+    </div>
+</div>
