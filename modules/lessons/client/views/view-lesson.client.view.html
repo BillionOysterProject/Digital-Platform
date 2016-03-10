@@ -1,4 +1,5 @@
-<div class="jumbotron" style="background-image: url('http://dreamatico.com/data_images/ocean/ocean-5.jpg')"></div><!-- TODO: Need to get lesson image --></div>
+<div class="jumbotron" ng-hide="vm.lesson.featuredImage" style="background-image: url('http://dreamatico.com/data_images/ocean/ocean-5.jpg')"></div><!-- TODO: Need to get lesson image -->
+<div class="jumbotron" ng-show="vm.lesson.featuredImage" ng-background-image image-url="vm.lesson.featuredImage"></div>
 <section class="content">
     <section class="container">
         <div class="row">
