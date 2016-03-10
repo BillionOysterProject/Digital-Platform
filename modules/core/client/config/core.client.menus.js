@@ -25,6 +25,11 @@
     //   state: 'settings.profile'
     // });
 
+    Menus.addSubMenuItem('account', 'settings', {
+      title: 'Settings',
+      state: 'settings.profile'
+    });
+
     // Menus.addSubMenuItem('account', 'settings', {
     //   title: 'Edit Profile Picture',
     //   state: 'settings.picture'
@@ -39,11 +44,6 @@
     //   title: 'Manage Social Accounts',
     //   state: 'settings.accounts'
     // });
-
-    Menus.addSubMenuItem('account', 'settings', {
-      title: 'Settings',
-      state: 'settings.profile'
-    });
 
     // Menus.addSubMenuItem('account', 'settings', {
     //   title: 'Manage Users',
