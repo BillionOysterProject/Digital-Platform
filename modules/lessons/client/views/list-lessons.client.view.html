@@ -24,7 +24,7 @@
                                     Subject Area(s) <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a ok-sel="*">Show All</a></li>
+                                    <li><a ok-sel="*">All</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li class="dropdown-header"><a ok-sel=".science">Science</a></li>
                                     <li><a ok-sel=".ecology">Ecology</a></li>
@@ -93,14 +93,15 @@
                     </div>
                     <div class="panel-body">
                         <small>{{lesson.lessonOverview.setting}}</small>
-                        <h4>{{lesson.lessonUpload.title}}</h4>
+                        <h4>{{lesson.title}}</h4>
                         <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
                     </div>
                     <div class="panel-footer">
-                        <!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
-                        <span class="label label-science">Science</span>
-                        <span class="label label-science">Oceanography</span>
-                        <span class="label label-science">Marine Biology</span>
+                        <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                            <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                                <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
