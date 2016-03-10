@@ -3,9 +3,7 @@
     <img ng-src="{{imageUrl}}" alt="{{imageAlt}}" class="img-thumbnail">
   </div>
   <div>
-    <!--<h3>{{imageUrl ? 'Update Image' : 'Select Image'}}</h3>-->
     <div ng-show="uploader.isHTML5">
-      <!-- 3. nv-file-over uploader="link" over-class="className" -->
       <div nv-file-drop="" uploader="uploader">
         <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
           Drop Image Here
@@ -17,7 +15,6 @@
         </span>
       </div>
     </div>
-    <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
     <div ng-hide="uploader.isHTML5">
       <span class="btn btn-default btn-file">
           Select Image <input type="file" nv-file-select uploader="uploader">
@@ -26,7 +23,6 @@
         Remove Image
       </span>
     </div>
-
     <div ng-show="error" class="text-danger">
         <strong ng-bind="error"></strong>
     </div>

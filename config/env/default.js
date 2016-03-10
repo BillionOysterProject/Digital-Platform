@@ -66,8 +66,13 @@ module.exports = {
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024
-      },
-      inMemory: true
+      }
+    },
+    lessonHandoutsUpload: {
+      dest: './modules/lessons/client/files/handouts/uploads', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
     }
   }
 };

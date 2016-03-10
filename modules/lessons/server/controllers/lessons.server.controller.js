@@ -142,6 +142,44 @@ exports.uploadFeaturedImage = function (req, res) {
           message: 'Error occurred while uploading featured image picture'
         });
       } else {
+        lesson.featuredImage.path = config.uploads.lessonFeaturedImageUpload.dest + req.file.filename;
+        lesson.featuredImage.originalname = req.file.originalname;
+        lesson.featuredImage.mimetype = req.file.mimetype;
+        lesson.featuredImage.filename = req.file.filename;
+
+        lesson.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(lesson);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Lesson does not exist'
+    });
+  }
+};
+
+exports.uploadHandouts = function (req, res) {
+  var lesson = req.lesson;
+  var upload = multer(config.uploads.lessonFeaturedImageUpload).single('newFeaturedImage');
+  var featuredImageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = featuredImageUploadFileFilter;
+
+  if (lesson) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading featured image picture'
+        });
+      } else {
         lesson.featuredImage = config.uploads.lessonFeaturedImageUpload.dest + req.file.filename;
 
         lesson.save(function (saveError) {

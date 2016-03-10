@@ -76,7 +76,10 @@ var LessonSchema = new Schema({
     require: 'Unit cannot be blank'
   },
   featuredImage: {
-    type: String
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
   },
   lessonOverview: {
     grade: {
@@ -117,15 +120,22 @@ var LessonSchema = new Schema({
       required: true,
       trim: true
     },
-    teacherResources: {
+    teacherResourcesLinks: [{
       type: String,
-      //required: true, should be required, not all set up yet
       trim: true
-    },
-    handoutsFileInput: {
-      type: String,
-      required: false
-    },
+    }],
+    teacherResourcesFiles: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
+    handoutsFileInput: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
     vocabulary: [{
       type: String,
       required: false

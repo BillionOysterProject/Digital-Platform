@@ -75,8 +75,10 @@ var ProtocolSiteConditionSchema = new Schema({
   },
   waterConditions: {
     waterConditionPhoto: {
-      type: String,
-      //required: true
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
     },
     waterColor: {
       type: String,
@@ -133,8 +135,10 @@ var ProtocolSiteConditionSchema = new Schema({
   },
   landConditions: {
     landConditionPhoto: {
-      type: String,
-      //required: true
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
     },
     shoreLineType: {
       type: String,

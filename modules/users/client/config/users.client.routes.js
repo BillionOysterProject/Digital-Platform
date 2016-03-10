@@ -8,11 +8,23 @@ angular.module('users').config(['$stateProvider',
       .state('settings', {
         abstract: true,
         url: '/settings',
-        templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
+        //template: '<ui-view/>'
+        templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user', 'admin'],
+          pageTitle: 'Settings'
         }
       })
+      // .state('settings.main', {
+      //   url: '',
+      //   templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html',
+      //   controller: 'SettingsController',
+      //   controllerAs: 'vm',
+      //   data: {
+      //     roles: ['user', 'admin'],
+      //     pageTitle: 'Settings'
+      //   }
+      // })
       .state('settings.profile', {
         url: '/profile',
         templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html',

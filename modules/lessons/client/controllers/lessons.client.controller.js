@@ -103,9 +103,15 @@
       });
     }
 
+    vm.featuredImage = vm.lesson.featuredImage.path;
+
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
-      queueLimit: 1
+      queueLimit: 2
+    });
+
+    vm.handoutFilesUploader = new FileUploader({
+      queueLimit: 20
     });
 
     // Remove existing Lesson
@@ -123,6 +129,10 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
+
+      vm.lesson.featuredImage = {
+        path: vm.featuredImage
+      };
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {

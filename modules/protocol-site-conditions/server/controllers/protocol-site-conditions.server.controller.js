@@ -233,7 +233,11 @@ exports.uploadWaterConditionPicture = function (req, res) {
           message: 'Error occurred while uploading water condition picture'
         });
       } else {
-        siteCondition.waterConditions.waterConditionPhoto = config.uploads.waterConditionUpload.dest + req.file.filename;
+        console.log('file', req.file);
+        siteCondition.waterConditions.waterConditionPhoto.path = config.uploads.waterConditionUpload.dest + req.file.filename;
+        siteCondition.waterConditions.waterConditionPhoto.originalname = req.file.originalname;
+        siteCondition.waterConditions.waterConditionPhoto.mimetype = req.file.mimetype;
+        siteCondition.waterConditions.waterConditionPhoto.filename = req.file.filename;
 
         siteCondition.save(function (saveError) {
           if (saveError) {
@@ -269,7 +273,10 @@ exports.uploadLandConditionPicture = function (req, res) {
         });
       } else {
         console.log('file', req.file);
-        siteCondition.landConditions.landConditionPhoto = config.uploads.landConditionUpload.dest + req.file.filename;
+        siteCondition.landConditions.landConditionPhoto.path = config.uploads.landConditionUpload.dest + req.file.filename;
+        siteCondition.landConditions.landConditionPhoto.originalname = req.file.originalname;
+        siteCondition.landConditions.landConditionPhoto.mimetype = req.file.mimetype;
+        siteCondition.landConditions.landConditionPhoto.filename = req.file.filename;
 
         siteCondition.save(function (saveError) {
           if (saveError) {

@@ -19,8 +19,8 @@
         siteConditionId: $stateParams.protocolSiteConditionId
       }, function(data) {
         vm.protocolSiteCondition = data;  
-        vm.waterConditionPhotoURL = vm.protocolSiteCondition.waterConditions.waterConditionPhoto;
-        vm.landConditionPhotoURL = vm.protocolSiteCondition.landConditions.landConditionPhoto;
+        vm.waterConditionPhotoURL = vm.protocolSiteCondition.waterConditions.waterConditionPhoto.path;
+        vm.landConditionPhotoURL = vm.protocolSiteCondition.landConditions.landConditionPhoto.path;
       }); 
     } else {
       vm.protocolSiteCondition = new ProtocolSiteConditionsService();
@@ -76,8 +76,12 @@
         return false;
       }
 
-      vm.protocolSiteCondition.waterConditions.waterConditionPhoto = vm.waterConditionPhotoURL;
-      vm.protocolSiteCondition.landConditions.landConditionPhoto = vm.landConditionPhotoURL;
+      vm.protocolSiteCondition.waterConditions.waterConditionPhoto = {
+        path: vm.waterConditionPhotoURL
+      };
+      vm.protocolSiteCondition.landConditions.landConditionPhoto = {
+        path: vm.landConditionPhotoURL
+      };
 
       // TODO: move create/update logic to service
       if (vm.protocolSiteCondition._id) {
