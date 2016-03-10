@@ -404,7 +404,9 @@
                         </div>
                         
                         <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-                        <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Create lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+                        <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+
+                        <button type="button" class="btn btn-danger pull-right" ng-click="vm.remove()">Delete</button>
                     </div>
                     <div ng-show="vm.error" class="text-danger">
                         <strong ng-bind="vm.error"></strong>
