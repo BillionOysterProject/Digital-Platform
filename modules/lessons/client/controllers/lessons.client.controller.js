@@ -95,7 +95,7 @@
     ];
     vm.units = UnitsService.query();
 
-    if (vm.lesson.user.team) {
+    if (vm.lesson.user && vm.lesson.user.team) {
       TeamsService.get({
         teamId: vm.lesson.user.team
       }, function(team) {
