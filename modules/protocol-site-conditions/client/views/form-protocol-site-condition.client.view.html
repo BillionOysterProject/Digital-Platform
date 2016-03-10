@@ -125,12 +125,12 @@
                         <label>Take a photograph of the water with your camera in landscape orientation</label>
                         <single-image-drop-zone uploader="vm.waterConditionUploader" image-url="vm.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
                     </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Describe the water color</label>
                         <select class="form-control" ng-options="color.value as color.label for color in vm.waterColors" ng-model="vm.protocolSiteCondition.waterConditions.waterColor"></select>
                     </div>
-                </div>
-                <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.oilSheen"></select>
