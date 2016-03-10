@@ -6,7 +6,7 @@
             <h1>{{user.firstName}} {{user.lastName}}</h1>
           </div>
           <div class="col-md-6 text-right">
-            <a class="btn btn-primary" ui-sref="admin.user-edit({userId: user._id})">
+            <a class="btn btn-primary" ui-sref="settings.admin-user-edit({userId: user._id})">
               <i class="glyphicon glyphicon-edit"></i>
             </a>
             <a class="btn btn-primary" ng-click="remove();" ng-if="user._id !== authentication.user._id">

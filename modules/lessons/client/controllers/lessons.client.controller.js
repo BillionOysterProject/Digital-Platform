@@ -104,6 +104,7 @@
     }
 
     vm.featuredImage = vm.lesson.featuredImage.path;
+    vm.handouts = [];
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',

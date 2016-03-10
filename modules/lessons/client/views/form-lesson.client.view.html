@@ -163,11 +163,7 @@
                                     <!-- TODO: Give location for upload files to be stored in the lesson -->
                                     <div class="form-group">
                                         <label for="handouts" class="control-label">Handouts</label>
-                                        <form action="/file-upload" class="dropzone" id="lessonHandouts">
-                                            <div class="fallback">
-                                                <input name="file" type="file" multiple />
-                                            </div>
-                                        </form>
+                                        <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"></multiple-file-drop-zone>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
