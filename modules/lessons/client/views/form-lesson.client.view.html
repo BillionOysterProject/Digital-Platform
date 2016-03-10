@@ -11,7 +11,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-group" show-errors>
                                         <label for="lessonTitle" class="control-label required">Lesson Title *</label>
                                         <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title" required/>
@@ -19,8 +19,6 @@
                                             <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="unit" class="control-label required">Unit *</label>
                                         <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit._id" ng-options="unit._id as unit.title for unit in vm.units" required>
@@ -30,7 +28,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group" show-errors>
                                         <!-- TODO: Wire up a featured image for each article -->
                                         <label for="image" class="control-label">Featured Image</label>
