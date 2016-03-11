@@ -473,6 +473,13 @@ h6, .h6 {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.tab-content .advanced-wrapper {
+    border-top: none;
+    box-shadow: none;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
 
 /* WYSIWYG EDITOR PLUGIN */
 

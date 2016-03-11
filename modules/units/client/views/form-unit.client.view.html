@@ -108,60 +108,54 @@
                                     <div class="tab-content">
                                         <div role="tabpanel" class="tab-pane active" id="science-cs">
                                             <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceContent" in-title="Science Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.science" label-class="control-label"></wysiwyg-editor>
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceContent" ng-model="vm.unit.stageOne.acquisition.content.science" label-class="control-label"></wysiwyg-editor>
                                             </div>
                                         </div>
                                         <div role="tabpanel" class="tab-pane" id="math-cs">
                                             <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathContent" in-title="Math Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.math"></wysiwyg-editor>
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathContent" ng-model="vm.unit.stageOne.acquisition.content.math"></wysiwyg-editor>
                                             </div>
                                         </div>
                                         <div role="tabpanel" class="tab-pane" id="field-cs">
                                             <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldContent" in-title="Field Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.field"></wysiwyg-editor>
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldContent" ng-model="vm.unit.stageOne.acquisition.content.field"></wysiwyg-editor>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <p>How will students acquire knowledge and skills?</p>
+                            <div class="row"><!--TODO: Make these fields save as WYSIWYGs-->
+                                <div class="col-lg-12">
+                                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                                        <li role="presentation" class="active"><a href="#science-l" data-toggle="tab" aria-controls="science-l" role="tab">Science Lessons</a></li>
+                                        <li role="presentation"><a href="#math-l" data-toggle="tab" aria-controls="math-l" role="tab">Math Lessons</a></li>
+                                        <li role="presentation"><a href="#field-l" data-toggle="tab" aria-controls="field-l" role="tab">Field Lessons</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="science-l">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceLContent" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="math-l">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathLContent" ng-model="vm.unit.stageOne.acquisition.lessons.math"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="field-l">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldLContent" ng-model="vm.unit.stageOne.acquisition.lessons.field"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- REMOVING SELECTS AND REPLACING WITH WYSIWYGS
                             <div class="row">
                                 <select-tags outer-column="col-md-4" name="scienceLessons" in-title="Science Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label" options="{{vm.scienceLessons}}"></select-tags>
-                                <!-- <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Science Lessons</label>
-                                        <select class="select2 form-control">
-                                            <option value="ecology">Ecology Lesson</option>
-                                            <option value="geologyeatchscience">Geology and Earth Science Lesson</option>
-                                            <option value="limnology">Limnology Lesson</option>
-                                            <option value="marinebio">Marine Biology Lesson</option>
-                                            <option value="oceanography">Oceanography Lesson</option>
-                                        </select>
-                                    </div>
-                                </div> -->
                                 <select-tags outer-column="col-md-4" name="mathLessons" in-title="Math Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.math" label-class="control-label" options="{{vm.mathLessons}}"></select-tags>
-                                <!-- <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Math Lessons</label>
-                                        <select class="select2 form-control">
-                                            <option value="dataanalysis">Data Analysis Lesson</option>
-                                            <option value="graphing">Graphing Lesson</option>
-                                            <option value="ratiosproportions">Ratios &amp; Proportions Lesson</option>
-                                            <option value="algebra">Algebra Lesson</option>
-                                        </select>
-                                    </div>
-                                </div> -->
                                 <select-tags outer-column="col-md-4" name="fieldLessons" in-title="Field Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.field" label-class="control-label" options="{{vm.fieldLessons}}"></select-tags>
-                                <!-- <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Field Lessons</label>
-                                        <select class="select2 form-control">
-                                            <option value="field1">Field Lesson 1</option>
-                                            <option value="field2">Field Lesson 2</option>
-                                        </select>
-                                    </div>
-                                </div> -->
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <!-- Stage 2: Evidence -->
@@ -170,15 +164,6 @@
                         <div class="panel-body">
                             <div class="row">
                                 <select-tags outer-column="col-md-12" name="numberExpectation" in-title="Number: Expectation" ng-model="vm.unit.stageTwo.evidence.expectations" label-class="control-label" options="{{vm.numberExpectations}}"></select-tags>
-                                <!-- <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Number: Expectation</label>
-                                        <select class="select2 form-control">
-                                            <option value="kps21">K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.</option>
-                                            <option value="kps22">K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.</option>
-                                        </select>
-                                    </div>
-                                </div> -->
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -214,15 +199,6 @@
                             <p>How will students show their learning?</p>
                             <div class="row">
                                 <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project" ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects" label-class="control-label" options="{{vm.researchProjects}}"></select-tags>
-                                <!-- <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Research Project</label>
-                                        <select class="select2create form-control">
-                                            <option value="project1">Project 1</option>
-                                            <option value="project2">Project 2</option>
-                                        </select>
-                                    </div>
-                                </div> -->
                                 <wysiwyg-editor outer-column="col-md-12 form-group" name="extentions" in-title="Extentions" ng-model="vm.unit.stageTwo.assessmentEvidence.extentions"></wysiwyg-editor>
                             </div>
                         </div>
