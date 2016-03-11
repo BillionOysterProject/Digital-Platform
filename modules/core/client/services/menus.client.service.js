@@ -91,6 +91,7 @@ angular.module('core').service('Menus', [
         type: options.type || 'item',
         class: options.class,
         roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
+        icon: options.icon || '',
         position: options.position || 0,
         items: [],
         shouldRender: shouldRender
@@ -122,6 +123,7 @@ angular.module('core').service('Menus', [
             title: options.title || '',
             state: options.state || '',
             roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
+            icon: options.icon || '',
             position: options.position || 0,
             shouldRender: shouldRender
           });

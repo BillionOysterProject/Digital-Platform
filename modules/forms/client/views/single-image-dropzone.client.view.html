@@ -1,0 +1,30 @@
+<div>
+  <div class="form-group" ng-show="imageUrl">
+    <img ng-src="{{imageUrl}}" alt="{{imageAlt}}" class="img-thumbnail">
+  </div>
+  <div>
+    <div ng-show="uploader.isHTML5">
+      <div nv-file-drop="" uploader="uploader">
+        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+          Drop Image Here
+        </div>
+      </div>
+      <div ng-show="imageUrl">
+        <span class="btn btn-default" ng-click="cancelUpload()">
+          Remove Image
+        </span>
+      </div>
+    </div>
+    <div ng-hide="uploader.isHTML5">
+      <span class="btn btn-default btn-file">
+          Select Image <input type="file" nv-file-select uploader="uploader">
+      </span>
+      <span class="btn btn-default" ng-click="cancelUpload()">
+        Remove Image
+      </span>
+    </div>
+    <div ng-show="error" class="text-danger">
+        <strong ng-bind="error"></strong>
+    </div>
+  </div>
+</div>

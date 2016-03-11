@@ -1,26 +1,26 @@
-<section ng-controller="SettingsController">
-  <div class="page-header">
-    <h1>Settings</h1>
-  </div>
-  <div class="row">
-    <nav class="col-sm-3 col-md-3">
-      <ul class="nav nav-pills nav-stacked">
-        <li ui-sref-active="active">
-          <a ui-sref="settings.profile">Edit Profile</a>
-        </li>
-        <li ui-sref-active="active">
-          <a ui-sref="settings.picture">Change Profile Picture</a>
-        </li>
-        <li ui-sref-active="active" ng-show="user.provider === 'local'">
-          <a ui-sref="settings.password">Change Password</a>
-        </li>
-        <li ui-sref-active="active">
-          <a ui-sref="settings.accounts">Manage Social Accounts</a>
-        </li>
-      </ul>
-    </nav>
-    <div class="col-sm-9 col-md-8 settings-view">
-      <div ui-view></div>
-    </div>
-  </div>
+<div class="jumbotron" ng-controller="SettingsController">
+    <section class="content">
+        <section class="container">
+            <h2>Settings</h2>
+            <ul class="nav nav-pills">
+                <li ui-sref-active="active">
+                    <a ui-sref="settings.profile">Profile</a>
+                </li>
+                <li ui-sref-active="active" ng-show="user.provider === 'local'">
+                    <a ui-sref="settings.password">Password</a>
+                </li>
+                <li ui-sref-active="active"><!-- TODO: Wire up page for this -->
+                    <a ui-sref="settings.notifications">Notifications</a>
+                </li>
+                <li ui-sref-active="active"><!-- TODO: Wire up page for this, only show if a Team Lead role -->
+                    <a ui-sref="settings.admin-users">Students</a>
+                </li>
+            </ul>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container">
+        <div ui-view></div>
+    </section>
 </section>

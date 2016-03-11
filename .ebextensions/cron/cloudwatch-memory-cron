@@ -1,0 +1,2 @@
+# The newline at the end of this file is extremely important.  Cron won't run without it.
+*/5 * * * * root /var/app/current/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-used --mem-avail --disk-space-util --disk-path=/ --from-cron

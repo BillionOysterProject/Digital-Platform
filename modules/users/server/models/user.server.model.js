@@ -76,10 +76,27 @@ var UserSchema = new Schema({
   },
   providerData: {},
   additionalProvidersData: {},
+  socialProfiles: {
+    twitter: {
+      type: String,
+      default: '',
+      trim: true
+    },
+    facebook: {
+      type: String,
+      default: '',
+      trim: true
+    },
+    website: {
+      type: String,
+      default: '',
+      trim: true
+    }
+  },
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'admin']
+      enum: ['user', 'admin', 'team lead', 'team member', 'partner']
     }],
     default: ['user'],
     required: 'Please provide at least one role'
@@ -97,6 +114,29 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  schoolOrg: {
+    type: Schema.ObjectId,
+    ref: 'SchoolOrg'
+  },
+  team: {
+    type: Schema.ObjectId,
+    ref: 'Team'
+  },
+  title: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  city: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  state: {
+    type: String,
+    default: '',
+    trim: true
   }
 });
 
@@ -201,6 +241,15 @@ UserSchema.statics.generateRandomPassphrase = function () {
       resolve(password);
     }
   });
+};
+
+/**
+ * Statics
+ */
+UserSchema.statics.load = function(id, cb) {
+  this.findOne({
+    _id: id
+  }).populate('team', 'name').populate('schoolOrg', 'name').exec(cb);
 };
 
 mongoose.model('User', UserSchema);

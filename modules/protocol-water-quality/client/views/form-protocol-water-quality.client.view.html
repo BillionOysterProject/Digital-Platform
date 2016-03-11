@@ -1,0 +1,146 @@
+<section>
+    <section class="content">
+        <section class="container">
+            <h2>Protocol 5 <small>Water Quality</small></h2>
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                  <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
+                </div>
+                <div class="col-md-6">
+                  <p>Using a bucket suspended from a rope, collect a sample of water from an area where your oyster cage is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first. If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.</p>
+                </div>
+            </div>
+        </section>
+    </section>
+    <section class="content shaded">
+        <section class="container">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <h6>Water Quality Parameters</h6>
+                    <label>Depth of Water Sample (m)</label>
+                    <input type="number" class="form-control" />
+                    <span class="help-block">Type 0 if at surface</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Location where Water Sample was taken</label>
+                    <span class="help-block">Describe location or mark exact coordinates on map</span>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- TODO: Create same experience from protocol1 mapping for this protocol -->
+                            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                            <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-responsive table-condensed">
+                        <tr>
+                            <th></th>
+                            <th>Method (tool or test name)</th>
+                            <th>Results (include units)</th>
+                            <th></th>
+                            <th></th>
+                            <th>Average</th>
+                            <th>Units</th>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Water Temperature</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Dissolved Oxygen</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Salinity</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>pH</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Turbidity</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Ammonia</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><h4>Nitrates</h4></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="form-control" placeholder="Other" /></td>
+                            <td><input type="text" class="form-control" placeholder="Method" /></td>
+                            <td><input type="text" class="form-control" placeholder="Results" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" placeholder="Average" /></td>
+                            <td><input type="text" class="form-control" placeholder="Units" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <a class="btn btn-primary">Add a new sample</a><!--TODO: This should add another <section class="content"> identical to the one above. But every other <section class="content"> should be <section class="content shaded">. Also, this button should only show on the last Sample -->
+            <a class="btn btn-primary">Remove sample</a> <!--TODO: This button should show on each added Sample to remove the <section> (but never on the initial Sample, since that is required) -->
+        </section>
+    </section>
+    <section class="content">
+        <section class="container">
+            <button type="submit" class="btn btn-default">Submit</button>
+            <div ng-show="vm.error" class="text-danger">
+                <strong ng-bind="vm.error"></strong>
+            </div>
+        </section>
+    </section>
+</section>
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog"><!--TODO: Update ID (just copy/pasted from protocol1-->
+    <map-select latitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
+</div>

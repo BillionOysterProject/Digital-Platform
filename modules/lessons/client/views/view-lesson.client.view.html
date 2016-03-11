@@ -1,0 +1,212 @@
+<div class="jumbotron" ng-hide="vm.lesson.featuredImage" style="background-image: url('http://dreamatico.com/data_images/ocean/ocean-5.jpg')"></div><!-- TODO: Need to get lesson image -->
+<div class="jumbotron" ng-show="vm.lesson.featuredImage" ng-background-image image-url="vm.lesson.featuredImage.path"></div>
+<section class="content">
+    <section class="container">
+        <div class="row">
+            <div class="col col-xs-10">
+                <h2>{{vm.lesson.title}}</h2>     
+            </div>
+            <div class="col col-xs-2 text-right" ng-show="vm.lesson.isCurrentUserOwner">
+                <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+            </div>
+        </div>
+
+        <div class="row text-muted">
+            <div class="col col-sm-10">
+                <h5><!-- TODO: Need to get images into user -->
+                    <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
+                    <b>{{vm.lesson.user.displayName}}</b><br>
+                    <!-- TODO: I don't know where the team name is stored right now -->
+                    <span ng-hide="!vm.lesson.user.team">{{vm.lesson.user.team.name}} / </span><a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
+                </h5>
+            </div>
+            <div class="col col-sm-2 text-right">
+                <p ng-bind="vm.lesson.created | date:'mediumDate'"></p>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col col-sm-6">
+                <h4><b>Unit:</b> <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a></h4>
+            </div>
+            <div class="col col-sm-6">
+                <h4><b>Protocols:</b>
+                    <span ng-repeat="protocol in vm.lesson.lessonOverview.protocolConnections">
+                        <span ng-bind="protocol | protocolConnections"></span>
+                    </span>
+                </h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-sm-2">
+                <b>Grade</b>
+                <p ng-bind="vm.lesson.lessonOverview.grade"></p>
+            </div>
+            <div class="col col-sm-2">
+                <b>Class Periods</b>
+                <p ng-bind="vm.lesson.lessonOverview.classPeriods"></p>
+            </div>
+            <div class="col col-sm-2">
+                <b>Setting</b>
+                <p ng-bind="vm.lesson.lessonOverview.setting"></p>
+            </div>
+            <div class="col col-sm-6">
+                <b>Subject Areas</b>
+                <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                    <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
+                        <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col col-sm-3">
+                <ul class="list-unstyled">
+                    <b>Supplies</b>
+                    <p ng-bind="vm.lesson.materialsResources.supplies"></p>
+                </ul>
+                <ul class="list-unstyled">
+                    <b>Teacher Resources</b>
+                    <!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.teacherResources - 3 TYPES OF RESOURCES, EXAMPLES WITH ICONS AND CORRECT BEHAVIORS BELOW-->
+                    <!-- TODO: FILE: Should download on click -->
+                    <li><a href="#"><i class="glyphicon glyphicon-file"></i> Resource Type</a></li>
+                    <!-- TODO: LINK: Should open link in new window on click -->
+                    <li><a href="#" target="_blank"><i class="glyphicon glyphicon-link"></i> School Blog</a></li>
+                    <!-- TODO: VIDEO: Should open modal and play video on click -->
+                    <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li>
+                </ul>
+                <ul class="list-unstyled">
+                    <b>Hand Outs</b>
+                    <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
+                        <a class="btn" ng-click="downloadExample(file)"><i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
+                    </li>
+                    <!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.handoutsFileInput - Should download on click -->
+                    <!-- <li><a href="#"><i class="glyphicon glyphicon-file"></i> Student Worksheet</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-file"></i> Harbour Map</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-file"></i> Marine Animals</a></li> -->
+                </ul>
+            </div>
+            <div class="col col-sm-9">
+                <h3>Lesson Overview</h3>
+                <div class="row">
+                    <div class="col col-sm-12">
+                        <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Objectives</h3>
+                        <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-6">
+                        <h3>Vocabulary</h3>
+                        <!-- TODO: Should show definition on click - place    $('.popover-trigger').popover();    inside jQuery to trigger popover -->
+                        <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
+                            <a class="popover-trigger" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Vocabulary Term" data-content="Vocabulary definition here" ng-bind="vocabulary | vocabulary"></a>
+                        </div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Background</h3>
+                        <div ng-bind-html="vm.lesson.background | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h3>Instruction Plan</h3>
+                        <h4>Engage</h4>
+                        <div ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h4>Explore</h4>
+                        <div ng-bind-html="vm.lesson.instructionPlan.explore | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h4>Explain</h4>
+                        <div ng-bind-html="vm.lesson.instructionPlan.explain | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h4>Elaborate</h4>
+                        <div ng-bind-html="vm.lesson.instructionPlan.elaborate | sanitize"></div>
+                    </div>
+                    <div class="col col-sm-12">
+                        <h4>Evaluate</h4>
+                        <div ng-bind-html="vm.lesson.instructionPlan.evaluate | sanitize"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col col-sm-12">
+                <h3>Standards</h3>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycScienceScopeSequence">
+                <b>New York City Science Scope &amp; Sequence</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.nycScienceScopeSequence">
+                        <span ng-bind="standard | nycScienceScope"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssStandards">
+                <b>NGSS Standards</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssStandards">
+                        <span ng-bind="standard | ngssStandards"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreEla">
+                <b>Common Core ELA</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.commonCoreEla">
+                        <span ng-bind="standard | commonCoreEla"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreMath">
+                <b>Common Core Math</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.commonCoreMath">
+                        <span ng-bind="standard | commonCoreMath"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Video Title</h4><!-- TODO: Wire up video title -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12"><!-- TODO: Wire up video URL -->
+                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/kB0JA7jsqMw" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

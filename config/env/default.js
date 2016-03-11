@@ -7,7 +7,7 @@ module.exports = {
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 8081,
   host: process.env.HOST || '0.0.0.0',
   templateEngine: 'swig',
   // Session Cookie settings
@@ -48,6 +48,30 @@ module.exports = {
       dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+      }
+    },
+    waterConditionUpload: {
+      dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
+      limits: {
+        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+      }
+    },
+    landConditionUpload: {
+      dest: './modules/protocol-site-conditions/client/img/land-condition/uploads/', // Protocol site condition upload destination path
+      limits: {
+        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+      }
+    },
+    lessonFeaturedImageUpload: {
+      dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    lessonHandoutsUpload: {
+      dest: './modules/lessons/client/files/handouts/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
       }
     }
   }

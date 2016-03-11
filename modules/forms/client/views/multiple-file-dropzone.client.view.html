@@ -1,0 +1,24 @@
+<div>
+  <div class="form-group" ng-show="files">
+    <div ng-repeat="file in files">
+      <i class="glyphicon glyphicon-file"></i> {{file.originalname}} <i class="glyphicon glyphicon-remove" ng-click="removeFile($index, file)"></i>
+    </div>
+  </div>
+  <div>
+    <div ng-show="uploader.isHTML5">
+      <div nv-file-drop="" uploader="uploader">
+        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+          Drop Files Here
+        </div>
+      </div>
+    </div>
+    <div ng-hide="uploader.isHTML5">
+      <span class="btn btn-default btn-file">
+          Select File <input type="file" nv-file-select uploader="uploader">
+      </span>
+    </div>
+    <div ng-show="error" class="text-danger">
+        <strong ng-bind="error"></strong>
+    </div>
+  </div>
+</div>

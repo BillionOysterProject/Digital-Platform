@@ -1,0 +1,118 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Search for a Lesson</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
+                </span>
+                <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject...">
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <nav class="navbar">
+            <div class="row">
+                <div class="col-sm-9 button-group filters-button-group">
+                    <div class="library-filter-nav">
+                        <ul class="nav navbar-nav">
+                            <li><a ok-sel="*">Show All</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Subject Area(s) <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a ok-sel="*">All</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><a ok-sel=".science">Science</a></li>
+                                    <li><a ok-sel=".ecology">Ecology</a></li>
+                                    <li><a ok-sel=".geologyeatchscience">Geology and Earth Science </a></li>
+                                    <li><a ok-sel=".limnology">Limnology</a></li>
+                                    <li><a ok-sel=".marinebio">Marine Biology</a></li>
+                                    <li><a ok-sel=".oceanography">Oceanography</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><a ok-sel=".technology">Technology</a></li>
+                                    <li><a ok-sel=".computerscience">Computer Science</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a ok-sel=".engineering">Engineering</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><a ok-sel=".math">Math</a></li>
+                                    <li><a ok-sel=".dataanalysis">Data Analysis</a></li>
+                                    <li><a ok-sel=".graphing">Graphing</a></li>
+                                    <li><a ok-sel=".ratiosproportions">Ratios & Proportions</a></li>
+                                    <li><a ok-sel=".algebra">Algebra</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header"><a ok-sel=".socialstudies">Social Studies</a></li>
+                                    <li><a ok-sel=".history">History</a></li>
+                                    <li><a ok-sel=".economics">Economics</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a ok-sel=".englishlanguagearts">English Language Arts</a></li>
+                                    <li><a ok-sel=".music">Music</a></li>
+                                    <li><a ok-sel=".music">Art</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Setting <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" opt-kind="" ok-key="filter">
+                                   <li><a ok-sel="*">Show all</a></li>
+                                   <li><a ok-sel=".Classroom">Classroom</a></li>
+                                   <li><a ok-sel=".Field">Field</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Units <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a ok-sel=".urbaneco"><i class="fa fa-circle text-primary"></i> NYC's Urban Ecosystem</a></li>
+                                    <li><a ok-sel=".oysters"><i class="fa fa-circle text-success"></i> Oysters</a></li>
+                                    <li><a ok-sel=".mobileorganism"><i class="fa fa-circle text-default"></i> Mobile Organisms</a></li>
+                                    <li><a ok-sel=".sessileorganism"><i class="fa fa-circle text-warning"></i> Sessile Organisms</a></li>
+                                    <li><a ok-sel=".waterquality"><i class="fa fa-circle text-info"></i> Water Quality</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="row" isotope-container="isotope-container">
+            <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.lessonUpload.unit}}">
+                <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                    <div class="panel-heading" style="background: {{lesson.lessonUpload.unit.color}}">
+                        <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                        <h3 class="panel-title">
+                            <i class="glyphicon {{lesson.lessonUpload.unit.icon}}"></i>
+                            {{lesson.lessonUpload.unit}}
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <small>{{lesson.lessonOverview.setting}}</small>
+                        <h4>{{lesson.title}}</h4>
+                        <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                    </div>
+                    <div class="panel-footer">
+                        <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                            <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                                <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+                <div class="panel panel-default" ui-sref="lessons.create">
+                    <div class="panel-body text-center text-muted">
+                        <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
+                        <h4 class="list-group-item-heading">Create new lesson</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

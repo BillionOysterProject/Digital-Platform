@@ -56,11 +56,11 @@ var validateEnvironmentVariable = function () {
   console.log();
   if (!environmentFiles.length) {
     if (process.env.NODE_ENV) {
-      console.error(chalk.red('+ Error: No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead'));
+      console.error(chalk.red('+ Error: No configuration file found for "' + process.env.NODE_ENV + '" environment using development-local instead'));
     } else {
-      console.error(chalk.red('+ Error: NODE_ENV is not defined! Using default development environment'));
+      console.error(chalk.red('+ Error: NODE_ENV is not defined! Using default development-local environment'));
     }
-    process.env.NODE_ENV = 'development';
+    process.env.NODE_ENV = 'development-local';
   }
   // Reset console color
   console.log(chalk.white(''));
@@ -93,6 +93,10 @@ var validateSecureMode = function (config) {
 var validateSessionSecret = function (config, testing) {
 
   if (process.env.NODE_ENV !== 'production') {
+    return true;
+  }
+
+  if (process.env.NODE_ENV !== 'staging') {
     return true;
   }
 
