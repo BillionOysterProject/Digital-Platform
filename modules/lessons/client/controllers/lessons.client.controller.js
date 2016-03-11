@@ -226,9 +226,7 @@
     };
 
     $scope.downloadExample = function(file) {
-      console.log('file', file);
       var url = '/api/lessons/' + vm.lesson._id + '/upload-handouts';
-      console.log('url', url);
       $http.get(url, {
         params: {
           originalname: file.originalname, 
@@ -237,7 +235,6 @@
         }
       }).
       success(function(data, status, headers, config) {
-        console.log('success');
         var anchor = angular.element('<a/>');
         anchor.attr({
           href: encodeURI(data),
@@ -246,7 +243,6 @@
         })[0].click();
       }).
       error(function(data, status, headers, config) {
-        console.log('error');
         // if there's an error you should see it here
       });
     };
