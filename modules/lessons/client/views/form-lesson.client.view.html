@@ -175,12 +175,11 @@
                                                 <td>Resource Name (Video/link)</td>
                                                 <td>http://link.com</td>
                                             </tr>
-                                            <tr data-toggle="modal" data-target="#modal-resources">
-                                                <td>Resource Name (File upload)</td>
-                                                <td></td>
+                                            <tr data-toggle="modal" data-target="#modal-resources" ng-repeat="file in vm.resourceFiles" ng-click="openTeacherResourcesModal()">
+                                                <td>{{file.originalname}} (File upload)</td>
                                             </tr>
                                         </table>
-                                        <button class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-resources" ng-click="vm.toggleResourceModal()">Add Resource</button>
+                                        <a class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-resources" ng-click="openTeacherResourcesModal()">Add Resource</a>
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +281,7 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-resources" tabindex="-1" role="dialog" ng-show="vm.showResourceModal">
+<div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -305,20 +304,16 @@
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="upload">
-                                <form action="/file-upload" class="dropzone" id="lessonResources">
-                                    <div class="fallback">
-                                        <input name="file" type="file" multiple />
-                                    </div>
-                                </form>
+                                <multiple-file-drop-zone uploader="vm.teacherResourceFilesUploader" files="vm.tempResourceFiles"></multiple-file-drop-zone>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.cancelTeacherResources()">Cancel</button>
+                <!-- <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.deleteTeacherResources()">Delete</button> -->
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addTeacherResources()">Add</button>
             </div>
         </div>
     </div>

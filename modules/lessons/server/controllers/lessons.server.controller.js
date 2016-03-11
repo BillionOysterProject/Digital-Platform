@@ -82,6 +82,15 @@ exports.update = function(req, res) {
     }
     lesson.materialsResources.handoutsFileInput = existingHandouts;
 
+    var existingResources = [];
+    for (var i = 0; i < lesson.materialsResources.teacherResourcesFiles.length; i++) {
+      var resource = lesson.materialsResources.teacherResourcesFiles[i];
+      if (resource.path) {
+        existingResources.push(resource);
+      }
+    }
+    lesson.materialsResources.teacherResourcesFiles = existingResources;
+
     if (!lesson.updated) lesson.updated = [];
     lesson.updated.push(Date.now());
 
@@ -180,8 +189,6 @@ exports.uploadHandouts = function (req, res) {
   var upload = multer(config.uploads.lessonHandoutsUpload).array('newHandouts', 20);
 
   var handoutUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
-
-  // Filtering to upload only images
   upload.fileFilter = handoutUploadFileFilter;
 
   if (lesson) {
@@ -219,7 +226,49 @@ exports.uploadHandouts = function (req, res) {
   }
 };
 
-exports.downloadHandout = function(req, res){
+exports.uploadTeacherResources = function (req, res) {
+  var lesson = req.lesson;
+  var upload = multer(config.uploads.lessonTeacherResourcesUpload).array('newTeacherResourceFile', 20);
+
+  var resourceUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
+  upload.fileFilter = resourceUploadFileFilter;
+
+  if (lesson) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading teacher resources'
+        });
+      } else {
+        for (var i = 0; i < req.files.length; i++) {
+          var file = req.files[i];
+          lesson.materialsResources.teacherResourcesFiles.push({
+            path: config.uploads.lessonTeacherResourcesUpload.dest + file.filename,
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            filename: file.filename
+          });
+        }
+
+        lesson.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(lesson);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Lesson does not exist'
+    });
+  }
+};
+
+exports.downloadFile = function(req, res){
   res.setHeader('Content-disposition', 'attachment; filename=' + req.query.originalname);
   res.setHeader('content-type', req.query.mimetype);
   //res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
