@@ -227,9 +227,10 @@
                             </div>
                         </div>
                     </div>
+                    <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+                    <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
+                    <button class="btn btn-danger pull-right" ng-click="vm.remove()">Delete</button>
                 </div>
-                <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-                <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Create unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
             </fieldset>
         </form>
     </section>

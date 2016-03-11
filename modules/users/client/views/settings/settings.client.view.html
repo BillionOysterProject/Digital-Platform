@@ -1,24 +1,23 @@
-<div class="jumbotron" ng-controller="SettingsController">
-    <section class="content">
-        <section class="container">
-            <h2>Settings</h2>
-            <ul class="nav nav-pills">
-                <li ui-sref-active="active">
-                    <a ui-sref="settings.profile">Profile</a>
-                </li>
-                <li ui-sref-active="active" ng-show="user.provider === 'local'">
-                    <a ui-sref="settings.password">Password</a>
-                </li>
-                <li ui-sref-active="active"><!-- TODO: Wire up page for this -->
-                    <a ui-sref="settings.notifications">Notifications</a>
-                </li>
-                <li ui-sref-active="active"><!-- TODO: Wire up page for this, only show if a Team Lead role -->
-                    <a ui-sref="settings.admin-users">Students</a>
-                </li>
-            </ul>
-        </section>
+<section class="content shaded">
+    <section class="container">
+        <h2>Settings</h2>
     </section>
-</div>
+</section>
+<section class="content shaded content-unpadded" ng-controller="SettingsController">
+    <section class="container">
+        <ul class="nav nav-tabs">
+            <li ui-sref-active="active">
+                <a ui-sref="settings.profile">Profile</a>
+            </li>
+            <!--<li ui-sref-active="active"><!-- TODO: Wire up page for this once we have an alert system --
+                <a ui-sref="settings.notifications">Notifications</a>
+            </li>-->
+            <li ui-sref-active="active"><!-- TODO: Only show if a Team Lead role -->
+                <a ui-sref="settings.admin-users">Students</a>
+            </li>
+        </ul>
+    </section>
+</section>
 <section class="content">
     <section class="container">
         <div ui-view></div>
