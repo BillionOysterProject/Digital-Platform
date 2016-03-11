@@ -146,6 +146,27 @@ body {
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              IMAGES
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.header-profile-image {
+  opacity: 0.8;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.profile-image {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
               COLORS
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -342,6 +363,10 @@ h6, .h6 {
     display: inline-block;
 }
 
+.table.table-verticalalign tbody > tr > td {
+    vertical-align: middle;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -448,6 +473,13 @@ h6, .h6 {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.tab-content .advanced-wrapper {
+    border-top: none;
+    box-shadow: none;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
 
 /* WYSIWYG EDITOR PLUGIN */
 
@@ -476,14 +508,6 @@ h6, .h6 {
 .ng-cloak,
 .x-ng-cloak {
   display: none !important;
-}
-
-.header-profile-image {
-  opacity: 0.8;
-  height: 28px;
-  width: 28px;
-  border-radius: 50%;
-  margin-right: 5px;
 }
 
 .open .header-profile-image,

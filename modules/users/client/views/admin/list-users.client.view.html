@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-9">
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon">
@@ -9,16 +9,30 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-3">
+        <a class="btn btn-primary btn-block">Add student</a><!-- TODO: This should open modal -->
+    </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <div class="list-group">
-            <a ng-repeat="user in pagedItems" ui-sref="settings.admin-user({userId: user._id})" class="list-group-item">
-                <h4 class="list-group-item-heading" ng-bind="user.username"></h4>
-                <p class="list-group-item-text pull-right small" ng-bind="user.roles"></p>
-                <p class="list-group-item-text" ng-bind="user.email"></p>
-            </a>
-        </div>
+    <div class="col-md-12"><!-- TODO: This list should only show a teacher's list of students (Team Members) -->
+        <table class="table table-verticalalign table-responsive">
+            <tr ng-repeat="user in pagedItems">
+                <td><img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png"></td><!--TODO: Pull in user's image-->
+                <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}<br/>{{user.email}}</span></td>
+                <td>7th</td>
+                <td>Female</td>
+                <td>2nd Period</td>
+                <td>Team</td>
+                <td class="text-right">
+                    <a class="btn btn-default" ui-sref="settings.admin-user-edit({userId: user._id})">
+                      <i class="glyphicon glyphicon-edit"></i><!--TODO: Put edit screen into a popup modal-->
+                    </a>
+                    <a class="btn btn-danger" ng-click="remove();" ng-if="user._id !== authentication.user._id">
+                      <i class="glyphicon glyphicon-trash"></i><!--TODO: This broke when moved from view page, should open confirmation popup modal -->
+                    </a>
+                </td>
+            </tr>
+        </table>
         
         <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
     </div>
