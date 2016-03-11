@@ -122,7 +122,10 @@ var LessonSchema = new Schema({
     },
     teacherResourcesLinks: [{
       name: String,
-      link: String
+      link: {
+        type: String,
+        trim: true
+      }
     }],
     teacherResourcesFiles: [{
       originalname: String,
