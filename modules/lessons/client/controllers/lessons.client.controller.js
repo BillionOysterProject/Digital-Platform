@@ -105,10 +105,10 @@
     }
 
     vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
-    vm.handouts = vm.lesson.materialsResources.handoutsFileInput || [];
-    vm.resourceFiles = vm.lesson.materialsResources.teacherResourcesFiles || [];
+    vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
+    vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
     vm.tempResourceFiles = [];
-    vm.resourceLinks = vm.lesson.materialsResources.teacherResourcesLinks || [];
+    vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
     vm.tempResourceLinkName = '';
     vm.tempResourceLink = '';
 
