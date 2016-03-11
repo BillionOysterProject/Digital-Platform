@@ -12,12 +12,28 @@ body {
     margin-top: 51px; /* allow for navbar, so content and jumbotron can be in any order */
 }
 
-.content {
-    padding: 15px 15px 15px 95px;
+.content { padding: 15px 15px 15px 95px; }
+.content-unpadded { padding-bottom: 0; }
+
+/* allow for sidenav */
+@media (min-width: 768px) {
+    .container {
+        width: 100%;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        width: 100%;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 1060px;
+    }
 }
 
 .jumbotron {
-    background-color: #f4f7f8;
+    background-color: #eee /*#f4f7f8*/;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -140,7 +156,7 @@ body {
 .lightblue { color: #a0d0cb; }
 .yellow { color: #fbe8ac; }
 .crimson { color: #943234; }
-.shaded { background-color: #f4f7f8; }
+.shaded { background-color: #eee/*#f4f7f8*/; }
 
 /* LINK COLORS */
 
@@ -269,6 +285,13 @@ a {
 }
 
 
+/* WELL COLORS */
+
+.well { 
+    background: #fff;
+}
+
+
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
             TYPOGRAPHY
@@ -297,8 +320,55 @@ a {
     font-style: normal;
 }
 
+h6, .h6 {
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
 .page-header {
     border-color: #ddd;
+}
+
+.table h1, 
+.table h2, 
+.table h3, 
+.table h4, 
+.table h5, 
+.table h6, 
+.table p {
+    margin: 0;
+    display: inline-block;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              MODALS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.modal-header,
+.modal-footer,
+.modal-body {
+    padding: 30px;
+}
+
+.modal-header {
+    border: none;
+}
+
+.modal-footer {
+    background: #eee;
+    border: none;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.modal-title {
+    font-size: 16pt;
+    color: #aaa;
 }
 
 

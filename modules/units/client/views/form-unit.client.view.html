@@ -1,238 +1,236 @@
-<div class="shaded">
-    <section class="content">
-        <section class="container">
-            <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid)" novalidate>
-                <fieldset>
-                    <div class="container-fluid">
-                        <div class="page-header">
-                            <h1>{{vm.unit._id ? 'Edit unit' : 'Create new unit'}}</h1>
-                        </div>
+<section class="content shaded">
+    <section class="container">
+        <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid)" novalidate>
+            <fieldset>
+                <div class="container-fluid">
+                    <div class="page-header">
+                        <h1>{{vm.unit._id ? 'Edit unit' : 'Create new unit'}}</h1>
+                    </div>
 
-                        <!-- Unit -->
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group" show-errors>
-                                            <label for="unitTitle" class="control-label required">Unit Title *</label>
-                                            <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title" required/>
-                                            <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alrt">
-                                                <p class="help-block error-text" ng-message="required">Unit title is required.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group" show-errors>
-                                            <label for="color" class="control-label required">Color *</label>
-                                            <small>Enter a hex code</small>
-                                            <input type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required/>
-                                            <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
-                                                <p class="help-block error-text" ng-message="required">Color is required.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group" show-errors>
-                                            <label for="icon" class="control-label required">Icon *</label>
-                                            <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons" target="_blank">glyphicon</a> name</small>
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-                                                    <!-- TODO: Update with their inputed selection -->
-                                                </span>
-                                                <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" id="icon" ng-model="vm.unit.icon" required/>
-                                                <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
-                                                    <p class="help-block error-text" ng-message="required">Icon is required.</p>
-                                                </div>
-                                            </div>
+                    <!-- Unit -->
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label for="unitTitle" class="control-label required">Unit Title *</label>
+                                        <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title" required/>
+                                        <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alrt">
+                                            <p class="help-block error-text" ng-message="required">Unit title is required.</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Stage 1: Desired Results -->
-                        <h3>Stage 1: Desired Results</h3>
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <h4>Enduring Understandings</h4>
-                                <p>The concepts and skills students will understand and be able to use several years into the future.</p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group" show-errors>
-                                            <label for="fieldWork" class="control-label required">Field Work *</label>
-                                            <input type="text" class="form-control" name="fieldWork" id="fieldWork" ng-model="vm.unit.stageOne.enduringUnderstandings.fieldWork" required/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" show-errors>
-                                            <label form="scienceContentEU" class="control-label required">Science Content *</label>
-                                            <input type="text" class="form-control" name="scienceContentEU" id="scienceContentEU" ng-model="vm.unit.stageOne.enduringUnderstandings.scienceContent" required/>
+                                <div class="col-md-3">
+                                    <div class="form-group" show-errors>
+                                        <label for="color" class="control-label required">Color *</label>
+                                        <small>Enter a hex code</small>
+                                        <input type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required/>
+                                        <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
+                                            <p class="help-block error-text" ng-message="required">Color is required.</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <h4>Essential Questions</h4>
-                                <p>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group" show-errors>
-                                            <label for="essentialQuestion1" class="control-label">Question 1</label>
-                                            <input type="text" class="form-control" name="essentialQuestion1" id="essentialQuestion1" ng-model="vm.unit.stageOne.essentialQuestions[0]">
-                                        </div>
-                                        <div class="form-group" show-errors>
-                                            <label for="essentialQuestion2" class="control-label">Question 2</label>
-                                            <input type="text" class="form-control" name="essentialQuestion2" id="essentialQuestion2" ng-model="vm.unit.stageOne.essentialQuestions[1]">
-                                        </div>
-                                        <div class="form-group" show-errors>
-                                            <label for="essetialQuestion3" class="control-label">Question 3</label>
-                                            <input type="text" class="form-control" name="essentialQuestion3" id="essentialQuestion3" ng-model="vm.unit.stageOne.essentialQuestions[2]">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <h4>Acquisition</h4>
-                                <p>What knowledge and skills will students acquire?</p>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <ul class="nav nav-tabs nav-justified" role="tablist">
-                                            <li role="presentation" class="active"><a href="#science-cs" data-toggle="tab" aria-controls="science-cs" role="tab">Science Content/Skills</a></li>
-                                            <li role="presentation"><a href="#math-cs" data-toggle="tab" aria-controls="math-cs" role="tab">Math Content/Skills</a></li>
-                                            <li role="presentation"><a href="#field-cs" data-toggle="tab" aria-controls="field-cs" role="tab">Field Content/Skills</a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane active" id="science-cs">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceContent" in-title="Science Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.science" label-class="control-label"></wysiwyg-editor>
-                                                </div>
-                                            </div>
-                                            <div role="tabpanel" class="tab-pane" id="math-cs">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="mathContent" in-title="Math Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.math"></wysiwyg-editor>
-                                                </div>
-                                            </div>
-                                            <div role="tabpanel" class="tab-pane" id="field-cs">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldContent" in-title="Field Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.field"></wysiwyg-editor>
-                                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group" show-errors>
+                                        <label for="icon" class="control-label required">Icon *</label>
+                                        <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons" target="_blank">glyphicon</a> name</small>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
+                                                <!-- TODO: Update with their inputed selection -->
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" id="icon" ng-model="vm.unit.icon" required/>
+                                            <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
+                                                <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <p>How will students acquire knowledge and skills?</p>
-                                <div class="row">
-                                    <select-tags outer-column="col-md-4" name="scienceLessons" in-title="Science Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label" options="{{vm.scienceLessons}}"></select-tags>
-                                    <!-- <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Science Lessons</label>
-                                            <select class="select2 form-control">
-                                                <option value="ecology">Ecology Lesson</option>
-                                                <option value="geologyeatchscience">Geology and Earth Science Lesson</option>
-                                                <option value="limnology">Limnology Lesson</option>
-                                                <option value="marinebio">Marine Biology Lesson</option>
-                                                <option value="oceanography">Oceanography Lesson</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                    <select-tags outer-column="col-md-4" name="mathLessons" in-title="Math Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.math" label-class="control-label" options="{{vm.mathLessons}}"></select-tags>
-                                    <!-- <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Math Lessons</label>
-                                            <select class="select2 form-control">
-                                                <option value="dataanalysis">Data Analysis Lesson</option>
-                                                <option value="graphing">Graphing Lesson</option>
-                                                <option value="ratiosproportions">Ratios &amp; Proportions Lesson</option>
-                                                <option value="algebra">Algebra Lesson</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                    <select-tags outer-column="col-md-4" name="fieldLessons" in-title="Field Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.field" label-class="control-label" options="{{vm.fieldLessons}}"></select-tags>
-                                    <!-- <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Field Lessons</label>
-                                            <select class="select2 form-control">
-                                                <option value="field1">Field Lesson 1</option>
-                                                <option value="field2">Field Lesson 2</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Stage 2: Evidence -->
-                        <h3>Stage 2: Evidence</h3>
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <select-tags outer-column="col-md-12" name="numberExpectation" in-title="Number: Expectation" ng-model="vm.unit.stageTwo.evidence.expectations" label-class="control-label" options="{{vm.numberExpectations}}"></select-tags>
-                                    <!-- <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Number: Expectation</label>
-                                            <select class="select2 form-control">
-                                                <option value="kps21">K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.</option>
-                                                <option value="kps22">K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <ul class="nav nav-tabs nav-justified" role="tablist">
-                                            <li role="presentation" class="active"><a href="#scieng" data-toggle="tab" aria-controls="scieng" role="tab">Science and Engineering</a></li>
-                                            <li role="presentation"><a href="#disciplinary" data-toggle="tab" aria-controls="disciplinary" role="tab">Disciplinary Core Ideas</a></li>
-                                            <li role="presentation"><a href="#crosscutting" data-toggle="tab" aria-controls="crosscutting" role="tab">Cross-Cutting Concepts</a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane active" id="scieng">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceAndEngineering" in-title="Science and Engineering" ng-model="vm.unit.stageTwo.evidence.scienceAndEngineering"></wysiwyg-editor>
-                                                </div>
-                                            </div>
-                                            <div role="tabpanel" class="tab-pane" id="disciplinary">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="disciplinaryCoreIdeas" in-title="Disciplinary Core Ideas" ng-model="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas"></wysiwyg-editor>
-                                                </div>
-                                            </div>
-                                            <div role="tabpanel" class="tab-pane" id="crosscutting">
-                                                <div class="row">
-                                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="crossCuttingConcepts" in-title="Cross-Cutting Concepts" ng-model="vm.unit.stageTwo.evidence.crossCuttingConcepts"></wysiwyg-editor>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <h4>Assessment Evidence</h4>
-                                <p>How will students show their learning?</p>
-                                <div class="row">
-                                    <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project" ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects" label-class="control-label" options="{{vm.researchProjects}}"></select-tags>
-                                    <!-- <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Research Project</label>
-                                            <select class="select2create form-control">
-                                                <option value="project1">Project 1</option>
-                                                <option value="project2">Project 2</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-                                    <wysiwyg-editor outer-column="col-md-12 form-group" name="extentions" in-title="Extentions" ng-model="vm.unit.stageTwo.assessmentEvidence.extentions"></wysiwyg-editor>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-                    <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Create unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
-                </fieldset>
-            </form>
-        </section>
+                    
+                    <!-- Stage 1: Desired Results -->
+                    <h3>Stage 1: Desired Results</h3>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Enduring Understandings</h4>
+                            <p>The concepts and skills students will understand and be able to use several years into the future.</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label for="fieldWork" class="control-label required">Field Work *</label>
+                                        <input type="text" class="form-control" name="fieldWork" id="fieldWork" ng-model="vm.unit.stageOne.enduringUnderstandings.fieldWork" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" show-errors>
+                                        <label form="scienceContentEU" class="control-label required">Science Content *</label>
+                                        <input type="text" class="form-control" name="scienceContentEU" id="scienceContentEU" ng-model="vm.unit.stageOne.enduringUnderstandings.scienceContent" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Essential Questions</h4>
+                            <p>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" show-errors>
+                                        <label for="essentialQuestion1" class="control-label">Question 1</label>
+                                        <input type="text" class="form-control" name="essentialQuestion1" id="essentialQuestion1" ng-model="vm.unit.stageOne.essentialQuestions[0]">
+                                    </div>
+                                    <div class="form-group" show-errors>
+                                        <label for="essentialQuestion2" class="control-label">Question 2</label>
+                                        <input type="text" class="form-control" name="essentialQuestion2" id="essentialQuestion2" ng-model="vm.unit.stageOne.essentialQuestions[1]">
+                                    </div>
+                                    <div class="form-group" show-errors>
+                                        <label for="essetialQuestion3" class="control-label">Question 3</label>
+                                        <input type="text" class="form-control" name="essentialQuestion3" id="essentialQuestion3" ng-model="vm.unit.stageOne.essentialQuestions[2]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Acquisition</h4>
+                            <p>What knowledge and skills will students acquire?</p>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                                        <li role="presentation" class="active"><a href="#science-cs" data-toggle="tab" aria-controls="science-cs" role="tab">Science Content/Skills</a></li>
+                                        <li role="presentation"><a href="#math-cs" data-toggle="tab" aria-controls="math-cs" role="tab">Math Content/Skills</a></li>
+                                        <li role="presentation"><a href="#field-cs" data-toggle="tab" aria-controls="field-cs" role="tab">Field Content/Skills</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="science-cs">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceContent" in-title="Science Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.science" label-class="control-label"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="math-cs">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathContent" in-title="Math Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.math"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="field-cs">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldContent" in-title="Field Content/Skills" ng-model="vm.unit.stageOne.acquisition.content.field"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>How will students acquire knowledge and skills?</p>
+                            <div class="row">
+                                <select-tags outer-column="col-md-4" name="scienceLessons" in-title="Science Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label" options="{{vm.scienceLessons}}"></select-tags>
+                                <!-- <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Science Lessons</label>
+                                        <select class="select2 form-control">
+                                            <option value="ecology">Ecology Lesson</option>
+                                            <option value="geologyeatchscience">Geology and Earth Science Lesson</option>
+                                            <option value="limnology">Limnology Lesson</option>
+                                            <option value="marinebio">Marine Biology Lesson</option>
+                                            <option value="oceanography">Oceanography Lesson</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <select-tags outer-column="col-md-4" name="mathLessons" in-title="Math Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.math" label-class="control-label" options="{{vm.mathLessons}}"></select-tags>
+                                <!-- <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Math Lessons</label>
+                                        <select class="select2 form-control">
+                                            <option value="dataanalysis">Data Analysis Lesson</option>
+                                            <option value="graphing">Graphing Lesson</option>
+                                            <option value="ratiosproportions">Ratios &amp; Proportions Lesson</option>
+                                            <option value="algebra">Algebra Lesson</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <select-tags outer-column="col-md-4" name="fieldLessons" in-title="Field Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.field" label-class="control-label" options="{{vm.fieldLessons}}"></select-tags>
+                                <!-- <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Field Lessons</label>
+                                        <select class="select2 form-control">
+                                            <option value="field1">Field Lesson 1</option>
+                                            <option value="field2">Field Lesson 2</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stage 2: Evidence -->
+                    <h3>Stage 2: Evidence</h3>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <select-tags outer-column="col-md-12" name="numberExpectation" in-title="Number: Expectation" ng-model="vm.unit.stageTwo.evidence.expectations" label-class="control-label" options="{{vm.numberExpectations}}"></select-tags>
+                                <!-- <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Number: Expectation</label>
+                                        <select class="select2 form-control">
+                                            <option value="kps21">K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.</option>
+                                            <option value="kps22">K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                                        <li role="presentation" class="active"><a href="#scieng" data-toggle="tab" aria-controls="scieng" role="tab">Science and Engineering</a></li>
+                                        <li role="presentation"><a href="#disciplinary" data-toggle="tab" aria-controls="disciplinary" role="tab">Disciplinary Core Ideas</a></li>
+                                        <li role="presentation"><a href="#crosscutting" data-toggle="tab" aria-controls="crosscutting" role="tab">Cross-Cutting Concepts</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="scieng">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceAndEngineering" in-title="Science and Engineering" ng-model="vm.unit.stageTwo.evidence.scienceAndEngineering"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="disciplinary">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="disciplinaryCoreIdeas" in-title="Disciplinary Core Ideas" ng-model="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="crosscutting">
+                                            <div class="row">
+                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="crossCuttingConcepts" in-title="Cross-Cutting Concepts" ng-model="vm.unit.stageTwo.evidence.crossCuttingConcepts"></wysiwyg-editor>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Assessment Evidence</h4>
+                            <p>How will students show their learning?</p>
+                            <div class="row">
+                                <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project" ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects" label-class="control-label" options="{{vm.researchProjects}}"></select-tags>
+                                <!-- <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Research Project</label>
+                                        <select class="select2create form-control">
+                                            <option value="project1">Project 1</option>
+                                            <option value="project2">Project 2</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <wysiwyg-editor outer-column="col-md-12 form-group" name="extentions" in-title="Extentions" ng-model="vm.unit.stageTwo.assessmentEvidence.extentions"></wysiwyg-editor>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+                <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Create unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
+            </fieldset>
+        </form>
     </section>
-</div>
+</section>

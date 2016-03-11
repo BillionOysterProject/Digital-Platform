@@ -10,4 +10,5 @@ echo "Loading data into mongo..."
 mongoimport -d bop-dev -c sites --type csv --file sites.csv --headerline
 mongoimport -d bop-dev -c metaweatherconditions --type csv --file metaWeatherConditions.csv --headerline
 mongoimport -d bop-dev -c metawatercolors --type csv --file metaWaterColors.csv --headerline
-mongoimport -d bop-dev -c metawaterflow --type csv --file metaWaterFlow.csv --headerline
+mongoimport -d bop-dev -c metawaterflows --type csv --file metaWaterFlow.csv --headerline
+mongoimport -d bop-dev -c metashorelinetypes --type csv --file metaShorelineTypes.csv --headerline

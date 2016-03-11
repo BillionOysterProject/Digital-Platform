@@ -5,15 +5,18 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService'];
+  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication', 
+  'UnitsService', 'TeamsService', 'FileUploader'];
 
-  function LessonsController($scope, $state, lesson, Authentication, UnitsService) {
+  function LessonsController($scope, $state, $http, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
     var vm = this;
 
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
+    vm.showResourceModal = false;
+    vm.showVocabularyModal = false;
 
     vm.subjectAreas = [
      { type: 'Science', name: 'Ecology', value: 'ecology' }, 
@@ -93,6 +96,27 @@
     ];
     vm.units = UnitsService.query();
 
+    if (vm.lesson.user && vm.lesson.user.team) {
+      TeamsService.get({
+        teamId: vm.lesson.user.team
+      }, function(team) {
+        vm.lesson.user.team = team;
+      });
+    }
+
+    vm.featuredImageURL = vm.lesson.featuredImage.path;
+    vm.handouts = vm.lesson.materialsResources.handoutsFileInput || [];
+
+    vm.featuredImageUploader = new FileUploader({
+      alias: 'newFeaturedImage',
+      queueLimit: 2
+    });
+
+    vm.handoutFilesUploader = new FileUploader({
+      alias: 'newHandouts',
+      queueLimit: 20
+    });
+
     // Remove existing Lesson
     vm.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
@@ -102,12 +126,18 @@
 
     // Save Lesson
     vm.save = function(isValid) {
-      console.log('save');
+      //console.log('save');
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
+
+      vm.lesson.featuredImage = {
+        path: vm.featuredImageURL
+      };
+
+      vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
@@ -120,8 +150,60 @@
 
       function successCallback(res) {
         console.log('successful');
-        $state.go('lessons.view', {
-          lessonId: res._id
+        var lessonId = res._id;
+
+        function goToView(lessonId) {
+          $state.go('lessons.view', {
+            lessonId: lessonId
+          });  
+        }
+
+        function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
+          if (vm.featuredImageUploader.queue.length > 0) {
+            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              featuredImageSuccessCallback();
+            };
+
+            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+              featuredImageErrorCallback(response.message);
+            };
+
+            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
+            };
+            vm.featuredImageUploader.uploadAll();
+          } else {
+            featuredImageSuccessCallback();
+          }
+        }
+
+        function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
+          if (vm.handoutFilesUploader.queue.length > 0) {
+            vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              handoutFileSuccessCallback();
+            };
+
+            vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+              handoutFileErrorCallback(response.message);
+            };
+
+            vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-handouts';
+            };
+            vm.handoutFilesUploader.uploadAll();
+          } else {
+            handoutFileSuccessCallback();
+          }
+        }
+
+        uploadFeaturedImage(lessonId, function() {
+          uploadHandoutFiles(lessonId, function() {
+            goToView(lessonId);
+          }, function(errorMessage) {
+            vm.error = errorMessage;
+          });
+        }, function(errorMessage) {
+          vm.error = errorMessage;
         });
       }
 
@@ -135,9 +217,38 @@
       $state.go('lessons.list');
     };
 
-    vm.subjectAreasSet = function() {
-      console.log('subject area changed');
-      console.log(vm.lesson.lessonOverview.subjectArea);
+    vm.toggleResourceModal = function() {
+      vm.showResourceModal = !vm.showResourceModal;
+    };
+
+    vm.toggleVocabularyModal = function() {
+      vm.showVocabularyModal = !vm.showVocabularyModal;
+    };
+
+    $scope.downloadExample = function(file) {
+      console.log('file', file);
+      var url = '/api/lessons/' + vm.lesson._id + '/upload-handouts';
+      console.log('url', url);
+      $http.get(url, {
+        params: {
+          originalname: file.originalname, 
+          mimetype: file.mimetype, 
+          path: file.path
+        }
+      }).
+      success(function(data, status, headers, config) {
+        console.log('success');
+        var anchor = angular.element('<a/>');
+        anchor.attr({
+          href: encodeURI(data),
+          target: '_blank',
+          download: file.originalname
+        })[0].click();
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error');
+        // if there's an error you should see it here
+      });
     };
   }
 })();

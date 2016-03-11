@@ -17,11 +17,11 @@
       .state('protocol-site-conditions.main', {
         url: '',
         templateUrl: 'modules/protocol-site-conditions/client/views/protocol-site-conditions.client.view.html',
-        controller: 'ProtocolSiteConditionsController',
+        controller: 'ProtocolSiteConditionsMainController',
         controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'admin'],
-          pageTitle: 'Protocol Site Conditions List'
+          pageTitle: 'Protocol Site Conditions'
         }
       })
       .state('protocol-site-conditions.create', {
@@ -29,9 +29,6 @@
         templateUrl: 'modules/protocol-site-conditions/client/views/form-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'vm',
-        resolve: {
-          protocolSiteConditionResolve: getProtocolSiteCondition
-        },
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Site Conditions Create'
@@ -42,9 +39,6 @@
         templateUrl: 'modules/protocol-site-conditions/client/views/form-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'vm',
-        resolve: {
-          protocolSiteConditionResolve: getProtocolSiteCondition
-        },
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Edit Protocol Site Conditions'
@@ -55,26 +49,9 @@
         templateUrl: 'modules/protocol-site-conditions/client/views/view-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'vm',
-        resolve: {
-          protocolSiteConditionResolve: getProtocolSiteCondition
-        },
         data: {
           pageTitle: 'Protocol Site Condition'
         }
       });
-  }
-
-  getProtocolSiteCondition.$inject = ['$stateParams', 'ProtocolSiteConditionsService'];
-
-  function getProtocolSiteCondition($stateParams, ProtocolSiteConditionsService) {
-    return ProtocolSiteConditionsService.get({
-      siteConditionId: $stateParams.siteConditionId
-    }).$promise;
-  }
-
-  newProtocolSiteCondition.$inject = ['ProtocolSiteConditionsService'];
-
-  function newProtocolSiteCondition(ProtocolSiteConditionsService) {
-    return new ProtocolSiteConditionsService();
   }
 })();

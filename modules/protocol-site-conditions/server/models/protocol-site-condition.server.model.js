@@ -10,6 +10,11 @@ var mongoose = require('mongoose'),
  * Site Condition Schema
  */
 var ProtocolSiteConditionSchema = new Schema({
+  expedition: {
+    type: Schema.ObjectId,
+    ref: 'Expedition',
+    //required: true TODO: will be required
+  },
   meteorologicalConditions: {
     weatherConditions: {
       type: String,
@@ -70,8 +75,10 @@ var ProtocolSiteConditionSchema = new Schema({
   },
   waterConditions: {
     waterConditionPhoto: {
-      type: String,
-      //required: true
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
     },
     waterColor: {
       type: String,
@@ -128,8 +135,10 @@ var ProtocolSiteConditionSchema = new Schema({
   },
   landConditions: {
     landConditionPhoto: {
-      type: String,
-      //required: true
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
     },
     shoreLineType: {
       type: String,

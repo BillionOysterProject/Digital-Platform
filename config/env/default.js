@@ -49,6 +49,30 @@ module.exports = {
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
+    },
+    waterConditionUpload: {
+      dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
+      limits: {
+        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+      }
+    },
+    landConditionUpload: {
+      dest: './modules/protocol-site-conditions/client/img/land-condition/uploads/', // Protocol site condition upload destination path
+      limits: {
+        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+      }
+    },
+    lessonFeaturedImageUpload: {
+      dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    lessonHandoutsUpload: {
+      dest: './modules/lessons/client/files/handouts/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
     }
   }
 };

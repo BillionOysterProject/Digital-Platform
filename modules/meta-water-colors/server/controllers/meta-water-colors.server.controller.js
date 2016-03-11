@@ -5,7 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  MetaWaterColors = mongoose.model('MetaWaterColors'),
+  MetaWaterColor = mongoose.model('MetaWaterColor'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -13,7 +13,7 @@ var path = require('path'),
  * Create a water color
  */
 exports.create = function (req, res) {
-  var waterColor = new MetaWaterColors(req.body);
+  var waterColor = new MetaWaterColor(req.body);
 
   waterColor.save(function (err) {
     if (err) {
@@ -78,7 +78,7 @@ exports.delete = function (req, res) {
  * List of Water Colors
  */
 exports.list = function (req, res) {
-  MetaWaterColors.find().sort('order').exec(function (err, waterColors) {
+  MetaWaterColor.find().sort('order').exec(function (err, waterColors) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -100,7 +100,7 @@ exports.waterColorByID = function (req, res, next, id) {
     });
   }
 
-  MetaWaterColors.findById(id).populate('user', 'displayName').exec(function (err, waterColor) {
+  MetaWaterColor.findById(id).exec(function (err, waterColor) {
     if (err) {
       return next(err);
     } else if (!waterColor) {

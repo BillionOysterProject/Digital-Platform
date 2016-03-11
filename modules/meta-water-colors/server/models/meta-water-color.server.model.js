@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 /**
  * Meta Water Color Schema
  */
-var MetaWaterColorsSchema = new Schema({
+var MetaWaterColorSchema = new Schema({
   order: {
     type: Number,
     required: true
@@ -24,4 +24,4 @@ var MetaWaterColorsSchema = new Schema({
   }
 });
 
-mongoose.model('MetaWaterColors', MetaWaterColorsSchema);
+mongoose.model('MetaWaterColor', MetaWaterColorSchema);

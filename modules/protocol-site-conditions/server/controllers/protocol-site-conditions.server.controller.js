@@ -4,10 +4,15 @@
  * Module dependencies
  */
 var path = require('path'),
+  fs = require('fs'),
+  path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config')),
+  moment = require('moment');
 
 var emptyString = function(string) {
   if (!string || string === null || string === '') {
@@ -19,6 +24,15 @@ var emptyString = function(string) {
 
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
   var errorMessages = [];
+
+  if (siteCondition.tideConditions.closestHighTide && !moment(siteCondition.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').isValid()) {
+    errorMessages.push('Tide Conditions - Closest High Tide is not valid');
+  }
+
+  if (siteCondition.tideConditions.closestLowTide && !moment(siteCondition.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').isValid()) {
+    errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
+  }
+
   if (siteCondition.waterConditions.garbage.garbagePresent) {
     if (emptyString(siteCondition.waterConditions.garbage.hardPlastic)) {
       errorMessages.push('Water Condition - Hard Plastic extent is required.');
@@ -123,6 +137,10 @@ exports.create = function (req, res) {
   validateSiteCondition(req.body, 
   function() {
     var siteCondition = new ProtocolSiteCondition(req.body);
+    siteCondition.tideConditions.closestHighTide = 
+      moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+    siteCondition.tideConditions.closestLowTide = 
+      moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
     siteCondition.save(function (err) {
       if (err) {
@@ -146,6 +164,8 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
+  siteCondition.tideConditions.closestHighTide = moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
+    siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
 
   res.json(siteCondition);
 };
@@ -193,6 +213,87 @@ exports.delete = function (req, res) {
       res.json(siteCondition);
     }
   });
+};
+
+/**
+ * Upload images to protocol site condition
+ */
+exports.uploadWaterConditionPicture = function (req, res) {
+  var siteCondition = req.siteCondition;
+  var upload = multer(config.uploads.waterConditionUpload).single('newWaterConditionPicture');
+  var waterConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = waterConditionUploadFileFilter;
+
+  if (siteCondition) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading water condition picture'
+        });
+      } else {
+        console.log('file', req.file);
+        siteCondition.waterConditions.waterConditionPhoto.path = config.uploads.waterConditionUpload.dest + req.file.filename;
+        siteCondition.waterConditions.waterConditionPhoto.originalname = req.file.originalname;
+        siteCondition.waterConditions.waterConditionPhoto.mimetype = req.file.mimetype;
+        siteCondition.waterConditions.waterConditionPhoto.filename = req.file.filename;
+
+        siteCondition.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(siteCondition);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Site condition does not exist'
+    });
+  }
+};
+
+exports.uploadLandConditionPicture = function (req, res) {
+  var siteCondition = req.siteCondition;
+  var upload = multer(config.uploads.landConditionUpload).single('newLandConditionPicture');
+  var landConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = landConditionUploadFileFilter;
+
+  if (siteCondition) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading land condition picture'
+        });
+      } else {
+        console.log('file', req.file);
+        siteCondition.landConditions.landConditionPhoto.path = config.uploads.landConditionUpload.dest + req.file.filename;
+        siteCondition.landConditions.landConditionPhoto.originalname = req.file.originalname;
+        siteCondition.landConditions.landConditionPhoto.mimetype = req.file.mimetype;
+        siteCondition.landConditions.landConditionPhoto.filename = req.file.filename;
+
+        siteCondition.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(siteCondition);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Site condition does not exist'
+    });
+  }
 };
 
 /**

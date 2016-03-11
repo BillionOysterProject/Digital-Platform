@@ -4,8 +4,6 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  crate = require('mongoose-crate'),
-  LocalFS = require('mongoose-crate-localfs'),
   Schema = mongoose.Schema;
 
 
@@ -77,6 +75,12 @@ var LessonSchema = new Schema({
     ref: 'Unit',
     require: 'Unit cannot be blank'
   },
+  featuredImage: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
+  },
   lessonOverview: {
     grade: {
       type: String,
@@ -116,15 +120,22 @@ var LessonSchema = new Schema({
       required: true,
       trim: true
     },
-    teacherResources: {
+    teacherResourcesLinks: [{
       type: String,
-      //required: true, should be required, not all set up yet
       trim: true
-    },
-    handoutsFileInput: {
-      type: String,
-      required: false
-    },
+    }],
+    teacherResourcesFiles: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
+    handoutsFileInput: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
     vocabulary: [{
       type: String,
       required: false
@@ -186,14 +197,5 @@ LessonSchema.statics.load = function(id, cb) {
     _id: id
   }).populate('user', 'name username displayName').exec(cb);
 };
-
-LessonSchema.plugin(crate, {
-  storage: new LocalFS({
-    directory: 'files/'
-  }),
-  fields: {
-    handout: {}
-  }
-});
 
 mongoose.model('Lesson', LessonSchema);
