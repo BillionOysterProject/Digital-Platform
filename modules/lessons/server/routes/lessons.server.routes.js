@@ -26,7 +26,7 @@ module.exports = function (app) {
 
   // Upload teacher resource route
   app.route('/api/lessons/:lessonId/upload-teacher-resources').all(lessonsPolicy.isAllowed)
-    .post(lessons.uploadTeacherResources)
+    .post(lessons.uploadTeacherResources);
 
   // Single lesson routes
   app.route('/api/lessons/:lessonId').all(lessonsPolicy.isAllowed)

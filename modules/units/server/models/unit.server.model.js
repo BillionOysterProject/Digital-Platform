@@ -68,15 +68,15 @@ var UnitSchema = new Schema({
         },
       },
       lessons: {
-        science: [{
+        science: {
           type: String
-        }],
-        math: [{
+        },
+        math: {
           type: String
-        }],
-        field: [{
+        },
+        field: {
           type: String
-        }]
+        }
       }
     }
   },

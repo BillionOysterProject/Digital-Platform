@@ -49,25 +49,13 @@
         <p ng-bind-html="vm.unit.stageOne.acquisition.content.field | sanitize"></p>
 
         <b>Science Lessons</b>
-        <!--TODO: Change to this: 
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.science | sanitize"></p>-->
-        <ul ng-repeat="scienceLesson in vm.unit.stageOne.acquisition.lessons.science">
-            <li ng-bind="scienceLesson | scienceLessons"></li>
-        </ul>
+        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.science | sanitize"></p>
 
         <b>Math Lessons</b>
-        <!--TODO: Change to this: 
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.math | sanitize"></p>-->
-        <ul ng-repeat="mathLesson in vm.unit.stageOne.acquisition.lessons.math">
-            <li ng-bind="mathLesson | mathLessons"></li>
-        </ul>
+        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.math | sanitize"></p>
 
         <b>Field Lessons</b>
-        <!--TODO: Change to this: 
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.field | sanitize"></p>-->
-        <ul ng-repeat="fieldLesson in vm.unit.stageOne.acquisition.lessons.field">
-            <li ng-bind="fieldLesson | fieldLessons"></li>
-        </ul>
+        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.field | sanitize"></p>
 
         <div class="page-header">
             <h2>Stage 2: Evidence</h2>

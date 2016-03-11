@@ -83,8 +83,8 @@ exports.update = function(req, res) {
     lesson.materialsResources.handoutsFileInput = existingHandouts;
 
     var existingResources = [];
-    for (var i = 0; i < lesson.materialsResources.teacherResourcesFiles.length; i++) {
-      var resource = lesson.materialsResources.teacherResourcesFiles[i];
+    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
+      var resource = lesson.materialsResources.teacherResourcesFiles[j];
       if (resource.path) {
         existingResources.push(resource);
       }

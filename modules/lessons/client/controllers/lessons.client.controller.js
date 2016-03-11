@@ -108,6 +108,9 @@
     vm.handouts = vm.lesson.materialsResources.handoutsFileInput || [];
     vm.resourceFiles = vm.lesson.materialsResources.teacherResourcesFiles || [];
     vm.tempResourceFiles = [];
+    vm.resourceLinks = vm.lesson.materialsResources.teacherResourcesLinks || [];
+    vm.tempResourceLinkName = '';
+    vm.tempResourceLink = '';
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -146,6 +149,7 @@
 
       vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
       vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+      vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
@@ -252,22 +256,37 @@
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };
 
-    vm.openTeacherResourcesModal = function() {
-      vm.tempResourceFiles = vm.resourceFiles;
-    };
-
     vm.cancelTeacherResources = function() {
-      vm.tempResourceFiles = vm.resourceFiles;
+      vm.tempResourceFiles = [];
+
+      vm.tempResourceLinkName = '';
+      vm.tempResourceLink = '';
     };
 
     vm.addTeacherResources = function() {
-      console.log('adding to teacher resources');
       if (vm.tempResourceFiles.length > 0) {
         vm.resourceFiles = vm.resourceFiles.concat(vm.tempResourceFiles);
-        vm.tempResourceFiles = vm.resourceFiles;
+        vm.tempResourceFiles = [];
       }
-      console.log('resources', vm.resourceFiles);
-      console.log('queue', vm.teacherResourceFilesUploader.queue);
+      if (vm.tempResourceLink) {
+        vm.resourceLinks.push({
+          name: vm.tempResourceLinkName,
+          link: vm.tempResourceLink
+        });
+        vm.tempResourceLinkName = '';
+        vm.tempResourceLink = '';
+      }
+    };
+
+    vm.deleteTeacherResourceFile = function(index, file) {
+      if (file.index) {
+        vm.teacherResourceFilesUploader.removeFromQueue(file.index);
+      }
+      vm.resourceFiles.splice(index,1);
+    };
+
+    vm.deleteTeacherResourceLink = function(index) {
+      vm.resourceLinks.splice(index, 1);
     };
 
     $scope.downloadExample = function(file) {

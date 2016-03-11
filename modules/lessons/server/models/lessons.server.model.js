@@ -121,8 +121,8 @@ var LessonSchema = new Schema({
       trim: true
     },
     teacherResourcesLinks: [{
-      type: String,
-      trim: true
+      name: String,
+      link: String
     }],
     teacherResourcesFiles: [{
       originalname: String,
