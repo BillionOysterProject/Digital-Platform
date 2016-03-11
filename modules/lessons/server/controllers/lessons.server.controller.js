@@ -220,14 +220,10 @@ exports.uploadHandouts = function (req, res) {
 };
 
 exports.downloadHandout = function(req, res){
-  console.log('params', req.query);
-  console.log('inside download');
   res.setHeader('Content-disposition', 'attachment; filename=' + req.query.originalname);
-  console.log('name: ' + req.query.originalname);
   res.setHeader('content-type', req.query.mimetype);
-  console.log('content-type: ' + req.query.mimetype);
-  console.log('path: ' + req.query.path);
-  res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
+  //res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
+  res.download(req.query.path, req.query.originalname);
 };
 
 /**
