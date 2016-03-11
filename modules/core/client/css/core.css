@@ -33,7 +33,7 @@ body {
 }
 
 .jumbotron {
-    background-color: #f4f7f8;
+    background-color: #eee /*#f4f7f8*/;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
