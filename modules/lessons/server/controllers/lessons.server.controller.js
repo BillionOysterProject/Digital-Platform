@@ -72,6 +72,16 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
+
+    var existingHandouts = [];
+    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
+      var handout = lesson.materialsResources.handoutsFileInput[i];
+      if (handout.path) {
+        existingHandouts.push(handout);
+      }
+    }
+    lesson.materialsResources.handoutsFileInput = existingHandouts;
+
     if (!lesson.updated) lesson.updated = [];
     lesson.updated.push(Date.now());
 
@@ -112,7 +122,7 @@ exports.delete = function(req, res) {
  * List of lessons
  */
 exports.list = function(req, res) {
-  Lesson.find().sort('-created').populate('user', 'displayName').exec(function(err, lessons) {
+  Lesson.find().sort('-created').populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon').exec(function(err, lessons) {
     if (err) {
       console.log(err);
       return res.status(400).send({
@@ -167,20 +177,29 @@ exports.uploadFeaturedImage = function (req, res) {
 
 exports.uploadHandouts = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonFeaturedImageUpload).single('newFeaturedImage');
-  var featuredImageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+  var upload = multer(config.uploads.lessonHandoutsUpload).array('newHandouts', 20);
+
+  var handoutUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
 
   // Filtering to upload only images
-  upload.fileFilter = featuredImageUploadFileFilter;
+  upload.fileFilter = handoutUploadFileFilter;
 
   if (lesson) {
     upload(req, res, function (uploadError) {
       if (uploadError) {
         return res.status(400).send({
-          message: 'Error occurred while uploading featured image picture'
+          message: 'Error occurred while uploading handouts'
         });
       } else {
-        lesson.featuredImage = config.uploads.lessonFeaturedImageUpload.dest + req.file.filename;
+        for (var i = 0; i < req.files.length; i++) {
+          var file = req.files[i];
+          lesson.materialsResources.handoutsFileInput.push({
+            path: config.uploads.lessonHandoutsUpload.dest + file.filename,
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            filename: file.filename
+          });
+        }
 
         lesson.save(function (saveError) {
           if (saveError) {
@@ -198,6 +217,17 @@ exports.uploadHandouts = function (req, res) {
       message: 'Lesson does not exist'
     });
   }
+};
+
+exports.downloadHandout = function(req, res){
+  console.log('params', req.query);
+  console.log('inside download');
+  res.setHeader('Content-disposition', 'attachment; filename=' + req.query.originalname);
+  console.log('name: ' + req.query.originalname);
+  res.setHeader('content-type', req.query.mimetype);
+  console.log('content-type: ' + req.query.mimetype);
+  console.log('path: ' + req.query.path);
+  res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
 };
 
 /**

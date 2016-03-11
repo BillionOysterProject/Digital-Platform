@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/upload-handouts',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
     }]
@@ -31,6 +34,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-handouts',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',

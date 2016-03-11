@@ -13,3 +13,7 @@ module.exports.imageUploadFileFilter = function (req, file, cb) {
   }
   cb(null, true);
 };
+
+module.exports.fileUploadFileFilter = function (req, file, cb) {
+  cb(null, true);
+};

@@ -5,9 +5,10 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', 'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService', 'FileUploader'];
+  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication', 
+  'UnitsService', 'TeamsService', 'FileUploader'];
 
-  function LessonsController($scope, $state, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
+  function LessonsController($scope, $state, $http, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -103,8 +104,8 @@
       });
     }
 
-    vm.featuredImage = vm.lesson.featuredImage.path;
-    vm.handouts = [];
+    vm.featuredImageURL = vm.lesson.featuredImage.path;
+    vm.handouts = vm.lesson.materialsResources.handoutsFileInput || [];
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -112,6 +113,7 @@
     });
 
     vm.handoutFilesUploader = new FileUploader({
+      alias: 'newHandouts',
       queueLimit: 20
     });
 
@@ -124,7 +126,7 @@
 
     // Save Lesson
     vm.save = function(isValid) {
-      console.log('save');
+      //console.log('save');
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
@@ -132,8 +134,10 @@
       }
 
       vm.lesson.featuredImage = {
-        path: vm.featuredImage
+        path: vm.featuredImageURL
       };
+
+      vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
@@ -155,7 +159,7 @@
         }
 
         function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
-          if (vm.featuredImageUploader.queue > 0) {
+          if (vm.featuredImageUploader.queue.length > 0) {
             vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
               featuredImageSuccessCallback();
             };
@@ -173,8 +177,31 @@
           }
         }
 
+        function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
+          if (vm.handoutFilesUploader.queue.length > 0) {
+            vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              handoutFileSuccessCallback();
+            };
+
+            vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+              handoutFileErrorCallback(response.message);
+            };
+
+            vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-handouts';
+            };
+            vm.handoutFilesUploader.uploadAll();
+          } else {
+            handoutFileSuccessCallback();
+          }
+        }
+
         uploadFeaturedImage(lessonId, function() {
-          goToView(lessonId);
+          uploadHandoutFiles(lessonId, function() {
+            goToView(lessonId);
+          }, function(errorMessage) {
+            vm.error = errorMessage;
+          });
         }, function(errorMessage) {
           vm.error = errorMessage;
         });
@@ -198,6 +225,30 @@
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };
 
-
+    $scope.downloadExample = function(file) {
+      console.log('file', file);
+      var url = '/api/lessons/' + vm.lesson._id + '/upload-handouts';
+      console.log('url', url);
+      $http.get(url, {
+        params: {
+          originalname: file.originalname, 
+          mimetype: file.mimetype, 
+          path: file.path
+        }
+      }).
+      success(function(data, status, headers, config) {
+        console.log('success');
+        var anchor = angular.element('<a/>');
+        anchor.attr({
+          href: encodeURI(data),
+          target: '_blank',
+          download: file.originalname
+        })[0].click();
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error');
+        // if there's an error you should see it here
+      });
+    };
   }
 })();
