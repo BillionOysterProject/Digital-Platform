@@ -18,10 +18,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/download-file',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/upload-handouts',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/upload-teacher-resources',
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId',
@@ -33,10 +39,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons',
       permissions: '*'
     }, {
+      resources: '/api/lessons/download-file',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-handouts',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-teacher-resources',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',

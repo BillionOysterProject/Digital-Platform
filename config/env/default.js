@@ -73,6 +73,12 @@ module.exports = {
       limits: {
         fileSize: 1*1024*1024
       }
+    },
+    lessonTeacherResourcesUpload: {
+      dest: './modules/lessons/client/files/teacher-resources/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
     }
   }
 };

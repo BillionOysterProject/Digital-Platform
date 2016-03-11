@@ -104,8 +104,13 @@
       });
     }
 
-    vm.featuredImageURL = vm.lesson.featuredImage.path;
+    vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
     vm.handouts = vm.lesson.materialsResources.handoutsFileInput || [];
+    vm.resourceFiles = vm.lesson.materialsResources.teacherResourcesFiles || [];
+    vm.tempResourceFiles = [];
+    vm.resourceLinks = vm.lesson.materialsResources.teacherResourcesLinks || [];
+    vm.tempResourceLinkName = '';
+    vm.tempResourceLink = '';
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -114,6 +119,11 @@
 
     vm.handoutFilesUploader = new FileUploader({
       alias: 'newHandouts',
+      queueLimit: 20
+    });
+
+    vm.teacherResourceFilesUploader = new FileUploader({
+      alias: 'newTeacherResourceFile',
       queueLimit: 20
     });
 
@@ -138,6 +148,8 @@
       };
 
       vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+      vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+      vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
@@ -196,9 +208,32 @@
           }
         }
 
+        function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
+          if (vm.teacherResourceFilesUploader.queue.length > 0) {
+            vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              resourceFileSuccessCallback();
+            };
+
+            vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+              resourceFileErrorCallback(response.message);
+            };
+
+            vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
+            };
+            vm.teacherResourceFilesUploader.uploadAll();
+          } else {
+            resourceFileSuccessCallback();
+          }
+        }
+
         uploadFeaturedImage(lessonId, function() {
           uploadHandoutFiles(lessonId, function() {
-            goToView(lessonId);
+            uploadResourceFiles(lessonId, function() {
+              goToView(lessonId);
+            }, function(errorMessage) {
+              vm.error = errorMessage;
+            });
           }, function(errorMessage) {
             vm.error = errorMessage;
           });
@@ -217,16 +252,45 @@
       $state.go('lessons.list');
     };
 
-    vm.toggleResourceModal = function() {
-      vm.showResourceModal = !vm.showResourceModal;
-    };
-
     vm.toggleVocabularyModal = function() {
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };
 
+    vm.cancelTeacherResources = function() {
+      vm.tempResourceFiles = [];
+
+      vm.tempResourceLinkName = '';
+      vm.tempResourceLink = '';
+    };
+
+    vm.addTeacherResources = function() {
+      if (vm.tempResourceFiles.length > 0) {
+        vm.resourceFiles = vm.resourceFiles.concat(vm.tempResourceFiles);
+        vm.tempResourceFiles = [];
+      }
+      if (vm.tempResourceLink) {
+        vm.resourceLinks.push({
+          name: vm.tempResourceLinkName,
+          link: vm.tempResourceLink
+        });
+        vm.tempResourceLinkName = '';
+        vm.tempResourceLink = '';
+      }
+    };
+
+    vm.deleteTeacherResourceFile = function(index, file) {
+      if (file.index) {
+        vm.teacherResourceFilesUploader.removeFromQueue(file.index);
+      }
+      vm.resourceFiles.splice(index,1);
+    };
+
+    vm.deleteTeacherResourceLink = function(index) {
+      vm.resourceLinks.splice(index, 1);
+    };
+
     $scope.downloadExample = function(file) {
-      var url = '/api/lessons/' + vm.lesson._id + '/upload-handouts';
+      var url = 'api/lessons/download-file';
       $http.get(url, {
         params: {
           originalname: file.originalname, 
