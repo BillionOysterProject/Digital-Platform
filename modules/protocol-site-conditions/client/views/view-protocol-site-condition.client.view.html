@@ -3,10 +3,10 @@
     <section class="container">
       <p>View Protocol</p>
       <h3>Water Condition</h3>
-      <img ng-src="{{vm.protocolSiteCondition.waterConditions.waterConditionPhoto.path}}" alt="Water Condition" class="img-thumbnail">
+      <img ng-src="{{vm.waterConditionPhotoURL}}" alt="Water Condition" class="img-thumbnail" ng-show="vm.waterConditionPhotoURL">
 
       <h3>Land Condition</h3>
-      <img ng-src="{{vm.protocolSiteCondition.landConditions.landConditionPhoto.path}}" alt="Land Condition" class="img-thumbnail">
+      <img ng-src="{{vm.landConditionPhotoURL}}" alt="Land Condition" class="img-thumbnail" ng-show="vm.landConditionPhotoURL">
     </section>
   </section>
 </div>
