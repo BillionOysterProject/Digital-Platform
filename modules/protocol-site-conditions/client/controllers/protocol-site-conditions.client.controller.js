@@ -19,8 +19,10 @@
         siteConditionId: $stateParams.protocolSiteConditionId
       }, function(data) {
         vm.protocolSiteCondition = data;  
-        vm.waterConditionPhotoURL = vm.protocolSiteCondition.waterConditions.waterConditionPhoto.path;
-        vm.landConditionPhotoURL = vm.protocolSiteCondition.landConditions.landConditionPhoto.path;
+        vm.waterConditionPhotoURL = (vm.protocolSiteCondition.waterConditions.waterConditionPhoto) ? 
+          vm.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+        vm.landConditionPhotoURL = (vm.protocolSiteCondition.landConditions.landConditionPhoto) ? 
+          vm.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
       }); 
     } else {
       vm.protocolSiteCondition = new ProtocolSiteConditionsService();

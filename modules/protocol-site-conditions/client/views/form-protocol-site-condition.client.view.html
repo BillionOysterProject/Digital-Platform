@@ -56,16 +56,16 @@
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="red">7</span> days?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
+                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
                     </div>
-                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn7Days === true">
+                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours === true">
                         <label>Has it rained in the past <span class="red">72</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours"></select>
                     </div>
                     <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
+                        <label>Has it rained in the past <span class="red">7</span> days?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
                 </div>
             </div>
