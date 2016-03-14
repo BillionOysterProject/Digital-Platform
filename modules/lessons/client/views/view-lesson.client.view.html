@@ -1,4 +1,4 @@
-<div class="jumbotron" ng-hide="vm.featuredImageURL" style="background-image: url('http://dreamatico.com/data_images/ocean/ocean-5.jpg')"></div><!-- TODO: Need to get lesson image -->
+<div class="jumbotron" ng-hide="vm.featuredImageURL"></div>
 <div class="jumbotron" ng-show="vm.featuredImageURL" ng-background-image image-url="vm.featuredImageURL"></div>
 <section class="content">
     <section class="container">
@@ -116,22 +116,22 @@
                     </div>
                     <div class="col col-sm-12">
                         <h3>Instruction Plan</h3>
-                        <h4>Engage</h4>
-                        <div ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
+                        <h4 ng-hide="!vm.lesson.instructionPlan.engage">Engage</h4>
+                        <div ng-hide="!vm.lesson.instructionPlan.engage" ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.explore">
                         <h4>Explore</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.explore | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.explain">
                         <h4>Explain</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.explain | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.elaborate">
                         <h4>Elaborate</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.elaborate | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.evaluate">
                         <h4>Evaluate</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.evaluate | sanitize"></div>
                     </div>
