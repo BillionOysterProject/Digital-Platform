@@ -7,5 +7,5 @@ angular.module('core').filter('urlNormalizer', function() {
     } else {
       return input;
     }
-  }
+  };
 });
