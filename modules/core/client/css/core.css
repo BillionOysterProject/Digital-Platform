@@ -177,6 +177,7 @@ body {
 .lightblue { color: #a0d0cb; }
 .yellow { color: #fbe8ac; }
 .crimson { color: #943234; }
+.green { color: #4CAF50; }
 .shaded { background-color: #eee/*#f4f7f8*/; }
 
 /* LINK COLORS */
@@ -195,6 +196,7 @@ a {
     border: 2px solid #444;
     background: transparent;
     color: #444;
+    text-shadow: none;
 }
      
     .btn-primary {
@@ -205,6 +207,11 @@ a {
     .btn-default {
         border-color: #777;
         color: #777;
+    }
+     
+    .btn-success {
+        border-color: #4CAF50;
+        color: #4CAF50;
     }
      
     .btn-danger {
@@ -257,9 +264,25 @@ a {
             background: transparent;
             border-color: #ea6158;
             color: #ea6158;
-            /*-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-            filter: alpha(opacity=80);
-            opacity: 0.8;*/
+        }
+        
+        .btn-success:hover, 
+        .btn-success:focus, 
+        .btn-success:active,
+        .btn-success.active, 
+        .open > .dropdown-toggle.btn-success,
+        .btn-success:active:hover, 
+        .btn-success.active:hover, 
+        .open > .dropdown-toggle.btn-success:hover, 
+        .btn-success:active:focus, 
+        .btn-success.active:focus, 
+        .open > .dropdown-toggle.btn-success:focus, 
+        .btn-success:active.focus, 
+        .btn-success.active.focus, 
+        .open > .dropdown-toggle.btn-success.focus {
+            background: transparent;
+            border-color: #555;
+            color: #555;
         }
 
 
@@ -312,6 +335,28 @@ a {
     background: #fff;
 }
 
+
+/* ALERT COLORS */
+
+.alert { 
+    background: #795548;
+    border: #fff;
+    color: #fff;
+}
+
+    .alert-success { background: #4CAF50; }
+    .alert-info { background: #607D8B; }
+    .alert-warning { background: #00BCD4; }
+    .alert-danger { background: #ea6158; }
+
+    .alert .btn, .alert .btn:focus {
+        border-color: #fff;
+        color: #fff;
+        margin: -5px 0 0 5px;
+        outline: none;
+        box-shadow: none;
+    }
+    
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

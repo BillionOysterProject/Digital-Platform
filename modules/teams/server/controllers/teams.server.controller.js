@@ -40,6 +40,25 @@ exports.read = function (req, res) {
   res.json(team);
 };
 
+exports.readOwner = function (req, res) {
+  Team.findOne({ teamLead: req.user }).populate('user', 'displayName').exec(function (err, found) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (!found) {
+      return res.status(404).send({
+        message: 'No team with that identifier has been found'
+      });
+    } else {
+      var team = found ? found.toJSON() : {};
+      team.isCurrentUserTeamLead = true;
+
+      res.json(team);
+    }
+  });
+};
+
 /**
  * Update a team
  */
@@ -59,6 +78,32 @@ exports.update = function (req, res) {
       }
     });
   }
+};
+
+exports.updateOwner = function (req, res) {
+  Team.findOne({ teamLead: req.user }).populate('user', 'displayName').exec(function (err, team) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (!team) {
+      return res.status(404).send({
+        message: 'No team with that identifier has been found'
+      });
+    } else {
+      team = _.extend(team, req.body);
+
+      team.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(team);
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -82,7 +127,7 @@ exports.delete = function (req, res) {
  * List of Teams
  */
 exports.list = function (req, res) {
-  Team.find().sort('name').exec(function (err, teams) {
+  Team.find().sort('name').populate('user', 'displayName').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -104,7 +149,7 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).exec(function (err, team) {
+  Team.findById(id).populate('user', 'displayName').exec(function (err, team) {
     if (err) {
       return next(err);
     } else if (!team) {
