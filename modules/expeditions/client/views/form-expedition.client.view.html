@@ -1,28 +1,107 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <div class="page-header">
-        <h1>{{vm.expedition._id ? 'Edit Expedition' : 'New Expedition'}}</h1>
-      </div>
-      <div class="col-md-12">
-        <form name="vm.form.expeditionForm" class="form-horizontal" ng-submit="vm.save(vm.form.expeditionForm.$valid)" novalidate>
-          <fieldset>
-            <!-- vm.expedition.team, I think this will be auto populated an not changable -->
-            <!-- vm.expedition.teamMembers, this will be a select2 -->
-            <!-- vm.expedition.site, another select2, single select -->
-            <!-- vm.expedition.latitude, number field with decimal, might be auto populated -->
-            <!-- vm.expedition.longitude, number field with decimal, might be auto populated -->
-            <!-- vm.expedition.monitoringDate, is there a date time field we can use?, if not we'll do two and I'll fix it on the back end -->
-            <!-- vm.expedition.notes, wysiwyg field -->
-            <div class="form-group">
-              <button type="submit" class="btn btn-default">{{vm.expedition._id ? 'Update' : 'Create'}}</button>
+<form name="vm.form.expeditionForm" ng-submit="vm.save(vm.form.expeditionForm.$valid)" novalidate>
+    <section class="content shaded">
+        <section class="container">
+            <div class="page-header">
+                <h1>{{vm.expedition._id ? 'Edit expedition' : 'Create an expedition'}}</h1>
             </div>
-            <div ng-show="vm.error" class="text-danger">
-              <strong ng-bind="vm.error"></strong>
-            </div>
-          </fieldset>
-        </form>
-      </div>
+            <div class="row">
+                <!-- vm.expedition.team, I think this will be auto populated an not changable -->
+                <!-- vm.expedition.teamMembers, this will be a select2 -->
+                <!-- vm.expedition.site, another select2, single select -->
+                <!-- vm.expedition.latitude, number field with decimal, might be auto populated -->
+                <!-- vm.expedition.longitude, number field with decimal, might be auto populated -->
+                <!-- vm.expedition.monitoringDate, is there a date time field we can use?, if not we'll do two and I'll fix it on the back end -->
+                <!-- vm.expedition.notes, wysiwyg field -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Name your expedition</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Select a team</label>
+                        <select class="form-control">
+                            <option>Team 1</option>
+                            <option>Team 2</option>
+                            <option>Team 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Select a location</label>
+                        <select class="form-control">
+                            <option>ORS 1</option>
+                            <option>ORS 2</option>
+                            <option>ORS 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Special Instructions</label>
+                    <textarea class="form-control" rows="5"></textarea>
+                </div>
+        </section>
     </section>
-  </section>
-</div>
+    <section class="content">
+        <section class="container">
+            <label>Assign students to protocols</label>
+            <div class="row"><!--TODO: Need to make this a drag and drop input system. Not sure what the best UI for this is -->
+                <div class="col-md-2">
+                    <a class="btn btn-default btn-block">John Smith</a>
+                    <a class="btn btn-default btn-block">Bob Doe</a>
+                    <a class="btn btn-default btn-block">Mary Smith</a>
+                    <a class="btn btn-default btn-block">Jane Doe</a>
+                    <a class="btn btn-default btn-block">John Jones</a>
+                    <a class="btn btn-default btn-block">Ann Smith</a>
+                </div>
+                <div class="col-md-10 panel panel-default">
+                    <table class="table">
+                        <tr>
+                            <td><h6>Protocol 1</h6><br /> Site Conditions</td>
+                            <td><h6>Protocol 2</h6><br /> Oyster Measurements</td>
+                            <td><h6>Protocol 3</h6><br /> Mobile Trap</td>
+                            <td><h6>Protocol 4</h6><br /> Settlement Tiles</td>
+                            <td><h6>Protocol 5</h6><br /> Water Quality</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>    
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>    
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>                    
+                    </table>
+                </div>
+            </div>
+        </section>
+    </section>
+    <section class="content shaded">
+        <section class="container">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Send invites'}}</button>
+                </div>
+                <div ng-show="vm.error" class="text-danger">
+                    <strong ng-bind="vm.error"></strong>
+                </div>
+            </div>
+        </section>
+    </section>
+</form>
