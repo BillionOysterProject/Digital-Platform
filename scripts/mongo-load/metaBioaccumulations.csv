@@ -1,0 +1,5 @@
+order,label,value
+0,None/clean – No macroalgae or animals present,none
+1,Light – Macroalgae or minimal animals present that do not encroach on mesh openings,light
+2,Medium – Some encrusting macroalgae/animals reducing size of mesh opening up to 25%,medium
+3,Heavy – Encrusting macroalgae/animals reducing mesh opening by over 50%,heavy

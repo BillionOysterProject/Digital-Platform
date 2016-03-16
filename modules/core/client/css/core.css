@@ -532,6 +532,10 @@ a:hover .header-profile-image {
   display: inline;
 }
 
+form.ng-submitted .ng-invalid {
+    border:1px solid #f00;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -7,8 +7,9 @@ then
 fi
 
 echo "Loading data into mongo..."
-mongoimport -d bop-dev -c sites --type json --file data/sites.json
-mongoimport -d bop-dev -c metaweatherconditions --type json --file data/metaWeatherConditions.json
-mongoimport -d bop-dev -c metawatercolors --type json --file data/metaWaterColors.json
-mongoimport -d bop-dev -c metawaterflows --type json --file data/metaWaterFlows.json
-mongoimport -d bop-dev -c metashorelinetypes --type json --file data/metaShorelineTypes.json
+mongoimport -d bop-dev -c sites --type csv --file sites.csv --headerline --drop
+mongoimport -d bop-dev -c metaweatherconditions --type csv --file metaWeatherConditions.csv --headerline --drop
+mongoimport -d bop-dev -c metawatercolors --type csv --file metaWaterColors.csv --headerline --drop
+mongoimport -d bop-dev -c metawaterflows --type csv --file metaWaterFlows.csv --headerline --drop
+mongoimport -d bop-dev -c metashorelinetypes --type csv --file metaShorelineTypes.csv --headerline --drop
+mongoimport -d bop-dev -c metabioaccumulations --type csv --file metaBioaccumulations.csv --headerline --drop

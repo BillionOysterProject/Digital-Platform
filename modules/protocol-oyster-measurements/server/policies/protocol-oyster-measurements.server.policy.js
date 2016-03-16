@@ -9,40 +9,34 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Protocol Site Condition Permissions
+ * Invoke Protocol Oyster Measurements Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['team member'],
     allows: [{
-      resources: '/api/protocol-site-conditions',
+      resources: '/api/protocol-oyster-measurements',
       permissions: '*'
     }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
       permissions: '*'
     }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: '*'
     }]
   }, {
     roles: ['team lead'],
     allows: [{
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
       permissions: ['post']
     }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: ['get', 'put']
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],
     allows: [{
-      resources: '/api/protocol-site-conditions/:siteConditionId',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: ['get']
     }]
   }]);
