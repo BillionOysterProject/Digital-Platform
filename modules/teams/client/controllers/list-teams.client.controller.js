@@ -16,13 +16,13 @@
 
     vm.models = {
       selected: null,
-      lists: {"A": [], "B": []}
+      lists: { 'A': [], 'B': [] }
     };
 
     // Generate initial model
     for (var i = 1; i <= 3; ++i) {
-      vm.models.lists.A.push({ label: "Item A" + i });
-      vm.models.lists.B.push({ label: "Item B" + i });
+      vm.models.lists.A.push({ label: 'Item A' + i });
+      vm.models.lists.B.push({ label: 'Item B' + i });
     }
 
     console.log('models', vm.models);
