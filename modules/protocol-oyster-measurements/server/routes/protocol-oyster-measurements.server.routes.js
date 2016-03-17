@@ -16,6 +16,12 @@ module.exports = function (app) {
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.uploadOysterCageConditionPicture);
 
+  app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-outer-substrate').all(oysterMeasurementsPolicy.isAllowed)
+    .post(oysterMeasurements.uploadOuterSubstratePicture);
+
+  app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-inner-substrate').all(oysterMeasurementsPolicy.isAllowed)
+    .post(oysterMeasurements.uploadInnerSubstratePicture);  
+
   // Single Protocol Oyster Measurements routes
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId').all(oysterMeasurementsPolicy.isAllowed)
     .get(oysterMeasurements.read)
@@ -24,4 +30,5 @@ module.exports = function (app) {
 
   // Finish by binding the protocol oyster measurements middleware
   app.param('oysterMeasurementId', oysterMeasurements.oysterMeasurementByID);
+  app.param('substrateIndex', oysterMeasurements.substrateIndexByID);
 };

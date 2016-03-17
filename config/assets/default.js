@@ -9,8 +9,7 @@ module.exports = {
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
         'public/lib/select2/select2.css',
-        'public/lib/select2/select2-bootstrap.css',
-        'http://fonts.googleapis.com/css?family=Roboto'
+        'public/lib/select2/select2-bootstrap.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',

@@ -8,8 +8,8 @@
                     <p class="lead red">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
-                        <label>Submerged depth of cage (meters)</label>
-                        <input type="number" class="form-control" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM"/>
+                        <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
+                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
@@ -18,14 +18,17 @@
                     <div class="form-group">
                         <label>Take a photograph of the oyster cage</label>
                         <single-image-drop-zone uploader="om.cageConditionUploader" image-url="om.cageConditionPhotoURL" image-alt="Oyster Cage Condition"></single-image-drop-zone>
+                        <div ng-show="om.form.oysterMeasurementForm.$invalid && om.form.oysterMeasurementForm.$submitted && !om.cageConditionPhotoURL">
+                            <p class="red">Oyster cage condition image is required.</p>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="required">Bioaccumulation on cage</label>
-                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"></select>
+                        <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage" name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
-                        <label>Describe any damage to the cage</label>
-                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage"></textarea>
+                        <label for="damage" class="control-label">Describe any damage to the cage</label>
+                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
                     </div>
                 </div>
             </div>
@@ -45,7 +48,7 @@
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
-                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells">
+                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" ng-class="{red: om.form.oysterMeasurementForm.$submitted && substrate.totalNumberOfLiveOystersOnShell === 0}">
                     <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
                     <td>
                         <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
@@ -81,4 +84,4 @@
 </form>
 
 <!-- MODALS -->
-<form-substrate-shell substrate="om.substrate" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm"></form-substrate-shell>
+<form-substrate-shell substrate="om.substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerSubstrateUploader" inner-substrate-uploader="om.innerSubstrateUploader" outer-substrate-url="om.outerSubstrateURL" inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm"></form-substrate-shell>

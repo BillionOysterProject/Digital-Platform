@@ -121,7 +121,7 @@ exports.delete = function (req, res) {
  */
 exports.uploadOysterCageConditionPicture = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
-  var upload = multer(config.uploads.landConditionUpload).single('newOysterCageConditionPicture');
+  var upload = multer(config.uploads.oysterCageConditionUpload).single('newOysterCageConditionPicture');
   var oysterCageConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
 
   // Filtering to upload only images
@@ -134,10 +134,90 @@ exports.uploadOysterCageConditionPicture = function (req, res) {
           message: 'Error occurred while uploading oyster cage condition picture'
         });
       } else {
-        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = config.uploads.waterConditionUpload.dest + req.file.filename;
+        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = config.uploads.oysterCageConditionUpload.dest + req.file.filename;
         oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.originalname = req.file.originalname;
         oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.mimetype = req.file.mimetype;
         oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.filename = req.file.filename;
+        
+        oysterMeasurement.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(oysterMeasurement);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Oyster measurement does not exist'
+    });
+  }
+};
+
+exports.uploadOuterSubstratePicture = function (req, res) {
+  var oysterMeasurement = req.oysterMeasurement;
+  var substrateIndex = req.substrateIndex;
+  var upload = multer(config.uploads.outerSubstrateUpload).single('newOuterSubstratePicture');
+  var outerSubstrateUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = outerSubstrateUploadFileFilter;
+
+  if (oysterMeasurement) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading outer substrate picture'
+        });
+      } else {
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.path = 
+          config.uploads.outerSubstrateUpload.dest + req.file.filename;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.originalname = req.file.originalname;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.mimetype = req.file.mimetype;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.filename = req.file.filename;
+        
+        oysterMeasurement.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(oysterMeasurement);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Oyster measurement does not exist'
+    });
+  }
+};
+
+exports.uploadInnerSubstratePicture = function (req, res) {
+  var oysterMeasurement = req.oysterMeasurement;
+  var substrateIndex = req.substrateIndex;
+  var upload = multer(config.uploads.innerSubstrateUpload).single('newInnerSubstratePicture');
+  var innerSubstrateUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = innerSubstrateUploadFileFilter;
+
+  if (oysterMeasurement) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading inner substrate picture'
+        });
+      } else {
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.path = 
+          config.uploads.innerSubstrateUpload.dest + req.file.filename;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.originalname = req.file.originalname;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.mimetype = req.file.mimetype;
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.filename = req.file.filename;
         
         oysterMeasurement.save(function (saveError) {
           if (saveError) {
@@ -193,4 +273,8 @@ exports.oysterMeasurementByID = function (req, res, next, id) {
     req.oysterMeasurement = oysterMeasurement;
     next();
   });
+};
+
+exports.substrateIndexByID = function (req, res, next, id) {
+  req.substrateIndex = id;
 };
