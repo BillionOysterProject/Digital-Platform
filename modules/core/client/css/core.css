@@ -541,6 +541,24 @@ h6, .h6 {
 }
 
 
+/* DRAG AND DROP */
+
+.dragdrop {
+    width: 20%;
+}
+
+    .draggable {
+        cursor: move;
+        text-align: left;
+        border-style: dashed;
+    }
+
+    .droppable {
+        min-height: 300px;
+        background: #eee;
+    }
+
+
 /* VALIDATION MESSAGES */
 
 .undecorated-link:hover {

@@ -51,12 +51,12 @@
             <label>Assign students to protocols</label>
             <div class="row"><!--TODO: Need to make this a drag and drop input system. Not sure what the best UI for this is -->
                 <div class="col-md-2">
-                    <a class="btn btn-default btn-block">John Smith</a>
-                    <a class="btn btn-default btn-block">Bob Doe</a>
-                    <a class="btn btn-default btn-block">Mary Smith</a>
-                    <a class="btn btn-default btn-block">Jane Doe</a>
-                    <a class="btn btn-default btn-block">John Jones</a>
-                    <a class="btn btn-default btn-block">Ann Smith</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Smith</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Bob Doe</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Mary Smith</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jane Doe</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Jones</a>
+                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Ann Smith</a>
                 </div>
                 <div class="col-md-10 panel panel-default">
                     <table class="table">
@@ -68,26 +68,12 @@
                             <td><h6>Protocol 5</h6><br /> Water Quality</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>    
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>    
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>                    
+                            <td class="dragdrop"><div class="droppable"></div></td>
+                            <td class="dragdrop"><div class="droppable"></div></td>
+                            <td class="dragdrop"><div class="droppable"></div></td>
+                            <td class="dragdrop"><div class="droppable"></div></td>
+                            <td class="dragdrop"><div class="droppable"></div></td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -105,3 +91,8 @@
         </section>
     </section>
 </form>
+
+<!-- JS not working, tried putting jquery/jqueryUI CDNs here with no luck -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.8.18/i18n/jquery-ui-i18n.min.js"></script>
+<script type="text/javascript" src="/modules/core/client/services/draggable.client.service.js"></script>
