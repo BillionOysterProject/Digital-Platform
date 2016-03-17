@@ -51,12 +51,12 @@
             <label>Assign students to protocols</label>
             <div class="row"><!--TODO: Need to make this a drag and drop input system. Not sure what the best UI for this is -->
                 <div class="col-md-2">
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Smith</a>
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Bob Doe</a>
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Mary Smith</a>
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jane Doe</a>
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Jones</a>
-                    <a class="btn btn-default btn-block draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Ann Smith</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Smith</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Bob Doe</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Mary Smith</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jane Doe</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Jones</a>
+                    <a class="draggable"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Ann Smith</a>
                 </div>
                 <div class="col-md-10 panel panel-default">
                     <table class="table">
@@ -75,6 +75,48 @@
                             <td class="dragdrop"><div class="droppable"></div></td>
                         </tr>
                     </table>
+                    
+                                            
+                            <div class="col-md-4">
+                              <div class="panel panel-default">
+                                <div class="panel-heading">
+                                  <h3 class="panel-title">Generated Model</h3>
+                                </div>
+                                <div class="panel-body">
+                                  <!-- The dnd-list directive allows to drop elements into it.
+                                  The dropped data will be added to the referenced list -->
+                                  <ul dnd-list="vm.models.lists.A">
+                                    <!-- The dnd-draggable directive makes an element draggable and will
+                                    transfer the object that was assigned to it. If an element was
+                                    dragged away, you have to remove it from the original list
+                                    yourself using the dnd-moved attribute -->
+                                    <li ng-repeat="item in vm.models.lists.A"
+                                      dnd-draggable="item"
+                                      dnd-moved="vm.models.lists.A.splice($index, 1)"
+                                      dnd-effect-allowed="move"
+                                      dnd-selected="vm.models.selected = item"
+                                      ng-class="{'selected': vm.models.selected === item}"
+                                    >
+                                      {{item.label}}
+                                    </li>
+                                  </ul>
+                                  <ul dnd-list="vm.models.lists.B">
+                                    <!-- The dnd-draggable directive makes an element draggable and will
+                                    transfer the object that was assigned to it. If an element was
+                                    dragged away, you have to remove it from the original list
+                                    yourself using the dnd-moved attribute -->
+                                    <li ng-repeat="item in vm.models.lists.B"
+                                      dnd-draggable="item"
+                                      dnd-moved="vm.models.lists.B.splice($index, 1)"
+                                      dnd-effect-allowed="move"
+                                      dnd-selected="vm.models.selected = item"
+                                      ng-class="{'selected': vm.models.selected === item}"
+                                    >
+                                      {{item.label}}
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
                 </div>
             </div>
         </section>
@@ -91,6 +133,3 @@
         </section>
     </section>
 </form>
-
-<!-- TODO: Wire up JS correctly-->
-<script type="text/javascript" src="/modules/core/client/services/draggable.client.service.js"></script>
