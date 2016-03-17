@@ -336,6 +336,18 @@ a {
 }
 
 
+/* BADGE COLORS */
+
+.badge, .panel-default > .panel-heading .badge { 
+    background: #795548;
+}
+
+    .badge-success, .panel-default > .panel-heading .badge-success { background: #4CAF50; }
+    .badge-info, .panel-default > .panel-heading .badge-info { background: #607D8B; }
+    .badge-warning, .panel-default > .panel-heading .badge-warning { background: #00BCD4; }
+    .badge-danger, .panel-default > .panel-heading .badge-danger { background: #ea6158; }
+
+
 /* ALERT COLORS */
 
 .alert { 
