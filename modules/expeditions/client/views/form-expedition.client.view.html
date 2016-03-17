@@ -48,7 +48,10 @@
     </section>
     <section class="content">
         <section class="container">
-            <label>Assign students to protocols</label>
+            <div class="form-group">
+                <label>Assign students to protocols</label>
+                <button type="submit" class="btn btn-default btn-sm">Auto Assign</button>
+            </div>
             <div class="row"><!--TODO: Fix drag and drop functionality. Currently drags but doesn't drop. -->
                 <div class="col-md-2">
                     <a class="draggable" dnd-draggable="item" dnd-moved="vm.models.lists.A.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="vm.models.selected = item" ng-class="{'selected': vm.models.selected === item}"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Smith</a>
@@ -58,23 +61,25 @@
                     <a class="draggable" dnd-draggable="item" dnd-moved="vm.models.lists.A.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="vm.models.selected = item" ng-class="{'selected': vm.models.selected === item}"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Jones</a>
                     <a class="draggable" dnd-draggable="item" dnd-moved="vm.models.lists.A.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="vm.models.selected = item" ng-class="{'selected': vm.models.selected === item}"><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Ann Smith</a>
                 </div>
-                <div class="col-md-10 panel panel-default">
-                    <table class="table">
-                        <tr>
-                            <td><h6>Protocol 1</h6><br /> Site Conditions</td>
-                            <td><h6>Protocol 2</h6><br /> Oyster Measurements</td>
-                            <td><h6>Protocol 3</h6><br /> Mobile Trap</td>
-                            <td><h6>Protocol 4</h6><br /> Settlement Tiles</td>
-                            <td><h6>Protocol 5</h6><br /> Water Quality</td>
-                        </tr>
-                        <tr>
-                            <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
-                            <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
-                            <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
-                            <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
-                            <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
-                        </tr>
-                    </table>
+                <div class="col-md-10">
+                    <div class="panel panel-default">
+                        <table class="table">
+                            <tr>
+                                <td><h6>Protocol 1</h6><br /> Site Conditions</td>
+                                <td><h6>Protocol 2</h6><br /> Oyster Measurements</td>
+                                <td><h6>Protocol 3</h6><br /> Mobile Trap</td>
+                                <td><h6>Protocol 4</h6><br /> Settlement Tiles</td>
+                                <td><h6>Protocol 5</h6><br /> Water Quality</td>
+                            </tr>
+                            <tr>
+                                <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
+                                <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
+                                <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
+                                <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
+                                <td class="dragdrop"><div class="droppable" dnd-list="vm.models.lists.A"></div></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -82,7 +87,7 @@
     <section class="content shaded">
         <section class="container">
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Send invites'}}</button>
+                    <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
                 </div>
                 <div ng-show="vm.error" class="text-danger">
                     <strong ng-bind="vm.error"></strong>
