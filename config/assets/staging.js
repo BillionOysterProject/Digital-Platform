@@ -9,8 +9,7 @@ module.exports = {
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
         'public/lib/select2/select2.css',
-        'public/lib/select2/select2-bootstrap.css',
-        'http://fonts.googleapis.com/css?family=Roboto'
+        'public/lib/select2/select2-bootstrap.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.min.js',
@@ -31,7 +30,8 @@ module.exports = {
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.min.js',
-        'public/lib/angular-select2/dist/angular-select2.min.js'
+        'public/lib/angular-select2/dist/angular-select2.min.js',
+        'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
       ]
     },
     css: 'public/dist/application.min.css',
