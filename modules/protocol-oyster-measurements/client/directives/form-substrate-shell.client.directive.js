@@ -15,7 +15,8 @@
           outerSubstrateUrl: '=',
           innerSubstrateUrl: '=',
           saveFunction: '=',
-          cancelFunction: '='
+          cancelFunction: '=',
+          index: '@'
         },
         replace: true,
         link: function (scope, element, attrs) {
@@ -32,7 +33,7 @@
               scope.form.substrateForm.$setValidity("innerImg", false);
               isValid = false;
             }
-            scope.saveFunction(substrate, isValid);
+            scope.saveFunction(substrate, scope.index, isValid);
           };
         }
       };

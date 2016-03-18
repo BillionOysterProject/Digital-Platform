@@ -18,7 +18,7 @@
         url: '',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/protocol-oyster-measurements.client.view.html',
         controller: 'ProtocolOysterMeasurementsMainController',
-        controllerAs: 'vm',
+        controllerAs: 'om',
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Oyster Measurements'
@@ -28,7 +28,7 @@
         url: '/create',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-protocol-oyster-measurement.client.view.html',
         controller: 'ProtocolOysterMeasurementsController',
-        controllerAs: 'vm',
+        controllerAs: 'om',
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Oyster Measurements Create'
@@ -38,7 +38,7 @@
         url: '/:protocolOysterMeasurementId/edit',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-protocol-oyster-measurement.client.view.html',
         controller: 'ProtocolOysterMeasurementsController',
-        controllerAs: 'vm',
+        controllerAs: 'om',
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Edit Protocol Oyster Measurements'
@@ -48,7 +48,7 @@
         url: '/:protocolOysterMeasurementId',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/view-protocol-oyster-measurement.client.view.html',
         controller: 'ProtocolOysterMeasurementsController',
-        controllerAs: 'vm',
+        controllerAs: 'om',
         data: {
           pageTitle: 'Protocol Oyster Measurement'
         }

@@ -18,13 +18,13 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-oyster-measurements',
       permissions: '*'
     }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-outer-substrate',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-inner-substrate',
       permissions: '*'
     }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
@@ -33,13 +33,13 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['team lead'],
     allows: [{
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
+      permissions: ['post']
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
+      permissions: ['post']
+    }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-outer-substrate',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/:substrateIndex/upload-outer-substrate',
       permissions: ['post']
     }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',

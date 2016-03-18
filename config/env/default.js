@@ -63,19 +63,19 @@ module.exports = {
       }
     },
     oysterCageConditionUpload: {
-      dest: './modules/protocol-oyster-measurements/client/image/oyster-cage/uploads/', // Protocol oyster measurement upload destination path
+      dest: './modules/protocol-oyster-measurements/client/img/oyster-cage/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     outerSubstrateUpload: {
-      dest: './modules/protocol-oyster-measurements/client/image/outer-substrate/uploads/', // Protocol oyster measurement upload destination path
+      dest: './modules/protocol-oyster-measurements/client/img/outer-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     innerSubstrateUpload: {
-      dest: './modules/protocol-oyster-measurements/client/image/inner-substrate/uploads/', // Protocol oyster measurement upload destination path
+      dest: './modules/protocol-oyster-measurements/client/img/inner-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }

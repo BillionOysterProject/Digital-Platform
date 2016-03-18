@@ -58,7 +58,7 @@
                             Total Alive <b>{{substrate.totalNumberOfLiveOystersOnShell | number}}</b>
                         </p>
                     </td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-target="#modal-substrateshell" ng-click="om.openSubstrateForm($index)">Edit Measurements</a></td>
+                    <td><a class="btn btn-default btn-sm pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="om.openSubstrateForm($index)">Edit Measurements</a></td>
                 </tr>
             </table>
         </section>
@@ -84,4 +84,4 @@
 </form>
 
 <!-- MODALS -->
-<form-substrate-shell substrate="om.substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerSubstrateUploader" inner-substrate-uploader="om.innerSubstrateUploader" outer-substrate-url="om.outerSubstrateURL" inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm"></form-substrate-shell>
+<form-substrate-shell ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" substrate="substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerUploaders[$index]" inner-substrate-uploader="om.innerUploaders[$index]" outer-substrate-url="om.outerSubstrateURL" inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>

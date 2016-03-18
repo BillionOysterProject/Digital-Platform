@@ -25,7 +25,7 @@ var emptyString = function(string) {
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
     oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate = 
-      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).toDate();
+      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate, 'MM-DD-YYYY').toDate();
   }
 
   var errorMessages = [];
@@ -167,29 +167,35 @@ exports.uploadOuterSubstratePicture = function (req, res) {
   upload.fileFilter = outerSubstrateUploadFileFilter;
 
   if (oysterMeasurement) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading outer substrate picture'
-        });
-      } else {
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.path = 
-          config.uploads.outerSubstrateUpload.dest + req.file.filename;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.originalname = req.file.originalname;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.mimetype = req.file.mimetype;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.filename = req.file.filename;
-        
-        oysterMeasurement.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(oysterMeasurement);
-          }
-        });
-      }
-    });
+    if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
+      upload(req, res, function (uploadError) {
+        if (uploadError) {
+          return res.status(400).send({
+            message: 'Error occurred while uploading outer substrate picture'
+          });
+        } else {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.path = 
+            config.uploads.outerSubstrateUpload.dest + req.file.filename;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.originalname = req.file.originalname;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.mimetype = req.file.mimetype;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.filename = req.file.filename;
+          
+          oysterMeasurement.save(function (saveError) {
+            if (saveError) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(saveError)
+              });
+            } else {
+              res.json(oysterMeasurement);
+            }
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Substrate for oyster measurement does not exist'
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Oyster measurement does not exist'
@@ -206,28 +212,34 @@ exports.uploadInnerSubstratePicture = function (req, res) {
   // Filtering to upload only images
   upload.fileFilter = innerSubstrateUploadFileFilter;
 
-  if (oysterMeasurement) {
+  if (oysterMeasurement && substrateIndex) {
     upload(req, res, function (uploadError) {
       if (uploadError) {
         return res.status(400).send({
           message: 'Error occurred while uploading inner substrate picture'
         });
       } else {
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.path = 
-          config.uploads.innerSubstrateUpload.dest + req.file.filename;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.originalname = req.file.originalname;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.mimetype = req.file.mimetype;
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.filename = req.file.filename;
-        
-        oysterMeasurement.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(oysterMeasurement);
-          }
-        });
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.path = 
+            config.uploads.innerSubstrateUpload.dest + req.file.filename;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.originalname = req.file.originalname;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.mimetype = req.file.mimetype;
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.filename = req.file.filename;
+          
+          oysterMeasurement.save(function (saveError) {
+            if (saveError) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(saveError)
+              });
+            } else {
+              res.json(oysterMeasurement);
+            }
+          });
+        } else {
+          return res.status(400).send({
+            message: 'Substrate for oyster measurement does not exist'
+          });
+        }
       }
     });
   } else {
@@ -277,4 +289,5 @@ exports.oysterMeasurementByID = function (req, res, next, id) {
 
 exports.substrateIndexByID = function (req, res, next, id) {
   req.substrateIndex = id;
+  next();
 };
