@@ -62,6 +62,24 @@ module.exports = {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
     },
+    oysterCageConditionUpload: {
+      dest: './modules/protocol-oyster-measurements/client/img/oyster-cage/uploads/', // Protocol oyster measurement upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    outerSubstrateUpload: {
+      dest: './modules/protocol-oyster-measurements/client/img/outer-substrate/uploads/', // Protocol oyster measurement upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    innerSubstrateUpload: {
+      dest: './modules/protocol-oyster-measurements/client/img/inner-substrate/uploads/', // Protocol oyster measurement upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
     lessonFeaturedImageUpload: {
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {
