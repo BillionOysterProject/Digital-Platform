@@ -68,8 +68,8 @@
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6" ng-repeat="measurement in substrate.measurements">
                                             <div class="form-group row">
-                                                <label class="text-right col-sm-4 required" ng-show="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Shell {{$index + 1}} *</label>
-                                                <label class="text-right col-sm-4" ng-hide="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Shell {{$index + 1}}</label>
+                                                <label class="text-right col-sm-4 required" ng-show="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Oyster {{$index + 1}} *</label>
+                                                <label class="text-right col-sm-4" ng-hide="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Oyster {{$index + 1}}</label>
                                                 <div class="col-sm-8">
                                                     <input class="form-control" type="number" ng-model="substrate.measurements[$index].sizeOfLiveOysterMM"/ ng-readonly="$index >= substrate.totalNumberOfLiveOystersOnShell" ng-required="$index < substrate.totalNumberOfLiveOystersOnShell" name="measure{{$index}}" id="measure{{$index}}">
                                                 </div>
