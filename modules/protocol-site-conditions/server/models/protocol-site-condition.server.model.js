@@ -1,4 +1,4 @@
-'ust strict';
+'use strict';
 
 /**
  * Module dependencies
@@ -15,6 +15,16 @@ var ProtocolSiteConditionSchema = new Schema({
     ref: 'Expedition',
     //required: true TODO: will be required
   },
+  team: [{
+    type: Schema.ObjectId,
+    ref: 'Team',
+    //required: true TODO: will be required
+  }],
+  teamMembers: [{
+    type: Schema.ObjectId,
+    ref: 'User',
+    //required: true TODO: will be required
+  }],
   meteorologicalConditions: {
     weatherConditions: {
       type: String,

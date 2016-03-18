@@ -9,40 +9,35 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Expeditions Permissions
+ * Invoke Bioaccumulation Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member', 'team lead', 'user'],
+    roles: ['admin'],
     allows: [{
-      resources: '/api/expeditions/:expeditionId',
+      resources: '/api/bioaccumulations',
       permissions: '*'
     }, {
-      resources: '/api/expeditions',
+      resources: '/api/bioaccumulations/:bioaccumulationId',
       permissions: '*'
     }]
   }, {
-    roles: ['admin', 'partner', 'guest'],
+    roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/expeditions/:expeditionId',
+      resources: '/api/bioaccumulations',
       permissions: ['get']
     }, {
-      resources: '/api/expeditions',
+      resources: '/api/bioaccumulations/:bioaccumulationId',
       permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If Expeditions Policy Allows
+ * Check If Water Flow Policy Allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
-  // If an expedition is being processed and the current user created it then allow any manipulation
-  if (req.expedition && req.user && req.expedition.user && req.expedition.user.id === req.user.id) {
-    return next();
-  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

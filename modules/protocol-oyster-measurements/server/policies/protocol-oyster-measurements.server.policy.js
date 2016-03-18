@@ -9,40 +9,41 @@ var acl = require('acl');
 acl = new acl(new acl.memoryBackend());
 
 /**
- * Invoke Expeditions Permissions
+ * Invoke Protocol Oyster Measurements Permissions
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['team member', 'team lead', 'user'],
     allows: [{
-      resources: '/api/expeditions/:expeditionId',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
       permissions: '*'
     }, {
-      resources: '/api/expeditions',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements',
       permissions: '*'
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],
     allows: [{
-      resources: '/api/expeditions/:expeditionId',
-      permissions: ['get']
-    }, {
-      resources: '/api/expeditions',
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: ['get']
     }]
   }]);
 };
 
 /**
- * Check If Expeditions Policy Allows
+ * Check if Protocol Site Condition Policy allows
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
-  // If an expedition is being processed and the current user created it then allow any manipulation
-  if (req.expedition && req.user && req.expedition.user && req.expedition.user.id === req.user.id) {
-    return next();
-  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
