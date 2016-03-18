@@ -13,31 +13,19 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member'],
+    roles: ['team member', 'team lead', 'user'],
     allows: [{
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-site-conditions',
       permissions: '*'
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId',
-      permissions: '*'
-    }]
-  }, {
-    roles: ['team lead'],
-    allows: [{
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId',
-      permissions: ['get', 'put']
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],

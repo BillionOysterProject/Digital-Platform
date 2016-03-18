@@ -13,37 +13,22 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member'],
+    roles: ['team member', 'team lead', 'user'],
     allows: [{
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-oyster-measurements',
       permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
-      permissions: '*'
-    }]
-  }, {
-    roles: ['team lead'],
-    allows: [{
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
-      permissions: ['post']
-    }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
-      permissions: ['get', 'put']
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],

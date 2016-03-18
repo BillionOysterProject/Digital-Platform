@@ -8,7 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/protocol-mobile-traps/client/views/form-protocol-mobile-trap.client.view.html',
         //controller: 'ProtocolMobileTrapsController',
-        //controllerAs: 'vm',
+        //controllerAs: 'mt',
       };
     });
 })();

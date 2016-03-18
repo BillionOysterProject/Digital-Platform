@@ -31,8 +31,8 @@
                         </div>
                         <div class="col-sm-6">
                             <!-- TODO: Create same experience from protocol1 mapping for this protocol -->
-                            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-sample" ng-hide="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
-                            <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-sample" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
+                            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-sample" ng-hide="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                            <input class="form-control" type="text" value="{{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-sample" ng-show="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                         </div>
                     </div>
                 </div>
@@ -131,8 +131,8 @@
     <section class="content">
         <section class="container">
             <button type="submit" class="btn btn-default">Submit</button>
-            <div ng-show="vm.error" class="text-danger">
-                <strong ng-bind="vm.error"></strong>
+            <div ng-show="wq.error" class="text-danger">
+                <strong ng-bind="wq.error"></strong>
             </div>
         </section>
     </section>
@@ -142,5 +142,5 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-sample" tabindex="-1" role="dialog"><!--TODO: Update ID (just copy/pasted from protocol1-->
-    <map-select latitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
+    <map-select latitude="wq.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="wq.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
 </div>

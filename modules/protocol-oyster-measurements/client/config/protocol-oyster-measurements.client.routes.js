@@ -20,7 +20,6 @@
         controller: 'ProtocolOysterMeasurementsMainController',
         controllerAs: 'om',
         data: {
-          roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Oyster Measurements'
         }
       })
