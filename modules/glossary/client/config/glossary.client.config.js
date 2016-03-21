@@ -2,25 +2,19 @@
   'use strict';
 
   angular
-    .module('units')
+    .module('glossary')
     .run(menuConfig);
 
   menuConfig.$inject = ['Menus'];
 
   function menuConfig(Menus) {
     // Add the dropdown create item
-    Menus.addSubMenuItem('account', 'settings', {
-      title: 'Manage Units',
-      state: 'units.list',
-      roles: ['admin']
-    });
-
     Menus.addSubMenuItem('topbar', 'curriculum', {
-      title: 'Units',
-      state: 'units.list',
+      title: 'Glossary',
+      state: 'glossary.main',
       icon: 'glyphicon glyphicon-cog',
       roles: ['team lead', 'admin'],
-      position: 2
+      position: 5
     });
   }
 })();

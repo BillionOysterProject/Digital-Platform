@@ -10,34 +10,24 @@
    function menuConfig(Menus) {
      Menus.addMenuItem('topbar', {
        title: 'Curriculum',
-       state: 'lesson.list',
+       state: 'curriculum',
        type: 'dropdown',
-       roles: ['user'],
+       roles: ['team lead', 'admin'],
        icon: 'glyphicon glyphicon-book',
      });
 
-     Menus.addSubMenuItem('topbar', 'lesson.list', {
-       title: 'Lessons',
-       state: 'lesson.list',
-       roles: ['user']
-     });
+     // Menus.addSubMenuItem('topbar', 'lessons.list', {
+     //   title: 'My Library',
+     //   state: 'lessons.list',
+     //   icon: 'glyphicon glyphicon-cog',
+     //   roles: ['team lead']
+     // });
 
-     Menus.addSubMenuItem('topbar', 'lesson.list', {
-       title: 'Units',
-       state: 'unit.list',
-       roles: ['team lead']
-     });
-
-     Menus.addSubMenuItem('topbar', 'lesson.list', {
-       title: 'My Library',
-       state: 'lesson.list',
-       roles: ['team lead']
-     });
-
-     Menus.addSubMenuItem('topbar', 'lesson.list', {
-       title: 'Glossary',
-       state: 'lesson.list',
-       roles: ['team lead']
-     });
+     // Menus.addSubMenuItem('topbar', 'lessons.list', {
+     //   title: 'Glossary',
+     //   state: 'lessons.list',
+     //   icon: 'glyphicon glyphicon-cog',
+     //   roles: ['team lead']
+     // });
    }
 })();
