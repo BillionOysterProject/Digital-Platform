@@ -6,10 +6,10 @@
     </div>
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
         <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
-            <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
+            <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }">{{::item.title}}&nbsp;<span class="caret"></span></span></a>
             <ul ng-switch-when="dropdown" class="dropdown-menu">
                 <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
-                    <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
+                    <a ui-sref="{{subitem.state}}"><i class="{{subitem.icon}}" ng-show="subitem.icon"></i>{{subitem.title}}</span></a>
                 </li>
             </ul>
             <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>

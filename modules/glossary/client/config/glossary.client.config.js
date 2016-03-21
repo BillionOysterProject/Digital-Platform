@@ -2,19 +2,18 @@
   'use strict';
 
   angular
-    .module('lessons')
+    .module('glossary')
     .run(menuConfig);
 
   menuConfig.$inject = ['Menus'];
 
   function menuConfig(Menus) {
-    // Add the dropdown list item
+    // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'curriculum', {
-      title: 'Lessons',
-      state: 'lessons.list',
+      title: 'Glossary',
+      state: 'glossary.main',
       roles: ['team lead', 'admin'],
-      icon: 'glyphicon glyphicon-cog',
-      position: 1
+      position: 4
     });
   }
 })();

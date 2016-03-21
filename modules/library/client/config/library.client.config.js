@@ -2,19 +2,17 @@
   'use strict';
 
   angular
-    .module('lessons')
+    .module('library')
     .run(menuConfig);
 
   menuConfig.$inject = ['Menus'];
 
   function menuConfig(Menus) {
-    // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'curriculum', {
-      title: 'Lessons',
-      state: 'lessons.list',
+      title: 'My Library',
+      state: 'library.user',
       roles: ['team lead', 'admin'],
-      icon: 'glyphicon glyphicon-cog',
-      position: 1
+      position: 3
     });
   }
 })();
