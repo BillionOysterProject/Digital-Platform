@@ -80,6 +80,12 @@ module.exports = {
         fileSize: 1*1024*1024
       }
     },
+    organismImageUpload: {
+      dest: './modules/organisms/client/img/organisms/uploads/', // Meta organisms upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
     lessonFeaturedImageUpload: {
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {

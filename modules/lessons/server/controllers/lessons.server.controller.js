@@ -19,35 +19,15 @@ var path = require('path'),
 exports.create = function(req, res) {
   var lesson = new Lesson(req.body);
   lesson.user = req.user;
-  if (req.files && req.files.handoutFile) {
-    lesson.attach('handout', req.files.handoutFile, function(error) {
-      if (error) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(error)
-        });
-      } else {
-        lesson.save(function(err) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
-    });
-  } else {
-    lesson.save(function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(lesson);
-      }
-    });
-  }
+  lesson.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(lesson);
+    }
+  });
 };
 
 /**
