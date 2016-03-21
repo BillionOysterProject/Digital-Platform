@@ -439,6 +439,7 @@ h6, .h6 {
 
 .modal-header {
     border: none;
+    padding-bottom: 0;
 }
 
 .modal-footer {
