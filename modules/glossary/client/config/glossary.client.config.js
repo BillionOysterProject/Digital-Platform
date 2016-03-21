@@ -12,9 +12,8 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'Glossary',
       state: 'glossary.main',
-      icon: 'glyphicon glyphicon-cog',
       roles: ['team lead', 'admin'],
-      position: 5
+      position: 4
     });
   }
 })();

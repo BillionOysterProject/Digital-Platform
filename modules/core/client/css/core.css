@@ -135,6 +135,12 @@ body {
                 padding: 5px 0 5px 70px;
             }
             
+                .sidebar ul.nav > li > .dropdown-menu i {
+                    float: right;
+                    width: auto;
+                    padding-right: 20px;
+                }
+                
                 .sidebar ul.nav > li.dropdown.open > a.dropdown-toggle {
                     color: #778095;
                 }
@@ -155,7 +161,10 @@ body {
                 }
             
                     .sidebar ul.nav > li > .dropdown-menu > li > a:hover, 
-                    .sidebar ul.nav > li > .dropdown-menu > li > a:active {
+                    .sidebar ul.nav > li > .dropdown-menu > li > a:active,
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a, 
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a:hover, 
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a:focus {
                         background: transparent;
                         color: #fff;
                     }

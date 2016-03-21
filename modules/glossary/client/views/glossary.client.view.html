@@ -1,5 +1,149 @@
-<section class="content shaded">
-  <section class="container">
-    <p>Glossary</p>
-  </section>
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container">
+            <h2>Glossary</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
+                </span>
+                <input type="text" class="form-control" placeholder="Search for a vocabulary term...">
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container">
+        <a class="btn btn-primary pull-right" data-toggle="modal" data-tager="#modal-addedit">Add a vocabulary term</a>
+        <nav class="navbar">
+            <ul class="nav navbar-nav"><!--TODO: Wire up sorts-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Sort <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                       <li><a>Alphabetical</a></li>
+                       <li><a>Relevance</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <table class="table">
+            <tr>
+                <td><h4>Scientist</h4><td>
+                <td><p class="text-muted">A person who is studying or has expert knowledge of one or more of the natural or physical sciences.</p></td>
+                <td class="text-right col-md-2">
+                    <a class="btn btn-primary" title="See uses">
+                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                    </a>
+                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-editadd">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td><h4>Scientist</h4><td>
+                <td><p class="text-muted">A person who is studying or has expert knowledge of one or more of the natural or physical sciences. A person who is studying or has expert knowledge of one or more of the natural or physical sciences. A person who is studying or has expert knowledge of one or more of the natural or physical sciences.</p></td>
+                <td class="text-right col-md-2">
+                    <a class="btn btn-primary" title="See uses">
+                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                    </a>
+                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-editadd">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+                </td>
+            </tr>
+            <tr>
+                <td><h4>Scientist</h4><td>
+                <td><p class="text-muted">A person who is studying or has expert knowledge of one or more of the natural or physical sciences. A person who is studying or has expert knowledge of one or more of the natural or physical sciences.</p></td>
+                <td class="text-right col-md-2">
+                    <a class="btn btn-primary" title="See uses">
+                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                    </a>
+                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-editadd">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td><h4>Scientist</h4><td>
+                <td><p class="text-muted">A person who is studying or has expert knowledge of one or more of the natural or physical sciences. A person who is studying or has expert knowledge of one or more of the natural or physical sciences. A person who is studying or has expert knowledge of one or more of the natural or physical sciences.</p></td>
+                <td class="text-right col-md-2">
+                    <a class="btn btn-primary" title="See uses">
+                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                    </a>
+                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-editadd">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </section>
 </section>
+
+
+<!-- MODALS -->
+
+<div class="modal fade" id="modal-editadd" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add a vocabulary term to the Glossary</h4><!--TODO: if editing, text should read "Edit the term "<term>" -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Vocabulary term</label>
+                            <input type="text" name="vocab-term" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Definition</label>
+                            <textarea class="form-control" name="definition" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button><!-- TODO: If editing, text should read "Update" -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete the term {{term}}?<!--TODO: Wire up term name--></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <!--TODO: Wire up button -->
+                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.remove()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODALS -->
