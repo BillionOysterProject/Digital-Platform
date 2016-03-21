@@ -10,13 +10,13 @@
         </div>
     </div>
     <div class="col-md-4 text-right">
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-student-editadd">Add student</a><!-- TODO: Wire up modal -->
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-import">Import class</a><!-- TODO: Wire up modal -->
+        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-student-editadd">Add team member</a><!-- TODO: Wire up modal -->
+        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-import">Import team</a><!-- TODO: Wire up modal -->
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-success" role="alert">You have <b>3</b> student requests to join your team. <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-student-requests">Respond</a></div>
+        <div class="alert alert-success" role="alert">You have <b>3</b> requests to join your team. <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-student-requests">Respond</a></div>
     </div>
 </div>
 <div class="row">
@@ -89,7 +89,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Add a student</h4><!--TODO: If editing, title should read "Edit Firstname Lastname" -->
+                <h4 class="modal-title">Add a team member</h4><!--TODO: If editing, title should read "Edit Firstname Lastname" -->
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -169,10 +169,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Import a class</h4>
+                <h4 class="modal-title">Import a team</h4>
             </div>
             <div class="modal-body">
-                <p>Have a large class? Mass import a list of students via a CSV file below.</p>
+                <p>Have a large team? Mass import a list of team members via a CSV file below.</p>
                 <div class="row">
                     <form>
                       <fieldset>
@@ -219,16 +219,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Student Requests</h4>
+                <h4 class="modal-title">Team Member Requests</h4>
             </div>
             <div class="modal-body">
-                <p>Accepted students will be invited to join and automatically added to your team. Rejected students will be removed from the list.</p>
+                <p>Accepted team members will be invited to join and automatically added to your team. Rejected team members will be removed from the list.</p>
                 <div class="row">
                     <div class="col-sm-6 col-md-4">
                         <div class="panel panel-default">
                             <div class="panel-body text-center">
                                 <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Student Name</h4>
+                                <h4>Team Member Name</h4>
                                 <p class="text-muted small">email@example.com<br/>7th grade</p>
                                 <!-- TODO: Wire up buttons, if either one is clicked, remove its entire div.col-sm-6.col-md-4 from the list and perform action (reject/accept)-->
                                 <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
@@ -240,7 +240,7 @@
                         <div class="panel panel-default">
                             <div class="panel-body text-center">
                                 <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Student Name</h4>
+                                <h4>Team Member Name</h4>
                                 <p class="text-muted small">email@example.com<br/>7th grade</p>
                                 <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
                                 <a class="btn btn-danger btn-sm" title="Reject"><i class="glyphicon glyphicon-remove"></i></a>
@@ -251,7 +251,7 @@
                         <div class="panel panel-default">
                             <div class="panel-body text-center">
                                 <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Student Name</h4>
+                                <h4>Team Member Name</h4>
                                 <p class="text-muted small">email@example.com<br/>7th grade</p>
                                 <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
                                 <a class="btn btn-danger btn-sm" title="Reject"><i class="glyphicon glyphicon-remove"></i></a>
