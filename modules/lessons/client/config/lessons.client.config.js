@@ -1,21 +1,20 @@
 (function () {
   'use strict';
 
- angular
-   .module('lessons')
-   .run(menuConfig);
+  angular
+    .module('lessons')
+    .run(menuConfig);
 
- menuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus'];
 
- function menuConfig(Menus) {
-   // Add the dropdown list item
-   Menus.addSubMenuItem('topbar', 'curriculum', {
-     title: 'Lessons',
-     state: 'lessons.list',
-     roles: ['team lead', 'admin'],
-     icon: 'glyphicon glyphicon-cog',
-     position: 1
-   });
- }
-  
+  function menuConfig(Menus) {
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'curriculum', {
+      title: 'Lessons',
+      state: 'lessons.list',
+      roles: ['team lead', 'admin'],
+      icon: 'glyphicon glyphicon-cog',
+      position: 1
+    });
+  }
 })();
