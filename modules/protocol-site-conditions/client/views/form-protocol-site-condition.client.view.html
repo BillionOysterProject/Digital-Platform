@@ -199,7 +199,7 @@
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
                         <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly/>
                     </div>
                     <div class="row">
@@ -217,7 +217,7 @@
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
                         <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                     </div>
                     <div class="form-group">
@@ -329,7 +329,7 @@
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-default">{{sc.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
+            <button type="submit" class="btn btn-primary">{{sc.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
             <div ng-show="sc.error" class="text-danger">
                 <strong ng-bind="sc.error"></strong>
             </div>

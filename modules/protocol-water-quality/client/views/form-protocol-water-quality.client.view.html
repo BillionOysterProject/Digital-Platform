@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-sm-6">
                             <!-- TODO: Create same experience from protocol1 mapping for this protocol -->
-                            <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-sample" ng-hide="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                            <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample" ng-hide="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
                             <input class="form-control" type="text" value="{{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-sample" ng-show="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                         </div>
                     </div>
@@ -124,13 +124,13 @@
                     </table>
                 </div>
             </div>
-            <a class="btn btn-primary">Add a new sample</a><!--TODO: This should add another <section class="content"> identical to the one above. But every other <section class="content"> should be <section class="content shaded">. Also, this button should only show on the last Sample -->
-            <a class="btn btn-primary">Remove sample</a> <!--TODO: This button should show on each added Sample to remove the <section> (but never on the initial Sample, since that is required) -->
+            <a class="btn btn-default">Add a new sample</a><!--TODO: This should add another <section class="content"> identical to the one above. But every other <section class="content"> should be <section class="content shaded">. Also, this button should only show on the last Sample -->
+            <a class="btn btn-default">Remove sample</a> <!--TODO: This button should show on each added Sample to remove the <section> (but never on the initial Sample, since that is required) -->
         </section>
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             <div ng-show="wq.error" class="text-danger">
                 <strong ng-bind="wq.error"></strong>
             </div>
