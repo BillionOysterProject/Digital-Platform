@@ -86,7 +86,38 @@ exports.delete = function(req, res) {
  * List of mobile organisms
  */
 exports.list = function(req, res) {
-  MobileOrganism.find().sort('commonName').exec(function(err, mobileOrganisms) {
+  var query;
+  var and = [];
+
+  if (req.query.category) {
+    and.push({'category': req.query.category});
+  }
+
+  if (and.length === 1) {
+    query = MobileOrganism.find(and[0]);
+  } else if (and.length > 0) {
+    query = MobileOrganism.find({ $and: and });
+  } else {
+    query = MobileOrganism.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'latin') {
+      query.sort('latinName');
+    }
+  } else {
+    query.sort('commonName');
+  }
+
+  if (req.query.limit) {
+    if (req.query.page) {
+      query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+    }
+  } else {
+    query.limit(req.query.limit);
+  }
+
+  query.exec(function(err, mobileOrganisms) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

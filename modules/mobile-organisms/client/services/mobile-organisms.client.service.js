@@ -13,6 +13,15 @@
     }, {
       update: {
         method: 'PUT'
+      }, query: {
+        method: 'GET',
+        params: {
+          category: '@category',
+          sort: '@sort',
+          limit: '@limit',
+          page: '@page'
+        },
+        isArray: true
       }
     });
   }

@@ -18,17 +18,17 @@
         <section class="container">
             <nav class="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Show All</a></li>
-                    <li><a href="#">Fish</a></li>
-                    <li><a href="#">Crustaceans</a></li>
-                    <li><a href="#">Worms</a></li>
+                    <li class="active"><a href="#" ng-click="mt.clearFilters()">Show All</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter(fish)">Fish</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter(crustaceans)">Crustaceans</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter(worms)">Worms</a></li>
                 </ul>
             </nav>
             <div class="row">
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
+                <div class="col-md-3 col-sm-4" ng-repeat="organism in mt.mobileOrganisms">
+                    <div class="thumbnail row">
+                        <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
+                        <h4 class="text-center" ng-bind="organism.commonName"></h4>
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
@@ -37,15 +37,15 @@
                             </div>
                         </div>
                         <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
+                            <em class="text-muted" ng-bind="organism.latinName"></em><br />
+                            <span ng-bind="organism.description"></span>
                         </p>
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
                         <!-- TODO: when notes/photo is added, show this instead
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or sketch/photograph</a>-->
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-4">
+                <!-- <div class="col-md-3 col-sm-4">
                     <div class="thumbnail">
                         <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
                         <h4 class="text-center">Blackfish, Tautog</h4>
@@ -170,7 +170,7 @@
                         </p>
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </section>
     </section>
@@ -213,7 +213,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Add a sketch or photograph</label>
-                            <input type="file" class="form-control" />
+                            <single-image-drop-zone uploader="mt.sketchPhotoUploader" image-url="mt.url" image-alt="Outer side"></single-image-drop-zone>
                         </div>
                         <div class="form-group">
                             <label>Add notes or questions</label>
