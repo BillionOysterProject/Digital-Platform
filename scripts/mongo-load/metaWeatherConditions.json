@@ -1,0 +1,8 @@
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e232"},"order":0,"label":"Sunny","value":"sunny"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e233"},"order":1,"label":"Partly Cloudy","value":"partly-cloudy"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e234"},"order":3,"label":"Rain","value":"rain"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e235"},"order":2,"label":"Cloudy","value":"cloudy"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e236"},"order":7,"label":"Thunderstorm","value":"thunderstorm"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e237"},"order":5,"label":"Snow","value":"snow"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e238"},"order":4,"label":"Fog","value":"fog"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e239"},"order":6,"label":"Hail","value":"hail"}
