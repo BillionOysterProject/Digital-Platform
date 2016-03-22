@@ -73,46 +73,48 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
-                <h6>Tide Conditions</h6>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Closest High Tide</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+            <div class="row">
+                <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
+                    <h6>Tide Conditions</h6>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Closest High Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Closest Low Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                        </div>
                     </div>
-                    <div class="form-group col-sm-6">
-                        <label>Closest Low Tide</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Current Speed</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Current Direction</label>
+                            <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.currentDirection">
+                                <option disabled selected></option>
+                                <option value="north">North</option>
+                                <option value="south">South</option>
+                                <option value="east">East</option>
+                                <option value="west">West</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Current Speed</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label>Current Direction</label>
-                        <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.currentDirection">
+                    <div class="form-group">
+                        <label>Tidal Current</label>
+                        <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.tidalCurrent">
                             <option disabled selected></option>
-                            <option value="north">North</option>
-                            <option value="south">South</option>
-                            <option value="east">East</option>
-                            <option value="west">West</option>
+                            <option value="flood-current">Flood current (incoming tide)</option>
+                            <option value="slack-water">Slack water</option>
+                            <option value="ebb-current">Ebb current (outgoing tide)</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Tidal Current</label>
-                    <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.tidalCurrent">
-                        <option disabled selected></option>
-                        <option value="flood-current">Flood current (incoming tide)</option>
-                        <option value="slack-water">Slack water</option>
-                        <option value="ebb-current">Ebb current (outgoing tide)</option>
-                    </select>
+                <div class="col-md-6">
+                    <tide-table></tide-table>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <tide-table></tide-table>
             </div>
         </section>
     </section>
