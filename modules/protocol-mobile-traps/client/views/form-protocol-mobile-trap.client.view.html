@@ -24,8 +24,8 @@
                     <li><a href="#" ng-click="mt.clickFilter(worms)">Worms</a></li>
                 </ul>
             </nav>
-            <div class="row">
-                <div class="col-md-3 col-sm-4" ng-repeat="organism in mt.mobileOrganisms">
+            <div class="row" isotope-container="isotope-container">
+                <div class="col-md-3 col-sm-4" isotope-item="isotope-item" ng-repeat="organism in mt.mobileOrganisms">
                     <div class="thumbnail">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>
