@@ -1,0 +1,16 @@
+<div class="shaded">
+  <section class="content">
+    <section class="container">
+      <p>View Protocol</p>
+
+      <h3>Mobile Organisms</h3>
+      <div ng-repeat="organismDetails in mt.protocolMobileTrap.mobileOrganisms">
+        <h4>{{organismDetails.organism.commonName}}</h4>
+        <h6>{{organismDetails.organism.latinName}}</h6>
+        <img ng-src="{{organismDetails.sketchPhoto.path}}" alt="Sketch or Photo" class="img-thumbnail" ng-show="organismDetails.sketchPhoto">
+        <p>Count: {{organismDetails.count}}</p>
+        <p>Notes: {{organismDetails.notesQuestions}}</p>
+      </div>
+    </section>
+  </section>
+</div>

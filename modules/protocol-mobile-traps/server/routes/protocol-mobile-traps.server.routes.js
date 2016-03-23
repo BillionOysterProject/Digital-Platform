@@ -8,15 +8,15 @@ var mobileTrapsPolicy = require('../policies/protocol-mobile-traps.server.policy
 
 module.exports = function (app) {
   // Protocol Mobile Traps collection routes
-  app.route('/api/protocol-oyster-measurements').all(mobileTrapsPolicy.isAllowed)
+  app.route('/api/protocol-mobile-traps').all(mobileTrapsPolicy.isAllowed)
     // .get(mobileTraps.list)
     .post(mobileTraps.create);
 
-  app.route('/api/protocol-mobile-trap/:mobileTrapId/organisms/:organismId/upload-sketch-photo').all(mobileTrapsPolicy.isAllowed)
+  app.route('/api/protocol-mobile-traps/:mobileTrapId/organisms/:organismId/upload-sketch-photo').all(mobileTrapsPolicy.isAllowed)
     .post(mobileTraps.uploadSketchPhoto);  
 
   // Single Protocol Mobile Traps routes
-  app.route('/api/protocol-oyster-measurements/:mobileTrapId').all(mobileTrapsPolicy.isAllowed)
+  app.route('/api/protocol-mobile-traps/:mobileTrapId').all(mobileTrapsPolicy.isAllowed)
     .get(mobileTraps.read)
     .put(mobileTraps.update)
     .delete(mobileTraps.delete);

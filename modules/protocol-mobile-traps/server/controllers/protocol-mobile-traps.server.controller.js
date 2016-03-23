@@ -122,11 +122,11 @@ exports.uploadSketchPhoto = function (req, res) {
   if (mobileTrap) {
     var index = -1;
     for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
-      if (mobileTrap.mobileOrganisms[i].organism === organismId) {
+      if (mobileTrap.mobileOrganisms[i].organism._id.toString() === organismId.toString()) {
         index = i;
       }
     }
-
+  
     if (index > -1 && mobileTrap.mobileOrganisms[index]) {
       upload(req, res, function (uploadError) {
         if (uploadError) {
@@ -188,7 +188,7 @@ exports.mobileTrapByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolMobileTrap.findById(id).populate('teamLead', 'displayName').exec(function (err, mobileTrap) {
+  ProtocolMobileTrap.findById(id).populate('teamLead', 'displayName').populate('mobileOrganisms.organism').exec(function (err, mobileTrap) {
     if (err) {
       return next(err);
     } else if (!mobileTrap) {

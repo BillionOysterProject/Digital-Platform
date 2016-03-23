@@ -90,7 +90,7 @@ exports.list = function(req, res) {
   var and = [];
 
   if (req.query.category) {
-    and.push({'category': req.query.category});
+    and.push({ 'category': req.query.category });
   }
 
   if (and.length === 1) {

@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['team member', 'team lead', 'user'],
     allows: [{
-      resources: '/api/protocol-mobile-trap/:mobileTrapId/organisms/:organismIndex/upload-sketch-photo',
+      resources: '/api/protocol-mobile-traps/:mobileTrapId/organisms/:organismId/upload-sketch-photo',
       permissions: '*'
     }, {
-      resources: '/api/protocol-mobile-trap/:mobileTrapId',
+      resources: '/api/protocol-mobile-traps/:mobileTrapId',
       permissions: '*'
     }, {
-      resources: '/api/protocol-mobile-trap',
+      resources: '/api/protocol-mobile-traps',
       permissions: '*'
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],
     allows: [{
-      resources: '/api/protocol-mobile-trap/:mobileTrapId',
+      resources: '/api/protocol-mobile-traps/:mobileTrapId',
       permissions: ['get']
     }]
   }]);

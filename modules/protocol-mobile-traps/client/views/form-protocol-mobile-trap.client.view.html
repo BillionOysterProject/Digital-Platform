@@ -1,4 +1,4 @@
-<section>
+<form name="mt.form.mobileTrapForm" ng-submit="mt.save(mt.form.mobileTrapForm.$valid)" novalidate>
     <section class="content">
         <section class="container">
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
@@ -19,9 +19,9 @@
             <nav class="navbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#" ng-click="mt.clearFilters()">Show All</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter(fish)">Fish</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter(crustaceans)">Crustaceans</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter(worms)">Worms</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter('fish')">Fish</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter('crustaceans')">Crustaceans</a></li>
+                    <li><a href="#" ng-click="mt.clickFilter('worms')">Worms</a></li>
                 </ul>
             </nav>
             <div class="row">
@@ -31,146 +31,21 @@
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+                                <button type="button" class="btn btn-default" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]" ng-click="mt.removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
+                                <b class="pull-left red" ng-show="mt.foundOrganisms[organism._id]">&nbsp;{{mt.foundOrganisms[organism._id].count}}&nbsp;</b>
+                                <b class="pull-left red" ng-hide="mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
+                                <button type="button" class="btn btn-default" ng-click="mt.addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
                         <p class="text-center">
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
+                        <a href="#" class="btn btn-default btn-sm btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or a sketch/photograph</a>
                         <!-- TODO: when notes/photo is added, show this instead
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or sketch/photograph</a>-->
                     </div>
                 </div>
-                <!-- <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-4">
-                    <div class="thumbnail">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <h4 class="text-center">Blackfish, Tautog</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Add notes or a sketch/photograph</a>
-                    </div>
-                </div> -->
             </div>
         </section>
     </section>
@@ -182,51 +57,7 @@
             </div>
         </section>
     </section>
-</section>
-
-
-
-
+</form>
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-input" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Blackfish, Tautog</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <img src="http://media.eol.org/content/2012/06/14/20/36789_580_360.jpg" class="img-responsive" />
-                        <p>
-                            <em class="text-muted">Tautoga onitis</em><br />
-                            A stout olive-brown fish with protruding teeth and rubbery, slimy skin
-                        </p>
-                        <p><span class="label label-default">Fish</span></p>
-                        <p>Native</p>
-                        <p><b>Habitat:</b> Associated with reefs and found close to shore in marine and brackish water</p>
-                        <p><b>Diet:</b> Feeds on mussels, other mollusks and crustaceans</p>
-                        <p><b>Morphology notes:</b> Average adult body size 18–26 cm, up to 17 dorsal spines present and 3 anal spines	</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Add a sketch or photograph</label>
-                            <single-image-drop-zone uploader="mt.sketchPhotoUploader" image-url="mt.url" image-alt="Outer side"></single-image-drop-zone>
-                        </div>
-                        <div class="form-group">
-                            <label>Add notes or questions</label>
-                            <textarea class="form-control" rows="18"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>

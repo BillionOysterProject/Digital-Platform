@@ -12,19 +12,7 @@
     FileUploader, ProtocolMobileTrapsService, MobileOrganismsService) {
     var mt = this;
 
-    // Set up Protocol Mobile Traps
-    mt.protocolMobileTrap = {};
-    if ($stateParams.protocolMobileTrapId) {
-      ProtocolMobileTrapsService.get({
-        mobileTrapId: $stateParams.protocolMobileTrapId
-      }, function(data) {
-        mt.protocolMobileTrap = data;
-      });
-    } else {
-      mt.protocolMobileTrap = new ProtocolMobileTrapsService();
-      mt.protocolMobileTrap.mobileOrganisms = [];
-    }
-
+    // Set up Organisms
     mt.filter = {
       category: ''
     };
@@ -43,22 +31,60 @@
       mt.findOrganisms();
     };
 
-    mt.findOrganisms = function() {
+    mt.findOrganisms = function(callback) {
       MobileOrganismsService.query({
         category: mt.filter.category
       }, function(data) {
         mt.mobileOrganisms = data;
-        console.log('organisms', mt.mobileOrganisms);
+        callback();
       });
     };
 
-    mt.mobileOrganisms = mt.findOrganisms();
+    mt.getFoundOrganism = function(organism) {
+      if (!mt.foundOrganisms[organism._id]) {
+        mt.foundOrganisms[organism._id] = {
+          uploader: new FileUploader({ alias: 'newSketchPhotoPicture' }),
+          count: 0,
+          imageUrl: '',
+          notes: '',
+          organism: organism
+        };
+      }
+      return mt.foundOrganisms[organism._id];
+    };
+
+    mt.foundOrganisms = {};
+    mt.mobileOrganisms = mt.findOrganisms(function() {
+      for (var o = 0; o < mt.mobileOrganisms.length; o++) {
+        mt.getFoundOrganism(mt.mobileOrganisms[o]);
+      }
+    });
+
+    // Set up Protocol Mobile Traps
+    mt.protocolMobileTrap = {};
+    if ($stateParams.protocolMobileTrapId) {
+      ProtocolMobileTrapsService.get({
+        mobileTrapId: $stateParams.protocolMobileTrapId
+      }, function(data) {
+        mt.protocolMobileTrap = data;
+
+        for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
+          var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
+          var foundOrganism = mt.getFoundOrganism(organismDetails.organism._id);
+
+          foundOrganism.count = organismDetails.count;
+          foundOrganism.imageUrl = (organismDetails.image) ? organismDetails.image.path : '';
+          foundOrganism.notes = organismDetails.notesQuestions;
+        }
+      });
+    } else {
+      mt.protocolMobileTrap = new ProtocolMobileTrapsService();
+      mt.protocolMobileTrap.mobileOrganisms = [];
+    }
 
     mt.authentication = Authentication;
     mt.error = null;
     mt.form = {};
-
-    mt.sketchPhotoUploaders = [];
 
     // Remove existing protocol mobile trap
     mt.remove = function() {
@@ -72,6 +98,19 @@
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'mt.form.protocolMobileTrapForm');
         return false;
+      }
+
+      var foundIds = [];
+      for (var foundId in mt.foundOrganisms) {
+        var found = mt.foundOrganisms[foundId];
+        foundIds.push(foundId);
+        if (found.count > 0) {
+          mt.protocolMobileTrap.mobileOrganisms.push({
+            organism: found.organism,
+            count: found.count, 
+            notesQuestions: found.notes
+          });
+        }
       }
 
       // TODO: move create/update logic to service
@@ -90,19 +129,19 @@
           });
         }
 
-        function uploadAllSketchPhotos(mobileTrapId, sketchPhotosSuccessCallback, sketchPhotosErrorCallback) {
-          function uploadSketchPhoto(mobileTrapId, index, sketchPhotoSuccessCallback, sketchPhotoErrorCallback) {
-            if (index < mt.sketchPhotoUploaders.length && mt.sketchPhotoUploaders[index]) {
-              var uploader = mt.sketchPhotoUploaders[index].uploader;
-              var organismId = mt.sketchPhotoUploaders[index].organismId;
+        function uploadAllSketchPhotos(mobileTrapId, foundIds, sketchPhotosSuccessCallback, sketchPhotosErrorCallback) {
+          function uploadSketchPhoto(mobileTrapId, index, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback) {
+            if (index < foundIds.length && foundIds[index]) {
+              var organismId = foundIds[index];
+              var uploader = mt.foundOrganisms[organismId].uploader;
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                  uploadSketchPhoto(mobileTrapId, index+1, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
+                  uploadSketchPhoto(mobileTrapId, index+1, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
                   mt.protocolMobileTrap.mobileOrganisms[index].sketchPhoto.error = response.message;
-                  sketchPhotoErrorCallback(index);
+                  sketchPhotoErrorCallback(organismId);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
@@ -110,21 +149,21 @@
                 };
                 uploader.uploadAll();
               } else {
-                uploadSketchPhoto(mobileTrapId, index+1, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
+                uploadSketchPhoto(mobileTrapId, index+1, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
               }
             } else {
               sketchPhotoSuccessCallback();
             }
           }
 
-          uploadSketchPhoto(mobileTrapId, 0, function() {
+          uploadSketchPhoto(mobileTrapId, 0, foundIds, function() {
             sketchPhotosSuccessCallback();
-          }, function(index) {
-            sketchPhotosErrorCallback('Error uploading sketch or photo for organism #' + index);
+          }, function(organismId) {
+            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id' + organismId);
           });
         }
 
-        uploadAllSketchPhotos(mobileTrapId, function() {
+        uploadAllSketchPhotos(mobileTrapId, foundIds, function() {
           goToView(mobileTrapId);
         }, function(errorMessage) {
           mt.error = errorMessage;
@@ -140,5 +179,42 @@
       $state.go('protocol-mobile-traps.main');
     };
 
+    mt.addOrganism = function(organism) {
+      var organismDetails = mt.getFoundOrganism(organism);
+      organismDetails.count = organismDetails.count+1;
+    };
+
+    mt.removeOrganism = function(organism) {
+      var organismDetails = mt.getFoundOrganism(organism);
+      organismDetails.count = organismDetails.count-1;
+    };
+
+    mt.openOrganismDetails = function(organism) {
+      var content = angular.element('#modal-organism-details-'+organism._id);
+
+      mt.organismDetails = mt.getFoundOrganism(organism);
+      mt.sketchPhotoUrl = (mt.organismDetails.imageUrl) ? mt.organismDetails.imageUrl : '';
+
+      content.modal('show');
+    };
+
+    mt.saveOrganismDetails = function(organismDetails, organismId, isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.organismDetailsForm');
+        return false;
+      } else {
+        angular.element('#modal-organism-details-'+organismId).modal('hide');
+        mt.foundOrganisms[organismDetails.organism._id] = organismDetails;
+
+        mt.organismDetails = {};
+        mt.sketchPhotoUrl = '';
+      }
+    };
+
+    mt.cancelOrganismDetails = function(organismId) {
+      angular.element('#modal-organism-details-'+organismId).modal('hide');
+      mt.organismDetails = {};
+      mt.sketchPhotoUrl = '';
+    };
   }
 })();
