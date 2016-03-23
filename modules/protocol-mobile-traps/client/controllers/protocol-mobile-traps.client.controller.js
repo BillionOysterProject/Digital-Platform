@@ -36,7 +36,7 @@
         category: mt.filter.category
       }, function(data) {
         mt.mobileOrganisms = data;
-        callback();
+        if (callback) callback();
       });
     };
 
@@ -58,29 +58,29 @@
       for (var o = 0; o < mt.mobileOrganisms.length; o++) {
         mt.getFoundOrganism(mt.mobileOrganisms[o]);
       }
+
+      // Set up Protocol Mobile Traps
+      mt.protocolMobileTrap = {};
+      if ($stateParams.protocolMobileTrapId) {
+        ProtocolMobileTrapsService.get({
+          mobileTrapId: $stateParams.protocolMobileTrapId
+        }, function(data) {
+          mt.protocolMobileTrap = data;
+
+          for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
+            var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
+            var foundOrganism = mt.getFoundOrganism(organismDetails.organism);
+            
+            foundOrganism.count = organismDetails.count;
+            foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
+            foundOrganism.notes = organismDetails.notesQuestions;
+          }
+        });
+      } else {
+        mt.protocolMobileTrap = new ProtocolMobileTrapsService();
+        mt.protocolMobileTrap.mobileOrganisms = [];
+      }
     });
-
-    // Set up Protocol Mobile Traps
-    mt.protocolMobileTrap = {};
-    if ($stateParams.protocolMobileTrapId) {
-      ProtocolMobileTrapsService.get({
-        mobileTrapId: $stateParams.protocolMobileTrapId
-      }, function(data) {
-        mt.protocolMobileTrap = data;
-
-        for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
-          var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
-          var foundOrganism = mt.getFoundOrganism(organismDetails.organism._id);
-
-          foundOrganism.count = organismDetails.count;
-          foundOrganism.imageUrl = (organismDetails.image) ? organismDetails.image.path : '';
-          foundOrganism.notes = organismDetails.notesQuestions;
-        }
-      });
-    } else {
-      mt.protocolMobileTrap = new ProtocolMobileTrapsService();
-      mt.protocolMobileTrap.mobileOrganisms = [];
-    }
 
     mt.authentication = Authentication;
     mt.error = null;
@@ -101,6 +101,7 @@
       }
 
       var foundIds = [];
+      mt.protocolMobileTrap.mobileOrganisms = [];
       for (var foundId in mt.foundOrganisms) {
         var found = mt.foundOrganisms[foundId];
         foundIds.push(foundId);
@@ -108,7 +109,10 @@
           mt.protocolMobileTrap.mobileOrganisms.push({
             organism: found.organism,
             count: found.count, 
-            notesQuestions: found.notes
+            notesQuestions: found.notes,
+            sketchPhoto: {
+              path: found.imageUrl
+            }
           });
         }
       }
