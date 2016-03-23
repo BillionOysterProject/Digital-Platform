@@ -142,9 +142,7 @@
 
     // Remove existing Lesson
     vm.remove = function() {
-      if (confirm('Are you sure you want to delete?')) {
-        vm.lesson.$remove($state.go('lessons.list'));
-      }
+      vm.lesson.$remove($state.go('lessons.list'));
     };
 
     // Save Lesson
@@ -354,6 +352,18 @@
       error(function(data, status, headers, config) {
         // if there's an error you should see it here
       });
+    };
+
+    vm.openDeleteLesson = function() {
+      angular.element('#modal-delete-lesson').modal('show');
+    };
+
+    vm.confirmDeleteLesson = function(shouldDelete) {
+      var element = angular.element('#modal-delete-lesson');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
+      });
+      element.modal('hide');
     };
   }
 })();
