@@ -75,6 +75,10 @@ body {
         -o-transition: all 500ms ease-in-out;
         transition: all 500ms ease-in-out;
     }
+        
+    .sidebar .open .dropdown-menu {
+        display: none;
+    }
 
     .sidebar i {
         font-size: 15px;
@@ -116,6 +120,54 @@ body {
             position: relative;
             color: #778095;
         }
+        
+            .sidebar ul.nav > li > .dropdown-menu {
+                position: relative;
+                top: auto;
+                left: auto;
+                min-width: 0;
+                width: 100%;
+                background: #1C2A40;
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+                margin: 0;
+                padding: 5px 0 5px 70px;
+            }
+            
+                .sidebar ul.nav > li > .dropdown-menu i {
+                    float: right;
+                    width: auto;
+                    padding-right: 20px;
+                }
+                
+                .sidebar ul.nav > li.dropdown.open > a.dropdown-toggle {
+                    color: #778095;
+                }
+                
+                    .sidebar:hover ul.nav > li.dropdown.open > a.dropdown-toggle {
+                        background: #2CA8FF;
+                        color: #fff;
+                        -webkit-transition: background 400ms ease-in-out;
+                        -moz-transition: background 400ms ease-in-out;
+                        -o-transition: background 400ms ease-in-out;
+                        transition: background 400ms ease-in-out;
+                    }
+            
+                .sidebar ul.nav > li > .dropdown-menu > li > a {
+                    padding: 10px 0;
+                    line-height: 1;
+                    color: #778095;
+                }
+            
+                    .sidebar ul.nav > li > .dropdown-menu > li > a:hover, 
+                    .sidebar ul.nav > li > .dropdown-menu > li > a:active,
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a, 
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a:hover, 
+                    .sidebar ul.nav > li > .dropdown-menu > .active > a:focus {
+                        background: transparent;
+                        color: #fff;
+                    }
 
     .sidebar:hover {
         width: 220px;
@@ -126,6 +178,10 @@ body {
             position: absolute;
             top: 12px;
             left: 70px;
+        }
+        
+        .sidebar:hover .open .dropdown-menu {
+            display: block;
         }
 
         .sidebar:hover .navbar-brand > img {
@@ -439,6 +495,7 @@ h6, .h6 {
 
 .modal-header {
     border: none;
+    padding-bottom: 0;
 }
 
 .modal-footer {
