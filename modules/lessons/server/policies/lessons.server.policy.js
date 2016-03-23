@@ -30,6 +30,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/upload-teacher-resources',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/upload-state-test-questions',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
     }]
@@ -49,6 +52,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-teacher-resources',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-state-test-questions',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',
