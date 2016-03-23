@@ -80,6 +80,18 @@ module.exports = {
         fileSize: 1*1024*1024
       }
     },
+    organismImageUpload: {
+      dest: './modules/mobile-organisms/client/img/organisms/', // Meta organisms upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    mobileTrapSketchPhotoUpload: {
+      dest: './modules/protocol-mobile-trap/client/img/sketchPhoto/uploads/', // Protocol mobile trap upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
     lessonFeaturedImageUpload: {
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {

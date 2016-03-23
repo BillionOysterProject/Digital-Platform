@@ -8,6 +8,6 @@
   ProtocolOysterMeasurementsMainController.$inject = ['$scope', 'ProtocolOysterMeasurementsService'];
 
   function ProtocolOysterMeasurementsMainController($scope, ProtocolOysterMeasurementsService) {
-    var vm = this;
+    var om = this;
   }
 })();
