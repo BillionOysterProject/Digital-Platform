@@ -97,7 +97,7 @@
     vm.units = UnitsService.query();
 
     if (vm.lesson.user && vm.lesson.user.team) {
-      TeamsService.get({
+      TeamsService.all.get({
         teamId: vm.lesson.user.team
       }, function(team) {
         vm.lesson.user.team = team;
@@ -111,6 +111,7 @@
     vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
     vm.tempResourceLinkName = '';
     vm.tempResourceLink = '';
+    vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -127,6 +128,18 @@
       queueLimit: 20
     });
 
+    vm.stateTestQuestionsFilesUploader = new FileUploader({
+      alias: 'newStateTestQuestions',
+      queueLimit: 20,
+      filters: [{
+        name: 'imageFilter',
+        fn: function (item, options) {
+          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+      }]
+    });
+
     // Remove existing Lesson
     vm.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
@@ -139,6 +152,15 @@
       //console.log('save');
       if (!isValid) {
         console.log('not valid');
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
+        return false;
+      }
+      if (vm.handouts.length <= 0) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
+        return false;
+      }
+
+      if (vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
@@ -227,10 +249,33 @@
           }
         }
 
+        function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
+          if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
+            vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              questionFileSuccessCallback();
+            };
+
+            vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+              questionFileErrorCallback(response.message);
+            };
+
+            vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
+            };
+            vm.stateTestQuestionsFilesUploader.uploadAll();
+          } else {
+            questionFileSuccessCallback();
+          }
+        }
+
         uploadFeaturedImage(lessonId, function() {
           uploadHandoutFiles(lessonId, function() {
             uploadResourceFiles(lessonId, function() {
-              goToView(lessonId);
+              uploadStateTestQuestionFiles(lessonId, function () {
+                goToView(lessonId);
+              }, function(errorMessage) {
+                vm.error = errorMessage;
+              });
             }, function(errorMessage) {
               vm.error = errorMessage;
             });

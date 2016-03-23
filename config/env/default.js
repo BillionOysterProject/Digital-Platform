@@ -87,7 +87,7 @@ module.exports = {
       }
     },
     mobileTrapSketchPhotoUpload: {
-      dest: './modules/protocol-mobile-trap/client/img/sketchPhoto/uploads/', // Protocol mobile trap upload destination path
+      dest: './modules/protocol-mobile-traps/client/img/sketchPhoto/uploads/', // Protocol mobile trap upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
@@ -106,6 +106,12 @@ module.exports = {
     },
     lessonTeacherResourcesUpload: {
       dest: './modules/lessons/client/files/teacher-resources/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 1*1024*1024
+      }
+    },
+    lessonStateTestQuestionsUpload: {
+      dest: './modules/lessons/client/img/state-test-questions/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024
       }

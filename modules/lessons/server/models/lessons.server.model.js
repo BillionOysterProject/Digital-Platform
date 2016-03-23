@@ -120,6 +120,10 @@ var LessonSchema = new Schema({
       required: true,
       trim: true
     },
+    teacherTips: {
+      type: String,
+      trim: true
+    },
     teacherResourcesLinks: [{
       name: String,
       link: {
@@ -134,6 +138,12 @@ var LessonSchema = new Schema({
       path: String
     }],
     handoutsFileInput: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
+    stateTestQuestions: [{
       originalname: String,
       mimetype: String,
       filename: String,
