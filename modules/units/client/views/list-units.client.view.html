@@ -7,24 +7,42 @@
 </div>
 <section class="content">
     <section class="container-fluid">
-        <div class="row" isotope-container="isotope-container">
-            <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" style="background: {{unit.color}}; color: #fff" ui-sref="units.view({ unitId: unit._id })">
-                    <div class="panel-body text-center">
-                        <h1 class="glyphicon {{unit.icon}}"></h1>
-                        <h4>{{unit.title}}</h4>
+        <div>
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#grid" aria-controls="grid" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-th-large"></i></a></li>
+                <li role="presentation"><a href="#graph" aria-controls="graph" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-picture"></i></a></li>
+            </ul>
+
+            <div class="tab-content">
+                <br />
+                <div role="tabpanel" class="tab-pane active" id="grid">
+                    <div class="row" isotope-container="isotope-container">
+                        <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+                            <div class="panel" style="background: {{unit.color}}; color: #fff" ui-sref="units.view({ unitId: unit._id })">
+                                <div class="panel-body text-center">
+                                    <h1 class="glyphicon {{unit.icon}}"></h1>
+                                    <h4>{{unit.title}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+                            <div class="panel panel-default" ui-sref="units.create">
+                                <div class="panel-body text-center text-muted">
+                                    <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
+                                    <h4>Create new unit</h4>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
-                <div class="panel panel-default" ui-sref="units.create">
-                    <div class="panel-body text-center text-muted">
-                        <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
-                        <h4>Create new unit</h4>
-                    </div>
+                <div role="tabpanel" class="tab-pane" id="graph">
+                
+                    <!-- TODO: insert node graph here -->
+                    
                 </div>
             </div>
         </div>
+    
         <div class="alert alert-warning text-center" ng-if="vm.units.$resolved && !vm.units.length">
             No units yet, why don't you <a ui-sref="units.create">create one</a>?
         </div>
