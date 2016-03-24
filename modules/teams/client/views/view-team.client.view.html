@@ -1,12 +1,20 @@
 <div class="row">
     <div class="col-md-3 col-sm-6"><!-- TODO: Wire up filters -->
         <div class="form-group">
-            <select class="form-control">
-                <option selected>Show all teams</option>
-                <option>Team Name 1</option>
-                <option>Team Name 2</option>
-                <option>Team Name 3</option>
-            </select>
+            <div class="input-group"><!-- TODO: Only show    class="input-group"   if a team is selected -->
+                <select class="form-control">
+                    <option selected>Show all teams</option>
+                    <option>Team Name 1</option>
+                    <option>Team Name 2</option>
+                    <option>Team Name 3</option>
+                </select>
+                <!-- TODO: Only show if a team is selected -->
+                <span class="input-group-btn">
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-team-delete">
+                      <i class="glyphicon glyphicon-trash"></i><!--TODO: Open delete team confirmation popup modal (move modal to it's own page) -->
+                    </a>
+                </span>
+            </div>
         </div>
     </div>
     <div class="col-md-5 col-sm-6"><!-- TODO: Wire up search -->
@@ -26,7 +34,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-success" role="alert">You have <b>3</b> requests to join your team. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
+        <div class="alert alert-success" role="alert">You have <b>3</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
     </div>
 </div>
 <div class="row">
@@ -98,4 +106,46 @@
 <import-team-members-modal save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
 <delete-team-member-modal delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
 <approve-team-members-modal close-function="vm.closeApproveTeamMembers" accept-function="vm.acceptTeamMember" reject-function="vm.rejectTeamMember"></approve-team-members-modal>
+
+
+<!--TODO: Move modal to it's own page-->
+<div class="modal fade" id="modal-team-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- TODO: Show this modal-content if Team is empty -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete {{team name}}<!--TODO: Wire up name--></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+        <!-- TODO: Replace modal-content with below if Team has members, wire up name in header
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{team name}} cannot be deleted</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This team currently has members in it. To delete the team, you must first either delete the current member accounts or move each one to another team.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default">Close</button>
+            </div>
+        </div>-->
+    </div>
+</div>
 <!-- END MODALS -->
