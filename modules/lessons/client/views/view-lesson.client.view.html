@@ -4,7 +4,13 @@
     <section class="container">
         <div class="row">
             <div class="col col-sm-6">
-                <h2>{{vm.lesson.title}}</h2>     
+                <h2>{{vm.lesson.title}} 
+                    <small>
+                        <a href="#"><i class="glyphicon glyphicon-star-empty"></i></a>
+                        <!--TODO: Wire up Lesson saves. If teacher clicks the star to save the lesson, show on My Library page and switch <a> tag to this:
+                        <a href="#"><i class="glyphicon glyphicon-star red"></i></a>-->
+                    </small>
+                </h2>     
             </div>
             <div class="col col-sm-6 text-right">
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
