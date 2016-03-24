@@ -13,7 +13,6 @@
       title: 'Lessons',
       state: 'lessons.list',
       roles: ['team lead', 'admin'],
-      icon: 'glyphicon glyphicon-cog',
       position: 1
     });
   }
