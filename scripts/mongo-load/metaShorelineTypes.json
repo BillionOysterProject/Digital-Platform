@@ -1,0 +1,6 @@
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e240"},"order":0,"label":"Bulkhead/Wall","value":"bulkhead-wall"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e241"},"order":1,"label":"Fixed Pier","value":"fixed-pier"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e242"},"order":2,"label":"Floating Dock","value":"floating-dock"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e243"},"order":3,"label":"Riprap/Rocky Shoreline","value":"riprap-rocky-shoreline"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e244"},"order":4,"label":"Dirt/Sand","value":"dirt-sand"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e245"},"order":5,"label":"Other","value":"other"}

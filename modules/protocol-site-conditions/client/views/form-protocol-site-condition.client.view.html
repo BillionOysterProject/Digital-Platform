@@ -73,46 +73,48 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
-                <h6>Tide Conditions</h6>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Closest High Tide</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+            <div class="row">
+                <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
+                    <h6>Tide Conditions</h6>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Closest High Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Closest Low Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                        </div>
                     </div>
-                    <div class="form-group col-sm-6">
-                        <label>Closest Low Tide</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Current Speed</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Current Direction</label>
+                            <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.currentDirection">
+                                <option disabled selected></option>
+                                <option value="north">North</option>
+                                <option value="south">South</option>
+                                <option value="east">East</option>
+                                <option value="west">West</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Current Speed</label>
-                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label>Current Direction</label>
-                        <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.currentDirection">
+                    <div class="form-group">
+                        <label>Tidal Current</label>
+                        <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.tidalCurrent">
                             <option disabled selected></option>
-                            <option value="north">North</option>
-                            <option value="south">South</option>
-                            <option value="east">East</option>
-                            <option value="west">West</option>
+                            <option value="flood-current">Flood current (incoming tide)</option>
+                            <option value="slack-water">Slack water</option>
+                            <option value="ebb-current">Ebb current (outgoing tide)</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Tidal Current</label>
-                    <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.tidalCurrent">
-                        <option disabled selected></option>
-                        <option value="flood-current">Flood current (incoming tide)</option>
-                        <option value="slack-water">Slack water</option>
-                        <option value="ebb-current">Ebb current (outgoing tide)</option>
-                    </select>
+                <div class="col-md-6">
+                    <tide-table></tide-table>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <tide-table></tide-table>
             </div>
         </section>
     </section>
@@ -197,7 +199,7 @@
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
                         <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly/>
                     </div>
                     <div class="row">
@@ -215,7 +217,7 @@
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
                         <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                     </div>
                     <div class="form-group">
@@ -327,7 +329,7 @@
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-default">{{sc.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
+            <button type="submit" class="btn btn-primary">{{sc.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
             <div ng-show="sc.error" class="text-danger">
                 <strong ng-bind="sc.error"></strong>
             </div>

@@ -1,0 +1,42 @@
+<div class="modal fade" id="modal-organism-details-{{organismId}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-bind="organismDetails.organism.commonName"></h4>
+            </div>
+            <form name="form.organismDetailsForm" ng-submit="submitForm(organismDetails, form.organismDetailsForm.$valid)" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <img ng-src="{{organismDetails.organism.image.path}}" class="img-responsive" ng-show="organismDetails.organism.image" />
+                            <p>
+                                <em class="text-muted" ng-bind="organismDetails.organism.latinName"></em><br />
+                                <span ng-bind="organismDetails.organism.description"></span>
+                            </p>
+                            <p><span class="label label-default" ng-bind="organismDetails.organism.category"></span></p>
+                            <p ng-bind="organismDetails.organism.nativeIntroduced"></p>
+                            <p><b>Habitat:</b> {{organismDetails.organism.habitat}}</p>
+                            <p><b>Diet:</b> {{organismDetails.organism.diet}}</p>
+                            <p><b>Morphology notes:</b> {{organismDetails.organism.morphologyNotes}}</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Add a sketch or photograph</label>
+                                <single-image-drop-zone uploader="sketchPhotoUploader" image-url="sketchPhotoUrl" image-alt="Sketch or Photo"></single-image-drop-zone>
+                            </div>
+                            <div class="form-group">
+                                <label>Add notes or questions</label>
+                                <textarea class="form-control" rows="18" ng-model="organismDetails.notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" ng-click="cancelFunction(organismId)">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -18,36 +18,21 @@ var path = require('path'),
  */
 exports.create = function(req, res) {
   var lesson = new Lesson(req.body);
+  
   lesson.user = req.user;
-  if (req.files && req.files.handoutFile) {
-    lesson.attach('handout', req.files.handoutFile, function(error) {
-      if (error) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(error)
-        });
-      } else {
-        lesson.save(function(err) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
-    });
-  } else {
-    lesson.save(function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(lesson);
-      }
-    });
-  }
+  lesson.materialsResources.handoutsFileInput = [];
+  lesson.materialsResources.teacherResourcesFiles = [];
+  lesson.materialsResources.stateTestQuestions = [];
+
+  lesson.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(lesson);
+    }
+  });
 };
 
 /**
@@ -90,6 +75,15 @@ exports.update = function(req, res) {
       }
     }
     lesson.materialsResources.teacherResourcesFiles = existingResources;
+
+    var existingQuestions = [];
+    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+      var question = lesson.materialsResources.stateTestQuestions[k];
+      if (question.path) {
+        existingQuestions.push(question);
+      }
+    }
+    lesson.materialsResources.stateTestQuestions = existingQuestions;
 
     if (!lesson.updated) lesson.updated = [];
     lesson.updated.push(Date.now());
@@ -244,6 +238,48 @@ exports.uploadTeacherResources = function (req, res) {
           var file = req.files[i];
           lesson.materialsResources.teacherResourcesFiles.push({
             path: config.uploads.lessonTeacherResourcesUpload.dest + file.filename,
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            filename: file.filename
+          });
+        }
+
+        lesson.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(lesson);
+          }
+        });
+      }
+    });
+  } else {
+    res.status(400).send({
+      message: 'Lesson does not exist'
+    });
+  }
+};
+
+exports.uploadStateTestQuestions = function (req, res) {
+  var lesson = req.lesson;
+  var upload = multer(config.uploads.lessonStateTestQuestionsUpload).array('newStateTestQuestions', 20);
+
+  var questionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+  upload.fileFilter = questionUploadFileFilter;
+
+  if (lesson) {
+    upload(req, res, function (uploadError) {
+      if (uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading state test questions'
+        });
+      } else {
+        for (var i = 0; i < req.files.length; i++) {
+          var file = req.files[i];
+          lesson.materialsResources.stateTestQuestions.push({
+            path: config.uploads.lessonStateTestQuestionsUpload.dest + file.filename,
             originalname: file.originalname,
             mimetype: file.mimetype,
             filename: file.filename

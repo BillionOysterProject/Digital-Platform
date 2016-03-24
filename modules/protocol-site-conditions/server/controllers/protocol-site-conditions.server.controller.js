@@ -198,6 +198,10 @@ exports.update = function (req, res) {
           res.json(siteCondition);
         }
       });
+    } else {
+      return res.status(400).send({
+        message: 'Protocol site condition not found'
+      });
     }
   }, function(errorMessages) {
     return res.status(400).send({

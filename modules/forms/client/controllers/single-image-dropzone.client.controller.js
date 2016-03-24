@@ -33,7 +33,6 @@
       $scope.error = 'Only images are allowed for this upload';
     };
     $scope.uploader.onAfterAddingFile = function(fileItem) {
-      //console.info('onAfterAddingFile', fileItem);
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);

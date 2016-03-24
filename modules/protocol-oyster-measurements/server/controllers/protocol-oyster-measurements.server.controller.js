@@ -91,6 +91,10 @@ exports.update = function (req, res) {
           res.json(oysterMeasurement);
         }
       });
+    } else {
+      return res.status(400).send({
+        message: 'Protocol oyster measurement not found'
+      });
     }
   }, function(errorMessages) {
     return res.status(400).send({
