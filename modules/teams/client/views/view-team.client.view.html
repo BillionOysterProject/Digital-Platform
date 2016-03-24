@@ -10,13 +10,13 @@
         </div>
     </div>
     <div class="col-md-4 text-right">
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-student-editadd">Add team member</a><!-- TODO: Wire up modal -->
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-import">Import team</a><!-- TODO: Wire up modal -->
+        <a class="btn btn-primary" ng-click="vm.openFormTeamMember()">Add team member</a>
+        <a class="btn btn-primary" ng-click="vm.openImportTeamMembers()">Import team</a>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-success" role="alert">You have <b>3</b> requests to join your team. <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-student-requests">Respond</a></div>
+        <div class="alert alert-success" role="alert">You have <b>3</b> requests to join your team. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
     </div>
 </div>
 <div class="row">
@@ -30,10 +30,10 @@
                 <td>2nd Period</td>
                 <td>New Team</td>
                 <td class="text-right">
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-student-editadd" ui-sref="settings.admin-user-edit({userId: user._id})">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember()">
                       <i class="glyphicon glyphicon-edit"></i><!--TODO: Put edit screen into a popup modal-->
                     </a>
-                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-student-delete" ng-click="remove();">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember()">
                       <i class="glyphicon glyphicon-trash"></i><!--TODO: Open confirmation popup modal -->
                     </a>
                 </td>
@@ -46,10 +46,10 @@
                 <td>2nd Period</td>
                 <td>New Team</td>
                 <td class="text-right">
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-student-editadd" ui-sref="settings.admin-user-edit({userId: user._id})">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember()">
                       <i class="glyphicon glyphicon-edit"></i><!--TODO: Put edit screen into a popup modal-->
                     </a>
-                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-student-delete" ng-click="remove();">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember()">
                       <i class="glyphicon glyphicon-trash"></i><!--TODO: Open confirmation popup modal -->
                     </a>
                 </td>
@@ -62,10 +62,10 @@
                 <td>2nd Period</td>
                 <td>New Team</td>
                 <td class="text-right">
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-student-editadd" ui-sref="settings.admin-user-edit({userId: user._id})">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember()">
                       <i class="glyphicon glyphicon-edit"></i><!--TODO: Put edit screen into a popup modal-->
                     </a>
-                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-student-delete" ng-click="remove();">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember()">
                       <i class="glyphicon glyphicon-trash"></i><!--TODO: Open confirmation popup modal -->
                     </a>
                 </td>
@@ -84,186 +84,8 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-student-editadd" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Add a team member</h4><!--TODO: If editing, title should read "Edit Firstname Lastname" -->
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <form><!-- TODO: Wire up form fields -->
-                      <fieldset>
-                        <div class="form-group col-md-6" show-errors>
-                          <label>First Name</label>
-                          <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group col-md-6" show-errors>
-                          <label>Last Name</label>
-                          <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group col-md-12" show-errors>
-                          <label>Email</label>
-                          <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group col-md-4" show-errors>
-                          <label>Gender</label>
-                          <select class="form-control">
-                            <option disabled selected value>
-                            <option>Male</option>
-                            <option>Female</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-4" show-errors>
-                          <label>Grade</label>
-                          <select class="form-control">
-                            <option disabled selected value>
-                            <option>6th</option>
-                            <option>7th</option>
-                            <option>8th</option>
-                            <option>9th</option>
-                            <option>10th</option>
-                            <option>11th</option>
-                            <option>12th</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-4" show-errors>
-                          <label>Period</label>
-                          <select class="form-control">
-                            <option disabled selected value>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-12" show-errors>
-                          <label>Team assignment</label>
-                          <select class="form-control">
-                            <option disabled selected value>
-                            <option>Team Name 1</option>
-                            <option>Team Name 2</option>
-                            <option>Team Name 3</option>
-                          </select>
-                        </div>
-                      </fieldset>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--TODO: Wire up buttons. -->
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal">Send invite</button><!--TODO: If editing, button should read "Update"-->
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-import" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Import a team</h4>
-            </div>
-            <div class="modal-body">
-                <p>Have a large team? Mass import a list of team members via a CSV file below.</p>
-                <div class="row">
-                    <form>
-                      <fieldset>
-                        <div class="form-group col-md-12" show-errors>
-                          <label>CSV File</label>
-                          <input type="file" class="form-control" required>
-                        </div>
-                      </fieldset>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!--TODO: Wire up buttons. -->
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal">Import</button><!--TODO: If editing, button should read "Update"-->
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-student-delete" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Are you sure you want to delete {{user's name}}<!--TODO: Wire up name--></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p>This action cannot be reversed.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <!--TODO: Wire up button -->
-                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.remove()">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-student-requests" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Team Member Requests</h4>
-            </div>
-            <div class="modal-body">
-                <p>Accepted team members will be invited to join and automatically added to your team. Rejected team members will be removed from the list.</p>
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <!-- TODO: Wire up buttons, if either one is clicked, remove its entire div.col-sm-6.col-md-4 from the list and perform action (reject/accept)-->
-                                <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <a class="btn btn-success btn-sm" title="Accept"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<form-team-member-modal team-member="" save-function="vm.saveFormTeamMember" cancel-function="vm.cancelFormTeamMember"></form-team-member-modal>
+<import-team-members-modal save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
+<delete-team-member-modal delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
+<approve-team-members-modal close-function="vm.closeApproveTeamMembers" accept-function="vm.acceptTeamMember" reject-function="vm.rejectTeamMember"></approve-team-members-modal>
 <!-- END MODALS -->

@@ -43,9 +43,7 @@
 
     // Remove existing Unit
     vm.remove = function() {
-      if (confirm('Are you sure you want to delete?')) {
-        vm.unit.$remove($state.go('units.list'));
-      }
+      vm.unit.$remove($state.go('units.list'));
     };
 
     // Save Unit
@@ -85,12 +83,24 @@
     };
 
     vm.cancel = function() {
-      $state.go('units.list');
+      $state.go('units.view');
     };
 
     vm.addQuestion = function(element) {
       console.log('element');
       console.log(element);
+    };
+
+    vm.openDeleteUnit = function() {
+      angular.element('#modal-delete-unit').modal('show');
+    };
+
+    vm.confirmDeleteUnit = function(shouldDelete) {
+      var element = angular.element('#modal-delete-unit');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
+      });
+      element.modal('hide');
     };
   }
 })();

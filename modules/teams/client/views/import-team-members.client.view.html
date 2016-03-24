@@ -1,1 +1,28 @@
-<p>Import Team Members</p>
+<div class="modal fade" id="modal-import-team-members" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import a team</h4>
+            </div>
+            <div class="modal-body">
+                <p>Have a large team? Mass import a list of team members via a CSV file below.</p>
+                <div class="row">
+                    <form>
+                      <fieldset>
+                        <div class="form-group col-md-12" show-errors>
+                          <label>CSV File</label>
+                          <input type="file" class="form-control" required>
+                        </div>
+                      </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--TODO: Wire up buttons. -->
+                <button type="button" ng-click="cancelFunction()">Cancel</button>
+                <button type="submit" ng-click="saveFunction()">Import</button><!--TODO: If editing, button should read "Update"-->
+            </div>
+        </div>
+    </div>
+</div>

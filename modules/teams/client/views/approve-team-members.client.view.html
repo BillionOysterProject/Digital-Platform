@@ -1,1 +1,52 @@
-<p>Approve Team Members</p>
+<div class="modal fade" id="modal-team-member-requests" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Team Member Requests</h4>
+            </div>
+            <div class="modal-body">
+                <p>Accepted team members will be invited to join and automatically added to your team. Rejected team members will be removed from the list.</p>
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body text-center">
+                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                <h4>Team Member Name</h4>
+                                <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                <!-- TODO: Wire up buttons, if either one is clicked, remove its entire div.col-sm-6.col-md-4 from the list and perform action (reject/accept)-->
+                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body text-center">
+                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                <h4>Team Member Name</h4>
+                                <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body text-center">
+                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                <h4>Team Member Name</h4>
+                                <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
