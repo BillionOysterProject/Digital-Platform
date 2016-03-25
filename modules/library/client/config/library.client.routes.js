@@ -24,6 +24,8 @@
       .state('library.user', {
         url: '/user',
         templateUrl: 'modules/library/client/views/user-library.client.view.html',
+        controller: 'LessonsListController',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'User Library'
         }
