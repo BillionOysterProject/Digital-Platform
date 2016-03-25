@@ -1,62 +1,176 @@
-<section class="content shaded">
-  <section class="container-fluid">
-    <div class="page-header">
-        <a class="btn btn-primary pull-right" ui-sref="lessons.create">Create new lesson</a>
-        <h2>My Library</h2>
-    </div>
-    
-    <h3>Created Lessons</h3>
-    <div class="row" isotope-container="isotope-container" ng-repeat="lesson in vm.lessons">
-        <div class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
-            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-                <div class="panel-heading" style="background: {{lesson.unit.color}}">
-                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
-                    <h3 class="panel-title">
-                        <i class="glyphicon {{lesson.unit.icon}}"></i>
-                        {{lesson.unit.title}}
-                    </h3>
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>My Library</h2>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab">Created Lessons</a></li>
+                <li role="presentation"><a href="#saved" aria-controls="graph" role="tab" data-toggle="tab">Saved Lessons</a></li>
+                <!--TODO: Only show if BOP Admin: -->
+                <li role="presentation"><a href="#submitted" aria-controls="graph" role="tab" data-toggle="tab">Submitted Lessons</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <br />
+                <div role="tabpanel" class="tab-pane active" id="created">
+                    <!-- TODO: Only show the Teacher's created lessons here -->
+                    <div class="row" isotope-container="isotope-container">
+                        <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+                            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                                <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                                    <h3 class="panel-title">
+                                        <i class="glyphicon {{lesson.unit.icon}}"></i>
+                                        {{lesson.unit.title}}
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <small>{{lesson.lessonOverview.setting}}</small>
+                                    <h4>{{lesson.title}}</h4>
+                                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                                </div>
+                                <div class="panel-footer">
+                                    <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: vm.lesson._id })"><i class="glyphicon glyphicon-pencil"></i></a><!-- TODO: Remove button if awaiting approval -->
+                                    <h6>Published</h6>
+                                    <!-- TODO: Show one of the 3 below options depending on status --
+                                    <h6 class="blue">Awaiting Approval</h6>
+                                    <h6 class="red">Rejected</h6>
+                                    <h6>Published</h6>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+                            <div class="panel panel-default" ui-sref="lessons.create">
+                                <div class="panel-body text-center text-muted">
+                                    <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
+                                    <h4 class="list-group-item-heading">Create new lesson</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <small>{{lesson.lessonOverview.setting}}</small>
-                    <h4>{{lesson.title}}</h4>
-                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                <div role="tabpanel" class="tab-pane" id="saved">
+                
+                    <!-- TODO: Show isotope container here with saved lessons: (also move to another page -- currently breaks to have multiple isotope instances on a page) 
+                    
+                    <div class="row" isotope-container="isotope-container">
+                        <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+                            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                                <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                                    <h3 class="panel-title">
+                                        <i class="glyphicon {{lesson.unit.icon}}"></i>
+                                        {{lesson.unit.title}}
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <small>{{lesson.lessonOverview.setting}}</small>
+                                    <h4>{{lesson.title}}</h4>
+                                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                                </div>
+                                <div class="panel-footer">
+                                    <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label 
+                                        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                                            <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                    <div class="alert alert-info text-center"><!-- TODO: Show if no saved lessons -->
+                        No saved lessons yet! When viewing a lesson, click the star in the title to save your favorites here.
+                    </div>
                 </div>
-                <div class="panel-footer">
-                    <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
-                        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                            <span ng-bind="subject | subjectAreas" class="label label-default"></span>
-                        </li>
-                    </ul>
+                <div role="tabpanel" class="tab-pane" id="submitted">
+                
+                    <!-- TODO: Show isotope container here with submitted lessons: (also move to another page and take along the two modals at the bottom -- currently breaks to have multiple isotope instances on a page) --
+                    
+                    <div class="row" isotope-container="isotope-container">
+                        <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+                            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                                <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                                    <h3 class="panel-title">
+                                        <i class="glyphicon {{lesson.unit.icon}}"></i>
+                                        {{lesson.unit.title}}
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <small>{{lesson.lessonOverview.setting}}</small>
+                                    <h4>{{lesson.title}}</h4>
+                                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                                </div>
+                                <div class="panel-footer">
+                                    <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: vm.lesson._id })"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a class="btn btn-sm btn-danger pull-right" data-toggle="modal" data-target="#modal-reject"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <a class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#modal-accept"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <h6>Awaiting Approval</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
                 </div>
             </div>
         </div>
-    </div>
-    
-    <h3>Saved Lessons</h3>
-    <div class="row" isotope-container="isotope-container" ng-repeat="lesson in vm.lessons">
-        <div class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
-            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-                <div class="panel-heading" style="background: {{lesson.unit.color}}">
-                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
-                    <h3 class="panel-title">
-                        <i class="glyphicon {{lesson.unit.icon}}"></i>
-                        {{lesson.unit.title}}
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    <small>{{lesson.lessonOverview.setting}}</small>
-                    <h4>{{lesson.title}}</h4>
-                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
-                </div>
-                <div class="panel-footer">
-                    <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
-                        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                            <span ng-bind="subject | subjectAreas" class="label label-default"></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-  </section>
+    </section>
 </section>
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-reject" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to reject {{lesson name}}<!--TODO: Wire up name--></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>The lesson draft will be returned to the author and they will be notified that it will not be published.</p>
+                        <div class="form-group">
+                          <label>Send a message</label>
+                          <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <!--TODO: Wire up button. If rejected, change status on Teacher Library to Rejected and send them an email -->
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-accept" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to accept {{lesson name}}<!--TODO: Wire up name--></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>The lesson will automatically be published to Curriculum and the author will be notified.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <!--TODO: Wire up button -->
+                <button type="button" class="btn btn-success" data-dismiss="modal">Accept</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MODALS -->
