@@ -125,15 +125,12 @@
         }
       })
       .state('settings.admin-team-owner', {
-        url: '/team/',
-        templateUrl: 'modules/teams/client/views/view-team.client.view.html',
-        controller: 'TeamsController',
+        url: '/teams/owner',
+        templateUrl: 'modules/teams/client/views/owner-teams.client.view.html',
+        controller: 'TeamsOwnerController',
         controllerAs: 'vm',
-        resolve: {
-          teamResolve: getOwnerTeam
-        },
         data: {
-          pageTitle: 'Team {{ teamResolve.name }}',
+          pageTitle: 'Teams',
           roles: ['team lead']
         }
       })
@@ -196,16 +193,10 @@
       });
   }
 
-  getOwnerTeam.$inject = ['$stateParams', 'TeamsService'];
-
-  function getOwnerTeam($stateParams, TeamsService) {
-    return TeamsService.owner.get().$promise;
-  }
-
   getTeam.$inject = ['$stateParams', 'TeamsService'];
 
   function getTeam($stateParams, TeamsService) {
-    return TeamsService.all.get({
+    return TeamsService.get({
       teamId: $stateParams.teamId
     }).$promise;
   }
@@ -213,6 +204,6 @@
   newTeam.$inject = ['TeamsService'];
 
   function newTeam(TeamsService) {
-    return new TeamsService.all();
+    return new TeamsService();
   }
 })();

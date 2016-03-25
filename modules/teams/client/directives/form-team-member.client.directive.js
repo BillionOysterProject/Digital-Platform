@@ -6,9 +6,11 @@
     .directive('formTeamMemberModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/teams/client/views/form-team.client.view.html',
+        templateUrl: 'modules/teams/client/views/form-team-member.client.view.html',
         scope: {
           teamMember: '=',
+          teams: '=',
+          newTeamName: '=',
           saveFunction: '=',
           cancelFunction: '='
         },

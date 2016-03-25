@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-md-3 col-sm-6">
+        <div class="form-group">
+            <div class="input-group">
+                <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
+                    <option value="">Show all teams</option>
+                    <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+                </select>
+                <!-- TODO: Only show if a team is selected -->
+                <span class="input-group-btn" ng-show="vm.filter.teamId">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeam()">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-sm-6">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-right">
+        <a class="btn btn-primary" ng-click="vm.openFormTeamMember()">Add members</a>
+        <a class="btn btn-primary" ng-click="vm.openImportTeamMembers()">Import members</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>3</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-verticalalign table-responsive">
+            <tr ng-repeat="member in vm.members">
+                <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td><!--TODO: Pull in user's image-->
+                <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}<br/>{{member.email}}</span></td>
+                <td ng-show="{{member.pending}}">pending</td>
+                <td ng-hide="{{member.pending}}"></td>
+                <td>{{member.team.name}}</td>
+                <td class="text-right">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember()">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember()">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+        
+        <!--TODO: Wire up pagination-->
+        <uib-pagination boundary-links="true" max-size="8" items-per-page="vm.filter.limit" total-items="filterLength" ng-model="vm.filter.page" ng-change="vm.pageChanged()"></uib-pagination>
+    </div>
+</div>
+
+
+<!-- MODALS -->
+<form-team-member-modal team-member="vm.teamMember" new-team-name="vm.newTeamName" teams="vm.teams" save-function="vm.saveFormTeamMember" cancel-function="vm.cancelFormTeamMember"></form-team-member-modal>
+<import-team-members-modal save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
+<delete-team-member-modal delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
+<delete-team-modal delete-function="vm.deleteTeam" cancel-function="vm.cancelDeleteTeam"></delete-team-modal>
+<approve-team-members-modal close-function="vm.closeApproveTeamMembers" accept-function="vm.acceptTeamMember" reject-function="vm.rejectTeamMember"></approve-team-members-modal>
+<!-- END MODALS -->

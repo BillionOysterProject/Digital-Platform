@@ -7,10 +7,10 @@ var teamsPolicy = require('../policies/teams.server.policy'),
   teams = require('../controllers/teams.server.controller');
 
 module.exports = function (app) {
-  app.route('/api/team').all(teamsPolicy.isAllowed)
-    .get(teams.readOwner)
-    .put(teams.updateOwner);
-    
+  // Teams members collection routes
+  app.route('/api/teams/members').all(teamsPolicy.isAllowed)
+    .get(teams.listMembers);
+
   // Teams collection routes
   app.route('/api/teams').all(teamsPolicy.isAllowed)
     .get(teams.list)

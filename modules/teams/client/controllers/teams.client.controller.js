@@ -50,57 +50,5 @@
     vm.cancel = function() {
       $state.go('settings.admin-team');
     };
-
-    vm.openFormTeamMember = function() {
-      angular.element('#modal-team-member-editadd').modal('show');
-    };
-
-    vm.saveFormTeamMember = function() {
-      angular.element('#modal-team-member-editadd').modal('hide');
-    };
-
-    vm.cancelFormTeamMember = function() {
-      angular.element('#modal-team-member-editadd').modal('hide');
-    };
-
-    vm.openImportTeamMembers = function() {
-      angular.element('#modal-import-team-members').modal('show');
-    };
-
-    vm.saveImportTeamMembers = function() {
-      angular.element('#modal-import-team-members').modal('hide');
-    };
-
-    vm.cancelImportTeamMembers = function() {
-      angular.element('#modal-import-team-members').modal('hide');
-    };
-
-    vm.openDeleteTeamMember = function() {
-      angular.element('#modal-team-member-delete').modal('show');
-    };
-
-    vm.deleteTeamMember = function() {
-      angular.element('#modal-team-member-delete').modal('hide');
-    };
-
-    vm.cancelDeleteTeamMember = function() {
-      angular.element('#modal-team-member-delete').modal('hide');
-    };
-
-    vm.openApproveTeamMembers = function() {
-      angular.element('#modal-team-member-requests').modal('show');
-    };
-
-    vm.acceptTeamMember = function() {
-
-    };
-
-    vm.rejectTeamMember = function() {
-
-    };
-
-    vm.closeApproveTeamMembers = function() {
-      angular.element('#modal-team-member-requests').modal('hide');
-    };
   }
 })();

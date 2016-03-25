@@ -14,6 +14,7 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var team = new Team(req.body);
+  team.teamLead = req.user;
 
   team.save(function (err) {
     if (err) {
@@ -40,25 +41,6 @@ exports.read = function (req, res) {
   res.json(team);
 };
 
-exports.readOwner = function (req, res) {
-  Team.findOne({ teamLead: req.user }).populate('user', 'displayName').exec(function (err, found) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else if (!found) {
-      return res.status(404).send({
-        message: 'No team with that identifier has been found'
-      });
-    } else {
-      var team = found ? found.toJSON() : {};
-      team.isCurrentUserTeamLead = true;
-
-      res.json(team);
-    }
-  });
-};
-
 /**
  * Update a team
  */
@@ -78,32 +60,6 @@ exports.update = function (req, res) {
       }
     });
   }
-};
-
-exports.updateOwner = function (req, res) {
-  Team.findOne({ teamLead: req.user }).populate('user', 'displayName').exec(function (err, team) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else if (!team) {
-      return res.status(404).send({
-        message: 'No team with that identifier has been found'
-      });
-    } else {
-      team = _.extend(team, req.body);
-
-      team.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(team);
-        }
-      });
-    }
-  });
 };
 
 /**
@@ -127,13 +83,125 @@ exports.delete = function (req, res) {
  * List of Teams
  */
 exports.list = function (req, res) {
-  Team.find().sort('name').populate('user', 'displayName').exec(function (err, teams) {
+  var query;
+  var and = [];
+
+  if (req.query.byOwner) {
+    and.push({ 'teamLead': req.user });
+  }
+  if (req.query.byMember) {
+    and.push({ 'teamMembers': req.user });
+  }
+  if (req.query.teamId) {
+    and.push({ '_id': req.query.teamId });
+  }
+
+  if (and.length === 1) {
+    query = Team.find(and[0]);
+  } else if (and.length > 0) {
+    query = Team.find({ $and: and });
+  } else {
+    query = Team.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'teamLead': 1, 'name': 1 });
+    }
+  } else {
+    query.sort('name');
+  }
+
+  if (req.query.limit) {
+    if (req.query.page) {
+      query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+    }
+  } else {
+    query.limit(req.query.limit);
+  }
+
+  query.populate('teamMembers', 'displayName username email profileImageURL')
+  .populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
       res.json(teams);
+    }
+  });
+};
+
+exports.listMembers = function (req, res) {
+  var query;
+  var and = [];
+
+  if (req.query.byOwner) {
+    and.push({ 'teamLead': req.user });
+  }
+  if (req.query.teamId) {
+    and.push({ '_id': req.query.teamId });
+  }
+  
+  var searchRe;
+  var or = [];
+  if (req.query.searchString) {
+    searchRe = new RegExp(req.query.searchString, 'i');
+    or.push({ 'displayName': searchRe });
+    or.push({ 'email': searchRe });
+    or.push({ 'username': searchRe }); 
+    
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = Team.find(and[0]);
+  } else if (and.length > 0) {
+    query = Team.find({ $and: and });
+  } else {
+    query = Team.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'teamLead': 1, 'name': 1 });
+    }
+  } else {
+    query.sort('name');
+  }
+
+  if (req.query.limit) {
+    if (req.query.page) {
+      var limit = Number(req.query.limit);
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    }
+  } else {
+    var limit = Number(req.query.limit);
+    query.limit(limit);
+  }
+
+  query.populate('teamMembers', 'displayName username email profileImageURL')
+  .populate('teamLead', 'displayName').exec(function (err, teams) {
+    if (err) {
+      console.log('error', err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var members = [];
+      for (var i = 0; i < teams.length; i++) {
+        var team = teams[i];
+        for (var j = 0; j < team.teamMembers.length; j++) {
+          var member = team.teamMembers[j];
+          member.team = {
+            name: team.name,
+            _id: team._id
+          };
+          members.push(member);
+        }
+      }
+      res.json(members);
     }
   });
 };

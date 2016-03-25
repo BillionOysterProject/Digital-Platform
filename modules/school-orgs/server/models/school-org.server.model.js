@@ -19,6 +19,16 @@ var SchoolOrgSchema = new Schema({
     default: '',
     trim: true,
     required: 'Name cannot be blank'
+  },
+  city: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  state: {
+    type: String,
+    default: '',
+    trim: true
   }
 });
 
