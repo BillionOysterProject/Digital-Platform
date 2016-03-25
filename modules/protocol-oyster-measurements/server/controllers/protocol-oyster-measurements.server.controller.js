@@ -5,7 +5,6 @@
  */
 var path = require('path'),
   fs = require('fs'),
-  path = require('path'),
   mongoose = require('mongoose'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),

@@ -1,146 +1,142 @@
-<section>
-    <section class="content">
-        <section class="container">
-            <h2>Protocol 5 <small>Water Quality</small></h2>
-            <hr />
-            <div class="row">
-                <div class="col-md-6">
-                  <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
+<form name="wq.form.waterQualityForm" ng-submit="wq.save(wq.form.waterQualityForm.$valid)" novalidate>
+    <section>
+        <section class="content">
+            <section class="container">
+                <h2>Protocol 5 <small>Water Quality</small></h2>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                      <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p>Using a bucket suspended from a rope, collect a sample of water from an area where your oyster cage is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first. If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.</p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                  <p>Using a bucket suspended from a rope, collect a sample of water from an area where your oyster cage is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first. If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.</p>
-                </div>
-            </div>
+            </section>
         </section>
-    </section>
-    <section class="content shaded">
-        <section class="container">
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <h6>Water Quality Parameters</h6>
-                    <label>Depth of Water Sample (m)</label>
-                    <input type="number" class="form-control" />
-                    <span class="help-block">Type 0 if at surface</span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Location where Water Sample was taken</label>
-                    <span class="help-block">Describe location or mark exact coordinates on map</span>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" />
-                        </div>
-                        <div class="col-sm-6">
-                            <!-- TODO: Create same experience from protocol1 mapping for this protocol -->
-                            <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample" ng-hide="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
-                            <input class="form-control" type="text" value="{{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-sample" ng-show="wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && wq.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
+        <section ng-repeat="sample in wq.protocolWaterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
+            <section class="container">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <h6>Water Quality Parameters</h6>
+                        <label>Depth of Water Sample (m)</label>
+                        <input type="number" class="form-control" ng-model="sample.depthOfWaterSampleM"/>
+                        <span class="help-block">Type 0 if at surface</span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Location where Water Sample was taken</label>
+                        <span class="help-block">Describe location or mark exact coordinates on map</span>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
+                                <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- TODO: Create same experience from protocol1 mapping for this protocol -->
+                                <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}">Mark the location on a map</a>
+                            </div>
+                            <div class="modal fade" id="modal-map-sample{{$index}}" tabindex="-1" role="dialog"><!--TODO: Update ID (just copy/pasted from protocol1-->
+                                <map-select latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table table-responsive table-condensed">
-                        <tr>
-                            <th></th>
-                            <th>Method (tool or test name)</th>
-                            <th>Results (include units)</th>
-                            <th></th>
-                            <th></th>
-                            <th>Average</th>
-                            <th>Units</th>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Water Temperature</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Dissolved Oxygen</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Salinity</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>pH</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Turbidity</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Ammonia</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"><h4>Nitrates</h4></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" class="form-control" placeholder="Other" /></td>
-                            <td><input type="text" class="form-control" placeholder="Method" /></td>
-                            <td><input type="text" class="form-control" placeholder="Results" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" placeholder="Average" /></td>
-                            <td><input type="text" class="form-control" placeholder="Units" /></td>
-                        </tr>
-                    </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-responsive table-condensed">
+                            <tr>
+                                <th></th>
+                                <th>Method (tool or test name)</th>
+                                <th colspan="3" class="text-center">Results (include units)</th>
+                                <th>Average</th>
+                                <th>Units</th>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Water Temperature</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.waterTemperature.method" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.waterTemperature.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Dissolved Oxygen</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.dissolvedOxygen.method" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.dissolvedOxygen.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Salinity</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.salinity.method" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="sample.salinity.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.salinity.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>pH</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.pH.method" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="sample.pH.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.pH.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Turbidity</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.turbidity.method" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]"/></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="sample.turbidity.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.turbidity.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Ammonia</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.ammonia.method" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="sample.ammonia.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.ammonia.units" /></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><h4>Nitrates</h4></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="sample.nitrates.method" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="sample.nitrates.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="sample.nitrates.units" /></td>
+                            </tr>
+                            <tr ng-repeat="other in sample.others">
+                                <td><input type="text" class="form-control" placeholder="Other" ng-model="other.label" /></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="other.method"/></td>
+                                <td><input type="text" class="form-control" placeholder="Result 1" ng-model="other.results[0]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 2" ng-model="other.results[1]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Result 3" ng-model="other.results[2]" /></td>
+                                <td><input type="text" class="form-control" placeholder="Average" ng-model="other.average" /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="other.units" /></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <a class="btn btn-default">Add a new sample</a><!--TODO: This should add another <section class="content"> identical to the one above. But every other <section class="content"> should be <section class="content shaded">. Also, this button should only show on the last Sample -->
-            <a class="btn btn-default">Remove sample</a> <!--TODO: This button should show on each added Sample to remove the <section> (but never on the initial Sample, since that is required) -->
+                <a class="btn btn-default" ng-show="$last" ng-click="wq.addSampleForm()">Add a new sample</a><!--TODO: This should add another <section class="content"> identical to the one above. But every other <section class="content"> should be <section class="content shaded">. Also, this button should only show on the last Sample -->
+                <a class="btn btn-danger" ng-show="wq.protocolWaterQuality.samples.length > 1" ng-click="wq.removeSampleForm()">Remove sample</a> <!--TODO: This button should show on each added Sample to remove the <section> (but never on the initial Sample, since that is required) -->
+            </section>
+        </section>
+        <section class="content">
+            <section class="container">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <div ng-show="wq.error" class="text-danger">
+                    <strong ng-bind="wq.error"></strong>
+                </div>
+            </section>
         </section>
     </section>
-    <section class="content">
-        <section class="container">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div ng-show="wq.error" class="text-danger">
-                <strong ng-bind="wq.error"></strong>
-            </div>
-        </section>
-    </section>
-</section>
-
-
-
-<!-- MODALS -->
-<div class="modal fade" id="modal-map-sample" tabindex="-1" role="dialog"><!--TODO: Update ID (just copy/pasted from protocol1-->
-    <map-select latitude="wq.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="wq.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
-</div>
+</form>

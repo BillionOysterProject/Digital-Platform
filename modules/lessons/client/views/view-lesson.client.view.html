@@ -13,7 +13,11 @@
                 </h2>     
             </div>
             <div class="col col-sm-6 text-right">
-                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+                <!-- TODO: show status of lesson --
+                <h6 class="blue">Awaiting Approval</h6>
+                <h6 class="red">Rejected</h6>-->
+                <h6>Published</h6>
+                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a><!-- TODO: Hide edit button if awaiting approval -->
                 <a class="btn btn-default">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
                 <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
             </div>

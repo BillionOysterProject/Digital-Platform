@@ -137,11 +137,11 @@ body {
                 padding: 5px 0 5px 70px;
             }
             
-                .sidebar ul.nav > li > .dropdown-menu i {
+                /*.sidebar ul.nav > li > .dropdown-menu i {
                     float: right;
                     width: auto;
                     padding-right: 20px;
-                }
+                }*/
                 
                 .sidebar ul.nav > li.dropdown.open > a.dropdown-toggle {
                     color: #778095;
@@ -155,6 +155,11 @@ body {
                         -o-transition: background 400ms ease-in-out;
                         transition: background 400ms ease-in-out;
                     }
+                
+                        .sidebar:hover ul.nav > li.dropdown.open > a.dropdown-toggle i {
+                            font-size: 30px;
+                            height: 15px;
+                        }
             
                 .sidebar ul.nav > li > .dropdown-menu > li > a {
                     padding: 10px 0;
@@ -729,8 +734,8 @@ form.ng-submitted .ng-invalid {
         color: #fff;
     }
 
-    .library-item a {
-        color: #000;
+    .library-item .panel .panel-footer .btn {
+        margin-left: 5px;
     }
 
 
