@@ -237,6 +237,7 @@ body {
 .crimson { color: #943234; }
 .green { color: #4CAF50; }
 .shaded { background-color: #f4f7f8; }
+.centered { text-align: center; }
 
 /* LINK COLORS */
 
