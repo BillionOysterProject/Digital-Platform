@@ -7,8 +7,8 @@
       return {
         restrict: 'AE',
         templateUrl: 'modules/protocol-water-quality/client/views/form-protocol-water-quality.client.view.html',
-        //controller: 'ProtocolWaterQualityController',
-        //controllerAs: 'wq',
+        controller: 'ProtocolWaterQualityController',
+        controllerAs: 'wq',
       };
     });
 })();

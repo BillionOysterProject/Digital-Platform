@@ -90,7 +90,7 @@ var ProtocolWaterQualitySchema = new Schema({
       average: Number,
       units: String
     },
-    other: [{
+    others: [{
       label: String,
       method: String,
       results: [{

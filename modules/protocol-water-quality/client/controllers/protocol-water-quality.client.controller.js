@@ -10,6 +10,39 @@
   function ProtocolWaterQualityController($scope, $state, Authentication, $stateParams, ProtocolWaterQualityService) {
     var wq = this;
 
+    wq.addSampleForm = function () {
+      wq.protocolWaterQuality.samples.push({
+        waterTemperature: {
+          results: new Array()
+        },
+        dissolvedOxygen: {
+          results: new Array()
+        },
+        salinity: {
+          results: new Array()
+        },
+        pH: {
+          results: new Array()
+        },
+        turbidity: {
+          results: new Array()
+        },
+        ammonia: {
+          results: new Array()
+        },
+        nitrates: {
+          results: new Array()
+        },
+        others: [{
+          results: new Array()
+        }]
+      });
+    };
+
+    wq.removeSampleForm = function (index) {
+      wq.protocolWaterQuality.samples.splice(index, 1);
+    };
+
     // Set up Protocol Water Quality
     wq.protocolWaterQuality = {};
     if ($stateParams.protocolWaterQualityId) {
@@ -20,6 +53,8 @@
       });
     } else {
       wq.protocolWaterQuality = new ProtocolWaterQualityService();
+      wq.protocolWaterQuality.samples = [];
+      wq.addSampleForm();
     }
 
     wq.authentication = Authentication;
