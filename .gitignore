@@ -27,6 +27,15 @@ coverage/
 public/dist/
 uploads
 modules/users/client/img/profile/uploads
+modules/protocol-site-conditions/client/img/water-condition/uploads
+modules/protocol-site-conditions/client/img/land-condition/uploads
+modules/protocol-oyster-measurements/client/img/oyster-cage/uploads
+modules/protocol-oyster-measurements/client/img/outer-substrate/uploads
+modules/protocol-oyster-measurements/client/img/inner-substrate/uploads
+modules/protocol-mobile-traps/client/img/sketchPhoto/uploads
+modules/lessons/client/img/featured-image/uploads
+modules/lessons/client/files/handouts/uploads
+modules/lessons/client/files/teacher-resources/uploads
 config/env/local.js
 config/env/local-*.js
 *.pem
@@ -37,7 +46,6 @@ _site/
 # General
 # =======
 *.log
-*.csv
 *.dat
 *.out
 *.pid
@@ -79,3 +87,8 @@ mongod
 *.ntvs*
 *.njsproj
 *.sln
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

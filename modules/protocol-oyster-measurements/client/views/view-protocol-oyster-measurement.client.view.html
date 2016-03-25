@@ -1,0 +1,18 @@
+<div class="shaded">
+  <section class="content">
+    <section class="container">
+      <p>View Protocol</p>
+      <h3>Cage Condition</h3>
+      <img ng-src="{{om.cageConditionPhotoURL}}" alt="Cage Condition" class="img-thumbnail" ng-show="om.cageConditionPhotoURL">
+
+      <h3>Substrates</h3>
+      <div ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells">
+        <h4>Substrate Shell #{{substrate.substrateShellNumber}}</h4>
+        <h5>Outer Shell</h5>
+        <img ng-src="{{substrate.outerSidePhoto.path}}" alt="Outer Side" class="img-thumbnail" ng-show="substrate.outerSidePhoto">
+        <h5>Inner Shell</h5>
+        <img ng-src="{{substrate.innerSidePhoto.path}}" alt="Inner Side" class="img-thumbnail" ng-show="substrate.innerSidePhoto.path">
+      </div>
+    </section>
+  </section>
+</div>

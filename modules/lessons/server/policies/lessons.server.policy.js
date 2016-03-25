@@ -18,10 +18,19 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/download-file',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/upload-handouts',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/upload-teacher-resources',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/upload-state-test-questions',
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId',
@@ -33,10 +42,19 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons',
       permissions: '*'
     }, {
+      resources: '/api/lessons/download-file',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-handouts',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-teacher-resources',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-state-test-questions',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',
@@ -52,9 +70,9 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
   
   // If a lesson is being processed and the current user created it then allow any manipulation
-  if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
-    return next();
-  }
+  // if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
+  //   return next();
+  // }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

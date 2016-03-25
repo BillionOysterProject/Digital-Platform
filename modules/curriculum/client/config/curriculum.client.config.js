@@ -1,19 +1,19 @@
 (function () {
   'use strict';
 
-  // angular
-  //   .module('curriculum')
-  //   .run(menuConfig);
+  angular
+     .module('curriculum')
+     .run(menuConfig);
 
-  // menuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus'];
 
-  // function menuConfig(Menus) {
-  //   Menus.addMenuItem('topbar', {
-  //     title: 'Curriculum',
-  //     state: 'lesson.list',
-  //     //type: 'dropdown',
-  //     roles: ['team lead'],
-  //     icon: 'glyphicon glyphicon-book',
-  //   });
-  // }
+  function menuConfig(Menus) {
+    Menus.addMenuItem('topbar', {
+      title: 'Curriculum',
+      state: 'curriculum',
+      type: 'dropdown',
+      roles: ['user', 'team lead', 'admin'],
+      icon: 'glyphicon glyphicon-book',
+    });
+  }
 })();

@@ -1,0 +1,62 @@
+<section class="content shaded">
+  <section class="container-fluid">
+    <div class="page-header">
+        <a class="btn btn-primary pull-right" ui-sref="lessons.create">Create new lesson</a>
+        <h2>My Library</h2>
+    </div>
+    
+    <h3>Created Lessons</h3>
+    <div class="row" isotope-container="isotope-container">
+        <div class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
+            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                    <h3 class="panel-title">
+                        <i class="glyphicon {{lesson.unit.icon}}"></i>
+                        {{lesson.unit.title}}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <small>{{lesson.lessonOverview.setting}}</small>
+                    <h4>{{lesson.title}}</h4>
+                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                </div>
+                <div class="panel-footer">
+                    <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                            <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h3>Saved Lessons</h3>
+    <div class="row" isotope-container="isotope-container">
+        <div class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
+            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                    <h3 class="panel-title">
+                        <i class="glyphicon {{lesson.unit.icon}}"></i>
+                        {{lesson.unit.title}}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <small>{{lesson.lessonOverview.setting}}</small>
+                    <h4>{{lesson.title}}</h4>
+                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                </div>
+                <div class="panel-footer">
+                    <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                            <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+</section>

@@ -20,10 +20,10 @@
     // FILTERS
     $scope.uploader.filters.push({
       name: 'customFilter',
-        fn: function(item /*{File|FileLikeObject}*/, options) {
-          return this.queue.length < 10;
-        }
-      });
+      fn: function(item /*{File|FileLikeObject}*/, options) {
+        return this.queue.length < 10;
+      }
+    });
 
     $scope.uploader.queueLimit = 2;
 
@@ -33,7 +33,6 @@
       $scope.error = 'Only images are allowed for this upload';
     };
     $scope.uploader.onAfterAddingFile = function(fileItem) {
-      //console.info('onAfterAddingFile', fileItem);
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);

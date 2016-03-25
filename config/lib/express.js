@@ -39,6 +39,13 @@ module.exports.initLocalVariables = function (app) {
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;
 
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local') {
+    app.locals.devEnv = true;
+  }
+  if (process.env.NODE_ENV === 'staging') {
+    app.locals.stagingEnv = true;
+  }
+
   // Passing the request url to environment locals
   app.use(function (req, res, next) {
     res.locals.host = req.protocol + '://' + req.hostname;
@@ -82,8 +89,8 @@ module.exports.initMiddleware = function (app) {
   // Request body parsing middleware should be above methodOverride
 
   //app.use(bodyParser({limit: '5mb'}));
-  app.use(bodyParser.json({limit: '5mb'}));
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json({ limit: '5mb' }));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(methodOverride());
 
   // Add the cookie parser and flash middleware

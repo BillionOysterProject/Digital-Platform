@@ -20,10 +20,10 @@
     // FILTERS
     $scope.uploader.filters.push({
       name: 'customFilter',
-        fn: function(item /*{File|FileLikeObject}*/, options) {
-          return this.queue.length <= 20;
-        }
-      });
+      fn: function(item /*{File|FileLikeObject}*/, options) {
+        return this.queue.length <= 20;
+      }
+    });
 
     // CALLBACKS
     $scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {

@@ -12,7 +12,7 @@
         link: function(scope, element, attrs) {
           element.css({
             'background-image': 'url(' + scope.imageUrl + ')'
-          })
+          });
         }
       };
     });
