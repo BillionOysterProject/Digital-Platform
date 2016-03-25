@@ -13,28 +13,28 @@
     wq.addSampleForm = function () {
       wq.protocolWaterQuality.samples.push({
         waterTemperature: {
-          results: new Array()
+          results: []
         },
         dissolvedOxygen: {
-          results: new Array()
+          results: []
         },
         salinity: {
-          results: new Array()
+          results: []
         },
         pH: {
-          results: new Array()
+          results: []
         },
         turbidity: {
-          results: new Array()
+          results: []
         },
         ammonia: {
-          results: new Array()
+          results: []
         },
         nitrates: {
-          results: new Array()
+          results: []
         },
         others: [{
-          results: new Array()
+          results: []
         }]
       });
     };
