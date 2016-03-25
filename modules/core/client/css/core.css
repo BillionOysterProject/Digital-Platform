@@ -37,7 +37,9 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 200px;  
+    min-height: 150px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
     .jumbotron.dark {
@@ -46,8 +48,8 @@ body {
     }
 
     .jumbotron .content {
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
 .navbar-default {
@@ -388,7 +390,7 @@ a {
 /* WELL COLORS */
 
 .well { 
-    background: #fff;
+    background: #f4f7f8;
 }
 
 

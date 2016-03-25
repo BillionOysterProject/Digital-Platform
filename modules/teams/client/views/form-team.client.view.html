@@ -57,8 +57,9 @@
                             <option>9</option>
                           </select>
                         </div>
-                        <div class="form-group col-md-12" show-errors>
-                          <label>Team assignment</label>
+                        <!--TODO: If adding new team member, and current teams exist, show below 2 form-groups -->
+                        <div class="form-group col-sm-6" show-errors>
+                          <label>Add to a current team</label>
                           <select class="form-control">
                             <option disabled selected value>
                             <option>Team Name 1</option>
@@ -66,6 +67,25 @@
                             <option>Team Name 3</option>
                           </select>
                         </div>
+                        <div class="form-group col-sm-6" show-errors>
+                          <label><em>or</em> Create a new team</label>
+                          <input type="text" class="form-control"/>
+                        </div>
+                        <!--TODO: If adding new team member, and no current team exists, show:
+                        <div class="form-group col-sm-12" show-errors>
+                          <label>Name your new team</label>
+                          <input type="text" class="form-control"/>
+                        </div>-->
+                        <!--TODO: If editing team member, show:
+                        <div class="form-group col-sm-12" show-errors>
+                          <label>Team Assignment</label>
+                          <select class="form-control">
+                            <option disabled selected value>
+                            <option>Team Name 1</option>
+                            <option>Team Name 2</option>
+                            <option>Team Name 3</option>
+                          </select>
+                        </div>-->
                       </fieldset>
                     </form>
                 </div>

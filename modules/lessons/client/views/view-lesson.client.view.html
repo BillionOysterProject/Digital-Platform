@@ -3,11 +3,19 @@
 <section class="content">
     <section class="container">
         <div class="row">
-            <div class="col col-xs-10">
-                <h2>{{vm.lesson.title}}</h2>     
+            <div class="col col-sm-6">
+                <h2>{{vm.lesson.title}} 
+                    <small>
+                        <a href="#"><i class="glyphicon glyphicon-star-empty"></i></a>
+                        <!--TODO: Wire up Lesson saves. If teacher clicks the star to save the lesson, show on My Library page and switch <a> tag to this:
+                        <a href="#"><i class="glyphicon glyphicon-star red"></i></a>-->
+                    </small>
+                </h2>     
             </div>
-            <div class="col col-xs-2 text-right" ng-show="vm.lesson.isCurrentUserOwner">
-                <a class="btn btn-primary" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+            <div class="col col-sm-6 text-right">
+                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+                <a class="btn btn-default">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
+                <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
             </div>
         </div>
 
@@ -214,9 +222,41 @@
                         <iframe width="100%" height="315" src="https://www.youtube.com/embed/kB0JA7jsqMw" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-download" tabindex="-1" role="dialog"><!--Wire up modal-->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Download <span class="red">{{vm.lesson.title}}</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" checked> Lesson content</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" checked> Handouts</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" checked> Vocabulary Definitions</label>
+                            </div>
+                        </div>
+                        <p>To download other associated lessons in the unit, or the entire unit, visit <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a>.</p>
+                    </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Download</button>
             </div>
         </div>
     </div>
