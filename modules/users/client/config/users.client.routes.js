@@ -125,7 +125,7 @@
         }
       })
       .state('settings.admin-team-owner', {
-        url: '/teams/owner',
+        url: '/teams/members',
         templateUrl: 'modules/teams/client/views/owner-teams.client.view.html',
         controller: 'TeamsOwnerController',
         controllerAs: 'vm',

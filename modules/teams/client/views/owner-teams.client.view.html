@@ -41,14 +41,14 @@
             <tr ng-repeat="member in vm.members">
                 <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td><!--TODO: Pull in user's image-->
                 <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}<br/>{{member.email}}</span></td>
-                <td ng-show="{{member.pending}}">pending</td>
-                <td ng-hide="{{member.pending}}"></td>
+                <td ng-show="{{member.pending === true}}">pending</td>
+                <td ng-hide="{{member.pending === true}}"></td>
                 <td>{{member.team.name}}</td>
                 <td class="text-right">
-                    <a class="btn btn-default" ng-click="vm.openFormTeamMember()">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember(member)">
                       <i class="glyphicon glyphicon-edit"></i>
                     </a>
-                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember()">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember(member)">
                       <i class="glyphicon glyphicon-trash"></i>
                     </a>
                 </td>
@@ -62,7 +62,7 @@
 
 
 <!-- MODALS -->
-<form-team-member-modal team-member="vm.teamMember" new-team-name="vm.newTeamName" teams="vm.teams" save-function="vm.saveFormTeamMember" cancel-function="vm.cancelFormTeamMember"></form-team-member-modal>
+<form-team-member-modal team-member="vm.teamMember" teams="vm.teams" save-function="vm.saveFormTeamMember" cancel-function="vm.cancelFormTeamMember"></form-team-member-modal>
 <import-team-members-modal save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
 <delete-team-member-modal delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
 <delete-team-modal delete-function="vm.deleteTeam" cancel-function="vm.cancelDeleteTeam"></delete-team-modal>

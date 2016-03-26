@@ -10,6 +10,9 @@
   function TeamMembersService($resource) {
     return $resource('api/teams/members', {
     }, {
+      update: {
+        method: 'PUT'
+      },
       query: {
         method: 'GET',
         params: {

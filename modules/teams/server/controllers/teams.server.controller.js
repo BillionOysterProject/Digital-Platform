@@ -6,25 +6,35 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Team = mongoose.model('Team'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
 /**
  * Create a team
  */
-exports.create = function (req, res) {
-  var team = new Team(req.body);
-  team.teamLead = req.user;
+var createInternal = function(teamJSON, user, successCallback, errorCallback) {
+  var team = new Team(teamJSON);
+  team.teamLead = user;
 
   team.save(function (err) {
     if (err) {
+      errorCallback(err);
+    } else {
+      successCallback(team);
+    }
+  });
+};
+
+exports.create = function (req, res) {
+  createInternal(req.body, req.user, 
+    function(team) {
+      res.json(team);
+    }, function(err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(team);
-    }
-  });
+    });
 };
 
 /**
@@ -120,7 +130,7 @@ exports.list = function (req, res) {
     query.limit(req.query.limit);
   }
 
-  query.populate('teamMembers', 'displayName username email profileImageURL')
+  query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
@@ -177,11 +187,11 @@ exports.listMembers = function (req, res) {
       query.skip(limit*(page-1)).limit(limit);
     }
   } else {
-    var limit = Number(req.query.limit);
-    query.limit(limit);
+    var limit2 = Number(req.query.limit);
+    query.limit(limit2);
   }
 
-  query.populate('teamMembers', 'displayName username email profileImageURL')
+  query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
       console.log('error', err);
@@ -194,11 +204,19 @@ exports.listMembers = function (req, res) {
         var team = teams[i];
         for (var j = 0; j < team.teamMembers.length; j++) {
           var member = team.teamMembers[j];
-          member.team = {
-            name: team.name,
-            _id: team._id
-          };
-          members.push(member);
+          members.push({
+            _id: member._id,
+            displayName: member.displayName,
+            firstName: member.firstName,
+            lastName: member.lastName,
+            username: member.username,
+            email: member.email,
+            profileImageURL: member.profileImageURL,
+            team: {
+              _id: team._id,
+              name: team.name
+            }
+          });
         }
       }
       res.json(members);
@@ -217,7 +235,9 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).populate('user', 'displayName').exec(function (err, team) {
+  Team.findById(id).populate('teamLead', 'displayName')
+  .populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
+  .exec(function (err, team) {
     if (err) {
       return next(err);
     } else if (!team) {
@@ -227,5 +247,204 @@ exports.teamByID = function (req, res, next, id) {
     }
     req.team = team;
     next();
+  });
+};
+
+/**
+ * Team Member methods
+ */
+exports.createMember = function (req, res) {
+  delete req.body.roles;
+
+  var user = new User(req.body);
+  user.provider = 'local';
+  user.displayName = user.firstName + ' ' + user.lastName;
+  user.roles = ['team member', 'user'];
+  user.username = user.email.substring(0, user.email.indexOf('@'));
+  user.pending = true;
+
+  // Then save the user
+  user.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if (req.body.newTeamName) {
+        var teamJSON = {
+          name: req.body.newTeamName,
+          schoolOrg: req.user.schoolOrg,
+          teamMembers: [user]
+        };
+        createInternal(teamJSON, req.user, 
+          function(team) {
+            res.json(user);
+          }, function(err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          });
+      } else {
+        Team.findById(req.body.team._id).exec(function (errTeam, team) {
+          if (errTeam || !team) {
+            user.remove(function (errUser) {
+              if (errUser) {
+                return res.status(400).send({
+                  message: 'Error adding member'
+                });
+              } else {
+                return res.status(400).send({
+                  message: 'Error adding member to team'
+                });
+              }
+            });
+          } else {
+            team.teamMembers.push(user);
+
+            team.save(function (errSave) {
+              if (errSave) {
+                return res.status(400).send({
+                  message: 'Error adding member to team'
+                });
+              } else {
+                res.json(user);
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+};
+
+exports.updateMember = function (req, res) {
+  delete req.body.roles;
+  
+  User.findById(req.body._id).exec(function (errUser, user) {
+    if (errUser) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(errUser)
+      });
+    } else {
+      Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
+        if (errDelTeam) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(errDelTeam)
+          });
+        } else {
+          var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(user._id) : -1;
+          if (index > -1) {
+            delTeam.teamMembers.splice(index, 1);
+
+            delTeam.save(function (delSaveErr) {
+              if (delSaveErr) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(delSaveErr)
+                });
+              } else {
+                if (req.body.newTeamName) {
+                  var teamJSON = {
+                    name: req.body.newTeamName,
+                    schoolOrg: req.user.schoolOrg,
+                    teamMembers: [user]
+                  };
+                  createInternal(teamJSON, req.user, 
+                    function(team) {
+                      res.json(user);
+                    }, function(err) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                      });
+                    });
+                } else {
+                  Team.findById(req.body.team._id).exec(function (errTeam, team) {
+                    if (errTeam || !team) {
+                      user.remove(function (errUser) {
+                        if (errUser) {
+                          return res.status(400).send({
+                            message: 'Error adding member'
+                          });
+                        } else {
+                          return res.status(400).send({
+                            message: 'Error adding member to team'
+                          });
+                        }
+                      });
+                    } else {
+                      team.teamMembers.push(user);
+
+                      team.save(function (errSave) {
+                        if (errSave) {
+                          return res.status(400).send({
+                            message: 'Error adding member to team'
+                          });
+                        } else {
+                          res.json(user);
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          } else {
+            return res.status(400).send({
+              message: 'Could not remove member from previous team'
+            });
+          }
+        }
+      });
+    }
+  });
+};
+
+exports.deleteMember = function (res, req) {
+  delete req.body.roles;
+  
+  User.findById(req.body._id).exec(function (errUser, user) {
+    if (errUser) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(errUser)
+      });
+    } else {
+      Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
+        if (errDelTeam) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(errDelTeam)
+          });
+        } else {
+          var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(user._id) : -1;
+          if (index > -1) {
+            delTeam.teamMembers.splice(index, 1);
+
+            delTeam.save(function (delSaveErr) {
+              if (delSaveErr) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(delSaveErr)
+                });
+              } else {
+                if (user.pending === true) {
+                  user.remove(function (errDelUser) {
+                    if (errDelUser) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(errDelUser)
+                      });
+                    } else {
+                      res.json(delTeam);
+                    }
+                  });
+                } else {
+                  res.json(delTeam);
+                }
+              }
+            });
+          } else {
+            return res.status(400).send({
+              message: 'Could not find team to delete member from'
+            });
+          }
+        }
+      });
+    }
   });
 };

@@ -46,10 +46,16 @@
       });
     };
 
-    vm.teams = TeamsService.query({
-      byOwner: true
-    });
-    vm.members = vm.findTeamMembers();
+    vm.findTeams = function() {
+      TeamsService.query({
+        byOwner: true
+      }, function(data) {
+        vm.teams = data;
+      });
+    };
+
+    vm.findTeams();
+    vm.findTeamMembers();
 
     vm.authentication = Authentication;
     vm.error = null;
@@ -92,12 +98,30 @@
     };
 
     vm.openFormTeamMember = function(teamMember) {
-      vm.teamMember = (teamMember) ? teamMember : {};
-      vm.newTeamName = '';
+      vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
+      vm.teamMember.oldTeamId = angular.copy(teamMember.team._id);
+      console.log('teamMember', vm.teamMember);
       angular.element('#modal-team-member-editadd').modal('show');
     };
 
     vm.saveFormTeamMember = function() {
+      if (vm.teamMember._id) {
+        console.log('updating team');
+        vm.teamMember.$update(successCallback, errorCallback);
+      } else {
+        vm.teamMember.$save(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        vm.findTeamMembers();
+        vm.findTeams(); 
+      }
+
+      function errorCallback(res) {
+        console.log('error: ' + res.data.message);
+        vm.error = res.data.message;
+      }
+
       angular.element('#modal-team-member-editadd').modal('hide');
     };
 
@@ -118,10 +142,15 @@
     };
 
     vm.openDeleteTeamMember = function() {
+      vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
       angular.element('#modal-team-member-delete').modal('show');
     };
 
     vm.deleteTeamMember = function() {
+      vm.teamMember.$remove(function() {
+        vm.findTeamMembers();
+        vm.findTeams(); 
+      });
       angular.element('#modal-team-member-delete').modal('hide');
     };
 
