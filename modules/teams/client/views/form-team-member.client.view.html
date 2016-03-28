@@ -11,15 +11,15 @@
                       <fieldset>
                         <div class="form-group col-md-6" show-errors>
                           <label for="firstName">First Name</label>
-                          <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id">
+                          <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id && teamMember.pending === false">
                         </div>
                         <div class="form-group col-md-6" show-errors>
                           <label for="lastName">Last Name</label>
-                          <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id">
+                          <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id && teamMember.pending === false">
                         </div>
                         <div class="form-group col-md-12" show-errors>
                           <label for="email">Email</label>
-                          <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id">
+                          <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id && teamMember.pending === false">
                         </div>
                         <!--TODO: If adding new team member, and current teams exist, show below 2 form-groups -->
                         <div class="form-group col-sm-6" show-errors>

@@ -108,7 +108,7 @@
         },
         data: {
           pageTitle: 'Team Create',
-          roles: ['admin', 'team lead']
+          roles: ['admin']
         }
       })
       .state('settings.admin-team', {
@@ -121,11 +121,24 @@
         },
         data: {
           pageTitle: 'Team {{ teamResolve.name }}',
-          roles: ['admin', 'team lead']
+          roles: ['admin']
+        }
+      })
+      .state('settings.admin-team-edit', {
+        url: '/teams/:teamId/edit',
+        templateUrl: 'modules/teams/client/views/form-team.client.view.html',
+        controller: 'TeamsController',
+        controllerAs: 'vm',
+        resolve: {
+          teamResolve: getTeam
+        },
+        data: {
+          pageTitle: 'Edit {{ teamResolve.name }}',
+          roles: ['admin']
         }
       })
       .state('settings.admin-team-owner', {
-        url: '/teams/members',
+        url: '/members',
         templateUrl: 'modules/teams/client/views/owner-teams.client.view.html',
         controller: 'TeamsOwnerController',
         controllerAs: 'vm',

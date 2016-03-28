@@ -212,6 +212,7 @@ exports.listMembers = function (req, res) {
             username: member.username,
             email: member.email,
             profileImageURL: member.profileImageURL,
+            pending: member.pending,
             team: {
               _id: team._id,
               name: team.name
@@ -281,6 +282,8 @@ exports.createMember = function (req, res) {
   user.roles = ['team member', 'user'];
   user.username = user.email.substring(0, user.email.indexOf('@'));
   user.pending = true;
+
+  console.log('user', user);
 
   // Then save the user
   user.save(function (err) {

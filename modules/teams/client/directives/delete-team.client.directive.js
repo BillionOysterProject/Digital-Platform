@@ -8,11 +8,12 @@
         restrict: 'AE',
         templateUrl: 'modules/teams/client/views/delete-team.client.view.html',
         scope: {
+          team: '=',
           deleteFunction: '=',
           cancelFunction: '='
         },
         replace: true,
-        link: function(scope, element, atrs) {
+        link: function(scope, element, attrs) {
 
         }
       };

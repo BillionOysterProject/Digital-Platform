@@ -1,10 +1,9 @@
 <div class="modal fade" id="modal-team-delete" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <!-- TODO: Show this modal-content if Team is empty -->
-        <div class="modal-content">
+        <div class="modal-content" ng-show="team.teamMembers.length === 0">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Are you sure you want to delete team name<!--TODO: Wire up name--></h4>
+                <h4 class="modal-title">Are you sure you want to delete {{team.name}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -14,15 +13,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default">Cancel</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="deleteFunction(team)">Delete</button>
             </div>
         </div>
-        <!-- TODO: Replace modal-content with below if Team has members, wire up name in header
-        <div class="modal-content">
+        <div class="modal-content" ng-hide="team.teamMembers.length === 0">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{team name}} cannot be deleted</h4>
+                <h4 class="modal-title">{{team.name}} cannot be deleted</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -32,8 +30,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default">Close</button>
+                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Close</button>
             </div>
-        </div>-->
+        </div>
     </div>
 </div>

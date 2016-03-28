@@ -45,6 +45,10 @@
       },
       remove: {
         method: 'DELETE'
+      },
+      query: {
+        method: 'GET',
+        isArray: true
       }
     });
   }

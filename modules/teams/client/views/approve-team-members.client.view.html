@@ -6,65 +6,66 @@
                 <h4 class="modal-title">Team Member Requests</h4>
             </div>
             <div class="modal-body">
-                <p>Accepted team members will be invited to join and added to the team you select. Rejected team members will be removed from the list.</p>
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <!-- TODO: Wire up buttons to save state-->
-                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                <form>
+                    <p>Accepted team members will be invited to join and added to the team you select. Rejected team members will be removed from the list.</p>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                    <h4>Team Member Name</h4>
+                                    <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                    <!-- TODO: Wire up buttons to save state-->
+                                    <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                    <h4>Team Member Name</h4>
+                                    <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                    <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body text-center">
+                                    <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
+                                    <h4>Team Member Name</h4>
+                                    <p class="text-muted small">email@example.com<br/>7th grade</p>
+                                    <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
+                    <hr/>
+                    <div class="row">
+                        <!--TODO: Show below 2 form-groups if current teams exist -->
+                        <div class="form-group col-sm-6" show-errors>
+                          <label for="team">Add to a current team</label>
+                          <select name="team" class="form-control" ng-model="teamMember.team._id">
+                            <option disabled selected value>
+                            <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
+                            <option value="">Create a new team</option>
+                          </select>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body text-center">
-                                <img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png">
-                                <h4>Team Member Name</h4>
-                                <p class="text-muted small">email@example.com<br/>7th grade</p>
-                                <a class="btn btn-success btn-sm" title="Accept" ng-click="acceptFunction()"><i class="glyphicon glyphicon-ok"></i></a>
-                                <a class="btn btn-danger btn-sm" title="Reject" ng-click="rejectFunction()"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
+                        <div class="form-group col-sm-6" show-errors ng-show="teamMember.team._id === ''">
+                          <label for="newTeam">Create a new team</label>
+                          <input type="text" name="newTeam" class="form-control" ng-model="teamMember.newTeamName"/>
                         </div>
+                        <!--TODO: If no current team exists, show:
+                        <div class="form-group col-sm-12" show-errors>
+                          <label>Name your new team</label>
+                          <input type="text" class="form-control"/>
+                        </div>-->
                     </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <!--TODO: Show below 2 form-groups if current teams exist -->
-                    <div class="form-group col-sm-6" show-errors>
-                      <label>Add to a current team</label>
-                      <select class="form-control">
-                        <option disabled selected value>
-                        <option>Team Name 1</option>
-                        <option>Team Name 2</option>
-                        <option>Team Name 3</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-sm-6" show-errors>
-                      <label><em>or</em> Create a new team</label>
-                      <input type="text" class="form-control"/>
-                    </div>
-                    <!--TODO: If no current team exists, show:
-                    <div class="form-group col-sm-12" show-errors>
-                      <label>Name your new team</label>
-                      <input type="text" class="form-control"/>
-                    </div>-->
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
