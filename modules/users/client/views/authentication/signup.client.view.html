@@ -1,21 +1,23 @@
 <div ng-controller="AuthenticationController">
-  <h3 class="col-md-12 text-center">Sign up</h3>
-  <div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
+  <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
+    <h3>Sign up</h3><br/>
     <form name="userForm" ng-submit="signup(userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
-        <div class="form-group" show-errors>
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName" placeholder="First Name" required>
-          <div ng-messages="userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">First name is required.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="credentials.lastName" placeholder="Last Name" required>
-          <div ng-messages="userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Last name is required.</p>
-          </div>
+        <div class="row">
+            <div class="form-group col-sm-6" show-errors>
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName" placeholder="First Name" required>
+              <div ng-messages="userForm.firstName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">First name is required.</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6" show-errors>
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" class="form-control" ng-model="credentials.lastName" placeholder="Last Name" required>
+              <div ng-messages="userForm.lastName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Last name is required.</p>
+              </div>
+            </div>
         </div>
         <div class="form-group" show-errors>
           <label for="email">Email</label>
@@ -25,35 +27,45 @@
             <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
           </div>
         </div>
-        <div class="form-group" show-errors>
-          <label>Role</label>
-          <select class="form-control" ng-model="credentials.userrole">
-            <option value="team lead">Team Lead</option>
-            <option value="team member">Team Member</option>
-          </select>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control" ng-model="credentials.username" placeholder="Username" lowercase required>
-          <div ng-messages="userForm.username.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Username is required.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" ng-model="credentials.password" placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
-          <div ng-messages="userForm.password.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Password is required.</p>
-            <div ng-repeat="passwordError in passwordErrors">
-              <p class="help-block error-text" ng-show="userForm.password.$error.requirements">{{passwordError}}</p>
+        <div class="row">
+            <div class="form-group col-sm-6" show-errors>
+              <label>Role</label>
+              <select class="form-control" ng-model="credentials.userrole">
+                <option value="team lead">Team Lead</option>
+                <option value="team member">Team Member</option>
+              </select>
             </div>
-          </div>
+            <div class="form-group col-sm-6" show-errors>
+              <label>Organization <a href="#" data-toggle="modal" data-target="#modal-addorg">(not listed?)</a></label><!--TODO: Should look up all current Organizations -->
+              <select class="form-control">
+                <option></option>
+              </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6" show-errors>
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" class="form-control" ng-model="credentials.username" placeholder="Username" lowercase required>
+              <div ng-messages="userForm.username.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Username is required.</p>
+              </div>
+            </div>
+            <div class="form-group col-sm-6" show-errors>
+              <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" ng-model="credentials.password" placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+              <div ng-messages="userForm.password.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Password is required.</p>
+                <div ng-repeat="passwordError in passwordErrors">
+                  <p class="help-block error-text" ng-show="userForm.password.$error.requirements">{{passwordError}}</p>
+                </div>
+              </div>
+            </div>
         </div>
         <div class="form-group" ng-show="!userForm.password.$error.required">
           <label>Password Requirements</label>
           <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
         </div>
-        <div class="text-center form-group">
+        <div class="text-right form-group">
           <button type="submit" class="btn btn-primary">Sign up</button>
           &nbsp; or&nbsp;
           <a ui-sref="authentication.signin" class="show-signup">Sign in</a>
@@ -65,3 +77,51 @@
     </form>
   </div>
 </div>
+
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-addorg" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Request to add a new organization </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Organization Name</label>
+                            <input type="text" name="vocab-term" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Street Address</label>
+                            <input type="text" name="vocab-term" class="form-control" />
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label>City</label>
+                                <input type="text" name="vocab-term" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label>State</label>
+                                <input type="text" name="vocab-term" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Organization Description</label>
+                            <textarea class="form-control" name="definition" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODALS-->
