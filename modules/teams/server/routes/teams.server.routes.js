@@ -10,9 +10,15 @@ module.exports = function (app) {
   // Teams members collection routes
   app.route('/api/teams/members').all(teamsPolicy.isAllowed)
     .get(teams.listMembers)
-    .post(teams.createMember)
-    .put(teams.updateMember)
+    .post(teams.createMember);
+
+  app.route('/api/teams/members/:memberId').all(teamsPolicy.isAllowed)
+    .put(teams.updateMember);
+
+  app.route('/api/teams/:teamId/members/:memberId').all(teamsPolicy.isAllowed)
+    //.get(teams.listMembers)
     .delete(teams.deleteMember);
+
 
   // Teams collection routes
   app.route('/api/teams').all(teamsPolicy.isAllowed)
@@ -27,4 +33,5 @@ module.exports = function (app) {
 
   // Finish by binding the team middleware
   app.param('teamId', teams.teamByID);
+  app.param('memberId', teams.memberByID);
 };

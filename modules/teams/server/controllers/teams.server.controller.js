@@ -228,7 +228,6 @@ exports.listMembers = function (req, res) {
  * Team middleware
  */
 exports.teamByID = function (req, res, next, id) {
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Team is invalid'
@@ -246,6 +245,26 @@ exports.teamByID = function (req, res, next, id) {
       });
     }
     req.team = team;
+    next();
+  });
+};
+
+exports.memberByID = function (req, res, next, id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Member is invalid'
+    });
+  }
+
+  User.findById(id).populate('teamLead', 'displayName').exec(function (err, member) {
+    if (err) {
+      return next(err);
+    } else if (!member) {
+      return res.status(404).send({
+        message: 'No member with that identifier has been found'
+      });
+    }
+    req.member = member;
     next();
   });
 };
@@ -287,16 +306,8 @@ exports.createMember = function (req, res) {
       } else {
         Team.findById(req.body.team._id).exec(function (errTeam, team) {
           if (errTeam || !team) {
-            user.remove(function (errUser) {
-              if (errUser) {
-                return res.status(400).send({
-                  message: 'Error adding member'
-                });
-              } else {
-                return res.status(400).send({
-                  message: 'Error adding member to team'
-                });
-              }
+            return res.status(400).send({
+              message: 'Error adding member to team'
             });
           } else {
             team.teamMembers.push(user);
@@ -318,133 +329,117 @@ exports.createMember = function (req, res) {
 };
 
 exports.updateMember = function (req, res) {
-  delete req.body.roles;
-  
-  User.findById(req.body._id).exec(function (errUser, user) {
-    if (errUser) {
+  var member = req.member;
+  Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
+    if (errDelTeam) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(errUser)
+        message: errorHandler.getErrorMessage(errDelTeam)
       });
     } else {
-      Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
-        if (errDelTeam) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(errDelTeam)
-          });
-        } else {
-          var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(user._id) : -1;
-          if (index > -1) {
-            delTeam.teamMembers.splice(index, 1);
+      var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(member._id) : -1;
+      if (index > -1) {
+        delTeam.teamMembers.splice(index, 1);
 
-            delTeam.save(function (delSaveErr) {
-              if (delSaveErr) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(delSaveErr)
+        delTeam.save(function (delSaveErr) {
+          if (delSaveErr) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(delSaveErr)
+            });
+          } else {
+            if (req.body.newTeamName) {
+              var teamJSON = {
+                name: req.body.newTeamName,
+                schoolOrg: req.user.schoolOrg,
+                teamMembers: [member]
+              };
+              createInternal(teamJSON, req.user, 
+                function(team) {
+                  res.json(member);
+                }, function(err) {
+                  return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                  });
                 });
-              } else {
-                if (req.body.newTeamName) {
-                  var teamJSON = {
-                    name: req.body.newTeamName,
-                    schoolOrg: req.user.schoolOrg,
-                    teamMembers: [user]
-                  };
-                  createInternal(teamJSON, req.user, 
-                    function(team) {
-                      res.json(user);
-                    }, function(err) {
-                      return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
-                      });
-                    });
+            } else {
+              Team.findById(req.body.team._id).exec(function (errTeam, team) {
+                if (errTeam || !team) {
+                  return res.status(400).send({
+                    message: 'Error adding member to team'
+                  });
                 } else {
-                  Team.findById(req.body.team._id).exec(function (errTeam, team) {
-                    if (errTeam || !team) {
-                      user.remove(function (errUser) {
-                        if (errUser) {
-                          return res.status(400).send({
-                            message: 'Error adding member'
-                          });
-                        } else {
-                          return res.status(400).send({
-                            message: 'Error adding member to team'
-                          });
-                        }
+                  team.teamMembers.push(member);
+
+                  team.save(function (errSave) {
+                    if (errSave) {
+                      return res.status(400).send({
+                        message: 'Error adding member to team'
                       });
                     } else {
-                      team.teamMembers.push(user);
-
-                      team.save(function (errSave) {
-                        if (errSave) {
-                          return res.status(400).send({
-                            message: 'Error adding member to team'
-                          });
-                        } else {
-                          res.json(user);
-                        }
-                      });
+                      res.json(member);
                     }
                   });
                 }
-              }
-            });
-          } else {
-            return res.status(400).send({
-              message: 'Could not remove member from previous team'
-            });
+              });
+            }
           }
-        }
-      });
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Could not remove member from previous team'
+        });
+      }
     }
   });
 };
 
-exports.deleteMember = function (res, req) {
-  delete req.body.roles;
+exports.deleteMember = function (req, res) {
+  console.log('team', req.team);
+  console.log('member', req.member);
+  var member = req.member;
+  var team = req.team;
   
-  User.findById(req.body._id).exec(function (errUser, user) {
-    if (errUser) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(errUser)
-      });
-    } else {
-      Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
-        if (errDelTeam) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(errDelTeam)
-          });
-        } else {
-          var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(user._id) : -1;
-          if (index > -1) {
-            delTeam.teamMembers.splice(index, 1);
+  if (team) {
+    if (member) {
+      var index = _.findIndex(team.teamMembers, function(m) { return m._id.toString() === member._id.toString(); });
+      console.log('index', index);
+      //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1; 
+      if (index > -1) {
+        team.teamMembers.splice(index, 1);
 
-            delTeam.save(function (delSaveErr) {
-              if (delSaveErr) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(delSaveErr)
-                });
-              } else {
-                if (user.pending === true) {
-                  user.remove(function (errDelUser) {
-                    if (errDelUser) {
-                      return res.status(400).send({
-                        message: errorHandler.getErrorMessage(errDelUser)
-                      });
-                    } else {
-                      res.json(delTeam);
-                    }
-                  });
-                } else {
-                  res.json(delTeam);
-                }
-              }
+        team.save(function (delSaveErr) {
+          if (delSaveErr) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(delSaveErr)
             });
           } else {
-            return res.status(400).send({
-              message: 'Could not find team to delete member from'
-            });
+            if (member.pending === true) {
+              member.remove(function (errDelUser) {
+                if (errDelUser) {
+                  return res.status(400).send({
+                    message: errorHandler.getErrorMessage(errDelUser)
+                  });
+                } else {
+                  res.json(member);
+                }
+              });
+            } else {
+              res.json(member);
+            }
           }
-        }
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Could not find member to delete in team'
+        });
+      }
+    } else {
+      return res.status(400).send({
+        message: 'Cound not find member to delete'
       });
     }
-  });
+  } else {
+    return res.status(400).send({
+      message: 'Could not find team to delete member from'
+    });
+  }
 };

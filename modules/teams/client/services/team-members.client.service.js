@@ -8,7 +8,8 @@
   TeamMembersService.$inject = ['$resource'];
 
   function TeamMembersService($resource) {
-    return $resource('api/teams/members', {
+    return $resource('api/teams/members/:memberId', {
+      memberId: '@_id'
     }, {
       update: {
         method: 'PUT'
@@ -24,6 +25,26 @@
           page: '@page'
         },
         isArray: true
+      }
+    });
+  }
+
+  angular
+    .module('teams.services')
+    .factory('TeamMembersDeleteService', TeamMembersDeleteService);
+
+  TeamMembersDeleteService.$inject = ['$resource'];
+
+  function TeamMembersDeleteService($resource) {
+    return $resource('api/teams/:teamId/members/:memberId', {
+      teamId: '@team._id',
+      memberId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      remove: {
+        method: 'DELETE'
       }
     });
   }

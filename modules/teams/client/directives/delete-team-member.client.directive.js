@@ -8,6 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/teams/client/views/delete-team-member.client.view.html',
         scope: {
+          teamMember: '=',
           deleteFunction: '=',
           cancelFunction: '='
         },

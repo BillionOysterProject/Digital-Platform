@@ -5,9 +5,9 @@
     .module('teams')
     .controller('TeamsOwnerController', TeamsOwnerController);
 
-  TeamsOwnerController.$inject = ['$scope', '$state', 'Authentication', 'TeamsService', 'TeamMembersService'];
+  TeamsOwnerController.$inject = ['$scope', '$state', 'Authentication', 'TeamsService', 'TeamMembersService', 'TeamMembersDeleteService'];
 
-  function TeamsOwnerController($scope, $state, Authentication, TeamsService, TeamMembersService) {
+  function TeamsOwnerController($scope, $state, Authentication, TeamsService, TeamMembersService, TeamMembersDeleteService) {
     var vm = this;
 
     vm.filter = {
@@ -99,7 +99,7 @@
 
     vm.openFormTeamMember = function(teamMember) {
       vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
-      vm.teamMember.oldTeamId = angular.copy(teamMember.team._id);
+      vm.teamMember.oldTeamId = (teamMember) ? angular.copy(teamMember.team._id) : '';
       console.log('teamMember', vm.teamMember);
       angular.element('#modal-team-member-editadd').modal('show');
     };
@@ -126,6 +126,7 @@
     };
 
     vm.cancelFormTeamMember = function() {
+      vm.teamMember = {};
       angular.element('#modal-team-member-editadd').modal('hide');
     };
 
@@ -141,20 +142,23 @@
       angular.element('#modal-import-team-members').modal('hide');
     };
 
-    vm.openDeleteTeamMember = function() {
-      vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
+    vm.openDeleteTeamMember = function(teamMember) {
+      vm.teamMemberToDelete = (teamMember) ? new TeamMembersDeleteService(teamMember) : new TeamMembersDeleteService();
       angular.element('#modal-team-member-delete').modal('show');
     };
 
-    vm.deleteTeamMember = function() {
-      vm.teamMember.$remove(function() {
+    vm.deleteTeamMember = function(teamMember) {
+      console.log('delete', teamMember);
+      vm.teamMemberToDelete.$remove(function() {
         vm.findTeamMembers();
         vm.findTeams(); 
       });
+      vm.teamMemberToDelete = {};
       angular.element('#modal-team-member-delete').modal('hide');
     };
 
     vm.cancelDeleteTeamMember = function() {
+      vm.teamMemberToDelete = {};
       angular.element('#modal-team-member-delete').modal('hide');
     };
 
