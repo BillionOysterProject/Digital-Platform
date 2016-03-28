@@ -10,7 +10,7 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Restoration Station',
+      title: 'Restoration Stations',
       state: 'restoration-station',
       roles: ['user'],
       icon: 'glyphicon glyphicon-map-marker',
