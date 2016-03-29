@@ -257,7 +257,7 @@ exports.memberByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id).populate('teamLead', 'displayName').exec(function (err, member) {
+  User.findById(id).exec(function (err, member) {
     if (err) {
       return next(err);
     } else if (!member) {
@@ -273,34 +273,38 @@ exports.memberByID = function (req, res, next, id) {
 /**
  * Team Member methods
  */
-exports.createMember = function (req, res) {
-  delete req.body.roles;
-
-  var user = new User(req.body);
+var createMemberInternal = function(userJSON, successCallback, errorCallback) {
+  var user = new User(userJSON);
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = ['team member', 'user'];
   user.username = user.email.substring(0, user.email.indexOf('@'));
   user.pending = true;
 
-  console.log('user', user);
-
   // Then save the user
   user.save(function (err) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+      errorCallback(errorHandler.getErrorMessage(err));
     } else {
+      successCallback(user);
+    }
+  });
+};
+
+exports.createMember = function (req, res) {
+  delete req.body.roles;
+
+  createMemberInternal(req.body, 
+    function(member) {
       if (req.body.newTeamName) {
         var teamJSON = {
           name: req.body.newTeamName,
           schoolOrg: req.user.schoolOrg,
-          teamMembers: [user]
+          teamMembers: [member]
         };
         createInternal(teamJSON, req.user, 
           function(team) {
-            res.json(user);
+            res.json(member);
           }, function(err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
@@ -313,7 +317,7 @@ exports.createMember = function (req, res) {
               message: 'Error adding member to team'
             });
           } else {
-            team.teamMembers.push(user);
+            team.teamMembers.push(member);
 
             team.save(function (errSave) {
               if (errSave) {
@@ -321,14 +325,17 @@ exports.createMember = function (req, res) {
                   message: 'Error adding member to team'
                 });
               } else {
-                res.json(user);
+                res.json(member);
               }
             });
           }
         });
       }
-    }
-  });
+    }, function(err) {
+      return res.status(400).send({
+        message: err
+      });
+    });
 };
 
 exports.updateMember = function (req, res) {
@@ -396,15 +403,12 @@ exports.updateMember = function (req, res) {
 };
 
 exports.deleteMember = function (req, res) {
-  console.log('team', req.team);
-  console.log('member', req.member);
   var member = req.member;
   var team = req.team;
   
   if (team) {
     if (member) {
       var index = _.findIndex(team.teamMembers, function(m) { return m._id.toString() === member._id.toString(); });
-      console.log('index', index);
       //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1; 
       if (index > -1) {
         team.teamMembers.splice(index, 1);
@@ -445,4 +449,101 @@ exports.deleteMember = function (req, res) {
       message: 'Could not find team to delete member from'
     });
   }
+};
+
+exports.downloadMemberBulkFile = function(req, res) {
+  var csvHeader = ['First Name *', 'Last Name *', 'Email *'];
+
+  var csvString = csvHeader.join() + '\n' + 'John,Doe,jdoe@email.com';
+
+  res.setHeader('Content-disposition', 'attachment; filename=employees.csv');
+  res.setHeader('content-type', 'text/csv');
+  res.send(csvString);
+};
+
+var convertCsvMember = function(csvMember, successCallback, errorCallback) {
+  var memberValues = {
+    firstName: csvMember['First Name *'],
+    lastName: csvMember['Last Name *'],
+    email: csvMember['Email *']
+  };
+
+  if (memberValues.firstName && memberValues.lastName && memberValues.email) {
+    successCallback(memberValues);
+  } else {
+    errorCallback('Error converting member from csv');
+  }
+};
+
+exports.createMemberCsv = function (req, res) {
+  convertCsvMember(req.body.member, 
+    function(memberJSON) {
+      createMemberInternal(memberJSON, 
+        function(member) {
+          if (req.body.newTeamName) {
+            Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
+              if (teamByNameErr) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(teamByNameErr)
+                });
+              } else if (teamByName) {
+                teamByName.teamMembers.push(member);
+
+                teamByName.save(function (errSave) {
+                  if (errSave) {
+                    return res.status(400).send({
+                      message: 'Error adding member to team'
+                    });
+                  } else {
+                    res.json(member);
+                  }
+                });
+              } else {
+                var teamJSON = {
+                  name: req.body.newTeamName,
+                  schoolOrg: req.user.schoolOrg,
+                  teamMembers: [member]
+                };
+
+                createInternal(teamJSON, req.user, 
+                  function(team) {
+                    res.json(member);
+                  }, function(err) {
+                    return res.status(400).send({
+                      message: errorHandler.getErrorMessage(err)
+                    });
+                  });
+              }
+            });
+          } else {
+            Team.findById(req.body.teamId).exec(function (errTeam, team) {
+              if (errTeam || !team) {
+                return res.status(400).send({
+                  message: 'Error adding member to team'
+                });
+              } else {
+                team.teamMembers.push(member);
+
+                team.save(function (errSave) {
+                  if (errSave) {
+                    return res.status(400).send({
+                      message: 'Error adding member to team'
+                    });
+                  } else {
+                    res.json(member);
+                  }
+                });
+              }
+            });
+          }
+        }, function(err) {
+          return res.status(400).send({
+            message: err
+          });
+        });
+    }, function (err) {
+      return res.status(400).send({
+        message: err
+      });
+    });
 };

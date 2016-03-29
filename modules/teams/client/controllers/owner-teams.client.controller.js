@@ -99,6 +99,8 @@
     };
 
     vm.saveImportTeamMembers = function() {
+      vm.findTeamMembers();
+      vm.findTeams(); 
       angular.element('#modal-import-team-members').modal('hide');
     };
 

@@ -10,20 +10,20 @@
                     <form><!-- TODO: Wire up form fields -->
                       <fieldset>
                         <div class="form-group col-md-6" show-errors>
-                          <label for="firstName">First Name</label>
-                          <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id && teamMember.pending === false">
+                          <label for="firstName" class="control-label required">First Name</label>
+                          <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
                         </div>
                         <div class="form-group col-md-6" show-errors>
-                          <label for="lastName">Last Name</label>
-                          <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id && teamMember.pending === false">
+                          <label for="lastName" class="control-label required">Last Name</label>
+                          <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
                         </div>
                         <div class="form-group col-md-12" show-errors>
-                          <label for="email">Email</label>
-                          <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id && teamMember.pending === false">
+                          <label for="email" class="control-label required">Email</label>
+                          <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id && teamMember.pending === false" required>
                         </div>
                         <!--TODO: If adding new team member, and current teams exist, show below 2 form-groups -->
                         <div class="form-group col-sm-6" show-errors>
-                          <label for="team">Add to a current team</label>
+                          <label for="team" class="control-label">Add to a current team</label>
                           <select name="team" class="form-control" ng-model="teamMember.team._id">
                             <option disabled selected value>
                             <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
@@ -31,7 +31,7 @@
                           </select>
                         </div>
                         <div class="form-group col-sm-6" show-errors ng-show="teamMember.team._id === ''">
-                          <label for="newTeam">Create a new team</label>
+                          <label for="newTeam" class="control-label">Create a new team</label>
                           <input type="text" name="newTeam" class="form-control" ng-model="teamMember.newTeamName"/>
                         </div>
                         <!--TODO: If adding new team member, and no current team exists, show:
