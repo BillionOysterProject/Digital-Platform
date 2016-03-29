@@ -29,6 +29,19 @@ bower install
 
 ```
 
+To generate a new scaffold
+```
+npm install -g yo`
+`npm install -g generator-meanjs`
+
+```
+
+To load data
+```cd scripts/mongo-load`
+./load-data-into-mongo.sh`
+```
+
+
 Once you have cloned down this project, run:
 ```
 cd Digital-Platform
