@@ -35,5 +35,11 @@ Once you have cloned down this project, run:
 ```
 cd Digital-Platform
 npm install
+
+#make sure mongo is running
+
 grunt
+
+open the browser to -  http://localhost:8081
+
 ```
