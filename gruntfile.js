@@ -228,6 +228,12 @@ module.exports = function (grunt) {
         filter: function () {
           return !fs.existsSync('config/env/local-development.js');
         }
+      },
+      fonts: {
+        cwd: 'modules/core/client/css/fonts/',
+        src: '**/*',
+        dest: 'public/dist/fonts/',
+        expand: true
       }
     }
   });
@@ -253,6 +259,11 @@ module.exports = function (grunt) {
     var done = this.async();
 
     grunt.file.mkdir(path.normalize(__dirname + '/modules/users/client/img/profile/uploads'));
+    grunt.file.mkdir(path.normalize(__dirname + '/modules/protocol-site-conditions/client/img/water-condition/uploads'));
+    grunt.file.mkdir(path.normalize(__dirname + '/modules/protocol-site-conditions/client/img/land-condition/uploads'));
+    grunt.file.mkdir(path.normalize(__dirname + '/modules/lessons/client/img/featured-image/uploads'));
+    grunt.file.mkdir(path.normalize(__dirname + '/modules/lessons/client/files/handouts/uploads'));
+    grunt.file.mkdir(path.normalize(__dirname + '/modules/lessons/client/files/teacher-resources/uploads'));
 
     done();
   });
@@ -306,7 +317,7 @@ module.exports = function (grunt) {
   grunt.registerTask('lint', ['sass', 'less', 'jshint', 'eslint', 'csslint']);
 
   // Lint project files and minify them into two production files.
-  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
+  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'copy:fonts', 'cssmin']);
 
   // Run the project tests
   grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'server', 'mochaTest', 'karma:unit', 'protractor']);

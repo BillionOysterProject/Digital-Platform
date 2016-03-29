@@ -13,30 +13,21 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member'],
+    roles: ['team member', 'team lead', 'user'],
     allows: [{
-      resources: '/api/expeditions',
+      resources: '/api/expeditions/:expeditionId',
       permissions: '*'
     }, {
-      resources: '/api/expeditions/:expeditionId',
+      resources: '/api/expeditions',
       permissions: '*'
     }]
   }, {
-    roles: ['team lead'],
+    roles: ['admin', 'partner', 'guest'],
     allows: [{
-      resources: '/api/expeditions',
+      resources: '/api/expeditions/:expeditionId',
       permissions: ['get']
     }, {
-      resources: '/api/expeditions/:expeditionId',
-      permissions: ['get', 'put']
-    }]
-  }, {
-    roles: ['admin', 'partner', 'user'],
-    allows: [{
       resources: '/api/expeditions',
-      permissions: ['get']
-    }, {
-      resources: '/api/expeditions/:expeditionId',
       permissions: ['get']
     }]
   }]);

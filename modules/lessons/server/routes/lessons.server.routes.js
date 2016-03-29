@@ -28,6 +28,10 @@ module.exports = function (app) {
   app.route('/api/lessons/:lessonId/upload-teacher-resources').all(lessonsPolicy.isAllowed)
     .post(lessons.uploadTeacherResources);
 
+    // Upload state test questions route
+  app.route('/api/lessons/:lessonId/upload-state-test-questions').all(lessonsPolicy.isAllowed)
+    .post(lessons.uploadStateTestQuestions);
+
   // Single lesson routes
   app.route('/api/lessons/:lessonId').all(lessonsPolicy.isAllowed)
     .get(lessons.read)

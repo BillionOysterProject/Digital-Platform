@@ -1,0 +1,93 @@
+<div class="modal fade" id="modal-substrateshell{{index}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Substrate Shell {{substrate.substrateShellNumber}}</h4>
+            </div>
+            <form name="form.substrateForm" ng-submit="submitForm(substrate, form.substrateForm.$valid)" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
+                                <li role="presentation"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="substrateshell-meta{{index}}">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="lead red">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
+                                            <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
+                                            <div class="form-group">
+                                                <label for="outerImg" class="control-label required">Outer side</label>
+                                                <single-image-drop-zone uploader="outerSubstrateUploader" image-url="outerSubstrateUrl" image-alt="Outer side"></single-image-drop-zone>
+                                                <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
+                                                    <p class="red">Outer side image is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="innerImg" class="control-label required">Inner side</label>
+                                                <single-image-drop-zone uploader="innerSubstrateUploader" image-url="innerSubstrateUrl" image-alt="Inner side"></single-image-drop-zone>
+                                                <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
+                                                    <p class="red">Inner side image is required.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="shellNumber" class="control-label required">Substrate Shell # *</label>
+                                                    <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label for="setDate" class="control-label required">Set date *</label>
+                                                    <input type="text" class="form-control" ng-model="substrate.setDate" placeholder="MM-DD-YYYY" name="setDate" id="setDate" required/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="source" class="control-label required">Source *</label>
+                                                <input type="text" class="form-control" ng-model="substrate.source" name="source" id="source" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total" id="total" min="0" max="{{maxLiveOysters}}" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="notes" class="control-label">Notes</label>
+                                                <textarea class="form-control" rows="5" ng-model="substrate.notes" name="notes" id="notes"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="substrateshell-measurements{{index}}">
+                                    <br />
+                                    <p class="lead red">Measure and record the size (in mm) of each live oyster below.</p>
+                                    <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell in the Description tab</p>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-6" ng-repeat="measurement in substrate.measurements">
+                                            <div class="form-group row">
+                                                <label class="text-right col-sm-4 required" ng-show="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Oyster {{$index + 1}} *</label>
+                                                <label class="text-right col-sm-4" ng-hide="$index < substrate.totalNumberOfLiveOystersOnShell" for="measure{{$index}}">Oyster {{$index + 1}}</label>
+                                                <div class="col-sm-8">
+                                                    <input class="form-control" type="number" ng-model="substrate.measurements[$index].sizeOfLiveOysterMM"/ ng-readonly="$index >= substrate.totalNumberOfLiveOystersOnShell" ng-required="$index < substrate.totalNumberOfLiveOystersOnShell" name="measure{{$index}}" id="measure{{$index}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--TODO: Wire up mortality rate/growth rate, only show after data is entered -->
+                                    <p class="red">Good job! Compared to your last expedition, your oyster population has experienced a mortality rate of <b>[]%</b> and a growth rate of <b>[]%</b>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" ng-click="cancelFunction(index)">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

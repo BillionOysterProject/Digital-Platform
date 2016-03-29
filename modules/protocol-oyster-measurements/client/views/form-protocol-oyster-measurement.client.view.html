@@ -1,4 +1,4 @@
-<section>
+<form name="om.form.oysterMeasurementForm" ng-submit="om.save(om.form.oysterMeasurementForm.$valid)" novalidate>
     <section class="content">
         <section class="container">
             <h2>Protocol 2 <small>Oyster Measurements</small></h2>
@@ -8,8 +8,8 @@
                     <p class="lead red">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
-                        <label>Submerged depth of cage (meters)</label>
-                        <input type="number" class="form-control" />
+                        <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
+                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
@@ -17,21 +17,18 @@
                     <h6>Condition of oyster cage</h6>
                     <div class="form-group">
                         <label>Take a photograph of the oyster cage</label>
-                        <input class="form-control" type="file" />
+                        <single-image-drop-zone uploader="om.cageConditionUploader" image-url="om.cageConditionPhotoURL" image-alt="Oyster Cage Condition"></single-image-drop-zone>
+                        <div ng-show="om.form.oysterMeasurementForm.$invalid && om.form.oysterMeasurementForm.$submitted && !om.cageConditionPhotoURL">
+                            <p class="red">Oyster cage condition image is required.</p>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Bioaccumulation on cage</label>
-                        <select class="form-control">
-                            <option disabled selected></option>
-                            <option>None/clean – No macroalgae or animals present</option>
-                            <option>Light – Macroalgae or minimal animals present that do not encroach on mesh openings</option>
-                            <option>Medium – Some encrusting macroalgae/animals reducing size of mesh opening up to 25%</option>
-                            <option>Heavy – Encrusting macroalgae/animals reducing mesh opening by over 50%</option>
-                        </select>
+                        <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage" name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
-                        <label>Describe any damage to the cage</label>
-                        <textarea class="form-control"></textarea>
+                        <label for="damage" class="control-label">Describe any damage to the cage</label>
+                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
                     </div>
                 </div>
             </div>
@@ -51,516 +48,40 @@
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell 1</h4></td>
-                    <td><p class="text-muted">Minimum size <b>25.2</b>, Maximum size <b>55.2</b>, Average size <b>40.2</b>, Total Alive <b>38</b></p></td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Edit Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell 2</h4></td>
-                    <td><p class="text-muted">Minimum size <b>25.2</b>, Maximum size <b>55.2</b>, Average size <b>40.2</b>, Total Alive <b>38</b></p></td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Edit Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell 3</h4></td>
-                    <td><p class="text-muted">Minimum size <b>25.2</b>, Maximum size <b>55.2</b>, Average size <b>40.2</b>, Total Alive <b>38</b></p></td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Edit Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell 4</h4></td>
-                    <td><p class="text-muted">Minimum size <b>25.2</b>, Maximum size <b>55.2</b>, Average size <b>40.2</b>, Total Alive <b>38</b></p></td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Edit Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell 5</h4></td>
-                    <td><p class="text-muted">Minimum size <b>25.2</b>, Maximum size <b>55.2</b>, Average size <b>40.2</b>, Total Alive <b>38</b></p></td>
-                    <td><a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Edit Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-unchecked red"></i> Substrate Shell 6</h4></td>
-                    <td></td>
-                    <td><a class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Add Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-unchecked red"></i> Substrate Shell 7</h4></td>
-                    <td></td>
-                    <td><a class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Add Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-unchecked red"></i> Substrate Shell 8</h4></td>
-                    <td></td>
-                    <td><a class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Add Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-unchecked red"></i> Substrate Shell 9</h4></td>
-                    <td></td>
-                    <td><a class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Add Measurements</a></td>
-                </tr>
-                <tr>
-                    <td><h4><i class="glyphicon glyphicon-unchecked red"></i> Substrate Shell 10</h4></td>
-                    <td></td>
-                    <td><a class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#modal-substrateshell">Add Measurements</a></td>
+                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" ng-class="{red: om.form.oysterMeasurementForm.$submitted && substrate.totalNumberOfLiveOystersOnShell === 0}">
+                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
+                    <td>
+                        <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
+                            Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>, 
+                            Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>, 
+                            Average size <b>{{substrate.averageSizeOfLiveOysters | number:2}}</b>, 
+                            Total Alive <b>{{substrate.totalNumberOfLiveOystersOnShell | number}}</b>
+                        </p>
+                    </td>
+                    <td><a class="btn btn-default btn-sm pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="om.openSubstrateForm($index)">Edit Measurements</a></td>
                 </tr>
             </table>
         </section>
     </section>
     <section class="content shaded">
         <section class="container">
-            <p class="lead red">Great work! Of the total population, the minimum shell size is <b>25.2</b>, maximum size is <b>55.2</b>, average size is <b>40.2</b>, and total oysters alive is <b>38</b>.</p>
-            <p>Compared to your last expedition, this is a <b>+.02%</b> mortality increase and a growth rate of <b>32mm/month</b>.</p>
+            <p class="lead red" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters || om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">Great work! Of the total population, the 
+                minimum shell size is <b>{{om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>, 
+                maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>, 
+                average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and 
+                total oysters alive is <b>{{om.protocolOysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
+            <p ng-show="om.lastExpedition">Compared to your last expedition, your oyster population has experienced a mortality rate of <b>[]%</b> and a growth rate of <b>[]%</b>.</p><!--TODO: Wire up mortality rate/growth rate -->
         </section>
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-default">Next</button>
-            <div ng-show="vm.error" class="text-danger">
-                <strong ng-bind="vm.error"></strong>
+            <button type="submit" class="btn btn-primary">Next</button>
+            <div ng-show="om.error" class="text-danger">
+                <strong ng-bind="om.error"></strong>
             </div>
         </section>
     </section>
-</section>
-
-
-
-
-
-
-
-
-
-
+</form>
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-substrateshell" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Substrate Shell 1</h4><!-- TODO: Should be dynamic to pull in the correct # (1-10) -->
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#substrateshell-meta" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
-                            <li role="presentation"><a href="#substrateshell-measurements" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="substrateshell-meta">
-                                <br />
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="lead red">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
-                                        <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
-                                        <div class="form-group">
-                                            <label>Outer side</label>
-                                            <input class="form-control" type="file" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Inner side</label>
-                                            <input class="form-control" type="file" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="form-group col-sm-6">
-                                                <label>Substrate Shell #</label>
-                                                <input type="number" class="form-control" />
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <label>Set date</label>
-                                                <input type="text" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Source</label>
-                                            <input type="text" class="form-control" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Total Number of live oysters on shell</label>
-                                            <input type="number" class="form-control" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Notes</label>
-                                            <textarea class="form-control" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="substrateshell-measurements">
-                                <br />
-                                <p class="lead red">Measure and record the size (in mm) of each live oyster below.</p>
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 1</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 2</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 3</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 4</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 5</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 6</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 7</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 8</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 9</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 10</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 11</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 12</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 13</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 14</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 15</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 16</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 17</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 18</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 19</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 20</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 21</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 22</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 23</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 24</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 25</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 26</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 27</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 28</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 29</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 30</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 31</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 32</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 33</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 34</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 35</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 36</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 37</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 38</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 39</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 40</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 41</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 42</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 43</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 44</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <div class="form-group row">
-                                            <label class="text-right col-sm-4">Shell 45</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+<form-substrate-shell ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" substrate="substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerUploaders[$index]" inner-substrate-uploader="om.innerUploaders[$index]" outer-substrate-url="om.outerSubstrateURL" inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>

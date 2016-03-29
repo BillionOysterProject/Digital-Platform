@@ -1,0 +1,7 @@
+order,label,value
+0,Bulkhead/Wall,bulkhead-wall
+1,Fixed Pier,fixed-pier
+2,Floating Dock,floating-dock
+3,Riprap/Rocky Shoreline,riprap-rocky-shoreline
+4,Dirt/Sand,dirt-sand
+5,Other,other

@@ -56,7 +56,8 @@
                     </div>
                     <div class="form-group col-sm-4"><!--TODO: Open "change password" screen in a popup modal -->
                         <label></label>
-                        <a class="btn btn-default btn-block" ui-sref="settings.password" ng-show="user.provider === 'local'">Change Password</a>
+                        <!--TODO: Wire up button to modal in order to consolidate from <a ui-sref="settings.password" ng-show="user.provider === 'local'"> -->
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-password">Change Password</a>
                     </div>
                 </div>
                 <div class="row">
@@ -96,3 +97,82 @@
         </form>
     </div>
 </div>
+
+
+
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-password" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Change your password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" ng-controller="ChangePasswordController">
+                    <form name="passwordForm" ng-submit="changeUserPassword(passwordForm.$valid)" class="signin" novalidate autocomplete="off">
+                      <fieldset>
+                        <div class="form-group col-md-12" show-errors>
+                          <label for="currentPassword">Current Password</label>
+                          <input type="password" id="currentPassword" name="currentPassword" class="form-control" ng-model="passwordDetails.currentPassword" placeholder="Current Password" required>
+                          <div ng-messages="passwordForm.currentPassword.$error" role="alert">
+                            <p class="help-block error-text" ng-message="required">Your current password is required.</p>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-12" show-errors>
+                          <label for="newPassword">New Password</label>
+                          <input type="password" id="newPassword" name="newPassword" class="form-control" ng-model="passwordDetails.newPassword" placeholder="New Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+                          <div ng-messages="passwordForm.newPassword.$error" role="alert">
+                            <p class="help-block error-text" ng-message="required">Enter a new password.</p>
+                            <div ng-repeat="passwordError in passwordErrors">
+                              <p class="help-block error-text" ng-show="passwordForm.newPassword.$error.requirements">{{passwordError}}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-12" show-errors>
+                          <label for="verifyPassword">Verify Password</label>
+                          <input type="password" id="verifyPassword" name="verifyPassword" class="form-control" ng-model="passwordDetails.verifyPassword" placeholder="Verify Password" password-verify="passwordDetails.newPassword" required>
+                          <div ng-messages="passwordForm.verifyPassword.$error" role="alert">
+                            <p class="help-block error-text" ng-message="required">Verify your new password.</p>
+                            <p class="help-block error-text" ng-show=passwordForm.verifyPassword.$error.passwordVerify>Passwords do not match.</p>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-12" ng-show="!passwordForm.newPassword.$error.required">
+                          <label>Password Requirements</label>
+                          <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
+                        </div>
+                        <div ng-show="error" class="text-center text-danger">
+                          <strong ng-bind="error"></strong>
+                        </div>
+                      </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--TODO: Wire up buttons. If success, show password-sucess modal. If error, show error message in body -->
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modal-password-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-password-success" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="glyphicon glyphicon-ok-sign blue"></i> Success!</h4>
+            </div>
+            <div class="modal-body">
+                <p>Password changed successfully.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MODALS -->

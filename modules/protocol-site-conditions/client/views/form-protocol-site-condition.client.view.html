@@ -1,4 +1,4 @@
-<form name="vm.form.siteConditionForm" ng-submit="vm.save(vm.form.siteConditionForm.$valid)" novalidate>
+<form name="sc.form.siteConditionForm" ng-submit="sc.save(sc.form.siteConditionForm.$valid)" novalidate>
     <section class="content">
         <section class="container">
             <h2>Protocol 1 <small>Site Conditions</small></h2>
@@ -17,23 +17,23 @@
                     <h6>Meteorological conditions</h6>
                     <div class="form-group">
                         <label>Weather conditions</label>
-                        <select class="form-control" ng-options="weather.value as weather.label for weather in vm.weatherConditions" ng-model="vm.protocolSiteCondition.meteorologicalConditions.weatherConditions"></select>
+                        <select class="form-control" ng-options="weather.value as weather.label for weather in sc.weatherConditions" ng-model="sc.protocolSiteCondition.meteorologicalConditions.weatherConditions"></select>
                     </div>
                     <div class="form-group">
                         <label>Air temperature (C)</label>
-                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.airTemperatureC"/>
+                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label>Wind speed (mph)</label>
-                            <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.meteorologicalConditions.windSpeedMPH"/>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.meteorologicalConditions.windSpeedMPH"/>
                             <span class="help-block">Method: Anemometer</span>
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Wind direction</label>
-                            <select class="form-control" ng-model="vm.protocolSiteCondition.meteorologicalConditions.windDirection">
+                            <select class="form-control" ng-model="sc.protocolSiteCondition.meteorologicalConditions.windDirection">
                                 <option disabled selected></option>
                                 <option value="north">North</option>
                                 <option value="northwest">North West</option>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group">
                         <label>Humidity (%)</label>
-                        <input class="form-control" type="number" ng-model="vm.protocolSiteCondition.meteorologicalConditions.humidityPer"/>
+                        <input class="form-control" type="number" ng-model="sc.protocolSiteCondition.meteorologicalConditions.humidityPer"/>
                         <span class="help-block">Method: Sling Psychrometer</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
                         <label>Has it rained in the past <span class="red">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn24Hours"></select>
                     </div>
-                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn24Hours === true">
+                    <div class="form-group" ng-show="sc.protocolSiteCondition.recentRainfall.rainedIn24Hours === true">
                         <label>Has it rained in the past <span class="red">72</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn72Hours"></select>
                     </div>
-                    <div class="form-group" ng-show="vm.protocolSiteCondition.recentRainfall.rainedIn72Hours === true">
+                    <div class="form-group" ng-show="sc.protocolSiteCondition.recentRainfall.rainedIn72Hours === true">
                         <label>Has it rained in the past <span class="red">7</span> days?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
                 </div>
             </div>
@@ -73,46 +73,48 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
-                <h6>Tide Conditions</h6>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Closest High Tide</label>
-                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+            <div class="row">
+                <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
+                    <h6>Tide Conditions</h6>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Closest High Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestHighTide" placeholder="MM-DD-YYYY HH:mm"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Closest Low Tide</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                        </div>
                     </div>
-                    <div class="form-group col-sm-6">
-                        <label>Closest Low Tide</label>
-                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.tideConditions.closestLowTide" placeholder="MM-DD-YYYY HH:mm" />
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Current Speed</label>
+                            <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Current Direction</label>
+                            <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.currentDirection">
+                                <option disabled selected></option>
+                                <option value="north">North</option>
+                                <option value="south">South</option>
+                                <option value="east">East</option>
+                                <option value="west">West</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Current Speed</label>
-                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.tideConditions.currentSpeedMPH"/>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label>Current Direction</label>
-                        <select class="form-control" ng-model="vm.protocolSiteCondition.tideConditions.currentDirection">
+                    <div class="form-group">
+                        <label>Tidal Current</label>
+                        <select class="form-control" ng-model="sc.protocolSiteCondition.tideConditions.tidalCurrent">
                             <option disabled selected></option>
-                            <option value="north">North</option>
-                            <option value="south">South</option>
-                            <option value="east">East</option>
-                            <option value="west">West</option>
+                            <option value="flood-current">Flood current (incoming tide)</option>
+                            <option value="slack-water">Slack water</option>
+                            <option value="ebb-current">Ebb current (outgoing tide)</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Tidal Current</label>
-                    <select class="form-control" ng-model="vm.protocolSiteCondition.tideConditions.tidalCurrent">
-                        <option disabled selected></option>
-                        <option value="flood-current">Flood current (incoming tide)</option>
-                        <option value="slack-water">Slack water</option>
-                        <option value="ebb-current">Ebb current (outgoing tide)</option>
-                    </select>
+                <div class="col-md-6">
+                    <tide-table></tide-table>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <tide-table></tide-table>
             </div>
         </section>
     </section>
@@ -123,113 +125,113 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Take a photograph of the water with your camera in landscape orientation</label>
-                        <single-image-drop-zone uploader="vm.waterConditionUploader" image-url="vm.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
+                        <single-image-drop-zone uploader="sc.waterConditionUploader" image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Describe the water color</label>
-                        <select class="form-control" ng-options="color.value as color.label for color in vm.waterColors" ng-model="vm.protocolSiteCondition.waterConditions.waterColor"></select>
+                        <select class="form-control" ng-options="color.value as color.label for color in sc.waterColors" ng-model="sc.protocolSiteCondition.waterConditions.waterColor"></select>
                     </div>
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.oilSheen"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.oilSheen"></select>
                     </div>
                     <div class="form-group">
                         <label>Is there any garbage in the water?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.garbage.garbagePresent"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.garbage.garbagePresent"></select>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Are there any unmarked or other outfall pipes?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"></select>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-md-4" ng-show="vm.protocolSiteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-4" ng-show="sc.protocolSiteCondition.waterConditions.garbage.garbagePresent === true">
                     <p>Record the extent of each type of garbage in the water.</p>
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label>Hard Plastic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.hardPlastic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.hardPlastic"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Soft Plastic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.softPlastic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.softPlastic"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Metal</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.metal"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.metal"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Paper</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.paper"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.paper"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Glass</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.glass"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.glass"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Organic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.organic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.organic"></select>
                         </div>
                         <div class="form-group col-sm-12">
                             <label>Other</label>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="vm.protocolSiteCondition.waterConditions.garbage.other.description"/>
+                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="sc.protocolSiteCondition.waterConditions.garbage.other.description"/>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.waterConditions.garbage.other.extent"></select>
+                                    <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.waterConditions.garbage.other.extent"></select>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Are there any unmarked or other outfall pipes?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"></select>
+                    </div>
+                </div>
+                <div class="col-md-4" ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
-                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" ng-show="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly/>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked" ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
+                        <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-marked" ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude && sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly/>
                     </div>
                     <div class="row">
-                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
                             <label>Is there any flow through the pipe?</label>
-                            <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent"></select>
+                            <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent"></select>
                         </div>
-                        <div class="form-group col-sm-6" ng-show="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true">
+                        <div class="form-group col-sm-6" ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true">
                             <label><br/>How much?</label>
-                            <select class="form-control" ng-options="flow.value as flow.label for flow in vm.waterFlows" ng-model="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
+                            <select class="form-control" ng-options="flow.value as flow.label for flow in sc.waterFlows" ng-model="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
+                <div class="col-md-4" ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label>What is the location?</label>
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
-                        <input class="form-control" type="text" value="{{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                        <input class="form-control" type="text" value="{{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}" data-toggle="modal" data-target="#modal-map-unmarked" ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly/>
                     </div>
                     <div class="form-group">
                         <label>What is the approximate diameter of the pipe (CM)?</label>
-                        <input class="form-control" type="text" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"/>
+                        <input class="form-control" type="text" ng-model="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"/>
                     </div>
                     <div class="row">
-                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true, 'col-sm-12': vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true, 'col-sm-12': sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
                             <label>Is there any flow through the pipe?</label>
-                            <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent"></select>
+                            <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent"></select>
                         </div>
-                        <div class="form-group col-sm-6" ng-show="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
+                        <div class="form-group col-sm-6" ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
                             <label><br/>How much?</label>
-                            <select class="form-control" ng-options="flow.value as flow.label for flow in vm.waterFlows" ng-model="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"></select>
+                            <select class="form-control" ng-options="flow.value as flow.label for flow in sc.waterFlows" ng-model="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"></select>
                         </div>
                     </div>
                 </div>
@@ -243,80 +245,80 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Take a photograph of the land with your camera in landscape orientation</label>
-                        <single-image-drop-zone uploader="vm.landConditionUploader" image-url="vm.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
+                        <single-image-drop-zone uploader="sc.landConditionUploader" image-url="sc.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
                         <label>Choose shoreline type</label>
-                        <select class="form-control" ng-options="type.value as type.label for type in vm.shorelineTypes" ng-model="vm.protocolSiteCondition.landConditions.shoreLineType"></select>
+                        <select class="form-control" ng-options="type.value as type.label for type in sc.shorelineTypes" ng-model="sc.protocolSiteCondition.landConditions.shoreLineType"></select>
                     </div>
                     <div class="form-group">
                         <label>Is there any garbage on the adjacent shoreline?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in vm.trueFalse" ng-model="vm.protocolSiteCondition.landConditions.garbage.garbagePresent"></select>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.landConditions.garbage.garbagePresent"></select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <p>Estimate percent surface cover for the adjacent shoreline (about 500 x 500 feet)</p>
-                    <div role="alert" ng-show="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
+                    <div role="alert" ng-show="sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
                         <p class="red">Percentages must add to 100%.</p>
                     </div>
                     <div class="form-group">
                         <label>Impervious Surface (concrete/asphalt paths, roads, buildings etc.)</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer" />
+                            <input type="number" class="form-control" ng-model="sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Pervious Surface (dirt, gravel etc.)</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer" />
+                            <input type="number" class="form-control" ng-model="sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Vegetated surface (grass, shrubs, trees)</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer" />
+                            <input type="number" class="form-control" ng-model="sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer" />
                         </div>
                     </div>
-                    <h4 class="text-right" ng-class="{'red': vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + vm.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
+                    <h4 class="text-right" ng-class="{'red': sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
-                <div class="col-md-4" ng-show="vm.protocolSiteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-4" ng-show="sc.protocolSiteCondition.landConditions.garbage.garbagePresent === true">
                     <p>Record the extent of each type of garbage on the adjacent shoreline.</p>
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label>Hard Plastic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.hardPlastic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.hardPlastic"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Soft Plastic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.softPlastic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.softPlastic"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Metal</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.metal"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.metal"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Paper</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.paper"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.paper"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Glass</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.glass"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.glass"></select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label>Organic</label>
-                            <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.organic"></select>
+                            <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.organic"></select>
                         </div>
                         <div class="form-group col-sm-12">
                             <label>Other</label>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="vm.protocolSiteCondition.landConditions.garbage.other.description"/>
+                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="sc.protocolSiteCondition.landConditions.garbage.other.description"/>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select class="form-control" ng-options="extent.value as extent.label for extent in vm.garbageExtent" ng-model="vm.protocolSiteCondition.landConditions.garbage.other.extent"></select>
+                                    <select class="form-control" ng-options="extent.value as extent.label for extent in sc.garbageExtent" ng-model="sc.protocolSiteCondition.landConditions.garbage.other.extent"></select>
                                 </div>
                             </div>
                         </div>
@@ -327,9 +329,9 @@
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-default">{{vm.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
-            <div ng-show="vm.error" class="text-danger">
-                <strong ng-bind="vm.error"></strong>
+            <button type="submit" class="btn btn-primary">{{sc.protocolSiteCondition._id ? 'Next' : 'Next'}}</button>
+            <div ng-show="sc.error" class="text-danger">
+                <strong ng-bind="sc.error"></strong>
             </div>
         </section>
     </section>
@@ -343,9 +345,9 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
-    <map-select latitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
+    <map-select latitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
 </div>
 
 <div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
-    <map-select latitude="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude" longitude="vm.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
+    <map-select latitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude" longitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
 </div>

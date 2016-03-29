@@ -1,0 +1,8 @@
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24a"},"order":0,"label":"Fish","value":"fish"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24b"},"order":1,"label":"Crustaceans","value":"crustaceans"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24c"},"order":2,"label":"Molluscs","value":"molluscs"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24d"},"order":3,"label":"Worms","value":"worms"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24e"},"order":4,"label":"Tunicates","value":"tunicates"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e24f"},"order":5,"label":"Sponges","value":"sponges"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e250"},"order":6,"label":"Bryozoans","value":"bryozoans"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e251"},"order":7,"label":"Cnidarians","value":"cnidarians"}

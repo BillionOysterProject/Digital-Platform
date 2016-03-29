@@ -115,7 +115,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <select-optgroup outer-column="col-md-12" name="protocolConnections" in-title="Protocol Connections" ng-model="vm.lesson.lessonOverview.protocolConnections" required="false" label-class="control-label" options="{{vm.protocolConnections}}"></select-optgroup>
+                                <select-optgroup outer-column="col-md-12" name="protocolConnections" in-title="Protocol Connections *" ng-model="vm.lesson.lessonOverview.protocolConnections" required="true" label-class="control-label" options="{{vm.protocolConnections}}"></select-optgroup>
                                 <!-- <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="protocolConnections" class="control-label">Protocol Connections</label> -->
@@ -162,13 +162,16 @@
                                 <div class="col-md-6">
                                     <!-- TODO: Give location for upload files to be stored in the lesson -->
                                     <div class="form-group">
-                                        <label for="handouts" class="control-label">Handouts</label>
+                                        <label for="handouts" class="control-label">Handouts *</label>
                                         <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"></multiple-file-drop-zone>
+                                        <div ng-show="vm.form.lessonForm.$submitted && vm.handouts.length <= 0">
+                                            <p class="red">Handouts are required.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="vocabulary" class="control-label">Teacher Resources</label>
+                                        <label for="vocabulary" class="control-label">Teacher Resources *</label>
                                         <!-- TODO: wire up "add resource" modal, wire up table to display added resources-->
                                         <table class="table table-hover">
                                             <tr ng-repeat="link in vm.resourceLinks">
@@ -183,6 +186,24 @@
                                             </tr>
                                         </table>
                                         <a class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
+                                        <div ng-show="vm.form.lessonForm.$submitted && vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0">
+                                            <p class="red">Teacher Resources are required.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="teacherTips" class="control-label">Teacher Tips</label>
+                                        <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="stateTestQuestions" class="control-label">State Test Questions</label><br/>
+                                        <em class="text-muted">Take a screenshot of any state test questions that connect to this lesson and upload the file</em>
+                                        <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"></multiple-file-drop-zone>
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +284,7 @@
                         </div>
                     </div>
                     <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-                    <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+                    <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
                     <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-delete">Delete</button>
                 </div>
                 <div ng-show="vm.error" class="text-danger">

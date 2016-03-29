@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('lessons')
+    .module('protocol-site-conditions')
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
   ProtocolSiteConditionsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', 'FileUploader',
@@ -10,86 +10,88 @@
 
   function ProtocolSiteConditionsController($scope, $state, Authentication, $stateParams, FileUploader,
     ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService, WaterFlowService, ShorelineTypesService) {
-    var vm = this;
+    var sc = this;
 
     // Set up Protocol Site Condition
-    vm.protocolSiteCondition = {};
+    sc.protocolSiteCondition = {};
     if ($stateParams.protocolSiteConditionId) {
       ProtocolSiteConditionsService.get({
         siteConditionId: $stateParams.protocolSiteConditionId
       }, function(data) {
-        vm.protocolSiteCondition = data;  
-        vm.waterConditionPhotoURL = (vm.protocolSiteCondition.waterConditions.waterConditionPhoto) ? 
-          vm.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-        vm.landConditionPhotoURL = (vm.protocolSiteCondition.landConditions.landConditionPhoto) ? 
-          vm.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
+        sc.protocolSiteCondition = data;  
+        sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ? 
+          sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+        sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ? 
+          sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
       }); 
     } else {
-      vm.protocolSiteCondition = new ProtocolSiteConditionsService();
-      vm.protocolSiteCondition.landConditions = {
+      sc.protocolSiteCondition = new ProtocolSiteConditionsService();
+      sc.protocolSiteCondition.landConditions = {
         shorelineSurfaceCoverEstPer: {
           imperviousSurfacePer: 0,
           perviousSurfacePer: 0,
           vegetatedSurfacePer: 0
         }
       };
+      sc.waterConditionPhotoURL = '';
+      sc.landConditionPhotoURL = '';
     }
     
-    vm.weatherConditions = WeatherConditionsService.query();
-    vm.waterColors = WaterColorsService.query();
-    vm.waterFlows = WaterFlowService.query();
-    vm.shorelineTypes = ShorelineTypesService.query();
+    sc.weatherConditions = WeatherConditionsService.query();
+    sc.waterColors = WaterColorsService.query();
+    sc.waterFlows = WaterFlowService.query();
+    sc.shorelineTypes = ShorelineTypesService.query();
 
-    vm.authentication = Authentication;
-    vm.error = null;
-    vm.form = {};
+    sc.authentication = Authentication;
+    sc.error = null;
+    sc.form = {};
 
-    vm.garbageExtent = [
+    sc.garbageExtent = [
       { label: 'None', value: 'none' },
       { label: 'Sporadic', value: 'sporadic' },
       { label: 'Common', value: 'common' },
       { label: 'Extensive', value: 'extensive' }
     ];
 
-    vm.trueFalse = [
+    sc.trueFalse = [
       { label: 'Yes', value: true },
       { label: 'No', value: false }
     ];
 
-    vm.waterConditionUploader = new FileUploader({
+    sc.waterConditionUploader = new FileUploader({
       alias: 'newWaterConditionPicture',
     });
 
-    vm.landConditionUploader = new FileUploader({
+    sc.landConditionUploader = new FileUploader({
       alias: 'newLandConditionPicture',
     });
 
     // Remove existing protocol site condition
-    vm.remove = function() {
+    sc.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
-        vm.protocolSiteCondition.$remove($state.go('protocol-site-conditions.main'));
+        sc.protocolSiteCondition.$remove($state.go('protocol-site-conditions.main'));
       }
     };
 
     // Save protocol site condition
-    vm.save = function(isValid) {
+    sc.save = function(isValid) {
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.protocolSiteConditionForm');
+        $scope.$broadcast('show-errors-check-validity', 'sc.form.protocolSiteConditionForm');
         return false;
       }
 
-      vm.protocolSiteCondition.waterConditions.waterConditionPhoto = {
-        path: vm.waterConditionPhotoURL
+      sc.protocolSiteCondition.waterConditions.waterConditionPhoto = {
+        path: sc.waterConditionPhotoURL
       };
-      vm.protocolSiteCondition.landConditions.landConditionPhoto = {
-        path: vm.landConditionPhotoURL
+      sc.protocolSiteCondition.landConditions.landConditionPhoto = {
+        path: sc.landConditionPhotoURL
       };
 
       // TODO: move create/update logic to service
-      if (vm.protocolSiteCondition._id) {
-        vm.protocolSiteCondition.$update(successCallback, errorCallback);
+      if (sc.protocolSiteCondition._id) {
+        sc.protocolSiteCondition.$update(successCallback, errorCallback);
       } else {
-        vm.protocolSiteCondition.$save(successCallback, errorCallback);
+        sc.protocolSiteCondition.$save(successCallback, errorCallback);
       }
 
       function successCallback(res) {
@@ -102,38 +104,38 @@
         }
 
         function uploadWaterConditionPhoto(siteConditionId, waterPhotoSuccessCallback, waterPhotoErrorCallback) {
-          if (vm.waterConditionUploader.queue.length > 0) {
-            vm.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          if (sc.waterConditionUploader.queue.length > 0) {
+            sc.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
               waterPhotoSuccessCallback();
             };
 
-            vm.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
+            sc.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               waterPhotoErrorCallback(response.message);
             };
             
-            vm.waterConditionUploader.onBeforeUploadItem = function(item) {
+            sc.waterConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-water-condition';
             };
-            vm.waterConditionUploader.uploadAll();
+            sc.waterConditionUploader.uploadAll();
           } else {
             waterPhotoSuccessCallback();
           }
         }
 
         function uploadLandConditionPhoto(siteConditionId, landPhotoSuccessCallback, landPhotoErrorCallback) {
-          if (vm.landConditionUploader.queue.length > 0) {
-            vm.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          if (sc.landConditionUploader.queue.length > 0) {
+            sc.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
               landPhotoSuccessCallback();
             };
 
-            vm.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
+            sc.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               landPhotoErrorCallback(response.message);
             };
             
-            vm.landConditionUploader.onBeforeUploadItem = function(item) {
+            sc.landConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-land-condition';
             };
-            vm.landConditionUploader.uploadAll();
+            sc.landConditionUploader.uploadAll();
           } else {
             landPhotoSuccessCallback();
           }
@@ -143,20 +145,20 @@
           uploadLandConditionPhoto(siteConditionId, function() {
             goToView(siteConditionId);
           }, function(errorMessage) {
-            vm.error = errorMessage;
+            sc.error = errorMessage;
           });
         }, function(errorMessage) {
-          vm.error = errorMessage;
+          sc.error = errorMessage;
         });
 
       }
 
       function errorCallback(res) {
-        vm.error = res.data.message;
+        sc.error = res.data.message;
       }
     };
 
-    vm.cancel = function() {
+    sc.cancel = function() {
       $state.go('protocol-site-conditions.main');
     };
   }

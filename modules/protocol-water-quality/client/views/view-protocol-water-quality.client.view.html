@@ -1,0 +1,97 @@
+<div class="shaded">
+  <section class="content">
+    <section class="container">
+      <h2>View Protocol</h2>
+      <div ng-repeat="sample in wq.protocolWaterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
+        <h3>Sample #{{$index+1}}</h3>
+        <h4>Depth of Water Sample (m)</h4>
+        {{sample.depthOfWaterSampleM}}
+
+        <h4>Location where Water Sample was taken</h4>
+        {{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}
+
+        <table class="table table-responsive table-condensed">
+          <tr>
+              <th></th>
+              <th>Method (tool or test name)</th>
+              <th colspan="3" class="text-center">Results (include units)</th>
+              <th>Average</th>
+              <th>Units</th>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Water Temperature</h4></td>
+              <td ng-bind="sample.waterTemperature.method"></td>
+              <td ng-bind="sample.waterTemperature.results[0]"></td>
+              <td ng-bind="sample.waterTemperature.results[1]"></td>
+              <td ng-bind="sample.waterTemperature.results[2]"></td>
+              <td ng-bind="sample.waterTemperature.average"></td>
+              <td ng-bind="sample.waterTemperature.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Dissolved Oxygen</h4></td>
+              <td ng-bind="sample.dissolvedOxygen.method"></td>
+              <td ng-bind="sample.dissolvedOxygen.results[0]"></td>
+              <td ng-bind="sample.dissolvedOxygen.results[1]"></td>
+              <td ng-bind="sample.dissolvedOxygen.results[2]"></td>
+              <td ng-bind="sample.dissolvedOxygen.average"></td>
+              <td ng-bind="sample.dissolvedOxygen.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Salinity</h4></td>
+              <td ng-bind="sample.salinity.method"></td>
+              <td ng-bind="sample.salinity.results[0]"></td>
+              <td ng-bind="sample.salinity.results[1]"></td>
+              <td ng-bind="sample.salinity.results[2]"></td>
+              <td ng-bind="sample.salinity.average"></td>
+              <td ng-bind="sample.salinity.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>pH</h4></td>
+              <td ng-bind="sample.pH.method"></td>
+              <td ng-bind="sample.pH.results[0]"></td>
+              <td ng-bind="sample.pH.results[1]"></td>
+              <td ng-bind="sample.pH.results[2]"></td>
+              <td ng-bind="sample.pH.average"></td>
+              <td ng-bind="sample.pH.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Turbidity</h4></td>
+              <td ng-bind="sample.turbidity.method"></td>
+              <td ng-bind="sample.turbidity.results[0]"></td>
+              <td ng-bind="sample.turbidity.results[1]"></td>
+              <td ng-bind="sample.turbidity.results[2]"></td>
+              <td ng-bind="sample.turbidity.average"></td>
+              <td ng-bind="sample.turbidity.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Ammonia</h4></td>
+              <td ng-bind="sample.ammonia.method"></td>
+              <td ng-bind="sample.ammonia.results[0]"></td>
+              <td ng-bind="sample.ammonia.results[1]"></td>
+              <td ng-bind="sample.ammonia.results[2]"></td>
+              <td ng-bind="sample.ammonia.average"></td>
+              <td ng-bind="sample.ammonia.units"></td>
+          </tr>
+          <tr>
+              <td class="text-right"><h4>Nitrates</h4></td>
+              <td ng-bind="sample.nitrates.method"></td>
+              <td ng-bind="sample.nitrates.results[0]"></td>
+              <td ng-bind="sample.nitrates.results[1]"></td>
+              <td ng-bind="sample.nitrates.results[2]"></td>
+              <td ng-bind="sample.nitrates.average"></td>
+              <td ng-bind="sample.nitrates.units"></td>
+          </tr>
+          <tr ng-repeat="other in sample.others">
+              <td ng-bind="other.label"></td>
+              <td ng-bind="other.method"></td>
+              <td ng-bind="other.results[0]"></td>
+              <td ng-bind="other.results[1]"></td>
+              <td ng-bind="other.results[2]"></td>
+              <td ng-bind="other.average"></td>
+              <td ng-bind="other.units"></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+  </section>
+</div>

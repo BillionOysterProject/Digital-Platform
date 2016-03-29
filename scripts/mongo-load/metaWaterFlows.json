@@ -1,0 +1,4 @@
+{"_id":{"$oid":"56d772018d66b1170cac4871"},"order":0,"label":"Trickle","value":"trickle"}
+{"_id":{"$oid":"56d772018d66b1170cac4872"},"order":1,"label":"Light Stream","value":"lightStream"}
+{"_id":{"$oid":"56d772018d66b1170cac4873"},"order":2,"label":"Steady Stream","value":"steadyStream"}
+{"_id":{"$oid":"56d772018d66b1170cac4874"},"order":3,"label":"Full Flow","value":"fullFlow"}
