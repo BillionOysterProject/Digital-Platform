@@ -27,8 +27,6 @@ npm install
 
 bower install
 
-grunt build
-
 ```
 
 Once you have cloned down this project, run:
