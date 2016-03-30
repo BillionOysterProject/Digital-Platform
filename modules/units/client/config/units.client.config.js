@@ -12,7 +12,7 @@
       title: 'Units',
       state: 'units.list',
       roles: ['team lead', 'admin'],
-      position: 2
+      position: 1
     });
   }
 })();

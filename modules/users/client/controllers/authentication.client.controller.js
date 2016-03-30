@@ -70,25 +70,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     $scope.schoolOrgSelected = false;
 
     $http.get('/api/school-orgs').success(function (response) {
-      // If successful we assign the response to the global user model
       $scope.schoolOrgs = response;
     }).error(function (response) {
     });
 
-    $scope.roleFieldSelected = function(role) {
-      if (role === 'team member') {
-        $scope.teamMemberSelected = true;
-        $http.get('/api/school-orgs').success(function (response) {
-          $scope.schoolOrgs = response;
-        }).error(function (response) {
-        });
-      } else {
-        $scope.teamMemberSelected = false;
-      }
-    };
-
     $scope.schoolOrgFieldSelected = function(schoolOrgId) {
-      if (schoolOrgId) {
+      if (schoolOrgId && $scope.credentials.userrole === 'team member') {
         $scope.schoolOrgSelected = true;
         $http.get('/api/school-orgs/' + schoolOrgId + '/team-leads').success(function (response) {
           console.log('teamLeads', response);

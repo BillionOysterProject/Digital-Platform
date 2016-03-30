@@ -13,7 +13,7 @@
       title: 'Lessons',
       state: 'lessons.list',
       roles: ['team lead', 'admin'],
-      position: 1
+      position: 2
     });
   }
 })();
