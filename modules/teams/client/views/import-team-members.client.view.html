@@ -75,6 +75,9 @@
                 <label for="newTeam" class="control-label" ng-class="{required: team.teamId === '-1'}">Create a new team</label>
                 <input type="text" name="newTeam" class="form-control" ng-model="team.newTeamName" ng-required="team.teamId === '-1'"/>
               </div>
+              <div class="text-danger row" ng-show="error">
+                <strong ng-bind="error"></strong>
+              </div>
             </div>
           </div>
           <div class="modal-footer" ng-show="bulkFileUploaded && !headersInvalid">

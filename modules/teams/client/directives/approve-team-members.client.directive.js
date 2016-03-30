@@ -8,11 +8,13 @@
         restrict: 'AE',
         templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
         scope: {
-          acceptFunction: '=',
-          rejectFunction: '=',
-          closeFunction: '='
+          teamRequests: '=',
+          teams: '=',
+          saveFunction: '=',
+          cancelFunction: '='
         },
         replace: true,
+        controller: 'TeamApprovalController',
         link: function(scope, element, attrs) {
 
         }

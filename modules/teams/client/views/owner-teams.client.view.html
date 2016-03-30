@@ -29,9 +29,9 @@
         <a class="btn btn-primary" ng-click="vm.openImportTeamMembers()">Import members</a>
     </div>
 </div>
-<div class="row">
+<div class="row" ng-show="vm.teamRequests.length > 0">
     <div class="col-md-12">
-        <div class="alert alert-success" role="alert">You have <b>3</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
+        <div class="alert alert-success" role="alert">You have <b>{{vm.teamRequests.length}}</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
     </div>
 </div>
 <div class="row">
@@ -65,5 +65,5 @@
 <import-team-members-modal teams="vm.teams" save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
 <delete-team-member-modal team-member="vm.teamMemberToDelete" delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
 <delete-team-modal team="vm.teamToDelete" delete-function="vm.deleteTeam" cancel-function="vm.cancelDeleteTeam"></delete-team-modal>
-<approve-team-members-modal close-function="vm.closeApproveTeamMembers" accept-function="vm.acceptTeamMember" reject-function="vm.rejectTeamMember"></approve-team-members-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" save-function="vm.saveApproveTeamMembers" cancel-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
 <!-- END MODALS -->

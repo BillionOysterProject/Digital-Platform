@@ -13,9 +13,36 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin', 'team lead', 'team member'],
+    roles: ['team lead'],
     allows: [{
-      resources: '',
+      resources: '/api/team-requests',
+      permissions: ['get']
+    }, {
+      resources: '/api/team-requests/:teamRequestId/approve',
+      permissions: '*'
+    }, {
+      resources: '/api/team-requests/:teamRequestId/deny',
+      permissions: '*'
+    }, {
+      resources: '/api/team-requests/:teamRequestId',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['admin'],
+    allows: [{
+      resources: '/api/team-requests',
+      permissions: ['get']
+    }, {
+      resources: '/api/team-requests/:teamRequestId',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['team member'],
+    allows: [{
+      resources: '/api/team-requests',
+      permissions: '*'
+    }, {
+      resources: '/api/team-requests/:teamRequestId',
       permissions: '*'
     }]
   }]);

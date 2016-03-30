@@ -5,9 +5,11 @@
     .module('teams')
     .controller('TeamsOwnerController', TeamsOwnerController);
 
-  TeamsOwnerController.$inject = ['$scope', '$state', 'Authentication', 'TeamsService', 'TeamMembersService', 'TeamMembersDeleteService'];
+  TeamsOwnerController.$inject = ['$scope', '$state', 'Authentication', 'TeamsService',
+  'TeamMembersService', 'TeamRequestsService', 'TeamMembersDeleteService'];
 
-  function TeamsOwnerController($scope, $state, Authentication, TeamsService, TeamMembersService, TeamMembersDeleteService) {
+  function TeamsOwnerController($scope, $state, Authentication, TeamsService,
+    TeamMembersService, TeamRequestsService, TeamMembersDeleteService) {
     var vm = this;
 
     vm.filter = {
@@ -54,8 +56,17 @@
       });
     };
 
+    vm.findTeamRequests = function() {
+      TeamRequestsService.query({
+        byOwner: true
+      }, function(data) {
+        vm.teamRequests = data;
+      });
+    };
+
     vm.findTeams();
     vm.findTeamMembers();
+    vm.findTeamRequests();
 
     vm.authentication = Authentication;
     vm.error = null;
@@ -140,15 +151,15 @@
     };
 
     vm.openApproveTeamMembers = function() {
+      vm.findTeamRequests();
       angular.element('#modal-team-member-requests').modal('show');
     };
 
-    vm.acceptTeamMember = function() {
-
-    };
-
-    vm.rejectTeamMember = function() {
-
+    vm.saveApproveTeamMembers = function() {
+      vm.findTeamMembers();
+      vm.findTeams();
+      vm.findTeamRequests();
+      angular.element('#modal-team-member-requests').modal('hide');
     };
 
     vm.closeApproveTeamMembers = function() {

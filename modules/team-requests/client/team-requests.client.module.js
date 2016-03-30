@@ -1,4 +1,6 @@
-'use strict';
+(function (app) {
+  'use strict';
 
-// Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('team-requests');
+  app.registerModule('team-requests');
+  app.registerModule('team-requests.services');
+})(ApplicationConfiguration);
