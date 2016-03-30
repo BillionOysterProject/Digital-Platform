@@ -2,6 +2,6 @@
   'use strict';
 
   app.registerModule('curriculum');
-  app.registerModule('curriculum.routes', ['ui.router']);
+  app.registerModule('curriculum.services');
+  app.registerModule('curriculum.routes', ['ui.router', 'curriculum.services']);
 })(ApplicationConfiguration);
-
