@@ -13,12 +13,8 @@
           saveFunction: '=',
           cancelFunction: '='
         },
+        controller: 'TeamMemberController',
         replace: true,
-        controller: function($scope, $http) {
-          $scope.save = function(isValid) {
-            //if ()
-          };
-        },
         link: function(scope, element, attrs) {
 
         }

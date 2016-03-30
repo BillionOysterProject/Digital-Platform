@@ -33,9 +33,9 @@
       <div class="modal-footer" ng-show="headersInvalid">
         <button class="btn btn-default" ng-click="reset()">Start over</button>
       </div>
-      <div class="modal-body" ng-show="bulkFileUploaded && !headersInvalid">
-        <form>
-          <fieldset>
+      <form name="form.importTeamMembersForm" ng-submit="upload(form.importTeamMembersForm.$valid)" novalidate>
+        <fieldset>
+          <div class="modal-body" ng-show="bulkFileUploaded && !headersInvalid">
             <div class="row" ng-hide="finishedValidation">
               <i class="fa fa-circle-o-notch fa-spin"></i> uploading {{totalUploading}} members ...</h3>
             </div>
@@ -72,22 +72,19 @@
                 </select>
               </div>
               <div class="form-group col-sm-6" show-errors ng-show="team.teamId === '-1'">
-                <label for="newTeam">Create a new team</label>
-                <input type="text" name="newTeam" class="form-control" ng-model="team.newTeamName"/>
+                <label for="newTeam" class="control-label" ng-class="{required: team.teamId === '-1'}">Create a new team</label>
+                <input type="text" name="newTeam" class="form-control" ng-model="team.newTeamName" ng-required="team.teamId === '-1'"/>
               </div>
             </div>
-          </fieldset>
-        </form>
-      </div>
-      <div class="modal-footer" ng-show="bulkFileUploaded && !headersInvalid">
-        <!--TODO: Wire up buttons. 
-        <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
-        <button type="submit" class="btn btn-danger" ng-click="saveFunction()">Import</button><!--TODO: If editing, button should read "Update"-->
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-default" ng-click="reset()" ng-show="invalidCsv.length > 0" ng-disabled="uploadingCsv">Start over</button>
-        <button class="btn btn-default" ng-click="upload()" ng-show="invalidCsv.length > 0 && validCsv.length > 0" ng-disabled="uploadingCsv">Submit the {{validCsv.length}} successful entries</button>
-        <button class="btn btn-default" ng-click="upload()" ng-show="invalidCsv.length === 0" ng-disabled="uploadingCsv">Submit</button>
-      </div>
+          </div>
+          <div class="modal-footer" ng-show="bulkFileUploaded && !headersInvalid">
+            <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-default" ng-click="reset()" ng-show="invalidCsv.length > 0" ng-disabled="uploadingCsv">Start over</button>
+            <button button="submit" class="btn btn-default" ng-show="invalidCsv.length > 0 && validCsv.length > 0" ng-disabled="uploadingCsv">Submit the {{validCsv.length}} successful entries</button>
+            <button button="submit" class="btn btn-default" ng-show="invalidCsv.length === 0" ng-disabled="uploadingCsv">Submit</button>
+          </div>
+        </fieldset>
+      </form>
     </div>
   </div>
 </div>

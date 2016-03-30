@@ -106,7 +106,12 @@
       }
     };
 
-    $scope.upload = function() {
+    $scope.upload = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.importTeamMembersForm');
+        return false;
+      }
+      
       $scope.uploadingCsv = true;
       var spinner = new Spinner({}).spin(document.getElementById('modal-import-team-members'));
 
@@ -133,12 +138,13 @@
           success(function(data, status, headers, config) {
             $scope.successfullyAdded++;
             done();
+            uploadMember(currMember+1, validCsv, callback);
           }).
           error(function(data, status, headers, config) {
             done();
+            uploadMember(currMember+1, validCsv, callback);
           });
-
-          uploadMember(currMember+1, validCsv, callback);
+          
         } else {
           callback();
         }

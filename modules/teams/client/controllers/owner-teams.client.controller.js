@@ -64,33 +64,21 @@
     vm.openFormTeamMember = function(teamMember) {
       vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
       vm.teamMember.oldTeamId = (teamMember) ? angular.copy(teamMember.team._id) : '';
-      console.log('teamMember', vm.teamMember);
+
       angular.element('#modal-team-member-editadd').modal('show');
     };
 
     vm.saveFormTeamMember = function() {
-      if (vm.teamMember._id) {
-        console.log('updating team');
-        vm.teamMember.$update(successCallback, errorCallback);
-      } else {
-        vm.teamMember.$save(successCallback, errorCallback);
-      }
-
-      function successCallback(res) {
-        vm.findTeamMembers();
-        vm.findTeams(); 
-      }
-
-      function errorCallback(res) {
-        console.log('error: ' + res.data.message);
-        vm.error = res.data.message;
-      }
+      vm.findTeamMembers();
+      vm.findTeams();
+      vm.teamMember = {};
 
       angular.element('#modal-team-member-editadd').modal('hide');
     };
 
     vm.cancelFormTeamMember = function() {
       vm.teamMember = {};
+
       angular.element('#modal-team-member-editadd').modal('hide');
     };
 
@@ -100,7 +88,7 @@
 
     vm.saveImportTeamMembers = function() {
       vm.findTeamMembers();
-      vm.findTeams(); 
+      vm.findTeams();
       angular.element('#modal-import-team-members').modal('hide');
     };
 
@@ -116,7 +104,7 @@
     vm.deleteTeamMember = function(teamMember) {
       vm.teamMemberToDelete.$remove(function() {
         vm.findTeamMembers();
-        vm.findTeams(); 
+        vm.findTeams();
       });
       vm.teamMemberToDelete = {};
       angular.element('#modal-team-member-delete').modal('hide');
@@ -132,14 +120,15 @@
         teamId: teamId
       }, function(data) {
         vm.teamToDelete = data;
-        angular.element('#modal-team-delete').modal('show');  
+        angular.element('#modal-team-delete').modal('show');
       });
     };
 
     vm.deleteTeam = function(team) {
       vm.teamToDelete.$remove(function() {
+        vm.filter.teamId = '';
         vm.findTeamMembers();
-        vm.findTeams(); 
+        vm.findTeams();
         vm.team = {};
         angular.element('#modal-team-delete').modal('hide');
       });

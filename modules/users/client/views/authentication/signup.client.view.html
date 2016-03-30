@@ -5,43 +5,77 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName" placeholder="First Name" required>
+          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="credentials.firstName"
+          placeholder="First Name" required>
           <div ng-messages="userForm.firstName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">First name is required.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="credentials.lastName" placeholder="Last Name" required>
+          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="credentials.lastName"
+          placeholder="Last Name" required>
           <div ng-messages="userForm.lastName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Last name is required.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email" placeholder="email@example.com" lowercase required>
+          <input type="email" id="email" name="email" class="form-control" ng-model="credentials.email"
+          placeholder="email@example.com" lowercase required>
           <div ng-messages="userForm.email.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Email address is required.</p>
             <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label>Role</label>
-          <select class="form-control" ng-model="credentials.userrole">
+          <label for="role" class="control-label required">Role</label>
+          <select name="role" class="form-control" ng-model="credentials.userrole" required
+          ng-change="roleFieldSelected(credentials.userrole)">
             <option value="team lead">Team Lead</option>
             <option value="team member">Team Member</option>
           </select>
         </div>
+        <div class="form-group" show-errors ng-show="teamMemberSelected">
+          <label for="schoolOrg" class="control-label" ng-class="{required: teamMemberSelected}">
+            School/Organization</label>
+          <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="credentials.schoolOrg"
+            ng-options="schoolOrg._id as schoolOrg.name for schoolOrg in schoolOrgs"
+            ng-required="teamMemberSelected"
+            ng-change="schoolOrgFieldSelected(credentials.schoolOrg)">
+          </select>
+        </div>
+        <div class="form-group" show-errors ng-show="schoolOrgSelected">
+          <label for="teamLead" class="control-label" ng-class="{required: schoolOrgSelected}">Team Lead</label>
+          <select class="form-control" name="teamLead" id="teamLead" ng-model="credentials.teamLead"
+            ng-options="teamLead._id as teamLead.displayName for teamLead in teamLeads"
+            ng-require="schoolOrgSelected">
+          </select>
+        </div>
         <div class="form-group" show-errors>
           <label for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control" ng-model="credentials.username" placeholder="Username" lowercase required>
+          <input type="text" id="username" name="username" class="form-control" ng-model="credentials.username"
+          placeholder="Username" lowercase required>
           <div ng-messages="userForm.username.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Username is required.</p>
           </div>
         </div>
         <div class="form-group" show-errors>
           <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" ng-model="credentials.password" placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+            <input type="password" id="password" name="password" class="form-control" ng-model="credentials.password"
+            placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+          <div ng-messages="userForm.password.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Password is required.</p>
+            <div ng-repeat="passwordError in passwordErrors">
+              <p class="help-block error-text" ng-show="userForm.password.$error.requirements">{{passwordError}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="retypePassword">Retype Password</label>
+            <input type="password" id="retypePassword" name="retypePassword" class="form-control"
+            ng-model="credentials.retypePassword" placeholder="Password" uib-popover="{{popoverMsg}}"
+            uib-popover-trigger="focus" password-validator required>
           <div ng-messages="userForm.password.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Password is required.</p>
             <div ng-repeat="passwordError in passwordErrors">
@@ -51,7 +85,9 @@
         </div>
         <div class="form-group" ng-show="!userForm.password.$error.required">
           <label>Password Requirements</label>
-          <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
+          <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">
+            <span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>
+          </uib-progressbar>
         </div>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Sign up</button>
