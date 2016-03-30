@@ -68,7 +68,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - marked CSO pipe latitude is required.');
     }
-    if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude || 
+    if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude ||
       siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude === 0) {
       errorMessages.push('Water Condition - marked CSO pipe longitude is required.');
     }
@@ -84,7 +84,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - unmarked pipe latitude is required.');
     }
-    if (!siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude || 
+    if (!siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude ||
       siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude === 0) {
       errorMessages.push('Water Condition - unmarked pipe longitude is required.');
     }
@@ -134,15 +134,15 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
 };
 
 /**
- * Create a protocol site condition 
+ * Create a protocol site condition
  */
 exports.create = function (req, res) {
-  validateSiteCondition(req.body, 
+  validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
-    siteCondition.tideConditions.closestHighTide = 
+    siteCondition.tideConditions.closestHighTide =
       moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
-    siteCondition.tideConditions.closestLowTide = 
+    siteCondition.tideConditions.closestLowTide =
       moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
     siteCondition.save(function (err) {
@@ -177,15 +177,15 @@ exports.read = function (req, res) {
  * Update a protocol site condition
  */
 exports.update = function (req, res) {
-  validateSiteCondition(req.body, 
+  validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = req.siteCondition;
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.tideConditions.closestHighTide = 
+      siteCondition.tideConditions.closestHighTide =
         moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
-      siteCondition.tideConditions.closestLowTide = 
+      siteCondition.tideConditions.closestLowTide =
         moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
       siteCondition.save(function (err) {
@@ -232,6 +232,27 @@ exports.delete = function (req, res) {
 exports.uploadWaterConditionPicture = function (req, res) {
   var siteCondition = req.siteCondition;
   var upload = multer(config.uploads.waterConditionUpload).single('newWaterConditionPicture');
+
+  /*
+  * Set up the s3 client - be sure to add the access and secret key first!
+  *
+  */
+  var s3 = require('s3');
+  var client = s3.createClient({
+    maxAsyncS3: 20,     // this is the default
+    s3RetryCount: 3,    // this is the default
+    s3RetryDelay: 1000, // this is the default
+    multipartUploadThreshold: 20971520, // this is the default (20 MB)
+    multipartUploadSize: 15728640, // this is the default (15 MB)
+    s3Options: {
+      accessKeyId: 'ADD YOUR KEY',
+      secretAccessKey: 'ADD YOUR KEY',
+      region: 'us-west-1',
+      // any other options are passed to new AWS.S3()
+      // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
+    },
+  });
+
   var waterConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
 
   // Filtering to upload only images
@@ -260,6 +281,51 @@ exports.uploadWaterConditionPicture = function (req, res) {
           }
         });
       }
+
+      var imgPathExt = path.extname(req.file.originalname);
+
+      /*
+      * This is where I am trying the S3 Upload
+      *
+      *
+      */
+      var params = {
+        localFile: siteCondition.waterConditions.waterConditionPhoto.path,
+
+        s3Params: {
+          Bucket: 'digital-platform-dev-files',
+          Key: 'modules/protocol-site-conditions/client/img/water-condition/uploads/'+siteCondition.waterConditions.waterConditionPhoto.filename+'.png',
+          // other options supported by putObject, except Body and ContentLength.
+          // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+        },
+      };
+
+      console.log('localFile=', siteCondition.waterConditions.waterConditionPhoto.path);
+      console.log('Key=', siteCondition.waterConditions.waterConditionPhoto.filename);
+
+      //console.log('Key=', siteCondition.waterConditions.waterConditionPhoto.path + imgPathExt);
+
+      //do the upload
+      var uploader = client.uploadFile(params);
+
+      //listen for stage changes on the call
+      uploader.on('error', function(err) {
+        console.error('unable to upload:', err.stack);
+      });
+      uploader.on('progress', function() {
+        console.log('progress', uploader.progressMd5Amount,
+                  uploader.progressAmount, uploader.progressTotal);
+      });
+      uploader.on('fileOpened', function() {
+        console.log('File Opened');
+      });
+      uploader.on('fileClosed', function() {
+        console.log('File Closed');
+      });
+      uploader.on('end', function() {
+        console.log('done uploading');
+      });
+
     });
   } else {
     res.status(400).send({
