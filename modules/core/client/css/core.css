@@ -487,6 +487,11 @@ h6, .h6 {
     vertical-align: middle;
 }
 
+.table-hover > tbody > tr:hover {
+    cursor: pointer;
+    background-color: #f4f7f8;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

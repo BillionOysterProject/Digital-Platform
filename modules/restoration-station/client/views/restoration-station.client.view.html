@@ -97,7 +97,7 @@
                         <h4>Oyster Restoration Stations</h4>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped">
+                        <table class="table">
                             <tr>
                                 <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
                                 <td>NY Harbor 19<br/><span class="small text-muted">40.704039, -74.0035392<br />East River</span></td>
@@ -114,7 +114,7 @@
                                 <td class="text-right"><span class="label label-success">Active</span></td>
                             </tr>
                         </table>
-                        <a class="btn btn-primary">Register a Station</a>
+                        <a class="btn btn-primary">Register a station</a>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -122,28 +122,30 @@
                         <h4>My Expeditions</h4>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped">
-                            <tr class="red">
+                        <table class="table table-hover">
+                            <tr class="text-muted" ui-sref="expeditions.create-protocols">
                                 <td><i class="glyphicon glyphicon-unchecked"></i></td>
-                                <td>NY Harbor Expedition</td>
-                                <td class="small">Incomplete</td>
-                                <td><a class="btn btn-default btn-sm btn-block" ui-sref="expeditions.create-protocols">Edit</a></td>
+                                <td><b>Ocean Expedition</b><br/><p class="text-muted">June 1, 2016</br>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-default">Coming up</span></td>
                             </tr>
-                            <tr>
-                                <td><i class="glyphicon glyphicon-check"></i></td>
-                                <td>Baltimore Harbor Expedition 2016</td>
-                                <td class="text-muted small">Published</td>
-                                <td><a class="btn btn-default btn-sm btn-block" ui-sref="expeditions.create-protocols">View</a></td>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-unchecked red"></i></td>
+                                <td><b>NY Harbor Expedition</b><br/><p class="text-muted">March 26, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-danger">Incomplete</span></td>
                             </tr>
-                            <tr>
-                                <td><i class="glyphicon glyphicon-check"></i></td>
-                                <td>Baltimore Harbor Expedition 2015</td>
-                                <td class="text-muted small">Published</td>
-                                <td><a class="btn btn-default btn-sm btn-block" ui-sref="expeditions.create-protocols">View</a></td>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-check green"></i></td>
+                                <td><b>Baltimore Harbor Expedition</b><br/><p class="text-muted">March 22, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-success">Published</span></td>
+                            </tr>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-check green"></i></td>
+                                <td><b>River Expedition</b><br/><p class="text-muted">March 5, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-success">Published</span></td>
                             </tr>
                         </table>
-                        <!--TODO: only show if student --><a class="btn btn-primary">Join Expedition</a>
-                        <!--TODO: only show if teacher --><a class="btn btn-primary" ui-sref="expeditions.create">New Expedition</a>
+                        <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
+                        <!--TODO: only show if teacher --><a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
                     </div>
                 </div>
             </div>
