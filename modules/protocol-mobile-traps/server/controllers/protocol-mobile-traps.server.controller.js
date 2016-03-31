@@ -128,7 +128,7 @@ exports.uploadSketchPhoto = function (req, res) {
     }
 
     if (index > -1 && mobileTrap.mobileOrganisms[index]) {
-      var uploadRemote = new uploadRemote();
+      var uploadRemote = new UploadRemote();
       uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.mobileTrapSketchPhotoUpload,
       function (fileInfo) {
         mobileTrap.mobileOrganisms[index].sketchPhoto = fileInfo;

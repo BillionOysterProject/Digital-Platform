@@ -141,7 +141,7 @@ exports.uploadImage = function(req, res) {
   upload.fileFilter = organismImageUploadFileFilter;
 
   if (mobileOrganism) {
-    var uploadRemote = new uploadRemote();
+    var uploadRemote = new UploadRemote();
     uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.organismImageUpload,
     function (fileInfo) {
       mobileOrganism.image = fileInfo;
