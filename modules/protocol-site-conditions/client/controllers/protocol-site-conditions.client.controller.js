@@ -80,12 +80,23 @@
         return false;
       }
 
-      sc.protocolSiteCondition.waterConditions.waterConditionPhoto = {
-        path: sc.waterConditionPhotoURL
-      };
-      sc.protocolSiteCondition.landConditions.landConditionPhoto = {
-        path: sc.landConditionPhotoURL
-      };
+      if (!sc.waterConditionPhotoURL || sc.waterConditionPhotoURL === '') {
+        sc.error = 'Water Condition photo is required';
+        return false;
+      } else {
+        sc.protocolSiteCondition.waterConditions.waterConditionPhoto = {
+          path: sc.waterConditionPhotoURL
+        };
+      }
+
+      if (!sc.landConditionPhotoURL || sc.landConditionPhotoURL === '') {
+        sc.error = 'Land Condition photo is required';
+        return false;
+      } else {
+        sc.protocolSiteCondition.landConditions.landConditionPhoto = {
+          path: sc.landConditionPhotoURL
+        };
+      }
 
       // TODO: move create/update logic to service
       if (sc.protocolSiteCondition._id) {
@@ -147,10 +158,12 @@
           }, function(errorMessage) {
             delete sc.protocolSiteCondition._id;
             sc.error = errorMessage;
+            return false;
           });
         }, function(errorMessage) {
           delete sc.protocolSiteCondition._id;
           sc.error = errorMessage;
+          return false;
         });
 
       }

@@ -106,17 +106,77 @@ exports.update = function (req, res) {
 /**
  * Delete a protocol oyster measurement
  */
+var deleteInternal = function(oysterMeasurement, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (oysterMeasurement) {
+    if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+    oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
+      filesToDelete.push(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
+    }
+    for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
+      if (oysterMeasurement.measuringOysterGrowth && oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path) {
+          filesToDelete.push(oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path);
+        }
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path) {
+          filesToDelete.push(oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path);
+        }
+      }
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    oysterMeasurement.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(oysterMeasurement);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
 
-  oysterMeasurement.remove(function (err) {
-    if (err) {
+  deleteInternal(oysterMeasurement,
+  function(oysterMeasurement) {
+    res.json(oysterMeasurement);
+  }, function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+var uploadFileSuccess = function(oysterMeasurement, res) {
+  oysterMeasurement.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(oysterMeasurement);
     }
+  });
+};
+
+var uploadFileError = function(oysterMeasurement, errorMessage, res) {
+  deleteInternal(oysterMeasurement,
+  function(oysterMeasurement) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -143,19 +203,9 @@ exports.uploadOysterCageConditionPicture = function (req, res) {
         function (fileInfo) {
           oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = fileInfo;
 
-          oysterMeasurement.save(function (saveError) {
-            if (saveError) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(saveError)
-              });
-            } else {
-              res.json(oysterMeasurement);
-            }
-          });
+          uploadFileSuccess(oysterMeasurement, res);
         }, function (errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
-          });
+          uploadFileError(oysterMeasurement, errorMessage, res);
         });
       }
     });
@@ -182,19 +232,9 @@ exports.uploadOuterSubstratePicture = function (req, res) {
       function (fileInfo) {
         oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto = fileInfo;
 
-        oysterMeasurement.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(oysterMeasurement);
-          }
-        });
+        uploadFileSuccess(oysterMeasurement, res);
       }, function(errorMessage) {
-        return res.status(400).send({
-          message: errorMessage
-        });
+        uploadFileError(oysterMeasurement, errorMessage, res);
       });
     } else {
       return res.status(400).send({
@@ -224,19 +264,9 @@ exports.uploadInnerSubstratePicture = function (req, res) {
       function(fileInfo) {
         oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto = fileInfo;
 
-        oysterMeasurement.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(oysterMeasurement);
-          }
-        });
+        uploadFileSuccess(oysterMeasurement, res);
       }, function(errorMessage) {
-        return res.status(400).send({
-          message: errorMessage
-        });
+        uploadFileError(oysterMeasurement, errorMessage, res);
       });
     } else {
       return res.status(400).send({

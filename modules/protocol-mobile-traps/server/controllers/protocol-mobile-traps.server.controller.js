@@ -90,20 +90,68 @@ exports.update = function (req, res) {
   });
 };
 
+var deleteInternal = function(mobileTrap, successCallback, errorCallback) {
+  var filesToDelete = [];
+  for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+    if (mobileTrap && mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms[i] &&
+      mobileTrap.mobileOrganisms[i].sketchPhoto && mobileTrap.mobileOrganisms[i].sketchPhoto.path) {
+      filesToDelete.push(mobileTrap.mobileOrganisms[i].sketchPhoto.path);
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    mobileTrap.remove(function(err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(mobileTrap);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 /**
  * Delete a protocol mobile trap
  */
 exports.delete = function (req, res) {
   var mobileTrap = req.mobileTrap;
 
-  mobileTrap.remove(function (err) {
-    if (err) {
+  deleteInternal(mobileTrap,
+  function(mobileTrap) {
+    res.json(mobileTrap);
+  }, function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+var uploadFileSuccess = function(mobileTrap, res) {
+  mobileTrap.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(mobileTrap);
     }
+  });
+};
+
+var uploadFileError = function(mobileTrap, errorMessage, res) {
+  deleteInternal(mobileTrap,
+  function(mobileTrap) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -133,19 +181,9 @@ exports.uploadSketchPhoto = function (req, res) {
       function (fileInfo) {
         mobileTrap.mobileOrganisms[index].sketchPhoto = fileInfo;
 
-        mobileTrap.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(mobileTrap);
-          }
-        });
+        uploadFileSuccess(mobileTrap, res);
       }, function (errorMessage) {
-        return res.status(400).send({
-          message: errorMessage
-        });
+        uploadFileError(mobileTrap, errorMessage, res);
       });
     } else {
       return res.status(400).send({

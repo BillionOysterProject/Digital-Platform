@@ -48,7 +48,9 @@
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
-                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid && substrate.totalNumberOfLiveOystersOnShell === 0}">
+                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
+                ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid && 
+                  substrate.totalNumberOfLiveOystersOnShell === 0}">
                     <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
                     <td>
                         <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">

@@ -24,6 +24,8 @@ function UploadRemote() {
       // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
     },
   });
+
+  this.remoteUrl = 'http://s3-' + config.s3.region + '.amazonaws.com/' + config.s3.bucket + '/';
 }
 
 /**
@@ -40,8 +42,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
           var localFileName = uploadConfig.dest + req.file.filename;
           var pathExt = path.extname(req.file.originalname);
 
-          var s3Filename = 'http://s3-' + config.s3.region + '.amazonaws.com/' +
-            config.s3.bucket + '/' + uploadConfig.s3dest + req.file.filename + pathExt;
+          var s3Filename = vm.remoteUrl + uploadConfig.s3dest + req.file.filename + pathExt;
 
           var params = {
             localFile: localFileName,
@@ -93,6 +94,60 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
           errorCallback('No file for uploading');
         }
       }
+    });
+  } else {
+    errorCallback('Must have an uploader');
+  }
+};
+
+UploadRemote.prototype.deleteRemote = function(filePaths, successCallback, errorCallback) {
+  var vm = this;
+  if (filePaths) {
+    var deleteKeys = [];
+    for (var i = 0; i < filePaths.length; i++) {
+      var filePath = filePaths[i];
+      var key = _.replace(filePath, vm.remoteUrl, '');
+      deleteKeys.push({ Key: key });
+    }
+    console.log('deleteKeys', deleteKeys);
+
+    var params = {
+      s3Params: {
+        Bucket: config.s3.bucket,
+        Delete: {
+          Objects: deleteKeys,
+        }
+      }
+    };
+
+    var s3Params = {
+      Bucket: config.s3.bucket,
+      Delete: {
+        Objects: deleteKeys,
+      }
+    };
+
+    console.log('params', params);
+    console.log('params', s3Params);
+
+    // Delete files in s3
+    var s3Deleter = vm.client.deleteObjects(s3Params);
+
+    // Listen for stage changes on the call
+    s3Deleter.on('error', function(err) {
+      console.error('unable to upload:', err.stack);
+      errorCallback(err.stack);
+    })
+    .on('progress', function() {
+      console.log('progress', s3Deleter.progressMd5Amount,
+        s3Deleter.progressAmount, s3Deleter.progressTotal);
+    })
+    .on('data', function() {
+      console.log('data');
+    })
+    .on('end', function() {
+      console.log('done deleting');
+      successCallback();
     });
   } else {
     errorCallback('Must have an uploader');

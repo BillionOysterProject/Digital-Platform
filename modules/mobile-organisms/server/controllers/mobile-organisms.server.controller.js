@@ -69,17 +69,37 @@ exports.update = function(req, res) {
 /**
  * Delete a mobile organism
  */
+var deleteInternal = function(mobileOrganism, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (mobileOrganism && mobileOrganism.image && mobileOrganism.image.path) {
+    filesToDelete.push(mobileOrganism.image.path);
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    mobileOrganism.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(mobileOrganism);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function(req, res) {
   var mobileOrganism = req.mobileOrganism;
 
-  mobileOrganism.remove(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(mobileOrganism);
-    }
+  deleteInternal(mobileOrganism,
+  function(mobileOrganism) {
+    res.json(mobileOrganism);
+  }, function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -129,6 +149,31 @@ exports.list = function(req, res) {
   });
 };
 
+var uploadFileSuccess = function(mobileOrganism, res) {
+  mobileOrganism.save(function (saveError) {
+    if (saveError) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(saveError)
+      });
+    } else {
+      res.json(mobileOrganism);
+    }
+  });
+};
+
+var uploadFileError = function(mobileOrganism, errorMessage, res) {
+  deleteInternal(mobileOrganism,
+  function(mobileOrganism) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
 /**
  * Upload image to mobile organism
  */
@@ -146,19 +191,9 @@ exports.uploadImage = function(req, res) {
     function (fileInfo) {
       mobileOrganism.image = fileInfo;
 
-      mobileOrganism.save(function (saveError) {
-        if (saveError) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(saveError)
-          });
-        } else {
-          res.json(mobileOrganism);
-        }
-      });
+      uploadFileSuccess(mobileOrganism, res);
     }, function (errorMessage) {
-      return res.status(400).send({
-        message: errorMessage
-      });
+      uploadFileError(mobileOrganism, errorMessage, res);
     });
   } else {
     res.status(400).send({

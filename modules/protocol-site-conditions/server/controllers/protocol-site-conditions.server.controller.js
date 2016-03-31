@@ -213,17 +213,70 @@ exports.update = function (req, res) {
 /**
  * Delete a protocol site condition
  */
+
+var deleteInternal = function(siteCondition, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (siteCondition) {
+    if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
+    siteCondition.waterConditions.waterConditionPhoto.path) {
+      filesToDelete.push(siteCondition.waterConditions.waterConditionPhoto.path);
+    }
+    if (siteCondition.landConditions && siteCondition.landConditions.landConditionPhoto &&
+    siteCondition.landConditions.landConditionPhoto.path) {
+      filesToDelete.push(siteCondition.landConditions.landConditionPhoto.path);
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    siteCondition.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(siteCondition);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function (req, res) {
   var siteCondition = req.siteCondition;
 
-  siteCondition.remove(function (err) {
-    if (err) {
+  deleteInternal(siteCondition,
+  function(siteCondition) {
+    res.json(siteCondition);
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
+var uploadFileSuccess = function(siteCondition, res) {
+  siteCondition.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(siteCondition);
     }
+  });
+};
+
+var uploadFileError = function(siteCondition, errorMessage, res) {
+  deleteInternal(siteCondition,
+  function(siteCondition) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -243,29 +296,10 @@ exports.uploadWaterConditionPicture = function (req, res) {
     uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
     function(fileInfo) {
       siteCondition.waterConditions.waterConditionPhoto = fileInfo;
-
-      siteCondition.save(function (saveError) {
-        if (saveError) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(saveError)
-          });
-        } else {
-          res.json(siteCondition);
-        }
-      });
+      uploadFileSuccess(siteCondition, res);
     }, function (errorMessage) {
       // delete siteCondition
-      siteCondition.remove(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          return res.status(400).send({
-            message: errorMessage
-          });
-        }
-      });
+      uploadFileError(siteCondition, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -287,20 +321,10 @@ exports.uploadLandConditionPicture = function (req, res) {
     uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
     function(fileInfo) {
       siteCondition.landConditions.landConditionPhoto = fileInfo;
-
-      siteCondition.save(function (saveError) {
-        if (saveError) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(saveError)
-          });
-        } else {
-          res.json(siteCondition);
-        }
-      });
+      uploadFileSuccess(siteCondition, res);
     }, function(errorMessage) {
-      res.status(400).send({
-        message: errorMessage
-      });
+      // delete siteCondition
+      uploadFileError(siteCondition, errorMessage, res);
     });
   } else {
     res.status(400).send({
