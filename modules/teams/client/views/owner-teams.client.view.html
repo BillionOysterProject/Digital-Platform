@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col-md-3 col-sm-6">
+        <div class="form-group">
+            <div class="input-group">
+                <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
+                    <option value="">Show all teams</option>
+                    <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+                </select>
+                <span class="input-group-btn" ng-show="vm.filter.teamId">
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeam(vm.filter.teamId)">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-sm-6">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-right">
+        <a class="btn btn-primary" ng-click="vm.openFormTeamMember()">Add members</a>
+        <a class="btn btn-primary" ng-click="vm.openImportTeamMembers()">Import members</a>
+    </div>
+</div>
+<div class="row" ng-show="vm.teamRequests.length > 0">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>{{vm.teamRequests.length}}</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-verticalalign table-responsive">
+            <tr ng-repeat="member in vm.members">
+                <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td>
+                <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}<br/>{{member.email}}</span></td>
+                <td ng-show="{{member.pending === true}}">pending</td>
+                <td ng-hide="{{member.pending === true}}"></td>
+                <td>{{member.team.name}}</td>
+                <td class="text-right">
+                    <a class="btn btn-default" ng-click="vm.openFormTeamMember(member)">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" ng-click="vm.openDeleteTeamMember(member)">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <uib-pagination boundary-links="true" max-size="vm.filter.limit" total-items="totalItems" ng-model="vm.filter.page" ng-change="vm.pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODALS -->
+<form-team-member-modal team-member="vm.teamMember" teams="vm.teams" save-function="vm.saveFormTeamMember" cancel-function="vm.cancelFormTeamMember"></form-team-member-modal>
+<import-team-members-modal teams="vm.teams" save-function="vm.saveImportTeamMembers" cancel-function="vm.cancelImportTeamMembers"></import-team-members-modal>
+<delete-team-member-modal team-member="vm.teamMemberToDelete" delete-function="vm.deleteTeamMember" cancel-function="vm.cancelDeleteTeamMember"></delete-team-member-modal>
+<delete-team-modal team="vm.teamToDelete" delete-function="vm.deleteTeam" cancel-function="vm.cancelDeleteTeam"></delete-team-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" save-function="vm.saveApproveTeamMembers" cancel-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
+<!-- END MODALS -->
