@@ -12,6 +12,8 @@
     $scope.uploader.filters.push({
       name: 'imageFilter',
       fn: function (item, options) {
+        console.log('item', item);
+        console.log('options', options);
         var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
         return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
       }
@@ -36,8 +38,10 @@
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);
+        console.log('fileItem', fileItem);
 
         fileReader.onload = function (fileReaderEvent) {
+          console.log('fileReaderEvent', fileReaderEvent);
           $timeout(function () {
             $scope.imageUrl = fileReaderEvent.target.result;
             $scope.error = '';

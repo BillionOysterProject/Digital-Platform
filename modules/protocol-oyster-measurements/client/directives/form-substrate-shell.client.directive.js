@@ -25,6 +25,7 @@
           });
 
           scope.submitForm = function(substrate, isValid) {
+            console.log('submitForm');
             if (scope.outerSubstrateUrl === undefined || scope.outerSubstrateUrl === null || scope.outerSubstrateUrl === '') {
               scope.form.substrateForm.$setValidity('outerImg', false);
               isValid = false;
@@ -32,6 +33,10 @@
             if (scope.innerSubstrateUrl === undefined || scope.innerSubstrateUrl === null || scope.innerSubstrateUrl === '') {
               scope.form.substrateForm.$setValidity('innerImg', false);
               isValid = false;
+            }
+            if (!isValid) {
+              scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
+              return false;
             }
             scope.saveFunction(substrate, scope.index, isValid);
           };

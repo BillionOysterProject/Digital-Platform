@@ -79,13 +79,14 @@
         $scope.$broadcast('show-errors-check-validity', 'om.form.protocolOysterMeasurementForm');
         return false;
       }
-      var substratesValid = true;
+      om.substratesValid = false;
       for (var i = 0; i < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
         if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
-          substratesValid = false;
+          om.substratesValid = true;
+          break;
         }
       }
-      if (!substratesValid) {
+      if (!om.substratesValid) {
         $scope.$broadcast('show-errors-check-validity', 'om.form.protocolOysterMeasurementForm');
         return false;
       }
@@ -221,9 +222,9 @@
 
     om.openSubstrateForm = function(index) {
       var content = angular.element('#modal-substrateshell'+index);
-      om.outerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ? 
+      om.outerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.path : '';
-      om.innerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto) ? 
+      om.innerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.path : '';
       content.modal('show');
     };
@@ -281,9 +282,9 @@
 
       for (var i = 0; i < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
         var substrate = om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i];
-        if (substrate.minimumSizeOfLiveOysters && substrate.maximumSizeOfLiveOysters && 
+        if (substrate.minimumSizeOfLiveOysters && substrate.maximumSizeOfLiveOysters &&
           substrate.totalNumberOfLiveOystersOnShell && substrate.averageSizeOfLiveOysters) {
-          
+
           if (substrate.minimumSizeOfLiveOysters < min) {
             min = substrate.minimumSizeOfLiveOysters;
           }

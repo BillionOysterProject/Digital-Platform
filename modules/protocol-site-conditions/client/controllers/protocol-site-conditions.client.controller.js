@@ -18,12 +18,12 @@
       ProtocolSiteConditionsService.get({
         siteConditionId: $stateParams.protocolSiteConditionId
       }, function(data) {
-        sc.protocolSiteCondition = data;  
-        sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ? 
+        sc.protocolSiteCondition = data;
+        sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
           sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-        sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ? 
+        sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
           sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-      }); 
+      });
     } else {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService();
       sc.protocolSiteCondition.landConditions = {
@@ -36,7 +36,7 @@
       sc.waterConditionPhotoURL = '';
       sc.landConditionPhotoURL = '';
     }
-    
+
     sc.weatherConditions = WeatherConditionsService.query();
     sc.waterColors = WaterColorsService.query();
     sc.waterFlows = WaterFlowService.query();
@@ -112,7 +112,7 @@
             sc.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               waterPhotoErrorCallback(response.message);
             };
-            
+
             sc.waterConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-water-condition';
             };
@@ -131,7 +131,7 @@
             sc.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               landPhotoErrorCallback(response.message);
             };
-            
+
             sc.landConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-land-condition';
             };
@@ -145,9 +145,11 @@
           uploadLandConditionPhoto(siteConditionId, function() {
             goToView(siteConditionId);
           }, function(errorMessage) {
+            delete sc.protocolSiteCondition._id;
             sc.error = errorMessage;
           });
         }, function(errorMessage) {
+          delete sc.protocolSiteCondition._id;
           sc.error = errorMessage;
         });
 

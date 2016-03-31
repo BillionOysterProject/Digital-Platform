@@ -8,11 +8,12 @@ var path = require('path'),
   MobileOrganism = mongoose.model('MobileOrganism'),
   MetaOrganismCategory = mongoose.model('MetaOrganismCategory'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
   multer = require('multer'),
-  config = require(path.resolve('./config/config')); 
+  config = require(path.resolve('./config/config'));
 
 /**
  * Create an Organism
@@ -140,27 +141,24 @@ exports.uploadImage = function(req, res) {
   upload.fileFilter = organismImageUploadFileFilter;
 
   if (mobileOrganism) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading image'
-        });
-      } else {
-        mobileOrganism.image.path = config.uploads.organismImageUpload.dest + req.file.filename;
-        mobileOrganism.image.originalname = req.file.originalname;
-        mobileOrganism.image.mimetype = req.file.mimetype;
-        mobileOrganism.image.filename = req.file.filename;
+    var uploadRemote = new uploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.organismImageUpload,
+    function (fileInfo) {
+      mobileOrganism.image = fileInfo;
 
-        mobileOrganism.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(mobileOrganism);
-          }
-        });
-      }
+      mobileOrganism.save(function (saveError) {
+        if (saveError) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(saveError)
+          });
+        } else {
+          res.json(mobileOrganism);
+        }
+      });
+    }, function (errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
     });
   } else {
     res.status(400).send({

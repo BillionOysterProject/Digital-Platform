@@ -8,6 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -232,100 +233,39 @@ exports.delete = function (req, res) {
 exports.uploadWaterConditionPicture = function (req, res) {
   var siteCondition = req.siteCondition;
   var upload = multer(config.uploads.waterConditionUpload).single('newWaterConditionPicture');
-
-  /*
-  * Set up the s3 client - be sure to add the access and secret key first!
-  *
-  */
-  var s3 = require('s3');
-  var client = s3.createClient({
-    maxAsyncS3: 20,     // this is the default
-    s3RetryCount: 3,    // this is the default
-    s3RetryDelay: 1000, // this is the default
-    multipartUploadThreshold: 20971520, // this is the default (20 MB)
-    multipartUploadSize: 15728640, // this is the default (15 MB)
-    s3Options: {
-      accessKeyId: 'ADD YOUR KEY',
-      secretAccessKey: 'ADD YOUR KEY',
-      region: 'us-west-1',
-      // any other options are passed to new AWS.S3()
-      // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
-    },
-  });
-
   var waterConditionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
 
   // Filtering to upload only images
   upload.fileFilter = waterConditionUploadFileFilter;
 
   if (siteCondition) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading water condition picture'
-        });
-      } else {
-        console.log('file', req.file);
-        siteCondition.waterConditions.waterConditionPhoto.path = config.uploads.waterConditionUpload.dest + req.file.filename;
-        siteCondition.waterConditions.waterConditionPhoto.originalname = req.file.originalname;
-        siteCondition.waterConditions.waterConditionPhoto.mimetype = req.file.mimetype;
-        siteCondition.waterConditions.waterConditionPhoto.filename = req.file.filename;
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
+    function(fileInfo) {
+      siteCondition.waterConditions.waterConditionPhoto = fileInfo;
 
-        siteCondition.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(siteCondition);
-          }
-        });
-      }
-
-      var imgPathExt = path.extname(req.file.originalname);
-
-      /*
-      * This is where I am trying the S3 Upload
-      *
-      *
-      */
-      var params = {
-        localFile: siteCondition.waterConditions.waterConditionPhoto.path,
-
-        s3Params: {
-          Bucket: 'digital-platform-dev-files',
-          Key: 'modules/protocol-site-conditions/client/img/water-condition/uploads/'+siteCondition.waterConditions.waterConditionPhoto.filename+'.png',
-          // other options supported by putObject, except Body and ContentLength.
-          // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-        },
-      };
-
-      console.log('localFile=', siteCondition.waterConditions.waterConditionPhoto.path);
-      console.log('Key=', siteCondition.waterConditions.waterConditionPhoto.filename);
-
-      //console.log('Key=', siteCondition.waterConditions.waterConditionPhoto.path + imgPathExt);
-
-      //do the upload
-      var uploader = client.uploadFile(params);
-
-      //listen for stage changes on the call
-      uploader.on('error', function(err) {
-        console.error('unable to upload:', err.stack);
+      siteCondition.save(function (saveError) {
+        if (saveError) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(saveError)
+          });
+        } else {
+          res.json(siteCondition);
+        }
       });
-      uploader.on('progress', function() {
-        console.log('progress', uploader.progressMd5Amount,
-                  uploader.progressAmount, uploader.progressTotal);
+    }, function (errorMessage) {
+      // delete siteCondition
+      siteCondition.remove(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        }
       });
-      uploader.on('fileOpened', function() {
-        console.log('File Opened');
-      });
-      uploader.on('fileClosed', function() {
-        console.log('File Closed');
-      });
-      uploader.on('end', function() {
-        console.log('done uploading');
-      });
-
     });
   } else {
     res.status(400).send({
@@ -343,28 +283,24 @@ exports.uploadLandConditionPicture = function (req, res) {
   upload.fileFilter = landConditionUploadFileFilter;
 
   if (siteCondition) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading land condition picture'
-        });
-      } else {
-        console.log('file', req.file);
-        siteCondition.landConditions.landConditionPhoto.path = config.uploads.landConditionUpload.dest + req.file.filename;
-        siteCondition.landConditions.landConditionPhoto.originalname = req.file.originalname;
-        siteCondition.landConditions.landConditionPhoto.mimetype = req.file.mimetype;
-        siteCondition.landConditions.landConditionPhoto.filename = req.file.filename;
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
+    function(fileInfo) {
+      siteCondition.landConditions.landConditionPhoto = fileInfo;
 
-        siteCondition.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(siteCondition);
-          }
-        });
-      }
+      siteCondition.save(function (saveError) {
+        if (saveError) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(saveError)
+          });
+        } else {
+          res.json(siteCondition);
+        }
+      });
+    }, function(errorMessage) {
+      res.status(400).send({
+        message: errorMessage
+      });
     });
   } else {
     res.status(400).send({

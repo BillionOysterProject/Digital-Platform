@@ -48,13 +48,13 @@
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
-                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" ng-class="{red: om.form.oysterMeasurementForm.$submitted && substrate.totalNumberOfLiveOystersOnShell === 0}">
+                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid && substrate.totalNumberOfLiveOystersOnShell === 0}">
                     <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
                     <td>
                         <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
-                            Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>, 
-                            Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>, 
-                            Average size <b>{{substrate.averageSizeOfLiveOysters | number:2}}</b>, 
+                            Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>,
+                            Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>,
+                            Average size <b>{{substrate.averageSizeOfLiveOysters | number:2}}</b>,
                             Total Alive <b>{{substrate.totalNumberOfLiveOystersOnShell | number}}</b>
                         </p>
                     </td>
@@ -65,10 +65,10 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <p class="lead red" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters || om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">Great work! Of the total population, the 
-                minimum shell size is <b>{{om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>, 
-                maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>, 
-                average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and 
+            <p class="lead red" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters || om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">Great work! Of the total population, the
+                minimum shell size is <b>{{om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
+                maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
+                average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
                 total oysters alive is <b>{{om.protocolOysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
             <p ng-show="om.lastExpedition">Compared to your last expedition, your oyster population has experienced a mortality rate of <b>[]%</b> and a growth rate of <b>[]%</b>.</p><!--TODO: Wire up mortality rate/growth rate -->
         </section>
