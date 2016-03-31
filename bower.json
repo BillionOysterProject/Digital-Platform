@@ -26,7 +26,8 @@
     "angular-isotope": "^0.1.14",
     "angular-select2": "^1.4.3",
     "angular-file-dnd": "^1.0.4",
-    "angular-drag-and-drop-lists": "^1.4.0"
+    "angular-drag-and-drop-lists": "^1.4.0",
+    "spin.js": "^2.3.2"
   },
   "resolutions": {
     "angular": "~1.3",
