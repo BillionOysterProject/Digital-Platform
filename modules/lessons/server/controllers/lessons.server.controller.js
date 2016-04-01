@@ -160,7 +160,62 @@ exports.delete = function(req, res) {
  * List of lessons
  */
 exports.list = function(req, res) {
-  Lesson.find().sort('-created').populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon').exec(function(err, lessons) {
+  var query;
+  var and = [];
+
+  if (req.query.subjectArea) {
+    and.push({ 'lessonOverview.subjectAreas' : req.query.subjectArea });
+  }
+
+  if (req.query.setting) {
+    and.push({ 'lessonOverview.setting' : req.query.setting });
+  }
+
+  if (req.query.unit) {
+    and.push({ 'unit': req.query.unit });
+  }
+
+  var searchRe;
+  var or = [];
+  if (req.query.searchString) {
+    searchRe = new RegExp(req.query.searchString, 'i');
+    or.push({ 'title': searchRe });
+    or.push({ 'lessonOverview.lessonSummary': searchRe });
+    or.push({ 'lessonObjectives': searchRe });
+    or.push({ 'materialsResources.vocabulary': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = Lesson.find(and[0]);
+  } else if (and.length > 0) {
+    query = Lesson.find({ $and: and });
+  } else {
+    query = Lesson.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'user': 1 });
+    }
+  } else {
+    query.sort('-create');
+  }
+
+  if (req.query.limit) {
+    if (req.query.page) {
+      var limit = Number(req.query.limit);
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    }
+  } else {
+    var limit2 = Number(req.query.limit);
+    query.limit(limit2);
+  }
+
+  query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
+  .exec(function(err, lessons) {
     if (err) {
       console.log(err);
       return res.status(400).send({
