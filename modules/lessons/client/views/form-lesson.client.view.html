@@ -285,16 +285,58 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="nysciencescope" in-title="New York City Science Scope & Sequence" ng-model="vm.lesson.standards.nycScienceScopeSequence" label-class="control-label" options="{{vm.nycScienceScope}}"></select-optgroup>
+                <select-optgroup outer-column="col-md-12" name="nycsssUnits"
+                in-title="NYC Science Scope & Sequence - Units"
+                ng-model="vm.lesson.standards.nycsssUnits"
+                label-class="control-label" options="{{vm.nycsssUnits}}"></select-optgroup>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="ngssstandards" in-title="NGSS Standards" ng-model="vm.lesson.standards.ngssStandards" label-class="control-label" options="{{vm.ngssStandards}}"></select-optgroup>
+                <select-optgroup outer-column="col-md-12" name="nysssKeyIdeas"
+                in-title="NYS Science Standards - Key Ideas"
+                ng-model="vm.lesson.standards.nysssKeyIdeas" label-class="control-label"
+                options="{{vm.nysssKeyIdeas}}"></select-optgroup>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="commoncoreela" in-title="Common Core ELA" ng-model="vm.lesson.standards.commonCoreEla" label-class="control-label" options="{{vm.commonCoreEla}}"></select-optgroup>
+                <select-optgroup outer-column="col-md-12" name="nysssMajorUnderstandings"
+                in-title="NYS Science Standards - Major Understandings"
+                ng-model="vm.lesson.standards.nysssMajorUnderstandings" label-class="control-label"
+                options="{{vm.nysssMajorUnderstandings}}"></select-optgroup>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="commoncoremath" in-title="Common Core Math" ng-model="vm.lesson.standards.commonCoreMath" label-class="control-label" options="{{vm.commonCoreMath}}"></select-optgroup>
+                <select-optgroup outer-column="col-md-12" name="nysssMst"
+                in-title="NYS Science Standards - MST"
+                ng-model="vm.lesson.standards.nysssMst" label-class="control-label"
+                options="{{vm.nysssMst}}"></select-optgroup>
+              </div>
+              <div class="row">
+                <select-optgroup outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas"
+                in-title="NGSS - Disciplinary Core Ideas"
+                ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas" label-class="control-label"
+                options="{{vm.ngssDisciplinaryCoreIdeas}}"></select-optgroup>
+              </div>
+              <div class="row">
+                <select-optgroup outer-column="col-md-12" name="ngssScienceEngineeringPractices"
+                in-title="NGSS - Science and Engineering Practices"
+                ng-model="vm.lesson.standards.ngssScienceEngineeringPractices" label-class="control-label"
+                options="{{vm.ngssScienceEngineeringPractices}}"></select-optgroup>
+              </div>
+              <div class="row">
+                <select-optgroup outer-column="col-md-12" name="ngssCrossCuttingConcepts"
+                in-title="NGSS - Cross-Cutting Concepts"
+                ng-model="vm.lesson.standards.ngssCrossCuttingConcepts" label-class="control-label"
+                options="{{vm.ngssCrossCuttingConcepts}}"></select-optgroup>
+              </div>
+              <div class="row">
+                <select-optgroup outer-column="col-md-12" name="cclsMathematics"
+                in-title="CCLS - Mathematics"
+                ng-model="vm.lesson.standards.cclsMathematics" label-class="control-label"
+                options="{{vm.cclsMathematics}}"></select-optgroup>
+              </div>
+              <div class="row">
+                <select-optgroup outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
+                in-title="CCLS - ELA Science & Technical Subjects"
+                ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects" label-class="control-label"
+                options="{{vm.cclsElaScienceTechnicalSubjects}}"></select-optgroup>
               </div>
             </div>
           </div>

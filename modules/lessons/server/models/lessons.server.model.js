@@ -40,19 +40,39 @@ var instructionPlans = {
 };
 
 var standardsOptions = {
-  nycScienceScopeSequence: [{
+  cclsElaScienceTechnicalSubjects: [{
     type: String,
     required: false
   }],
-  ngssStandards: [{
+  cclsMathematics: [{
     type: String,
     required: false
   }],
-  commonCoreEla: [{
+  ngssCrossCuttingConcepts: [{
     type: String,
     required: false
   }],
-  commonCoreMath: [{
+  ngssDisciplinaryCoreIdeas: [{
+    type: String,
+    required: false
+  }],
+  ngssScienceEngineeringPractices: [{
+    type: String,
+    required: false
+  }],
+  nycsssUnits: [{
+    type: String,
+    required: false
+  }],
+  nysssKeyIdeas: [{
+    type: String,
+    required: false
+  }],
+  nysssMajorUnderstandings: [{
+    type: String,
+    required: false
+  }],
+  nysssMst: [{
     type: String,
     required: false
   }]
