@@ -10,6 +10,74 @@
   function ProtocolWaterQualityController($scope, $state, Authentication, $stateParams, ProtocolWaterQualityService) {
     var wq = this;
 
+    wq.waterTemperatureMethods = [
+      { name: 'Digital thermometer', value: 'digitalThermometer' },
+      { name: 'Analog thermometer', value: 'analogThermometer' },
+      { name: 'Sensor*', value: 'sensor' }
+    ];
+
+    wq.dissolvedOxygenMethods = [
+      { name: 'Colormetric ampules', value: 'colormetricvAmpules' },
+      { name: 'Sensor', value: 'sensor' },
+      { name: 'Winkler', value: 'winkler' }
+    ];
+
+    wq.salinityMethods = [
+      { name: 'Hydrometer', value: 'hydrometer' },
+      { name: 'Refractometer', value: 'refractometer' },
+      { name: 'Sensor', value: 'sensor' }
+    ];
+
+    wq.pHMethods = [
+      { name: 'Test strips', value: 'testStrips' },
+      { name: 'Sensor (read only)', value: 'sensorRO' },
+      { name: 'Sensor', value: 'sensor' }
+    ];
+
+    wq.turbidityMethods = [
+      { name: 'Turbidity tube', value: 'turbidityTube' }
+    ];
+
+    wq.ammoniaMethods = [
+      { name: 'Test strips', value: 'testStrips' },
+      { name: 'Photometer', value: 'photometer' }
+    ];
+
+    wq.nitratesMethods = [
+      { name: 'Test strips', value: 'testStrips' },
+      { name: 'Photometer', value: 'photometer' }
+    ];
+
+    wq.waterTemperatureUnits = [
+      { name: 'F', value: 'f' },
+      { name: 'C', value: 'c' }
+    ];
+
+    wq.dissolvedOxygenUnits = [
+      { name: 'mg/L (PPM)', value: 'mgl' },
+      { name: '% saturation', value: 'saturation' }
+    ];
+
+    wq.salinityUnits = [
+      { name: 'PPT', value: 'ppt' }
+    ];
+
+    wq.pHUnits = [
+      { name: 'pH (logscale)', value: 'pHlogscale' }
+    ];
+
+    wq.turbidityUnits = [
+      { name: 'NTU**', value: 'ntu' }
+    ];
+
+    wq.ammoniaUnits = [
+      { name: 'PPM', value: 'ppm' }
+    ];
+
+    wq.nitratesUnits = [
+      { name: 'PPM', value: 'ppm' }
+    ];
+
     wq.addSampleForm = function () {
       wq.protocolWaterQuality.samples.push({
         waterTemperature: {

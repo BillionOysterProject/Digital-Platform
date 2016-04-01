@@ -45,72 +45,84 @@ module.exports = {
   favicon: 'modules/core/client/img/brand/favicon.ico',
   uploads: {
     profileUpload: {
+      s3dest: 'uploads/users/img/profile/',
       dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
     },
     waterConditionUpload: {
+      s3dest: 'uploads/protocols/site-conditions/img/water-conditions/',
       dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
     },
     landConditionUpload: {
+      s3dest: 'uploads/protocols/site-conditions/img/land-conditions/',
       dest: './modules/protocol-site-conditions/client/img/land-condition/uploads/', // Protocol site condition upload destination path
       limits: {
         fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
       }
     },
     oysterCageConditionUpload: {
+      s3dest: 'uploads/protocols/oyster-measurements/img/oyster-cage-condition/',
       dest: './modules/protocol-oyster-measurements/client/img/oyster-cage/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     outerSubstrateUpload: {
+      s3dest: 'uploads/protocols/oyster-measurements/img/outer-substrates/',
       dest: './modules/protocol-oyster-measurements/client/img/outer-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     innerSubstrateUpload: {
+      s3dest: 'uploads/protocols/oyster-measurements/img/inner-substrates',
       dest: './modules/protocol-oyster-measurements/client/img/inner-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     organismImageUpload: {
+      s3dest: 'uploads/organisms/img/mobile-organisms/',
       dest: './modules/mobile-organisms/client/img/organisms/', // Meta organisms upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     mobileTrapSketchPhotoUpload: {
+      s3dest: 'uploads/protocols/mobile-traps/img/sketchPhotos/',
       dest: './modules/protocol-mobile-traps/client/img/sketchPhoto/uploads/', // Protocol mobile trap upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     lessonFeaturedImageUpload: {
+      s3dest: 'uploads/lessons/img/featured-images/',
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     lessonHandoutsUpload: {
+      s3dest: 'uploads/lessons/files/handouts/',
       dest: './modules/lessons/client/files/handouts/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     lessonTeacherResourcesUpload: {
+      s3dest: 'uploads/lessons/files/teacher-resources/',
       dest: './modules/lessons/client/files/teacher-resources/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024
       }
     },
     lessonStateTestQuestionsUpload: {
+      s3dest: 'uploads/lessons/img/state-test-questions/',
       dest: './modules/lessons/client/img/state-test-questions/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 1*1024*1024

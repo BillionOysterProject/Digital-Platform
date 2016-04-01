@@ -18,12 +18,12 @@
       ProtocolSiteConditionsService.get({
         siteConditionId: $stateParams.protocolSiteConditionId
       }, function(data) {
-        sc.protocolSiteCondition = data;  
-        sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ? 
+        sc.protocolSiteCondition = data;
+        sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
           sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-        sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ? 
+        sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
           sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-      }); 
+      });
     } else {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService();
       sc.protocolSiteCondition.landConditions = {
@@ -36,7 +36,7 @@
       sc.waterConditionPhotoURL = '';
       sc.landConditionPhotoURL = '';
     }
-    
+
     sc.weatherConditions = WeatherConditionsService.query();
     sc.waterColors = WaterColorsService.query();
     sc.waterFlows = WaterFlowService.query();
@@ -80,12 +80,23 @@
         return false;
       }
 
-      sc.protocolSiteCondition.waterConditions.waterConditionPhoto = {
-        path: sc.waterConditionPhotoURL
-      };
-      sc.protocolSiteCondition.landConditions.landConditionPhoto = {
-        path: sc.landConditionPhotoURL
-      };
+      if (!sc.waterConditionPhotoURL || sc.waterConditionPhotoURL === '') {
+        sc.error = 'Water Condition photo is required';
+        return false;
+      } else {
+        sc.protocolSiteCondition.waterConditions.waterConditionPhoto = {
+          path: sc.waterConditionPhotoURL
+        };
+      }
+
+      if (!sc.landConditionPhotoURL || sc.landConditionPhotoURL === '') {
+        sc.error = 'Land Condition photo is required';
+        return false;
+      } else {
+        sc.protocolSiteCondition.landConditions.landConditionPhoto = {
+          path: sc.landConditionPhotoURL
+        };
+      }
 
       // TODO: move create/update logic to service
       if (sc.protocolSiteCondition._id) {
@@ -112,7 +123,7 @@
             sc.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               waterPhotoErrorCallback(response.message);
             };
-            
+
             sc.waterConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-water-condition';
             };
@@ -131,7 +142,7 @@
             sc.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
               landPhotoErrorCallback(response.message);
             };
-            
+
             sc.landConditionUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-land-condition';
             };
@@ -145,10 +156,14 @@
           uploadLandConditionPhoto(siteConditionId, function() {
             goToView(siteConditionId);
           }, function(errorMessage) {
+            delete sc.protocolSiteCondition._id;
             sc.error = errorMessage;
+            return false;
           });
         }, function(errorMessage) {
+          delete sc.protocolSiteCondition._id;
           sc.error = errorMessage;
+          return false;
         });
 
       }

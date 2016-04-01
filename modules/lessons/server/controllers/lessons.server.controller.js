@@ -7,8 +7,10 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
+  request = require('request'),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config'));
@@ -18,7 +20,7 @@ var path = require('path'),
  */
 exports.create = function(req, res) {
   var lesson = new Lesson(req.body);
-  
+
   lesson.user = req.user;
   lesson.materialsResources.handoutsFileInput = [];
   lesson.materialsResources.teacherResourcesFiles = [];
@@ -104,28 +106,116 @@ exports.update = function(req, res) {
   }
 };
 
-/** 
+/**
  * Delete a lesson
  */
-exports.delete = function(req, res) {
-  var lesson = req.lesson;
-
-  lesson.remove(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(lesson);
+var deleteInternal = function(lesson, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (lesson) {
+    if (lesson.featuredImage && lesson.featuredImage.path) {
+      filesToDelete.push(lesson.featuredImage.path);
     }
+    if (lesson.materialsResources) {
+      if (lesson.materialsResources.teacherResourcesFiles && lesson.materialsResources.teacherResourcesFiles.path) {
+        filesToDelete.push(lesson.materialsResources.teacherResourcesFiles.path);
+      }
+      if (lesson.materialsResources.handoutsFileInput && lesson.materialsResources.handoutsFileInput.path) {
+        filesToDelete.push(lesson.materialsResources.handoutsFileInput.path);
+      }
+      if (lesson.materialsResources.stateTestQuestions && lesson.materialsResources.stateTestQuestions.path) {
+        filesToDelete.push(lesson.materialsResources.stateTestQuestions.path);
+      }
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    lesson.remove(function(err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(lesson);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
   });
 };
 
-/** 
+exports.delete = function(req, res) {
+  var lesson = req.lesson;
+
+  deleteInternal(lesson,
+  function(lesson) {
+    res.json(lesson);
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
+/**
  * List of lessons
  */
 exports.list = function(req, res) {
-  Lesson.find().sort('-created').populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon').exec(function(err, lessons) {
+  var query;
+  var and = [];
+
+  if (req.query.subjectArea) {
+    and.push({ 'lessonOverview.subjectAreas' : req.query.subjectArea });
+  }
+
+  if (req.query.setting) {
+    and.push({ 'lessonOverview.setting' : req.query.setting });
+  }
+
+  if (req.query.unit) {
+    and.push({ 'unit': req.query.unit });
+  }
+
+  var searchRe;
+  var or = [];
+  if (req.query.searchString) {
+    searchRe = new RegExp(req.query.searchString, 'i');
+    or.push({ 'title': searchRe });
+    or.push({ 'lessonOverview.lessonSummary': searchRe });
+    or.push({ 'lessonObjectives': searchRe });
+    or.push({ 'materialsResources.vocabulary': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = Lesson.find(and[0]);
+  } else if (and.length > 0) {
+    query = Lesson.find({ $and: and });
+  } else {
+    query = Lesson.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'user': 1 });
+    }
+  } else {
+    query.sort('-create');
+  }
+
+  if (req.query.limit) {
+    if (req.query.page) {
+      var limit = Number(req.query.limit);
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    }
+  } else {
+    var limit2 = Number(req.query.limit);
+    query.limit(limit2);
+  }
+
+  query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
+  .exec(function(err, lessons) {
     if (err) {
       console.log(err);
       return res.status(400).send({
@@ -137,7 +227,33 @@ exports.list = function(req, res) {
   });
 };
 
-/** 
+var uploadFileSuccess = function(lesson, res) {
+  lesson.save(function (saveError) {
+    if (saveError) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(saveError)
+      });
+    } else {
+      res.json(lesson);
+    }
+  });
+};
+
+var uploadFileError = function(lesson, errorMessage, res) {
+  console.log('errorMessage', errorMessage);
+  deleteInternal(lesson,
+  function(lesson) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
+/**
  * Upload files to lessons
  */
 exports.uploadFeaturedImage = function (req, res) {
@@ -149,27 +265,14 @@ exports.uploadFeaturedImage = function (req, res) {
   upload.fileFilter = featuredImageUploadFileFilter;
 
   if (lesson) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading featured image picture'
-        });
-      } else {
-        lesson.featuredImage.path = config.uploads.lessonFeaturedImageUpload.dest + req.file.filename;
-        lesson.featuredImage.originalname = req.file.originalname;
-        lesson.featuredImage.mimetype = req.file.mimetype;
-        lesson.featuredImage.filename = req.file.filename;
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonFeaturedImageUpload,
+    function(fileInfo) {
+      lesson.featuredImage = fileInfo;
 
-        lesson.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
+      uploadFileSuccess(lesson, res);
+    }, function (errorMessage) {
+      uploadFileError(lesson, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -180,38 +283,20 @@ exports.uploadFeaturedImage = function (req, res) {
 
 exports.uploadHandouts = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonHandoutsUpload).array('newHandouts', 20);
+  var upload = multer(config.uploads.lessonHandoutsUpload).single('newHandouts', 20);
 
   var handoutUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
   upload.fileFilter = handoutUploadFileFilter;
 
   if (lesson) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading handouts'
-        });
-      } else {
-        for (var i = 0; i < req.files.length; i++) {
-          var file = req.files[i];
-          lesson.materialsResources.handoutsFileInput.push({
-            path: config.uploads.lessonHandoutsUpload.dest + file.filename,
-            originalname: file.originalname,
-            mimetype: file.mimetype,
-            filename: file.filename
-          });
-        }
-
-        lesson.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonHandoutsUpload,
+    function(fileInfo) {
+      lesson.materialsResources.handoutsFileInput.push(fileInfo);
+      uploadFileSuccess(lesson, res);
+    }, function (errorMessage) {
+      // delete lesson
+      uploadFileError(lesson, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -222,38 +307,19 @@ exports.uploadHandouts = function (req, res) {
 
 exports.uploadTeacherResources = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonTeacherResourcesUpload).array('newTeacherResourceFile', 20);
+  var upload = multer(config.uploads.lessonTeacherResourcesUpload).single('newTeacherResourceFile', 20);
 
   var resourceUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
   upload.fileFilter = resourceUploadFileFilter;
 
   if (lesson) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading teacher resources'
-        });
-      } else {
-        for (var i = 0; i < req.files.length; i++) {
-          var file = req.files[i];
-          lesson.materialsResources.teacherResourcesFiles.push({
-            path: config.uploads.lessonTeacherResourcesUpload.dest + file.filename,
-            originalname: file.originalname,
-            mimetype: file.mimetype,
-            filename: file.filename
-          });
-        }
-
-        lesson.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonTeacherResourcesUpload,
+    function(fileInfo) {
+      lesson.materialsResources.teacherResourcesFiles.push(fileInfo);
+      uploadFileSuccess(lesson, res);
+    }, function(errorMessage) {
+      uploadFileError(lesson, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -264,38 +330,19 @@ exports.uploadTeacherResources = function (req, res) {
 
 exports.uploadStateTestQuestions = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonStateTestQuestionsUpload).array('newStateTestQuestions', 20);
-
+  var upload = multer(config.uploads.lessonStateTestQuestionsUpload).single('newStateTestQuestions', 20);
   var questionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
   upload.fileFilter = questionUploadFileFilter;
 
   if (lesson) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading state test questions'
-        });
-      } else {
-        for (var i = 0; i < req.files.length; i++) {
-          var file = req.files[i];
-          lesson.materialsResources.stateTestQuestions.push({
-            path: config.uploads.lessonStateTestQuestionsUpload.dest + file.filename,
-            originalname: file.originalname,
-            mimetype: file.mimetype,
-            filename: file.filename
-          });
-        }
-
-        lesson.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(lesson);
-          }
-        });
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonStateTestQuestionsUpload,
+    function(fileInfo) {
+      lesson.materialsResources.stateTestQuestions.push(fileInfo);
+      uploadFileSuccess(lesson, res);
+    }, function(errorMessage) {
+      uploadFileError(lesson, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -305,10 +352,10 @@ exports.uploadStateTestQuestions = function (req, res) {
 };
 
 exports.downloadFile = function(req, res){
-  res.setHeader('Content-disposition', 'attachment; filename=' + req.query.originalname);
+  res.setHeader('Content-disposition', 'attachment;');
   res.setHeader('content-type', req.query.mimetype);
-  //res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
-  res.download(req.query.path, req.query.originalname);
+
+  request(req.query.path).pipe(res);
 };
 
 /**

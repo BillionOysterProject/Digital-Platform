@@ -8,6 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -27,7 +28,7 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
  * Create a protocol mobile trap
  */
 exports.create = function (req, res) {
-  validateMobileTrap(req.body, 
+  validateMobileTrap(req.body,
   function(mobileTrapJSON) {
     var mobileTrap = new ProtocolMobileTrap(mobileTrapJSON);
 
@@ -61,7 +62,7 @@ exports.read = function (req, res) {
  * Update a protocol mobile trap
  */
 exports.update = function (req, res) {
-  validateMobileTrap(req.body, 
+  validateMobileTrap(req.body,
   function(mobileTrapJSON) {
     var mobileTrap = req.mobileTrap;
 
@@ -89,20 +90,68 @@ exports.update = function (req, res) {
   });
 };
 
+var deleteInternal = function(mobileTrap, successCallback, errorCallback) {
+  var filesToDelete = [];
+  for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+    if (mobileTrap && mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms[i] &&
+      mobileTrap.mobileOrganisms[i].sketchPhoto && mobileTrap.mobileOrganisms[i].sketchPhoto.path) {
+      filesToDelete.push(mobileTrap.mobileOrganisms[i].sketchPhoto.path);
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    mobileTrap.remove(function(err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(mobileTrap);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 /**
- * Delete a protocol mobile trap 
+ * Delete a protocol mobile trap
  */
 exports.delete = function (req, res) {
   var mobileTrap = req.mobileTrap;
 
-  mobileTrap.remove(function (err) {
-    if (err) {
+  deleteInternal(mobileTrap,
+  function(mobileTrap) {
+    res.json(mobileTrap);
+  }, function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+var uploadFileSuccess = function(mobileTrap, res) {
+  mobileTrap.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(mobileTrap);
     }
+  });
+};
+
+var uploadFileError = function(mobileTrap, errorMessage, res) {
+  deleteInternal(mobileTrap,
+  function(mobileTrap) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -125,30 +174,16 @@ exports.uploadSketchPhoto = function (req, res) {
         index = i;
       }
     }
-  
+
     if (index > -1 && mobileTrap.mobileOrganisms[index]) {
-      upload(req, res, function (uploadError) {
-        if (uploadError) {
-          return res.status(400).send({
-            message: 'Error occurred while uploading organism sketch or photo'
-          });
-        } else {
-          mobileTrap.mobileOrganisms[index].sketchPhoto.path = 
-            config.uploads.mobileTrapSketchPhotoUpload.dest + req.file.filename;
-          mobileTrap.mobileOrganisms[index].sketchPhoto.originalname = req.file.originalname;
-          mobileTrap.mobileOrganisms[index].sketchPhoto.mimetype = req.file.mimetype;
-          mobileTrap.mobileOrganisms[index].sketchPhoto.filename = req.file.filename;
-          
-          mobileTrap.save(function (saveError) {
-            if (saveError) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(saveError)
-              });
-            } else {
-              res.json(mobileTrap);
-            }
-          });
-        }
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.mobileTrapSketchPhotoUpload,
+      function (fileInfo) {
+        mobileTrap.mobileOrganisms[index].sketchPhoto = fileInfo;
+
+        uploadFileSuccess(mobileTrap, res);
+      }, function (errorMessage) {
+        uploadFileError(mobileTrap, errorMessage, res);
       });
     } else {
       return res.status(400).send({

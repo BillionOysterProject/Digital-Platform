@@ -8,6 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -23,7 +24,7 @@ var emptyString = function(string) {
 
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
-    oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate = 
+    oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
       moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate, 'MM-DD-YYYY').toDate();
   }
 
@@ -40,7 +41,7 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
  * Create a protocol oyster oysterMeasurement
  */
 exports.create = function (req, res) {
-  validateOysterMeasurement(req.body, 
+  validateOysterMeasurement(req.body,
   function(oysterMeasurementJSON) {
     var oysterMeasurement = new ProtocolOysterMeasurement(oysterMeasurementJSON);
 
@@ -61,7 +62,7 @@ exports.create = function (req, res) {
 };
 
 /**
- * Show the current protocol oyster measurement 
+ * Show the current protocol oyster measurement
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
@@ -74,7 +75,7 @@ exports.read = function (req, res) {
  * Update a protocol oyster measurement
  */
 exports.update = function (req, res) {
-  validateOysterMeasurement(req.body, 
+  validateOysterMeasurement(req.body,
   function(oysterMeasurementJSON) {
     var oysterMeasurement = req.oysterMeasurement;
 
@@ -103,19 +104,79 @@ exports.update = function (req, res) {
 };
 
 /**
- * Delete a protocol oyster measurement 
+ * Delete a protocol oyster measurement
  */
+var deleteInternal = function(oysterMeasurement, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (oysterMeasurement) {
+    if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+    oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
+      filesToDelete.push(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
+    }
+    for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
+      if (oysterMeasurement.measuringOysterGrowth && oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path) {
+          filesToDelete.push(oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path);
+        }
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path) {
+          filesToDelete.push(oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path);
+        }
+      }
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    oysterMeasurement.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(oysterMeasurement);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
 
-  oysterMeasurement.remove(function (err) {
-    if (err) {
+  deleteInternal(oysterMeasurement,
+  function(oysterMeasurement) {
+    res.json(oysterMeasurement);
+  }, function (err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+var uploadFileSuccess = function(oysterMeasurement, res) {
+  oysterMeasurement.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(oysterMeasurement);
     }
+  });
+};
+
+var uploadFileError = function(oysterMeasurement, errorMessage, res) {
+  deleteInternal(oysterMeasurement,
+  function(oysterMeasurement) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -137,19 +198,14 @@ exports.uploadOysterCageConditionPicture = function (req, res) {
           message: 'Error occurred while uploading oyster cage condition picture'
         });
       } else {
-        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = config.uploads.oysterCageConditionUpload.dest + req.file.filename;
-        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.originalname = req.file.originalname;
-        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.mimetype = req.file.mimetype;
-        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.filename = req.file.filename;
-        
-        oysterMeasurement.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(oysterMeasurement);
-          }
+        var uploadRemote = new UploadRemote();
+        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.oysterCageConditionUpload,
+        function (fileInfo) {
+          oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = fileInfo;
+
+          uploadFileSuccess(oysterMeasurement, res);
+        }, function (errorMessage) {
+          uploadFileError(oysterMeasurement, errorMessage, res);
         });
       }
     });
@@ -171,28 +227,14 @@ exports.uploadOuterSubstratePicture = function (req, res) {
 
   if (oysterMeasurement) {
     if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
-      upload(req, res, function (uploadError) {
-        if (uploadError) {
-          return res.status(400).send({
-            message: 'Error occurred while uploading outer substrate picture'
-          });
-        } else {
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.path = 
-            config.uploads.outerSubstrateUpload.dest + req.file.filename;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.originalname = req.file.originalname;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.mimetype = req.file.mimetype;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto.filename = req.file.filename;
-          
-          oysterMeasurement.save(function (saveError) {
-            if (saveError) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(saveError)
-              });
-            } else {
-              res.json(oysterMeasurement);
-            }
-          });
-        }
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.outerSubstrateUpload,
+      function (fileInfo) {
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto = fileInfo;
+
+        uploadFileSuccess(oysterMeasurement, res);
+      }, function(errorMessage) {
+        uploadFileError(oysterMeasurement, errorMessage, res);
       });
     } else {
       return res.status(400).send({
@@ -215,36 +257,22 @@ exports.uploadInnerSubstratePicture = function (req, res) {
   // Filtering to upload only images
   upload.fileFilter = innerSubstrateUploadFileFilter;
 
-  if (oysterMeasurement && substrateIndex) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading inner substrate picture'
-        });
-      } else {
-        if (oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.path = 
-            config.uploads.innerSubstrateUpload.dest + req.file.filename;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.originalname = req.file.originalname;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.mimetype = req.file.mimetype;
-          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto.filename = req.file.filename;
-          
-          oysterMeasurement.save(function (saveError) {
-            if (saveError) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(saveError)
-              });
-            } else {
-              res.json(oysterMeasurement);
-            }
-          });
-        } else {
-          return res.status(400).send({
-            message: 'Substrate for oyster measurement does not exist'
-          });
-        }
-      }
-    });
+  if (oysterMeasurement) {
+    if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.innerSubstrateUpload,
+      function(fileInfo) {
+        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto = fileInfo;
+
+        uploadFileSuccess(oysterMeasurement, res);
+      }, function(errorMessage) {
+        uploadFileError(oysterMeasurement, errorMessage, res);
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Substrate for oyster measurement does not exist'
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Oyster measurement does not exist'
