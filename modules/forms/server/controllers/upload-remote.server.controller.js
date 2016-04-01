@@ -39,16 +39,16 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
         errorCallback('Error occurred while uploading local file');
       } else {
         if (req.file) {
-          var localFileName = uploadConfig.dest + req.file.filename;
-          var pathExt = path.extname(req.file.originalname);
-
-          var s3Filename = vm.remoteUrl + uploadConfig.s3dest + req.file.filename + pathExt;
+          var file = req.file;
+          var localFileName = uploadConfig.dest + file.filename;
+          var pathExt = path.extname(file.originalname);
+          var s3Filename = vm.remoteUrl + uploadConfig.s3dest + file.filename + pathExt;
 
           var params = {
             localFile: localFileName,
             s3Params: {
               Bucket: config.s3.bucket,
-              Key: uploadConfig.s3dest + req.file.filename + pathExt
+              Key: uploadConfig.s3dest + file.filename + pathExt
               // other options supported by putObject, except Body and ContentLength.
               // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
             }
@@ -64,7 +64,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
           })
           .on('progress', function() {
             console.log('progress', s3Uploader.progressMd5Amount,
-              s3Uploader.progressAmount, s3Uploader.progressTotal);
+            s3Uploader.progressAmount, s3Uploader.progressTotal);
           })
           .on('fileOpened', function() {
             console.log('File Opened');
@@ -76,9 +76,9 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
             console.log('File Closed');
             var fileInfo = {
               path: s3Filename,
-              originalname: req.file.originalname,
-              mimetype: req.file.mimetype,
-              filename: req.file.filename
+              originalname: file.originalname,
+              mimetype: file.mimetype,
+              filename: file.filename
             };
 
             fs.exists(localFileName, function(exists) {
@@ -103,31 +103,19 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
 UploadRemote.prototype.deleteRemote = function(filePaths, successCallback, errorCallback) {
   var vm = this;
   if (filePaths) {
-    var deleteKeys = [];
-    for (var i = 0; i < filePaths.length; i++) {
-      var filePath = filePaths[i];
-      var key = _.replace(filePath, vm.remoteUrl, '');
-      deleteKeys.push({ Key: key });
-    }
-    console.log('deleteKeys', deleteKeys);
-
-    var params = {
-      s3Params: {
-        Bucket: config.s3.bucket,
-        Delete: {
-          Objects: deleteKeys,
-        }
-      }
-    };
-
     var s3Params = {
       Bucket: config.s3.bucket,
       Delete: {
-        Objects: deleteKeys,
+        Objects: [],
       }
     };
 
-    console.log('params', params);
+    for (var i = 0; i < filePaths.length; i++) {
+      var filePath = filePaths[i];
+      var key = _.replace(filePath, vm.remoteUrl, '');
+      s3Params.Delete.Objects.push({ Key: key });
+    }
+
     console.log('params', s3Params);
 
     // Delete files in s3

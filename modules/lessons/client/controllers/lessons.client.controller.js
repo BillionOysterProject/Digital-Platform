@@ -5,10 +5,11 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication',
-  'UnitsService', 'TeamsService', 'FileUploader'];
+  LessonsController.$inject = ['$scope', '$state', '$http',
+  'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService', 'FileUploader'];
 
-  function LessonsController($scope, $state, $http, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
+  function LessonsController($scope, $state, $http,
+    lesson, Authentication, UnitsService, TeamsService, FileUploader) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -266,26 +267,30 @@
           }
         }
 
+        var unsubmitLesson = function(errorMessage) {
+          delete vm.lesson._id;
+          vm.lesson.unit = {
+            _id: vm.lesson.unit
+          };
+          vm.error = errorMessage;
+        };
+
         uploadFeaturedImage(lessonId, function() {
           uploadHandoutFiles(lessonId, function() {
             uploadResourceFiles(lessonId, function() {
               uploadStateTestQuestionFiles(lessonId, function () {
                 goToView(lessonId);
               }, function(errorMessage) {
-                delete vm.lesson._id;
-                vm.error = errorMessage;
+                unsubmitLesson(errorMessage);
               });
             }, function(errorMessage) {
-              delete vm.lesson._id;
-              vm.error = errorMessage;
+              unsubmitLesson(errorMessage);
             });
           }, function(errorMessage) {
-            delete vm.lesson._id;
-            vm.error = errorMessage;
+            unsubmitLesson(errorMessage);
           });
         }, function(errorMessage) {
-          delete vm.lesson._id;
-          vm.error = errorMessage;
+          unsubmitLesson(errorMessage);
         });
       }
 
@@ -334,28 +339,6 @@
 
     vm.deleteTeacherResourceLink = function(index) {
       vm.resourceLinks.splice(index, 1);
-    };
-
-    $scope.downloadExample = function(file) {
-      var url = 'api/lessons/download-file';
-      $http.get(url, {
-        params: {
-          originalname: file.originalname,
-          mimetype: file.mimetype,
-          path: file.path
-        }
-      }).
-      success(function(data, status, headers, config) {
-        var anchor = angular.element('<a/>');
-        anchor.attr({
-          href: encodeURI(data),
-          target: '_blank',
-          download: file.originalname
-        })[0].click();
-      }).
-      error(function(data, status, headers, config) {
-        // if there's an error you should see it here
-      });
     };
 
     vm.openDeleteLesson = function() {

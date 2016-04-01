@@ -10,6 +10,7 @@ var path = require('path'),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
+  request = require('request'),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config'));
@@ -227,7 +228,7 @@ exports.uploadFeaturedImage = function (req, res) {
 
 exports.uploadHandouts = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonHandoutsUpload).array('newHandouts', 20);
+  var upload = multer(config.uploads.lessonHandoutsUpload).single('newHandouts', 20);
 
   var handoutUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
   upload.fileFilter = handoutUploadFileFilter;
@@ -251,7 +252,7 @@ exports.uploadHandouts = function (req, res) {
 
 exports.uploadTeacherResources = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonTeacherResourcesUpload).array('newTeacherResourceFile', 20);
+  var upload = multer(config.uploads.lessonTeacherResourcesUpload).single('newTeacherResourceFile', 20);
 
   var resourceUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
   upload.fileFilter = resourceUploadFileFilter;
@@ -274,7 +275,7 @@ exports.uploadTeacherResources = function (req, res) {
 
 exports.uploadStateTestQuestions = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonStateTestQuestionsUpload).array('newStateTestQuestions', 20);
+  var upload = multer(config.uploads.lessonStateTestQuestionsUpload).single('newStateTestQuestions', 20);
   var questionUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
 
   upload.fileFilter = questionUploadFileFilter;
@@ -296,10 +297,10 @@ exports.uploadStateTestQuestions = function (req, res) {
 };
 
 exports.downloadFile = function(req, res){
-  res.setHeader('Content-disposition', 'attachment; filename=' + req.query.originalname);
+  res.setHeader('Content-disposition', 'attachment;');
   res.setHeader('content-type', req.query.mimetype);
-  //res.sendFile(req.query.path, { root: path.join(__dirname, '../../../../') });
-  res.download(req.query.path, req.query.originalname);
+
+  request(req.query.path).pipe(res);
 };
 
 /**
