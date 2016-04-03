@@ -9,9 +9,9 @@
                 <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
                     <!--<img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />-->
                   <div>
-                    <input type="text" ng-model="vm.asyncSelected" placeholder="Type in an address or a place"
-                           uib-typeahead="address for address in vm.getLocation($viewValue)"
-                           typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control">
+                    <input type="text" ng-model="vm.placeSelected" typeahead-on-select="vm.selectPlace($item, $model, $label, $event)" placeholder="Type in an address or a place"
+                           uib-typeahead="address as address.place for address in vm.getLocation($viewValue) | filter:$viewValue"
+                           class="form-control">
                   </div>
 
                   <div id="{{::mapUniqueId}}" ></div>

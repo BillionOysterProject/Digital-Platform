@@ -10,6 +10,7 @@
   function MapSelectController($scope, L,$timeout, $http,GoogleGeoCodeService) {
     var vm = this;
     var mapSelectMap;
+    vm.placeSelected = null;
 
     var settings = {
       defaults:{
@@ -24,6 +25,7 @@
         zoom:10,
         maxZoom: 18
       },
+      searchZoom:14,
       initialBounds: { xmin: -119.37, ymin: 23.21, xmax: -69.36, ymax: 51.98 }
 
     };
@@ -44,7 +46,13 @@
         mapSelectMap.scrollWheelZoom.disable();
 
 
-        mapSelectMap.on('click', updateCoords);
+        mapSelectMap.on('click', function(e){
+          //since this event is outside angular world, must call apply so the ui looks for changes
+          $scope.$apply(function () {
+            updateCoords(e.latlng);
+          });
+          
+        });
         
       });
 
@@ -70,19 +78,30 @@
         sensor:false
       }).$promise.then(function(data) {
         return data.results.map(function (item) {
-          return item.formatted_address;
+          return {
+            place:item.formatted_address,
+            location:item.geometry.location
+          };
         });
       });
     };
+    
+    vm.selectPlace = function ($item, $model, $label, $event) {
+      if ($event.which === 13 || $event.which === 1) {
+        zoomToLocation(L.latLng(vm.placeSelected.location.lat, vm.placeSelected.location.lng));
+      }
+
+    };
 
 
-    function updateCoords(e) {
-      //since this event is outside angular world, must call apply so the ui looks for changes
-      $scope.$apply(function () {
-        vm.latitude = e.latlng.lat;
-        vm.longitude = e.latlng.lng;
-        
-      });
+    function updateCoords(coords) {
+      vm.latitude = coords.lat;
+      vm.longitude = coords.lng;
+    }
+    
+    function zoomToLocation(location){
+      mapSelectMap.setView(location, settings.searchZoom);
+      updateCoords(location);
     }
     
   }
