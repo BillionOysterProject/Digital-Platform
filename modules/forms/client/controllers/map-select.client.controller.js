@@ -5,9 +5,9 @@
     .module('forms')
     .controller('MapSelectController', MapSelectController);
 
-  MapSelectController.$inject = ['$scope', 'L','$timeout'];
+  MapSelectController.$inject = ['$scope', 'L','$timeout','$http','GoogleGeoCodeService'];
 
-  function MapSelectController($scope, L,$timeout) {
+  function MapSelectController($scope, L,$timeout, $http,GoogleGeoCodeService) {
     var vm = this;
     var mapSelectMap;
 
@@ -49,7 +49,7 @@
       });
 
       if(vm.modalId){
-        $('#'+vm.modalId).on('shown.bs.modal', function(){
+        angular.element(document.querySelector('#'+vm.modalId)).on('shown.bs.modal', function(){
           setTimeout(function() {
             mapSelectMap.invalidateSize();
           });
@@ -57,11 +57,24 @@
       }
 
       $scope.$on('$destroy', function () {
-        map.off('click', updateCoords);
-        $('#'+vm.modalId).unbind('shown.bs.modal');
+        mapSelectMap.off('click', updateCoords);
+        angular.element(document.querySelector('#'+vm.modalId)).unbind('shown.bs.modal');
       });
       
     }
+
+    vm.getLocation = function(val) {
+
+      return GoogleGeoCodeService.query({
+        address:val,
+        sensor:false
+      }).$promise.then(function(data) {
+        return data.results.map(function (item) {
+          return item.formatted_address;
+        });
+      });
+    };
+
 
     function updateCoords(e) {
       //since this event is outside angular world, must call apply so the ui looks for changes
