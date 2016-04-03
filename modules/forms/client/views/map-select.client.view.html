@@ -7,16 +7,17 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
-                    <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />
+                    <!--<img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" class="img-responsive" />-->
+                    <div id="{{::mapUniqueId}}" ></div>
                     <br />
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label>Latitude</label>
-                            <input type="text" class="form-control" placeholder="39.290385" ng-model="latitude"/>
+                            <input type="text" class="form-control" placeholder="39.290385" ng-model="vm.latitude"/>
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Longitude</label>
-                            <input type="text" class="form-control" placeholder="-76.612189" ng-model="longitude"/>
+                            <input type="text" class="form-control" placeholder="-76.612189" ng-model="vm.longitude"/>
                         </div>
                     </div>
                 </div>
