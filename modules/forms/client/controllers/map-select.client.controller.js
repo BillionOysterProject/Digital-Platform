@@ -5,9 +5,9 @@
     .module('forms')
     .controller('MapSelectController', MapSelectController);
 
-  MapSelectController.$inject = ['$scope', 'L','$timeout','$http','GoogleGeoCodeService'];
+  MapSelectController.$inject = ['$scope', 'L','$timeout'];
 
-  function MapSelectController($scope, L,$timeout, $http,GoogleGeoCodeService) {
+  function MapSelectController($scope, L,$timeout) {
     var vm = this;
     var mapSelectMap;
     var mapMarker = null;
@@ -73,21 +73,6 @@
       });
       
     }
-
-    vm.getLocation = function(val) {
-
-      return GoogleGeoCodeService.query({
-        address:val,
-        sensor:false
-      }).$promise.then(function(data) {
-        return data.results.map(function (item) {
-          return {
-            place:item.formatted_address,
-            location:item.geometry.location
-          };
-        });
-      });
-    };
     
     vm.placeSelected = function (place) {
       if (place) {
