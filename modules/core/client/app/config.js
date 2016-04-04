@@ -14,10 +14,9 @@ var ApplicationConfiguration = (function () {
     'angularFileUpload',
     'ngQuill',
     'iso.directives',
-    //'rt.select2',
+    'rt.select2',
     'omr.angularFileDnD',
-    'dndLists',
-    'ui.select'];
+    'dndLists'];
     //'ngSanitize'];
 
   // Add a new vertical module

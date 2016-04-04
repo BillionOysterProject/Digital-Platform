@@ -334,14 +334,10 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label for="cclsMathematics" class="control-label">CCLS - Mathematics</label>
-                    <ui-select ng-model="vm.lesson.standards.cclsMathematics">
-                      <ui-select-match>
-                        <span ng-bind="$select.selected.name"></span>
-                      </ui-select-match>
-                      <ui-select-choices repeat="item in vm.cclsMathematics track by item._id">
-                        <span ng-bind="item.value"></span>
-                      </ui-select-choices>
-                    </ui-select>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.cclsMathematics"
+                    s2-options="item._id as item.value for item in vm.cclsMathematics"
+                    options="{ allowClear: true, dropdownAutoWidth: true }"
+                    multiple name="cclsMathematics" id="cclsMathematics"></select2>
                   </div>
                 </div>
               </div>

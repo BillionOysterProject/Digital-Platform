@@ -27,7 +27,7 @@
     "angular-file-dnd": "^1.0.4",
     "angular-drag-and-drop-lists": "^1.4.0",
     "spin.js": "^2.3.2",
-    "ui-select": "angular-ui-select#^0.16.1"
+    "angular-select2": "^1.4.3"
   },
   "resolutions": {
     "angular": "~1.3",

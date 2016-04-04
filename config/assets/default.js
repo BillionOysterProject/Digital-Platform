@@ -8,13 +8,12 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
-        //'public/lib/select2/select2.css',
-        //'public/lib/select2/select2-bootstrap.css'
-        'public/lib/ui-select/dist/select.css',
+        'public/lib/select2/select2.css',
+        'public/lib/select2/select2-bootstrap.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
-        //'public/lib/select2/select2.js',
+        'public/lib/select2/select2.js',
         'public/lib/isotope/dist/isotope.pkgd.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
         'public/lib/quill/dist/quill.js',
@@ -31,8 +30,7 @@ module.exports = {
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.js',
-        //'public/lib/angular-select2/dist/angular-select2.js',
-        'public/lib/ui-select/dist/select.js',
+        'public/lib/angular-select2/dist/angular-select2.js',
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js'
       ],
