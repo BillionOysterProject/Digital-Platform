@@ -74,6 +74,16 @@
         data:{
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
         }
+      })
+      .state('expeditions.submitted', {
+        url: '/submitted',
+        templateUrl: 'modules/expeditions/client/views/submitted-expeditions.client.view.html',
+        controller: 'ExpeditionsListController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['team member', 'team lead', 'partner', 'admin'],
+          pageTitle: 'Submitted Expeditions'
+        }
       });
   }
 

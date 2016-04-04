@@ -10,6 +10,7 @@ var ApplicationConfiguration = (function () {
     'ngMessages',
     'ui.router',
     'ui.bootstrap',
+    'ui.bootstrap.tpls',
     'ui.utils',
     'angularFileUpload',
     'ngQuill',

@@ -9,7 +9,8 @@ module.exports = {
         'public/lib/quill/dist/quill.base.css',
         'public/lib/quill/dist/quill.snow.css',
         'public/lib/select2/select2.css',
-        'public/lib/select2/select2-bootstrap.css'
+        'public/lib/select2/select2-bootstrap.css',
+        'public/lib/leaflet/dist/leaflet.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -32,7 +33,8 @@ module.exports = {
         'public/lib/ngQuill/src/ng-quill.js',
         'public/lib/angular-select2/dist/angular-select2.js',
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
-        'public/lib/spin.js/spin.js'
+        'public/lib/spin.js/spin.js',
+        'public/lib/leaflet/dist/leaflet.js' 
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

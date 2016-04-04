@@ -12,6 +12,10 @@ module.exports = function (app) {
     .get(units.list)
     .post(units.create);
 
+  // Lessons by Unit collection routes
+  app.route('/api/units/:unitId/lessons').all(unitsPolicy.isAllowed)
+    .get(units.listLessons);
+
   // Single unit routes
   app.route('/api/units/:unitId').all(unitsPolicy.isAllowed)
     .get(units.read)
