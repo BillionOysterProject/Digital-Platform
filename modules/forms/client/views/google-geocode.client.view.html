@@ -1,0 +1,5 @@
+<div>
+  <input type="text" ng-model="vm.selectedPlace" typeahead-on-select="vm.selectPlace($item, $model, $label, $event)" placeholder="Type in an address or a place"
+         uib-typeahead="address as address.place for address in vm.getLocation($viewValue) | filter:$viewValue"
+         class="form-control">
+</div>
