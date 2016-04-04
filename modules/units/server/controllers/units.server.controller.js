@@ -111,6 +111,27 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of lessons by units
+ */
+exports.listLessons = function(req, res) {
+  var unit = req.unit;
+
+  Lesson.find({ unit: unit }).sort('-created').
+  populate('user', 'displayName email team profileImageURL').
+  populate('unit', 'title color icon').exec(function(err, lessons) {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(lessons);
+    }
+  });
+};
+
+
+/**
  * Unit middleware
  */
 exports.unitByID = function (req, res, next, id) {

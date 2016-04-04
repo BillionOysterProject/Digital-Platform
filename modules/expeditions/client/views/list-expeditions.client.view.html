@@ -1,43 +1,53 @@
 <div class="jumbotron text-center">
     <section class="content">
         <section class="container">
-            <a class="btn btn-primary pull-right" ui-sref="expeditions.create">Create an expedition</a>
             <h2>Expeditions</h2>
+            <a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
         </section>
     </section>
 </div>
 <section class="content">
     <section class="container">
-
         <table class="table table-hover">
-            <tr class="text-muted" ui-sref="expeditions.create-protocols">
-                <td><h3><i class="glyphicon glyphicon-unchecked"></i></h3></td>
-                <td><h4>Ocean Expedition</h4><br/><p class="text-muted">Team New York</p></td>
-                <td><b>June 1, 2016</b><br/>12:00-14:00</td>
-                <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
-                <td class="text-right"><span class="label label-default">Coming up</span></td>
-            </tr>
-            <tr ui-sref="expeditions.create-protocols">
-                <td><h3><i class="glyphicon glyphicon-unchecked red"></i></h3></td>
-                <td><h4>NY Harbor Expedition</h4><br/><p class="text-muted">Team New York</p></td>
-                <td><b>March 26, 2016</b><br/>12:00-14:00</td>
-                <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
-                <td class="text-right"><span class="label label-danger">Incomplete</span></td>
-            </tr>
-            <tr ui-sref="expeditions.create-protocols">
-                <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
-                <td><h4>Baltimore Harbor Expedition</h4><br/><p class="text-muted">Team New York</p></td>
-                <td><b>March 22, 2016</b><br/>12:00-14:00</td>
-                <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
-                <td class="text-right"><span class="label label-success">Published</span></td>
-            </tr>
-            <tr ui-sref="expeditions.create-protocols">
-                <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
-                <td><h4>River Expedition</h4><br/><p class="text-muted">Team New York</p></td>
-                <td><b>March 5, 2016</b><br/>12:00-14:00</td>
-                <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
-                <td class="text-right"><span class="label label-success">Published</span></td>
-            </tr>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Expedition</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th class="text-right">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-muted" ui-sref="expeditions.create-protocols">
+                    <td><h3><i class="glyphicon glyphicon-unchecked"></i></h3></td>
+                    <td><h4>Ocean Expedition</h4><br/><p class="text-muted">Team New York</p></td>
+                    <td><b>June 1, 2016</b><br/>12:00-14:00</td>
+                    <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
+                    <td class="text-right"><span class="label label-default">Coming up</span></td>
+                </tr>
+                <tr ui-sref="expeditions.create-protocols">
+                    <td><h3><i class="glyphicon glyphicon-unchecked red"></i></h3></td>
+                    <td><h4>NY Harbor Expedition</h4><br/><p class="text-muted">Team New York</p></td>
+                    <td><b>March 26, 2016</b><br/>12:00-14:00</td>
+                    <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
+                    <td class="text-right"><span class="label label-danger">Incomplete</span></td>
+                </tr>
+                <tr ui-sref="expeditions.create-protocols">
+                    <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
+                    <td><h4>Baltimore Harbor Expedition</h4><br/><p class="text-muted">Team New York</p></td>
+                    <td><b>March 22, 2016</b><br/>12:00-14:00</td>
+                    <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
+                    <td class="text-right"><span class="label label-success">Under Review</span></td>
+                </tr>
+                <tr ui-sref="expeditions.create-protocols">
+                    <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
+                    <td><h4>River Expedition</h4><br/><p class="text-muted">Team New York</p></td>
+                    <td><b>March 5, 2016</b><br/>12:00-14:00</td>
+                    <td><a href="#"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</a></td>
+                    <td class="text-right"><span class="label label-success">Published</span></td>
+                </tr>
+            </tbody>
         </table>
         
                     

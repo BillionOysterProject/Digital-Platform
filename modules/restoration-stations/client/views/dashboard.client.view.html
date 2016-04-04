@@ -1,4 +1,4 @@
-<section class="content shaded" ng-controller="RestorationStationController">
+<section class="content shaded">
     <section class="container-fluid">
         <div class="page-header">
             <h2>Restoration Stations</h2>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="row"><!--TODO: only show if teacher -->
-                    <div class="col-sm-6">
+                    <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Members <span class="badge badge-success pull-right">5</span></h4>
@@ -39,53 +39,71 @@
                                 <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Daryl Jones</p>
                                 <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Kay Martin</p>
                                 <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jeremy Smith</p>
+                            </div>
+                            <div class="panel-footer">
                                 <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add student</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">4</span></h4>
                             </div>
                             <div class="panel-body">
-                                <div class="alert alert-success">4 members updated their activities</div>
+                                <div class="alert alert-success">4 members updated their protocols</div>
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div> 
+                                    </div>
                                     <div class="col-sm-10 col-xs-8">
                                         <p>John Doe <small class="text-muted">15 min ago</small><br />
-                                        <span class="text-muted">completed</span> <a href="#">Protocol 1</a></p>
-                                    </div> 
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 1</a></p>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div> 
+                                    </div>
                                     <div class="col-sm-10 col-xs-8">
                                         <p>Kay Martin <small class="text-muted">2 hours ago</small><br />
-                                        <span class="text-muted">completed</span> <a href="#">Protocol 1 & 3</a></p>
-                                    </div> 
+                                        <span class="text-muted">resubmitted</span> <a href="#">Protocol 1 & 3</a></p>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div> 
+                                    </div>
                                     <div class="col-sm-10 col-xs-8">
                                         <p>Daryl Jones <small class="text-muted">3 hours ago</small><br />
-                                        <span class="text-muted">completed</span> <a href="#">Protocol 4</a></p>
-                                    </div> 
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 4</a></p>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div> 
+                                    </div>
                                     <div class="col-sm-10 col-xs-8">
                                         <p>Mary Ann Smith <small class="text-muted">1 day ago</small><br />
-                                        <span class="text-muted">completed</span> <a href="#">Protocol 2</a></p>
-                                    </div> 
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 2</a></p>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="panel-footer">
+                                <a class="btn btn-primary" ui-sref="expeditions.submitted">View Submissions</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Documents</h4>
+                            </div>
+                            <div class="panel-body">
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmeDZYXzhiOTlqQXM&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmRlNLTUFTbG5pWGs&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
                             </div>
                         </div>
                     </div>
@@ -94,7 +112,7 @@
             <div class="col-md-4">
                 <div class="panel panel-default"><!--TODO: only show if teacher -->
                     <div class="panel-heading">
-                        <h4>Oyster Restoration Stations</h4>
+                        <h4>My Stations</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table">
@@ -114,6 +132,8 @@
                                 <td class="text-right"><span class="label label-success">Active</span></td>
                             </tr>
                         </table>
+                    </div>
+                    <div class="panel-footer">
                         <a class="btn btn-primary">Register a station</a>
                     </div>
                 </div>
@@ -144,6 +164,8 @@
                                 <td class="text-right"><span class="label label-success">Published</span></td>
                             </tr>
                         </table>
+                    </div>
+                    <div class="panel-footer">
                         <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
                         <!--TODO: only show if teacher --><a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
                     </div>

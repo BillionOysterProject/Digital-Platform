@@ -9,6 +9,7 @@ body {
     -webkit-font-smoothing: antialiased;
     font-family: 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: #fff;
+    color: #2c3c56;
     margin-top: 51px; /* allow for navbar, so content and jumbotron can be in any order */
 }
 
@@ -431,6 +432,14 @@ a {
         outline: none;
         box-shadow: none;
     }
+
+
+/* TABLE ROW COLORS */
+
+tr.success { background: #f3f9ef; }
+tr.info { background: #e3eaf4; }
+tr.warning { background: #fdf2d1; }
+tr.danger { background: #fce5e3; }
     
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -717,6 +726,21 @@ form.ng-submitted .ng-invalid {
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+             PANELS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.panel .panel-footer {
+    text-align: right;
+}
+
+    .panel .panel-footer .btn {
+        margin-left: 5px;
+    }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
            LIBRARY TILES
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -737,10 +761,6 @@ form.ng-submitted .ng-invalid {
     .library-item .panel .panel-heading {
         background: #ea6158; /*fallback*/
         color: #fff;
-    }
-
-    .library-item .panel .panel-footer .btn {
-        margin-left: 5px;
     }
 
 

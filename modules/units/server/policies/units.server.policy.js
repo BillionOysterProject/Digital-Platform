@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/units',
       permissions: '*'
     }, {
+      resources: '/api/units/:unitId/lessons',
+      permissions: '*'
+    }, {
       resources: '/api/units/:unitId',
       permissions: '*'
     }]
@@ -25,6 +28,9 @@ exports.invokeRolesPolicies = function () {
     roles: ['user', 'team leader', 'team member', 'partner', 'guest'],
     allows: [{
       resources: '/api/units',
+      permissions: ['get']
+    }, {
+      resources: '/api/units/:unitId/lessons',
       permissions: ['get']
     }, {
       resources: '/api/units/:unitId',
