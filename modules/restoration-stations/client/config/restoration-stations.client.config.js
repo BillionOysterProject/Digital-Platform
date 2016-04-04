@@ -25,25 +25,25 @@
       position: 1
     });
 
-    Menus.addSubMenuItem('topbar', 'restoration-stations', {
-      title: 'Stations',
-      state: 'restoration-stations.list',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
-      position: 2
-    });
+    //Menus.addSubMenuItem('topbar', 'restoration-stations', {
+    //  title: 'Stations',
+    //  state: 'restoration-stations.list',
+    //  roles: ['team lead', 'team member', 'partner', 'admin'],
+    //  position: 2
+    //});
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Expeditions',
       state: 'expeditions.list',
       roles: ['team lead', 'team member', 'partner', 'admin'],
-      position: 3
+      position: 2
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Submissions',
       state: 'expeditions.submitted',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
-      position: 4
+      roles: ['team lead', 'partner', 'admin'],
+      position: 3
     });
   }
 })();
