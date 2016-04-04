@@ -14,7 +14,7 @@ var MetaCclsMathematicsSchema = new Schema({
     type: Number,
     required: true
   },
-  label: {
+  name: {
     type: String,
     required: true
   },

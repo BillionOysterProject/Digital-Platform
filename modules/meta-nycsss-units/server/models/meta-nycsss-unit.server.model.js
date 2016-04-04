@@ -9,12 +9,12 @@ var mongoose = require('mongoose'),
 /**
  * Meta NYC Science Scope & Sequence Schema
  */
-var MetaNycssUnitsSchema = new Schema({
+var MetaNycssUnitSchema = new Schema({
   order: {
     type: Number,
     required: true
   },
-  label: {
+  name: {
     type: String,
     required: true
   },
@@ -24,4 +24,4 @@ var MetaNycssUnitsSchema = new Schema({
   }
 });
 
-mongoose.model('MetaNycssUnits', MetaNycssUnitsSchema);
+mongoose.model('MetaNycssUnit', MetaNycssUnitSchema);

@@ -24,10 +24,10 @@
     "parsleyjs": "~2.3.3",
     "font-awesome": "fontawesome#^4.5.0",
     "angular-isotope": "^0.1.14",
-    "angular-select2": "^1.4.3",
     "angular-file-dnd": "^1.0.4",
     "angular-drag-and-drop-lists": "^1.4.0",
-    "spin.js": "^2.3.2"
+    "spin.js": "^2.3.2",
+    "ui-select": "angular-ui-select#^0.16.1"
   },
   "resolutions": {
     "angular": "~1.3",

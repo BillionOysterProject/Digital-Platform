@@ -5,7 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
-  MetaNycssUnits = mongoose.model('MetaNycssUnits'),
+  MetaNycssUnit = mongoose.model('MetaNycssUnit'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -13,7 +13,7 @@ var path = require('path'),
  * Create a standard
  */
 exports.create = function (req, res) {
-  var standard = new MetaNycssUnits(req.body);
+  var standard = new MetaNycssUnit(req.body);
 
   standard.save(function (err) {
     if (err) {
@@ -78,7 +78,7 @@ exports.delete = function (req, res) {
  * List of Standards
  */
 exports.list = function (req, res) {
-  MetaNycssUnits.find().sort('order').exec(function (err, standards) {
+  MetaNycssUnit.find().sort('order').exec(function (err, standards) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -100,7 +100,7 @@ exports.standardByID = function (req, res, next, id) {
     });
   }
 
-  MetaNycssUnits.findById(id).exec(function (err, standard) {
+  MetaNycssUnit.findById(id).exec(function (err, standard) {
     if (err) {
       return next(err);
     } else if (!standard) {

@@ -327,16 +327,29 @@
                 options="{{vm.ngssCrossCuttingConcepts}}"></select-optgroup>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="cclsMathematics"
+                <!-- <select-tags outer-column="col-md-12" name="cclsMathematics"
                 in-title="CCLS - Mathematics"
                 ng-model="vm.lesson.standards.cclsMathematics" label-class="control-label"
-                options="{{vm.cclsMathematics}}"></select-optgroup>
+                options="{{vm.cclsMathematics}}"></select-tags> -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="cclsMathematics" class="control-label">CCLS - Mathematics</label>
+                    <ui-select ng-model="vm.lesson.standards.cclsMathematics">
+                      <ui-select-match>
+                        <span ng-bind="$select.selected.name"></span>
+                      </ui-select-match>
+                      <ui-select-choices repeat="item in vm.cclsMathematics track by item._id">
+                        <span ng-bind="item.value"></span>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
+                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
                 in-title="CCLS - ELA Science & Technical Subjects"
                 ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects" label-class="control-label"
-                options="{{vm.cclsElaScienceTechnicalSubjects}}"></select-optgroup>
+                options="{{vm.cclsElaScienceTechnicalSubjects}}"></select-tags>
               </div>
             </div>
           </div>

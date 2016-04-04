@@ -54,6 +54,15 @@
     ];
 
     vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query();
+
+    // vm.cclsMathematicsQueryOptions = {
+    //   query: function (query) {
+    //     CclsMathematicsService.query({
+    //     }, function(data) {
+    //       query.callback(data);
+    //     });
+    //   }
+    // };
     vm.cclsMathematics = CclsMathematicsService.query();
     vm.ngssCrossCuttingConcepts = NgssCrossCuttingConceptsService.query();
     vm.ngssDisciplinaryCoreIdeas = NgssDisciplinaryCoreIdeasService.query();
