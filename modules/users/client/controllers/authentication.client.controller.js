@@ -62,5 +62,30 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       // Effectively call OAuth authentication route:
       $window.location.href = url;
     };
+
+    // Team Member Request
+    $scope.schoolOrgs = [];
+    $scope.teamMemberSelected = false;
+    $scope.teamLeads = [];
+    $scope.schoolOrgSelected = false;
+
+    $http.get('/api/school-orgs').success(function (response) {
+      $scope.schoolOrgs = response;
+    }).error(function (response) {
+    });
+
+    $scope.schoolOrgFieldSelected = function(schoolOrgId) {
+      if (schoolOrgId && $scope.credentials.userrole === 'team member') {
+        $scope.schoolOrgSelected = true;
+        $http.get('/api/school-orgs/' + schoolOrgId + '/team-leads').success(function (response) {
+          console.log('teamLeads', response);
+          $scope.teamLeads = response;
+        }).error(function (response) {
+          console.log('teamLeads', response);
+        });
+      } else {
+        $scope.schoolOrgSelected = false;
+      }
+    };
   }
 ]);

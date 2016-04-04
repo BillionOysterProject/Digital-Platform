@@ -108,7 +108,7 @@
         },
         data: {
           pageTitle: 'Team Create',
-          roles: ['admin', 'team lead']
+          roles: ['admin']
         }
       })
       .state('settings.admin-team', {
@@ -121,20 +121,7 @@
         },
         data: {
           pageTitle: 'Team {{ teamResolve.name }}',
-          roles: ['admin', 'team lead']
-        }
-      })
-      .state('settings.admin-team-owner', {
-        url: '/team/',
-        templateUrl: 'modules/teams/client/views/view-team.client.view.html',
-        controller: 'TeamsController',
-        controllerAs: 'vm',
-        resolve: {
-          teamResolve: getOwnerTeam
-        },
-        data: {
-          pageTitle: 'Team {{ teamResolve.name }}',
-          roles: ['team lead']
+          roles: ['admin']
         }
       })
       .state('settings.admin-team-edit', {
@@ -146,61 +133,18 @@
           teamResolve: getTeam
         },
         data: {
-          pageTitle: 'Edit Team {{ teamResolve.name }}',
-          roles: ['admin', 'team lead']
+          pageTitle: 'Edit {{ teamResolve.name }}',
+          roles: ['admin']
         }
       })
-      .state('settings.admin-team-edit-owner', {
-        url: '/team/edit',
-        templateUrl: 'modules/teams/client/views/form-team.client.view.html',
-        controller: 'TeamsController',
-        controllerAs: 'vm',
-        resolve: {
-          teamResolve: getOwnerTeam
-        },
-        data: {
-          pageTitle: 'Edit Team {{ teamResolve.name }}',
-          roles: ['admin', 'team lead']
-        }
-      })
-      .state('settings.admin-import-team-members', {
-        url: '/teams/:teamId/import',
-        templateUrl: 'modules/teams/client/views/import-team-members.client.view.html',
-        controller: 'TeamMembersController',
+      .state('settings.admin-team-owner', {
+        url: '/members',
+        templateUrl: 'modules/teams/client/views/owner-teams.client.view.html',
+        controller: 'TeamsOwnerController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Import Team Members',
-          roles: ['admin', 'team lead']
-        }
-      })
-      .state('settings.admin-import-team-members-owner', {
-        url: '/team/import',
-        templateUrl: 'modules/teams/client/views/import-team-members.client.view.html',
-        controller: 'TeamMembersController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Import Team Members',
-          roles: ['admin', 'team lead']
-        }
-      })
-      .state('settings.admin-approve-team-members', {
-        url: '/teams/:teamId/approve',
-        templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
-        controller: 'TeamMembersController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Approve Team Members',
-          roles: ['admin', 'team lead']
-        }
-      })
-      .state('settings.admin-approve-team-members-owner', {
-        url: '/team/approve',
-        templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
-        controller: 'TeamMembersController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Approve Team Members',
-          roles: ['admin', 'team lead']
+          pageTitle: 'Teams',
+          roles: ['team lead']
         }
       })
       .state('authentication', {
@@ -262,16 +206,10 @@
       });
   }
 
-  getOwnerTeam.$inject = ['$stateParams', 'TeamsService'];
-
-  function getOwnerTeam($stateParams, TeamsService) {
-    return TeamsService.owner.get().$promise;
-  }
-
   getTeam.$inject = ['$stateParams', 'TeamsService'];
 
   function getTeam($stateParams, TeamsService) {
-    return TeamsService.all.get({
+    return TeamsService.get({
       teamId: $stateParams.teamId
     }).$promise;
   }
@@ -279,6 +217,6 @@
   newTeam.$inject = ['TeamsService'];
 
   function newTeam(TeamsService) {
-    return new TeamsService.all();
+    return new TeamsService();
   }
 })();

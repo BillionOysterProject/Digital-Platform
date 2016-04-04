@@ -10,7 +10,7 @@
   function TeamsListController($scope, TeamsService) {
     var vm = this;
 
-    vm.teams = TeamsService.all.query();
+    vm.teams = TeamsService.query();
 
     // Drag and Drop stuff
 

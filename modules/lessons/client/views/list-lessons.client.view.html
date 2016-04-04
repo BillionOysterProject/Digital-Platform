@@ -6,7 +6,8 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
                 </span>
-                <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject...">
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for a Lesson by title, lesson summary, lesson objective, vocabulary...">
             </div>
         </section>
     </section>
@@ -22,33 +23,20 @@
                         Subject Area(s) <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ok-sel="*">All</a></li>
+                      <li><a ng-click="vm.subjectAreaSelected()" ok-sel=".all">All</a></li>
+                      <li role="separator" class="divider"></li>
+
+                      <li ng-repeat="subject in vm.subjectAreas">
+                        <a ok-sel=".{{subject.value}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.name}}</a>
+                      </li>
+
+                      <!-- <span ng-repeat="subjectHeader in vm.subjectAreas | unique:'type'">
+                        <li class="dropdown-header"><a ok-sel=".technology">{{subjectHeader.type}}</a></li>
+                        <li ng-repeat="subject in vm.subjectAreas | filter: subjectHeader.type">
+                          <a ok-sel=".{{subject.value}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.name}}</a></li>
                         <li role="separator" class="divider"></li>
-                        <li class="dropdown-header"><a ok-sel=".science">Science</a></li>
-                        <li><a ok-sel=".ecology">Ecology</a></li>
-                        <li><a ok-sel=".geologyeatchscience">Geology and Earth Science </a></li>
-                        <li><a ok-sel=".limnology">Limnology</a></li>
-                        <li><a ok-sel=".marinebio">Marine Biology</a></li>
-                        <li><a ok-sel=".oceanography">Oceanography</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header"><a ok-sel=".technology">Technology</a></li>
-                        <li><a ok-sel=".computerscience">Computer Science</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a ok-sel=".engineering">Engineering</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header"><a ok-sel=".math">Math</a></li>
-                        <li><a ok-sel=".dataanalysis">Data Analysis</a></li>
-                        <li><a ok-sel=".graphing">Graphing</a></li>
-                        <li><a ok-sel=".ratiosproportions">Ratios & Proportions</a></li>
-                        <li><a ok-sel=".algebra">Algebra</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header"><a ok-sel=".socialstudies">Social Studies</a></li>
-                        <li><a ok-sel=".history">History</a></li>
-                        <li><a ok-sel=".economics">Economics</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a ok-sel=".englishlanguagearts">English Language Arts</a></li>
-                        <li><a ok-sel=".music">Music</a></li>
-                        <li><a ok-sel=".music">Art</a></li>
+                      </span> -->
+
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -56,9 +44,9 @@
                         Setting <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" opt-kind="" ok-key="filter">
-                       <li><a ok-sel="*">Show all</a></li>
-                       <li><a ok-sel=".Classroom">Classroom</a></li>
-                       <li><a ok-sel=".Field">Field</a></li>
+                       <li><a ok-sel="*" ng-click="vm.settingSelected()">Show all</a></li>
+                       <li><a ok-sel=".Classroom" ng-click="vm.settingSelected('Classroom')">Classroom</a></li>
+                       <li><a ok-sel=".Field" ng-click="vm.settingSelected('Field')">Field</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -66,11 +54,12 @@
                         Units <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a ok-sel=".urbaneco"><i class="fa fa-circle text-primary"></i> NYC's Urban Ecosystem</a></li>
-                        <li><a ok-sel=".oysters"><i class="fa fa-circle text-success"></i> Oysters</a></li>
-                        <li><a ok-sel=".mobileorganism"><i class="fa fa-circle text-default"></i> Mobile Organisms</a></li>
-                        <li><a ok-sel=".sessileorganism"><i class="fa fa-circle text-warning"></i> Sessile Organisms</a></li>
-                        <li><a ok-sel=".waterquality"><i class="fa fa-circle text-info"></i> Water Quality</a></li>
+                      <li><a ok-sel="*" ng-click="vm.unitSelected()">Show all</a></li>
+                      <li ng-repeat="unit in vm.units">
+                        <a ok-sel=".{{unit._id}}" ng-click="vm.unitSelected(unit)">
+                          <i class="fa fa-circle text-primary"></i> {{unit.title}}
+                        </a>
+                      </li>
                     </ul>
                 </li>
             </ul>
@@ -205,10 +194,10 @@
                                 <a class="btn btn-default">Add subject area</a>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="units">
-                                
+
                             </div>
                             <div role="tabpanel" class="tab-pane" id="protocols">
-                                
+
                             </div>
                         </div>
                     </div>

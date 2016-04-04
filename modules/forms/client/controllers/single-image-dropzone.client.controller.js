@@ -36,8 +36,10 @@
       if ($window.FileReader) {
         var fileReader = new FileReader();
         fileReader.readAsDataURL(fileItem._file);
+        console.log('fileItem', fileItem);
 
         fileReader.onload = function (fileReaderEvent) {
+          console.log('fileReaderEvent', fileReaderEvent);
           $timeout(function () {
             $scope.imageUrl = fileReaderEvent.target.result;
             $scope.error = '';

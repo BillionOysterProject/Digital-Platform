@@ -5,10 +5,10 @@
     .module('protocol-mobile-traps')
     .controller('ProtocolMobileTrapsController', ProtocolMobileTrapsController);
 
-  ProtocolMobileTrapsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', 
+  ProtocolMobileTrapsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams',
     'FileUploader', 'ProtocolMobileTrapsService', 'MobileOrganismsService'];
 
-  function ProtocolMobileTrapsController($scope, $state, Authentication, $stateParams, 
+  function ProtocolMobileTrapsController($scope, $state, Authentication, $stateParams,
     FileUploader, ProtocolMobileTrapsService, MobileOrganismsService) {
     var mt = this;
 
@@ -70,7 +70,7 @@
           for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
             var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
             var foundOrganism = mt.getFoundOrganism(organismDetails.organism);
-            
+
             foundOrganism.count = organismDetails.count;
             foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
             foundOrganism.notes = organismDetails.notesQuestions;
@@ -101,6 +101,7 @@
       }
 
       var foundIds = [];
+      var imageErrorMessage = '';
       mt.protocolMobileTrap.mobileOrganisms = [];
       for (var foundId in mt.foundOrganisms) {
         var found = mt.foundOrganisms[foundId];
@@ -108,13 +109,20 @@
         if (found.count > 0) {
           mt.protocolMobileTrap.mobileOrganisms.push({
             organism: found.organism,
-            count: found.count, 
+            count: found.count,
             notesQuestions: found.notes,
             sketchPhoto: {
               path: found.imageUrl
             }
           });
+          if (!found.imageUrl || found.imageUrl === '') {
+            imageErrorMessage = 'Image missing for mobile trap';
+          }
         }
+      }
+      if (imageErrorMessage !== '') {
+        mt.error = imageErrorMessage;
+        return false;
       }
 
       // TODO: move create/update logic to service
@@ -170,7 +178,9 @@
         uploadAllSketchPhotos(mobileTrapId, foundIds, function() {
           goToView(mobileTrapId);
         }, function(errorMessage) {
+          delete mt.protocolMobileTrap._id;
           mt.error = errorMessage;
+          return false;
         });
       }
 

@@ -7,7 +7,8 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  TeamRequest = mongoose.model('TeamRequest');
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -39,13 +40,35 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
-      });
+      var loginNewUser = function() {
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      };
+
+      // Add team request
+      if (req.body.userrole === 'team member') {
+        var request = new TeamRequest({
+          requester: user,
+          teamLead: req.body.teamLead
+        });
+
+        request.save(function(saveErr) {
+          if (saveErr) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveErr)
+            });
+          } else {
+            loginNewUser();
+          }
+        });
+      } else {
+        loginNewUser();
+      }
     }
   });
 };

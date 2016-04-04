@@ -8,11 +8,12 @@ var path = require('path'),
   MobileOrganism = mongoose.model('MobileOrganism'),
   MetaOrganismCategory = mongoose.model('MetaOrganismCategory'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
   multer = require('multer'),
-  config = require(path.resolve('./config/config')); 
+  config = require(path.resolve('./config/config'));
 
 /**
  * Create an Organism
@@ -68,17 +69,37 @@ exports.update = function(req, res) {
 /**
  * Delete a mobile organism
  */
+var deleteInternal = function(mobileOrganism, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (mobileOrganism && mobileOrganism.image && mobileOrganism.image.path) {
+    filesToDelete.push(mobileOrganism.image.path);
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    mobileOrganism.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(mobileOrganism);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function(req, res) {
   var mobileOrganism = req.mobileOrganism;
 
-  mobileOrganism.remove(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(mobileOrganism);
-    }
+  deleteInternal(mobileOrganism,
+  function(mobileOrganism) {
+    res.json(mobileOrganism);
+  }, function(err) {
+    return res.status(400).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -128,6 +149,31 @@ exports.list = function(req, res) {
   });
 };
 
+var uploadFileSuccess = function(mobileOrganism, res) {
+  mobileOrganism.save(function (saveError) {
+    if (saveError) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(saveError)
+      });
+    } else {
+      res.json(mobileOrganism);
+    }
+  });
+};
+
+var uploadFileError = function(mobileOrganism, errorMessage, res) {
+  deleteInternal(mobileOrganism,
+  function(mobileOrganism) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
 /**
  * Upload image to mobile organism
  */
@@ -140,27 +186,14 @@ exports.uploadImage = function(req, res) {
   upload.fileFilter = organismImageUploadFileFilter;
 
   if (mobileOrganism) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading image'
-        });
-      } else {
-        mobileOrganism.image.path = config.uploads.organismImageUpload.dest + req.file.filename;
-        mobileOrganism.image.originalname = req.file.originalname;
-        mobileOrganism.image.mimetype = req.file.mimetype;
-        mobileOrganism.image.filename = req.file.filename;
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.organismImageUpload,
+    function (fileInfo) {
+      mobileOrganism.image = fileInfo;
 
-        mobileOrganism.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(mobileOrganism);
-          }
-        });
-      }
+      uploadFileSuccess(mobileOrganism, res);
+    }, function (errorMessage) {
+      uploadFileError(mobileOrganism, errorMessage, res);
     });
   } else {
     res.status(400).send({

@@ -31,7 +31,8 @@ module.exports = {
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.min.js',
         'public/lib/angular-select2/dist/angular-select2.min.js',
-        'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
+        'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
+        'public/lib/spin.js/spin.min.js'
       ]
     },
     css: 'public/dist/application.min.css',

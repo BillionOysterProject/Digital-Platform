@@ -5,10 +5,11 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication', 
-  'UnitsService', 'TeamsService', 'FileUploader'];
+  LessonsController.$inject = ['$scope', '$state', '$http',
+  'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService', 'FileUploader'];
 
-  function LessonsController($scope, $state, $http, lesson, Authentication, UnitsService, TeamsService, FileUploader) {
+  function LessonsController($scope, $state, $http,
+    lesson, Authentication, UnitsService, TeamsService, FileUploader) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -19,7 +20,7 @@
     vm.showVocabularyModal = false;
 
     vm.subjectAreas = [
-     { type: 'Science', name: 'Ecology', value: 'ecology' }, 
+     { type: 'Science', name: 'Ecology', value: 'ecology' },
      { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
      { type: 'Science', name: 'Limnology', value: 'limnology' },
      { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
@@ -97,7 +98,7 @@
     vm.units = UnitsService.query();
 
     if (vm.lesson.user && vm.lesson.user.team) {
-      TeamsService.all.get({
+      TeamsService.get({
         teamId: vm.lesson.user.team
       }, function(team) {
         vm.lesson.user.team = team;
@@ -142,9 +143,7 @@
 
     // Remove existing Lesson
     vm.remove = function() {
-      if (confirm('Are you sure you want to delete?')) {
-        vm.lesson.$remove($state.go('lessons.list'));
-      }
+      vm.lesson.$remove($state.go('lessons.list'));
     };
 
     // Save Lesson
@@ -189,7 +188,7 @@
         function goToView(lessonId) {
           $state.go('lessons.view', {
             lessonId: lessonId
-          });  
+          });
         }
 
         function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
@@ -268,22 +267,30 @@
           }
         }
 
+        var unsubmitLesson = function(errorMessage) {
+          delete vm.lesson._id;
+          vm.lesson.unit = {
+            _id: vm.lesson.unit
+          };
+          vm.error = errorMessage;
+        };
+
         uploadFeaturedImage(lessonId, function() {
           uploadHandoutFiles(lessonId, function() {
             uploadResourceFiles(lessonId, function() {
               uploadStateTestQuestionFiles(lessonId, function () {
                 goToView(lessonId);
               }, function(errorMessage) {
-                vm.error = errorMessage;
+                unsubmitLesson(errorMessage);
               });
             }, function(errorMessage) {
-              vm.error = errorMessage;
+              unsubmitLesson(errorMessage);
             });
           }, function(errorMessage) {
-            vm.error = errorMessage;
+            unsubmitLesson(errorMessage);
           });
         }, function(errorMessage) {
-          vm.error = errorMessage;
+          unsubmitLesson(errorMessage);
         });
       }
 
@@ -334,26 +341,16 @@
       vm.resourceLinks.splice(index, 1);
     };
 
-    $scope.downloadExample = function(file) {
-      var url = 'api/lessons/download-file';
-      $http.get(url, {
-        params: {
-          originalname: file.originalname, 
-          mimetype: file.mimetype, 
-          path: file.path
-        }
-      }).
-      success(function(data, status, headers, config) {
-        var anchor = angular.element('<a/>');
-        anchor.attr({
-          href: encodeURI(data),
-          target: '_blank',
-          download: file.originalname
-        })[0].click();
-      }).
-      error(function(data, status, headers, config) {
-        // if there's an error you should see it here
+    vm.openDeleteLesson = function() {
+      angular.element('#modal-delete-lesson').modal('show');
+    };
+
+    vm.confirmDeleteLesson = function(shouldDelete) {
+      var element = angular.element('#modal-delete-lesson');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
       });
+      element.modal('hide');
     };
   }
 })();

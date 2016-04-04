@@ -44,7 +44,11 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var unit = req.unit ? req.unit.toJSON() : {};
 
-  res.json(unit);
+  Lesson.find({ unit: unit }).exec(function(err, lessons) {
+    console.log('lessons', lessons);
+    unit.hasLessons = (lessons && lessons.length > 0) ? true : false;
+    res.json(unit);
+  });
 };
 
 /**
