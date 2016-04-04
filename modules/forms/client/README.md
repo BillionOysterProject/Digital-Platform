@@ -26,3 +26,4 @@ This project is based off the <a href="http://meanjs.org/">MEAN.js stack</a>
 * uses the google geocode service
 * only responds to selected items by way of click in the list of results or enter key on a result option (set in controller and can be modified)
 * had to add 'ui.bootstrap.tpls' to the app module, could have just added it to forms module
+* the search results need to be above the zoom in/out button of the map, styling needed
