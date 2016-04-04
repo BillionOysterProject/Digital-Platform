@@ -39,25 +39,6 @@ var instructionPlans = {
   }
 };
 
-var standardsOptions = {
-  nycScienceScopeSequence: [{
-    type: String,
-    required: false
-  }],
-  ngssStandards: [{
-    type: String,
-    required: false
-  }],
-  commonCoreEla: [{
-    type: String,
-    required: false
-  }],
-  commonCoreMath: [{
-    type: String,
-    required: false
-  }]
-};
-
 var LessonSchema = new Schema({
   created: {
     type: Date,
@@ -164,8 +145,51 @@ var LessonSchema = new Schema({
     validate: instructionPlanValidator
   },
   standards: {
-    type: standardsOptions,
-    validate: standardsValidator
+    cclsElaScienceTechnicalSubjects: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsElaScienceTechnicalSubject',
+      required: false
+    }],
+    cclsMathematics: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsMathematics',
+      required: false
+    }],
+    ngssCrossCuttingConcepts: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssCrossCuttingConcept',
+      required: false
+    }],
+    ngssDisciplinaryCoreIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssDisciplinaryCoreIdea',
+      required: false
+    }],
+    ngssScienceEngineeringPractices: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssScienceEngineeringPractice',
+      required: false
+    }],
+    nycsssUnits: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNycssUnit',
+      required: false
+    }],
+    nysssKeyIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssKeyIdea',
+      required: false
+    }],
+    nysssMajorUnderstandings: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMajorUnderstanding',
+      required: false
+    }],
+    nysssMst: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMst',
+      required: false
+    }]
   },
   user: {
     type: Schema.ObjectId,
@@ -195,7 +219,9 @@ function instructionPlanValidator(value) {
 }
 
 function standardsValidator(value) {
-  if (value.nycScienceScopeSequence || value.ngssStandards || value.commonCoreEla || value.commonCoreMath) {
+  if (value.cclsElaScienceTechnicalSubjects || value.cclsMathematics || value.ngssCrossCuttingConcepts ||
+    value.ngssDisciplinaryCoreIdeas || value.ngssScienceEngineeringPractices || value.nycsssUnits ||
+    value.nysssKeyIdeas || value.nysssMajorUnderstandings || value.nysssMst) {
     return true;
   } else {
     return false;

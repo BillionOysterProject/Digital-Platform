@@ -285,16 +285,103 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="nysciencescope" in-title="New York City Science Scope & Sequence" ng-model="vm.lesson.standards.nycScienceScopeSequence" label-class="control-label" options="{{vm.nycScienceScope}}"></select-optgroup>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="nycsssUnits" class="control-label">NYC Science Scope & Sequence - Units</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.nycsssUnits"
+                    s2-options="unit._id as unit.value for unit in vm.nycsssUnits"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="nycsssUnits" id="nycsssUnits"></select2>
+                  </div>
+                </div>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="ngssstandards" in-title="NGSS Standards" ng-model="vm.lesson.standards.ngssStandards" label-class="control-label" options="{{vm.ngssStandards}}"></select-optgroup>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="nysssKeyIdeas" class="control-label">NYS Science Standards - Key Ideas</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.nysssKeyIdeas"
+                    s2-options="idea._id as idea.value for idea in vm.nysssKeyIdeas"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="nysssKeyIdeas" id="nysssKeyIdeas"></select2>
+                  </div>
+                </div>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="commoncoreela" in-title="Common Core ELA" ng-model="vm.lesson.standards.commonCoreEla" label-class="control-label" options="{{vm.commonCoreEla}}"></select-optgroup>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="nysssMajorUnderstandings" class="control-label">NYS Science Standards - Major Understandings</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.nysssMajorUnderstandings"
+                    s2-options="understanding._id as understanding.value for understanding in vm.nysssMajorUnderstandings"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="nysssMajorUnderstandings" id="nysssMajorUnderstandings"></select2>
+                  </div>
+                </div>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="commoncoremath" in-title="Common Core Math" ng-model="vm.lesson.standards.commonCoreMath" label-class="control-label" options="{{vm.commonCoreMath}}"></select-optgroup>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="nysssMst" class="control-label">NYS Science Standards - MST</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.nysssMst"
+                    s2-options="mst._id as mst.value for mst in vm.nysssMst"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="nysssMst" id="nysssMst"></select2>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="ngssDisciplinaryCoreIdeas" class="control-label">NGSS - Disciplinary Core Ideas</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas"
+                    s2-options="core._id as core.value for core in vm.ngssDisciplinaryCoreIdeas"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="ngssDisciplinaryCoreIdeas" id="ngssDisciplinaryCoreIdeas"></select2>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="ngssScienceEngineeringPractices" class="control-label">NGSS - Science and Engineering Practices</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.ngssScienceEngineeringPractices"
+                    s2-options="practice._id as practice.value for practice in vm.ngssScienceEngineeringPractices"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="ngssScienceEngineeringPractices" id="ngssScienceEngineeringPractices"></select2>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="ngssCrossCuttingConcepts" class="control-label">NGSS - Cross-Cutting Concepts</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.ngssCrossCuttingConcepts"
+                    s2-options="concept._id as concept.value for concept in vm.ngssCrossCuttingConcepts"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="ngssCrossCuttingConcepts" id="ngssCrossCuttingConcepts"></select2>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="cclsMathematics" class="control-label">CCLS - Mathematics</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.cclsMathematics"
+                    s2-options="math._id as math.value for math in vm.cclsMathematics"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="cclsMathematics" id="cclsMathematics"></select2>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="cclsElaScienceTechnicalSubjects" class="control-label">CCLS - ELA Science & Technical Subjects</label>
+                    <select2 class="form-control" ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects"
+                    s2-options="ela._id as ela.value for ela in vm.cclsElaScienceTechnicalSubjects"
+                    options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                    name="cclsElaScienceTechnicalSubjects" id="cclsElaScienceTechnicalSubjects"></select2>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

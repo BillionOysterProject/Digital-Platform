@@ -56,7 +56,7 @@
         controller: 'LessonsController',
         controllerAs: 'vm',
         resolve: {
-          lessonResolve: getLesson
+          lessonResolve: getLessonFull
         },
         data: {
           pageTitle: 'Lesson {{ lessonResolve.title }}'
@@ -69,6 +69,15 @@
   function getLesson($stateParams, LessonsService) {
     return LessonsService.get({
       lessonId: $stateParams.lessonId
+    }).$promise;
+  }
+
+  getLessonFull.$inject = ['$stateParams', 'LessonsService'];
+
+  function getLessonFull($stateParams, LessonsService) {
+    return LessonsService.get({
+      lessonId: $stateParams.lessonId,
+      full: true
     }).$promise;
   }
 

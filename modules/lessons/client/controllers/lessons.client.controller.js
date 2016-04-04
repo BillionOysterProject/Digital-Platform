@@ -5,13 +5,19 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http',
-  'lessonResolve', 'Authentication', 'UnitsService', 'TeamsService', 'FileUploader'];
+  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication',
+  'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
+  'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
+  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
 
   function LessonsController($scope, $state, $http,
-    lesson, Authentication, UnitsService, TeamsService, FileUploader) {
+    lesson, Authentication, UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService,
+    CclsMathematicsService, NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService,
+    NgssScienceEngineeringPracticesService, NycsssUnitsService, NysssKeyIdeasService,
+    NysssMajorUnderstandingsService, NysssMstService) {
     var vm = this;
 
+    console.log('lesson', lesson);
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.error = null;
@@ -47,54 +53,17 @@
       { name: 'Oyster', value: 'oyster' },
       { name: 'Science', value: 'science' }
     ];
-    vm.nycScienceScope = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
-      { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
-    ];
-    vm.ngssStandards = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1b' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
-      { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
-    ];
-    vm.commonCoreEla = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
-      { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
-    ];
-    vm.commonCoreMath = [
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1A Structure and Properties of matter', value: 'ps1a' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1B Chemical Reactions', value: 'ps1b' },
-      { type: 'PS1 Matter and Its Interactions', name: 'PS1C Nuclear Processes', value: 'ps1c' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1A The Universe and Its Stars', value: 'ess1a' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1B Earth and the Solar System', value: 'ess1b' },
-      { type: 'ESS1 Earth\'s Place in the Universe', name: 'ESS1C The History of Planet Earth ESS2 Earth\'s', value: 'ess1c' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2A Earth Materials and Systems', value: 'ess2a' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2B Plate Tectonics and Large-Scale System Interactions', value: 'ess2b' },
-      { type: 'ESS2 Earth\'s Systems', name: 'ESS2C The Roles of Water in Earth\'s Surface Processes', value: 'ess2c' },
-      { type: 'Grade 8, Unit1: Humans and the Environment', name: 'Grade 8, Unit1: Humans and the Environment', value: 'g8unit' }
-    ];
+
+    vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query({ select: true });
+    vm.cclsMathematics = CclsMathematicsService.query({ select: true });
+    vm.ngssCrossCuttingConcepts = NgssCrossCuttingConceptsService.query({ select: true });
+    vm.ngssDisciplinaryCoreIdeas = NgssDisciplinaryCoreIdeasService.query({ select: true });
+    vm.ngssScienceEngineeringPractices = NgssScienceEngineeringPracticesService.query({ select: true });
+    vm.nycsssUnits = NycsssUnitsService.query({ select: true });
+    vm.nysssKeyIdeas = NysssKeyIdeasService.query({ select: true });
+    vm.nysssMajorUnderstandings = NysssMajorUnderstandingsService.query({ select: true });
+    vm.nysssMst = NysssMstService.query({ select: true });
+
     vm.units = UnitsService.query();
 
     if (vm.lesson.user && vm.lesson.user.team) {
@@ -171,6 +140,71 @@
       vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
       vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
+
+      // for (var a = 0; a < vm.lesson.standards.nycsssUnits.length; a++) {
+      //   vm.lesson.standards.nycsssUnits[a] =
+      //     NycsssUnitsService.get({
+      //       _id: vm.lesson.standards.nycsssUnits[a]
+      //     });
+      // }
+      //
+      // for (var b = 0; b < vm.lesson.standards.nysssKeyIdeas.length; b++) {
+      //   vm.lesson.standards.nysssKeyIdeas[b] =
+      //     NysssKeyIdeasService.get({
+      //       _id: vm.lesson.standards.nysssKeyIdeas[b]
+      //     });
+      // }
+      //
+      // for (var c = 0; c < vm.lesson.standards.nysssMajorUnderstandings.length; c++) {
+      //   vm.lesson.standards.nysssMajorUnderstandings[c] =
+      //     NysssMajorUnderstandingsService.get({
+      //       _id: vm.lesson.standards.nysssMajorUnderstandings[c]
+      //     });
+      // }
+      //
+      // for (var d = 0; d < vm.lesson.standards.nysssMst.length; d++) {
+      //   vm.lesson.standards.nysssMst[d] =
+      //     NysssMstService.get({
+      //       _id: vm.lesson.standards.nysssMst[d]
+      //     });
+      // }
+      //
+      // for (var f = 0; f < vm.lesson.standards.ngssDisciplinaryCoreIdeas.length; f++) {
+      //   vm.lesson.standards.ngssDisciplinaryCoreIdeas[f] =
+      //     NgssDisciplinaryCoreIdeasService.get({
+      //       _id: vm.lesson.standards.ngssDisciplinaryCoreIdeas[f]
+      //     });
+      // }
+      //
+      // for (var g = 0; g < vm.lesson.standards.ngssScienceEngineeringPractices.length; g++) {
+      //   vm.lesson.standards.ngssScienceEngineeringPractices[g] =
+      //     NgssScienceEngineeringPracticesService.get({
+      //       _id: vm.lesson.standards.ngssScienceEngineeringPractices[g]
+      //     });
+      // }
+      //
+      // for (var h = 0; h < vm.lesson.standards.ngssCrossCuttingConcepts.length; h++) {
+      //   vm.lesson.standards.ngssCrossCuttingConcepts[h] =
+      //     NgssCrossCuttingConceptsService.get({
+      //       _id: vm.lesson.standards.ngssCrossCuttingConcepts[h]
+      //     });
+      // }
+      //
+      // for (var i = 0; i < vm.lesson.standards.cclsMathematics.length; i++) {
+      //   vm.lesson.standards.cclsMathematics[i] =
+      //     CclsMathematicsService.get({
+      //       _id: vm.lesson.standards.cclsMathematics[i]
+      //     });
+      // }
+      //
+      // for (var j = 0; j < vm.lesson.standards.cclsElaScienceTechnicalSubjects.length; j++) {
+      //   vm.lesson.standards.cclsElaScienceTechnicalSubjects[j] =
+      //     CclsElaScienceTechnicalSubjectsService.get({
+      //       _id: vm.lesson.standards.cclsElaScienceTechnicalSubjects[j]
+      //     });
+      // }
+
+      console.log('lesson', vm.lesson.standards);
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {

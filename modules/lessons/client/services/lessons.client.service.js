@@ -9,7 +9,8 @@
 
   function LessonsService($resource) {
     return $resource('api/lessons/:lessonId', {
-      lessonId: '@_id'
+      lessonId: '@_id',
+      full: '@full'
     }, {
       update: {
         method: 'PUT'
