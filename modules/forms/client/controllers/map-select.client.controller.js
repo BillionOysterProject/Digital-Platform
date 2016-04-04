@@ -10,7 +10,8 @@
   function MapSelectController($scope, L,$timeout, $http,GoogleGeoCodeService) {
     var vm = this;
     var mapSelectMap;
-    vm.placeSelected = null;
+    var mapMarker = null;
+    
 
     var settings = {
       defaults:{
@@ -44,6 +45,8 @@
           apikey:settings.defaults.key
         }).addTo(mapSelectMap);
         mapSelectMap.scrollWheelZoom.disable();
+
+        mapMarker = L.marker([settings.defaults.center[0], settings.defaults.center[1]]).addTo(mapSelectMap);
 
 
         mapSelectMap.on('click', function(e){
@@ -86,9 +89,9 @@
       });
     };
     
-    vm.selectPlace = function ($item, $model, $label, $event) {
-      if ($event.which === 13 || $event.which === 1) {
-        zoomToLocation(L.latLng(vm.placeSelected.location.lat, vm.placeSelected.location.lng));
+    vm.placeSelected = function (place) {
+      if (place) {
+        zoomToLocation(L.latLng(place.location.lat, place.location.lng));
       }
 
     };
@@ -97,6 +100,8 @@
     function updateCoords(coords) {
       vm.latitude = coords.lat;
       vm.longitude = coords.lng;
+
+      mapMarker.setLatLng(coords);
     }
     
     function zoomToLocation(location){
