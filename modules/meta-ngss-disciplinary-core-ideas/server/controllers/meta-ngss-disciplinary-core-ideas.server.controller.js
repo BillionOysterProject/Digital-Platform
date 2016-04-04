@@ -78,13 +78,25 @@ exports.delete = function (req, res) {
  * List of Standards
  */
 exports.list = function (req, res) {
-  MetaNgssDisciplinaryCoreIdea.find().sort('order').exec(function (err, standards) {
+  MetaNgssDisciplinaryCoreIdea.find().sort({ 'header': 1, 'description': 1 }).exec(function (err, standards) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(standards);
+      if (req.query.select) {
+        var values = [];
+        for (var i = 0; i < standards.length; i++) {
+          values.push({
+            _id: standards[i]._id,
+            header: standards[i].header,
+            value: standards[i].header + ' - ' + standards[i].description
+          });
+        }
+        res.json(values);
+      } else {
+        res.json(standards);
+      }
     }
   });
 };

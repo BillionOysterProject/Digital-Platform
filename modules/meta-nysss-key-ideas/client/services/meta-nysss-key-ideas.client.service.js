@@ -13,6 +13,13 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET',
+        params: {
+          select: '@select'
+        },
+        isArray: true
       }
     });
   }

@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta NYC Science Scope & Sequence Schema
  */
 var MetaNycssUnitSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  name: {
+  header: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }

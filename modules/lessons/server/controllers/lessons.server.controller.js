@@ -59,6 +59,7 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
+    console.log('body', req.body);
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
@@ -368,7 +369,16 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  Lesson.findById(id).populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon').exec(function(err, lesson) {
+  var query = Lesson.findById(id).populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon');
+
+  if (req.query.full) {
+    query.populate('standards.cclsElaScienceTechnicalSubjects').populate('standards.cclsMathematics')
+    .populate('standards.ngssCrossCuttingConcepts').populate('standards.ngssDisciplinaryCoreIdeas')
+    .populate('standards.ngssScienceEngineeringPractices').populate('standards.nycsssUnits')
+    .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst');
+  }
+
+  query.exec(function(err, lesson) {
     if (err) {
       return next(err);
     } else if (!lesson) {
@@ -376,6 +386,7 @@ exports.lessonByID = function(req, res, next, id) {
         message: 'No lesson with that identifier has been found'
       });
     }
+    console.log('lesson.standards', lesson.standards);
     req.lesson = lesson;
     next();
   });

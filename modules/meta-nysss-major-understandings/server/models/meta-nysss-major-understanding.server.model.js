@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta NYS Science Stanard Major Understanding
  */
 var MetaNysssMajorUnderstandingSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  name: {
+  code: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }

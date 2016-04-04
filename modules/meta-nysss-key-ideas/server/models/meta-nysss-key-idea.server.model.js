@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta NYS Science Standard Key Idea
  */
 var MetaNysssKeyIdeaSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  name: {
+  header: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }

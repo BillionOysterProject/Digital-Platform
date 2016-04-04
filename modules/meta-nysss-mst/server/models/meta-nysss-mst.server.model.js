@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta NYS Science Standard MST
  */
 var MetaNysssMstSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  label: {
+  code: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }

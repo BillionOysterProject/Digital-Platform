@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta CCLS Mathematics Schema
  */
 var MetaCclsMathematicsSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  name: {
+  code: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }

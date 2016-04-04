@@ -168,43 +168,93 @@
             <div class="col col-sm-12">
                 <h3>Standards</h3>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycScienceScopeSequence">
-                <b>New York City Science Scope &amp; Sequence</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycsssUnits">
+                <b>NYC Science Scope &amp; Sequence - Units</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.nycScienceScopeSequence">
-                        <span ng-bind="standard | nycScienceScope"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nycsssUnits">
+                        <span>{{standard.header}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssStandards">
-                <b>NGSS Standards</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssKeyIdeas">
+                <b>NYS Science Standards - Key Ideas</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.ngssStandards">
-                        <span ng-bind="standard | ngssStandards"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssKeyIdeas">
+                        <span>{{standard.header}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreEla">
-                <b>Common Core ELA</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMajorUnderstandings">
+                <b>NYS Science Standards - Major Understandings</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.commonCoreEla">
-                        <span ng-bind="standard | commonCoreEla"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssMajorUnderstandings">
+                        <span>{{standard.code}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreMath">
-                <b>Common Core Math</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMst">
+                <b>NYS Science Standards - MST</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.commonCoreMath">
-                        <span ng-bind="standard | commonCoreMath"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssMst">
+                        <span>{{standard.code}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+                <b>NGSS - Disciplinary Core Ideas</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssScienceEngineeringPractices">
+                <b>NGSS - Science and Engineering Practices</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssScienceEngineeringPractices">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssCrossCuttingConcepts">
+                <b>NGSS - Cross-Cutting Concepts</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssCrossCuttingConcepts">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsMathematics">
+                <b>CCLS - Mathematics</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.cclsMathematics">
+                        <span>{{standard.code}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+                <b>CCLS - ELA Science &amp; Technical Subjects</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+                        <span>{{standard.code}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>

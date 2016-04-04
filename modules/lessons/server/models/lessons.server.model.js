@@ -39,45 +39,6 @@ var instructionPlans = {
   }
 };
 
-var standardsOptions = {
-  cclsElaScienceTechnicalSubjects: [{
-    type: String,
-    required: false
-  }],
-  cclsMathematics: [{
-    type: String,
-    required: false
-  }],
-  ngssCrossCuttingConcepts: [{
-    type: String,
-    required: false
-  }],
-  ngssDisciplinaryCoreIdeas: [{
-    type: String,
-    required: false
-  }],
-  ngssScienceEngineeringPractices: [{
-    type: String,
-    required: false
-  }],
-  nycsssUnits: [{
-    type: String,
-    required: false
-  }],
-  nysssKeyIdeas: [{
-    type: String,
-    required: false
-  }],
-  nysssMajorUnderstandings: [{
-    type: String,
-    required: false
-  }],
-  nysssMst: [{
-    type: String,
-    required: false
-  }]
-};
-
 var LessonSchema = new Schema({
   created: {
     type: Date,
@@ -184,8 +145,51 @@ var LessonSchema = new Schema({
     validate: instructionPlanValidator
   },
   standards: {
-    type: standardsOptions,
-    validate: standardsValidator
+    cclsElaScienceTechnicalSubjects: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsElaScienceTechnicalSubject',
+      required: false
+    }],
+    cclsMathematics: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsMathematics',
+      required: false
+    }],
+    ngssCrossCuttingConcepts: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssCrossCuttingConcept',
+      required: false
+    }],
+    ngssDisciplinaryCoreIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssDisciplinaryCoreIdea',
+      required: false
+    }],
+    ngssScienceEngineeringPractices: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssScienceEngineeringPractice',
+      required: false
+    }],
+    nycsssUnits: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNycssUnit',
+      required: false
+    }],
+    nysssKeyIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssKeyIdea',
+      required: false
+    }],
+    nysssMajorUnderstandings: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMajorUnderstanding',
+      required: false
+    }],
+    nysssMst: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMst',
+      required: false
+    }]
   },
   user: {
     type: Schema.ObjectId,
@@ -215,7 +219,9 @@ function instructionPlanValidator(value) {
 }
 
 function standardsValidator(value) {
-  if (value.nycScienceScopeSequence || value.ngssStandards || value.commonCoreEla || value.commonCoreMath) {
+  if (value.cclsElaScienceTechnicalSubjects || value.cclsMathematics || value.ngssCrossCuttingConcepts ||
+    value.ngssDisciplinaryCoreIdeas || value.ngssScienceEngineeringPractices || value.nycsssUnits ||
+    value.nysssKeyIdeas || value.nysssMajorUnderstandings || value.nysssMst) {
     return true;
   } else {
     return false;

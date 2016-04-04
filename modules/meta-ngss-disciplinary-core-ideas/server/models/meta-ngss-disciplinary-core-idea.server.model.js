@@ -10,15 +10,11 @@ var mongoose = require('mongoose'),
  * Meta NGSS Disciplinary Core Idea
  */
 var MetaNgssDisciplinaryCoreIdeaSchema = new Schema({
-  order: {
-    type: Number,
-    required: true
-  },
-  name: {
+  header: {
     type: String,
     required: true
   },
-  value: {
+  description: {
     type: String,
     required: true
   }
