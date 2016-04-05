@@ -62,13 +62,26 @@
       vm.findGlossary();
     };
 
-    vm.cancelTerm = function() {
+    vm.cancelTermAddEdit = function() {
       vm.term = {};
       angular.element('#modal-vocabulary').modal('hide');
     };
 
     vm.openDelete = function(term) {
+      vm.term = (term) ? new GlossaryService(term) : new GlossaryService();
 
+      angular.element('#modal-delete').modal('show');
+    };
+
+    vm.deleteTerm = function() {
+      vm.term = {};
+      angular.element('#modal-delete').modal('hide');
+      vm.findGlossary();
+    };
+
+    vm.cancelTermDelete = function() {
+      vm.term = {};
+      angular.element('#modal-delete').modal('hide');
     };
 
     vm.goToLesson = function(term) {

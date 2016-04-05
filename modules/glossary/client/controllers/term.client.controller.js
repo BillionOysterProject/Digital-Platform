@@ -11,7 +11,9 @@
     $scope.error = null;
 
     $scope.remove = function() {
-      $scope.term.$remove($scope.saveFunction());
+      $scope.term.$remove(function(er) {
+        $scope.saveFunction();
+      });
     };
 
     $scope.save = function(isValid) {
@@ -39,7 +41,7 @@
 
     $scope.cancel = function() {
       $scope.cancelFunction();
-      $scope.form.termForm.$setPristine();
+      if ($scope.form && $scope.form.termForm) $scope.form.termForm.$setPristine();
     };
   }
 })();
