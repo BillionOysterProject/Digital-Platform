@@ -176,6 +176,10 @@ exports.list = function(req, res) {
     and.push({ 'unit': req.query.unit });
   }
 
+  if (req.query.vocabulary) {
+    and.push({ 'materialsResources.vocabulary': req.query.vocabulary });
+  }
+
   var searchRe;
   var or = [];
   if (req.query.searchString) {
@@ -205,14 +209,13 @@ exports.list = function(req, res) {
   }
 
   if (req.query.limit) {
+    var limit = Number(req.query.limit);
     if (req.query.page) {
-      var limit = Number(req.query.limit);
       var page = Number(req.query.page);
       query.skip(limit*(page-1)).limit(limit);
+    } else {
+      query.limit(limit);
     }
-  } else {
-    var limit2 = Number(req.query.limit);
-    query.limit(limit2);
   }
 
   query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
@@ -375,7 +378,8 @@ exports.lessonByID = function(req, res, next, id) {
     query.populate('standards.cclsElaScienceTechnicalSubjects').populate('standards.cclsMathematics')
     .populate('standards.ngssCrossCuttingConcepts').populate('standards.ngssDisciplinaryCoreIdeas')
     .populate('standards.ngssScienceEngineeringPractices').populate('standards.nycsssUnits')
-    .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst');
+    .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst')
+    .populate('materialsResources.vocabulary');
   }
 
   query.exec(function(err, lesson) {

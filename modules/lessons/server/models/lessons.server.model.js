@@ -131,7 +131,8 @@ var LessonSchema = new Schema({
       path: String
     }],
     vocabulary: [{
-      type: String,
+      type: Schema.ObjectId,
+      ref: 'Glossary',
       required: false
     }]
   },
