@@ -5,15 +5,16 @@
     .module('lessons')
     .controller('LessonsListController', LessonsListController);
 
-  LessonsListController.$inject = ['$scope', 'LessonsService', 'UnitsService'];
+  LessonsListController.$inject = ['$scope', '$rootScope', 'LessonsService', 'UnitsService'];
 
-  function LessonsListController($scope, LessonsService, UnitsService) {
+  function LessonsListController($scope, $rootScope, LessonsService, UnitsService) {
     var vm = this;
 
     vm.filter = {
       subjectArea: '',
       setting: '',
       unit: '',
+      vocabulary: '',
       searchString: '',
       sort: '',
       limit: 20,
@@ -25,6 +26,7 @@
         subjectArea: vm.filter.subjectArea,
         setting: vm.filter.setting,
         unit: vm.filter.unit,
+        vocabulary: vm.filter.vocabulary,
         searchString: vm.filter.searchString,
         limit: vm.filter.limit,
         page: vm.filter.page
@@ -32,6 +34,12 @@
         vm.lessons = data;
       });
     };
+
+    if ($rootScope.vocabulary) {
+      console.log('vocabulary', $rootScope.vocabulary);
+      vm.filter.vocabulary = $rootScope.vocabulary;
+      $rootScope.vocabulary = null;
+    }
 
     vm.findLessons();
 

@@ -1,0 +1,35 @@
+<div class="modal fade" id="modal-vocabulary" tabindex="-1" role="dialog" aria-labelledby="modal-vocabulary">
+  <div class="modal-dialog" role="document">
+    <form name="form.termForm" ng-submit="save(form.termForm.$valid)" novalidate>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">{{ term._id ? 'Edit the term' : 'Add a vocabulary term to the Glossary' }}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="vocab-term" class="label-control required">Vocabulary term</label>
+                <input type="text" name="vocab-term" class="form-control" ng-model="term.term" required/>
+              </div>
+              <div class="form-group">
+                <label for="definition" class="label-control required">Definition</label>
+                <textarea class="form-control" name="definition" rows="5" ng-model="term.definition" required></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{ term._id ? 'Update' : 'Save' }}</button>
+          <div ng-show="error" class="text-danger">
+            <strong ng-bind="error"></strong>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

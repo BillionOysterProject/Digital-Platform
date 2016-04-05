@@ -11,7 +11,6 @@ var path = require('path'),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
-  path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config'));
 
