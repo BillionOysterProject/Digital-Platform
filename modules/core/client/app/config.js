@@ -17,7 +17,8 @@ var ApplicationConfiguration = (function () {
     'iso.directives',
     'rt.select2',
     'omr.angularFileDnD',
-    'dndLists'];
+    'dndLists',
+    'chart.js'];
     //'ngSanitize'];
 
   // Add a new vertical module
