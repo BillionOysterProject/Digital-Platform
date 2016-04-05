@@ -46,7 +46,7 @@
         }).addTo(mapSelectMap);
         mapSelectMap.scrollWheelZoom.disable();
 
-        mapMarker = L.marker([settings.defaults.center[0], settings.defaults.center[1]]).addTo(mapSelectMap);
+        mapMarker = L.marker([settings.defaults.center[0], settings.defaults.center[1]],{draggable:vm.canMoveMarker || false}).addTo(mapSelectMap);
 
 
         mapSelectMap.on('click', function(e){
@@ -56,8 +56,17 @@
           });
           
         });
-        
+
+        mapMarker.on('dragend', function(e){
+          //since this event is outside angular world, must call apply so the ui looks for changes
+          $scope.$apply(function () {
+            updateCoords(mapMarker.getLatLng());
+          });
+
+        });
       });
+
+
 
       if(vm.modalId){
         angular.element(document.querySelector('#'+vm.modalId)).on('shown.bs.modal', function(){
@@ -69,6 +78,7 @@
 
       $scope.$on('$destroy', function () {
         mapSelectMap.off('click', updateCoords);
+        mapMarker.off('dragend', updateCoords);
         angular.element(document.querySelector('#'+vm.modalId)).unbind('shown.bs.modal');
       });
       

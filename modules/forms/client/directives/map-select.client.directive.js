@@ -11,6 +11,7 @@
         templateUrl: 'modules/forms/client/views/map-select.client.view.html',
         scope: {
           canGeocode:'=',
+          canMoveMarker:'=',
           latitude: '=',
           longitude: '=',
           modalId:'@'
