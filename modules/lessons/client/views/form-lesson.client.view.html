@@ -155,7 +155,18 @@
                     <textarea name="supplies" id="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies" required></textarea>
                   </div>
                 </div>
-                <select-tags outer-column="col-md-6" name="vobalulary" in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary" label-class="control-label" options="{{vm.vocabulary}}"></select-tags>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="vocabulary" class="control-label">Vocabulary</label>
+                    <div class="input-group-btn">
+                      <select2 class="form-control col-md-10" ng-model="vm.lesson.materialsResources.vocabulary"
+                      s2-options="item._id as item.term for item in vm.vocabulary"
+                      options="{ allowClear: true, dropdownAutoWidth: true }" multiple
+                      name="vocabulary" id="vocabulary"></select2>
+                      <button class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus-sign"></i></button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
@@ -456,5 +467,6 @@
     </div>
   </div>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
+  <form-term-modal term="vm.term" save-function="vm.saveTerm" cancel-function="vm.cancelTermAdd"></form-term-modal>
   <!--END MODALS-->
 </section>

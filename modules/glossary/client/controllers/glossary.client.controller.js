@@ -5,9 +5,9 @@
     .module('glossary')
     .controller('GlossaryController', GlossaryController);
 
-  GlossaryController.$inject = ['$scope', '$state', '$rootScope', 'GlossaryService', 'Authentication'];
+  GlossaryController.$inject = ['$scope', '$state', '$rootScope', 'GlossaryService', 'Authentication', 'lodash'];
 
-  function GlossaryController($scope, $state, $rootScope, GlossaryService, Authentication) {
+  function GlossaryController($scope, $state, $rootScope, GlossaryService, Authentication, lodash) {
     var vm = this;
 
     vm.filter = {
@@ -47,8 +47,16 @@
     };
 
     vm.authentication = Authentication;
+    console.log('authentication', vm.authentication.user.roles);
     vm.error = null;
     vm.form = {};
+
+    vm.hasRole = function(role) {
+      var index = lodash.findIndex(vm.authentication.user.roles, function(o) {
+        return o === role;
+      });
+      return (index > -1) ? true : false;
+    };
 
     vm.openAddEdit = function(term) {
       vm.term = (term) ? new GlossaryService(term) : new GlossaryService();

@@ -128,9 +128,9 @@
                     </div>
                     <div class="col col-sm-6">
                         <h3>Vocabulary</h3>
-                        <!-- TODO: Should show definition on click - place    $('.popover-trigger').popover();    inside jQuery to trigger popover -->
                         <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
-                            <a class="popover-trigger" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Vocabulary Term" data-content="Vocabulary definition here" ng-bind="vocabulary | vocabulary"></a>
+                            <span uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
+                            popover-trigger="mouseenter" popover-placement="top" ng-bind="vocabulary.term"></span>
                         </div>
                     </div>
                     <div class="col col-sm-12">
