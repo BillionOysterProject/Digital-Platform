@@ -14,7 +14,8 @@
           canMoveMarker:'=',
           latitude: '=',
           longitude: '=',
-          modalId:'@'
+          modalId:'@',
+          showMarker:'='
         },
         
         link: function(scope, elem, attrs) {
