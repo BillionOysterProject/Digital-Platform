@@ -8,13 +8,13 @@
   LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication',
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
-  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
+  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService'];
 
   function LessonsController($scope, $state, $http,
     lesson, Authentication, UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService,
     CclsMathematicsService, NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService,
     NgssScienceEngineeringPracticesService, NycsssUnitsService, NysssKeyIdeasService,
-    NysssMajorUnderstandingsService, NysssMstService) {
+    NysssMajorUnderstandingsService, NysssMstService, GlossaryService) {
     var vm = this;
 
     console.log('lesson', lesson);
@@ -46,13 +46,7 @@
     vm.protocolConnections = [
       { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' }
     ];
-    vm.vocabulary = [
-      { name: 'Art', value: 'art' },
-      { name: 'Ecosystem', value: 'ecosystem' },
-      { name: 'Hypothesis', value: 'hypothesis' },
-      { name: 'Oyster', value: 'oyster' },
-      { name: 'Science', value: 'science' }
-    ];
+    vm.vocabulary = GlossaryService.query();
 
     vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query({ select: true });
     vm.cclsMathematics = CclsMathematicsService.query({ select: true });
@@ -140,71 +134,6 @@
       vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
       vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
-
-      // for (var a = 0; a < vm.lesson.standards.nycsssUnits.length; a++) {
-      //   vm.lesson.standards.nycsssUnits[a] =
-      //     NycsssUnitsService.get({
-      //       _id: vm.lesson.standards.nycsssUnits[a]
-      //     });
-      // }
-      //
-      // for (var b = 0; b < vm.lesson.standards.nysssKeyIdeas.length; b++) {
-      //   vm.lesson.standards.nysssKeyIdeas[b] =
-      //     NysssKeyIdeasService.get({
-      //       _id: vm.lesson.standards.nysssKeyIdeas[b]
-      //     });
-      // }
-      //
-      // for (var c = 0; c < vm.lesson.standards.nysssMajorUnderstandings.length; c++) {
-      //   vm.lesson.standards.nysssMajorUnderstandings[c] =
-      //     NysssMajorUnderstandingsService.get({
-      //       _id: vm.lesson.standards.nysssMajorUnderstandings[c]
-      //     });
-      // }
-      //
-      // for (var d = 0; d < vm.lesson.standards.nysssMst.length; d++) {
-      //   vm.lesson.standards.nysssMst[d] =
-      //     NysssMstService.get({
-      //       _id: vm.lesson.standards.nysssMst[d]
-      //     });
-      // }
-      //
-      // for (var f = 0; f < vm.lesson.standards.ngssDisciplinaryCoreIdeas.length; f++) {
-      //   vm.lesson.standards.ngssDisciplinaryCoreIdeas[f] =
-      //     NgssDisciplinaryCoreIdeasService.get({
-      //       _id: vm.lesson.standards.ngssDisciplinaryCoreIdeas[f]
-      //     });
-      // }
-      //
-      // for (var g = 0; g < vm.lesson.standards.ngssScienceEngineeringPractices.length; g++) {
-      //   vm.lesson.standards.ngssScienceEngineeringPractices[g] =
-      //     NgssScienceEngineeringPracticesService.get({
-      //       _id: vm.lesson.standards.ngssScienceEngineeringPractices[g]
-      //     });
-      // }
-      //
-      // for (var h = 0; h < vm.lesson.standards.ngssCrossCuttingConcepts.length; h++) {
-      //   vm.lesson.standards.ngssCrossCuttingConcepts[h] =
-      //     NgssCrossCuttingConceptsService.get({
-      //       _id: vm.lesson.standards.ngssCrossCuttingConcepts[h]
-      //     });
-      // }
-      //
-      // for (var i = 0; i < vm.lesson.standards.cclsMathematics.length; i++) {
-      //   vm.lesson.standards.cclsMathematics[i] =
-      //     CclsMathematicsService.get({
-      //       _id: vm.lesson.standards.cclsMathematics[i]
-      //     });
-      // }
-      //
-      // for (var j = 0; j < vm.lesson.standards.cclsElaScienceTechnicalSubjects.length; j++) {
-      //   vm.lesson.standards.cclsElaScienceTechnicalSubjects[j] =
-      //     CclsElaScienceTechnicalSubjectsService.get({
-      //       _id: vm.lesson.standards.cclsElaScienceTechnicalSubjects[j]
-      //     });
-      // }
-
-      console.log('lesson', vm.lesson.standards);
 
       // TODO: move create/update logic to service
       if (vm.lesson._id) {
@@ -385,6 +314,23 @@
         if (shouldDelete) vm.remove();
       });
       element.modal('hide');
+    };
+
+    vm.openAdd = function() {
+      vm.term = new GlossaryService();
+
+      angular.element('#modal-vocabulary').modal('show');
+    };
+
+    vm.saveTerm = function() {
+      vm.term = {};
+      angular.element('#modal-vocabulary').modal('hide');
+      vm.vocabulary = GlossaryService.query();
+    };
+
+    vm.cancelTermAdd = function() {
+      vm.term = {};
+      angular.element('#modal-vocabulary').modal('hide');
     };
   }
 })();

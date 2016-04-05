@@ -34,7 +34,8 @@ module.exports = {
         'public/lib/angular-select2/dist/angular-select2.js',
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js',
-        'public/lib/leaflet/dist/leaflet.js' 
+        'public/lib/leaflet/dist/leaflet.js',
+        'public/lib/ng-lodash/build/ng-lodash.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

@@ -21,6 +21,7 @@
           subjectArea: '@subjectArea',
           setting: '@setting',
           unit: '@unit',
+          vocabulary: '@vocabulary',
           searchString: '@searchString',
           sort: '@sort',
           limit: '@limit',
