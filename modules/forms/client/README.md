@@ -4,11 +4,30 @@ This project is based off the <a href="http://meanjs.org/">MEAN.js stack</a>
 
 ## Map Select Directive
 ### Usage
-* <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
+* <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-move-marker="true" show-marker="true" 
+latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
 * *modal-id(@)* - if this directive is wrapped in a modal, pass the id so the directive can tell whem the modal is visible(shown) so that the map can render correctly
 * *can-geocode(=)* - if true the googleGeocode directive is shown
+* *show-marker(=)* - if true the map marker is visible
+* *can-move-marker(=)* - if true the map marker is draggable if it is visible
 * *latitude(=)* - can set the latitude displayed
 * *longitude(=)* - can set the longitude displayed
+
+
+### Items To Note
+* the directive uses standard leaflet and not the leaflet directive
+* the directive uses its link function to set the id of the leaflet map since the ids need to be unique whenever the directive is used, this can be generated in a Service too
+* hbostic added leaflet.client.service to make the global window.L object available to angular and pass linting, not sure what the BOP team does for globals  
+
+## Leaflet Map Directive
+### Usage
+* <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd"
+                                 can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker"></leaflet-map>
+* *map-controls(=)* - empty object that the directive attaches internal functions to so the calling controller can call functions
+* *map-click-event(&)* - function to call if when the map is clicked
+* *marker-drag-end-event(&)* - function to call when marker drag is done
+* *show-marker(=)* - if true the map marker is visible
+* *can-move-marker(=)* - if true the map marker is draggable if it is visible
 
 
 ### Items To Note

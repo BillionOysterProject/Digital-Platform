@@ -10,7 +10,8 @@
 
                   <google-geocode ng-if="vm.canGeocode" place-selected="vm.placeSelected"></google-geocode>
 
-                  <div id="{{::mapUniqueId}}" ></div>
+                  <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd"
+                               can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker"></leaflet-map>
                     <br />
                     <div class="row">
                         <div class="form-group col-sm-6">
