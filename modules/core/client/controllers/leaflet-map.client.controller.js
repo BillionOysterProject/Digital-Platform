@@ -43,7 +43,7 @@
     };
 
     var zoomToLocation = function(location){
-      var latlng  = L.latLng(location.lat, location.lng);
+      var latlng = L.latLng(location.lat, location.lng);
       mapSelectMap.setView(latlng, settings.searchZoom);
       moveMarker(latlng);
     };
@@ -74,7 +74,7 @@
           $scope.$apply(function () {
             moveMarker(e.latlng);
             if(angular.isFunction(vm.mapClickEvent())) {
-              vm.mapClickEvent()(e)
+              vm.mapClickEvent()(e);
             }
           });
           
@@ -88,7 +88,7 @@
             $scope.$apply(function () {
               moveMarker(mapMarker.getLatLng());
               if(angular.isFunction(vm.markerDragEndEvent())){
-                vm.markerDragEndEvent()(mapMarker.getLatLng())
+                vm.markerDragEndEvent()(mapMarker.getLatLng());
               }
             });
 
@@ -99,8 +99,11 @@
       });
 
       $scope.$on('$destroy', function () {
-        mapSelectMap.off('click', updateCoords);
-        mapMarker.off('dragend', updateCoords);
+        mapSelectMap.off('click');
+        if(mapMarker){
+          mapMarker.off('dragend');
+        }
+        
         angular.element(document.querySelector('#'+vm.modalId)).unbind('shown.bs.modal');
       });
       

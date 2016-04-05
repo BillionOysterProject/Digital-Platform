@@ -18,7 +18,7 @@
       if(vm.modalId){
         angular.element(document.querySelector('#'+vm.modalId)).on('shown.bs.modal', function(){
           $timeout(function() {
-            vm.mapControls.resizeMap()
+            vm.mapControls.resizeMap();
           });
         });
       }
