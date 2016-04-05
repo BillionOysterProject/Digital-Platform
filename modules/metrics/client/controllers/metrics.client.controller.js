@@ -11,11 +11,16 @@
     var vm = this;
 
     vm.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    vm.series = ['Series A', 'Series B'];
+    vm.series = ['Team Members', 'Team Leads', 'Admin'];
     vm.data = [
-      [65, 59, 80, 81, 56, 55, 40],
-      [28, 48, 40, 19, 86, 27, 90]
+      [165, 159, 180, 181, 256, 257, 325],
+      [18, 18, 20, 29, 36, 43, 45],
+      [2, 2, 2, 2, 3, 3, 3, 3]
     ];
+    
+    vm.pielabels = ['Team Members', 'Team Leads', 'Admin'];
+    vm.piedata = [300, 500, 100];
+    
     vm.onClick = function (points, evt) {
       console.log(points, evt);
     };
