@@ -22,6 +22,8 @@
           setting: '@setting',
           unit: '@unit',
           vocabulary: '@vocabulary',
+          status: '@status',
+          byCreator: '@byCreator',
           searchString: '@searchString',
           sort: '@sort',
           limit: '@limit',

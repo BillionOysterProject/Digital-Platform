@@ -5,19 +5,17 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication',
+  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', 'lessonResolve', 'Authentication',
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService'];
 
-  function LessonsController($scope, $state, $http,
-    lesson, Authentication, UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService,
-    CclsMathematicsService, NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService,
-    NgssScienceEngineeringPracticesService, NycsssUnitsService, NysssKeyIdeasService,
-    NysssMajorUnderstandingsService, NysssMstService, GlossaryService) {
+  function LessonsController($scope, $state, $http, $timeout, lesson, Authentication,
+    UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
+    NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
+    NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService) {
     var vm = this;
 
-    console.log('lesson', lesson);
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.error = null;
@@ -136,113 +134,122 @@
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
       // TODO: move create/update logic to service
-      if (vm.lesson._id) {
-        console.log('updating lesson');
-        vm.lesson.$update(successCallback, errorCallback);
-      } else {
-        console.log('saving new lesson');
-        vm.lesson.$save(successCallback, errorCallback);
-      }
+      angular.element('#modal-saved-lesson').modal('show');
 
-      function successCallback(res) {
-        console.log('successful');
-        var lessonId = res._id;
-
-        function goToView(lessonId) {
-          $state.go('lessons.view', {
-            lessonId: lessonId
-          });
+      $timeout(function () {
+        if (vm.lesson._id) {
+          console.log('updating lesson');
+          vm.lesson.$update(successCallback, errorCallback);
+        } else {
+          console.log('saving new lesson');
+          vm.lesson.$save(successCallback, errorCallback);
         }
 
-        function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
-          if (vm.featuredImageUploader.queue.length > 0) {
-            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+        function successCallback(res) {
+          console.log('successful');
+          var lessonId = res._id;
+
+          function goToView(lessonId) {
+            angular.element('#modal-saved-lesson').modal('hide');
+            $timeout(function () {
+              $state.go('lessons.view', {
+                lessonId: lessonId
+              });
+            }, 1000);
+          }
+
+          function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
+            if (vm.featuredImageUploader.queue.length > 0) {
+              vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                featuredImageSuccessCallback();
+              };
+
+              vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+                featuredImageErrorCallback(response.message);
+              };
+
+              vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
+              };
+              vm.featuredImageUploader.uploadAll();
+            } else {
               featuredImageSuccessCallback();
-            };
-
-            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-              featuredImageErrorCallback(response.message);
-            };
-
-            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
-            };
-            vm.featuredImageUploader.uploadAll();
-          } else {
-            featuredImageSuccessCallback();
+            }
           }
-        }
 
-        function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
-          if (vm.handoutFilesUploader.queue.length > 0) {
-            vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
+            if (vm.handoutFilesUploader.queue.length > 0) {
+              vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                handoutFileSuccessCallback();
+              };
+
+              vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                handoutFileErrorCallback(response.message);
+              };
+
+              vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-handouts';
+              };
+              vm.handoutFilesUploader.uploadAll();
+            } else {
               handoutFileSuccessCallback();
-            };
-
-            vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              handoutFileErrorCallback(response.message);
-            };
-
-            vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-handouts';
-            };
-            vm.handoutFilesUploader.uploadAll();
-          } else {
-            handoutFileSuccessCallback();
+            }
           }
-        }
 
-        function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
-          if (vm.teacherResourceFilesUploader.queue.length > 0) {
-            vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
+            if (vm.teacherResourceFilesUploader.queue.length > 0) {
+              vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                resourceFileSuccessCallback();
+              };
+
+              vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                resourceFileErrorCallback(response.message);
+              };
+
+              vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
+              };
+              vm.teacherResourceFilesUploader.uploadAll();
+            } else {
               resourceFileSuccessCallback();
-            };
-
-            vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              resourceFileErrorCallback(response.message);
-            };
-
-            vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
-            };
-            vm.teacherResourceFilesUploader.uploadAll();
-          } else {
-            resourceFileSuccessCallback();
+            }
           }
-        }
 
-        function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
-          if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
-            vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
+            if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
+              vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                questionFileSuccessCallback();
+              };
+
+              vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                questionFileErrorCallback(response.message);
+              };
+
+              vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
+              };
+              vm.stateTestQuestionsFilesUploader.uploadAll();
+            } else {
               questionFileSuccessCallback();
-            };
-
-            vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              questionFileErrorCallback(response.message);
-            };
-
-            vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
-            };
-            vm.stateTestQuestionsFilesUploader.uploadAll();
-          } else {
-            questionFileSuccessCallback();
+            }
           }
-        }
 
-        var unsubmitLesson = function(errorMessage) {
-          delete vm.lesson._id;
-          vm.lesson.unit = {
-            _id: vm.lesson.unit
+          var unsubmitLesson = function(errorMessage) {
+            delete vm.lesson._id;
+            vm.lesson.unit = {
+              _id: vm.lesson.unit
+            };
+            vm.error = errorMessage;
           };
-          vm.error = errorMessage;
-        };
 
-        uploadFeaturedImage(lessonId, function() {
-          uploadHandoutFiles(lessonId, function() {
-            uploadResourceFiles(lessonId, function() {
-              uploadStateTestQuestionFiles(lessonId, function () {
-                goToView(lessonId);
+          uploadFeaturedImage(lessonId, function() {
+            uploadHandoutFiles(lessonId, function() {
+              uploadResourceFiles(lessonId, function() {
+                uploadStateTestQuestionFiles(lessonId, function () {
+                  goToView(lessonId);
+                }, function(errorMessage) {
+                  unsubmitLesson(errorMessage);
+                });
               }, function(errorMessage) {
                 unsubmitLesson(errorMessage);
               });
@@ -252,15 +259,15 @@
           }, function(errorMessage) {
             unsubmitLesson(errorMessage);
           });
-        }, function(errorMessage) {
-          unsubmitLesson(errorMessage);
-        });
-      }
+        }
 
-      function errorCallback(res) {
-        console.log('error: ' + res.data.message);
-        vm.error = res.data.message;
-      }
+        function errorCallback(res) {
+          angular.element('#modal-saved-lesson').modal('hide');
+          console.log('error: ' + res.data.message);
+          vm.error = res.data.message;
+        }
+        //angular.element('#modal-saved-lesson').modal('hide');
+      }, 5000);
     };
 
     vm.cancel = function() {
@@ -331,6 +338,33 @@
     vm.cancelTermAdd = function() {
       vm.term = {};
       angular.element('#modal-vocabulary').modal('hide');
+    };
+
+    vm.favoriteLesson = function() {
+      $http.post('api/lessons/'+vm.lesson._id+'/favorite', {})
+      .success(function(data, status, headers, config) {
+        vm.lesson.saved = true;
+        console.log('data', data);
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.unfavoriteLesson = function() {
+      $http.post('api/lessons/'+vm.lesson._id+'/unfavorite', {})
+      .success(function(data, status, headers, config) {
+        vm.lesson.saved = false;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.duplicateLesson = function() {
+      $state.go('lessons.duplicate', {
+        lessonId: vm.lesson._id
+      });
     };
   }
 })();
