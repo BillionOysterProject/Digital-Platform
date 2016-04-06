@@ -20,7 +20,6 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
     if (_.isArray(to)) {
       to = to.join(', ');
     }
-    console.log('from', from);
 
     transporter.sendMail({
       from: from,
@@ -29,14 +28,10 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
       text: bodyText,
       html: bodyHtml
     }, function(err, info) {
-      console.log('err', err);
-      console.log('info', info);
       if (err) errorCallback(err);
-      console.log('email sent', info.response);
       successCallback(info.response);
     });
   } else {
-    console.log('Missing params');
     errorCallback('Must have to address(es), subject, and body');
   }
 };
