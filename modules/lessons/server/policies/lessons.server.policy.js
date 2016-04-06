@@ -33,6 +33,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/upload-state-test-questions',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/publish',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/return',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
     }]
@@ -57,6 +63,15 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/upload-state-test-questions',
       permissions: '*'
     }, {
+      resources: '/api/lessons/:lessonId/favorite',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/unfavorite',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/favorites',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: '*'
     }]
@@ -68,7 +83,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-  
+
   // If a lesson is being processed and the current user created it then allow any manipulation
   // if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
   //   return next();

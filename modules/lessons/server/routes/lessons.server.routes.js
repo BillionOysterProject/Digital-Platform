@@ -32,6 +32,23 @@ module.exports = function (app) {
   app.route('/api/lessons/:lessonId/upload-state-test-questions').all(lessonsPolicy.isAllowed)
     .post(lessons.uploadStateTestQuestions);
 
+  // Publish lesson route
+  app.route('/api/lessons/:lessonId/publish').all(lessonsPolicy.isAllowed)
+    .post(lessons.publish);
+
+  app.route('/api/lessons/:lessonId/return').all(lessonsPolicy.isAllowed)
+    .post(lessons.return);
+
+  // Saved Lesson routes
+  app.route('/api/lessons/:lessonId/favorite').all(lessonsPolicy.isAllowed)
+    .post(lessons.favoriteLesson);
+
+  app.route('/api/lessons/:lessonId/unfavorite').all(lessonsPolicy.isAllowed)
+    .post(lessons.unfavoriteLesson);
+
+  app.route('/api/lessons/favorites').all(lessonsPolicy.isAllowed)
+    .get(lessons.listFavorites);
+
   // Single lesson routes
   app.route('/api/lessons/:lessonId').all(lessonsPolicy.isAllowed)
     .get(lessons.read)

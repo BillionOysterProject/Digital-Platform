@@ -205,6 +205,15 @@ var LessonSchema = new Schema({
   },
   updated: {
     type: Array
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'published', 'returned'],
+    default: ['pending'],
+    required: true
+  },
+  returnedNotes: {
+    type: String
   }
 });
 

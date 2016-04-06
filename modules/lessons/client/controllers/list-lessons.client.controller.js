@@ -27,6 +27,7 @@
         setting: vm.filter.setting,
         unit: vm.filter.unit,
         vocabulary: vm.filter.vocabulary,
+        status: 'published',
         searchString: vm.filter.searchString,
         limit: vm.filter.limit,
         page: vm.filter.page

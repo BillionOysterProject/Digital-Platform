@@ -6,8 +6,10 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
+  SavedLesson = mongoose.model('SavedLesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   request = require('request'),
@@ -48,6 +50,20 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Lesson model.
   lesson.isCurrentUserOwner = req.user && lesson.user && lesson.user._id.toString() === req.user._id.toString() ? true : false;
 
+  if (req.lessonSaved) {
+    lesson.saved = req.lessonSaved;
+  }
+
+  if (req.query.duplicate) {
+    delete lesson._id;
+    delete lesson.created;
+    delete lesson.title;
+    delete lesson.user;
+    delete lesson.updated;
+    delete lesson.status;
+    delete lesson.returnedNotes;
+  }
+
   res.json(lesson);
 };
 
@@ -59,7 +75,7 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
-    console.log('body', req.body);
+    lesson.returnedNotes = '';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
@@ -105,6 +121,155 @@ exports.update = function(req, res) {
       message: 'Cannot update the lesson'
     });
   }
+};
+
+/**
+ * Publish a lesson
+ */
+exports.publish = function(req, res) {
+  var lesson = req.lesson;
+
+  if (lesson) {
+    lesson.status = 'published';
+    lesson.returnedNotes = '';
+
+    lesson.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        //TODO: changed to actual user email address
+        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been approved',
+        'Your lesson has been approved and is now visible on the lessons page.',
+        '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
+        function(response) {
+          res.json(lesson);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Cannot update the lesson'
+    });
+  }
+};
+
+/**
+ * Return a lesson
+ */
+exports.return = function(req, res) {
+  var lesson = req.lesson;
+
+  if (lesson) {
+    lesson.status = 'returned';
+    lesson.returnedNotes = req.body.returnedNotes;
+
+    lesson.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been returned',
+        'Your lesson has been returned, the following changes need to be made: ' + lesson.returnedNotes + '\n' +
+        'You can edit the lesson on the My Library page.',
+        '<p>Your lesson has been returned, the following changes need to be made: <br/>' + lesson.returnedNotes + '<br/>' +
+        'You can edit the lesson on the My Library page.</p>',
+        function(response) {
+          res.json(lesson);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Cannot update the lesson'
+    });
+  }
+};
+
+/**
+ * Saved lesson methods
+ */
+exports.favoriteLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  var savedLesson = new SavedLesson({
+    user: req.user,
+    lesson: lesson
+  });
+
+  savedLesson.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      lesson.saved = true;
+      console.log('lesson', lesson);
+      res.json(lesson);
+    }
+  });
+};
+
+exports.unfavoriteLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  SavedLesson.findOne({ lesson: lesson, user: req.user }).exec(function(err, savedLesson) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (!savedLesson) {
+      return res.status(400).send({
+        message: 'Saved lesson not found'
+      });
+    } else {
+      savedLesson.remove(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          lesson.saved = false;
+          res.json(lesson);
+        }
+      });
+    }
+  });
+};
+
+exports.listFavorites = function(req, res) {
+  SavedLesson.find({ user: req.user }).exec(function(err, savedLessons) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var lessonIds = [];
+      for (var i = 0; i < savedLessons.length; i++) {
+        lessonIds.push(savedLessons[i].lesson);
+      }
+      Lesson.find({ _id: { $in: lessonIds } }).populate('user', 'displayName email team profileImageURL')
+      .populate('unit', 'title color icon').exec(function(err, lessons) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(lessons);
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -178,6 +343,18 @@ exports.list = function(req, res) {
 
   if (req.query.vocabulary) {
     and.push({ 'materialsResources.vocabulary': req.query.vocabulary });
+  }
+
+  if (req.query.byCreator) {
+    and.push({ 'user': req.user });
+  }
+
+  if (req.query.status) {
+    if (req.query.status === 'pending') {
+      and.push({ 'status': 'pending' });
+    } else if (req.query.status === 'published') {
+      and.push({ 'status': 'published' });
+    }
   }
 
   var searchRe;
@@ -372,7 +549,8 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon');
+  var query = Lesson.findById(id).populate('user', 'displayName email team profileImageURL')
+  .populate('unit', 'title color icon');
 
   if (req.query.full) {
     query.populate('standards.cclsElaScienceTechnicalSubjects').populate('standards.cclsMathematics')
@@ -390,8 +568,22 @@ exports.lessonByID = function(req, res, next, id) {
         message: 'No lesson with that identifier has been found'
       });
     }
-    console.log('lesson.standards', lesson.standards);
-    req.lesson = lesson;
-    next();
+
+    if (req.query.full) {
+      SavedLesson.findOne({ lesson: lesson, user: req.user }).exec(function(err, savedLesson) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          req.lesson = lesson;
+          req.lessonSaved = (savedLesson) ? true : false;
+          next();
+        }
+      });
+    } else {
+      req.lesson = lesson;
+      next();
+    }
   });
 };
