@@ -15,7 +15,8 @@ var ApplicationConfiguration = (function () {
     'angularFileUpload',
     'ngQuill',
     'iso.directives',
-    'rt.select2',
+    //'rt.select2',
+    'aa.select2',
     'omr.angularFileDnD',
     'dndLists',
     'ngLodash'];

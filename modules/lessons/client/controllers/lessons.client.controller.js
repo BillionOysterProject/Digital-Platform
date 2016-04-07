@@ -41,10 +41,24 @@
      { type: 'Music', name: 'Music', value: 'music' },
      { type: 'Art', name: 'Art', value: 'art' }
     ];
+
+    vm.subjectAreasSelectConfig = {
+      mode: 'tags-id',
+      id: 'value',
+      text: 'name',
+      options: vm.subjectAreas
+    };
+
     vm.protocolConnections = [
       { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' }
     ];
-    vm.vocabulary = GlossaryService.query();
+
+    vm.protocolConnectionsSelectConfig = {
+      mode: 'tags-id',
+      id: 'value',
+      text: 'name',
+      options: vm.protocolConnections
+    };
 
     vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query({ select: true });
     vm.cclsMathematics = CclsMathematicsService.query({ select: true });
@@ -55,6 +69,30 @@
     vm.nysssKeyIdeas = NysssKeyIdeasService.query({ select: true });
     vm.nysssMajorUnderstandings = NysssMajorUnderstandingsService.query({ select: true });
     vm.nysssMst = NysssMstService.query({ select: true });
+
+    vm.vocabularySelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'term',
+      textLookup: function(id) {
+        return GlossaryService.get({ termId: id }).$promise;
+      },
+      options: function(searchText) {
+        return GlossaryService.query();
+      }
+    };
+
+    vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsElaScienceTechnicalSubjectsService.get({ standardId: id }).$promise;
+      },
+      options: function(searchText) {
+        return CclsElaScienceTechnicalSubjectsService.query({ select: true });
+      }
+    };
 
     vm.units = UnitsService.query();
 

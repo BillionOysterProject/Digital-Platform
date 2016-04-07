@@ -29,7 +29,6 @@
                 </div>
                 <div class="col-md-4">
                   <div class="form-group" show-errors>
-                    <!-- TODO: Wire up a featured image for each article -->
                     <label for="image" class="control-label">Featured Image</label>
                     <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL" image-alt="Featured Image"></single-image-drop-zone>
                   </div>
@@ -100,13 +99,11 @@
                   </div>
                 </div>
                 <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
-                <!-- <select-optgroup outer-column="col-md-6" name="subjectArea" in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas" required="true" label-class="control-label required" options="{{vm.subjectAreas}}"></select-optgroup> -->
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group" show-errors>
                     <label for="subjectAreas" class="control-label required">Subject Area(s) *</label>
-
-                    <select2 class="form-control" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas" s2-options="subject.value as subject.name group by subject.type for subject in vm.subjectAreas" options="{ allowClear: true, dropdownAutoWidth: true }" multiple required></select2>
-
+                    <div aa-select2="vm.subjectAreasSelectConfig" name="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas"
+                    class="form-control"></div>
                     <div ng-messages="vm.form.lessonForm.subjectAreas.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Subject area is required.</p>
                     </div>
@@ -114,17 +111,19 @@
                 </div>
               </div>
               <div class="row">
-                <select-optgroup outer-column="col-md-12" name="protocolConnections" in-title="Protocol Connections *" ng-model="vm.lesson.lessonOverview.protocolConnections" required="true" label-class="control-label" options="{{vm.protocolConnections}}"></select-optgroup>
-                <!-- <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="protocolConnections" class="control-label">Protocol Connections</label> -->
-                <!-- TODO: should be required -->
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="protocolConnections" class="control-label required">Protocol Connections *</label>
+                    <div aa-select2="vm.protocolConnectionsSelectConfig" name="protocolConnections"
+                    ng-model="vm.lesson.lessonOverview.protocolConnections" class="form-control" required></div>
+                    <div ng-messages="vm.form.lessonForm.protocolConnections.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Procotol connections is required.</p>
+                    </div>
+                  </div>
                 <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate
-                                            Selections should turn into "tags" using select2. Multiple selections should be able to be made.
-                                            Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
-                <!-- <select class="select2 form-control" name="protocolConnections" multiple="multiple" placeholder="Protocol 1: Site Conditions" ng-model="vm.lesson.lessonOverview.protocolConnections"></select>
-                                    </div>
-                                </div> -->
+                  Selections should turn into "tags" using select2. Multiple selections should be able to be made.
+                  Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
+                </div>
               </div>
               <div class="row">
                 <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" label-class="control-label required"></wysiwyg-editor>
@@ -159,10 +158,8 @@
                   <div class="form-group">
                     <label for="vocabulary" class="control-label">Vocabulary</label>
                     <div class="input-group">
-                      <select2 class="form-control col-md-10" ng-model="vm.lesson.materialsResources.vocabulary"
-                      s2-options="item._id as item.term for item in vm.vocabulary"
-                      options="{ allowClear: true, dropdownAutoWidth: true }" multiple
-                      name="vocabulary" id="vocabulary"></select2>
+                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
+                      class="form-control col-md-10"></div>
                       <div class="input-group-btn">
                         <button class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></button>
                       </div>
