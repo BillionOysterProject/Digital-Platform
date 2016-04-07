@@ -15,7 +15,7 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ccls-ela-science-technical-subjects/:standardId',
+      resources: '/api/ccls-ela-science-technical-subjects/:metaCclsElaId',
       permissions: '*'
     }, {
       resources: '/api/ccls-ela-science-technical-subjects',
