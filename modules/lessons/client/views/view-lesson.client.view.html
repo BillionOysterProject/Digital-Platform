@@ -67,7 +67,8 @@
                 <b>Subject Areas</b>
                 <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
-                        <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                        <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                        class="label label-default"></span>
                     </li>
                 </ul>
             </div>
