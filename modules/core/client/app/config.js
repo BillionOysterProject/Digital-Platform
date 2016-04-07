@@ -18,7 +18,8 @@ var ApplicationConfiguration = (function () {
     'rt.select2',
     'omr.angularFileDnD',
     'dndLists',
-    'ngLodash'];
+    'ngLodash',
+    'ngCytoscape'];
     //'ngSanitize'];
 
   // Add a new vertical module
