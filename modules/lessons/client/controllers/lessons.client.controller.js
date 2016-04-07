@@ -60,16 +60,6 @@
       options: vm.protocolConnections
     };
 
-    vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query({ select: true });
-    vm.cclsMathematics = CclsMathematicsService.query({ select: true });
-    vm.ngssCrossCuttingConcepts = NgssCrossCuttingConceptsService.query({ select: true });
-    vm.ngssDisciplinaryCoreIdeas = NgssDisciplinaryCoreIdeasService.query({ select: true });
-    vm.ngssScienceEngineeringPractices = NgssScienceEngineeringPracticesService.query({ select: true });
-    vm.nycsssUnits = NycsssUnitsService.query({ select: true });
-    vm.nysssKeyIdeas = NysssKeyIdeasService.query({ select: true });
-    vm.nysssMajorUnderstandings = NysssMajorUnderstandingsService.query({ select: true });
-    vm.nysssMst = NysssMstService.query({ select: true });
-
     vm.vocabularySelectConfig = {
       mode: 'tags-id',
       id: '_id',
@@ -87,10 +77,106 @@
       id: '_id',
       text: 'value',
       textLookup: function(id) {
-        return CclsElaScienceTechnicalSubjectsService.get({ standardId: id }).$promise;
+        return CclsElaScienceTechnicalSubjectsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
         return CclsElaScienceTechnicalSubjectsService.query({ select: true });
+      }
+    };
+
+    vm.cclsMathematicsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsMathematicsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return CclsMathematicsService.query({ select: true });
+      }
+    };
+
+    vm.ngssCrossCuttingConceptsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssCrossCuttingConceptsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssCrossCuttingConceptsService.query({ select: true });
+      }
+    };
+
+    vm.ngssDisciplinaryCoreIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssDisciplinaryCoreIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssDisciplinaryCoreIdeasService.query({ select: true });
+      }
+    };
+
+    vm.ngssScienceEngineeringPracticesSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssScienceEngineeringPracticesService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssScienceEngineeringPracticesService.query({ select: true });
+      }
+    };
+
+    vm.nycsssUnitsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NycsssUnitsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NycsssUnitsService.query({ select: true });
+      }
+    };
+
+    vm.nysssKeyIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssKeyIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssKeyIdeasService.query({ select: true });
+      }
+    };
+
+    vm.nysssMajorUnderstandingsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMajorUnderstandingsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMajorUnderstandingsService.query({ select: true });
+      }
+    };
+
+    vm.nysssMstSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMstService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMstService.query({ select: true });
       }
     };
 
@@ -160,6 +246,14 @@
 
       if (vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
+        return false;
+      }
+
+      if (vm.lesson.lessonOverview.protocolConnections.length <= 0) {
+        return false;
+      }
+
+      if (vm.lesson.lessonOverview.subjectAreas.length <= 0) {
         return false;
       }
 
