@@ -77,7 +77,7 @@
           id: 'curriculum',
           name: 'Curriculum',
           color: '#cccccc',
-          size: 40,
+          size: 50,
           type: 'curriculum'
         }
       }];
