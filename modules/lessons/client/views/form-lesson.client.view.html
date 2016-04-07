@@ -295,85 +295,49 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="nycsssUnits" class="control-label">NYC Science Scope &amp; Sequence - Units</label>
-                    <div aa-select2="vm.nycsssUnitsSelectConfig" name="nycsssUnits"
-                    ng-model="vm.lesson.standards.nycsssUnits" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="nycsssUnits"
+                in-title="NYC Science Scope &amp; Sequence - Units" ng-model="vm.lesson.standards.nycsssUnits"
+                label-class="control-label" select-config="vm.nycsssUnitsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="nysssKeyIdeas" class="control-label">NYS Science Standards - Key Ideas</label>
-                    <div aa-select2="vm.nysssKeyIdeasSelectConfig" name="nysssKeyIdeas"
-                    ng-model="vm.lesson.standards.nysssKeyIdeas" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="nysssKeyIdeas"
+                in-title="NYS Science Standards - Key Ideas" ng-model="vm.lesson.standards.nysssKeyIdeas"
+                label-class="control-label" select-config="vm.nysssKeyIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="nysssMajorUnderstandings" class="control-label">NYS Science Standards - Major Understandings</label>
-                    <div aa-select2="vm.nysssMajorUnderstandingsSelectConfig" name="nysssMajorUnderstandings"
-                    ng-model="vm.lesson.standards.nysssMajorUnderstandings" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings"
+                in-title="NYS Science Standards - Major Understandings" ng-model="vm.lesson.standards.nysssMajorUnderstandings"
+                label-class="control-label" select-config="vm.nysssMajorUnderstandingsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="nysssMst" class="control-label">NYS Science Standards - MST</label>
-                    <div aa-select2="vm.nysssMstSelectConfig" name="nysssMst"
-                    ng-model="vm.lesson.standards.nysssMst" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="nysssMst"
+                in-title="NYS Science Standards - MST" ng-model="vm.lesson.standards.nysssMst"
+                label-class="control-label" select-config="vm.nysssMstSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="ngssDisciplinaryCoreIdeas" class="control-label">NGSS - Disciplinary Core Ideas</label>
-                    <div aa-select2="vm.ngssDisciplinaryCoreIdeasSelectConfig" name="ngssDisciplinaryCoreIdeas"
-                    ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas"
+                in-title="NGSS - Disciplinary Core Ideas" ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas"
+                label-class="control-label" select-config="vm.ngssDisciplinaryCoreIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="ngssScienceEngineeringPractices" class="control-label">NGSS - Science and Engineering Practices</label>
-                    <div aa-select2="vm.ngssScienceEngineeringPracticesSelectConfig" name="ngssScienceEngineeringPractices"
-                    ng-model="vm.lesson.standards.ngssScienceEngineeringPractices" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices"
+                in-title="NGSS - Science and Engineering Practices" ng-model="vm.lesson.standards.ngssScienceEngineeringPractices"
+                label-class="control-label" select-config="vm.ngssScienceEngineeringPracticesSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="ngssCrossCuttingConcepts" class="control-label">NGSS - Cross-Cutting Concepts</label>
-                    <div aa-select2="vm.ngssCrossCuttingConceptsSelectConfig" name="ngssCrossCuttingConcepts"
-                    ng-model="vm.lesson.standards.ngssCrossCuttingConcepts" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts"
+                in-title="NGSS - Cross-Cutting Concepts" ng-model="vm.lesson.standards.ngssCrossCuttingConcepts"
+                label-class="control-label" select-config="vm.ngssCrossCuttingConceptsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="cclsMathematics" class="control-label">CCLS - Mathematics</label>
-                    <div aa-select2="vm.cclsMathematicsSelectConfig" name="cclsMathematics"
-                    ng-model="vm.lesson.standards.cclsMathematics" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="cclsMathematics"
+                in-title="CCLS - Mathematics" ng-model="vm.lesson.standards.cclsMathematics"
+                label-class="control-label" select-config="vm.cclsMathematicsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="cclsElaScienceTechnicalSubjects" class="control-label">CCLS - ELA Science & Technical Subjects</label>
-                    <div aa-select2="vm.cclsElaScienceTechnicalSubjectsSelectConfig" name="cclsElaScienceTechnicalSubjects"
-                    ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects" class="form-control"></div>
-                  </div>
-                </div>
+                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
+                in-title="CCLS - ELA Science & Technical Subjects" ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects"
+                label-class="control-label" select-config="vm.cclsElaScienceTechnicalSubjectsSelectConfig"></select-tags>
               </div>
             </div>
           </div>
