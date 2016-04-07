@@ -36,40 +36,36 @@
       }
     }];
 
-    // vm.style = {
-    //   global: {
-    //     backgroundColor: '#ffffff',
-    //     tooltipDelay: 1000
-    //   },
-    //   nodes: {
-    //     shape: 'ELLIPSE',
-    //     color: '#333333',
-    //     opacity: 1,
-    //     size: {
-    //       defaultValue: 12,
-    //       continuousMapper: {
-    //         attrName: 'weight',
-    //         minValue: 12,
-    //         maxValue: 36
+    // vm.style = [{
+    //   selector: 'node',
+    //   style: {
+    //     'shape': 'ELLIPSE',
+    //     'background-color': 'data(color)',
+    //     'color': '#333333',
+    //     'opacity': '1',
+    //     'size': {
+    //       'defaultValue': '12',
+    //       'continuousMapper': {
+    //         'attrName': 'data(size)',
+    //         'minValue': '12',
+    //         'maxValue': '56'
     //       }
     //     },
-    //     borderColor: '#000000',
-    //     tooltipText: '<b>${data(name)}</b>: ${weight}'
+    //     'borderColor': '#000000',
+    //     'label': 'data(name)',
+    //     'tooltipText': '<b>data(name)</b>'
     //   },
-    //   edges: {
-    //     color: '#999999',
-    //     width: 2,
-    //     mergeWidth: 2,
-    //     opacity: 1,
-    //     label: {
-    //       passthroughMapper: {
-    //         attrName: 'id'
-    //       }
-    //     },
-    //     labelFontSize: 10,
-    //     labelFontWeight: 'bold'
+    // }, {
+    //   selector: 'edge',
+    //   style: {
+    //     'color': '#999999',
+    //     'width': '2',
+    //     'mergeWidth': '2',
+    //     'opacity': '1',
+    //     'labelFontSize': '10',
+    //     'labelFontWeight': 'bold'
     //   }
-    // };
+    // }];
 
     vm.lessonsOpen = false;
 
