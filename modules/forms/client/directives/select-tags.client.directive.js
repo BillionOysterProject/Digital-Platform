@@ -16,7 +16,7 @@
           labelClass: '@',
           selectConfig: '='
         },
-        require: ['ngModel','aaSelect2'],
+        require: ['ngModel','selectConfig'],
         replace: true
       };
     });
