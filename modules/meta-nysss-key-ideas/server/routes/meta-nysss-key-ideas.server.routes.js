@@ -3,21 +3,21 @@
 /**
  * Module dependencies
  */
-var standardPolicy = require('../policies/meta-nysss-key-ideas.server.policy'),
-  standards = require('../controllers/meta-nysss-key-ideas.server.controller');
+var metaNysssKiPolicy = require('../policies/meta-nysss-key-ideas.server.policy'),
+  metaNysssKis = require('../controllers/meta-nysss-key-ideas.server.controller');
 
 module.exports = function (app) {
-  // Standard collection routes
-  app.route('/api/nysss-key-ideas').all(standardPolicy.isAllowed)
-    .get(standards.list)
-    .post(standards.create);
-
   // Single standard routes
-  app.route('/api/nysss-key-ideas/:standardId').all(standardPolicy.isAllowed)
-    .get(standards.read)
-    .put(standards.update)
-    .delete(standards.delete);
+  app.route('/api/nysss-key-ideas/:metaNysssKiId').all(metaNysssKiPolicy.isAllowed)
+    .get(metaNysssKis.read)
+    .put(metaNysssKis.update)
+    .delete(metaNysssKis.delete);
+
+  // Standard collection routes
+  app.route('/api/nysss-key-ideas').all(metaNysssKiPolicy.isAllowed)
+    .get(metaNysssKis.list)
+    .post(metaNysssKis.create);
 
   // Finish by binding the standard middleware
-  app.param('standardId', standards.standardByID);
+  app.param('metaNysssKiId', metaNysssKis.standardByID);
 };

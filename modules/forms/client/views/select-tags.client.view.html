@@ -1,6 +1,6 @@
 <div class="{{outerColumn}}">
   <div class="form-group">
     <label for="{{name}}" class="{{labelClass}}">{{inTitle}}</label>
-    <select2 class="form-control" ng-model="outModel" s2-options="item.value as item.name for item in {{options}}" options="{ allowClear: true, dropdownAutoWidth: true }" multiple required="{{required}}" name="{{name}}" id="{{name}}"></select2>
+    <div class="form-control" style="width: 100%" ng-model="outModel" aa-select2="selectConfig" required="{{required}}" name="{{name}}"></div>
   </div>
 </div>

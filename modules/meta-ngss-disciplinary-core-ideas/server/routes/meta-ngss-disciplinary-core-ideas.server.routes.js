@@ -3,21 +3,21 @@
 /**
  * Module dependencies
  */
-var standardPolicy = require('../policies/meta-ngss-disciplinary-core-ideas.server.policy'),
-  standards = require('../controllers/meta-ngss-disciplinary-core-ideas.server.controller');
+var metaNgssDciPolicy = require('../policies/meta-ngss-disciplinary-core-ideas.server.policy'),
+  metaNgssDcis = require('../controllers/meta-ngss-disciplinary-core-ideas.server.controller');
 
 module.exports = function (app) {
   // Standard collection routes
-  app.route('/api/ngss-disciplinary-core-ideas').all(standardPolicy.isAllowed)
-    .get(standards.list)
-    .post(standards.create);
+  app.route('/api/ngss-disciplinary-core-ideas').all(metaNgssDciPolicy.isAllowed)
+    .get(metaNgssDcis.list)
+    .post(metaNgssDcis.create);
 
   // Single standard routes
-  app.route('/api/ngss-disciplinary-core-ideas/:standardId').all(standardPolicy.isAllowed)
-    .get(standards.read)
-    .put(standards.update)
-    .delete(standards.delete);
+  app.route('/api/ngss-disciplinary-core-ideas/:metaNgssDciId').all(metaNgssDciPolicy.isAllowed)
+    .get(metaNgssDcis.read)
+    .put(metaNgssDcis.update)
+    .delete(metaNgssDcis.delete);
 
   // Finish by binding the standard middleware
-  app.param('standardId', standards.standardByID);
+  app.param('metaNgssDciId', metaNgssDcis.standardByID);
 };

@@ -3,21 +3,21 @@
 /**
  * Module dependencies
  */
-var standardPolicy = require('../policies/meta-nysss-major-understandings.server.policy'),
-  standards = require('../controllers/meta-nysss-major-understandings.server.controller');
+var metaNysssMuPolicy = require('../policies/meta-nysss-major-understandings.server.policy'),
+  metaNysssMus = require('../controllers/meta-nysss-major-understandings.server.controller');
 
 module.exports = function (app) {
-  // Standard collection routes
-  app.route('/api/nysss-major-understandings').all(standardPolicy.isAllowed)
-    .get(standards.list)
-    .post(standards.create);
-
   // Single standard routes
-  app.route('/api/nysss-major-understandings/:standardId').all(standardPolicy.isAllowed)
-    .get(standards.read)
-    .put(standards.update)
-    .delete(standards.delete);
+  app.route('/api/nysss-major-understandings/:metaNysssMuId').all(metaNysssMuPolicy.isAllowed)
+    .get(metaNysssMus.read)
+    .put(metaNysssMus.update)
+    .delete(metaNysssMus.delete);
+
+  // Standard collection routes
+  app.route('/api/nysss-major-understandings').all(metaNysssMuPolicy.isAllowed)
+    .get(metaNysssMus.list)
+    .post(metaNysssMus.create);
 
   // Finish by binding the standard middleware
-  app.param('standardId', standards.standardByID);
+  app.param('metaNysssMuId', metaNysssMus.standardByID);
 };

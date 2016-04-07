@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ngss-cross-cutting-concepts',
+      resources: '/api/ngss-cross-cutting-concepts/:metaNgssCccId',
       permissions: '*'
     }, {
-      resources: '/api/ngss-cross-cutting-concepts/:standardId',
+      resources: '/api/ngss-cross-cutting-concepts',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/ngss-cross-cutting-concepts',
+      resources: '/api/ngss-cross-cutting-concepts/:metaNgssCccId',
       permissions: ['get']
     }, {
-      resources: '/api/ngss-cross-cutting-concepts/:standardId',
+      resources: '/api/ngss-cross-cutting-concepts',
       permissions: ['get']
     }]
   }]);

@@ -3,21 +3,21 @@
 /**
  * Module dependencies
  */
-var standardPolicy = require('../policies/meta-ccls-mathematics.server.policy'),
-  standards = require('../controllers/meta-ccls-mathematics.server.controller');
+var metaCclsMathPolicy = require('../policies/meta-ccls-mathematics.server.policy'),
+  metaCclsMaths = require('../controllers/meta-ccls-mathematics.server.controller');
 
 module.exports = function (app) {
-  // Standard collection routes
-  app.route('/api/ccls-mathematics').all(standardPolicy.isAllowed)
-    .get(standards.list)
-    .post(standards.create);
-
   // Single standard routes
-  app.route('/api/ccls-mathematics/:standardId').all(standardPolicy.isAllowed)
-    .get(standards.read)
-    .put(standards.update)
-    .delete(standards.delete);
+  app.route('/api/ccls-mathematics/:metaCclsMathId').all(metaCclsMathPolicy.isAllowed)
+    .get(metaCclsMaths.read)
+    .put(metaCclsMaths.update)
+    .delete(metaCclsMaths.delete);
+
+  // Standard collection routes
+  app.route('/api/ccls-mathematics').all(metaCclsMathPolicy.isAllowed)
+    .get(metaCclsMaths.list)
+    .post(metaCclsMaths.create);
 
   // Finish by binding the standard middleware
-  app.param('standardId', standards.standardByID);
+  app.param('metaCclsMathId', metaCclsMaths.standardByID);
 };

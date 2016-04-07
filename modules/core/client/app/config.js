@@ -15,12 +15,11 @@ var ApplicationConfiguration = (function () {
     'angularFileUpload',
     'ngQuill',
     'iso.directives',
-    'rt.select2',
+    'aa.select2',
     'omr.angularFileDnD',
     'dndLists',
     'ngLodash',
     'ngCytoscape'];
-    //'ngSanitize'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

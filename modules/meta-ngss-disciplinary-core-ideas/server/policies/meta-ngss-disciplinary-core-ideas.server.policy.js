@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ngss-disciplinary-core-ideas',
+      resources: '/api/ngss-disciplinary-core-ideas/:metaNgssDciId',
       permissions: '*'
     }, {
-      resources: '/api/ngss-disciplinary-core-ideas/:standardId',
+      resources: '/api/ngss-disciplinary-core-ideas',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/ngss-disciplinary-core-ideas',
+      resources: '/api/ngss-disciplinary-core-ideas/:metaNgssDciId',
       permissions: ['get']
     }, {
-      resources: '/api/ngss-disciplinary-core-ideas/:standardId',
+      resources: '/api/ngss-disciplinary-core-ideas',
       permissions: ['get']
     }]
   }]);

@@ -32,7 +32,12 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var standard = req.standard ? req.standard.toJSON() : {};
-
+  if (req.query.select) {
+    standard = {
+      _id: standard._id,
+      value: standard.header + ' - ' + standard.description
+    };
+  }
   res.json(standard);
 };
 
