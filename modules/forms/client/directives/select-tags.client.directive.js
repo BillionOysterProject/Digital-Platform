@@ -14,9 +14,9 @@
           name: '@',
           required: '@',
           labelClass: '@',
-          options: '@'
+          selectConfig: '='
         },
-        require: 'ngModel',
+        require: ['ngModel','selectConfig'],
         replace: true
       };
     });

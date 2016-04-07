@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/nysss-mst',
+      resources: '/api/nysss-mst/:nyssMstId',
       permissions: '*'
     }, {
-      resources: '/api/nysss-mst/:standardId',
+      resources: '/api/nysss-mst',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/nysss-mst',
+      resources: '/api/nysss-mst/:nyssMstId',
       permissions: ['get']
     }, {
-      resources: '/api/nysss-mst/:standardId',
+      resources: '/api/nysss-mst',
       permissions: ['get']
     }]
   }]);

@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ccls-mathematics',
+      resources: '/api/ccls-mathematics/:metaCclsMathId',
       permissions: '*'
     }, {
-      resources: '/api/ccls-mathematics/:standardId',
+      resources: '/api/ccls-mathematics',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/ccls-mathematics',
+      resources: '/api/ccls-mathematics/:metaCclsMathId',
       permissions: ['get']
     }, {
-      resources: '/api/ccls-mathematics/:standardId',
+      resources: '/api/ccls-mathematics',
       permissions: ['get']
     }]
   }]);

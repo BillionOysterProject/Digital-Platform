@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Stage 1: Desired Results -->
                     <h3>Stage 1: Desired Results</h3>
                     <div class="panel panel-default">
@@ -150,12 +150,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- REMOVING SELECTS AND REPLACING WITH WYSIWYGS
-                            <div class="row">
-                                <select-tags outer-column="col-md-4" name="scienceLessons" in-title="Science Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label" options="{{vm.scienceLessons}}"></select-tags>
-                                <select-tags outer-column="col-md-4" name="mathLessons" in-title="Math Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.math" label-class="control-label" options="{{vm.mathLessons}}"></select-tags>
-                                <select-tags outer-column="col-md-4" name="fieldLessons" in-title="Field Lessons" ng-model="vm.unit.stageOne.acquisition.lessons.field" label-class="control-label" options="{{vm.fieldLessons}}"></select-tags>
-                            </div>-->
+                            </div>
                         </div>
                     </div>
                     <!-- Stage 2: Evidence -->
@@ -163,7 +158,9 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <select-tags outer-column="col-md-12" name="numberExpectation" in-title="Performance Expectation" ng-model="vm.unit.stageTwo.evidence.expectations" label-class="control-label" options="{{vm.numberExpectations}}"></select-tags>
+                                <select-tags outer-column="col-md-12" name="numberExpectation"
+                                in-title="Performance Expectation" ng-model="vm.unit.stageTwo.evidence.expectations"
+                                label-class="control-label" select-config="vm.numberExpectationsSelectConfig"></select-tags>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -198,7 +195,9 @@
                             <h4>Assessment Evidence</h4>
                             <p>How will students show their learning?</p>
                             <div class="row">
-                                <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project" ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects" label-class="control-label" options="{{vm.researchProjects}}"></select-tags>
+                                <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project"
+                                ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects"
+                                label-class="control-label" select-config="vm.researchProjectsSelectConfig"></select-tags>
                                 <wysiwyg-editor outer-column="col-md-12 form-group" name="extentions" in-title="Extensions" ng-model="vm.unit.stageTwo.assessmentEvidence.extentions"></wysiwyg-editor>
                             </div>
                         </div>

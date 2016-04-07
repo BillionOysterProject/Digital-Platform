@@ -149,7 +149,7 @@ exports.termByID = function(req, res, next, id) {
     });
   }
 
-  Glossary.findById(id).exec(function(err, term) {
+  Glossary.findById(id).populate('user', 'displayName email').exec(function(err, term) {
     if (err) {
       return next(err);
     } else if (!term) {

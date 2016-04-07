@@ -3,21 +3,21 @@
 /**
  * Module dependencies
  */
-var standardPolicy = require('../policies/meta-ccls-ela-science-technical-subjects.server.policy'),
-  standards = require('../controllers/meta-ccls-ela-science-technical-subjects.server.controller');
+var metaCclsElaPolicy = require('../policies/meta-ccls-ela-science-technical-subjects.server.policy'),
+  metaCclsElas = require('../controllers/meta-ccls-ela-science-technical-subjects.server.controller');
 
 module.exports = function (app) {
-  // Standard collection routes
-  app.route('/api/ccls-ela-science-technical-subjects').all(standardPolicy.isAllowed)
-    .get(standards.list)
-    .post(standards.create);
+  // Single metaCclsEla routes
+  app.route('/api/ccls-ela-science-technical-subjects/:metaCclsElaId').all(metaCclsElaPolicy.isAllowed)
+    .get(metaCclsElas.read)
+    .put(metaCclsElas.update)
+    .delete(metaCclsElas.delete);
 
-  // Single standard routes
-  app.route('/api/ccls-ela-science-technical-subjects/:standardId').all(standardPolicy.isAllowed)
-    .get(standards.read)
-    .put(standards.update)
-    .delete(standards.delete);
+  // Standard collection routes
+  app.route('/api/ccls-ela-science-technical-subjects').all(metaCclsElaPolicy.isAllowed)
+    .get(metaCclsElas.list)
+    .post(metaCclsElas.create);
 
   // Finish by binding the standard middleware
-  app.param('standardId', standards.standardByID);
+  app.param('metaCclsElaId', metaCclsElas.standardByID);
 };
