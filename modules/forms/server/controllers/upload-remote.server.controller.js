@@ -36,6 +36,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
   if (req && res && localUploader && uploadConfig) {
     localUploader(req, res, function(localUploadError) {
       if (localUploadError) {
+        console.log('localUploadError', localUploadError);
         errorCallback('Error occurred while uploading local file');
       } else {
         if (req.file) {
@@ -44,6 +45,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
           var pathExt = path.extname(file.originalname);
           var s3Filename = vm.remoteUrl + uploadConfig.s3dest + file.filename + pathExt;
 
+          console.log('key', uploadConfig.s3dest + file.filename + pathExt);
           var params = {
             localFile: localFileName,
             s3Params: {

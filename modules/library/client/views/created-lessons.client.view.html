@@ -1,6 +1,6 @@
 <div class="row" isotope-container="isotope-container">
     <div ng-repeat="lesson in vm.createdLessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
-        <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+        <div class="panel" data-category="transition">
             <div class="panel-heading" style="background: {{lesson.unit.color}}">
                 <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
                 <h3 class="panel-title">
@@ -17,6 +17,8 @@
                 <a class="btn btn-sm btn-primary pull-right" ng-show="lesson.status === 'published'"
                 ui-sref="lessons.edit({ lessonId: lesson._id })">
                   <i class="glyphicon glyphicon-pencil"></i></a>
+                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.view({ lessonId: lesson._id })">
+                  <i class="glyphicon glyphicon-eye-open"></i></a>
                 <h6 ng-show="lesson.status === 'published'">Published</h6>
                 <h6 ng-show="lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
                 <h6 ng-show="lesson.status === 'returned'" class="red">Returned</h6>

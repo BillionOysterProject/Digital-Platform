@@ -14,7 +14,10 @@
                 <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: lesson._id })"><i class="glyphicon glyphicon-pencil"></i></a>
+                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: lesson._id })">
+                  <i class="glyphicon glyphicon-pencil"></i></a>
+                  <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.view({ lessonId: lesson._id })">
+                    <i class="glyphicon glyphicon-eye-open"></i></a>
                 <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openReturnModal(lesson)"><i class="glyphicon glyphicon-remove"></i></a>
                 <a class="btn btn-sm btn-success pull-right" ng-click="vm.openPublishModal(lesson)"><i class="glyphicon glyphicon-ok"></i></a>
                 <h6 class="blue">Awaiting Approval</h6>

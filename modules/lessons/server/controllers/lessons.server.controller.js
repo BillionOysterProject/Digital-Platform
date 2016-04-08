@@ -12,6 +12,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
+  archiver = require('archiver'),
   request = require('request'),
   path = require('path'),
   multer = require('multer'),
@@ -259,7 +260,8 @@ exports.listFavorites = function(req, res) {
         lessonIds.push(savedLessons[i].lesson);
       }
       Lesson.find({ _id: { $in: lessonIds } }).populate('user', 'displayName email team profileImageURL')
-      .populate('unit', 'title color icon').exec(function(err, lessons) {
+      .populate('unit', 'title color icon').populate('lessonOverview.subjectAreas', 'subject color')
+      .exec(function(err, lessons) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
@@ -537,6 +539,28 @@ exports.downloadFile = function(req, res){
   res.setHeader('content-type', req.query.mimetype);
 
   request(req.query.path).pipe(res);
+};
+
+exports.downloadZip = function(req, res) {
+  var lesson = req.lesson;
+  console.log('lesson', lesson);
+  
+  res.setHeader('Content-disposition', 'attachment; filename=' + lesson.title + '.zip');
+  res.setHeader('Content-Type', 'application/zip');
+
+  var zip = archiver('zip');
+
+  zip.pipe(res);
+  console.log('query download', req.query.download);
+
+  //content
+  zip.append('Some text to go in file 1.', { name: '1.txt' })
+      .append('Some text to go in file 2. I go in a folder!', { name: 'somefolder/2.txt' });
+
+  //local file
+  //zip.file('staticFiles/3.txt', { name: '3.txt' });
+
+  zip.finalize();
 };
 
 /**

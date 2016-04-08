@@ -39,6 +39,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/return',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/download',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
     }]
@@ -67,6 +70,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/unfavorite',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/download',
       permissions: '*'
     }, {
       resources: '/api/lessons/favorites',
