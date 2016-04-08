@@ -26,7 +26,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelFunction()">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="downloadFunction()">Download</button>
+                <a class="btn btn-default" ng-click="downloadFunction()" download="{{lesson.filename}}" target="_blank"
+                ng-href="api/lessons/{{lesson._id}}/download?content={{download.content}}&handout={{download.handout}}&resources={{download.resources}}&full=true&filename={{lesson.filename}}">Download</a>
             </div>
         </div>
     </div>
