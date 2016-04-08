@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ccls-ela-science-technical-subjects',
+      resources: '/api/ccls-ela-science-technical-subjects/:metaCclsElaId',
       permissions: '*'
     }, {
-      resources: '/api/ccls-ela-science-technical-subjects/:standardId',
+      resources: '/api/ccls-ela-science-technical-subjects',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/ccls-ela-science-technical-subjects',
+      resources: '/api/ccls-ela-science-technical-subjects/:metaCclsElaId',
       permissions: ['get']
     }, {
-      resources: '/api/ccls-ela-science-technical-subjects/:standardId',
+      resources: '/api/ccls-ela-science-technical-subjects',
       permissions: ['get']
     }]
   }]);

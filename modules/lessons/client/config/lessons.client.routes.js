@@ -50,6 +50,19 @@
           pageTitle: 'Edit Lesson {{ lessonResolve.title }}'
         }
       })
+      .state('lessons.duplicate', {
+        url: '/:lessonId/duplicate',
+        templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
+        controller: 'LessonsController',
+        controllerAs: 'vm',
+        resolve: {
+          lessonResolve: getLessonDuplicate
+        },
+        data: {
+          roles: ['team lead'],
+          pageTitle: 'Duplicate Lesson'
+        }
+      })
       .state('lessons.view', {
         url: '/:lessonId',
         templateUrl: 'modules/lessons/client/views/view-lesson.client.view.html',
@@ -69,6 +82,15 @@
   function getLesson($stateParams, LessonsService) {
     return LessonsService.get({
       lessonId: $stateParams.lessonId
+    }).$promise;
+  }
+
+  getLessonDuplicate.$inject = ['$stateParams', 'LessonsService'];
+
+  function getLessonDuplicate($stateParams, LessonsService) {
+    return LessonsService.get({
+      lessonId: $stateParams.lessonId,
+      duplicate: true
     }).$promise;
   }
 

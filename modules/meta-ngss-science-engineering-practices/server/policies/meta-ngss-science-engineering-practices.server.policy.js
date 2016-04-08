@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/ngss-science-engineering-practices',
+      resources: '/api/ngss-science-engineering-practices/:metaNgssSepId',
       permissions: '*'
     }, {
-      resources: '/api/ngss-science-engineering-practices/:standardId',
+      resources: '/api/ngss-science-engineering-practices',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/ngss-science-engineering-practices',
+      resources: '/api/ngss-science-engineering-practices/:metaNgssSepId',
       permissions: ['get']
     }, {
-      resources: '/api/ngss-science-engineering-practices/:standardId',
+      resources: '/api/ngss-science-engineering-practices',
       permissions: ['get']
     }]
   }]);

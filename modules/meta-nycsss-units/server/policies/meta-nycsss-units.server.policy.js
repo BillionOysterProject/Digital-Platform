@@ -15,19 +15,19 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/nycsss-units',
+      resources: '/api/nycsss-units/:metaNycssUnitId',
       permissions: '*'
     }, {
-      resources: '/api/nycsss-units/:standardId',
+      resources: '/api/nycsss-units',
       permissions: '*'
     }]
   }, {
     roles: ['user', 'team lead', 'team member', 'partner', 'guest'],
     allows: [{
-      resources: '/api/nycsss-units',
+      resources: '/api/nycsss-units/:metaNycssUnitId',
       permissions: ['get']
     }, {
-      resources: '/api/nycsss-units/:standardId',
+      resources: '/api/nycsss-units',
       permissions: ['get']
     }]
   }]);

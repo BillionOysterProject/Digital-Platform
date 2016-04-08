@@ -6,19 +6,17 @@
             <div class="col col-sm-6">
                 <h2>{{vm.lesson.title}}
                     <small>
-                        <a href="#"><i class="glyphicon glyphicon-star-empty"></i></a>
-                        <!--TODO: Wire up Lesson saves. If teacher clicks the star to save the lesson, show on My Library page and switch <a> tag to this:
-                        <a href="#"><i class="glyphicon glyphicon-star red"></i></a>-->
+                        <a ng-click="vm.favoriteLesson()" ng-hide="vm.lesson.saved"><i class="glyphicon glyphicon-star-empty"></i></a>
+                        <a ng-click="vm.unfavoriteLesson()" ng-show="vm.lesson.saved"><i class="glyphicon glyphicon-star red"></i></a>
                     </small>
                 </h2>
             </div>
             <div class="col col-sm-6 text-right">
-                <!-- TODO: show status of lesson --
-                <h6 class="blue">Awaiting Approval</h6>
-                <h6 class="red">Returned</h6>-->
-                <h6>Published</h6>
-                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a><!-- TODO: Hide edit button if awaiting approval -->
-                <a class="btn btn-default">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
+                <h6 ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
+                <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
+                <h6 ng-show="vm.lesson.status === 'published'">Published</h6>
+                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+                <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
                 <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
             </div>
         </div>
@@ -69,7 +67,8 @@
                 <b>Subject Areas</b>
                 <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
-                        <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                        <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                        class="label label-default"></span>
                     </li>
                 </ul>
             </div>
@@ -128,9 +127,9 @@
                     </div>
                     <div class="col col-sm-6">
                         <h3>Vocabulary</h3>
-                        <!-- TODO: Should show definition on click - place    $('.popover-trigger').popover();    inside jQuery to trigger popover -->
                         <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
-                            <a class="popover-trigger" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Vocabulary Term" data-content="Vocabulary definition here" ng-bind="vocabulary | vocabulary"></a>
+                            <span uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
+                            popover-trigger="mouseenter" popover-placement="top" ng-bind="vocabulary.term"></span>
                         </div>
                     </div>
                     <div class="col col-sm-12">

@@ -5,19 +5,19 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', 'lessonResolve', 'Authentication',
+  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', 'lessonResolve', 'Authentication',
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
-  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
+  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
+  'SubjectAreasService'];
 
-  function LessonsController($scope, $state, $http,
-    lesson, Authentication, UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService,
-    CclsMathematicsService, NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService,
-    NgssScienceEngineeringPracticesService, NycsssUnitsService, NysssKeyIdeasService,
-    NysssMajorUnderstandingsService, NysssMstService) {
+  function LessonsController($scope, $state, $http, $timeout, lesson, Authentication,
+    UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
+    NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
+    NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
+    SubjectAreasService) {
     var vm = this;
 
-    console.log('lesson', lesson);
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.error = null;
@@ -25,44 +25,176 @@
     vm.showResourceModal = false;
     vm.showVocabularyModal = false;
 
-    vm.subjectAreas = [
-     { type: 'Science', name: 'Ecology', value: 'ecology' },
-     { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
-     { type: 'Science', name: 'Limnology', value: 'limnology' },
-     { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
-     { type: 'Science', name: 'Oceanography', value: 'oceanography' },
-     { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
-     { type: 'Engineering', name: 'Engineering', value: 'engineering' },
-     { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
-     { type: 'Math', name: 'Graphing', value: 'graphing' },
-     { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
-     { type: 'Math', name: 'Algebra', value: 'algebra' },
-     { type: 'Social Studies', name: 'History', value: 'history' },
-     { type: 'Social Studies', name: 'Economics', value: 'economics' },
-     { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
-     { type: 'Music', name: 'Music', value: 'music' },
-     { type: 'Art', name: 'Art', value: 'art' }
-    ];
+    // vm.subjectAreas = [
+    //  { type: 'Science', name: 'Ecology', value: 'ecology' },
+    //  { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
+    //  { type: 'Science', name: 'Limnology', value: 'limnology' },
+    //  { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
+    //  { type: 'Science', name: 'Oceanography', value: 'oceanography' },
+    //  { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
+    //  { type: 'Engineering', name: 'Engineering', value: 'engineering' },
+    //  { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
+    //  { type: 'Math', name: 'Graphing', value: 'graphing' },
+    //  { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
+    //  { type: 'Math', name: 'Algebra', value: 'algebra' },
+    //  { type: 'Social Studies', name: 'History', value: 'history' },
+    //  { type: 'Social Studies', name: 'Economics', value: 'economics' },
+    //  { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
+    //  { type: 'Music', name: 'Music', value: 'music' },
+    //  { type: 'Art', name: 'Art', value: 'art' }
+    // ];
+
+    vm.subjectAreasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'subject',
+      textLookup: function(id) {
+        return SubjectAreasService.get({ subjectAreaId: id }).$promise;
+      },
+      options: function(searchText) {
+        return SubjectAreasService.query();
+      }
+    };
+    SubjectAreasService.query({
+
+    }, function(data) {
+      console.log('subject areas', data);
+    });
+
     vm.protocolConnections = [
-      { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' }
-    ];
-    vm.vocabulary = [
-      { name: 'Art', value: 'art' },
-      { name: 'Ecosystem', value: 'ecosystem' },
-      { name: 'Hypothesis', value: 'hypothesis' },
-      { name: 'Oyster', value: 'oyster' },
-      { name: 'Science', value: 'science' }
+      { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' },
+      { type: 'Protocol 2', name: 'Protocol 2: Oyster Measurements', value: 'protocol2' },
+      { type: 'Protocol 3', name: 'Protocol 3: Mobile Trap', value: 'protocol3' },
+      { type: 'Protocol 4', name: 'Protocol 4: Settlement Tiles', value: 'protocol4' },
+      { type: 'Protocol 5', name: 'Protocol 5: Water Quality', value: 'protocol5' },
     ];
 
-    vm.cclsElaScienceTechnicalSubjects = CclsElaScienceTechnicalSubjectsService.query({ select: true });
-    vm.cclsMathematics = CclsMathematicsService.query({ select: true });
-    vm.ngssCrossCuttingConcepts = NgssCrossCuttingConceptsService.query({ select: true });
-    vm.ngssDisciplinaryCoreIdeas = NgssDisciplinaryCoreIdeasService.query({ select: true });
-    vm.ngssScienceEngineeringPractices = NgssScienceEngineeringPracticesService.query({ select: true });
-    vm.nycsssUnits = NycsssUnitsService.query({ select: true });
-    vm.nysssKeyIdeas = NysssKeyIdeasService.query({ select: true });
-    vm.nysssMajorUnderstandings = NysssMajorUnderstandingsService.query({ select: true });
-    vm.nysssMst = NysssMstService.query({ select: true });
+    vm.protocolConnectionsSelectConfig = {
+      mode: 'tags-id',
+      id: 'value',
+      text: 'name',
+      options: vm.protocolConnections
+    };
+
+    vm.vocabularySelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'term',
+      textLookup: function(id) {
+        return GlossaryService.get({ termId: id }).$promise;
+      },
+      options: function(searchText) {
+        return GlossaryService.query();
+      }
+    };
+
+    vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsElaScienceTechnicalSubjectsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return CclsElaScienceTechnicalSubjectsService.query({ select: true });
+      }
+    };
+
+    vm.cclsMathematicsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsMathematicsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return CclsMathematicsService.query({ select: true });
+      }
+    };
+
+    vm.ngssCrossCuttingConceptsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssCrossCuttingConceptsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssCrossCuttingConceptsService.query({ select: true });
+      }
+    };
+
+    vm.ngssDisciplinaryCoreIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssDisciplinaryCoreIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssDisciplinaryCoreIdeasService.query({ select: true });
+      }
+    };
+
+    vm.ngssScienceEngineeringPracticesSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssScienceEngineeringPracticesService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssScienceEngineeringPracticesService.query({ select: true });
+      }
+    };
+
+    vm.nycsssUnitsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NycsssUnitsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NycsssUnitsService.query({ select: true });
+      }
+    };
+
+    vm.nysssKeyIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssKeyIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssKeyIdeasService.query({ select: true });
+      }
+    };
+
+    vm.nysssMajorUnderstandingsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMajorUnderstandingsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMajorUnderstandingsService.query({ select: true });
+      }
+    };
+
+    vm.nysssMstSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMstService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMstService.query({ select: true });
+      }
+    };
 
     vm.units = UnitsService.query();
 
@@ -133,6 +265,14 @@
         return false;
       }
 
+      if (vm.lesson.lessonOverview.protocolConnections.length <= 0) {
+        return false;
+      }
+
+      if (vm.lesson.lessonOverview.subjectAreas.length <= 0) {
+        return false;
+      }
+
       vm.lesson.featuredImage = {
         path: vm.featuredImageURL
       };
@@ -141,179 +281,123 @@
       vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
-      // for (var a = 0; a < vm.lesson.standards.nycsssUnits.length; a++) {
-      //   vm.lesson.standards.nycsssUnits[a] =
-      //     NycsssUnitsService.get({
-      //       _id: vm.lesson.standards.nycsssUnits[a]
-      //     });
-      // }
-      //
-      // for (var b = 0; b < vm.lesson.standards.nysssKeyIdeas.length; b++) {
-      //   vm.lesson.standards.nysssKeyIdeas[b] =
-      //     NysssKeyIdeasService.get({
-      //       _id: vm.lesson.standards.nysssKeyIdeas[b]
-      //     });
-      // }
-      //
-      // for (var c = 0; c < vm.lesson.standards.nysssMajorUnderstandings.length; c++) {
-      //   vm.lesson.standards.nysssMajorUnderstandings[c] =
-      //     NysssMajorUnderstandingsService.get({
-      //       _id: vm.lesson.standards.nysssMajorUnderstandings[c]
-      //     });
-      // }
-      //
-      // for (var d = 0; d < vm.lesson.standards.nysssMst.length; d++) {
-      //   vm.lesson.standards.nysssMst[d] =
-      //     NysssMstService.get({
-      //       _id: vm.lesson.standards.nysssMst[d]
-      //     });
-      // }
-      //
-      // for (var f = 0; f < vm.lesson.standards.ngssDisciplinaryCoreIdeas.length; f++) {
-      //   vm.lesson.standards.ngssDisciplinaryCoreIdeas[f] =
-      //     NgssDisciplinaryCoreIdeasService.get({
-      //       _id: vm.lesson.standards.ngssDisciplinaryCoreIdeas[f]
-      //     });
-      // }
-      //
-      // for (var g = 0; g < vm.lesson.standards.ngssScienceEngineeringPractices.length; g++) {
-      //   vm.lesson.standards.ngssScienceEngineeringPractices[g] =
-      //     NgssScienceEngineeringPracticesService.get({
-      //       _id: vm.lesson.standards.ngssScienceEngineeringPractices[g]
-      //     });
-      // }
-      //
-      // for (var h = 0; h < vm.lesson.standards.ngssCrossCuttingConcepts.length; h++) {
-      //   vm.lesson.standards.ngssCrossCuttingConcepts[h] =
-      //     NgssCrossCuttingConceptsService.get({
-      //       _id: vm.lesson.standards.ngssCrossCuttingConcepts[h]
-      //     });
-      // }
-      //
-      // for (var i = 0; i < vm.lesson.standards.cclsMathematics.length; i++) {
-      //   vm.lesson.standards.cclsMathematics[i] =
-      //     CclsMathematicsService.get({
-      //       _id: vm.lesson.standards.cclsMathematics[i]
-      //     });
-      // }
-      //
-      // for (var j = 0; j < vm.lesson.standards.cclsElaScienceTechnicalSubjects.length; j++) {
-      //   vm.lesson.standards.cclsElaScienceTechnicalSubjects[j] =
-      //     CclsElaScienceTechnicalSubjectsService.get({
-      //       _id: vm.lesson.standards.cclsElaScienceTechnicalSubjects[j]
-      //     });
-      // }
-
-      console.log('lesson', vm.lesson.standards);
-
       // TODO: move create/update logic to service
-      if (vm.lesson._id) {
-        console.log('updating lesson');
-        vm.lesson.$update(successCallback, errorCallback);
-      } else {
-        console.log('saving new lesson');
-        vm.lesson.$save(successCallback, errorCallback);
-      }
+      angular.element('#modal-saved-lesson').modal('show');
 
-      function successCallback(res) {
-        console.log('successful');
-        var lessonId = res._id;
-
-        function goToView(lessonId) {
-          $state.go('lessons.view', {
-            lessonId: lessonId
-          });
+      $timeout(function () {
+        if (vm.lesson._id) {
+          console.log('updating lesson');
+          vm.lesson.$update(successCallback, errorCallback);
+        } else {
+          console.log('saving new lesson');
+          vm.lesson.$save(successCallback, errorCallback);
         }
 
-        function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
-          if (vm.featuredImageUploader.queue.length > 0) {
-            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+        function successCallback(res) {
+          console.log('successful');
+          var lessonId = res._id;
+
+          function goToView(lessonId) {
+            angular.element('#modal-saved-lesson').modal('hide');
+            $timeout(function () {
+              $state.go('lessons.view', {
+                lessonId: lessonId
+              });
+            }, 1000);
+          }
+
+          function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
+            if (vm.featuredImageUploader.queue.length > 0) {
+              vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                featuredImageSuccessCallback();
+              };
+
+              vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+                featuredImageErrorCallback(response.message);
+              };
+
+              vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
+              };
+              vm.featuredImageUploader.uploadAll();
+            } else {
               featuredImageSuccessCallback();
-            };
-
-            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-              featuredImageErrorCallback(response.message);
-            };
-
-            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
-            };
-            vm.featuredImageUploader.uploadAll();
-          } else {
-            featuredImageSuccessCallback();
+            }
           }
-        }
 
-        function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
-          if (vm.handoutFilesUploader.queue.length > 0) {
-            vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
+            if (vm.handoutFilesUploader.queue.length > 0) {
+              vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                handoutFileSuccessCallback();
+              };
+
+              vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                handoutFileErrorCallback(response.message);
+              };
+
+              vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-handouts';
+              };
+              vm.handoutFilesUploader.uploadAll();
+            } else {
               handoutFileSuccessCallback();
-            };
-
-            vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              handoutFileErrorCallback(response.message);
-            };
-
-            vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-handouts';
-            };
-            vm.handoutFilesUploader.uploadAll();
-          } else {
-            handoutFileSuccessCallback();
+            }
           }
-        }
 
-        function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
-          if (vm.teacherResourceFilesUploader.queue.length > 0) {
-            vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
+            if (vm.teacherResourceFilesUploader.queue.length > 0) {
+              vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                resourceFileSuccessCallback();
+              };
+
+              vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                resourceFileErrorCallback(response.message);
+              };
+
+              vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
+              };
+              vm.teacherResourceFilesUploader.uploadAll();
+            } else {
               resourceFileSuccessCallback();
-            };
-
-            vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              resourceFileErrorCallback(response.message);
-            };
-
-            vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
-            };
-            vm.teacherResourceFilesUploader.uploadAll();
-          } else {
-            resourceFileSuccessCallback();
+            }
           }
-        }
 
-        function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
-          if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
-            vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
+            if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
+              vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+                questionFileSuccessCallback();
+              };
+
+              vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+                questionFileErrorCallback(response.message);
+              };
+
+              vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
+                item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
+              };
+              vm.stateTestQuestionsFilesUploader.uploadAll();
+            } else {
               questionFileSuccessCallback();
-            };
-
-            vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-              questionFileErrorCallback(response.message);
-            };
-
-            vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
-            };
-            vm.stateTestQuestionsFilesUploader.uploadAll();
-          } else {
-            questionFileSuccessCallback();
+            }
           }
-        }
 
-        var unsubmitLesson = function(errorMessage) {
-          delete vm.lesson._id;
-          vm.lesson.unit = {
-            _id: vm.lesson.unit
+          var unsubmitLesson = function(errorMessage) {
+            delete vm.lesson._id;
+            vm.lesson.unit = {
+              _id: vm.lesson.unit
+            };
+            vm.error = errorMessage;
           };
-          vm.error = errorMessage;
-        };
 
-        uploadFeaturedImage(lessonId, function() {
-          uploadHandoutFiles(lessonId, function() {
-            uploadResourceFiles(lessonId, function() {
-              uploadStateTestQuestionFiles(lessonId, function () {
-                goToView(lessonId);
+          uploadFeaturedImage(lessonId, function() {
+            uploadHandoutFiles(lessonId, function() {
+              uploadResourceFiles(lessonId, function() {
+                uploadStateTestQuestionFiles(lessonId, function () {
+                  goToView(lessonId);
+                }, function(errorMessage) {
+                  unsubmitLesson(errorMessage);
+                });
               }, function(errorMessage) {
                 unsubmitLesson(errorMessage);
               });
@@ -323,15 +407,15 @@
           }, function(errorMessage) {
             unsubmitLesson(errorMessage);
           });
-        }, function(errorMessage) {
-          unsubmitLesson(errorMessage);
-        });
-      }
+        }
 
-      function errorCallback(res) {
-        console.log('error: ' + res.data.message);
-        vm.error = res.data.message;
-      }
+        function errorCallback(res) {
+          angular.element('#modal-saved-lesson').modal('hide');
+          console.log('error: ' + res.data.message);
+          vm.error = res.data.message;
+        }
+        //angular.element('#modal-saved-lesson').modal('hide');
+      }, 5000);
     };
 
     vm.cancel = function() {
@@ -385,6 +469,50 @@
         if (shouldDelete) vm.remove();
       });
       element.modal('hide');
+    };
+
+    vm.openAdd = function() {
+      vm.term = new GlossaryService();
+
+      angular.element('#modal-vocabulary').modal('show');
+    };
+
+    vm.saveTerm = function() {
+      vm.term = {};
+      angular.element('#modal-vocabulary').modal('hide');
+      vm.vocabulary = GlossaryService.query();
+    };
+
+    vm.cancelTermAdd = function() {
+      vm.term = {};
+      angular.element('#modal-vocabulary').modal('hide');
+    };
+
+    vm.favoriteLesson = function() {
+      $http.post('api/lessons/'+vm.lesson._id+'/favorite', {})
+      .success(function(data, status, headers, config) {
+        vm.lesson.saved = true;
+        console.log('data', data);
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.unfavoriteLesson = function() {
+      $http.post('api/lessons/'+vm.lesson._id+'/unfavorite', {})
+      .success(function(data, status, headers, config) {
+        vm.lesson.saved = false;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.duplicateLesson = function() {
+      $state.go('lessons.duplicate', {
+        lessonId: vm.lesson._id
+      });
     };
   }
 })();

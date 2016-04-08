@@ -33,11 +33,12 @@ module.exports = {
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.js',
-        'public/lib/angular-select2/dist/angular-select2.js',
+        'public/lib/angular-agility/dist/angular-agility.js',
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js',
         'public/lib/leaflet/dist/leaflet.js',
         'public/lib/angular-chart.js/dist/angular-chart.js'
+        'public/lib/ng-lodash/build/ng-lodash.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

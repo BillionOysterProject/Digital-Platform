@@ -76,7 +76,8 @@ var LessonSchema = new Schema({
       required: true
     },
     subjectAreas: [{
-      type: String,
+      type: Schema.ObjectId,
+      ref: 'MetaSubjectArea',
       required: true
     }],
     protocolConnections: [{
@@ -131,7 +132,8 @@ var LessonSchema = new Schema({
       path: String
     }],
     vocabulary: [{
-      type: String,
+      type: Schema.ObjectId,
+      ref: 'Glossary',
       required: false
     }]
   },
@@ -204,6 +206,15 @@ var LessonSchema = new Schema({
   },
   updated: {
     type: Array
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'published', 'returned'],
+    default: ['pending'],
+    required: true
+  },
+  returnedNotes: {
+    type: String
   }
 });
 

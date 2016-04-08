@@ -14,32 +14,28 @@
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
-    
-    vm.scienceLessons = [
-      { name: 'Ecology Lesson', value: 'ecology' },
-      { name: 'Geology and Earth Science Lesson', value: 'geologyeatchscience' },
-      { name: 'Limnology Lesson', value: 'limnology' },
-      { name: 'Marine Biology Lesson', value: 'marinebio' },
-      { name: 'Oceanography Lesson', value: 'oceanography' }
-    ];
-    vm.mathLessons = [
-      { name: 'Data Analysis Lesson', value: 'dataanalysis' },
-      { name: 'Graphing Lesson', value: 'graphing' },
-      { name: 'Ratios &amp; Proportions Lesson', value: 'ratiosproportions' },
-      { name: 'Algebra Lesson', value: 'algebra' }
-    ];
-    vm.fieldLessons = [
-      { name: 'Field Lesson 1', value: 'field1' },
-      { name: 'Field Lesson 2', value: 'field2' }
-    ];
+
     vm.numberExpectations = [
       { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
       { name: 'K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.', value: 'kps22' }
     ];
+    vm.numberExpectationsSelectConfig = {
+      mode: 'tags-id',
+      id: 'value',
+      text: 'name',
+      options: vm.numberExpectations
+    };
+
     vm.researchProjects = [
       { name: 'Project 1', value: 'project1' },
       { name: 'Project 2', value: 'project2' }
     ];
+    vm.researchProjectsSelectConfig = {
+      mode: 'tags-id',
+      id: 'value',
+      text: 'name',
+      options: vm.researchProjects
+    };
 
     // Remove existing Unit
     vm.remove = function() {

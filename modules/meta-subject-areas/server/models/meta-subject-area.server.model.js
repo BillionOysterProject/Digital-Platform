@@ -7,19 +7,28 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Subject Areas Schema
+ * Meta Subject Areas Schema
  */
-var SubjectAreaSchema = new Schema({
+var MetaSubjectAreaSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  order: {
+    type: Number,
+    required: true
   },
   subject: {
     type: String,
     default: '',
     trim: true,
     required: 'Subject cannot be blank'
+  },
+  color: {
+    type: String,
+    trim: true,
+    required: 'Color cannot be blank'
   }
 });
 
-mongoose.model('SubjectArea', SubjectAreaSchema);
+mongoose.model('MetaSubjectArea', MetaSubjectAreaSchema);

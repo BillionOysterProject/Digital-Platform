@@ -10,7 +10,8 @@
   function MenuConfig(Menus) {
     Menus.addSubMenuItem('account', 'settings', {
       title: 'Metrics',
-      state: 'metrics.dashboard'
+      state: 'metrics.dashboard',
+      roles: ['admin']
     });
   }
 })();

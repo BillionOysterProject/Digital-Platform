@@ -28,8 +28,9 @@
     "angular-file-dnd": "^1.0.4",
     "angular-drag-and-drop-lists": "^1.4.0",
     "spin.js": "^2.3.2",
-    "angular-select2": "^1.4.3",
-    "angular-chart.js": "^0.9.0"
+    "angular-chart.js": "^0.9.0",
+    "ng-lodash": "^0.4.0",
+    "angular-agility": "^0.8.32"
   },
   "resolutions": {
     "angular": "~1.3",
