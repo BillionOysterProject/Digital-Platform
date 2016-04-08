@@ -17,6 +17,8 @@
       .state('metrics.dashboard', {
         url: '',
         templateUrl: 'modules/metrics/client/views/metrics.client.view.html',
+        controller: 'MetricsController',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'Metrics'
         }

@@ -247,6 +247,7 @@ body {
 .yellow { color: #fbe8ac; }
 .crimson { color: #943234; }
 .green { color: #4CAF50; }
+.gray { color: #ccc; }
 .shaded { background-color: #f4f7f8; }
 
 /* LINK COLORS */
