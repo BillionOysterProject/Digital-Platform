@@ -76,7 +76,8 @@ var LessonSchema = new Schema({
       required: true
     },
     subjectAreas: [{
-      type: String,
+      type: Schema.ObjectId,
+      ref: 'MetaSubjectArea',
       required: true
     }],
     protocolConnections: [{
