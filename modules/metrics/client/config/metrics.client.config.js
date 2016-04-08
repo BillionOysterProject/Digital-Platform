@@ -8,7 +8,6 @@
   MenuConfig.$inject = ['Menus'];
 
   function MenuConfig(Menus) {
-
     Menus.addSubMenuItem('account', 'settings', {
       title: 'Metrics',
       state: 'metrics.dashboard',

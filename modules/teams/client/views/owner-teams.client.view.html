@@ -34,13 +34,16 @@
         <div class="alert alert-success" role="alert">You have <b>{{vm.teamRequests.length}}</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
     </div>
 </div>
+<div class="alert alert-info text-center" ng-show="vm.members.length === 0">
+    No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+</div>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-verticalalign table-responsive">
             <tr ng-repeat="member in vm.members">
                 <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td>
-                <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}<br/>{{member.email}}</span></td>
-                <td ng-show="{{member.pending === true}}">pending</td>
+                <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{member.email}}</span></td>
+                <td ng-show="{{member.pending === true}}"><em class="text-muted">Pending</em></td>
                 <td ng-hide="{{member.pending === true}}"></td>
                 <td>{{member.team.name}}</td>
                 <td class="text-right">
