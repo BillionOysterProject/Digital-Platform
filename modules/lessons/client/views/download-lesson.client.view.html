@@ -1,0 +1,33 @@
+<div class="modal fade" id="modal-download-lesson" tabindex="-1" role="dialog"><!--Wire up modal-->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Download <span class="red">{{lesson.title}}</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="download.content" ng-true-value="'YES'" ng-false-value="'NO'"> Lesson content</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="download.handout" ng-true-value="'YES'" ng-false-value="'NO'"> Handouts</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="download.resources" ng-true-value="'YES'" ng-false-value="'NO'"> Teacher Resources</label>
+                            </div>
+                        </div>
+                        <p>To download other associated lessons in the unit, or the entire unit, visit
+                          <a href="#" ng-click="unitFunction()">{{lesson.unit.title}}</a>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelFunction()">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="downloadFunction()">Download</button>
+            </div>
+        </div>
+    </div>
+</div>

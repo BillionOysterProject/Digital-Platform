@@ -14,10 +14,12 @@
                 <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
             </div>
             <div class="panel-footer">
-                <span ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                    <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
-                    class="label label-default"></span>
-                </span>
+                <ul class="list-inline">
+                  <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                      <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                      class="label label-default"></span>
+                  </li>
+                </ul>
             </div>
         </div>
     </div>
