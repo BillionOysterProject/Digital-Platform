@@ -5,9 +5,9 @@
     .module('lessons')
     .controller('LessonsListController', LessonsListController);
 
-  LessonsListController.$inject = ['$scope', '$rootScope', 'LessonsService', 'UnitsService'];
+  LessonsListController.$inject = ['$scope', '$rootScope', 'LessonsService', 'UnitsService', 'SubjectAreasService'];
 
-  function LessonsListController($scope, $rootScope, LessonsService, UnitsService) {
+  function LessonsListController($scope, $rootScope, LessonsService, UnitsService, SubjectAreasService) {
     var vm = this;
 
     vm.filter = {
@@ -45,7 +45,7 @@
     vm.findLessons();
 
     vm.subjectAreaSelected = function(selection) {
-      vm.filter.subjectArea = (selection) ? selection.value : '';
+      vm.filter.subjectArea = (selection) ? selection._id : '';
       vm.findLessons();
     };
 
@@ -72,23 +72,9 @@
 
     vm.units = UnitsService.query();
 
-    vm.subjectAreas = [
-     { type: 'Science', name: 'Ecology', value: 'ecology' },
-     { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
-     { type: 'Science', name: 'Limnology', value: 'limnology' },
-     { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
-     { type: 'Science', name: 'Oceanography', value: 'oceanography' },
-     { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
-     { type: 'Engineering', name: 'Engineering', value: 'engineering' },
-     { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
-     { type: 'Math', name: 'Graphing', value: 'graphing' },
-     { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
-     { type: 'Math', name: 'Algebra', value: 'algebra' },
-     { type: 'Social Studies', name: 'History', value: 'history' },
-     { type: 'Social Studies', name: 'Economics', value: 'economics' },
-     { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
-     { type: 'Music', name: 'Music', value: 'music' },
-     { type: 'Art', name: 'Art', value: 'art' }
-    ];
+    SubjectAreasService.query({
+    }, function(data) {
+      vm.subjectAreas = data;
+    });
   }
 })();

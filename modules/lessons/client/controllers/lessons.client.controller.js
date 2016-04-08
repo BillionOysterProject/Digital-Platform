@@ -8,12 +8,14 @@
   LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', 'lessonResolve', 'Authentication',
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
-  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService'];
+  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
+  'SubjectAreasService'];
 
   function LessonsController($scope, $state, $http, $timeout, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
-    NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService) {
+    NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
+    SubjectAreasService) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -23,34 +25,48 @@
     vm.showResourceModal = false;
     vm.showVocabularyModal = false;
 
-    vm.subjectAreas = [
-     { type: 'Science', name: 'Ecology', value: 'ecology' },
-     { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
-     { type: 'Science', name: 'Limnology', value: 'limnology' },
-     { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
-     { type: 'Science', name: 'Oceanography', value: 'oceanography' },
-     { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
-     { type: 'Engineering', name: 'Engineering', value: 'engineering' },
-     { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
-     { type: 'Math', name: 'Graphing', value: 'graphing' },
-     { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
-     { type: 'Math', name: 'Algebra', value: 'algebra' },
-     { type: 'Social Studies', name: 'History', value: 'history' },
-     { type: 'Social Studies', name: 'Economics', value: 'economics' },
-     { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
-     { type: 'Music', name: 'Music', value: 'music' },
-     { type: 'Art', name: 'Art', value: 'art' }
-    ];
+    // vm.subjectAreas = [
+    //  { type: 'Science', name: 'Ecology', value: 'ecology' },
+    //  { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
+    //  { type: 'Science', name: 'Limnology', value: 'limnology' },
+    //  { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
+    //  { type: 'Science', name: 'Oceanography', value: 'oceanography' },
+    //  { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
+    //  { type: 'Engineering', name: 'Engineering', value: 'engineering' },
+    //  { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
+    //  { type: 'Math', name: 'Graphing', value: 'graphing' },
+    //  { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
+    //  { type: 'Math', name: 'Algebra', value: 'algebra' },
+    //  { type: 'Social Studies', name: 'History', value: 'history' },
+    //  { type: 'Social Studies', name: 'Economics', value: 'economics' },
+    //  { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
+    //  { type: 'Music', name: 'Music', value: 'music' },
+    //  { type: 'Art', name: 'Art', value: 'art' }
+    // ];
 
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.subjectAreas
+      id: '_id',
+      text: 'subject',
+      textLookup: function(id) {
+        return SubjectAreasService.get({ subjectAreaId: id }).$promise;
+      },
+      options: function(searchText) {
+        return SubjectAreasService.query();
+      }
     };
+    SubjectAreasService.query({
+
+    }, function(data) {
+      console.log('subject areas', data);
+    });
 
     vm.protocolConnections = [
-      { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' }
+      { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' },
+      { type: 'Protocol 2', name: 'Protocol 2: Oyster Measurements', value: 'protocol2' },
+      { type: 'Protocol 3', name: 'Protocol 3: Mobile Trap', value: 'protocol3' },
+      { type: 'Protocol 4', name: 'Protocol 4: Settlement Tiles', value: 'protocol4' },
+      { type: 'Protocol 5', name: 'Protocol 5: Water Quality', value: 'protocol5' },
     ];
 
     vm.protocolConnectionsSelectConfig = {

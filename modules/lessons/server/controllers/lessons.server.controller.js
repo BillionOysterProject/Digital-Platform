@@ -396,7 +396,7 @@ exports.list = function(req, res) {
   }
 
   query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
-  .exec(function(err, lessons) {
+  .populate('lessonOverview.subjectAreas', 'subject color').exec(function(err, lessons) {
     if (err) {
       console.log(err);
       return res.status(400).send({
@@ -557,7 +557,7 @@ exports.lessonByID = function(req, res, next, id) {
     .populate('standards.ngssCrossCuttingConcepts').populate('standards.ngssDisciplinaryCoreIdeas')
     .populate('standards.ngssScienceEngineeringPractices').populate('standards.nycsssUnits')
     .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst')
-    .populate('materialsResources.vocabulary');
+    .populate('materialsResources.vocabulary').populate('lessonOverview.subjectAreas');
   }
 
   query.exec(function(err, lesson) {
