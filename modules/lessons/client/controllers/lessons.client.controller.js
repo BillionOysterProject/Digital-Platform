@@ -9,13 +9,13 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService'];
+  'SubjectAreasService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService) {
+    SubjectAreasService, lodash) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -500,23 +500,13 @@
       vm.download = {
         content: 'YES'
       };
+      vm.lesson.filename = lodash.replace(vm.lesson.title + '.zip', /\s/, '_');
       angular.element('#modal-download-lesson').modal('show');
     };
 
     vm.downloadLesson = function() {
-      console.log('download');
-      console.log('vm.download', vm.download);
-      $http.get('api/lessons/'+vm.lesson._id+'/download', {
-        params: { download: vm.download }
-      })
-      .success(function(data, status, headers, config) {
-        angular.element('#modal-download-lesson').modal('hide');
-        vm.download = {};
-      })
-      .error(function(data, status, headers, config) {
-        angular.element('#modal-download-lesson').modal('hide');
-        vm.download = {};
-      });
+      angular.element('#modal-download-lesson').modal('hide');
+      //vm.download = {};
     };
 
     vm.goToUnitFromDownloadLesson = function() {

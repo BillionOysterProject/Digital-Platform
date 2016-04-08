@@ -543,24 +543,82 @@ exports.downloadFile = function(req, res){
 
 exports.downloadZip = function(req, res) {
   var lesson = req.lesson;
-  console.log('lesson', lesson);
-  
-  res.setHeader('Content-disposition', 'attachment; filename=' + lesson.title + '.zip');
-  res.setHeader('Content-Type', 'application/zip');
 
-  var zip = archiver('zip');
+  if (req.query.content || req.query.handout || req.query.resources) {
+    var archive = archiver('zip');
 
-  zip.pipe(res);
-  console.log('query download', req.query.download);
+    archive.on('error', function(err) {
+      return res.status(500).send({
+        message: err.message
+      });
+    });
 
-  //content
-  zip.append('Some text to go in file 1.', { name: '1.txt' })
-      .append('Some text to go in file 2. I go in a folder!', { name: 'somefolder/2.txt' });
+    //on stream closed we can end the request
+    archive.on('end', function() {
+      console.log('Archive wrote %d bytes', archive.pointer());
+    });
 
-  //local file
-  //zip.file('staticFiles/3.txt', { name: '3.txt' });
+    //set the archive name
+    res.attachment(req.query.filename);
+    res.setHeader('Content-Type', 'application/zip, application/octet-stream');
 
-  zip.finalize();
+    //this is the streaming magic
+    archive.pipe(res);
+
+    var getHandoutContent = function(index, list, handoutCallback) {
+      if (index < list.length) {
+        var handout = list[index];
+        request(handout.path, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: handout.originalname });
+          }
+          getHandoutContent(index+1, list, handoutCallback);
+        });
+      } else {
+        handoutCallback();
+      }
+    };
+
+    var getHandouts = function(handoutsCallback) {
+      if (req.query.handout === 'YES') {
+        var resources = lesson.materialsResources.handoutsFileInput;
+        getHandoutContent(0, resources, handoutsCallback);
+      } else {
+        handoutsCallback();
+      }
+    };
+
+    var getResourceContent = function(index, list, resourceCallback) {
+      if (index < list.length) {
+        var resource = list[index];
+        request(resource.path, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: resource.originalname });
+          }
+          getResourceContent(index+1, list, resourceCallback);
+        });
+      } else {
+        resourceCallback();
+      }
+    };
+
+    var getResources = function(resourcesCallback) {
+      if (req.query.resources === 'YES') {
+        var resources = lesson.materialsResources.teacherResourcesFiles;
+        getResourceContent(0, resources, resourcesCallback);
+      } else {
+        resourcesCallback();
+      }
+    };
+
+    getHandouts(function() {
+      getResources(function() {
+        archive.finalize();
+      });
+    });
+  } else {
+    return res.status(200).send('OK');
+  }
 };
 
 /**
