@@ -67,7 +67,7 @@
     //   }
     // }];
 
-    vm.lessonsOpen = false;
+    vm.unitOpen = null;
 
     var createGraph = function() {
       // Add initial element
@@ -114,7 +114,7 @@
     createGraph();
 
     var openUnit = function(unitData) {
-      vm.lessonsOpen = true;
+      vm.unitOpen = unitData._id;
       UnitLessonsService.query({
         unitId: unitData._id
       }, function(data) {
@@ -147,7 +147,7 @@
     };
 
     var closeUnit = function() {
-      vm.lessonsOpen = false;
+      vm.unitOpen = null;
       vm.graph.remove(vm.graph.elements());
       createGraph();
     };
@@ -163,13 +163,18 @@
       var data = node.data();
 
       if (data.type === 'unit') {
-        if (vm.lessonsOpen) {
+        if (vm.unitOpen === data._id) {
           closeUnit();
+        } else if (vm.unitOpen !== null) {
+          closeUnit();
+          openUnit(data);
         } else {
           openUnit(data);
         }
       } else if (data.type === 'lesson') {
         openLesson(data);
+      } else {
+        closeUnit();
       }
     });
   }
