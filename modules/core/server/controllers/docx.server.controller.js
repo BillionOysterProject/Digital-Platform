@@ -1,20 +1,17 @@
-archiver = require('archiver')
-fs = require('fs')
-path = require('path')
-util = require('util')
-
+var archiver = require('archiver'),
+	fs = require('fs'),
+	path = require('path'),
+	util = require('util');
 
 exports.createLessonDocx = function(pathToTemplate, lessonObject, callback ){
 
   //hopefully we just stick to utf8
   var encoding = "utf8";
 
-  tempTemplatePath = createTempTemplate(pathToTemplate);
+  tempTemplatePath = createTempTemplatePath(pathToTemplate);
   copyDir(pathToTemplate, tempTemplatePath);
-  documentPath = createDocumentPathString(tempTemplatePath);
+  documentPath = path.join(pathToTemplate, "word", "document.xml")
 
-
-  bar = "Hey"
   fs.readFile(documentPath, encoding, function (err, data) {
     if (err) {
       return console.log(err);
@@ -29,34 +26,13 @@ exports.createLessonDocx = function(pathToTemplate, lessonObject, callback ){
   return docxName
 };
 
-
-var fs = require("fs");
-var path = require("path");
-
-var rmdir = function(dir) {
-	var list = fs.readdirSync(dir);
-	for(var i = 0; i < list.length; i++) {
-		var filename = path.join(dir, list[i]);
-		var stat = fs.statSync(filename);
-
-		if(filename == "." || filename == "..") {
-			// pass these files
-		} else if(stat.isDirectory()) {
-			// rmdir recursively
-			rmdir(filename);
-		} else {
-			// rm fiilename
-			fs.unlinkSync(filename);
-		}
-	}
-	fs.rmdirSync(dir);
-};
-
 function templateToDocx(tempTemplatePath){
+  //convert the template dir into a docx file by zipping the dir
+
+  //get file pathing
   baseDir = path.dirname(tempTemplatePath)
   fileName = path.basename(tempTemplatePath)
   docxName = path.join(baseDir, fileName.concat('.docx'))
-
 
   var output = fs.createWriteStream(docxName);
   var archive = archiver('zip');
@@ -75,7 +51,6 @@ function templateToDocx(tempTemplatePath){
   archive.directory(tempTemplatePath, "")
   archive.finalize();
 
-
   return docxName
 }
 
@@ -83,27 +58,21 @@ function processTemplate(data, lessonObject){
   return "made it"
 }
 
-function createDocumentPathString(pathToTemplate){
-  document = path.join(pathToTemplate, "word", "document.xml")
-  return document
-}
+function createTempTemplatePath(pathToTemplate){
+  //simple helper function to create a file name from the date
 
-function createTempTemplate(pathToTemplate){
   date = new Date().toLocaleString();
   basePath = path.dirname(pathToTemplate);
   tempPath = path.join(basePath, date);
   return tempPath;
 }
 
-var mkdir = function(dir) {
-	// making directory without exception if exists
-	try {
-		fs.mkdirSync(dir, 0755);
-	} catch(e) {
-		if(e.code != "EEXIST") {
-			throw e;
-		}
-	}
+//---- File system helper functions ----
+
+var copy = function(src, dest) {
+	var oldFile = fs.createReadStream(src);
+	var newFile = fs.createWriteStream(dest);
+	util.pump(oldFile, newFile);
 };
 
 var copyDir = function(src, dest) {
@@ -122,10 +91,33 @@ var copyDir = function(src, dest) {
 	}
 };
 
-var copy = function(src, dest) {
-	var oldFile = fs.createReadStream(src);
-	var newFile = fs.createWriteStream(dest);
-	util.pump(oldFile, newFile);
+var mkdir = function(dir) {
+	// making directory without exception if exists
+	try {
+		fs.mkdirSync(dir, 0755);
+	} catch(e) {
+		if(e.code != "EEXIST") {
+			throw e;
+		}
+	}
 };
 
+var rmdir = function(dir) {
+	//simple function to remove a directory and it's contents
+	var list = fs.readdirSync(dir);
+	for(var i = 0; i < list.length; i++) {
+		var filename = path.join(dir, list[i]);
+		var stat = fs.statSync(filename);
 
+		if(filename == "." || filename == "..") {
+			// pass these files
+		} else if(stat.isDirectory()) {
+			// rmdir recursively
+			rmdir(filename);
+		} else {
+			// rm fiilename
+			fs.unlinkSync(filename);
+		}
+	}
+	fs.rmdirSync(dir);
+};
