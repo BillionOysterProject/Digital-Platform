@@ -28,10 +28,8 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
       text: bodyText,
       html: bodyHtml
     }, function(err, info) {
-      console.log('err', err);
-      console.log('info', info);
-      if (err) errorCallback(err);
-      successCallback(info.response);
+      if (err) errorCallback(err.message);
+      successCallback(info);
     });
   } else {
     errorCallback('Must have to address(es), subject, and body');
