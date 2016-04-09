@@ -28,6 +28,7 @@ exports.create = function(req, res) {
   lesson.materialsResources.handoutsFileInput = [];
   lesson.materialsResources.teacherResourcesFiles = [];
   lesson.materialsResources.stateTestQuestions = [];
+  lesson.status = 'pending';
 
   lesson.save(function(err) {
     if (err) {
@@ -76,6 +77,7 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
+    lesson.status = 'pending';
     lesson.returnedNotes = '';
 
     var existingHandouts = [];
@@ -141,7 +143,7 @@ exports.publish = function(req, res) {
         });
       } else {
         //TODO: changed to actual user email address
-        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been approved',
+        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
         'Your lesson has been approved and is now visible on the lessons page.',
         '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
         function(response) {
@@ -176,7 +178,7 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been returned',
+        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
         'Your lesson has been returned, the following changes need to be made: ' + lesson.returnedNotes + '\n' +
         'You can edit the lesson on the My Library page.',
         '<p>Your lesson has been returned, the following changes need to be made: <br/>' + lesson.returnedNotes + '<br/>' +
