@@ -71,7 +71,7 @@ function processTemplate(data, lessonObject){
 function createTempTemplatePath(pathToTemplate){
   //simple helper function to create a file name from the date
 
-  var date = new Date().toLocaleString();
+  var date = new Date().getTime().toString();
   var basePath = path.dirname(pathToTemplate);
   var tempPath = path.join(basePath, date);
   return tempPath;
@@ -119,6 +119,6 @@ exports.createLessonDocx = function(pathToTemplate, lessonObject, callback) {
   });
 
   var docxName = templateToDocx(tempTemplatePath);
-
-  return docxName;
+  console.log('docsName', docxName);
+  callback(docxName);
 };
