@@ -106,8 +106,17 @@ exports.createLessonDocx = function(pathToTemplate, lessonObject, callback) {
   //hopefully we just stick to utf8
   var encoding = 'utf8';
 
+  if (!fs.statSync(pathToTemplate)){
+    return console.log("Bad template path: " + pathToTemplate);
+  }
+
   var tempTemplatePath = createTempTemplatePath(pathToTemplate);
   copyDir(pathToTemplate, tempTemplatePath);
+
+  if (!fs.statSync(pathToTemplate)){
+    return console.log("Unable to create temp path: " + tempTemplatePath);
+  }
+
   var documentPath = path.join(pathToTemplate, 'word', 'document.xml');
 
   fs.readFile(documentPath, encoding, function (err, data) {
