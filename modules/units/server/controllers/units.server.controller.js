@@ -99,7 +99,7 @@ exports.delete = function (req, res) {
  * List of Units
  */
 exports.list = function (req, res) {
-  Unit.find().sort('-created').populate('user', 'displayName').exec(function (err, units) {
+  Unit.find().sort('title').populate('user', 'displayName').exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
