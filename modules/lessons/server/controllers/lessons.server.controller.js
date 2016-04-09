@@ -617,7 +617,9 @@ exports.downloadZip = function(req, res) {
       });
     });
   } else {
-    return res.status(200).send('OK');
+    return res.status(404).send({
+      message: 'Must select something to download'
+    });
   }
 };
 
