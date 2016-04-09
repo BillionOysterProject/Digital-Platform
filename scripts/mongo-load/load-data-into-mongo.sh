@@ -20,3 +20,4 @@ mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glos
 mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json
 mongoimport -d bop-dev -c units --type json --file sample-data/bop-dev-units.json
 mongoimport -d bop-dev -c users --type json --file sample-data/bop-dev-users.json
+mongoimport -d bop-dev -c teams --type json --file sample-data/bop-dev-teams.json
