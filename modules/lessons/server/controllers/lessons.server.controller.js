@@ -541,12 +541,12 @@ exports.downloadFile = function(req, res){
   request(req.query.path).pipe(res);
 };
 
-var createLessonDocxMock = function(pathToTemplate, lessonObject, callback){
+var createLessonDocx = function(pathToTemplate, lessonObject, callback){
   // verify pathToTempate exists
   // zip pathToTemplate
   // rename to docx
   // return docx
-  var content = '';
+  var content = 'Add lesson content here';
   callback(content);
 };
 
@@ -576,7 +576,7 @@ exports.downloadZip = function(req, res) {
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
       if (req.query.content === 'YES') {
-        createLessonDocxMock('', lesson, function(content) {
+        createLessonDocx('', lesson, function(content) {
           var filename = _.replace(lesson.title + '.docx', /\s/, '_');
           archive.append(content, { name: filename });
           lessonCallback();
