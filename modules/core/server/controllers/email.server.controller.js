@@ -8,7 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   ses = require('nodemailer-ses-transport');
 
-var from = process.env.MAILER_FROM || 'tforkner@fearless.tech';
+var from = process.env.MAILER_FROM || 'bop@fearless.tech';
 
 var transporter = nodemailer.createTransport(ses(config.mailer.options.ses));
 
@@ -28,6 +28,8 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
       text: bodyText,
       html: bodyHtml
     }, function(err, info) {
+      console.log('err', err);
+      console.log('info', info);
       if (err) errorCallback(err);
       successCallback(info.response);
     });
