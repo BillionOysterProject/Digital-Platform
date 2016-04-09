@@ -541,46 +541,71 @@ exports.downloadFile = function(req, res){
   request(req.query.path).pipe(res);
 };
 
+var createLessonDocx = function(pathToTemplate, lessonObject, callback){
+  // verify pathToTempate exists
+  // zip pathToTemplate
+  // rename to docx
+  // return docx
+  var content = 'Add lesson content here';
+  callback(content);
+};
+
 exports.downloadZip = function(req, res) {
   var lesson = req.lesson;
 
-  if (req.query.content || req.query.handout || req.query.resources) {
-    var archive = archiver('zip');
+  var archive = archiver('zip');
 
-    archive.on('error', function(err) {
-      return res.status(500).send({
-        message: err.message
-      });
+  archive.on('error', function(err) {
+    return res.status(500).send({
+      message: err.message
     });
+  });
 
-    //on stream closed we can end the request
-    archive.on('end', function() {
-      console.log('Archive wrote %d bytes', archive.pointer());
-    });
+  //on stream closed we can end the request
+  archive.on('end', function() {
+    console.log('Archive wrote %d bytes', archive.pointer());
+  });
 
-    //set the archive name
-    res.attachment(req.query.filename);
-    res.setHeader('Content-Type', 'application/zip, application/octet-stream');
+  //set the archive name
+  res.attachment(req.query.filename);
+  res.setHeader('Content-Type', 'application/zip, application/octet-stream');
 
-    //this is the streaming magic
-    archive.pipe(res);
+  //this is the streaming magic
+  archive.pipe(res);
+
+  if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
+    var getLessonContent = function(lessonCallback) {
+      if (req.query.content === 'YES') {
+        createLessonDocx('', lesson, function(content) {
+          var filename = _.replace(lesson.title + '.docx', /\s/, '_');
+          archive.append(content, { name: filename });
+          lessonCallback();
+        });
+      } else {
+        lessonCallback();
+      }
+    };
 
     var getHandoutContent = function(index, list, handoutCallback) {
       if (index < list.length) {
         var handout = list[index];
+        console.log('getting handout', handout);
         request(handout.path, function (error, response, body) {
           if (!error && response.statusCode === 200) {
+            console.log('body', body);
             archive.append(body, { name: handout.originalname });
           }
           getHandoutContent(index+1, list, handoutCallback);
         });
       } else {
+        console.log('callback');
         handoutCallback();
       }
     };
 
     var getHandouts = function(handoutsCallback) {
       if (req.query.handout === 'YES') {
+        console.log('handouts === YES');
         var resources = lesson.materialsResources.handoutsFileInput;
         getHandoutContent(0, resources, handoutsCallback);
       } else {
@@ -611,15 +636,19 @@ exports.downloadZip = function(req, res) {
       }
     };
 
-    getHandouts(function() {
-      getResources(function() {
-        archive.finalize();
+    getLessonContent(function() {
+      getHandouts(function() {
+        getResources(function() {
+          archive.finalize();
+        });
       });
     });
   } else {
-    return res.status(404).send({
-      message: 'Must select something to download'
-    });
+    // return res.status(404).send({
+    //   message: 'Must select something to download'
+    // });
+    archive.append('No files selected', { name: 'error.txt' });
+    archive.finalize();
   }
 };
 

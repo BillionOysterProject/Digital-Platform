@@ -20,7 +20,7 @@
         controller: 'LessonsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead'],
+          roles: ['team lead', 'admin'],
           pageTitle: 'Lessons List'
         }
       })

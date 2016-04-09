@@ -12,10 +12,10 @@
                             <div class="checkbox">
                                 <label><input type="checkbox" ng-model="download.content" ng-true-value="'YES'" ng-false-value="'NO'"> Lesson content</label>
                             </div>
-                            <div class="checkbox">
+                            <div class="checkbox" ng-show="lesson.materialsResources.handoutsFileInput.length > 0">
                                 <label><input type="checkbox" ng-model="download.handout" ng-true-value="'YES'" ng-false-value="'NO'"> Handouts</label>
                             </div>
-                            <div class="checkbox">
+                            <div class="checkbox" ng-show="lesson.materialsResources.teacherResourcesFiles.length > 0">
                                 <label><input type="checkbox" ng-model="download.resources" ng-true-value="'YES'" ng-false-value="'NO'"> Teacher Resources</label>
                             </div>
                         </div>
