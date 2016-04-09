@@ -579,7 +579,7 @@ exports.downloadZip = function(req, res) {
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
       if (req.query.content === 'YES') {
-        docx.createLessonDocx('modules/lessons/server/templates/lesson-download-template-v1', lesson,
+        docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson-download-template-v1'), lesson,
         function(filepath) {
           var filename = _.replace(lesson.title + '.docx', /\s/, '_');
           console.log('filepath', path.resolve(filepath));
