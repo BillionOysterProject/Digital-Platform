@@ -3,7 +3,8 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  _ = require('lodash');
 
 // Using the memory backed
 acl = new acl(new acl.memoryBackend());
@@ -41,6 +42,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['*']
+    }, {
+      resources: '/api/lessons/favorites',
+      permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId',
       permissions: ['*']
@@ -91,9 +95,9 @@ exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
   // If a lesson is being processed and the current user created it then allow any manipulation
-  // if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
-  //   return next();
-  // }
+  if (req.lesson && req.user && ((_.indexOf(roles, 'admin') > -1) || (req.lesson.user && req.lesson.user.id === req.user.id))) {
+    return next();
+  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

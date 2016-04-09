@@ -18,7 +18,8 @@
         url: '',
         templateUrl: 'modules/library/client/views/library.client.view.html',
         data: {
-          pageTitle: 'Library'
+          pageTitle: 'Library',
+          roles: ['admin', 'team lead']
         }
       })
       .state('library.user', {
@@ -27,7 +28,8 @@
         controller: 'LibraryController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'My Library'
+          pageTitle: 'My Library',
+          roles: ['admin', 'team lead']
         }
       });
   }
