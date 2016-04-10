@@ -3,7 +3,8 @@
 var archiver = require('archiver'),
   fs = require('fs'),
   path = require('path'),
-  util = require('util');
+  util = require('util'),
+  Docxtemplater = require('docxtemplater');
 
 var mkdir = function(dir) {
 // making directory without exception if exists
@@ -16,55 +17,15 @@ var mkdir = function(dir) {
   }
 };
 
-var rmdir = function(dir) {
-//simple function to remove a directory and it's contents
-  var list = fs.readdirSync(dir);
-  for(var i = 0; i < list.length; i++) {
-    var filename = path.join(dir, list[i]);
-    var stat = fs.statSync(filename);
 
-    if(filename === '.' || filename === '..') {
-      // pass these files
-    } else if(stat.isDirectory()) {
-      // rmdir recursively
-      rmdir(filename);
-    } else {
-      // rm fiilename
-      fs.unlinkSync(filename);
-    }
-  }
-  fs.rmdirSync(dir);
-};
 
-function templateToDocx(tempTemplatePath, callback){
-  //convert the template dir into a docx file by zipping the dir
 
-  //get file pathing
-  var baseDir = path.dirname(tempTemplatePath);
-  var fileName = path.basename(tempTemplatePath);
-  var docxName = path.join(baseDir, fileName.concat('.docx'));
 
-  var output = fs.createWriteStream(docxName);
-  var archive = archiver('zip');
 
-  output.on('close', function () {
-    console.log(archive.pointer() + ' total bytes');
-    console.log('archiver has been finalized and the output file descriptor has closed.');
-    rmdir(tempTemplatePath);
-    callback(docxName);
-  });
-
-  archive.on('error', function(err){
-    throw err;
-  });
-
-  archive.pipe(output);
-  archive.directory(tempTemplatePath, '');
-  archive.finalize();
-}
-
-function processTemplate(data, lessonObject){
-  return 'made it';
+function sanitizeHtml(str){
+  var re = /(&nbsp;|<([^>]+)>)/ig
+  var sanitizedStr = str.replace(re, '');
+  return sanitizedStr
 }
 
 function createTempTemplatePath(pathToTemplate){
@@ -101,31 +62,36 @@ var copyDir = function(src, dest) {
 };
 
 exports.createLessonDocx = function(pathToTemplate, lessonObject, successCallback, errorCallback) {
-  //hopefully we just stick to utf8
-  var encoding = 'utf8';
+  //pass in docx template
+
 
   if (!fs.statSync(pathToTemplate)){
     errorCallback(console.log('Bad template path: ' + pathToTemplate));
   }
+  try{
 
-  var tempTemplatePath = createTempTemplatePath(pathToTemplate);
-  copyDir(pathToTemplate, tempTemplatePath);
+    var __dirname = path.dirname(pathToTemplate);
 
-  if (!fs.statSync(pathToTemplate)){
-    errorCallback(console.log('Unable to create temp path: ' + tempTemplatePath));
+    var json = JSON.parse(sanitizeHtml(lessonObject));
+
+    var content = fs
+    .readFileSync(pathToTemplate, "binary");
+
+    var doc = new Docxtemplater(content);
+
+    doc.setData(json);
+    doc.render()
+    var buf = doc.getZip()
+                 .generate({type:"nodebuffer"});
+
+    var date = new Date().getTime().toString();
+    var formattedFile = path.join(__dirname, date+".docx");
+    fs.writeFileSync(formattedFile, buf);
+
+    successCallback(formattedFile)
+  }
+  catch(err){
+    errorCallback(err)
   }
 
-  var documentPath = path.join(pathToTemplate, 'word', 'document.xml');
-
-  fs.readFile(documentPath, encoding, function (err, data) {
-    if (err) {
-      errorCallback(console.log(err));
-    }
-
-    var bar = processTemplate(data, lessonObject);
-
-    templateToDocx(tempTemplatePath, function(docxName) {
-      successCallback(docxName);
-    });
-  });
 };
