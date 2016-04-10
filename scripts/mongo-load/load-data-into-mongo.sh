@@ -16,3 +16,8 @@ mongoimport -d bop-dev -c metabioaccumulations --type json --file metaBioaccumul
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
 mongoimport -d bop-dev -c metasubjectareas --type json --file metaSubjectAreas.json --drop
+mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glossaries.json
+mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json
+mongoimport -d bop-dev -c units --type json --file sample-data/bop-dev-units.json
+mongoimport -d bop-dev -c users --type json --file sample-data/bop-dev-users.json
+mongoimport -d bop-dev -c teams --type json --file sample-data/bop-dev-teams.json

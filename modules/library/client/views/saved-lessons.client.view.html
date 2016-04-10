@@ -14,10 +14,11 @@
                 <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
             </div>
             <div class="panel-footer">
-                <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label-->
-                    <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                        <span ng-bind="subject | subjectAreas" class="label label-default"></span>
-                    </li>
+                <ul class="list-inline">
+                  <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                      <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                      class="label label-default"></span>
+                  </li>
                 </ul>
             </div>
         </div>

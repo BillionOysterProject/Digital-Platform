@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "acl": "~0.4.9",
+    "archiver": "^1.0.0",
     "async": "~1.5.2",
     "body-parser": "~1.15.0",
     "bower": "~1.7.7",

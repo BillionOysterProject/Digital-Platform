@@ -12,6 +12,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
+  archiver = require('archiver'),
   request = require('request'),
   path = require('path'),
   multer = require('multer'),
@@ -27,6 +28,7 @@ exports.create = function(req, res) {
   lesson.materialsResources.handoutsFileInput = [];
   lesson.materialsResources.teacherResourcesFiles = [];
   lesson.materialsResources.stateTestQuestions = [];
+  lesson.status = 'pending';
 
   lesson.save(function(err) {
     if (err) {
@@ -75,6 +77,7 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
+    lesson.status = 'pending';
     lesson.returnedNotes = '';
 
     var existingHandouts = [];
@@ -140,7 +143,7 @@ exports.publish = function(req, res) {
         });
       } else {
         //TODO: changed to actual user email address
-        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been approved',
+        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
         'Your lesson has been approved and is now visible on the lessons page.',
         '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
         function(response) {
@@ -175,7 +178,7 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        email.sendEmail('tforkner@fearless.tech', 'Your lesson ' + lesson.title + ' has been returned',
+        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
         'Your lesson has been returned, the following changes need to be made: ' + lesson.returnedNotes + '\n' +
         'You can edit the lesson on the My Library page.',
         '<p>Your lesson has been returned, the following changes need to be made: <br/>' + lesson.returnedNotes + '<br/>' +
@@ -259,7 +262,8 @@ exports.listFavorites = function(req, res) {
         lessonIds.push(savedLessons[i].lesson);
       }
       Lesson.find({ _id: { $in: lessonIds } }).populate('user', 'displayName email team profileImageURL')
-      .populate('unit', 'title color icon').exec(function(err, lessons) {
+      .populate('unit', 'title color icon').populate('lessonOverview.subjectAreas', 'subject color')
+      .exec(function(err, lessons) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
@@ -537,6 +541,117 @@ exports.downloadFile = function(req, res){
   res.setHeader('content-type', req.query.mimetype);
 
   request(req.query.path).pipe(res);
+};
+
+var createLessonDocx = function(pathToTemplate, lessonObject, callback){
+  // verify pathToTempate exists
+  // zip pathToTemplate
+  // rename to docx
+  // return docx
+  var content = 'Add lesson content here';
+  callback(content);
+};
+
+exports.downloadZip = function(req, res) {
+  var lesson = req.lesson;
+
+  var archive = archiver('zip');
+
+  archive.on('error', function(err) {
+    return res.status(500).send({
+      message: err.message
+    });
+  });
+
+  //on stream closed we can end the request
+  archive.on('end', function() {
+    console.log('Archive wrote %d bytes', archive.pointer());
+  });
+
+  //set the archive name
+  res.attachment(req.query.filename);
+  res.setHeader('Content-Type', 'application/zip, application/octet-stream');
+
+  //this is the streaming magic
+  archive.pipe(res);
+
+  if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
+    var getLessonContent = function(lessonCallback) {
+      if (req.query.content === 'YES') {
+        createLessonDocx('', lesson, function(content) {
+          var filename = _.replace(lesson.title + '.docx', /\s/, '_');
+          archive.append(content, { name: filename });
+          lessonCallback();
+        });
+      } else {
+        lessonCallback();
+      }
+    };
+
+    var getHandoutContent = function(index, list, handoutCallback) {
+      if (index < list.length) {
+        var handout = list[index];
+        console.log('getting handout', handout);
+        request(handout.path, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            console.log('body', body);
+            archive.append(body, { name: handout.originalname });
+          }
+          getHandoutContent(index+1, list, handoutCallback);
+        });
+      } else {
+        console.log('callback');
+        handoutCallback();
+      }
+    };
+
+    var getHandouts = function(handoutsCallback) {
+      if (req.query.handout === 'YES') {
+        console.log('handouts === YES');
+        var resources = lesson.materialsResources.handoutsFileInput;
+        getHandoutContent(0, resources, handoutsCallback);
+      } else {
+        handoutsCallback();
+      }
+    };
+
+    var getResourceContent = function(index, list, resourceCallback) {
+      if (index < list.length) {
+        var resource = list[index];
+        request(resource.path, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: resource.originalname });
+          }
+          getResourceContent(index+1, list, resourceCallback);
+        });
+      } else {
+        resourceCallback();
+      }
+    };
+
+    var getResources = function(resourcesCallback) {
+      if (req.query.resources === 'YES') {
+        var resources = lesson.materialsResources.teacherResourcesFiles;
+        getResourceContent(0, resources, resourcesCallback);
+      } else {
+        resourcesCallback();
+      }
+    };
+
+    getLessonContent(function() {
+      getHandouts(function() {
+        getResources(function() {
+          archive.finalize();
+        });
+      });
+    });
+  } else {
+    // return res.status(404).send({
+    //   message: 'Must select something to download'
+    // });
+    archive.append('No files selected', { name: 'error.txt' });
+    archive.finalize();
+  }
 };
 
 /**

@@ -1,17 +1,17 @@
 order,subject,color
-0,Algebra,#00FFFF
-1,Art,#00FF00
-2,Computer Science,#0000FF
-3,Data Analysis,#FF00FF
-4,Ecology,#004400
-5,Economics,#008800
-6,Engineering,#800000
-7,English Language Arts,#000088
-8,Geology and Earth Science,#808000
-9,Graphing,#800080
-10,History,#FF0000
-11,Limnology,#440000
-12,Marine Biology,#008080
-13,Music,#FFFF00
-14,Oceanography,#000044
-15,Ratios & Proportions,#008844
+1,Art,#00BCD4
+0,Algebra,#607D8B
+3,Data Analysis,#9E9E9E
+4,Ecology,#4CAF50
+5,Economics,#795548
+6,Engineering,#FF5722
+7,English Language Arts,#673AB7
+8,Geology and Earth Science,#E91E63
+9,Graphing,#00BCD4
+2,Computer Science,#607D8B
+10,History,#9E9E9E
+11,Limnology,#4CAF50
+12,Marine Biology,#795548
+13,Music,#FF5722
+14,Oceanography,#673AB7
+15,Ratios & Proportions,#E91E63

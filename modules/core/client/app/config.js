@@ -18,8 +18,9 @@ var ApplicationConfiguration = (function () {
     'aa.select2',
     'omr.angularFileDnD',
     'dndLists',
-    'ngLodash',
-    'ngCytoscape'];
+    'ngCytoscape',
+    'chart.js',
+    'ngLodash'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

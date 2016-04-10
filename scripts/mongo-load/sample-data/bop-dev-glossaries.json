@@ -1,0 +1,23 @@
+{"_id":{"$oid":"5708414a4dd65ac417b0fbe5"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Filter","definition":"a porous device for removing impurities or solid particles from a liquid or gas passed through it.","created":{"$date":1460158794648},"__v":0}
+{"_id":{"$oid":"570841624dd65ac417b0fbe6"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Solution","definition":"a liquid mixture in which the minor component (the solute) is uniformly distributed within the major component (the solvent).","created":{"$date":1460158818910},"__v":0}
+{"_id":{"$oid":"570841874dd65ac417b0fbe7"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"definition":"the presence in or introduction into the environment of a substance or thing that has harmful or poisonous effects.","term":"Pollution","created":{"$date":1460158855489},"__v":0}
+{"_id":{"$oid":"5708418e4dd65ac417b0fbe8"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"definition":"matter that settles to the bottom of a liquid; dregs.","term":"Sediment","created":{"$date":1460158862561},"__v":0}
+{"_id":{"$oid":"570841a04dd65ac417b0fbe9"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Detergent","definition":"a water-soluble cleansing agent that combines with impurities and dirt to make them more soluble and differs from soap in not forming a scum with the salts in hard water.","created":{"$date":1460158880357},"__v":0}
+{"_id":{"$oid":"570841b24dd65ac417b0fbea"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"definition":"waste water and excrement conveyed in sewers.","term":"Sewage","created":{"$date":1460158898904},"__v":0}
+{"_id":{"$oid":"570849824dd65ac417b0fbf0"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"High tide","definition":"high tide","created":{"$date":1460160898270},"__v":0}
+{"_id":{"$oid":"570849884dd65ac417b0fbf1"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Low tide","definition":"low tide","created":{"$date":1460160904219},"__v":0}
+{"_id":{"$oid":"5708498e4dd65ac417b0fbf2"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Axes","definition":"axes","created":{"$date":1460160910661},"__v":0}
+{"_id":{"$oid":"570849944dd65ac417b0fbf3"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Dependent","definition":"dependent","created":{"$date":1460160916126},"__v":0}
+{"_id":{"$oid":"5708499a4dd65ac417b0fbf4"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Independent","definition":"independent","created":{"$date":1460160922055},"__v":0}
+{"_id":{"$oid":"570849a04dd65ac417b0fbf5"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Discrete","definition":"discrete","created":{"$date":1460160928207},"__v":0}
+{"_id":{"$oid":"570849a54dd65ac417b0fbf6"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Continuous","definition":"continuous","created":{"$date":1460160933379},"__v":0}
+{"_id":{"$oid":"570849ab4dd65ac417b0fbf7"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Current","definition":"current","created":{"$date":1460160939010},"__v":0}
+{"_id":{"$oid":"57084ca74dd65ac417b0fc03"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Water cycle","definition":"water cycle","created":{"$date":1460161703814},"__v":0}
+{"_id":{"$oid":"57084cad4dd65ac417b0fc04"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Precipitation","definition":"precipitation","created":{"$date":1460161709755},"__v":0}
+{"_id":{"$oid":"57084cb34dd65ac417b0fc05"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Infiltration","definition":"infiltration","created":{"$date":1460161715315},"__v":0}
+{"_id":{"$oid":"57084cba4dd65ac417b0fc06"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Runoff","definition":"runoff","created":{"$date":1460161722599},"__v":0}
+{"_id":{"$oid":"57084cc04dd65ac417b0fc07"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Evaporation","definition":"evaporation","created":{"$date":1460161728625},"__v":0}
+{"_id":{"$oid":"57084cc64dd65ac417b0fc08"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Transpiration","definition":"transpiration","created":{"$date":1460161734145},"__v":0}
+{"_id":{"$oid":"57084ccb4dd65ac417b0fc09"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Condensation","definition":"condensation","created":{"$date":1460161739957},"__v":0}
+{"_id":{"$oid":"57084cd34dd65ac417b0fc0a"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Melting","definition":"melting","created":{"$date":1460161747322},"__v":0}
+{"_id":{"$oid":"57084cd94dd65ac417b0fc0b"},"user":{"$oid":"5707ed9177d0beb8cb1c8e1c"},"term":"Freezing","definition":"freezing","created":{"$date":1460161753230},"__v":0}

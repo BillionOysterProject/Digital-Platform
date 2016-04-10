@@ -43,7 +43,7 @@
                         <span ng-bind="authentication.user.displayName"></span><b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li ui-sref-active="active" ng-repeat="item in accountMenu.items">
+                        <li ui-sref-active="active" ng-repeat="item in accountMenu.items" ng-if="item.shouldRender(authentication.user);">
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                         </li>
                         <li class="divider"></li>

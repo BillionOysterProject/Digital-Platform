@@ -46,6 +46,9 @@ module.exports = function (app) {
   app.route('/api/lessons/:lessonId/unfavorite').all(lessonsPolicy.isAllowed)
     .post(lessons.unfavoriteLesson);
 
+  app.route('/api/lessons/:lessonId/download').all(lessonsPolicy.isAllowed)
+    .get(lessons.downloadZip);
+
   app.route('/api/lessons/favorites').all(lessonsPolicy.isAllowed)
     .get(lessons.listFavorites);
 

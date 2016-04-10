@@ -9,13 +9,13 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService'];
+  'SubjectAreasService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService) {
+    SubjectAreasService, lodash) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -24,25 +24,6 @@
     vm.form = {};
     vm.showResourceModal = false;
     vm.showVocabularyModal = false;
-
-    // vm.subjectAreas = [
-    //  { type: 'Science', name: 'Ecology', value: 'ecology' },
-    //  { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
-    //  { type: 'Science', name: 'Limnology', value: 'limnology' },
-    //  { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
-    //  { type: 'Science', name: 'Oceanography', value: 'oceanography' },
-    //  { type: 'Technology', name: 'Computer Science', value: 'computerscience' },
-    //  { type: 'Engineering', name: 'Engineering', value: 'engineering' },
-    //  { type: 'Math', name: 'Data Analysis', value: 'dataanalysis' },
-    //  { type: 'Math', name: 'Graphing', value: 'graphing' },
-    //  { type: 'Math', name: 'Ratios & Proportions', value: 'ratiosproportions' },
-    //  { type: 'Math', name: 'Algebra', value: 'algebra' },
-    //  { type: 'Social Studies', name: 'History', value: 'history' },
-    //  { type: 'Social Studies', name: 'Economics', value: 'economics' },
-    //  { type: 'English Language Arts', name: 'English Language Arts', value: 'englishlanguagearts' },
-    //  { type: 'Music', name: 'Music', value: 'music' },
-    //  { type: 'Art', name: 'Art', value: 'art' }
-    // ];
 
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
@@ -513,6 +494,37 @@
       $state.go('lessons.duplicate', {
         lessonId: vm.lesson._id
       });
+    };
+
+    vm.openDownloadLesson = function() {
+      vm.download = {
+        content: 'YES'
+      };
+      vm.lesson.filename = lodash.replace(vm.lesson.title + '.zip', /\s/, '_');
+      angular.element('#modal-download-lesson').modal('show');
+    };
+
+    vm.downloadLesson = function() {
+      angular.element('#modal-download-lesson').modal('hide');
+      //vm.download = {};
+    };
+
+    vm.goToUnitFromDownloadLesson = function() {
+      console.log('go');
+      vm.download = {};
+
+      angular.element('#modal-download-lesson').modal('hide');
+      $timeout(function () {
+        $state.go('units.view', {
+          unitId: vm.lesson.unit._id
+        });
+      }, 100);
+    };
+
+    vm.closeDownloadLesson = function() {
+      console.log('cancel');
+      angular.element('#modal-download-lesson').modal('hide');
+      vm.download = {};
     };
   }
 })();

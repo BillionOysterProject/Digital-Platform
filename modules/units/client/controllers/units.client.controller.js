@@ -5,9 +5,9 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', 'unitResolve', 'Authentication'];
+  UnitsController.$inject = ['$scope', '$state', 'unitResolve', 'Authentication', 'UnitLessonsService'];
 
-  function UnitsController($scope, $state, unit, Authentication) {
+  function UnitsController($scope, $state, unit, Authentication, UnitLessonsService) {
     var vm = this;
 
     vm.unit = unit;
@@ -36,6 +36,10 @@
       text: 'name',
       options: vm.researchProjects
     };
+
+    vm.lessons = UnitLessonsService.query({
+      unitId: vm.unit._id
+    });
 
     // Remove existing Unit
     vm.remove = function() {

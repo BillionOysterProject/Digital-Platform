@@ -16,19 +16,22 @@
     Menus.addMenuItem('account', {
       title: '',
       state: 'settings',
-      type: 'dropdown',
+      type: 'dropdown'
+    });
+
+    Menus.addSubMenuItem('account', 'settings', {
+      title: 'Settings',
+      state: 'settings.profile',
       roles: ['user']
     });
+
+    
 
     // Menus.addSubMenuItem('account', 'settings', {
     //   title: 'Edit Profile',
     //   state: 'settings.profile'
     // });
 
-    Menus.addSubMenuItem('account', 'settings', {
-      title: 'Settings',
-      state: 'settings.profile'
-    });
 
     // Menus.addSubMenuItem('account', 'settings', {
     //   title: 'Edit Profile Picture',

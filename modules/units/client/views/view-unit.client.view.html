@@ -26,24 +26,21 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="well">
-                    <ul class="row list-unstyled"><!--TODO: Wire up list/links of lessons inside the unit-->
-                        <li class="col-md-4"><a href="#">How to indentify a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to plant a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to water a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to indentify a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to plant a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to water a tree</a></li>
+                    <ul class="row list-unstyled">
+                        <li class="col-md-4" ng-repeat="lesson in vm.lessons">
+                          <a href="#" ui-sref="lessons.view({ lessonId: lesson._id })">{{lesson.title}}</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        
+
         <div class="page-header">
             <h2>Stage 1: Desired Results</h2>
         </div>
 
         <h3>Enduring Understandings</h3>
-        
+
         <b>Field Work</b>
         <p ng-bind="vm.unit.stageOne.enduringUnderstandings.fieldWork"></p>
 
@@ -83,7 +80,7 @@
         <ul ng-repeat="expectation in vm.unit.stageTwo.evidence.expectations">
             <li ng-bind="expectation | numberExpectations"></li>
         </ul>
-        
+
         <p><b>Science and Engineering</b> <span ng-bind-html="vm.unit.stageTwo.evidence.scienceAndEngineering | sanitize"></span></p>
         <p><b>Disciplinary Core Ideas</b> <span ng-bind-html="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas | sanitize"></span></p>
         <p><b>Cross-Cutting Concepts</b> <span ng-bind-html="vm.unit.stageTwo.evidence.crossCuttingConcepts | sanitize"></span></p>
@@ -134,7 +131,7 @@
                                 <label><input type="checkbox" value="" checked> Include all Teacher Resources</label>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

@@ -55,14 +55,14 @@ module.exports = {
       s3dest: 'uploads/protocols/site-conditions/img/water-conditions/',
       dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 10*1024*1024 // Max file size in bytes (1 MB)
       }
     },
     landConditionUpload: {
       s3dest: 'uploads/protocols/site-conditions/img/land-conditions/',
       dest: './modules/protocol-site-conditions/client/img/land-condition/uploads/', // Protocol site condition upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 10*1024*1024 // Max file size in bytes (1 MB)
       }
     },
     oysterCageConditionUpload: {

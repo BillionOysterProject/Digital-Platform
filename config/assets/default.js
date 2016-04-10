@@ -10,11 +10,13 @@ module.exports = {
         'public/lib/quill/dist/quill.snow.css',
         'public/lib/select2/select2.css',
         'public/lib/select2/select2-bootstrap.css',
-        'public/lib/leaflet/dist/leaflet.css'
+        'public/lib/leaflet/dist/leaflet.css',
+        'public/lib/angular-chart.js/dist/angular-chart.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
         'public/lib/select2/select2.js',
+        'public/lib/Chart.js/Chart.js',
         'public/lib/isotope/dist/isotope.pkgd.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
         'public/lib/quill/dist/quill.js',
@@ -35,9 +37,10 @@ module.exports = {
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js',
         'public/lib/leaflet/dist/leaflet.js',
-        'public/lib/ng-lodash/build/ng-lodash.min.js',
         'public/lib/cytoscape/dist/cytoscape.js',
-        'public/lib/ngCytoscape/dst/ngCytoscape.js'
+        'public/lib/ngCytoscape/dst/ngCytoscape.js',
+        'public/lib/angular-chart.js/dist/angular-chart.js',
+        'public/lib/ng-lodash/build/ng-lodash.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

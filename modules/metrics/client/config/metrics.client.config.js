@@ -14,5 +14,6 @@
       state: 'metrics.dashboard',
       roles: ['admin']
     });
+
   }
 })();

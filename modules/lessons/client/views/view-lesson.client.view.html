@@ -17,7 +17,7 @@
                 <h6 ng-show="vm.lesson.status === 'published'">Published</h6>
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
                 <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
-                <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
+                <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
             </div>
         </div>
 
@@ -263,6 +263,8 @@
 
 
 <!-- MODALS -->
+<download-lesson-modal lesson="vm.lesson" download="vm.download" download-function="vm.downloadLesson"
+  cancel-function="vm.closeDownloadLesson" unit-function="vm.goToUnitFromDownloadLesson"></download-lesson-modal>
 <div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -279,38 +281,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-download" tabindex="-1" role="dialog"><!--Wire up modal-->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Download <span class="red">{{vm.lesson.title}}</span></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Lesson content</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Handouts</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Teacher Resources</label>
-                            </div>
-                        </div>
-                        <p>To download other associated lessons in the unit, or the entire unit, visit <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a>.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Download</button>
             </div>
         </div>
     </div>
