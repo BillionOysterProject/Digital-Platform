@@ -586,6 +586,10 @@ exports.downloadZip = function(req, res) {
           lessonDocxFilepath = path.resolve(filepath);
           archive.file(lessonDocxFilepath, { name: filename });
           lessonCallback();
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
         });
       } else {
         lessonCallback();

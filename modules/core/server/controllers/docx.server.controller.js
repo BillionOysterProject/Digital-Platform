@@ -36,7 +36,7 @@ var rmdir = function(dir) {
   fs.rmdirSync(dir);
 };
 
-function templateToDocx(tempTemplatePath){
+function templateToDocx(tempTemplatePath, callback){
   //convert the template dir into a docx file by zipping the dir
 
   //get file pathing
@@ -51,6 +51,7 @@ function templateToDocx(tempTemplatePath){
     console.log(archive.pointer() + ' total bytes');
     console.log('archiver has been finalized and the output file descriptor has closed.');
     rmdir(tempTemplatePath);
+    callback(docxName);
   });
 
   archive.on('error', function(err){
@@ -60,8 +61,6 @@ function templateToDocx(tempTemplatePath){
   archive.pipe(output);
   archive.directory(tempTemplatePath, '');
   archive.finalize();
-
-  return docxName;
 }
 
 function processTemplate(data, lessonObject){
@@ -101,33 +100,32 @@ var copyDir = function(src, dest) {
   }
 };
 
-exports.createLessonDocx = function(pathToTemplate, lessonObject, callback) {
-
+exports.createLessonDocx = function(pathToTemplate, lessonObject, successCallback, errorCallback) {
   //hopefully we just stick to utf8
   var encoding = 'utf8';
 
   if (!fs.statSync(pathToTemplate)){
-    return console.log("Bad template path: " + pathToTemplate);
+    errorCallback(console.log('Bad template path: ' + pathToTemplate));
   }
 
   var tempTemplatePath = createTempTemplatePath(pathToTemplate);
   copyDir(pathToTemplate, tempTemplatePath);
 
   if (!fs.statSync(pathToTemplate)){
-    return console.log("Unable to create temp path: " + tempTemplatePath);
+    errorCallback(console.log('Unable to create temp path: ' + tempTemplatePath));
   }
 
   var documentPath = path.join(pathToTemplate, 'word', 'document.xml');
 
   fs.readFile(documentPath, encoding, function (err, data) {
     if (err) {
-      return console.log(err);
+      errorCallback(console.log(err));
     }
 
     var bar = processTemplate(data, lessonObject);
-  });
 
-  var docxName = templateToDocx(tempTemplatePath);
-  console.log('docsName', docxName);
-  callback(docxName);
+    templateToDocx(tempTemplatePath, function(docxName) {
+      successCallback(docxName);
+    });
+  });
 };
