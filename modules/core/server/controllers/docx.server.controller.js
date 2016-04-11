@@ -76,8 +76,11 @@ var convertProtocolConnections = function(protocolConnections) {
 
 var convertHtmlToText = function(html) {
   if (html && html !== '') {
-    html = _.replace(html, '</li>', '\n</li>');
+
+    html = _.replace(html, '<li>', '\n<li>');
+    
     var text = htmlToText.fromString(html, {});
+    console.log('text', text);
     return text;
   } else {
     return '';
