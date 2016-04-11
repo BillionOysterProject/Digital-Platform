@@ -9,14 +9,16 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Restoration Stations',
-      state: 'restoration-stations',
-      type: 'dropdown',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
-      icon: 'glyphicon glyphicon-map-marker',
-      position: 2
-    });
+
+    // COMMENTED OUT FOR STAGING:
+    // Menus.addMenuItem('topbar', {
+    //   title: 'Restoration Stations',
+    //   state: 'restoration-stations',
+    //   type: 'dropdown',
+    //   roles: ['team lead', 'team member', 'partner', 'admin'],
+    //   icon: 'glyphicon glyphicon-map-marker',
+    //   position: 2
+    // });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Dashboard',
