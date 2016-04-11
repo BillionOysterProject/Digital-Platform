@@ -10,27 +10,24 @@ var mongoose = require('mongoose'),
  * Expedition Schema
  */
 var ExpeditionSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
   team: {
     type: Schema.ObjectId,
     ref: 'Team'
   },
-  teamMembers: [{
+  station: {
     type: Schema.ObjectId,
-    ref: 'User'
-  }],
-  site: {
-    type: Schema.ObjectId,
-    ref: 'Site'
+    ref: 'RestorationStation'
   },
-  latitude: {
-    type: Number,
-    required: true
-  }, 
-  longitude: {
-    type: Number,
+  monitoringStartDate: {
+    type: Date,
     required: true
   },
-  monitoringDate: {
+  monitoringEndDate: {
     type: Date,
     required: true
   },
@@ -41,6 +38,12 @@ var ExpeditionSchema = new Schema({
   },
   updated: {
     type: Date
+  },
+  status: {
+    type: String,
+    enum: ['incomplete','returned','published'],
+    default: ['incomplete'],
+    required: true
   }
 });
 mongoose.model('Expedition', ExpeditionSchema);

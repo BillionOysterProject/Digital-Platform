@@ -1,12 +1,5 @@
 <section class="content">
-  <section class="container">
-    <!-- <p>Node Edge Graph</p> -->
-    <!-- <ul ng-repeat="unit in vm.units">
-      <li ng-click="vm.selectedUnit(unit)">{{unit.title}}</li>
-      <ul ng-show="vm.lessons" ng-repeat="lesson in vm.lessons">
-        <li>{{lesson.title}}</li>
-      </ul>
-    </ul> -->
+  <section class="container-fluid">
     <cytoscape id="node-graph" graph-options="vm.options" graph-elements="vm.elements" graph-layout="vm.layout" graph-style="vm.style"></cytoscape>
   </section>
 </section>

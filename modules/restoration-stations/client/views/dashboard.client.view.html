@@ -1,12 +1,26 @@
 <section class="content shaded">
     <section class="container-fluid">
         <div class="page-header">
-            <div class="col-sm-4 pull-right">
-              <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
-                  <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
-              </select>
+            <div class="row">
+                <h2 class="col-md-8">Restoration Stations</h2>
+                <div class="col-md-4">
+                    <div class="btn-group pull-right">
+                      <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{vm.team.name}} <span class="caret"></span><!--If only a member/teacher of 1 team, hide this caret -->
+                      </button>
+                      <ul class="dropdown-menu" ng-show="vm.teams.length > 1">
+                        <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
+                      </ul>
+                    </div>
+                    <!--TODO: Can we get rid of the select below and change it to the button dropdown above?
+                    <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
+                      <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+                    </select>-->
+                    <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
+                      <small class="text-muted">{{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
+                    </h5>
+                </div>
             </div>
-            <h2>Restoration Stations</h2>
         </div>
         <div class="row">
             <div class="col-md-8">
@@ -15,24 +29,7 @@
                         <h4>Oyster Restoration Stations</h4>
                     </div>
                     <div class="panel-body">
-                      <leaflet-map map-controls="" map-click-event="" marker-drag-end-event=""
-                                   can-move-marker="" show-marker=""></leaflet-map>
-                      <div class="row">
-                            <div class="col-sm-6">
-                                <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
-                                  <small class="text-muted">{{vm.team.name}}, {{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
-                                </h5>
-                            </div>
-                            <!-- <div class="col-sm-2 col-xs-4">
-                                <h5><b>45&deg;</b><br /><small class="text-muted">Temp</small></h5>
-                            </div>
-                            <div class="col-sm-2 col-xs-4">
-                                <h5><b>4mph</b><br /><small class="text-muted">Wind</small></h5>
-                            </div>
-                            <div class="col-sm-2 col-xs-4">
-                                <h5><span class="label label-success">Active</span><br /><small class="text-muted">Status</small></h5>
-                            </div> -->
-                        </div>
+                      <leaflet-map map-controls="" map-click-event="" marker-drag-end-event="" can-move-marker="" show-marker=""></leaflet-map>
                     </div>
                 </div>
                 <div class="row" ng-show="vm.isTeamLead">
@@ -119,8 +116,8 @@
                         <h4>Team Stations</h4>
                     </div>
                     <div class="panel-body">
-                        <table class="table">
-                            <tr ng-repeat="station in vm.stations">
+                        <table class="table table-hover">
+                            <tr data-toggle="modal" data-target="#modal-station-register" ng-repeat="station in vm.stations">
                                 <td><h3>
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
                                   <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
@@ -132,16 +129,16 @@
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
                                   <span class="label label-default" ng-show="station.status === 'Lost'">Lost</span>
                                 </td>
-                            </tr>
+                              </tr>
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary">Register a station</a>
+                        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-station-register">Register a station</a>
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>My Expeditions</h4>
+                        <h4>Team Expeditions</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
@@ -176,3 +173,72 @@
         </div>
     </section>
 </section>
+
+
+
+
+
+
+  <!-- MODALS -->
+  <div class="modal fade" id="modal-station-register" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Register a Station</h4>
+          <!--TODO: If editing an existing station: show:
+          <h4 class="modal-title">Update the <span class="red">{{station.title}}</span> Station</h4> and wire up title-->
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Station Name</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Team</label>
+                        <select class="form-control"><!--TODO: Fill in all teacher's teams here, preselect whichever team they clicked Register from--></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Body of Water</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Station Status</label>
+                        <select class="form-control">
+                            <option>Active</option>
+                            <option>Lost</option>
+                        </select>
+                    </div>
+                </div>
+                <google-geocode ng-if="vm.canGeocode" place-selected="vm.placeSelected"></google-geocode>
+                <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd" can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker"></leaflet-map><!-- TODO: Fix? I copied this from the protocol, not sure if it'll work? -->
+                <br />
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Latitude</label>
+                        <input type="text" class="form-control" placeholder="39.290385" ng-model="vm.latitude"/>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Longitude</label>
+                        <input type="text" class="form-control" placeholder="-76.612189" ng-model="vm.longitude"/>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button><!-- Only show on Edit view -->
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Register</button><!-- Say "Update" on Edit view -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--END MODALS-->

@@ -1,7 +1,7 @@
 <div>
   <div class="form-group" ng-show="files">
     <div ng-repeat="file in files">
-      <i class="glyphicon glyphicon-file"></i> {{file.originalname}} <i class="glyphicon glyphicon-remove" ng-click="removeFile($index, file)"></i>
+      <i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}} <a ng-click="removeFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
     </div>
   </div>
   <div>

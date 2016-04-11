@@ -44,15 +44,6 @@
     };
 
     vm.findTeamValues = function() {
-      if (vm.filter.teamId && vm.filter.teamId !== '') {
-        var index = lodash.findIndex(vm.teams, function(t) {
-          return t._id === vm.filter.teamId;
-        });
-        if (index > -1) {
-          vm.team = vm.teams[index];
-        }
-      }
-
       TeamMembersService.query({
         byOwner: true,
         teamId: vm.filter.teamId
@@ -72,12 +63,15 @@
     vm.initializeBasedOnTeam = function() {
       if (!vm.filter.teamId || vm.filter.teamId === '') {
         vm.filter.teamId = (vm.teams.length > 0) ? vm.teams[0]._id : '';
+        vm.team = vm.teams[0];
         console.log('teamId', vm.filter.teamId);
         vm.findTeamValues();
       }
     };
 
-    vm.fieldChanged = function($event) {
+    vm.fieldChanged = function(team) {
+      vm.filter.teamId = (team) ? team._id : '';
+      vm.team = team;
       vm.findTeamValues();
     };
 

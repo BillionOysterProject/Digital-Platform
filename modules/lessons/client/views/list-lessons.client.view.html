@@ -15,7 +15,7 @@
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-lesson-settings"><i class="glyphicon glyphicon-cog"></i></a>
+            <!--Comment out settings modal for now -- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-lesson-settings"><i class="glyphicon glyphicon-cog"></i></a>-->
             <ul class="nav navbar-nav">
                 <li><a ok-sel="*">Show All</a></li>
                 <li class="dropdown">
@@ -29,14 +29,6 @@
                       <li ng-repeat="subject in vm.subjectAreas">
                         <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.subject}}</a>
                       </li>
-
-                      <!-- <span ng-repeat="subjectHeader in vm.subjectAreas | unique:'type'">
-                        <li class="dropdown-header"><a ok-sel=".technology">{{subjectHeader.type}}</a></li>
-                        <li ng-repeat="subject in vm.subjectAreas | filter: subjectHeader.type">
-                          <a ok-sel=".{{subject.value}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.name}}</a></li>
-                        <li role="separator" class="divider"></li>
-                      </span> -->
-
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -78,7 +70,8 @@
                     <div class="panel-body">
                         <small>{{lesson.lessonOverview.setting}}</small>
                         <h4>{{lesson.title}}</h4>
-                        <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                        <p ng-bind="lesson.lessonOverview.lessonSummary | limitTo:200"></p>
+                        <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <ul class="list-inline">
