@@ -8,6 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -68,7 +69,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - marked CSO pipe latitude is required.');
     }
-    if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude || 
+    if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude ||
       siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude === 0) {
       errorMessages.push('Water Condition - marked CSO pipe longitude is required.');
     }
@@ -84,7 +85,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - unmarked pipe latitude is required.');
     }
-    if (!siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude || 
+    if (!siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude ||
       siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude === 0) {
       errorMessages.push('Water Condition - unmarked pipe longitude is required.');
     }
@@ -134,15 +135,15 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
 };
 
 /**
- * Create a protocol site condition 
+ * Create a protocol site condition
  */
 exports.create = function (req, res) {
-  validateSiteCondition(req.body, 
+  validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
-    siteCondition.tideConditions.closestHighTide = 
+    siteCondition.tideConditions.closestHighTide =
       moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
-    siteCondition.tideConditions.closestLowTide = 
+    siteCondition.tideConditions.closestLowTide =
       moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
     siteCondition.save(function (err) {
@@ -177,15 +178,15 @@ exports.read = function (req, res) {
  * Update a protocol site condition
  */
 exports.update = function (req, res) {
-  validateSiteCondition(req.body, 
+  validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = req.siteCondition;
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.tideConditions.closestHighTide = 
+      siteCondition.tideConditions.closestHighTide =
         moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
-      siteCondition.tideConditions.closestLowTide = 
+      siteCondition.tideConditions.closestLowTide =
         moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
 
       siteCondition.save(function (err) {
@@ -212,17 +213,70 @@ exports.update = function (req, res) {
 /**
  * Delete a protocol site condition
  */
+
+var deleteInternal = function(siteCondition, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (siteCondition) {
+    if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
+    siteCondition.waterConditions.waterConditionPhoto.path) {
+      filesToDelete.push(siteCondition.waterConditions.waterConditionPhoto.path);
+    }
+    if (siteCondition.landConditions && siteCondition.landConditions.landConditionPhoto &&
+    siteCondition.landConditions.landConditionPhoto.path) {
+      filesToDelete.push(siteCondition.landConditions.landConditionPhoto.path);
+    }
+  }
+
+  var uploadRemote = new UploadRemote();
+  uploadRemote.deleteRemote(filesToDelete,
+  function() {
+    siteCondition.remove(function (err) {
+      if (err) {
+        errorCallback(errorHandler.getErrorMessage(err));
+      } else {
+        successCallback(siteCondition);
+      }
+    });
+  }, function(err) {
+    errorCallback(err);
+  });
+};
+
 exports.delete = function (req, res) {
   var siteCondition = req.siteCondition;
 
-  siteCondition.remove(function (err) {
-    if (err) {
+  deleteInternal(siteCondition,
+  function(siteCondition) {
+    res.json(siteCondition);
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
+  });
+};
+
+var uploadFileSuccess = function(siteCondition, res) {
+  siteCondition.save(function (saveError) {
+    if (saveError) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorHandler.getErrorMessage(saveError)
       });
     } else {
       res.json(siteCondition);
     }
+  });
+};
+
+var uploadFileError = function(siteCondition, errorMessage, res) {
+  deleteInternal(siteCondition,
+  function(siteCondition) {
+    return res.status(400).send({
+      message: errorMessage
+    });
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -238,28 +292,14 @@ exports.uploadWaterConditionPicture = function (req, res) {
   upload.fileFilter = waterConditionUploadFileFilter;
 
   if (siteCondition) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading water condition picture'
-        });
-      } else {
-        console.log('file', req.file);
-        siteCondition.waterConditions.waterConditionPhoto.path = config.uploads.waterConditionUpload.dest + req.file.filename;
-        siteCondition.waterConditions.waterConditionPhoto.originalname = req.file.originalname;
-        siteCondition.waterConditions.waterConditionPhoto.mimetype = req.file.mimetype;
-        siteCondition.waterConditions.waterConditionPhoto.filename = req.file.filename;
-
-        siteCondition.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(siteCondition);
-          }
-        });
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
+    function(fileInfo) {
+      siteCondition.waterConditions.waterConditionPhoto = fileInfo;
+      uploadFileSuccess(siteCondition, res);
+    }, function (errorMessage) {
+      // delete siteCondition
+      uploadFileError(siteCondition, errorMessage, res);
     });
   } else {
     res.status(400).send({
@@ -277,28 +317,14 @@ exports.uploadLandConditionPicture = function (req, res) {
   upload.fileFilter = landConditionUploadFileFilter;
 
   if (siteCondition) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading land condition picture'
-        });
-      } else {
-        console.log('file', req.file);
-        siteCondition.landConditions.landConditionPhoto.path = config.uploads.landConditionUpload.dest + req.file.filename;
-        siteCondition.landConditions.landConditionPhoto.originalname = req.file.originalname;
-        siteCondition.landConditions.landConditionPhoto.mimetype = req.file.mimetype;
-        siteCondition.landConditions.landConditionPhoto.filename = req.file.filename;
-
-        siteCondition.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            res.json(siteCondition);
-          }
-        });
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
+    function(fileInfo) {
+      siteCondition.landConditions.landConditionPhoto = fileInfo;
+      uploadFileSuccess(siteCondition, res);
+    }, function(errorMessage) {
+      // delete siteCondition
+      uploadFileError(siteCondition, errorMessage, res);
     });
   } else {
     res.status(400).send({

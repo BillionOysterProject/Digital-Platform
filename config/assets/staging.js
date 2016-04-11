@@ -30,8 +30,9 @@ module.exports = {
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.min.js',
-        'public/lib/angular-select2/dist/angular-select2.min.js',
-        'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
+        'public/lib/angular-agility/dist/angular-agility.min.js',
+        'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
+        'public/lib/spin.js/spin.min.js'
       ]
     },
     css: 'public/dist/application.min.css',

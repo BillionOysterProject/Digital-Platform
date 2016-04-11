@@ -1,0 +1,31 @@
+<div class="modal fade" id="modal-return" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form name="form.returnLessonForm" ng-submit="return(form.returnLessonForm.$valid)" novalidate>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to return <span class="red">{{lesson.title}}</span>?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>The lesson draft will be returned to the author for changes and they will be notified that it will not be published.</p>
+                        <div class="form-group">
+                          <label for="description" class="label-control required">Description of edits/changes needed</label>
+                          <textarea class="form-control" ng-model="lesson.returnedNotes" name="description" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="error" class="text-danger">
+              <strong ng-bind="error"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+                <!--TODO: Wire up button. If returned, change status on Teacher Library to Returned and send them an email -->
+                <button type="submit" class="btn btn-danger">Return</button>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>

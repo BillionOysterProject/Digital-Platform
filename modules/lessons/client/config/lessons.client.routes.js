@@ -20,7 +20,7 @@
         controller: 'LessonsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead'],
+          roles: ['team lead', 'admin'],
           pageTitle: 'Lessons List'
         }
       })
@@ -50,13 +50,26 @@
           pageTitle: 'Edit Lesson {{ lessonResolve.title }}'
         }
       })
+      .state('lessons.duplicate', {
+        url: '/:lessonId/duplicate',
+        templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
+        controller: 'LessonsController',
+        controllerAs: 'vm',
+        resolve: {
+          lessonResolve: getLessonDuplicate
+        },
+        data: {
+          roles: ['team lead'],
+          pageTitle: 'Duplicate Lesson'
+        }
+      })
       .state('lessons.view', {
         url: '/:lessonId',
         templateUrl: 'modules/lessons/client/views/view-lesson.client.view.html',
         controller: 'LessonsController',
         controllerAs: 'vm',
         resolve: {
-          lessonResolve: getLesson
+          lessonResolve: getLessonFull
         },
         data: {
           pageTitle: 'Lesson {{ lessonResolve.title }}'
@@ -69,6 +82,24 @@
   function getLesson($stateParams, LessonsService) {
     return LessonsService.get({
       lessonId: $stateParams.lessonId
+    }).$promise;
+  }
+
+  getLessonDuplicate.$inject = ['$stateParams', 'LessonsService'];
+
+  function getLessonDuplicate($stateParams, LessonsService) {
+    return LessonsService.get({
+      lessonId: $stateParams.lessonId,
+      duplicate: true
+    }).$promise;
+  }
+
+  getLessonFull.$inject = ['$stateParams', 'LessonsService'];
+
+  function getLessonFull($stateParams, LessonsService) {
+    return LessonsService.get({
+      lessonId: $stateParams.lessonId,
+      full: true
     }).$promise;
   }
 

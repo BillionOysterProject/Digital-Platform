@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Unit = mongoose.model('Unit'),
+  Lesson = mongoose.model('Lesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -43,7 +44,11 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var unit = req.unit ? req.unit.toJSON() : {};
 
-  res.json(unit);
+  Lesson.find({ unit: unit }).exec(function(err, lessons) {
+    console.log('lessons', lessons);
+    unit.hasLessons = (lessons && lessons.length > 0) ? true : false;
+    res.json(unit);
+  });
 };
 
 /**
@@ -94,7 +99,7 @@ exports.delete = function (req, res) {
  * List of Units
  */
 exports.list = function (req, res) {
-  Unit.find().sort('-created').populate('user', 'displayName').exec(function (err, units) {
+  Unit.find().sort('title').populate('user', 'displayName').exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -104,6 +109,27 @@ exports.list = function (req, res) {
     }
   });
 };
+
+/**
+ * List of lessons by units
+ */
+exports.listLessons = function(req, res) {
+  var unit = req.unit;
+
+  Lesson.find({ unit: unit }).sort('-created').
+  populate('user', 'displayName email team profileImageURL').
+  populate('unit', 'title color icon').exec(function(err, lessons) {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(lessons);
+    }
+  });
+};
+
 
 /**
  * Unit middleware

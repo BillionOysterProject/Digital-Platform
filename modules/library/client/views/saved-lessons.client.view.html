@@ -1,0 +1,30 @@
+<div class="row" isotope-container="isotope-container" ng-show="vm.savedLessons.length > 0">
+    <div ng-repeat="lesson in vm.savedLessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+        <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+            <div class="panel-heading" style="background: {{lesson.unit.color}}">
+                <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+                <h3 class="panel-title">
+                    <i class="glyphicon {{lesson.unit.icon}}"></i>
+                    {{lesson.unit.title}}
+                </h3>
+            </div>
+            <div class="panel-body">
+                <small>{{lesson.lessonOverview.setting}}</small>
+                <h4>{{lesson.title}}</h4>
+                <p ng-bind="lesson.lessonOverview.lessonSummary | limitTo:200"></p>
+                <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
+            </div>
+            <div class="panel-footer">
+                <ul class="list-inline">
+                  <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                      <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                      class="label label-default"></span>
+                  </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center" ng-show="vm.savedLessons.length === 0">
+    No saved lessons yet! When viewing a lesson, click the star in the title to save your favorites here.
+</div>

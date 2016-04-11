@@ -32,7 +32,7 @@
           unitResolve: newUnit
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle : 'Units Create'
         }
       })
@@ -45,7 +45,7 @@
           unitResolve: getUnit
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Edit Unit {{ unitResolve.title }}'
         }
       })

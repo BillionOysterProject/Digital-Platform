@@ -12,8 +12,16 @@
       title: 'Curriculum',
       state: 'curriculum',
       type: 'dropdown',
-      roles: ['user', 'team lead', 'admin'],
+      roles: ['team lead', 'admin'],
       icon: 'glyphicon glyphicon-book',
+      position: 1
+    });
+
+    Menus.addSubMenuItem('topbar', 'curriculum', {
+      title: 'Overview',
+      state: 'curriculum.overview',
+      roles: ['team lead', 'admin'],
+      position: 0
     });
   }
 })();

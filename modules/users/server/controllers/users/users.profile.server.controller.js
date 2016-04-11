@@ -7,6 +7,7 @@ var _ = require('lodash'),
   fs = require('fs'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
@@ -57,35 +58,35 @@ exports.changeProfilePicture = function (req, res) {
   var user = req.user;
   var upload = multer(config.uploads.profileUpload).single('newProfilePicture');
   var profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
 
   if (user) {
-    upload(req, res, function (uploadError) {
-      if(uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading profile picture'
-        });
-      } else {
-        user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.profileUpload,
+    function(fileInfo) {
+      user.profileImageURL = fileInfo.path;
 
-        user.save(function (saveError) {
-          if (saveError) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(saveError)
-            });
-          } else {
-            req.login(user, function (err) {
-              if (err) {
-                res.status(400).send(err);
-              } else {
-                res.json(user);
-              }
-            });
-          }
-        });
-      }
+      user.save(function (saveError) {
+        if (saveError) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(saveError)
+          });
+        } else {
+          req.login(user, function (err) {
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              res.json(user);
+            }
+          });
+        }
+      });
+    }, function (errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
     });
   } else {
     res.status(400).send({

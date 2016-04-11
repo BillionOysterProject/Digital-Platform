@@ -4,22 +4,20 @@
     <section class="container">
         <div class="row">
             <div class="col col-sm-6">
-                <h2>{{vm.lesson.title}} 
+                <h2>{{vm.lesson.title}}
                     <small>
-                        <a href="#"><i class="glyphicon glyphicon-star-empty"></i></a>
-                        <!--TODO: Wire up Lesson saves. If teacher clicks the star to save the lesson, show on My Library page and switch <a> tag to this:
-                        <a href="#"><i class="glyphicon glyphicon-star red"></i></a>-->
+                        <a ng-click="vm.favoriteLesson()" ng-hide="vm.lesson.saved"><i class="glyphicon glyphicon-star-empty"></i></a>
+                        <a ng-click="vm.unfavoriteLesson()" ng-show="vm.lesson.saved"><i class="glyphicon glyphicon-star red"></i></a>
                     </small>
-                </h2>     
+                </h2>
             </div>
             <div class="col col-sm-6 text-right">
-                <!-- TODO: show status of lesson --
-                <h6 class="blue">Awaiting Approval</h6>
-                <h6 class="red">Returned</h6>-->
-                <h6>Published</h6>
-                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a><!-- TODO: Hide edit button if awaiting approval -->
-                <a class="btn btn-default">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
-                <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
+                <h6 ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
+                <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
+                <h6 ng-show="vm.lesson.status === 'published'">Published</h6>
+                <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+                <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
+                <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
             </div>
         </div>
 
@@ -67,9 +65,10 @@
             </div>
             <div class="col col-sm-6">
                 <b>Subject Areas</b>
-                <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                <ul class="list-inline">
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
-                        <span ng-bind="subject | subjectAreas" class="label label-default"></span>
+                        <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                        class="label label-default"></span>
                     </li>
                 </ul>
             </div>
@@ -78,36 +77,40 @@
         <hr />
 
         <div class="row">
-            <div class="col col-sm-3">
+            <div class="col-sm-3">
                 <ul class="list-unstyled">
                     <b>Supplies</b>
                     <p ng-bind="vm.lesson.materialsResources.supplies"></p>
                 </ul>
+                <br/>
                 <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.teacherTips">
                     <b>Teacher Tips</b>
                     <p ng-bind="vm.lesson.materialsResources.teacherTips"></p>
                 </ul>
+                <br/>
                 <ul class="list-unstyled">
                     <b>Teacher Resources</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.teacherResourcesFiles">
-                        <a class="btn" ng-click="downloadExample(file)"><i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
+                        <a class="break" download="{{file.originalname}}" target="_blank"
+                        ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+                          <i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
                     </li>
                     <li ng-repeat="link in vm.lesson.materialsResources.teacherResourcesLinks">
-                        <a href="{{link.link | urlNormalizer}}" target="_blank"><i class="glyphicon glyphicon-link"></i> {{link.name}}</a>
+                        <a class="break" href="{{link.link | urlNormalizer}}" target="_blank"><i class="glyphicon glyphicon-link"></i> {{link.name}}</a>
                     </li>
                     <!-- TODO: VIDEO: Should open modal and play video on click -->
                     <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
                 </ul>
+                <br/>
                 <ul class="list-unstyled">
                     <b>Hand Outs</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
-                        <a class="btn" ng-click="downloadExample(file)"><i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
+                        <a class="break" download="{{file.originalname}}" target="_blank"
+                        ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+                        <i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
                     </li>
-                    <!-- TODO: This needs to be fixed in the model vm.lesson.materialsResources.handoutsFileInput - Should download on click -->
-                    <!-- <li><a href="#"><i class="glyphicon glyphicon-file"></i> Student Worksheet</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-file"></i> Harbour Map</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-file"></i> Marine Animals</a></li> -->
                 </ul>
+                <br/>
                 <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.stateTestQuestions">
                     <b>State Test Questions</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.stateTestQuestions">
@@ -119,7 +122,7 @@
                 <h3>Lesson Overview</h3>
                 <div class="row">
                     <div class="col col-sm-12">
-                        <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
+                        <div ng-bind="vm.lesson.lessonOverview.lessonSummary"></div>
                     </div>
                     <div class="col col-sm-6">
                         <h3>Objectives</h3>
@@ -127,9 +130,9 @@
                     </div>
                     <div class="col col-sm-6">
                         <h3>Vocabulary</h3>
-                        <!-- TODO: Should show definition on click - place    $('.popover-trigger').popover();    inside jQuery to trigger popover -->
                         <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
-                            <a class="popover-trigger" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Vocabulary Term" data-content="Vocabulary definition here" ng-bind="vocabulary | vocabulary"></a>
+                            <a href="#" uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
+                            popover-trigger="mouseenter" popover-placement="top"><i class="glyphicon glyphicon-comment"></i> {{vocabulary.term}}</a>
                         </div>
                     </div>
                     <div class="col col-sm-12">
@@ -167,43 +170,93 @@
             <div class="col col-sm-12">
                 <h3>Standards</h3>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycScienceScopeSequence">
-                <b>New York City Science Scope &amp; Sequence</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycsssUnits">
+                <b>NYC Science Scope &amp; Sequence - Units</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.nycScienceScopeSequence">
-                        <span ng-bind="standard | nycScienceScope"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nycsssUnits">
+                        <span>{{standard.header}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssStandards">
-                <b>NGSS Standards</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssKeyIdeas">
+                <b>NYS Science Standards - Key Ideas</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.ngssStandards">
-                        <span ng-bind="standard | ngssStandards"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssKeyIdeas">
+                        <span>{{standard.header}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreEla">
-                <b>Common Core ELA</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMajorUnderstandings">
+                <b>NYS Science Standards - Major Understandings</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.commonCoreEla">
-                        <span ng-bind="standard | commonCoreEla"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssMajorUnderstandings">
+                        <span>{{standard.code}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.commonCoreMath">
-                <b>Common Core Math</b>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMst">
+                <b>NYS Science Standards - MST</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
                 <ul>
-                    <li ng-repeat="standard in vm.lesson.standards.commonCoreMath">
-                        <span ng-bind="standard | commonCoreMath"></span>
+                    <li ng-repeat="standard in vm.lesson.standards.nysssMst">
+                        <span>{{standard.code}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+                <b>NGSS - Disciplinary Core Ideas</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssScienceEngineeringPractices">
+                <b>NGSS - Science and Engineering Practices</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssScienceEngineeringPractices">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssCrossCuttingConcepts">
+                <b>NGSS - Cross-Cutting Concepts</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.ngssCrossCuttingConcepts">
+                        <span>{{standard.header}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsMathematics">
+                <b>CCLS - Mathematics</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.cclsMathematics">
+                        <span>{{standard.code}} - {{standard.description}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+                <b>CCLS - ELA Science &amp; Technical Subjects</b>
+                <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+                <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                <ul>
+                    <li ng-repeat="standard in vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+                        <span>{{standard.code}} - {{standard.description}}</span>
                     </li>
                 </ul>
             </div>
@@ -213,6 +266,8 @@
 
 
 <!-- MODALS -->
+<download-lesson-modal lesson="vm.lesson" download="vm.download" download-function="vm.downloadLesson"
+  cancel-function="vm.closeDownloadLesson" unit-function="vm.goToUnitFromDownloadLesson"></download-lesson-modal>
 <div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -229,38 +284,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-download" tabindex="-1" role="dialog"><!--Wire up modal-->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Download <span class="red">{{vm.lesson.title}}</span></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Lesson content</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Handouts</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Teacher Resources</label>
-                            </div>
-                        </div>
-                        <p>To download other associated lessons in the unit, or the entire unit, visit <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a>.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Download</button>
             </div>
         </div>
     </div>

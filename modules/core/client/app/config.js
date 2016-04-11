@@ -5,18 +5,22 @@ var ApplicationConfiguration = (function () {
   // Init module configuration options
   var applicationModuleName = 'mean';
   var applicationModuleVendorDependencies = [
-    'ngResource', 
-    'ngAnimate', 
-    'ngMessages', 
-    'ui.router', 
-    'ui.bootstrap', 
-    'ui.utils', 
-    'angularFileUpload', 
-    'ngQuill', 
+    'ngResource',
+    'ngAnimate',
+    'ngMessages',
+    'ui.router',
+    'ui.bootstrap',
+    'ui.bootstrap.tpls',
+    'ui.utils',
+    'angularFileUpload',
+    'ngQuill',
     'iso.directives',
-    'rt.select2',
+    'aa.select2',
     'omr.angularFileDnD',
-    'dndLists'];
+    'dndLists',
+    'ngCytoscape',
+    'chart.js',
+    'ngLodash'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

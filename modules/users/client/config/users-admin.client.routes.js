@@ -1,8 +1,8 @@
-'use strict';
+//'use strict';
 
 // Setting up route
-angular.module('users.admin.routes').config(['$stateProvider',
-  function ($stateProvider) {
+//angular.module('users.admin.routes').config(['$stateProvider',
+//  function ($stateProvider) {
     // $stateProvider
       // .state('admin.users', {
       //   url: '/users',
@@ -42,5 +42,5 @@ angular.module('users.admin.routes').config(['$stateProvider',
       //     pageTitle: 'Edit User {{ userResolve.displayName }}'
       //   }
       // });
-  }
-]);
+//  }
+//]);

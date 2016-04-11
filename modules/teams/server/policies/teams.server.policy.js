@@ -15,7 +15,16 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin', 'team lead'],
     allows: [{
-      resources: '/api/team',
+      resources: '/api/teams/members/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/teams/members',
+      permissions: '*'
+    }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: '*'
+    }, {
+      resources: '/api/teams/:teamId/members/:memberId',
       permissions: '*'
     }, {
       resources: '/api/teams',
@@ -27,7 +36,13 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['user', 'team member', 'partner'],
     allows: [{
-      resources: '/api/team',
+      resources: '/api/teams/members',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/:teamId/members/:memberId',
       permissions: ['get']
     }, {
       resources: '/api/teams',

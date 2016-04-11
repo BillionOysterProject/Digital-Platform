@@ -12,6 +12,10 @@ module.exports = {
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
   },
+  s3: {
+    region: 'us-west-1',
+    bucket: 'digital-platform-dev-files',
+  },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
     // Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
@@ -23,7 +27,7 @@ module.exports = {
       //  directoryPath: process.cwd(),
       //  fileName: 'access.log',
       //  rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
-      //    active: false, // activate to use rotating logs 
+      //    active: false, // activate to use rotating logs
       //    fileName: 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
       //    frequency: 'daily',
       //    verbose: false
@@ -72,6 +76,10 @@ module.exports = {
       auth: {
         user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
         pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+      },
+      ses: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'YOUR_AMAZON_KEY',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'YOUR_AMAZON_SECRET_KEY'
       }
     }
   },

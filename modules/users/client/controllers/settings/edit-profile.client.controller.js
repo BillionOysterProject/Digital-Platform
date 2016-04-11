@@ -25,5 +25,18 @@ angular.module('users').controller('EditProfileController', ['$scope', '$http', 
         $scope.error = response.data.message;
       });
     };
+
+    $scope.openChangePasswordModal = function() {
+      angular.element('#change-password-modal').modal('show');
+    };
+
+    $scope.closeChangePasswordModal = function(success) {
+      angular.element('#change-password-modal').modal('hide');
+      if (success) angular.element('#modal-password-change-success').modal('show');
+    };
+
+    $scope.closeChangePasswordSuccessfulModal = function() {
+      angular.element('#modal-password-change-success').modal('hide');
+    };
   }
 ]);

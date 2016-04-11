@@ -1,0 +1,450 @@
+<section class="content shaded">
+    <section class="container-fluid">
+        <h2>Metrics</h2>
+    </section>
+</section>
+<section class="content shaded content-unpadded" ng-controller="SettingsController">
+    <section class="container-fluid">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a href="#people" data-toggle="tab" aria-controls="people" role="tab">People</a>
+            </li>
+            <li role="presentation">
+                <a href="#curriculum" data-toggle="tab" aria-controls="curriculum" role="tab">Curriculum</a>
+            </li>
+            <li role="presentation">
+                <a href="#stations" data-toggle="tab" aria-controls="stations" role="tab">Stations</a>
+            </li>
+        </ul>
+    </section>
+</section>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="people">
+        <section class="content">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="red">373 <i class="glyphicon glyphicon-user gray"></i></h1>
+                                <h6>Total Users</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h2 class="red">3</h2>
+                                <h6>Admin</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h2 class="red">45</h2>
+                                <h6>Team Leads</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h2 class="red">325</h2>
+                                <h6>Team Members</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Timeline</h4>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.data"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.series"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Roles</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.piedata"
+                            chart-labels="vm.pielabels" chart-legend="true">
+                        </canvas> 
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="content shaded">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <nav class="navbar">
+                            <h4 class="navbar-text">Most Active Users</h4>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        June <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                       <li><a>January</a></li>
+                                       <li><a>February</a></li>
+                                       <li><a>March</a></li>
+                                       <li><a>April</a></li>
+                                       <li><a>May</a></li>
+                                       <li><a>June</a></li>
+                                       <li><a>July</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        Team Leads <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                       <li><a>Team Leads</a></li>
+                                       <li><a>Team Members</a></li>
+                                       <li><a>Admin</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                        <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Team(s)</th>
+                                <th>Members</th>
+                                <th>Organization</th>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">89</h3> <small class="text-muted">logins</small></td>
+                                <td>Bob Smith</td>
+                                <td>Team 1, Team 2, Team 3</td>
+                                <td><b>68</b></td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">74</h3> <small class="text-muted">logins</small></td>
+                                <td>Jane Doe</td>
+                                <td>Team 6</td>
+                                <td><b>63</b></td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">65</h3> <small class="text-muted">logins</small></td>
+                                <td>Bob Smith</td>
+                                <td>Team 1, Team 2, Team 3</td>
+                                <td><b>53</b></td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">54</h3> <small class="text-muted">logins</small></td>
+                                <td>Jane Doe</td>
+                                <td>Team 5</td>
+                                <td><b>113</b></td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="navbar">
+                            <h4 class="navbar-text">Largest Teams</h4>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        June <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                       <li><a>January</a></li>
+                                       <li><a>February</a></li>
+                                       <li><a>March</a></li>
+                                       <li><a>April</a></li>
+                                       <li><a>May</a></li>
+                                       <li><a>June</a></li>
+                                       <li><a>July</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                        <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Team Name</th>
+                                <th>Team Lead</th>
+                                <th>Organization</th>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">125</h3> <small class="text-muted">team members</small></td>
+                                <td>Team 2</td>
+                                <td>Bob Smith</td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">115</h3> <small class="text-muted">team members</small></td>
+                                <td>Team 3</td>
+                                <td>Jane Doe</td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">113</h3> <small class="text-muted">team members</small></td>
+                                <td>Team 1</td>
+                                <td>Bob Smith</td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">108</h3> <small class="text-muted">team members</small></td>
+                                <td>Team 4</td>
+                                <td>Jane Doe</td>
+                                <td>NYC Public Schools</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="curriculum">
+        <section class="content">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="red">5 <i class="glyphicon glyphicon-book gray"></i></h1>
+                                <h6>Units</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1 class="red">248 <i class="glyphicon glyphicon-list-alt gray"></i></h1>
+                                <h6>Lessons</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 class="red">289 <i class="glyphicon glyphicon-star gray"></i></h3>
+                                <h6>Saved Lessons</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h3 class="red">52 <i class="glyphicon glyphicon-duplicate gray"></i></h3>
+                                <h6>Duplicated Lessons</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 class="red">99.5% <i class="glyphicon glyphicon-thumbs-up gray"></i></h3>
+                                <h6>Lesson Aproval Rating</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h3 class="red">124 <i class="glyphicon glyphicon-comment gray"></i></h3>
+                                <h6>Glossary Terms</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Timeline</h4>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Lessons per Unit</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieFdata"
+                            chart-labels="vm.pieFlabels" chart-legend="true">
+                        </canvas> 
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="content shaded">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h4>Grade</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieBdata"
+                            chart-labels="vm.pieBlabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Periods</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieCdata"
+                            chart-labels="vm.pieClabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Setting</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieDdata"
+                            chart-labels="vm.pieDlabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Subject Areas</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieEdata"
+                            chart-labels="vm.pieElabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="content">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Lesson Averages</h4>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="red">4 <i class="glyphicon glyphicon-scissors gray"></i></h1>
+                                <h6># of Supplies</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1 class="red">3 <i class="glyphicon glyphicon-link gray"></i></h1>
+                                <h6># of Teacher Resource Links</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="red">5 <i class="glyphicon glyphicon-facetime-video gray"></i></h1>
+                                <h6># of Teacher Resource Videos</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1 class="red">2 <i class="glyphicon glyphicon-file gray"></i></h1>
+                                <h6># of Handouts</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h4>Most Viewed Lessons</h4>
+                        <table class="table">
+                            <tr>
+                                <td><h3 class="red">251</h3> <small class="text-muted">views</small></td>
+                                <td><p>How to plant a tree</p></td>
+                                <td><h6>Unit 2</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">241</h3> <small class="text-muted">views</small></td>
+                                <td><p>How to water a tree</p></td>
+                                <td><h6>Unit 2</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">234</h3> <small class="text-muted">views</small></td>
+                                <td><p>How to grow a tree</p></td>
+                                <td><h6>Unit 2</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">222</h3> <small class="text-muted">views</small></td>
+                                <td><p>How to care for a tree</p></td>
+                                <td><h6>Unit 2</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">145</h3> <small class="text-muted">views</small></td>
+                                <td><p>How to chop down a tree</p></td>
+                                <td><h6>Unit 2</h6></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Most Viewed Units</h4>
+                        <table class="table">
+                            <tr>
+                                <td><h3 class="red">155</h3> <small class="text-muted">views</small></td>
+                                <td><p>Unit 2</p></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">113</h3> <small class="text-muted">views</small></td>
+                                <td><p>Unit 3</p></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">99</h3> <small class="text-muted">views</small></td>
+                                <td><p>Unit 5</p></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">78</h3> <small class="text-muted">views</small></td>
+                                <td><p>Unit 1</p></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">77</h3> <small class="text-muted">views</small></td>
+                                <td><p>Unit 4</p></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="stations">
+        <section class="content">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="red">345 <i class="glyphicon glyphicon-map-marker gray"></i></h1>
+                                <h6>Oyster Restoration Stations</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h1 class="red">52 <i class="glyphicon glyphicon-flag gray"></i></h1>
+                                <h6>Expeditions</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 class="red">248</h3>
+                                <h6>Active Stations</h6>
+                            </div>
+                            <div class="col-xs-6">
+                                <h3 class="red">97</h3>
+                                <h6>Lost Stations</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Timeline</h4>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.Cdata"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.Cseries"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Station Status</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieGdata"
+                            chart-labels="vm.pieGlabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="content shaded">
+            <section class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Top Stations for Expeditions</h4>
+                        <table class="table">
+                            <tr>
+                                <td><h3 class="red">34</h3> <small class="text-muted">expeditions</small></td>
+                                <td>NY Harbor 19</td>
+                                <td><h6>40.704039, -74.0035392</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">33</h3> <small class="text-muted">expeditions</small></td>
+                                <td>Baltimore Harbor 64</td>
+                                <td><h6>40.704039, -74.0035392</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">32</h3> <small class="text-muted">expeditions</small></td>
+                                <td>Eastern Shore 525</td>
+                                <td><h6>40.704039, -74.0035392</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">28</h3> <small class="text-muted">expeditions</small></td>
+                                <td>NY Harbor 19</td>
+                                <td><h6>40.704039, -74.0035392</h6></td>
+                            </tr>
+                            <tr>
+                                <td><h3 class="red">17</h3> <small class="text-muted">expeditions</small></td>
+                                <td>Eastern Shore 525</td>
+                                <td><h6>40.704039, -74.0035392</h6></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Protocol Status</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieHdata"
+                            chart-labels="vm.pieHlabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Expedition Status</h4>
+                        <canvas id="pie" class="chart chart-pie" chart-data="vm.pieIdata"
+                            chart-labels="vm.pieIlabels" chart-legend="false">
+                        </canvas> 
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+</div>

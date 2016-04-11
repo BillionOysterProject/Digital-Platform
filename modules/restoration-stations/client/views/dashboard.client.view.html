@@ -1,0 +1,177 @@
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="page-header">
+            <h2>Restoration Stations</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Oyster Restoration Stations</h4>
+                    </div>
+                    <div class="panel-body">
+                      <leaflet-map map-controls="" map-click-event="" marker-drag-end-event=""
+                                   can-move-marker="" show-marker=""></leaflet-map>
+                      <div class="row">
+                            <div class="col-sm-6">
+                                <h5><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image pull-left" src="modules/users/client/img/profile/default.png"> Team Name<br /><small class="text-muted">Teacher, City, State</small></h5>
+                            </div>
+                            <div class="col-sm-2 col-xs-4">
+                                <h5><b>45&deg;</b><br /><small class="text-muted">Temp</small></h5>
+                            </div>
+                            <div class="col-sm-2 col-xs-4">
+                                <h5><b>4mph</b><br /><small class="text-muted">Wind</small></h5>
+                            </div>
+                            <div class="col-sm-2 col-xs-4">
+                                <h5><span class="label label-success">Active</span><br /><small class="text-muted">Status</small></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"><!--TODO: only show if teacher -->
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Members <span class="badge badge-success pull-right">5</span></h4>
+                            </div>
+                            <div class="panel-body">
+                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Doe</p>
+                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Mary Ann Smith</p>
+                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Daryl Jones</p>
+                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Kay Martin</p>
+                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jeremy Smith</p>
+                            </div>
+                            <div class="panel-footer">
+                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add student</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Activity <span class="badge badge-success pull-right">4</span></h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="alert alert-success">4 members updated their protocols</div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-4">
+                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+                                    </div>
+                                    <div class="col-sm-10 col-xs-8">
+                                        <p>John Doe <small class="text-muted">15 min ago</small><br />
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 1</a></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-4">
+                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+                                    </div>
+                                    <div class="col-sm-10 col-xs-8">
+                                        <p>Kay Martin <small class="text-muted">2 hours ago</small><br />
+                                        <span class="text-muted">resubmitted</span> <a href="#">Protocol 1 & 3</a></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-4">
+                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+                                    </div>
+                                    <div class="col-sm-10 col-xs-8">
+                                        <p>Daryl Jones <small class="text-muted">3 hours ago</small><br />
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 4</a></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-xs-4">
+                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+                                    </div>
+                                    <div class="col-sm-10 col-xs-8">
+                                        <p>Mary Ann Smith <small class="text-muted">1 day ago</small><br />
+                                        <span class="text-muted">submitted</span> <a href="#">Protocol 2</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <a class="btn btn-primary" ui-sref="expeditions.submitted">View Submissions</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Documents</h4>
+                            </div>
+                            <div class="panel-body">
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmeDZYXzhiOTlqQXM&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmRlNLTUFTbG5pWGs&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing&tid=0Bzf_STNcTtRmaFktbXJWYmVqMW8" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default"><!--TODO: only show if teacher -->
+                    <div class="panel-heading">
+                        <h4>My Stations</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
+                                <td>NY Harbor 19<br/><span class="small text-muted">40.704039, -74.0035392<br />East River</span></td>
+                                <td class="text-right"><span class="label label-success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
+                                <td>Eastern Shore 525<br/><span class="small text-muted">40.704039, -74.0035392<br />West River</span></td>
+                                <td class="text-right"><span class="label label-default">Lost</span></td>
+                            </tr>
+                            <tr>
+                                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
+                                <td>Baltimore Harbor 64<br/><span class="small text-muted">40.704039, -74.0035392<br />North River</span></td>
+                                <td class="text-right"><span class="label label-success">Active</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-primary">Register a station</a>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>My Expeditions</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tr class="text-muted" ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-unchecked"></i></td>
+                                <td><b>Ocean Expedition</b><br/><p class="text-muted">June 1, 2016</br>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-default">Coming up</span></td>
+                            </tr>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-unchecked red"></i></td>
+                                <td><b>NY Harbor Expedition</b><br/><p class="text-muted">March 26, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-danger">Incomplete</span></td>
+                            </tr>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-check green"></i></td>
+                                <td><b>Baltimore Harbor Expedition</b><br/><p class="text-muted">March 22, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-success">Published</span></td>
+                            </tr>
+                            <tr ui-sref="expeditions.create-protocols">
+                                <td><i class="glyphicon glyphicon-check green"></i></td>
+                                <td><b>River Expedition</b><br/><p class="text-muted">March 5, 2016<br/>12:00-14:00</p></td>
+                                <td class="text-right"><span class="label label-success">Published</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
+                        <!--TODO: only show if teacher --><a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

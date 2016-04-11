@@ -21,7 +21,8 @@
     "inject",
     "by",
     "browser",
-    "element"
+    "element",
+    "Spinner"
   ],
   "devel": true // Allow development statements e.g. `console.log();`.
 }
