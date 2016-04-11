@@ -11,7 +11,8 @@
             <div class="panel-body">
                 <small>{{lesson.lessonOverview.setting}}</small>
                 <h4>{{lesson.title}}</h4>
-                <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                <p ng-bind="lesson.lessonOverview.lessonSummary | limitTo:200"></p>
+                <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
                 <a class="btn btn-sm btn-primary pull-right" ng-show="lesson.status === 'published'"
