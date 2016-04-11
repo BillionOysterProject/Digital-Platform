@@ -27,7 +27,7 @@ var createInternal = function(teamJSON, user, successCallback, errorCallback) {
 };
 
 exports.create = function (req, res) {
-  createInternal(req.body, req.user, 
+  createInternal(req.body, req.user,
     function(team) {
       res.json(team);
     }, function(err) {
@@ -89,7 +89,7 @@ exports.delete = function (req, res) {
   });
 };
 
-/** 
+/**
  * List of Teams
  */
 exports.list = function (req, res) {
@@ -131,7 +131,7 @@ exports.list = function (req, res) {
   }
 
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName').exec(function (err, teams) {
+  .populate('teamLead', 'displayName profileImageURL').populate('schoolOrg').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -152,15 +152,15 @@ exports.listMembers = function (req, res) {
   if (req.query.teamId) {
     and.push({ '_id': req.query.teamId });
   }
-  
+
   var searchRe;
   var or = [];
   if (req.query.searchString) {
     searchRe = new RegExp(req.query.searchString, 'i');
     or.push({ 'displayName': searchRe });
     or.push({ 'email': searchRe });
-    or.push({ 'username': searchRe }); 
-    
+    or.push({ 'username': searchRe });
+
     and.push({ $or: or });
   }
 
@@ -294,7 +294,7 @@ var createMemberInternal = function(userJSON, successCallback, errorCallback) {
 exports.createMember = function (req, res) {
   delete req.body.roles;
 
-  createMemberInternal(req.body, 
+  createMemberInternal(req.body,
     function(member) {
       if (req.body.newTeamName) {
         var teamJSON = {
@@ -302,7 +302,7 @@ exports.createMember = function (req, res) {
           schoolOrg: req.user.schoolOrg,
           teamMembers: [member]
         };
-        createInternal(teamJSON, req.user, 
+        createInternal(teamJSON, req.user,
           function(team) {
             res.json(member);
           }, function(err) {
@@ -362,7 +362,7 @@ exports.updateMember = function (req, res) {
                 schoolOrg: req.user.schoolOrg,
                 teamMembers: [member]
               };
-              createInternal(teamJSON, req.user, 
+              createInternal(teamJSON, req.user,
                 function(team) {
                   res.json(member);
                 }, function(err) {
@@ -405,11 +405,11 @@ exports.updateMember = function (req, res) {
 exports.deleteMember = function (req, res) {
   var member = req.member;
   var team = req.team;
-  
+
   if (team) {
     if (member) {
       var index = _.findIndex(team.teamMembers, function(m) { return m._id.toString() === member._id.toString(); });
-      //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1; 
+      //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1;
       if (index > -1) {
         team.teamMembers.splice(index, 1);
 
@@ -476,9 +476,9 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
 };
 
 exports.createMemberCsv = function (req, res) {
-  convertCsvMember(req.body.member, 
+  convertCsvMember(req.body.member,
     function(memberJSON) {
-      createMemberInternal(memberJSON, 
+      createMemberInternal(memberJSON,
         function(member) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
@@ -505,7 +505,7 @@ exports.createMemberCsv = function (req, res) {
                   teamMembers: [member]
                 };
 
-                createInternal(teamJSON, req.user, 
+                createInternal(teamJSON, req.user,
                   function(team) {
                     res.json(member);
                   }, function(err) {

@@ -24,7 +24,6 @@ module.exports = function (app) {
     //.get(teams.listMembers)
     .delete(teams.deleteMember);
 
-
   // Teams collection routes
   app.route('/api/teams').all(teamsPolicy.isAllowed)
     .get(teams.list)
