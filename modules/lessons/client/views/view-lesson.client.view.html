@@ -65,7 +65,7 @@
             </div>
             <div class="col col-sm-6">
                 <b>Subject Areas</b>
-                <ul class="list-inline"><!-- TODO: Wire up subject colors as background colors on each label -->
+                <ul class="list-inline">
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
                         <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
                         class="label label-default"></span>
@@ -77,37 +77,40 @@
         <hr />
 
         <div class="row">
-            <div class="col col-sm-3">
+            <div class="col-sm-3">
                 <ul class="list-unstyled">
                     <b>Supplies</b>
                     <p ng-bind="vm.lesson.materialsResources.supplies"></p>
                 </ul>
+                <br/>
                 <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.teacherTips">
                     <b>Teacher Tips</b>
                     <p ng-bind="vm.lesson.materialsResources.teacherTips"></p>
                 </ul>
+                <br/>
                 <ul class="list-unstyled">
                     <b>Teacher Resources</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.teacherResourcesFiles">
-                        <!-- <a class="btn" ng-click="downloadExample(file)"><i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a> -->
-                        <a class="btn" download="{{file.originalname}}" target="_blank"
+                        <a class="break" download="{{file.originalname}}" target="_blank"
                         ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
                           <i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
                     </li>
                     <li ng-repeat="link in vm.lesson.materialsResources.teacherResourcesLinks">
-                        <a href="{{link.link | urlNormalizer}}" target="_blank"><i class="glyphicon glyphicon-link"></i> {{link.name}}</a>
+                        <a class="break" href="{{link.link | urlNormalizer}}" target="_blank"><i class="glyphicon glyphicon-link"></i> {{link.name}}</a>
                     </li>
                     <!-- TODO: VIDEO: Should open modal and play video on click -->
                     <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
                 </ul>
+                <br/>
                 <ul class="list-unstyled">
                     <b>Hand Outs</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
-                        <a class="btn" download="{{file.originalname}}" target="_blank"
+                        <a class="break" download="{{file.originalname}}" target="_blank"
                         ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
                         <i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
                     </li>
                 </ul>
+                <br/>
                 <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.stateTestQuestions">
                     <b>State Test Questions</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.stateTestQuestions">
@@ -119,7 +122,7 @@
                 <h3>Lesson Overview</h3>
                 <div class="row">
                     <div class="col col-sm-12">
-                        <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
+                        <div ng-bind="vm.lesson.lessonOverview.lessonSummary"></div>
                     </div>
                     <div class="col col-sm-6">
                         <h3>Objectives</h3>
@@ -128,8 +131,8 @@
                     <div class="col col-sm-6">
                         <h3>Vocabulary</h3>
                         <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
-                            <span uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
-                            popover-trigger="mouseenter" popover-placement="top" ng-bind="vocabulary.term"></span>
+                            <a href="#" uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
+                            popover-trigger="mouseenter" popover-placement="top"><i class="glyphicon glyphicon-comment"></i> {{vocabulary.term}}</a>
                         </div>
                     </div>
                     <div class="col col-sm-12">
