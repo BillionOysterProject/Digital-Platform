@@ -131,7 +131,7 @@ exports.list = function (req, res) {
   }
 
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName').exec(function (err, teams) {
+  .populate('teamLead', 'displayName profileImageURL').populate('schoolOrg').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -267,24 +267,6 @@ exports.memberByID = function (req, res, next, id) {
     }
     req.member = member;
     next();
-  });
-};
-
-exports.teamForTeamMember = function (req, res) {
-  Team.find({ 'teamMembers': req.user }).populate('teamLead', 'displayName')
-  .populate('teamMembers', 'displayName username email profileImageURL pending')
-  .exec(function (err, teams) {
-    if (err) {
-      return res.status(404).send({
-        messages: 'Error finding team for user'
-      });
-    } else if (!teams) {
-      return res.status(404).send({
-        message: 'No team has been found this user'
-      });
-    } else {
-      res.json(teams);
-    }
   });
 };
 

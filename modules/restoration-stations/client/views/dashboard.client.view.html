@@ -1,6 +1,11 @@
 <section class="content shaded">
     <section class="container-fluid">
         <div class="page-header">
+            <div class="col-sm-4 pull-right">
+              <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
+                  <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+              </select>
+            </div>
             <h2>Restoration Stations</h2>
         </div>
         <div class="row">
@@ -14,7 +19,9 @@
                                    can-move-marker="" show-marker=""></leaflet-map>
                       <div class="row">
                             <div class="col-sm-6">
-                                <h5><img ng-src="{{vm.user.profileImageURL}}" class="header-profile-image pull-left"> {{user.displayName}}<br /><small class="text-muted">Teacher, City, State</small></h5>
+                                <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
+                                  <small class="text-muted">{{vm.team.name}}, {{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
+                                </h5>
                             </div>
                             <!-- <div class="col-sm-2 col-xs-4">
                                 <h5><b>45&deg;</b><br /><small class="text-muted">Temp</small></h5>
@@ -28,25 +35,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="row"><!--TODO: only show if teacher -->
+                <div class="row" ng-show="vm.isTeamLead">
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4>Members <span class="badge badge-success pull-right">5</span></h4>
+                                <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
-                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> John Doe</p>
-                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Mary Ann Smith</p>
-                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Daryl Jones</p>
-                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Kay Martin</p>
-                                <p><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"> Jeremy Smith</p>
+                                <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                             </div>
                             <div class="panel-footer">
                                 <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add student</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">4</span></h4>
@@ -95,7 +98,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -111,9 +114,9 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default"><!--TODO: only show if teacher -->
+                <div class="panel panel-default" ng-show="vm.isTeamLead">
                     <div class="panel-heading">
-                        <h4>My Stations</h4>
+                        <h4>Team Stations</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table">
@@ -168,7 +171,7 @@
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
-                        <!--TODO: only show if teacher --><a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
+                        <a class="btn btn-primary" ui-sref="expeditions.create" ng-show="vm.isTeamLead">Create an expedition</a>
                     </div>
                 </div>
             </div>
