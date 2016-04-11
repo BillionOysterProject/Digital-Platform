@@ -441,9 +441,28 @@ h6, .h6 {
     letter-spacing: 2px;
 }
 
+.break {
+    word-break: break-all;
+}
+
+.list-inline li {
+    padding-right: 0;
+}
+
+.label {
+    line-height: 2;
+}
+
 .page-header {
     border-color: #ddd;
 }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              TABLES
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 .table h1,
 .table h2,
@@ -463,6 +482,10 @@ h6, .h6 {
 .table-hover > tbody > tr:hover {
     cursor: pointer;
     background-color: #f4f7f8;
+}
+
+.table tr td {
+    word-break: break-all;
 }
 
 
@@ -700,10 +723,6 @@ form.ng-submitted .ng-invalid {
 
     .panel .panel-footer .btn {
         margin-left: 5px;
-    }
-
-    .panel .panel-footer .label {
-        line-height: 2;
     }
 
 

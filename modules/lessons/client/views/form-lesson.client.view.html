@@ -97,6 +97,21 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="protocolConnections" class="control-label required">Protocol Connections *</label>
+                        <div aa-select2="vm.protocolConnectionsSelectConfig" name="protocolConnections"
+                        ng-model="vm.lesson.lessonOverview.protocolConnections" class="form-control" required></div>
+                        <div ng-messages="vm.form.lessonForm.protocolConnections.$error" role="alert">
+                          <p class="help-block error-text" ng-message="required">Procotol connections is required.</p>
+                        </div>
+                      </div>
+                    <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate
+                      Selections should turn into "tags" using select2. Multiple selections should be able to be made.
+                      Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
+                    </div>
+                  </div>
                 </div>
                 <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
                 <div class="col-md-6">
@@ -111,22 +126,14 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="protocolConnections" class="control-label required">Protocol Connections *</label>
-                    <div aa-select2="vm.protocolConnectionsSelectConfig" name="protocolConnections"
-                    ng-model="vm.lesson.lessonOverview.protocolConnections" class="form-control" required></div>
-                    <div ng-messages="vm.form.lessonForm.protocolConnections.$error" role="alert">
-                      <p class="help-block error-text" ng-message="required">Procotol connections is required.</p>
+                <!-- Switched to textarea instead of wysiwyg -- <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" label-class="control-label required"></wysiwyg-editor>-->
+                <div class="form-group col-sm-12" show-errors>
+                    <label for="lessonSummary" class="control-label required">Lesson Summary *</label>
+                    <textarea name="lessonSummary" id="lessonSummary" class="form-control" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" rows="7"></textarea>
+                    <div ng-messages="vm.form.lessonForm.lessonSummary.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Lesson Summary is required.</p>
                     </div>
-                  </div>
-                <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate
-                  Selections should turn into "tags" using select2. Multiple selections should be able to be made.
-                  Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
                 </div>
-              </div>
-              <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" required="true" label-class="control-label required"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -179,45 +186,42 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="vocabulary" class="control-label">Teacher Resources *</label>
-                    <!-- TODO: wire up "add resource" modal, wire up table to display added resources-->
-                    <table class="table table-hover">
+                    <div class="form-group">
+                        <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
+                        <label for="vocabulary" class="control-label">Teacher Resources *</label>
+                        <div ng-show="vm.form.lessonForm.$submitted && vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0">
+                          <p class="red">Teacher Resources are required.</p>
+                        </div>
+                    </div>
+                    <table class="table">
                       <tr ng-repeat="link in vm.resourceLinks">
-                        <td>{{link.name}}
-                          (link)</td>
+                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
                         <td>{{link.link}}</td>
                         <td>
-                          <i class="glyphicon glyphicon-remove" ng-click="deleteTeacherResourceLink($index)"></i>
+                          <a ng-click="deleteTeacherResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr>
                       <tr ng-repeat="file in vm.resourceFiles">
-                        <td>{{file.originalname}}
-                          (File upload)</td>
-                        <td>&nbsp;</td>
+                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
+                        <td></td>
                         <td>
-                          <i class="glyphicon glyphicon-remove" ng-click="deleteTeacherResourceFile($index, file)"></i>
+                          <a ng-click="deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i>
                         </td>
                       </tr>
                     </table>
-                    <a class="btn btn-primary form-control" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
-                    <div ng-show="vm.form.lessonForm.$submitted && vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0">
-                      <p class="red">Teacher Resources are required.</p>
-                    </div>
-                  </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="teacherTips" class="control-label">Teacher Tips</label>
-                    <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips"></textarea>
+                    <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips" rows="7"></textarea>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="stateTestQuestions" class="control-label">State Test Questions</label><br/>
-                    <em class="text-muted">Take a screenshot of any state test questions that connect to this lesson and upload the file</em>
+                    <label for="stateTestQuestions" class="control-label">State Test Questions</label>
+                    <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
                     <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"></multiple-file-drop-zone>
                   </div>
                 </div>
@@ -398,6 +402,7 @@
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="upload">
+                  <br/>
                   <multiple-file-drop-zone uploader="vm.teacherResourceFilesUploader" files="vm.tempResourceFiles"></multiple-file-drop-zone>
                 </div>
               </div>
