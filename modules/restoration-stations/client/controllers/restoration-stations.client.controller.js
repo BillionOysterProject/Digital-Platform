@@ -6,10 +6,10 @@
     .controller('RestorationStationsController', RestorationStationsController);
 
   RestorationStationsController.$inject = ['$scope', 'lodash', 'Authentication',
-  'TeamsService', 'TeamMembersService'];
+  'TeamsService', 'TeamMembersService', 'RestorationStationsService'];
 
   function RestorationStationsController($scope, lodash, Authentication,
-    TeamsService, TeamMembersService) {
+    TeamsService, TeamMembersService, RestorationStationsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -58,6 +58,12 @@
         teamId: vm.filter.teamId
       }, function(data) {
         vm.members = data;
+      });
+
+      RestorationStationsService.query({
+        teamId: vm.filter.teamId
+      }, function(data) {
+        vm.stations = data;
       });
     };
 

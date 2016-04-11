@@ -15,6 +15,10 @@ var RestorationStationSchema = new Schema({
     required: true,
     trim: true
   },
+  team: {
+    type: Schema.ObjectId,
+    ref: 'Team'
+  },
   latitude: {
     type: Number,
     required: true
@@ -30,9 +34,13 @@ var RestorationStationSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'lost'],
-    default: ['active'],
+    enum: ['Active', 'Lost'],
+    default: ['Active'],
     required: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
   }
 });
 

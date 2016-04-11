@@ -120,20 +120,18 @@
                     </div>
                     <div class="panel-body">
                         <table class="table">
-                            <tr>
-                                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                                <td>NY Harbor 19<br/><span class="small text-muted">40.704039, -74.0035392<br />East River</span></td>
-                                <td class="text-right"><span class="label label-success">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
-                                <td>Eastern Shore 525<br/><span class="small text-muted">40.704039, -74.0035392<br />West River</span></td>
-                                <td class="text-right"><span class="label label-default">Lost</span></td>
-                            </tr>
-                            <tr>
-                                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                                <td>Baltimore Harbor 64<br/><span class="small text-muted">40.704039, -74.0035392<br />North River</span></td>
-                                <td class="text-right"><span class="label label-success">Active</span></td>
+                            <tr ng-repeat="station in vm.stations">
+                                <td><h3>
+                                  <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
+                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                                </h3></td>
+                                <td>{{station.name}}<br/><span class="small text-muted">{{station.latitude}}, {{station.longitude}}<br />
+                                  {{station.bodyOfWater}}</span>
+                                </td>
+                                <td class="text-right">
+                                  <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
+                                  <span class="label label-default" ng-show="station.status === 'Lost'">Lost</span>
+                                </td>
                             </tr>
                         </table>
                     </div>
