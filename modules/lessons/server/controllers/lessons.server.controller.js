@@ -10,6 +10,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  docx = require(path.resolve('./modules/core/server/controllers/docx.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   archiver = require('archiver'),
@@ -543,19 +544,12 @@ exports.downloadFile = function(req, res){
   request(req.query.path).pipe(res);
 };
 
-var createLessonDocx = function(pathToTemplate, lessonObject, callback){
-  // verify pathToTempate exists
-  // zip pathToTemplate
-  // rename to docx
-  // return docx
-  var content = 'Add lesson content here';
-  callback(content);
-};
-
 exports.downloadZip = function(req, res) {
   var lesson = req.lesson;
 
   var archive = archiver('zip');
+
+  var lessonDocxFilepath = '';
 
   archive.on('error', function(err) {
     return res.status(500).send({
@@ -565,6 +559,13 @@ exports.downloadZip = function(req, res) {
 
   //on stream closed we can end the request
   archive.on('end', function() {
+    if (lessonDocxFilepath && lessonDocxFilepath !== '') {
+      fs.exists(lessonDocxFilepath, function(exists) {
+        if (exists) {
+          fs.unlink(lessonDocxFilepath);
+        }
+      });
+    }
     console.log('Archive wrote %d bytes', archive.pointer());
   });
 
@@ -578,10 +579,17 @@ exports.downloadZip = function(req, res) {
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
       if (req.query.content === 'YES') {
-        createLessonDocx('', lesson, function(content) {
+        docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson.docx'), lesson,
+        function(filepath) {
           var filename = _.replace(lesson.title + '.docx', /\s/, '_');
-          archive.append(content, { name: filename });
+          console.log('filepath', path.resolve(filepath));
+          lessonDocxFilepath = path.resolve(filepath);
+          archive.file(lessonDocxFilepath, { name: filename });
           lessonCallback();
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
         });
       } else {
         lessonCallback();
