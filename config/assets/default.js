@@ -37,6 +37,8 @@ module.exports = {
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js',
         'public/lib/leaflet/dist/leaflet.js',
+        'public/lib/cytoscape/dist/cytoscape.js',
+        'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
         'public/lib/ng-lodash/build/ng-lodash.min.js'
       ],

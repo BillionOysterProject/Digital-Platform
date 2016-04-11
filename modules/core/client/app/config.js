@@ -18,6 +18,7 @@ var ApplicationConfiguration = (function () {
     'aa.select2',
     'omr.angularFileDnD',
     'dndLists',
+    'ngCytoscape',
     'chart.js',
     'ngLodash'];
 
