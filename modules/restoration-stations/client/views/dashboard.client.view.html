@@ -14,9 +14,9 @@
                                    can-move-marker="" show-marker=""></leaflet-map>
                       <div class="row">
                             <div class="col-sm-6">
-                                <h5><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image pull-left" src="modules/users/client/img/profile/default.png"> Team Name<br /><small class="text-muted">Teacher, City, State</small></h5>
+                                <h5><img ng-src="{{vm.user.profileImageURL}}" class="header-profile-image pull-left"> {{user.displayName}}<br /><small class="text-muted">Teacher, City, State</small></h5>
                             </div>
-                            <div class="col-sm-2 col-xs-4">
+                            <!-- <div class="col-sm-2 col-xs-4">
                                 <h5><b>45&deg;</b><br /><small class="text-muted">Temp</small></h5>
                             </div>
                             <div class="col-sm-2 col-xs-4">
@@ -24,7 +24,7 @@
                             </div>
                             <div class="col-sm-2 col-xs-4">
                                 <h5><span class="label label-success">Active</span><br /><small class="text-muted">Status</small></h5>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

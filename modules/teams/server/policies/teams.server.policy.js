@@ -30,6 +30,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams',
       permissions: '*'
     }, {
+      resources: '/api/teams/user',
+      permissions: '*'
+    }, {
       resources: '/api/teams/:teamId',
       permissions: '*'
     }]
