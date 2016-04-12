@@ -12,10 +12,6 @@
                         <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
                       </ul>
                     </div>
-                    <!--TODO: Can we get rid of the select below and change it to the button dropdown above?
-                    <select class="form-control" ng-model="vm.filter.teamId" ng-change="vm.fieldChanged()" name="teamFilter" id="teamFilter">
-                      <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
-                    </select>-->
                     <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
                       <small class="text-muted">{{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
                     </h5>

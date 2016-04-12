@@ -40,7 +40,9 @@ module.exports = {
         'public/lib/cytoscape/dist/cytoscape.js',
         'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
-        'public/lib/ng-lodash/build/ng-lodash.min.js'
+        'public/lib/ng-lodash/build/ng-lodash.min.js',
+        'public/lib/moment/min/moment.min.js',
+        'public/lib/angular-moment/angular-moment.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

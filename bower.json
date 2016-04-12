@@ -31,11 +31,14 @@
     "angular-chart.js": "^0.9.0",
     "ng-lodash": "^0.4.0",
     "ngCytoscape": "^0.0.5",
-    "angular-agility": "^0.8.32"
+    "angular-agility": "^0.8.32",
+    "angular-moment": "^0.10.3",
+    "moment": "^2.12.0"
   },
   "resolutions": {
     "angular": "~1.3",
     "select2": "~3.5.2",
-    "angular-mocks": "~1.3"
+    "angular-mocks": "~1.3",
+    "moment": ">=2.8.0 <2.11.0"
   }
 }
