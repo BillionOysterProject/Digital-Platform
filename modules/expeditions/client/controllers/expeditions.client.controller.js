@@ -13,27 +13,40 @@
     var vm = this;
 
     vm.expedition = expedition;
+    vm.teamId = '';
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
 
-    vm.dateTime = {
-      min: moment().subtract(7, 'days').toDate(),
-      max: moment().add(1, 'year').toDate()
-    };
-
     vm.memberLists = {
       'selected': null,
-      'lists': {
-        'Members': [],
+      'members': [],
+      'protocols': {
         'Site Conditions': [],
         'Oyster Measurements': [],
         'Mobile Trap': [],
         'Settlement Tiles': [],
         'Water Quality': []
       }
+    };
+
+    if (vm.expedition._id) {
+      vm.teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
+
+      vm.memberLists = {
+        'Site Conditions': vm.expedition.teamLists.siteCondition,
+        'Oyster Measurements': vm.expedition.teamLists.oysterMeasurement,
+        'Mobile Trap': vm.expedition.teamLists.mobileTrap,
+        'Settlement Tiles': vm.expedition.teamLists.settlementTiles,
+        'Water Quality': vm.expedition.teamLists.waterQuality
+      };
+    }
+
+    vm.dateTime = {
+      min: moment().subtract(7, 'days').toDate(),
+      max: moment().add(1, 'year').toDate()
     };
 
     vm.findTeams = function() {
@@ -48,30 +61,37 @@
     vm.findTeams();
 
     vm.findTeamValues = function() {
-      if (!vm.expedition.team || vm.expedition.team === undefined) {
-        vm.expedition.team = vm.teams[0];
+      if (vm.teamId === '') {
+        vm.team = vm.teams[0];
+        vm.teamId = vm.team._id;
         vm.expedition.monitoringStartDate = moment().startOf('day').hours(8).toDate();
         vm.expedition.monitoringEndDate = moment().startOf('day').hours(16).toDate();
       }
 
-      var teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
-
       TeamMembersService.query({
-        teamId: teamId
+        teamId: vm.teamId
       }, function(data) {
         vm.members = data;
-        vm.memberLists.lists.Members = angular.copy(data);
+        vm.memberLists.members = angular.copy(data);
         vm.member = null;
       });
 
       RestorationStationsService.query({
-        teamId: teamId
+        teamId: vm.teamId
       }, function(data) {
         vm.stations = data;
         if (!vm.expedition.station || vm.expedition.station === undefined) {
           vm.expedition.station = vm.stations[0];
         }
       });
+
+      vm.memberLists.protocols = {
+        'Site Conditions': [],
+        'Oyster Measurements': [],
+        'Mobile Trap': [],
+        'Settlement Tiles': [],
+        'Water Quality': []
+      };
     };
 
     vm.fieldChanged = function(team) {
@@ -93,6 +113,21 @@
         return false;
       }
 
+      // set team
+      var index = lodash.findIndex(vm.teams, function(t) {
+        return t._id === vm.teamId;
+      });
+      if (index > -1) vm.expedition.team = vm.teams[index];
+
+      // set team members
+      vm.expedition.teamLists = {
+        siteCondition: vm.memberLists.protocols['Site Conditions'],
+        oysterMeasurement: vm.memberLists.protocols['Oyster Measurements'],
+        mobileTrap: vm.memberLists.protocols['Mobile Trap'],
+        settlementTiles: vm.memberLists.protocols['Settlement Tiles'],
+        waterQuality: vm.memberLists.protocols['Water Quality']
+      };
+
       // TODO: move create/update logic to service
       if (vm.expedition._id) {
         vm.expedition.$update(successCallback, errorCallback);
@@ -110,13 +145,47 @@
     }
 
     vm.isInList = function(item, list) {
-      console.log('in list', list);
       var index = lodash.findIndex(list, function(i) {
         return i._id === item._id;
       });
-      console.log('index', index);
       return (index > -1) ? true : false;
     };
 
+    vm.onDrop = function(list, item) {
+      if (!vm.isInList(item, list)) {
+        list.push(item);
+      }
+      return true;
+    };
+
+    vm.autoAssign = function() {
+      var keys = [];
+      angular.forEach(vm.memberLists.protocols, function(value, key) {
+        keys.push(key);
+      });
+      if (vm.memberLists.members.length < keys.length) {
+        var ml = 0;
+        for (var l = 0; l < keys.length; l++) {
+          vm.memberLists.protocols[keys[l]].push(vm.memberLists.members[ml]);
+          ml++;
+          if (ml >= vm.memberLists.members.length) {
+            ml = 0;
+          }
+        }
+      } else if (vm.memberLists.members.length === keys.length) {
+        for (var e = 0; e < keys.length; e++) {
+          vm.memberLists.protocols[keys[e]].push(vm.memberLists.members[e]);
+        }
+      } else {
+        var ll = 0;
+        for (var g = 0; g < vm.memberLists.members.length; g++) {
+          vm.memberLists.protocols[keys[ll]].push(vm.memberLists.members[g]);
+          ll++;
+          if (ll >= keys.length) {
+            ll = 0;
+          }
+        }
+      }
+    };
   }
 })();

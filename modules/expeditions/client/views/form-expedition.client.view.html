@@ -5,13 +5,6 @@
                 <h1>{{vm.expedition._id ? 'Edit expedition' : 'Create an expedition'}}</h1>
             </div>
             <div class="row">
-                <!-- vm.expedition.team, I think this will be auto populated an not changable -->
-                <!-- vm.expedition.teamMembers, this will be a select2 -->
-                <!-- vm.expedition.site, another select2, single select -->
-                <!-- vm.expedition.latitude, number field with decimal, might be auto populated -->
-                <!-- vm.expedition.longitude, number field with decimal, might be auto populated -->
-                <!-- vm.expedition.monitoringDate, is there a date time field we can use?, if not we'll do two and I'll fix it on the back end -->
-                <!-- vm.expedition.notes, wysiwyg field -->
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="name">Name your expedition</label>
@@ -20,7 +13,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="team">Select a team</label>
-                            <select class="form-control" ng-model="vm.expedition.team._id" ng-change="vm.fieldChanged(team)"
+                            <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
                             name="team" id="team">
                               <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
                             </select>
@@ -61,11 +54,12 @@
         <section class="container">
             <div class="form-group">
                 <label>Assign students to protocols</label>
-                <button type="submit" class="btn btn-default btn-sm">Auto Assign</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()">Auto Assign</button>
             </div>
-            <div class="row"><!--TODO: Fix drag and drop functionality. Currently drags but doesn't drop. -->
-              <div class="col-md-2" dnd-list="vm.memberLists.lists['Members']"><!-- dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Members'])"-->
-                <a ng-repeat="item in vm.memberLists.lists['Members']" class="draggable" dnd-draggable="item"
+            <div class="row">
+              <div class="col-md-2" dnd-list="vm.memberLists.members"
+              dnd-drop="vm.onDrop(vm.memberLists.members, item)">
+                <a ng-repeat="item in vm.memberLists.members" class="draggable" dnd-draggable="item"
                  dnd-moved="" dnd-effect-allowed="move"
                  dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                   <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
@@ -82,41 +76,46 @@
                     </tr>
                     <tr>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.lists['Site Conditions']"><!--dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Site Conditions'])"-->
-                          <a ng-repeat="item in vm.memberLists.lists['Site Conditions']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.lists['Site Conditions'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.memberLists.protocols['Site Conditions']"
+                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Site Conditions'], item)">
+                          <a ng-repeat="item in vm.memberLists.protocols['Site Conditions']" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.memberLists.protocols['Site Conditions'].splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.lists['Oyster Measurements']"><!-- dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Oyster Measurements'])"-->
-                          <a ng-repeat="item in vm.memberLists.lists['Oyster Measurements']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.lists['Oyster Measurements'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.memberLists.protocols['Oyster Measurements']"
+                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Oyster Measurements'], item)">
+                          <a ng-repeat="item in vm.memberLists.protocols['Oyster Measurements']" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.memberLists.protocols['Oyster Measurements'].splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.lists['Mobile Trap']"><!-- dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Mobile Trap'])"-->
-                          <a ng-repeat="item in vm.memberLists.lists['Mobile Trap']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.lists['Mobile Trap'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.memberLists.protocols['Mobile Trap']"
+                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Mobile Trap'], item)">
+                          <a ng-repeat="item in vm.memberLists.protocols['Mobile Trap']" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.memberLists.protocols['Mobile Trap'].splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.lists['Settlement Tiles']"><!-- dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Settlement Tiles'])"-->
-                          <a ng-repeat="item in vm.memberLists.lists['Settlement Tiles']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.lists['Settlement Tiles'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.memberLists.protocols['Settlement Tiles']"
+                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Settlement Tiles'], item)">
+                          <a ng-repeat="item in vm.memberLists.protocols['Settlement Tiles']" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.memberLists.protocols['Settlement Tiles'].splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.lists['Water Quality']"><!-- dnd-disable-if="vm.isInList(item, vm.memberLists.lists['Water Quality'])"-->
-                          <a ng-repeat="item in vm.memberLists.lists['Water Quality']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.lists['Water Quality'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.memberLists.protocols['Water Quality']"
+                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Water Quality'], item)">
+                          <a ng-repeat="item in vm.memberLists.protocols['Water Quality']" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.memberLists.protocols['Water Quality'].splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>

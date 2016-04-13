@@ -13,12 +13,15 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member', 'team lead', 'user'],
+    roles: ['team member', 'team lead', 'admin'],
     allows: [{
       resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
       permissions: '*'
     }, {
       resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId/incremental-save',
       permissions: '*'
     }, {
       resources: '/api/protocol-site-conditions/:siteConditionId',
@@ -28,7 +31,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['admin', 'partner', 'guest'],
+    roles: ['user', 'partner', 'guest'],
     allows: [{
       resources: '/api/protocol-site-conditions/:siteConditionId',
       permissions: ['get']

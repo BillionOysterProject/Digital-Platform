@@ -5,11 +5,11 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', 'lodash', 'Authentication',
-  'TeamsService', 'TeamMembersService', 'RestorationStationsService'];
+  RestorationStationsController.$inject = ['$scope', 'lodash', 'moment', 'Authentication',
+  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService'];
 
-  function RestorationStationsController($scope, lodash, Authentication,
-    TeamsService, TeamMembersService, RestorationStationsService) {
+  function RestorationStationsController($scope, lodash, moment, Authentication,
+    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -56,6 +56,15 @@
       }, function(data) {
         vm.stations = data;
       });
+
+      var byMember = (vm.isTeamLead) ? '' : true;
+      ExpeditionsService.query({
+        teamId: vm.filter.teamId,
+        byMember: byMember,
+        limit: 5
+      }, function(data) {
+        vm.expeditions = data;
+      });
     };
 
     vm.findTeams();
@@ -75,5 +84,17 @@
       vm.findTeamValues();
     };
 
+    vm.isUpcoming = function(expedition) {
+      return (moment(expedition.monitoringStartDate).isAfter(moment())) ? true : false;
+    };
+
+    vm.getExpeditionDate = function(expedition) {
+      return moment(expedition.monitoringStartDate).format('MMMM D, YYYY');
+    };
+
+    vm.getExpeditionTimeRange = function(expedition) {
+      return moment(expedition.monitoringStartDate).format('HH:mm')+'-'+
+        moment(expedition.monitoringEndDate).format('HH:mm');
+    };
   }
 })();

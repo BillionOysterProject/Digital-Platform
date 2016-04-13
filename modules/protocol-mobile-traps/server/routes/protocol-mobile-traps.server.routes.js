@@ -13,7 +13,10 @@ module.exports = function (app) {
     .post(mobileTraps.create);
 
   app.route('/api/protocol-mobile-traps/:mobileTrapId/organisms/:organismId/upload-sketch-photo').all(mobileTrapsPolicy.isAllowed)
-    .post(mobileTraps.uploadSketchPhoto);  
+    .post(mobileTraps.uploadSketchPhoto);
+
+  app.route('/api/protocol-mobile-traps/:mobileTrapId/incremental-save').all(mobileTrapsPolicy.isAllowed)
+    .post(mobileTraps.incrementalSave);
 
   // Single Protocol Mobile Traps routes
   app.route('/api/protocol-mobile-traps/:mobileTrapId').all(mobileTrapsPolicy.isAllowed)

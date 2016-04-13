@@ -21,6 +21,18 @@ var emptyString = function(string) {
 var validateWaterQuality = function(waterQuality, successCallback, errorCallback) {
   var errorMessages = [];
 
+  if (!waterQuality.samples || waterQuality.samples.length <= 0) {
+    errorMessages.push('At least one sample is required');
+  } else {
+    for (var i = 0; i < waterQuality.samples.length; i++) {
+      var sample = waterQuality.samples[i];
+      if (sample.depthOfWaterSampleM < 0) {
+        errorMessages.push('Depth of water sample must be positive');
+      }
+    }
+  }
+
+
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
   } else {
@@ -29,10 +41,10 @@ var validateWaterQuality = function(waterQuality, successCallback, errorCallback
 };
 
 /**
- * Create a protocol water quality 
+ * Create a protocol water quality
  */
 exports.create = function (req, res) {
-  validateWaterQuality(req.body, 
+  validateWaterQuality(req.body,
   function(waterQualityJSON) {
     var waterQuality = new ProtocolWaterQuality(waterQualityJSON);
 
@@ -62,17 +74,39 @@ exports.read = function (req, res) {
   res.json(waterQuality);
 };
 
+exports.incrementalSave = function (req, res) {
+  var waterQuality = req.waterQuality;
+
+  if (waterQuality) {
+    waterQuality = _.extend(waterQuality, req.body);
+
+    waterQuality.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(waterQuality);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Protocol water quality not found'
+    });
+  }
+};
+
 /**
  * Update a protocol water quality
  */
 exports.update = function (req, res) {
-  validateWaterQuality(req.body, 
+  validateWaterQuality(req.body,
   function(waterQualityJSON) {
     var waterQuality = req.waterQuality;
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
-      
+
       waterQuality.save(function (err) {
         if (err) {
           return res.status(400).send({

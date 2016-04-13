@@ -24,19 +24,6 @@
           pageTitle: 'Expeditions List'
         }
       })
-      .state('expeditions.create-protocols', {
-        url: '/create/protocols',
-        templateUrl: 'modules/expeditions/client/views/form-expedition-protocols.client.view.html',
-        controller: 'ExpeditionsController',
-        controllerAs: 'vm',
-        resolve: {
-          expeditionResolve: newExpedition
-        },
-        data: {
-          roles: ['team member', 'team lead', 'admin'],
-          pageTitle : 'Expeditions Create'
-        }
-      })
       .state('expeditions.create', {
         url: '/create',
         templateUrl: 'modules/expeditions/client/views/form-expedition.client.view.html',
@@ -61,6 +48,19 @@
         data: {
           roles: ['team member', 'team lead', 'admin'],
           pageTitle: 'Edit Expedition {{ expeditionResolve.title }}'
+        }
+      })
+      .state('expeditions.protocols', {
+        url: '/:expeditionId/protocols',
+        templateUrl: 'modules/expeditions/client/views/form-expedition-protocols.client.view.html',
+        controller: 'ExpeditionProtocolsController',
+        controllerAs: 'vm',
+        resolve: {
+          expeditionResolve: getFullExpedition
+        },
+        data: {
+          roles: ['team member', 'team lead', 'admin'],
+          pageTitle : 'Expedition Protocols'
         }
       })
       .state('expeditions.view', {
@@ -91,7 +91,16 @@
 
   function getExpedition($stateParams, ExpeditionsService) {
     return ExpeditionsService.get({
-      expeditionId: $stateParams.expeditionId
+      expeditionId: $stateParams.expeditionId,
+    }).$promise;
+  }
+
+  getFullExpedition.$inject = ['$stateParams', 'ExpeditionsService'];
+
+  function getFullExpedition($stateParams, ExpeditionsService) {
+    return ExpeditionsService.get({
+      expeditionId: $stateParams.expeditionId,
+      //full: true
     }).$promise;
   }
 

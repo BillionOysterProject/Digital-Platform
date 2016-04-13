@@ -16,11 +16,14 @@ module.exports = function (app) {
     .post(oysterMeasurements.uploadOuterSubstratePicture);
 
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-inner-substrate').all(oysterMeasurementsPolicy.isAllowed)
-    .post(oysterMeasurements.uploadInnerSubstratePicture);  
+    .post(oysterMeasurements.uploadInnerSubstratePicture);
 
   // Upload Oyster Cage Condition route
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.uploadOysterCageConditionPicture);
+
+  app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save').all(oysterMeasurementsPolicy.isAllowed)
+    .post(oysterMeasurements.incrementalSave);
 
   // Single Protocol Oyster Measurements routes
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId').all(oysterMeasurementsPolicy.isAllowed)

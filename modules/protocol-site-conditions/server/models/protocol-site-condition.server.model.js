@@ -10,77 +10,55 @@ var mongoose = require('mongoose'),
  * Site Condition Schema
  */
 var ProtocolSiteConditionSchema = new Schema({
-  expedition: {
-    type: Schema.ObjectId,
-    ref: 'Expedition',
-    //required: true TODO: will be required
+  status: {
+    type: String,
+    enum: ['incomplete','complete'],
+    default: ['incomplete'],
+    required: true
   },
-  team: {
-    type: Schema.ObjectId,
-    ref: 'Team',
-    //required: true TODO: will be required
-  },
-  teamMembers: [{
-    type: Schema.ObjectId,
-    ref: 'User',
-    //required: true TODO: will be required
-  }],
   meteorologicalConditions: {
     weatherConditions: {
-      type: String,
-      required: true
+      type: String
     },
     airTemperatureC: {
-      type: Number,
-      required: true
+      type: Number
     },
     windSpeedMPH: {
-      type: Number,
-      required: true
+      type: Number
     },
     windDirection: {
-      type: String,
-      required: true
+      type: String
     },
     humidityPer: {
-      type: Number,
-      required: true
+      type: Number
     }
   },
   recentRainfall: {
     rainedIn24Hours: {
-      type: Boolean,
-      required: true
+      type: Boolean
     },
     rainedIn72Hours: {
-      type: Boolean,
-      required: true
+      type: Boolean
     },
     rainedIn7Days: {
-      type: Boolean,
-      required: true
+      type: Boolean
     }
   },
   tideConditions: {
     closestHighTide: {
-      type: Date,
-      required: true
+      type: Date
     },
     closestLowTide: {
-      type: Date,
-      required: true
+      type: Date
     },
     currentSpeedMPH: {
-      type: Number,
-      required: true
+      type: Number
     },
     currentDirection: {
-      type: String,
-      required: true
+      type: String
     },
     tidalCurrent: {
-      type: String,
-      required: true
+      type: String
     }
   },
   waterConditions: {
@@ -91,17 +69,14 @@ var ProtocolSiteConditionSchema = new Schema({
       path: String
     },
     waterColor: {
-      type: String,
-      required: true
+      type: String
     },
     oilSheen: {
-      type: Boolean,
-      required: true
+      type: Boolean
     },
     garbage: {
       garbagePresent: {
-        type: Boolean,
-        required: true
+        type: Boolean
       },
       hardPlastic: String,
       softPlastic: String,
@@ -119,8 +94,7 @@ var ProtocolSiteConditionSchema = new Schema({
     },
     markedCombinedSewerOverflowPipes: {
       markedCSOPresent: {
-        type: Boolean,
-        required: true
+        type: Boolean
       },
       location: {
         latitude: Number,
@@ -131,8 +105,7 @@ var ProtocolSiteConditionSchema = new Schema({
     },
     unmarkedOutfallPipes: {
       unmarkedPipePresent: {
-        type: Boolean,
-        required: true
+        type: Boolean
       },
       location: {
         latitude: Number,
@@ -151,8 +124,7 @@ var ProtocolSiteConditionSchema = new Schema({
       path: String
     },
     shoreLineType: {
-      type: String,
-      required: true
+      type: String
     },
     shorelineSurfaceCoverEstPer: {
       imperviousSurfacePer: Number,
@@ -161,8 +133,7 @@ var ProtocolSiteConditionSchema = new Schema({
     },
     garbage: {
       garbagePresent: {
-        type: Boolean,
-        required: true
+        type: Boolean
       },
       hardPlastic: String,
       softPlastic: String,
