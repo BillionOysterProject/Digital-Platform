@@ -23,14 +23,15 @@
         });
       }
 
-      om.protocolOysterMeasurement.measuringOysterGrowth = {
-        substrateShells: []
-      };
-
-      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
+      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells &&
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
         for (var h = 0; h < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; h++) {
           om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[h].substrateShellNumber = h+1;
         }
+      } else {
+        om.protocolOysterMeasurement.measuringOysterGrowth = {
+          substrateShells: []
+        };
       }
 
       var totalToAdd = om.substrateCount - om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length;
@@ -120,11 +121,13 @@
           !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path ||
           om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path === '') {
             imageErrorMessages.push('Outer Side Photo is required for Substrate Shell #' + i+1);
+            om.substratesValid = false;
           }
           if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto ||
           !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path ||
           om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path === '') {
             imageErrorMessages.push('Inner Side Photo is required for Substrate Shell #' + i+1);
+            om.substratesValid = false;
           }
         }
       }

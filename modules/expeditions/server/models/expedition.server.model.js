@@ -45,6 +45,10 @@ var ExpeditionSchema = new Schema({
       type: Schema.ObjectId,
       ref: 'ProtocolMobileTrap'
     },
+    settlementTiles: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolSettlementTile'
+    },
     waterQuality: {
       type: Schema.ObjectId,
       ref: 'ProtocolWaterQuality'

@@ -18,7 +18,13 @@ var ProtocolSettlementTileSchema = new Schema({
       filename: String,
       path: String
     },
-
+    grids: [{
+      organism: {
+        type: Schema.ObjectId,
+        ref: 'SessileOrganism'
+      },
+      notes: String
+    }]
   }]
 });
 
