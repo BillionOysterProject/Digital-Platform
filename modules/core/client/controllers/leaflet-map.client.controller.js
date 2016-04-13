@@ -133,6 +133,8 @@
 
     function loadPoints(){
 
+      addPointsGroup.clearLayers();
+      
       for (var i = 0; i < vm.addPoints.length; i++) {
         var marker = new L.marker([vm.addPoints[i].lat,vm.addPoints[i].lng],{icon:L.AwesomeMarkers.icon(vm.addPoints[i].icon)});
 
