@@ -22,16 +22,20 @@ latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWat
 ## Leaflet Map Directive
 ### Usage
 * <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd"
-                                 can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker"></leaflet-map>
+                                 can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker" add-points="[{lat:40.668514 , lng:-74.077721,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'green'}},
+                                                                                                {lat:40.600774 , lng:-74.056435,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'red'}},
+                                                                                                {lat:40.545488 , lng:-73.949318,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'green'}}]"></leaflet-map>
 * *map-controls(=)* - empty object that the directive attaches internal functions to so the calling controller can call functions
 * *map-click-event(&)* - function to call if when the map is clicked
 * *marker-drag-end-event(&)* - function to call when marker drag is done
 * *show-marker(=)* - if true the map marker is visible
 * *can-move-marker(=)* - if true the map marker is draggable if it is visible
+* *add-points(=)* - an array of point objects with associated icon to be loaded on the map, overridding any existing points
 
 
 ### Items To Note
 * the directive uses standard leaflet and not the leaflet directive
+*the directive uses HBOSTIC personal mapbox basemap and needs to be updated for production use
 * the directive uses its link function to set the id of the leaflet map since the ids need to be unique whenever the directive is used, this can be generated in a Service too
 * hbostic added leaflet.client.service to make the global window.L object available to angular and pass linting, not sure what the BOP team does for globals  
 

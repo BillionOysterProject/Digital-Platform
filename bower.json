@@ -31,7 +31,8 @@
     "angular-chart.js": "^0.9.0",
     "ng-lodash": "^0.4.0",
     "ngCytoscape": "^0.0.5",
-    "angular-agility": "^0.8.32"
+    "angular-agility": "^0.8.32",
+    "Leaflet.awesome-markers": "^2.0.2"
   },
   "resolutions": {
     "angular": "~1.3",
