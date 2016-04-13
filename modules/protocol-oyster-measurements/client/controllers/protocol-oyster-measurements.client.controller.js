@@ -26,7 +26,15 @@
       om.protocolOysterMeasurement.measuringOysterGrowth = {
         substrateShells: []
       };
-      for (var i = 1; i <= om.substrateCount; i++) {
+
+      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
+        for (var h = 0; h < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; h++) {
+          om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[h].substrateShellNumber = h+1;
+        }
+      }
+
+      var totalToAdd = om.substrateCount - om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length;
+      for (var i = 1; i <= totalToAdd; i++) {
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.push({
           substrateShellNumber: i,
           totalNumberOfLiveOystersOnShell: 0,
