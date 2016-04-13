@@ -13,6 +13,7 @@
     var vm = this;
 
     vm.expedition = expedition;
+    console.log('expedition', expedition);
     vm.teamId = '';
     vm.authentication = Authentication;
     vm.error = null;
@@ -22,26 +23,18 @@
 
     vm.memberLists = {
       'selected': null,
-      'members': [],
-      'protocols': {
-        'Site Conditions': [],
-        'Oyster Measurements': [],
-        'Mobile Trap': [],
-        'Settlement Tiles': [],
-        'Water Quality': []
-      }
+      'members': []
     };
 
     if (vm.expedition._id) {
       vm.teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
+      console.log('vm.expedition.team', vm.expedition.team);
 
-      vm.memberLists = {
-        'Site Conditions': vm.expedition.teamLists.siteCondition,
-        'Oyster Measurements': vm.expedition.teamLists.oysterMeasurement,
-        'Mobile Trap': vm.expedition.teamLists.mobileTrap,
-        'Settlement Tiles': vm.expedition.teamLists.settlementTiles,
-        'Water Quality': vm.expedition.teamLists.waterQuality
-      };
+      vm.expedition.monitoringStartDate = moment(vm.expedition.monitoringStartDate).toDate();
+      vm.expedition.monitoringEndDate = moment(vm.expedition.monitoringEndDate).toDate();
+    } else {
+      vm.expedition.monitoringStartDate = moment().startOf('day').hours(8).toDate();
+      vm.expedition.monitoringEndDate = moment().startOf('day').hours(16).toDate();
     }
 
     vm.dateTime = {
@@ -64,8 +57,6 @@
       if (vm.teamId === '') {
         vm.team = vm.teams[0];
         vm.teamId = vm.team._id;
-        vm.expedition.monitoringStartDate = moment().startOf('day').hours(8).toDate();
-        vm.expedition.monitoringEndDate = moment().startOf('day').hours(16).toDate();
       }
 
       TeamMembersService.query({
@@ -119,14 +110,8 @@
       });
       if (index > -1) vm.expedition.team = vm.teams[index];
 
-      // set team members
-      vm.expedition.teamLists = {
-        siteCondition: vm.memberLists.protocols['Site Conditions'],
-        oysterMeasurement: vm.memberLists.protocols['Oyster Measurements'],
-        mobileTrap: vm.memberLists.protocols['Mobile Trap'],
-        settlementTiles: vm.memberLists.protocols['Settlement Tiles'],
-        waterQuality: vm.memberLists.protocols['Water Quality']
-      };
+      console.log('expedition start', vm.expedition.monitoringStartDate);
+      console.log('expedition end', vm.expedition.monitoringEndDate);
 
       // TODO: move create/update logic to service
       if (vm.expedition._id) {

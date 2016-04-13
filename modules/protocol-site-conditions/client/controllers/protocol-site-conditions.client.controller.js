@@ -24,6 +24,23 @@
         sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
           sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
       });
+    } else if ($scope.protocolSiteCondition) {
+      sc.protocolSiteCondition = $scope.protocolSiteCondition;
+      sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
+        sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
+        sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+      sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
+        sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
+        sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
+      if (!sc.protocolSiteCondition.landConditions) {
+        sc.protocolSiteCondition.landConditions = {
+          shorelineSurfaceCoverEstPer: {
+            imperviousSurfacePer: 0,
+            perviousSurfacePer: 0,
+            vegetatedSurfacePer: 0
+          }
+        };
+      }
     } else {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService();
       sc.protocolSiteCondition.landConditions = {

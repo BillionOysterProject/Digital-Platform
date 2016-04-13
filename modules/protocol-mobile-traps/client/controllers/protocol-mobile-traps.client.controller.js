@@ -59,6 +59,17 @@
         mt.getFoundOrganism(mt.mobileOrganisms[o]);
       }
 
+      var setupMobileOrganisms = function() {
+        for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
+          var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
+          var foundOrganism = mt.getFoundOrganism(organismDetails.organism);
+
+          foundOrganism.count = organismDetails.count;
+          foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
+          foundOrganism.notes = organismDetails.notesQuestions;
+        }
+      };
+
       // Set up Protocol Mobile Traps
       mt.protocolMobileTrap = {};
       if ($stateParams.protocolMobileTrapId) {
@@ -66,16 +77,15 @@
           mobileTrapId: $stateParams.protocolMobileTrapId
         }, function(data) {
           mt.protocolMobileTrap = data;
-
-          for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
-            var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
-            var foundOrganism = mt.getFoundOrganism(organismDetails.organism);
-
-            foundOrganism.count = organismDetails.count;
-            foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
-            foundOrganism.notes = organismDetails.notesQuestions;
-          }
+          setupMobileOrganisms();
         });
+      } else if ($scope.protocolMobileTrap) {
+        mt.protocolMobileTrap = $scope.protocolMobileTrap;
+        if (!mt.protocolMobileTrap.mobileOrganisms) {
+          mt.protocolMobileTrap.mobileOrganisms = [];
+        } else {
+          setupMobileOrganisms();
+        }
       } else {
         mt.protocolMobileTrap = new ProtocolMobileTrapsService();
         mt.protocolMobileTrap.mobileOrganisms = [];

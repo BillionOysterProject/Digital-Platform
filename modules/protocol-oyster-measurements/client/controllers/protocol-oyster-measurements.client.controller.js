@@ -15,20 +15,7 @@
     om.substrateCount = 10;
     om.liveShellCount = 45;
 
-    // Set up Protocol Oyster Measurements
-    om.protocolOysterMeasurement = {};
-    if ($stateParams.protocolOysterMeasurementId) {
-      ProtocolOysterMeasurementsService.get({
-        oysterMeasurementId: $stateParams.protocolOysterMeasurementId
-      }, function(data) {
-        om.protocolOysterMeasurement = data;
-        om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
-          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
-      });
-    } else {
-      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
-      om.cageConditionPhotoURL = '';
-
+    var setupSubstrateShells = function() {
       var measurements = [];
       for (var j = 0; j < om.liveShellCount; j++) {
         measurements.push({
@@ -46,6 +33,33 @@
           measurements: angular.copy(measurements)
         });
       }
+    };
+
+    // Set up Protocol Oyster Measurements
+    om.protocolOysterMeasurement = {};
+    if ($stateParams.protocolOysterMeasurementId) {
+      ProtocolOysterMeasurementsService.get({
+        oysterMeasurementId: $stateParams.protocolOysterMeasurementId
+      }, function(data) {
+        om.protocolOysterMeasurement = data;
+        om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+      });
+    } else if ($scope.protocolOysterMeasurement) {
+      om.protocolOysterMeasurement = $scope.protocolOysterMeasurement;
+      om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
+        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+      console.log('measuringOysterGrowth', om.protocolOysterMeasurement.measuringOysterGrowth);
+      if (!om.protocolOysterMeasurement.measuringOysterGrowth ||
+        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length < om.substrateCount) {
+        setupSubstrateShells();
+      }
+    } else {
+      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
+      om.cageConditionPhotoURL = '';
+      setupSubstrateShells();
     }
 
     om.bioaccumulations = BioaccumulationService.query();

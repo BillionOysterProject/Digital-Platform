@@ -119,6 +119,12 @@
       }, function (data) {
         wq.protocolWaterQuality = data;
       });
+    } else if ($scope.protocolWaterQuality) {
+      wq.protocolWaterQuality = $scope.protocolWaterQuality;
+      if (!wq.protocolWaterQuality.samples || wq.protocolWaterQuality.samples.length === 0) {
+        wq.protocolWaterQuality.samples = [];
+        wq.addSampleForm();
+      }
     } else {
       wq.protocolWaterQuality = new ProtocolWaterQualityService();
       wq.protocolWaterQuality.samples = [];

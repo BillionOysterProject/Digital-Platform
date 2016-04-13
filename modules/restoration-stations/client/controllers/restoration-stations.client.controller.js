@@ -85,16 +85,16 @@
     };
 
     vm.isUpcoming = function(expedition) {
-      return (moment(expedition.monitoringStartDate).isAfter(moment())) ? true : false;
+      return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
     };
 
     vm.getExpeditionDate = function(expedition) {
-      return moment(expedition.monitoringStartDate).format('MMMM D, YYYY');
+      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
     };
 
     vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate).format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate).format('HH:mm');
+      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
+        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
     };
   }
 })();

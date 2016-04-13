@@ -3,44 +3,54 @@
         <section class="container-fluid">
             <div class="row">
                 <nav class="navbar"><!-- TODO: Wire up -->
-                    <h6 class="navbar-text blue">Expedition Name</h6>
-                    <h6 class="navbar-text">September 29, 2016</h6>
-                    <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> ORS 1</h6>
-                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> Student Name</h6>
+                    <a ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })">
+                      <h6 class="navbar-text blue">{{vm.expedition.name}}</h6></a>
+                    <h6 class="navbar-text">{{vm.getExpeditionDate}}</h6>
+                    <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
+                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.user.displayName}}</h6>
                     <div class="navbar-right">
-                        <!-- TODO: Wire up buttons 
-                        If never submitted (Status: Incomplete) -
-                        Show if team member: <button class="btn btn-success navbar-btn">Submit</button>
-                        
-                        If submitted by team member (Status: Under Review) -
-                        Show if team lead: <button class="btn btn-danger navbar-btn">Return</button>
-                        Show if team lead: <button class="btn btn-success navbar-btn">Publish</button>
-                        
-                        If returned by team lead (Status: Returned)-
-                        Show if team member: <button class="btn btn-success navbar-btn">Submit</button>
-                        
-                        If published by team lead (Status: Published) -
-                        Show if team lead: <button class="btn btn-success navbar-btn">Publish changes</button>
-                        Show if team lead: <button class="btn btn-danger navbar-btn">Unpublish</button>
-                        -->
+                        <!-- TODO: Wire up buttons
+                        If never submitted (Status: Incomplete) --->
+                        <!-- Show if team member: -->
+                        <button class="btn btn-success navbar-btn"
+                        ng-show="vm.expedition.status === 'incomplete' && vm.isTeamMember">Submit</button>
 
-                        <!-- TODO: Wire up statuses 
-                        If submitted by team member -
-                        Show if team lead: <h6 class="navbar-text">Needs Review</h6>
-                        Show if team member: <h6 class="navbar-text">Under Review</h6>
-                        
-                        If returned by team lead -
-                        Show if team lead: <h6 class="navbar-text">Incomplete</h6>
-                        Show if team member: <h6 class="navbar-text">Returned</h6>
-                        
-                        If published by team lead -
-                        <h6 class="navbar-text">Published</h6>
-                        -->
-                        
-                        <!--Example for UI, remove when buttons/status are wired up above-->
-                        <button class="btn btn-danger navbar-btn">Return</button>
-                        <button class="btn btn-success navbar-btn">Publish</button>
-                        <h6 class="navbar-text">Needs Review</h6>
+                        <!--If submitted by team member (Status: Under Review) -->
+                        <!-- Show if team lead: -->
+                        <button class="btn btn-danger navbar-btn"
+                        ng-show="vm.expedition.status === 'pending' && vm.isTeamLead">Return</button>
+                        <!-- Show if team lead: -->
+                        <button class="btn btn-success navbar-btn"
+                        ng-show-"vm.expedition.status === 'pending' && vm.isTeamLead">Publish</button>
+
+                        <!-- If returned by team lead (Status: Returned) -->
+                        <!-- Show if team member: -->
+                        <button class="btn btn-success navbar-btn"
+                        ng-show="vm.expedition.status === 'returned' && vm.isTeamMember">Submit</button>
+
+                        <!-- If published by team lead (Status: Published) -->
+                        <!-- Show if team lead: -->
+                        <!-- Show if team lead: -->
+                        <button class="btn btn-danger navbar-btn"
+                        ng-show="vm.expedition.status === 'published' && vm.isTeamLead">Unpublish</button>
+
+                        <!-- TODO: Wire up statuses
+                        If submitted by team member -->
+                        <!-- Show if team lead: -->
+                        <h6 class="navbar-text"
+                        ng-show="vm.expedition.status === 'pending' && vm.isTeamLead">Needs Review</h6>
+                        <!-- Show if team member: -->
+                        <h6 class="navbar-text"
+                        ng-show="vm.expedition.status === 'pending' && vm.isTeamMember">Under Review</h6>
+
+                        <!-- If returned by team lead -->
+                        <!-- Show if team lead: -->
+                        <h6 class="navbar-text" ng-show="vm.expedition.status === 'incomplete'">Incomplete</h6>
+                        <!-- Show if team member: -->
+                        <h6 class="navbar-text" ng-show="vm.expedition.status === 'returned'">Returned</h6>
+
+                        <!-- If published by team lead -->
+                        <h6 class="navbar-text" ng-show="vm.expedition.status === 'published'">Published</h6>
                     </div>
                 </nav>
             </div>
@@ -55,19 +65,24 @@
     </section>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="protocol1">
-            <form-protocol-site-condition></form-protocol-site-condition>
+            <form-protocol-site-condition protocol-site-condition="vm.expedition.protocols.siteCondition">
+            </form-protocol-site-condition>
         </div>
         <div role="tabpanel" class="tab-pane" id="protocol2">
-            <form-protocol-oyster-measurement></form-protocol-oyster-measurement>
+            <form-protocol-oyster-measurement protocol-oyster-measurement="vm.expedition.protocols.oysterMeasurement">
+            </form-protocol-oyster-measurement>
         </div>
         <div role="tabpanel" class="tab-pane" id="protocol3">
-            <form-protocol-mobile-trap></form-protocol-mobile-trap>
+            <form-protocol-mobile-trap protocol-mobile-trap="vm.expedition.protocols.mobileTrap">
+            </form-protocol-mobile-trap>
         </div>
         <div role="tabpanel" class="tab-pane" id="protocol4">
-            <form-protocol-settlement-tile></form-protocol-settlement-tile>
+            <form-protocol-settlement-tiles protocol-settlement-tiles="vm.expedition.protocols.settlementTiles">
+            </form-protocol-settlement-tiles>
         </div>
         <div role="tabpanel" class="tab-pane" id="protocol5">
-            <form-protocol-water-quality></form-protocol-water-quality>
+            <form-protocol-water-quality protocol-water-quality="vm.expedition.protocols.waterQuality">
+            </form-protocol-water-quality>
         </div>
     </div>
 </section>

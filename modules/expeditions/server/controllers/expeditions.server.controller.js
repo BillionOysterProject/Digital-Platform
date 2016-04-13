@@ -64,8 +64,8 @@ exports.create = function (req, res) {
                     mobileTrap: mobileTrap,
                     waterQuality: waterQuality
                   };
-                  expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'MM/DD/YYYY HH:mm').toDate();
-                  expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'MM/DD/YYYY HH:mm').toDate();
+                  expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+                  expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
                   expedition.save(function (err) {
                     if (err) {
@@ -92,7 +92,7 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var expedition = req.expedition ? req.expedition.toJSON() : {};
-  console.log('read', expedition);
+
   res.json(expedition);
 };
 
@@ -105,8 +105,9 @@ exports.update = function (req, res) {
   if (expedition) {
     expedition = _.extend(expedition, req.body);
     expedition.updated = new Date();
-    expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'MM/DD/YYYY HH:mm').toDate();
-    expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'MM/DD/YYYY HH:mm').toDate();
+
+    expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
     expedition.save(function(err) {
       if (err) {
@@ -227,17 +228,24 @@ exports.list = function (req, res) {
  * Expedition middleware
  */
 exports.expeditionByID = function (req, res, next, id) {
-  console.log('expeditionByID');
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Expedition is invalid'
     });
   }
 
-  var query = Expedition.findById(id).populate('team').populate('station');
+  var query = Expedition.findById(id).populate('team').populate('station')
+  .populate('teamLists.siteCondition', 'displayName profileImageURL')
+  .populate('teamLists.oysterMeasurement', 'displayName profileImageURL')
+  .populate('teamLists.mobileTrap', 'displayName profileImageURL')
+  .populate('teamLists.settlementTiles', 'displayName profileImageURL')
+  .populate('teamLists.waterQuality', 'displayName profileImageURL');
 
   if (req.query.full) {
-    query.populate('siteCondition').populate('oysterMeasurement').populate('mobileTrap').populate('waterQuality');
+    query.populate('protocols.siteCondition')
+    .populate('protocols.oysterMeasurement')
+    .populate('protocols.mobileTrap')
+    .populate('protocols.waterQuality');
   }
 
   query.exec(function (err, expedition) {

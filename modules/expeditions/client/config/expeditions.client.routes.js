@@ -66,10 +66,10 @@
       .state('expeditions.view', {
         url: '/:expeditionId',
         templateUrl: 'modules/expeditions/client/views/view-expedition.client.view.html',
-        controller: 'ExpeditionsController',
+        controller: 'ExpeditionProtocolsController',
         controllerAs: 'vm',
         resolve: {
-          expeditionResolve: getExpedition
+          expeditionResolve: getFullExpedition
         },
         data:{
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
@@ -100,7 +100,7 @@
   function getFullExpedition($stateParams, ExpeditionsService) {
     return ExpeditionsService.get({
       expeditionId: $stateParams.expeditionId,
-      //full: true
+      full: true
     }).$promise;
   }
 

@@ -76,46 +76,46 @@
                     </tr>
                     <tr>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.protocols['Site Conditions']"
-                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Site Conditions'], item)">
-                          <a ng-repeat="item in vm.memberLists.protocols['Site Conditions']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.protocols['Site Conditions'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.expedition.teamLists.siteCondition"
+                        dnd-drop="vm.onDrop(vm.expedition.teamLists.siteCondition, item)">
+                          <a ng-repeat="item in vm.expedition.teamLists.siteCondition" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.expedition.teamLists.siteCondition.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.protocols['Oyster Measurements']"
-                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Oyster Measurements'], item)">
-                          <a ng-repeat="item in vm.memberLists.protocols['Oyster Measurements']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.protocols['Oyster Measurements'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.expedition.teamLists.oysterMeasurement"
+                        dnd-drop="vm.onDrop(vm.expedition.teamLists.oysterMeasurement, item)">
+                          <a ng-repeat="item in vm.expedition.teamLists.oysterMeasurement" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.expedition.teamLists.oysterMeasurement.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.protocols['Mobile Trap']"
-                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Mobile Trap'], item)">
-                          <a ng-repeat="item in vm.memberLists.protocols['Mobile Trap']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.protocols['Mobile Trap'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.expedition.teamLists.mobileTrap"
+                        dnd-drop="vm.onDrop(vm.expedition.teamLists.mobileTrap, item)">
+                          <a ng-repeat="item in vm.expedition.teamLists.mobileTrap" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.expedition.teamLists.mobileTrap.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.protocols['Settlement Tiles']"
-                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Settlement Tiles'], item)">
-                          <a ng-repeat="item in vm.memberLists.protocols['Settlement Tiles']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.protocols['Settlement Tiles'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.expedition.teamLists.settlementTiles"
+                        dnd-drop="vm.onDrop(vm.expedition.teamLists.settlementTiles, item)">
+                          <a ng-repeat="item in vm.expedition.teamLists.settlementTiles" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.expedition.teamLists.settlementTiles.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
                       <td class="dragdrop">
-                        <div class="droppable" dnd-list="vm.memberLists.protocols['Water Quality']"
-                        dnd-drop="vm.onDrop(vm.memberLists.protocols['Water Quality'], item)">
-                          <a ng-repeat="item in vm.memberLists.protocols['Water Quality']" class="draggable" dnd-draggable="item"
-                            dnd-moved="vm.memberLists.protocols['Water Quality'].splice($index,1)" dnd-effect-allowed="move"
+                        <div class="droppable" dnd-list="vm.expedition.teamLists.waterQuality"
+                        dnd-drop="vm.onDrop(vm.expedition.teamLists.waterQuality, item)">
+                          <a ng-repeat="item in vm.expedition.teamLists.waterQuality" class="draggable" dnd-draggable="item"
+                            dnd-moved="vm.expedition.teamLists.waterQuality.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
