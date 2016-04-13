@@ -11,7 +11,8 @@ module.exports = {
         'public/lib/select2/select2.css',
         'public/lib/select2/select2-bootstrap.css',
         'public/lib/leaflet/dist/leaflet.css',
-        'public/lib/angular-chart.js/dist/angular-chart.css'
+        'public/lib/angular-chart.js/dist/angular-chart.css',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -40,7 +41,8 @@ module.exports = {
         'public/lib/cytoscape/dist/cytoscape.js',
         'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
-        'public/lib/ng-lodash/build/ng-lodash.min.js'
+        'public/lib/ng-lodash/build/ng-lodash.min.js',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

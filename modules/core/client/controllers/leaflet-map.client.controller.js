@@ -11,6 +11,7 @@
     var vm = this;
     var mapSelectMap;
     var mapMarker = null;
+    var addPointsGroup = new L.featureGroup();
     
 
     var settings = {
@@ -48,6 +49,18 @@
       moveMarker(latlng);
     };
 
+    var zoomToLevel = function(level){
+      mapSelectMap.setZoom(level);
+    };
+
+    var zoomOut = function(){
+      mapSelectMap.zoomOut();
+    };
+
+    var zoomIn = function(){
+      mapSelectMap.zoomIn();
+    };
+
     activate();
 
     function activate(){
@@ -56,6 +69,9 @@
         vm.mapControls.resizeMap = resizeMap;
         vm.mapControls.moveMarker = moveMarker;
         vm.mapControls.zoomToLocation = zoomToLocation;
+        vm.mapControls.zoomToLevel = zoomToLevel;
+        vm.mapControls.zoomOut = zoomOut;
+        vm.mapControls.zoomIn = zoomIn;
       }
       
       $timeout(function() {
@@ -95,6 +111,12 @@
           });
         }
 
+        if(vm.addPoints && angular.isArray(vm.addPoints)){
+          if(vm.addPoints.length > 0){
+            loadPoints();
+          }
+        }
+
         
       });
 
@@ -106,6 +128,22 @@
         
         angular.element(document.querySelector('#'+vm.modalId)).unbind('shown.bs.modal');
       });
+      
+    }
+
+    function loadPoints(){
+
+      for (var i = 0; i < vm.addPoints.length; i++) {
+        var marker = new L.marker([vm.addPoints[i].lat,vm.addPoints[i].lng],{icon:L.AwesomeMarkers.icon(vm.addPoints[i].icon)});
+
+        addPointsGroup.addLayer(marker);
+
+
+      }
+      mapSelectMap.addLayer(addPointsGroup);
+      mapSelectMap.fitBounds(addPointsGroup.getBounds());
+      zoomOut();
+      
       
     }
   }
