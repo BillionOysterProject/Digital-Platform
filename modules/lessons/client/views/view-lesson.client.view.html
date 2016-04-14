@@ -14,8 +14,9 @@
             <div class="col col-sm-6 text-right">
                 <h6 ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
                 <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
-                <h6 ng-show="vm.lesson.status === 'published'">Published</h6>
+                <h6 ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
+                <a class="btn btn-default" data-toggle="modal" data-target="#modal-lesson-feedback" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a><!--TODO: Wire up modal, DON'T SHOW if author-->
                 <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
                 <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
             </div>
@@ -288,3 +289,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-lesson-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Send feedback to the author</h4>
+                <p>Thanks for contributing input! All feedback is appreciated.</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label">Message</label>
+                            <textarea class="form-control" rows="10"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MODALS -->
