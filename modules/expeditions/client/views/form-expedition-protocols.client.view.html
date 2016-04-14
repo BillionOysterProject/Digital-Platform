@@ -2,9 +2,11 @@
     <section class="content shaded content-unpadded">
         <section class="container-fluid">
             <div class="row">
-                <nav class="navbar"><!-- TODO: Wire up -->
+                <nav class="navbar">
                     <a ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })">
-                      <h6 class="navbar-text blue">{{vm.expedition.name}}</h6></a>
+                        <h6 class="navbar-text blue">{{vm.expedition.name}}</h6>
+                    </a>
+                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> Team Lead Name</h6><!-- TODO: Wire up -->
                     <h6 class="navbar-text">{{vm.getExpeditionDate}}</h6>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.user.displayName}}</h6>
