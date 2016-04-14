@@ -9,6 +9,7 @@ var path = require('path'),
   ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
+  ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   moment = require('moment'),
@@ -24,6 +25,7 @@ exports.create = function (req, res) {
   var siteCondition = new ProtocolSiteCondition({});
   var oysterMeasurement = new ProtocolOysterMeasurement({});
   var mobileTrap = new ProtocolMobileTrap({});
+  var settlementTile = new ProtocolSettlementTile({});
   var waterQuality = new ProtocolWaterQuality({});
 
   siteCondition.save(function (err) {
@@ -47,33 +49,43 @@ exports.create = function (req, res) {
                 message: 'Could not create a mobile trap protocol'
               });
             } else {
-              // do settlement tiles
-              waterQuality.save(function (err) {
+              settlementTile.save(function (err) {
                 if (err) {
                   siteCondition.remove();
                   oysterMeasurement.remove();
                   mobileTrap.remove();
-                  //settlementTile.remove();
                   return res.status(400).send({
-                    message: 'Could not create a water quality protocol'
+                    message: 'Could not create a settlement tiles protocol'
                   });
                 } else {
-                  expedition.protocols = {
-                    siteCondition: siteCondition,
-                    oysterMeasurement: oysterMeasurement,
-                    mobileTrap: mobileTrap,
-                    waterQuality: waterQuality
-                  };
-                  expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
-                  expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
-
-                  expedition.save(function (err) {
+                  waterQuality.save(function (err) {
                     if (err) {
+                      siteCondition.remove();
+                      oysterMeasurement.remove();
+                      mobileTrap.remove();
+                      settlementTile.remove();
                       return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                        message: 'Could not create a water quality protocol'
                       });
                     } else {
-                      res.json(expedition);
+                      expedition.protocols = {
+                        siteCondition: siteCondition,
+                        oysterMeasurement: oysterMeasurement,
+                        mobileTrap: mobileTrap,
+                        waterQuality: waterQuality
+                      };
+                      expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+                      expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+
+                      expedition.save(function (err) {
+                        if (err) {
+                          return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                          });
+                        } else {
+                          res.json(expedition);
+                        }
+                      });
                     }
                   });
                 }
@@ -136,6 +148,7 @@ exports.delete = function (req, res) {
     var siteCondition = expedition.siteCondition;
     var oysterMeasurement = expedition.oysterMeasurement;
     var mobileTrap = expedition.mobileTrap;
+    var settlementTiles = expedition.settlementTiles;
     var waterQuality = expedition.waterQuality;
     expedition.remove(function (err) {
       if (err) {
@@ -146,6 +159,7 @@ exports.delete = function (req, res) {
         siteCondition.remove();
         oysterMeasurement.remove();
         mobileTrap.remove();
+        settlementTiles.remove();
         waterQuality.remove();
         res.json(expedition);
       }
@@ -245,6 +259,7 @@ exports.expeditionByID = function (req, res, next, id) {
     query.populate('protocols.siteCondition')
     .populate('protocols.oysterMeasurement')
     .populate('protocols.mobileTrap')
+    .populate('protocols.settlementTiles')
     .populate('protocols.waterQuality');
   }
 

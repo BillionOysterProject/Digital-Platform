@@ -1,4 +1,7 @@
-'use strict';
+(function (app) {
+  'use strict';
 
-// Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('sessile-organisms');
+  app.registerModule('sessile-organisms');
+  app.registerModule('sessile-organisms.services');
+  //app.registerModule('sessile-organisms.routes', ['ui.router', 'sessile-organisms.services']);
+})(ApplicationConfiguration);

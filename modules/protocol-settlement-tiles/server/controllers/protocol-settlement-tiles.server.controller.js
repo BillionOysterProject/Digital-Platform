@@ -15,7 +15,7 @@ var path = require('path'),
   moment = require('moment');
 
 var emptyString = function(string) {
-  if (!string || string === null || string === '') {
+  if (!string || string === null || string === '' || string === undefined) {
     return true;
   } else {
     return false;
@@ -36,14 +36,22 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       if (!tile.tilePhoto) {
         errorMessages.push('Settlement Tile #' + (i+1) + ' photo is required');
       }
-      if (!tile.grids || tile.grids.length < 25) {
-        errorMessages.push('Settlement Tile #' + (i+1) + ' must have 25 dominant organisms');
-      } else {
-        for (var j = 0; j < tile.grids.length; j++) {
-          if (!tile.grids[j].organism) {
-            errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominate species selected for grid space ' + (j+1));
+
+      var successfulGrids = true;
+      for (var j = 1; j <= 25; j++) {
+        if (tile['grid'+j]) {
+          console.log('grid', tile['grid'+j]);
+          if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
+          emptyString(tile['grid'+j].notes)) {
+            successfulGrids = false;
+            errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominate species selected for grid space ' + (j));
           }
+        } else {
+          successfulGrids = false;
         }
+      }
+      if (!successfulGrids) {
+        errorMessages.push('Settlement Tile #' + (i+1) + ' must have 25 dominant organisms');
       }
     }
   }
@@ -55,12 +63,29 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
   }
 };
 
+// var convertOrganisms = function(settlementTiles) {
+//   console.log('settlementTiles', settlementTiles);
+//   for (var i = 0; i < settlementTiles.length; i++) {
+//     for (var j = 0; j < settlementTiles[i].grids.length; j++) {
+//       console.log('settlementTiles[i].grids[j]', settlementTiles[i].grids[j]);
+//       console.log('settlementTiles[i].grids[j].organism', settlementTiles[i].grids[j].organism);
+//       var organism = (settlementTiles[i].grids[j] &&
+//         settlementTiles[i].grids[j].organism && settlementTiles[i].grids[j].organism._id) ?
+//         settlementTiles[i].grids[j].organism._id : settlementTiles[i].grids[j].organism;
+//       settlementTiles[i].grids[j].organism = organism;
+//       console.log('organism', organism);
+//     }
+//   }
+//   return settlementTiles;
+// };
+
 /**
  * Create a protocol settlement tiles
  */
 exports.create = function (req, res) {
   validateSettlementTiles(req.body,
   function(settlementTilesJSON) {
+    //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
 
     settlementTiles.save(function (err) {
@@ -93,6 +118,8 @@ exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
   if (settlementTiles) {
+    console.log('req.body', req.body);
+    //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
 
     settlementTiles.save(function (err) {
@@ -120,6 +147,7 @@ exports.update = function (req, res) {
     var settlementTiles = req.settlementTiles;
 
     if (settlementTiles) {
+      //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
 
       settlementTiles.save(function (err) {
@@ -267,7 +295,9 @@ exports.settlementTilesByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolSettlementTile.findById(id).exec(function (err, settlementTiles) {
+  ProtocolSettlementTile.findById(id)
+  //.populate('settlementTiles.grid1')
+  .exec(function (err, settlementTiles) {
     if (err) {
       return next(err);
     } else if (!settlementTiles) {

@@ -16,7 +16,7 @@ mongoimport -d bop-dev -c metashorelinetypes --type json --file metaShorelineTyp
 mongoimport -d bop-dev -c metabioaccumulations --type json --file metaBioaccumulations.json --drop
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
-mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --headerline --drop
+mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --drop
 mongoimport -d bop-dev -c metasubjectareas --type json --file metaSubjectAreas.json --drop
 mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glossaries.json
 mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json

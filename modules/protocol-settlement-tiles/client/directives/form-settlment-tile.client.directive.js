@@ -3,12 +3,13 @@
 
   angular
     .module('protocol-settlement-tiles')
-    .directive('formSettlementTile', function() {
+    .directive('formSettlementTile', function($http) {
       return {
         restrict: 'AE',
         templateUrl: 'modules/protocol-settlement-tiles/client/views/form-settlement-tile.client.view.html',
         scope: {
-          settlementTile: '=',
+          grids: '=',
+          sessileOrganisms: '=',
           saveFunction: '=',
           cancelFunction: '=',
           index: '@'
@@ -25,7 +26,13 @@
               scope.$broadcast('show-errors-check-validity', 'form.settlementTileForm');
               return false;
             }
+
             scope.saveFunction(settlementTile, scope.index, isValid);
+          };
+
+          scope.cancelForm = function(index) {
+            scope.form.settlementTileForm.$setPristine();
+            scope.cancelFunction(index);
           };
         }
       };
