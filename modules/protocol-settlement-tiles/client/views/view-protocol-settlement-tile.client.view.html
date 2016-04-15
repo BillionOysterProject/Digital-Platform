@@ -5,7 +5,7 @@
 
       <div ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
         <h3>Settlement Tile {{$index+1}}</h3>
-        <img ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto.path">
+        <img ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto.path">{{tile.tilePhoto.path}}
         <p>{{tile.description}}</p>
         <ul>
           <li>{{tile.grid1.organism}}</li>
