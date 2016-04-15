@@ -4,25 +4,30 @@
         <section class="container">
             <h2>Protocol 4 <small>Settlement Tiles</small></h2>
             <hr />
-            <div class="row"><!--TODO: NEW! Wire up new fields -->
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Date and time of data collection</label>
-                        <input type="datetime-local" class="form-control" />
+                        <label for="collectionTime">Date and time of data collection</label>
+                        <input type="datetime-local" class="form-control" name="collectionTime"
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{st.dateTime.min}}" max="{{st.dateTime.max}}"
+                        ng-model="st.protocolSettlementTiles.collectionTime" ng-blur="st.saveOnBlur()"/>
                     </div>
                     <div class="form-group">
-                        <!--TODO: Wire up to map modal -->
-                        <a href="#" class="btn btn-default btn-block">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{st.protocolSettlementTiles.latitude}}, {{st.protocolSettlementTiles.longitude}}"
+                        data-toggle="modal" data-target="#modal-settlement-tile" ng-show="st.protocolSettlementTiles.latitude && st.protocolSettlementTiles.longitude"
+                        ng-blur="st.saveOnBlur()" readonly/>
                     </div>
                     <div class="form-group">
-                        <label>Names of team members</label>
-                        <input type="text" class="form-control" />
+                        <select-tags outer-column="" name="teamMembers"
+                        in-title="Names of team members" ng-model="st.protocolSettlementTiles.teamMembers"
+                        label-class="control-label" select-config="st.teamMemberSelectConfig" ng-blur="st.saveOnBlur()"></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7"></textarea>
+                        <textarea class="form-control" rows="7" ng-model="st.protocolSettlementTiles.notes" ng-blur="st.saveOnBlur()"></textarea>
                     </div>
                 </div>
             </div>
@@ -57,7 +62,7 @@
                     <div class="form-group">
                         <label>Tile photograph</label>
                         <single-image-drop-zone uploader="st.settlementTilePhotoUploaders[$index]"
-                        image-url="tile.tilePhoto.path" image-alt="Settlement Tile #{{$index+1}} Photo"></single-image-drop-zone>
+                        image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"></single-image-drop-zone>
                     </div>
                     <!-- TODO: Each opens its own modal-->
                     <a class="btn btn-default btn-sm btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
@@ -87,4 +92,9 @@
 
 
 <!-- MODALS -->
+<div class="modal fade" id="modal-settlement-tile" tabindex="-1" role="dialog">
+    <map-select modal-id="modal-settlement-tile" latitude="st.protocolSettlementTiles.latitude"
+    longitude="st.protocolSettlementTiles.longitude"></map-select>
+</div>
+
 <!-- <form-settlement-tile ng-repeat="tile in st.protocolSettlementTiles.settlementTiles" settlement-tile="tile" save-function="" cancel-function="" index="{{$index}}"></form-settlement-tile> -->

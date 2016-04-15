@@ -19,6 +19,10 @@ var RestorationStationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Team'
   },
+  schoolOrg: {
+    type: Schema.ObjectId,
+    ref: 'SchoolOrg'
+  },
   latitude: {
     type: Number,
     required: true

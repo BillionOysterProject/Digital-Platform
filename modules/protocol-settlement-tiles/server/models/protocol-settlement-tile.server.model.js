@@ -10,6 +10,25 @@ var mongoose = require('mongoose'),
  * Settlement Tile Schema
  */
 var ProtocolSettlementTileSchema = new Schema({
+  collectionTime: Date,
+  latitude: Number,
+  longitude: Number,
+  scribeMember: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  teamMembers: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  notes: String,
+  status: {
+    type: String,
+    enum: ['incomplete','submitted'],
+    default: ['incomplete'],
+    required: true
+  },
+  submitted: Date,
   settlementTiles: [{
     description: String,
     tilePhoto: {

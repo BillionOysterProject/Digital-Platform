@@ -547,3 +547,10 @@ exports.createMemberCsv = function (req, res) {
       });
     });
 };
+
+exports.readMember = function(req, res) {
+  // convert mongoose document to JSON
+  var member = req.member ? req.member.toJSON() : {};
+
+  res.json(member);
+};

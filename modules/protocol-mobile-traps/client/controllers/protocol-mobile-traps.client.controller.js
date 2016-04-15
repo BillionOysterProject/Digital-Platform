@@ -5,11 +5,11 @@
     .module('protocol-mobile-traps')
     .controller('ProtocolMobileTrapsController', ProtocolMobileTrapsController);
 
-  ProtocolMobileTrapsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams',
-    'FileUploader', 'ProtocolMobileTrapsService', 'MobileOrganismsService'];
+  ProtocolMobileTrapsController.$inject = ['$scope', '$state', 'moment', '$http', 'Authentication', '$stateParams',
+    'FileUploader', 'ProtocolMobileTrapsService', 'MobileOrganismsService', 'TeamMembersService'];
 
-  function ProtocolMobileTrapsController($scope, $state, Authentication, $stateParams,
-    FileUploader, ProtocolMobileTrapsService, MobileOrganismsService) {
+  function ProtocolMobileTrapsController($scope, $state, moment, $http, Authentication, $stateParams,
+    FileUploader, ProtocolMobileTrapsService, MobileOrganismsService, TeamMembersService) {
     var mt = this;
 
     // Set up Organisms
@@ -42,6 +42,7 @@
 
     mt.getFoundOrganism = function(organism) {
       if (!mt.foundOrganisms[organism._id]) {
+        console.log('adding new found organism');
         mt.foundOrganisms[organism._id] = {
           uploader: new FileUploader({ alias: 'newSketchPhotoPicture' }),
           count: 0,
@@ -53,22 +54,27 @@
       return mt.foundOrganisms[organism._id];
     };
 
+    var setupMobileOrganisms = function() {
+      for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
+        var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
+        var organismId = (organismDetails.organism && organismDetails.organism._id) ?
+          organismDetails.organism._id : organismDetails.organism;
+        console.log('organismId', organismId);
+        var foundOrganism = mt.getFoundOrganism(organismId);
+
+        foundOrganism.count = organismDetails.count;
+        foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
+        foundOrganism.notes = organismDetails.notesQuestions;
+        console.log('foundOrganism', foundOrganism);
+      }
+      angular.element('#isotope-container').isotope();
+    };
+
     mt.foundOrganisms = {};
     mt.mobileOrganisms = mt.findOrganisms(function() {
       for (var o = 0; o < mt.mobileOrganisms.length; o++) {
         mt.getFoundOrganism(mt.mobileOrganisms[o]);
       }
-
-      var setupMobileOrganisms = function() {
-        for (var i = 0; i < mt.protocolMobileTrap.mobileOrganisms.length; i++) {
-          var organismDetails = mt.protocolMobileTrap.mobileOrganisms[i];
-          var foundOrganism = mt.getFoundOrganism(organismDetails.organism);
-
-          foundOrganism.count = organismDetails.count;
-          foundOrganism.imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
-          foundOrganism.notes = organismDetails.notesQuestions;
-        }
-      };
 
       // Set up Protocol Mobile Traps
       mt.protocolMobileTrap = {};
@@ -77,15 +83,18 @@
           mobileTrapId: $stateParams.protocolMobileTrapId
         }, function(data) {
           mt.protocolMobileTrap = data;
+          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
           setupMobileOrganisms();
         });
       } else if ($scope.protocolMobileTrap) {
         mt.protocolMobileTrap = $scope.protocolMobileTrap;
+        mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
         if (!mt.protocolMobileTrap.mobileOrganisms) {
           mt.protocolMobileTrap.mobileOrganisms = [];
         } else {
           setupMobileOrganisms();
         }
+        console.log('mobileTrap', mt.protocolMobileTrap);
       } else {
         mt.protocolMobileTrap = new ProtocolMobileTrapsService();
         mt.protocolMobileTrap.mobileOrganisms = [];
@@ -96,6 +105,23 @@
     mt.error = null;
     mt.form = {};
 
+    mt.teamMemberSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'displayName',
+      textLookup: function(id) {
+        return TeamMembersService.get({ memberId: id }).$promise;
+      },
+      options: function(searchText) {
+        return TeamMembersService.query();
+      }
+    };
+
+    mt.dateTime = {
+      min: moment().subtract(7, 'days').toDate(),
+      max: moment().add(1, 'year').toDate()
+    };
+
     // Remove existing protocol mobile trap
     mt.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
@@ -103,15 +129,8 @@
       }
     };
 
-    // Save protocol mobile trap
-    mt.save = function(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'mt.form.protocolMobileTrapForm');
-        return false;
-      }
-
+    var foundOrganismsToMobileOrganisms = function(imageErrorMessage) {
       var foundIds = [];
-      var imageErrorMessage = '';
       mt.protocolMobileTrap.mobileOrganisms = [];
       for (var foundId in mt.foundOrganisms) {
         var found = mt.foundOrganisms[foundId];
@@ -130,6 +149,19 @@
           }
         }
       }
+      return foundIds;
+    };
+
+    // Save protocol mobile trap
+    mt.save = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'mt.form.protocolMobileTrapForm');
+        return false;
+      }
+
+      var imageErrorMessage = '';
+      var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
+
       if (imageErrorMessage !== '') {
         mt.error = imageErrorMessage;
         return false;
@@ -222,6 +254,33 @@
       content.modal('show');
     };
 
+    var saveImageOnBlur = function(organismId, successCallback, errorCallback) {
+      if (mt.protocolMobileTrap._id) {
+        if (organismId) {
+          var uploader = mt.foundOrganisms[organismId].uploader;
+          if (uploader.queue.length > 0) {
+            uploader.onSuccessItem = function (fileItem, response, status, headers) {
+              uploader.removeFromQueue(fileItem);
+              successCallback();
+            };
+
+            uploader.onErrorItem = function (fileItem, response, status, headers) {
+              errorCallback(response.message);
+            };
+
+            uploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/organisms/' + organismId + '/upload-sketch-photo';
+            };
+            uploader.uploadAll();
+          } else {
+            successCallback();
+          }
+        } else {
+          errorCallback('Error with organism id');
+        }
+      }
+    };
+
     mt.saveOrganismDetails = function(organismDetails, organismId, isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.organismDetailsForm');
@@ -230,8 +289,21 @@
         angular.element('#modal-organism-details-'+organismId).modal('hide');
         mt.foundOrganisms[organismDetails.organism._id] = organismDetails;
 
-        mt.organismDetails = {};
-        mt.sketchPhotoUrl = '';
+        var imageErrorMessage = '';
+        var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
+
+        console.log('mobile trap', mt.protocolMobileTrap);
+
+        mt.saveOnBlur(function() {
+          saveImageOnBlur(organismId, function() {
+            mt.organismDetails = {};
+            mt.sketchPhotoUrl = '';
+          }, function(errorMessage) {
+            mt.error = errorMessage;
+          });
+        }, function(errorMessage) {
+          mt.error = errorMessage;
+        });
       }
     };
 
@@ -239,6 +311,25 @@
       angular.element('#modal-organism-details-'+organismId).modal('hide');
       mt.organismDetails = {};
       mt.sketchPhotoUrl = '';
+    };
+
+    mt.saveOnBlur = function(successCallback, errorCallback) {
+      if (mt.protocolMobileTrap._id) {
+        $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
+        mt.protocolMobileTrap)
+        .success(function (data, status, headers, config) {
+          mt.protocolMobileTrap = data;
+          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
+          console.log('mt.protocolMobileTrap', mt.protocolMobileTrap);
+          setupMobileOrganisms();
+          console.log('saved');
+          successCallback();
+        })
+        .error(function (data, status, headers, config) {
+          mt.error = data.message;
+          errorCallback(data.message);
+        });
+      }
     };
   }
 })();

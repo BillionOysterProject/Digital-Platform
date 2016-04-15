@@ -121,6 +121,7 @@ exports.incrementalSave = function (req, res) {
     console.log('req.body', req.body);
     //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
     settlementTiles.save(function (err) {
       if (err) {

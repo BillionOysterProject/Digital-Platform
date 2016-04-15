@@ -18,6 +18,7 @@ module.exports = function (app) {
     .post(teams.createMember);
 
   app.route('/api/teams/members/:memberId').all(teamsPolicy.isAllowed)
+    .get(teams.readMember)
     .put(teams.updateMember);
 
   app.route('/api/teams/:teamId/members/:memberId').all(teamsPolicy.isAllowed)

@@ -58,33 +58,28 @@
             </div>
         </section>
         <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li role="presentation" class="active"><a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">Protocol 1: Site Conditions</a></li>
-            <li role="presentation"><a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">Protocol 2: Oyster Measurements</a></li>
-            <li role="presentation"><a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">Protocol 3: Mobile Trap</a></li>
-            <li role="presentation"><a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">Protocol 4: Settlement Tiles</a></li>
-            <li role="presentation"><a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">Protocol 5: Water Quality</a></li>
+            <li role="presentation" class="active"><a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab" ng-show="vm.viewSiteCondition">Protocol 1: Site Conditions</a></li>
+            <li role="presentation"><a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab" ng-show="vm.viewOysterMeasurement">Protocol 2: Oyster Measurements</a></li>
+            <li role="presentation"><a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab" ng-show="vm.viewMobileTrap">Protocol 3: Mobile Trap</a></li>
+            <li role="presentation"><a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab" ng-show="vm.viewSettlementTiles">Protocol 4: Settlement Tiles</a></li>
+            <li role="presentation"><a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab" ng-show="vm.viewWaterQuality">Protocol 5: Water Quality</a></li>
         </ul>
     </section>
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="protocol1">
-            <form-protocol-site-condition protocol-site-condition="vm.expedition.protocols.siteCondition">
-            </form-protocol-site-condition>
+        <div role="tabpanel" class="tab-pane active" id="protocol1" ng-show="vm.viewSiteCondition">
+            <form-protocol-site-condition protocol-site-condition="vm.siteCondition"></form-protocol-site-condition>
         </div>
-        <div role="tabpanel" class="tab-pane" id="protocol2">
-            <form-protocol-oyster-measurement protocol-oyster-measurement="vm.expedition.protocols.oysterMeasurement">
-            </form-protocol-oyster-measurement>
+        <div role="tabpanel" class="tab-pane" id="protocol2" ng-show="vm.viewOysterMeasurement">
+            <form-protocol-oyster-measurement protocol-oyster-measurement="vm.oysterMeasurement"></form-protocol-oyster-measurement>
         </div>
-        <div role="tabpanel" class="tab-pane" id="protocol3">
-            <form-protocol-mobile-trap protocol-mobile-trap="vm.expedition.protocols.mobileTrap">
-            </form-protocol-mobile-trap>
+        <div role="tabpanel" class="tab-pane" id="protocol3" ng-show="vm.viewMobileTrap">
+            <form-protocol-mobile-trap protocol-mobile-trap="vm.mobileTrap"></form-protocol-mobile-trap>
         </div>
-        <div role="tabpanel" class="tab-pane" id="protocol4">
-            <form-protocol-settlement-tiles protocol-settlement-tiles="vm.expedition.protocols.settlementTiles">
-            </form-protocol-settlement-tiles>
+        <div role="tabpanel" class="tab-pane" id="protocol4" ng-show="vm.viewSettlementTiles">
+            <form-protocol-settlement-tiles protocol-settlement-tiles="vm.settlementTiles"></form-protocol-settlement-tiles>
         </div>
-        <div role="tabpanel" class="tab-pane" id="protocol5">
-            <form-protocol-water-quality protocol-water-quality="vm.expedition.protocols.waterQuality">
-            </form-protocol-water-quality>
+        <div role="tabpanel" class="tab-pane" id="protocol5" ng-show="vm.viewWaterQuality">
+            <form-protocol-water-quality protocol-water-quality="vm.waterQuality"></form-protocol-water-quality>
         </div>
     </div>
 </section>
