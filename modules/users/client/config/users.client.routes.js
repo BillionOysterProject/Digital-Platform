@@ -147,6 +147,16 @@
           roles: ['team lead']
         }
       })
+      .state('settings.admin-organizations', {
+        url: '/organizations',
+        templateUrl: 'modules/school-orgs/client/views/list-school-orgs.client.view.html',
+        controller: 'SchoolOrganizationsControllers',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Schools/Organizations',
+          roles: ['admin']
+        }
+      })
       .state('authentication', {
         abstract: true,
         url: '/authentication',
