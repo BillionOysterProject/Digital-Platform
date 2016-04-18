@@ -88,6 +88,7 @@ var ExpeditionSchema = new Schema({
     enum: ['incomplete','returned','pending','published'],
     default: ['incomplete'],
     required: true
-  }
+  },
+  published: Date
 });
 mongoose.model('Expedition', ExpeditionSchema);

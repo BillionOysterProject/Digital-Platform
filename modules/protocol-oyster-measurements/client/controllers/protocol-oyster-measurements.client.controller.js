@@ -5,15 +5,25 @@
     .module('protocol-oyster-measurements')
     .controller('ProtocolOysterMeasurementsController', ProtocolOysterMeasurementsController);
 
-  ProtocolOysterMeasurementsController.$inject = ['$scope', '$state', 'Authentication', '$stateParams', '$compile', '$rootScope',
-    'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService'];
+  ProtocolOysterMeasurementsController.$inject = ['$scope', '$state', '$http', 'moment', 'Authentication', '$stateParams',
+    'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
 
-  function ProtocolOysterMeasurementsController($scope, $state, Authentication, $stateParams, $compile, $rootScope,
-    FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService) {
+  function ProtocolOysterMeasurementsController($scope, $state, $http, moment, Authentication, $stateParams,
+    FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
     var om = this;
 
     om.substrateCount = 10;
     om.liveShellCount = 45;
+
+    om.checkDone = function(substrate) {
+      if (substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.outerSidePhoto && substrate.outerSidePhoto.path &&
+        substrate.innerSidePhoto && substrate.innerSidePhoto.path && substrate.minimumSizeOfLiveOysters &&
+        substrate.maximumSizeOfLiveOysters && substrate.averageSizeOfLiveOysters) {
+        return true;
+      } else {
+        return false;
+      }
+    };
 
     var setupSubstrateShells = function() {
       var measurements = [];
@@ -39,7 +49,8 @@
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.push({
           substrateShellNumber: i,
           totalNumberOfLiveOystersOnShell: 0,
-          measurements: angular.copy(measurements)
+          measurements: angular.copy(measurements),
+          done: false
         });
       }
     };
@@ -53,12 +64,14 @@
         om.protocolOysterMeasurement = data;
         om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
           om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+        om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
       });
     } else if ($scope.protocolOysterMeasurement) {
       om.protocolOysterMeasurement = $scope.protocolOysterMeasurement;
       om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+      om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
       console.log('measuringOysterGrowth', om.protocolOysterMeasurement.measuringOysterGrowth);
       if (!om.protocolOysterMeasurement.measuringOysterGrowth ||
         !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells ||
@@ -70,6 +83,18 @@
       om.cageConditionPhotoURL = '';
       setupSubstrateShells();
     }
+
+    if (om.protocolOysterMeasurement._id) {
+      $http.get('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/previous')
+      .success(function (data, status, headers, config) {
+        om.previous = data;
+        console.log('previous', om.previous);
+      })
+      .error(function (data, status, headers, config) {
+        console.log('Could not find previous');
+      });
+    }
+
 
     om.bioaccumulations = BioaccumulationService.query();
 
@@ -88,6 +113,23 @@
       om.outerUploaders.push(new FileUploader({ alias: 'newOuterSubstratePicture' }));
       om.innerUploaders.push(new FileUploader({ alias: 'newInnerSubstratePicture' }));
     }
+
+    om.teamMemberSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'displayName',
+      textLookup: function(id) {
+        return TeamMembersService.get({ memberId: id }).$promise;
+      },
+      options: function(searchText) {
+        return TeamMembersService.query();
+      }
+    };
+
+    om.dateTime = {
+      min: moment().subtract(7, 'days').toDate(),
+      max: moment().add(1, 'year').toDate()
+    };
 
     // Remove existing protocol oyster measurement
     om.remove = function() {
@@ -276,6 +318,66 @@
       content.modal('show');
     };
 
+    var saveSubstrateOuterImagesOnBlur = function(index, successCallback, errorCallback) {
+      if (index) {
+        if (index < om.outerUploaders.length && om.outerUploaders[index]) {
+          var uploader = om.outerUploaders[index];
+          if (uploader.queue.length > 0) {
+            uploader.onSuccessItem = function (fileItem, response, status, headers) {
+              uploader.removeFromQueue(fileItem);
+              successCallback();
+            };
+
+            uploader.onErrorItem = function (fileItem, response, status, headers) {
+              om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.error = response.message;
+              errorCallback();
+            };
+
+            uploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/index/' + index + '/upload-outer-substrate';
+            };
+            uploader.uploadAll();
+          } else {
+            successCallback();
+          }
+        } else {
+          errorCallback();
+        }
+      } else {
+        errorCallback();
+      }
+    };
+
+    var saveSubstrateInnerImagesOnBlur = function(index, successCallback, errorCallback) {
+      if (index) {
+        if (index < om.innerUploaders.length && om.innerUploaders[index]) {
+          var uploader = om.innerUploaders[index];
+          if (uploader.queue.length > 0) {
+            uploader.onSuccessItem = function (fileItem, response, status, headers) {
+              uploader.removeFromQueue(fileItem);
+              successCallback();
+            };
+
+            uploader.onErrorItem = function (fileItem, response, status, headers) {
+              om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.error = response.message;
+              errorCallback();
+            };
+
+            uploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/index/' + index + '/upload-inner-substrate';
+            };
+            uploader.uploadAll();
+          } else {
+            successCallback();
+          }
+        } else {
+          successCallback();
+        }
+      } else {
+        errorCallback();
+      }
+    };
+
     om.saveSubstrateForm = function(substrate, index, isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
@@ -291,6 +393,16 @@
         };
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[substrate.substrateShellNumber-1] = substrate;
         om.findOverallStats();
+
+        om.saveOnBlur(function() {
+          saveSubstrateOuterImagesOnBlur(index, function() {
+            saveSubstrateInnerImagesOnBlur(index, function() {
+            }, function() {
+            });
+          }, function() {
+          });
+        }, function() {
+        });
       }
     };
 
@@ -355,5 +467,49 @@
       angular.element('#modal-substrateshell'+index).modal('hide');
       om.substrate = {};
     };
+
+    om.saveOnBlur = function(successCallback, errorCallback) {
+      if (om.protocolOysterMeasurement._id) {
+        $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
+        om.protocolOysterMeasurement)
+        .success(function (data, status, headers, config) {
+          om.protocolOysterMeasurement = data;
+          om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
+          om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+            om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+          if (successCallback) successCallback();
+          console.log('saved');
+        })
+        .error(function (data, status, headers, config) {
+          om.error = data.message;
+          if (errorCallback) errorCallback();
+        });
+      }
+    };
+
+    $scope.$watch('om.cageConditionPhotoURL', function(newValue, oldValue) {
+      if (om.cageConditionUploader.queue.length > 0) {
+        om.cageConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          om.cageConditionUploader.removeFromQueue(fileItem);
+          ProtocolOysterMeasurementsService.get({
+            oysterMeasurementId: om.protocolOysterMeasurement._id
+          }, function(data) {
+            om.protocolOysterMeasurement = data;
+            om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
+            om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+              om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+          });
+        };
+
+        om.cageConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
+          om.error = response.message;
+        };
+
+        om.cageConditionUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/upload-oyster-cage-condition';
+        };
+        om.cageConditionUploader.uploadAll();
+      }
+    });
   }
 })();

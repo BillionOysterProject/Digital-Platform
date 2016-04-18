@@ -8,6 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  moment = require('moment'),
   _ = require('lodash');
 
 var emptyString = function(string) {
@@ -47,6 +48,8 @@ exports.create = function (req, res) {
   validateWaterQuality(req.body,
   function(waterQualityJSON) {
     var waterQuality = new ProtocolWaterQuality(waterQualityJSON);
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
       if (err) {
@@ -79,6 +82,8 @@ exports.incrementalSave = function (req, res) {
 
   if (waterQuality) {
     waterQuality = _.extend(waterQuality, req.body);
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
       if (err) {
@@ -106,6 +111,8 @@ exports.update = function (req, res) {
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
+      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      waterQuality.scribeMember = req.user;
 
       waterQuality.save(function (err) {
         if (err) {

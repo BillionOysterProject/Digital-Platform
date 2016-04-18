@@ -25,6 +25,10 @@ module.exports = function (app) {
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.incrementalSave);
 
+  // Previous Protocol Oyster Measurements routes
+  app.route('/api/protocol-oyster-measurements/:currentOysterMeasurementId/previous').all(oysterMeasurementsPolicy.isAllowed)
+    .get(oysterMeasurements.read);
+
   // Single Protocol Oyster Measurements routes
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId').all(oysterMeasurementsPolicy.isAllowed)
     .get(oysterMeasurements.read)
@@ -34,4 +38,5 @@ module.exports = function (app) {
   // Finish by binding the protocol oyster measurements middleware
   app.param('oysterMeasurementId', oysterMeasurements.oysterMeasurementByID);
   app.param('substrateIndex', oysterMeasurements.substrateIndexByID);
+  app.param('currentOysterMeasurementId', oysterMeasurements.previousOysterMeasurement);
 };

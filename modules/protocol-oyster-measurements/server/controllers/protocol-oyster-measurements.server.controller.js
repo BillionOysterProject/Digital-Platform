@@ -6,6 +6,7 @@
 var path = require('path'),
   fs = require('fs'),
   mongoose = require('mongoose'),
+  Expedition = mongoose.model('Expedition'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -394,4 +395,51 @@ exports.oysterMeasurementByID = function (req, res, next, id) {
 exports.substrateIndexByID = function (req, res, next, id) {
   req.substrateIndex = id;
   next();
+};
+
+exports.previousOysterMeasurement = function (req, res, next, id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Protocol Oyster Measurement is invalid'
+    });
+  }
+
+  Expedition.findOne({ 'protocols.oysterMeasurement': id }).populate('protocols.oysterMeasurement')
+  .exec(function(err, expedition) {
+    if (err) {
+      return next(err);
+    } else if (!expedition) {
+      return res.status(404).send({
+        message: 'No protocol with that identifier has been found associated with an expedition'
+      });
+    }
+
+    Expedition.find({ 'station': expedition.station, 'status': 'published', '_id': { $ne: expedition._id } })
+    .populate('protocols.oysterMeasurement').sort('-published').exec(function (err, previousPublished) {
+      if (err) {
+        return res.status(404).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (!previousPublished) {
+        console.log('no previous published, checking team');
+        Expedition.find({ 'station': expedition.station, 'team': expedition.team, '_id': { $ne: expedition._id } })
+        .populate('protocols.oysterMeasurement').sort('-monitoringStartDate').exec(function (err, previousTeams) {
+          if (err) {
+            return res.status(404).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            console.log('previous team expedition', previousTeams);
+            req.oysterMeasurement = (previousTeams && previousTeams.length > 0) ?
+              previousTeams[0].protocols.oysterMeasurement : null;
+            next();
+          }
+        });
+      } else {
+        req.oysterMeasurement = (previousPublished && previousPublished.length > 0) ?
+          previousPublished[0].protocols.oysterMeasurement : null;
+        next();
+      }
+    });
+  });
 };

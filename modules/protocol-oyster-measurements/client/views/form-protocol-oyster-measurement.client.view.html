@@ -3,25 +3,30 @@
         <section class="container">
             <h2>Protocol 2 <small>Oyster Measurements</small></h2>
             <hr />
-            <div class="row"><!--TODO: NEW! Wire up new fields -->
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Date and time of data collection</label>
-                        <input type="datetime-local" class="form-control" />
+                        <label for="collectionTime">Date and time of data collection</label>
+                        <input type="datetime-local" class="form-control" name="collectionTime"
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{om.dateTime.min}}" max="{{om.dateTime.max}}"
+                        ng-model="om.protocolOysterMeasurement.collectionTime" ng-blur="om.saveOnBlur()"/>
                     </div>
                     <div class="form-group">
-                        <!--TODO: Wire up to map modal -->
-                        <a href="#" class="btn btn-default btn-block">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{om.protocolOysterMeasurement.latitude}}, {{om.protocolOysterMeasurement.longitude}}"
+                        data-toggle="modal" data-target="#modal-settlement-tile" ng-show="om.protocolOysterMeasurement.latitude && om.protocolOysterMeasurement.longitude"
+                        ng-blur="om.saveOnBlur()" readonly/>
                     </div>
                     <div class="form-group">
-                        <label>Names of team members</label>
-                        <input type="text" class="form-control" />
+                        <select-tags outer-column="" name="teamMembers"
+                        in-title="Names of team members" ng-model="om.protocolOysterMeasurement.teamMembers"
+                        label-class="control-label" select-config="om.teamMemberSelectConfig" ng-blur="om.saveOnBlur()"></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7"></textarea>
+                        <textarea class="form-control" rows="7" ng-model="om.protocolOysterMeasurement.notes" ng-blur="om.saveOnBlur()"></textarea>
                     </div>
                 </div>
             </div>
@@ -35,7 +40,7 @@
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
                         <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
-                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM" required/>
+                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="om.saveOnBlur()" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
@@ -50,11 +55,11 @@
                     </div>
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
-                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage" name="bioaccumulation" id="bioaccumulation" required></select>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage" ng-blur="om.saveOnBlur()" name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
-                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage" ng-blur="om.saveOnBlur()"></textarea>
                     </div>
                 </div>
             </div>
@@ -75,9 +80,12 @@
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
                 <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
-                ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid && 
+                ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid &&
                   substrate.totalNumberOfLiveOystersOnShell === 0}">
-                    <td><h4><i class="glyphicon glyphicon-check"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
+                    <td><h4>
+                      <i class="glyphicon glyphicon-check" ng-show="om.checkDone(substrate)"></i>
+                      <i class="glyphicon glyphicon-unchecked red" ng-hide="om.checkDone(substrate)"></i>
+                      Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
                     <td>
                         <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
                             Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>,
@@ -93,12 +101,24 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <p class="lead red" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters || om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">Great work! Of the total population, the
+            <p class="lead red" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters ||
+            om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+            Great work! Of the total population, the
                 minimum shell size is <b>{{om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
                 maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
                 average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
                 total oysters alive is <b>{{om.protocolOysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
-            <p ng-show="om.lastExpedition">Compared to your last expedition, your oyster population has experienced a mortality rate of <b>[]%</b> and a growth rate of <b>[]%</b>.</p><!--TODO: Wire up mortality rate/growth rate -->
+            <p ng-show="om.previous &&
+            om.previous.totalNumberOfAllLiveOysters > om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+            Compared to your last expedition, your oyster population has
+              experienced a mortality rate of <b>{{(om.previous.totalNumberOfAllLiveOysters / om.protocolOysterMeasurement.totalNumberOfAllLiveOysters).toFixed(2)}}%</b>.</p>
+            <p ng-show="om.previous &&
+            om.previous.totalNumberOfAllLiveOysters < om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+            Compared to your last expedition, your oyster population has
+              experienced a growth rate of <b>{{(om.protocolOysterMeasurement.totalNumberOfAllLiveOysters / om.previous.totalNumberOfAllLiveOysters).toFixed(2)}}%</b>.</p>
+              <p ng-show="om.previous &&
+              om.previous.totalNumberOfAllLiveOysters === om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+              Compared to your last expedition, your oyster population has stayed the same.</p>
         </section>
     </section>
     <section class="content">

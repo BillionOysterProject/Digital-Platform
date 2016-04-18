@@ -10,12 +10,25 @@ var mongoose = require('mongoose'),
  * Site Condition Schema
  */
 var ProtocolSiteConditionSchema = new Schema({
+  collectionTime: Date,
+  latitude: Number,
+  longitude: Number,
+  scribeMember: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  teamMembers: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
+  notes: String,
   status: {
     type: String,
-    enum: ['incomplete','complete'],
+    enum: ['incomplete','submitted'],
     default: ['incomplete'],
     required: true
   },
+  submitted: Date,
   meteorologicalConditions: {
     weatherConditions: {
       type: String

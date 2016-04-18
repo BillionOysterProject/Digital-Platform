@@ -87,6 +87,8 @@ exports.create = function (req, res) {
   function(settlementTilesJSON) {
     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {
       if (err) {
@@ -122,6 +124,7 @@ exports.incrementalSave = function (req, res) {
     //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {
       if (err) {
@@ -150,6 +153,7 @@ exports.update = function (req, res) {
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
+      settlementTiles.scribeMember = req.user;
 
       settlementTiles.save(function (err) {
         if (err) {
