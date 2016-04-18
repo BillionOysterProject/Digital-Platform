@@ -1,7 +1,162 @@
-<section class="content shaded">
-  <section class="container-fluid">
-    <div class="page-header">
-      <h2>Schools/Organizations</h2>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search -->
+                </span>
+                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" />
+            </div>
+        </div>
     </div>
-  </section>
-</section>
+    <div class="col-md-4 text-right">
+        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-org-editadd">Add organization</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>5</b> new organization requests. <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-org-requests">Respond</a></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-verticalalign table-responsive">
+            <tr><!--TODO: Wire up -->
+                <td><h4>Organization Name</h4><br />Street Address, City, State<br/><small class="text-muted">Requested by Requester Name</small></td>
+                <td class="col-xs-6"><small class="text-muted">Description - Bacon ipsum dolor amet fatback chicken biltong, short loin ground round meatball pork belly cupim hamburger. Bacon ipsum dolor amet fatback chicken biltong, short loin ground round meatball pork belly cupim hamburger.</small></td>
+                <td><h6><span class="red">6</span> Team Leads<br/><span class="red">20</span> Teams<br/><span class="red">98</span> Team Members</h6></td>
+                <td class="text-right">
+                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-org-editadd">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-org-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+        
+        <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    </div>
+</div>
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-org-editadd" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add a new organization </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Organization Name</label>
+                            <input type="text" name="vocab-term" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Street Address</label>
+                            <input type="text" name="vocab-term" class="form-control" />
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label>City</label>
+                                <input type="text" name="vocab-term" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label>State</label>
+                                <input type="text" name="vocab-term" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Organization Description</label>
+                            <textarea class="form-control" name="definition" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-org-requests" tabindex="-1" role="dialog"><!-- TODO: Form copied from member requests -- needs updated wiring -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Organization Requests</h4>
+      </div>
+      <form>
+        <div class="modal-body"> 
+          <div class="row">
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body text-center">
+                  <h4>Organization Name</h4>
+                  <p class="text-muted small">Street Address, City State<br/>Requested by Requester Name</p>
+                  <p class="small">Description - Bacon ipsum dolor amet fatback chicken biltong, short loin ground round meatball pork belly cupim hamburger spare ribs.</p>
+                  <div class="btn-group">
+                    <a class="btn btn-success btn-sm" title="Accept" ng-model="request.approve"
+                      uib-btn-radio="true"><i class="glyphicon glyphicon-ok" ng-click="approve()"></i></a>
+                    <a class="btn btn-danger btn-sm" title="Reject" ng-model="request.approve"
+                      uib-btn-radio="false"><i class="glyphicon glyphicon-remove" ng-click="deny()"></i></a>
+                  </div>
+                  <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">
+                    <strong ng-bind="request.error"></strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-danger row" ng-show="error">
+            <strong ng-bind="error"></strong>
+          </div>
+        </div>
+        <div class="modal-footer" ng-show="teamRequests.length > 0">
+          <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-org-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete <span class="red">Org Name</span>?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                        <!-- TODO: If there are team leads/teams/members assigned to org, show the <p> and <form group> below -->
+                        <p>There are currently <b>6</b> team leads, <b>20</b> teams, and <b>108</b> team members in this organization. Before deleting, you must select another organization to transfer all of these accounts.</p>
+                        <div class="form-group">
+                            <label>Organization to transfer accounts</label>
+                            <select class="form-control">
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="deleteFunction(teamMember)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODALS-->
