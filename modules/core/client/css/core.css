@@ -182,6 +182,19 @@ body {
                         color: #fff;
                     }
 
+    .sidebar .navbar-footer {
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+        .sidebar .navbar-footer img {
+            display: inline;
+            width: 40px;
+        }
+
     .sidebar:hover {
         width: 220px;
     }
@@ -228,9 +241,10 @@ body {
 }
 
 .profile-image {
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
   border-radius: 50%;
+  margin-right: 5px;
 }
 
 
@@ -253,14 +267,19 @@ body {
 /* LINK COLORS */
 
 a {
-    color: #777;
+    color: #426ca9;
     cursor: pointer;
 }
 
-    a:hover, a:focus {
+    a:hover, a:focus, .nav-tabs a:hover, .nav-tabs a:focus, .nav-pills a:hover, .nav-pills a:focus {
         text-decoration: none;
         color: #ea6158;
     }
+
+.nav-tabs a, .nav-pills a {
+    color: #777;
+    cursor: pointer;
+}
 
 .btn {
     border: none;

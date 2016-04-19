@@ -21,15 +21,16 @@
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
 
-
-    vm.expeditions = ExpeditionsService.query();
-
     ExpeditionsService.query({
       byOwner: (vm.isTeamLead) ? true : '',
       byMember: (vm.isTeamMember) ? true : '',
     }, function(data) {
       vm.expeditions = data;
     });
+
+    vm.expeditionLink = function(expedition) {
+      return (vm.isTeamLead) ? 'expeditions.edit({ expeditionId: expedition._id })' : 'expeditions.protocols({ expeditionId: expedition._id })';
+    };
 
     vm.isUpcoming = function(expedition) {
       return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;

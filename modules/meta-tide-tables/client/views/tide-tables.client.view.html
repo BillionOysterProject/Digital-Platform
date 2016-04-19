@@ -3,7 +3,7 @@
     <table class="table table-responsive table-condensed">
         <tr ng-repeat="tide in vm.tides.HighLowValues.item">
             <td>
-                <h6 ng-bind="tide.date"></h6>
+                <p class="blue" ng-bind="tide.date"></p>
             </td>
             <td>
                 <p ng-show="tide.data[0]"><b>{{tide.data[0].time}}</b> {{tide.data[0].pred}}({{tide.data[0].type}})</p>

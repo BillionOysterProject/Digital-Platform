@@ -21,7 +21,7 @@
       </thead>
       <tbody>
         <tr class="text-muted" ng-repeat="expedition in vm.expeditions"
-          ui-sref="expeditions.protocols({ expeditionId: expedition._id })">
+          ui-sref="{{vm.expeditionLink(expedition)}}">
           <td ng-show="vm.isUpcoming(expedition)"><i class="glyphicon glyphicon-unchecked"></i></td>
           <td ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
           ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)">
