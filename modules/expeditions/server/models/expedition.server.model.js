@@ -19,6 +19,10 @@ var ExpeditionSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Team'
   },
+  teamLead: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   station: {
     type: Schema.ObjectId,
     ref: 'RestorationStation'

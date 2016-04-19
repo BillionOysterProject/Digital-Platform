@@ -6,10 +6,12 @@
     .controller('RestorationStationsController', RestorationStationsController);
 
   RestorationStationsController.$inject = ['$scope', 'lodash', 'moment', 'Authentication',
-  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService'];
+  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
+  'ExpeditionActivitiesService'];
 
   function RestorationStationsController($scope, lodash, moment, Authentication,
-    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService) {
+    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
+    ExpeditionActivitiesService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -64,6 +66,13 @@
         limit: 5
       }, function(data) {
         vm.expeditions = data;
+      });
+
+      ExpeditionActivitiesService.query({
+        teamId: vm.filter.teamId,
+        limit: 5
+      }, function(data) {
+        vm.activities = data;
       });
     };
 
@@ -136,6 +145,25 @@
       if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
       if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
       return expedition.status === 'returned' && !protocolsComplete;
+    };
+
+    vm.displaySubmittedProtocols = function(activity) {
+      var changed = [];
+      if (activity.protocols.siteCondition) changed.push('Protocol 1');
+      if (activity.protocols.oysterMeasurement) changed.push('Protocol 2');
+      if (activity.protocols.mobileTrap) changed.push('Protocol 3');
+      if (activity.protocols.settlementTiles) changed.push('Protocol 4');
+      if (activity.protocols.waterQuality) changed.push('Protocol 5');
+      var formatted = '';
+      for (var i = 0; i < changed.length; i++) {
+        formatted += changed[i];
+        if (i === changed.length - 2 && changed.length > 1) {
+          formatted += ' & ';
+        } else if (i < changed.length - 1 && changed.length > 1) {
+          formatted += ', ';
+        }
+      }
+      return formatted;
     };
   }
 })();

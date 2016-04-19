@@ -69,6 +69,7 @@ exports.create = function (req, res) {
                         message: 'Could not create a water quality protocol'
                       });
                     } else {
+                      expedition.teamLead = req.user;
                       expedition.protocols = {
                         siteCondition: siteCondition,
                         oysterMeasurement: oysterMeasurement,
@@ -118,6 +119,7 @@ exports.update = function (req, res) {
   if (expedition) {
     expedition = _.extend(expedition, req.body);
     expedition.updated = new Date();
+    expedition.teamLead = req.user;
 
     expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
@@ -206,6 +208,7 @@ exports.publish = function (req, res) {
   if (expedition) {
 
     expedition.status = 'published';
+    expedition.published = new Date();
 
     expedition.save(function(err) {
       if (err) {
@@ -386,6 +389,9 @@ exports.list = function (req, res) {
   if (req.query.teamId) {
     and.push({ 'team': req.query.teamId });
   }
+  if (req.query.byOwner) {
+    and.push({ 'teamLead': req.user });
+  }
   if (req.query.byMember) {
     var or = [];
     or.push({ 'teamLists.siteCondition': req.user });
@@ -426,11 +432,14 @@ exports.list = function (req, res) {
     query.limit(req.query.limit);
   }
 
-  query.populate('teamLists.siteCondition', 'username')
-  .populate('teamLists.oysterMeasurement', 'username')
-  .populate('teamLists.mobileTrap', 'username')
-  .populate('teamLists.settlementTiles', 'username')
-  .populate('teamLists.waterQuality', 'username')
+  query.populate('team', 'name')
+  .populate('teamLead', 'displayName username profileImageURL')
+  .populate('station', 'name')
+  .populate('teamLists.siteCondition', 'displayName username profileImageURL')
+  .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
+  .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
+  .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
+  .populate('teamLists.waterQuality', 'displayName username profileImageURL')
   .populate('protocols.siteCondition', 'status')
   .populate('protocols.oysterMeasurement', 'status')
   .populate('protocols.mobileTrap', 'status')

@@ -4,13 +4,16 @@
             <div class="row">
                 <h2 class="col-md-8">Restoration Stations</h2>
                 <div class="col-md-4">
-                    <div class="btn-group pull-right">
+                    <div class="btn-group pull-right" ng-show="vm.teams.length > 1">
                       <button type="button" class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{vm.team.name}} <span class="caret"></span><!--If only a member/teacher of 1 team, hide this caret -->
                       </button>
-                      <ul class="dropdown-menu" ng-show="vm.teams.length > 1">
+                      <ul class="dropdown-menu">
                         <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
                       </ul>
+                    </div>
+                    <div class="btn-group pull-right" ng-show="vm.teams.length < 1">
+                      <button type="button" class="btn btn-lg btn-success">{{vm.team.name}}</button>
                     </div>
                     <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
                       <small class="text-muted">{{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
@@ -48,41 +51,15 @@
                                 <h4>Activity <span class="badge badge-success pull-right">4</span></h4>
                             </div>
                             <div class="panel-body">
-                                <div class="alert alert-success">4 members updated their protocols</div>
-                                <div class="row">
+                                <div class="alert alert-success">{{vm.activities.length}} members updated their protocols</div>
+                                <div class="row" ng-repeat="activity in vm.activities">
                                     <div class="col-sm-2 col-xs-4">
-                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+                                        <img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">
                                     </div>
                                     <div class="col-sm-10 col-xs-8">
-                                        <p>John Doe <small class="text-muted">15 min ago</small><br />
-                                        <span class="text-muted">submitted</span> <a href="#">Protocol 1</a></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-4">
-                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div>
-                                    <div class="col-sm-10 col-xs-8">
-                                        <p>Kay Martin <small class="text-muted">2 hours ago</small><br />
-                                        <span class="text-muted">resubmitted</span> <a href="#">Protocol 1 & 3</a></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-4">
-                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div>
-                                    <div class="col-sm-10 col-xs-8">
-                                        <p>Daryl Jones <small class="text-muted">3 hours ago</small><br />
-                                        <span class="text-muted">submitted</span> <a href="#">Protocol 4</a></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-4">
-                                        <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
-                                    </div>
-                                    <div class="col-sm-10 col-xs-8">
-                                        <p>Mary Ann Smith <small class="text-muted">1 day ago</small><br />
-                                        <span class="text-muted">submitted</span> <a href="#">Protocol 2</a></p>
+                                        <p>{{activity.user.displayName}} <small class="text-muted" am-time-ago="activity.created"></small><br />
+                                        <span class="text-muted">{{activity.status}}</span>
+                                        <a ui-sref="expeditions.protocols({ expeditionId: activity.expedition._id })">{{vm.displaySubmittedProtocols(activity)}}</a></p>
                                     </div>
                                 </div>
                             </div>

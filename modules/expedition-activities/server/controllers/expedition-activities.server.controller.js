@@ -41,7 +41,10 @@ exports.read = function (req, res) {
  * List of Expedition Activities
  */
 exports.list = function (req, res) {
-  ExpeditionActivity.find().sort('-created').exec(function (err, activities) {
+  ExpeditionActivity.find()
+  .populate('user', 'displayName email profileImageURL')
+  .populate('expedition', 'name')
+  .sort('-created').exec(function (err, activities) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
