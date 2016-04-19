@@ -28,7 +28,7 @@
   var umd;
 
   umd = function(root, factory) {
-    if (typeof define === "function" && (define.amd != null)) {
+    if (typeof define === "function" && (define.amd !== null)) {
       return define("values/icon-groups-map", ["angular"], factory);
     } else {
       return factory(root.angular);
@@ -56,7 +56,7 @@
   var umd;
 
   umd = function(root, factory) {
-    if (typeof define === "function" && (define.amd != null)) {
+    if (typeof define === "function" && (define.amd !== null)) {
       return define("services/IconGroupCollection", ["angular", "values/icon-groups-map"], factory);
     } else {
       return factory(root.angular);
@@ -71,7 +71,7 @@
         var IconGroupCollection;
         return IconGroupCollection = (function() {
           function IconGroupCollection(groupIdLiteral) {
-            if (groupIdLiteral == null) {
+            if (groupIdLiteral === null) {
               groupIdLiteral = "bootstrap";
             }
             this.iconGroupsMap = {};
@@ -80,7 +80,7 @@
 
           IconGroupCollection.prototype.filterByGroups = function(groupIdLiteral) {
             var group, groupId, groupIds, _ref;
-            if (groupIdLiteral == null) {
+            if (groupIdLiteral === null) {
               groupIdLiteral = "bootstrap";
             }
             if (groupIdLiteral !== "all") {
@@ -98,13 +98,13 @@
 
           IconGroupCollection.prototype.includeGroups = function(groupIdLiteral) {
             var group, groupId, groupIds;
-            if (groupIdLiteral == null) {
+            if (groupIdLiteral === null) {
               groupIdLiteral = "bootstrap";
             }
             groupIds = groupIdLiteral.split(" ");
             for (groupId in iconGroupsMap) {
               group = iconGroupsMap[groupId];
-              if (this.iconGroupsMap[groupId] == null) {
+              if (this.iconGroupsMap[groupId] === null) {
                 if (groupIdLiteral === "all" || groupIds.indexOf(groupId) !== -1) {
                   this.iconGroupsMap[groupId] = group;
                 }
@@ -141,7 +141,7 @@
   var umd;
 
   umd = function(root, factory) {
-    if (typeof define === "function" && (define.amd != null)) {
+    if (typeof define === "function" && (define.amd !== null)) {
       return define("templates/iconpicker", ["angular", "angular-bootstrap"], factory);
     } else {
       return factory(root.angular);
@@ -164,7 +164,7 @@
   var umd;
 
   umd = function(root, factory) {
-    if (typeof define === "function" && (define.amd != null)) {
+    if (typeof define === "function" && (define.amd !== null)) {
       return define("directives/ui-iconpicker", ["angular", "services/IconGroupCollection", "templates/iconpicker"], factory);
     } else {
       return factory(root.angular);
@@ -187,7 +187,7 @@
           link: function($scope, $element, attrs) {
             var _ref;
             $scope.availableIconClasses = (new IconGroupCollection(attrs.groups)).getClassArray();
-            $scope.iconClass = (_ref = attrs.value) != null ? _ref : $scope.availableIconClasses[0];
+            $scope.iconClass = (_ref = attrs.value) !== null ? _ref : $scope.availableIconClasses[0];
             if (attrs.ngModel) {
               $scope.model = $scope[attrs.ngModel];
               $scope.$watch("iconClass", function() {
@@ -198,7 +198,7 @@
               });
             }
             $scope.$dropdownButton = $element.find("button").eq(0);
-            return $scope.disabled = attrs.disabled != null;
+            return $scope.disabled = attrs.disabled !== null;
           }
         };
       }
@@ -211,7 +211,7 @@
   var umd;
 
   umd = function(root, factory) {
-    if (typeof define === "function" && (define.amd != null)) {
+    if (typeof define === "function" && (define.amd !== null)) {
       return define("ui-iconpicker", ["angular", "directives/ui-iconpicker"], factory);
     } else {
       return factory(root.angular);
