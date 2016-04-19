@@ -7,28 +7,31 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Oyster Measurement Schema 
+ * Oyster Measurement Schema
  */
 var ProtocolOysterMeasurementSchema = new Schema({
-  expedition: {
+  collectionTime: Date,
+  latitude: Number,
+  longitude: Number,
+  scribeMember: {
     type: Schema.ObjectId,
-    ref: 'Expedition',
-    //required: true TODO: will be required
-  },
-  team: {
-    type: Schema.ObjectId,
-    ref: 'Team',
-    //required: true TODO: will be required
+    ref: 'User'
   },
   teamMembers: [{
     type: Schema.ObjectId,
-    ref: 'User',
-    //required: true TODO: will be required
+    ref: 'User'
   }],
+  notes: String,
+  status: {
+    type: String,
+    enum: ['incomplete','submitted'],
+    default: ['incomplete'],
+    required: true
+  },
+  submitted: Date,
   depthOfOysterCage: {
     submergedDepthofCageM: {
       type: Number,
-      required: true
     }
   },
   conditionOfOysterCage: {
@@ -39,12 +42,10 @@ var ProtocolOysterMeasurementSchema = new Schema({
       path: String
     },
     bioaccumulationOnCage: {
-      type: String,
-      required: true
+      type: String
     },
     notesOnDamageToCage: {
-      type: String,
-      required: true
+      type: String
     }
   },
   measuringOysterGrowth: {
@@ -75,20 +76,16 @@ var ProtocolOysterMeasurementSchema = new Schema({
     }]
   },
   minimumSizeOfAllLiveOysters: {
-    type: Number,
-    required: true
+    type: Number
   },
   maximumSizeOfAllLiveOysters: {
-    type: Number,
-    required: true
+    type: Number
   },
   averageSizeOfAllLiveOysters: {
-    type: Number,
-    required: true
+    type: Number
   },
   totalNumberOfAllLiveOysters: {
-    type: Number,
-    required: true
+    type: Number
   }
 });
 

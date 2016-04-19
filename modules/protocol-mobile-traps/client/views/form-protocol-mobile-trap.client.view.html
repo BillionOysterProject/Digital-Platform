@@ -4,6 +4,37 @@
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
             <hr />
             <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="collectionTime">Date and time of data collection</label>
+                        <input type="datetime-local" class="form-control" name="collectionTime"
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{mt.dateTime.min}}" max="{{mt.dateTime.max}}"
+                        ng-model="mt.protocolMobileTrap.collectionTime" ng-blur="mt.saveOnBlur()"/>
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{mt.protocolMobileTrap.latitude}}, {{mt.protocolMobileTrap.longitude}}"
+                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
+                        ng-blur="mt.saveOnBlur()" readonly/>
+                    </div>
+                    <div class="form-group">
+                        <select-tags outer-column="" name="teamMembers"
+                        in-title="Names of team members" ng-model="mt.protocolMobileTrap.teamMembers"
+                        label-class="control-label" select-config="mt.teamMemberSelectConfig" ng-blur="mt.saveOnBlur()"></select-tags>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Notes or other observations</label>
+                        <textarea class="form-control" rows="7" ng-model="mt.protocolMobileTrap.notes" ng-blur="mt.saveOnBlur()"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <section class="content shaded">
+        <section class="container">
+            <div class="row">
                 <div class="col-md-6">
                     <p class="lead red">Your group is responsible for observations about the types and quantities of mobile organisms found within the two compartments of the mobile trap, one containing mesh and the other containing oyster shells.</p>
                 </div>
@@ -24,7 +55,7 @@
                     <li><a href="#" ng-click="mt.clickFilter('worms')">Worms</a></li>
                 </ul>
             </nav>
-            <div class="row" isotope-container="isotope-container">
+            <div class="row" isotope-container="isotope-container" id="isotope-container">
                 <div class="col-md-3 col-sm-4" isotope-item="isotope-item" ng-repeat="organism in mt.mobileOrganisms">
                     <div class="thumbnail">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
@@ -33,7 +64,7 @@
                             <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-default" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]" ng-click="mt.removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
                                 <b class="pull-left red" ng-show="mt.foundOrganisms[organism._id]">&nbsp;{{mt.foundOrganisms[organism._id].count}}&nbsp;</b>
-                                <b class="pull-left red" ng-hide="mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
+                                <b class="pull-left red" ng-show="!mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
                                 <button type="button" class="btn btn-default" ng-click="mt.addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
@@ -51,7 +82,7 @@
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-primary">Next</button>
+            <!-- <button type="button" class="btn btn-primary">Next</button> -->
             <div ng-show="mt.error" class="text-danger">
                 <strong ng-bind="mt.error"></strong>
             </div>
@@ -60,4 +91,9 @@
 </form>
 
 <!-- MODALS -->
+<div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
+    <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
+    longitude="mt.protocolMobileTrap.longitude"></map-select>
+</div>
+
 <form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>

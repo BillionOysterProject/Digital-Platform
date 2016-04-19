@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'lodash', 'Authentication', 'PasswordValidator',
+  function ($scope, $state, $http, $location, $window, lodash, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -47,7 +47,17 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        var checkRole = function(role) {
+          var teamLeadIndex = lodash.findIndex($scope.authentication.user.roles, function(o) {
+            return o === role;
+          });
+          return (teamLeadIndex > -1) ? true : false;
+        };
+
+        var dashboard = checkRole('team lead') ? 'curriculum.overview' : 'restoration-stations.dashboard';
+
+        //$state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go(dashboard);
       }).error(function (response) {
         $scope.error = response.message;
       });

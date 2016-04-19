@@ -29,6 +29,12 @@ var SchoolOrgSchema = new Schema({
     type: String,
     default: '',
     trim: true
+  },
+  latitude: {
+    type: Number
+  },
+  longitude: {
+    type: Number,
   }
 });
 

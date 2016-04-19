@@ -26,17 +26,69 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
   if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
   if (!siteCondition.recentRainfall.rainedIn7Days) siteCondition.recentRainfall.rainedIn7Days = false;
+  if (!siteCondition.waterConditions.oilSheen) siteCondition.waterConditions.oilSheen = false;
+  if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent = false;
+  if (!siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent = false;
 
   var errorMessages = [];
 
-  if (siteCondition.tideConditions.closestHighTide && !moment(siteCondition.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').isValid()) {
-    errorMessages.push('Tide Conditions - Closest High Tide is not valid');
+  if (!siteCondition.meteorologicalConditions) {
+    errorMessages.push('Meterological Conditions are required');
+  } else {
+    if (emptyString(siteCondition.meteorologicalConditions.weatherConditions)) {
+      errorMessages.push('Weather conditions are required');
+    }
+    if (!siteCondition.meteorologicalConditions.airTemperatureC) {
+      errorMessages.push('Air temperature is required');
+    }
+    if (siteCondition.meteorologicalConditions.windSpeedMPH < 0) {
+      errorMessages.push('Wind speed must be positive');
+    }
+    if (emptyString(siteCondition.meteorologicalConditions.windDirection)) {
+      errorMessages.push('Wind direction is required');
+    }
+    if (siteCondition.meteorologicalConditions.humidityPer < 0) {
+      errorMessages.push('Humidity percentage is required');
+    }
   }
 
-  if (siteCondition.tideConditions.closestLowTide && !moment(siteCondition.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').isValid()) {
-    errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
+  if (!siteCondition.tideConditions) {
+    errorMessages.push('Tide conditions are required');
+  }
+  if (emptyString(siteCondition.tideConditions.closestHighTide)) {
+    errorMessages.push('Closest high tide is required');
+  } else {
+    if (!moment(siteCondition.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
+      errorMessages.push('Tide Conditions - Closest High Tide is not valid');
+    }
   }
 
+  if (emptyString(siteCondition.tideConditions.closestLowTide)) {
+    errorMessages.push('Closest low tide is required');
+  } else {
+    if (!moment(siteCondition.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
+      errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
+    }
+  }
+  if (siteCondition.tideConditions.currentSpeedMPH < 0) {
+    errorMessages.push('Current speed must be positive');
+  }
+  if (emptyString(siteCondition.tideConditions.currentDirection)) {
+    errorMessages.push('Current direction is required');
+  }
+  if (emptyString(siteCondition.tideConditions.tidalCurrent)) {
+    errorMessages.push('Tidal current is required');
+  }
+
+  if (!siteCondition.waterConditions) {
+    errorMessages.push('Water condition is required');
+  }
+  if (!siteCondition.waterConditions.waterConditionPhoto) {
+    errorMessages.push('Water condition photo is required');
+  }
+  if (emptyString(siteCondition.waterConditions.waterColor)) {
+    errorMessages.push('Water color is required');
+  }
   if (siteCondition.waterConditions.garbage.garbagePresent) {
     if (emptyString(siteCondition.waterConditions.garbage.hardPlastic)) {
       errorMessages.push('Water Condition - Hard Plastic extent is required.');
@@ -100,6 +152,15 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     }
   }
 
+  if (!siteCondition.landConditions) {
+    errorMessages.push('Land conditions is required');
+  }
+  if (!siteCondition.landConditions.landConditionPhoto) {
+    errorMessages.push('Land condition photo is required');
+  }
+  if (emptyString(siteCondition.landConditions.shoreLineType)) {
+    errorMessages.push('Shore line type is required');
+  }
   if (siteCondition.landConditions.garbage.garbagePresent) {
     if (emptyString(siteCondition.landConditions.garbage.hardPlastic)) {
       errorMessages.push('Land Condition - Hard Plastic extent is required.');
@@ -141,10 +202,12 @@ exports.create = function (req, res) {
   validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.scribeMember = req.user;
 
     siteCondition.save(function (err) {
       if (err) {
@@ -168,10 +231,42 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
-  siteCondition.tideConditions.closestHighTide = moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
-  siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
+  // siteCondition.collectionTime =
+  //   moment(req.body.collection, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  // siteCondition.tideConditions.closestHighTide =
+  //   moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  // siteCondition.tideConditions.closestLowTide =
+  //   moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
   res.json(siteCondition);
+};
+
+exports.incrementalSave = function (req, res) {
+  var siteCondition = req.siteCondition;
+
+  if (siteCondition) {
+    siteCondition = _.extend(siteCondition, req.body);
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.tideConditions.closestHighTide =
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.tideConditions.closestLowTide =
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.scribeMember = req.user;
+
+    siteCondition.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(siteCondition);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Protocol site condition not found'
+    });
+  }
 };
 
 /**
@@ -184,10 +279,14 @@ exports.update = function (req, res) {
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
+      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
+        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      siteCondition.scribeMember = req.user;
+      siteCondition.status = 'submitted';
+      siteCondition.submitted = new Date();
 
       siteCondition.save(function (err) {
         if (err) {

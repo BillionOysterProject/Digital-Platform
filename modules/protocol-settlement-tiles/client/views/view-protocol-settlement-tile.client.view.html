@@ -1,0 +1,40 @@
+<div class="shaded">
+  <section class="content">
+    <section class="container">
+      <p>View Protocol</p>
+
+      <div ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
+        <h3>Settlement Tile {{$index+1}}</h3>
+        <img ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto.path">{{tile.tilePhoto.path}}
+        <p>{{tile.description}}</p>
+        <ul>
+          <li>{{tile.grid1.organism}}</li>
+          <li>{{tile.grid2.organism}}</li>
+          <li>{{tile.grid3.organism}}</li>
+          <li>{{tile.grid4.organism}}</li>
+          <li>{{tile.grid5.organism}}</li>
+          <li>{{tile.grid6.organism}}</li>
+          <li>{{tile.grid7.organism}}</li>
+          <li>{{tile.grid8.organism}}</li>
+          <li>{{tile.grid9.organism}}</li>
+          <li>{{tile.grid10.organism}}</li>
+          <li>{{tile.grid11.organism}}</li>
+          <li>{{tile.grid12.organism}}</li>
+          <li>{{tile.grid13.organism}}</li>
+          <li>{{tile.grid14.organism}}</li>
+          <li>{{tile.grid15.organism}}</li>
+          <li>{{tile.grid16.organism}}</li>
+          <li>{{tile.grid17.organism}}</li>
+          <li>{{tile.grid18.organism}}</li>
+          <li>{{tile.grid19.organism}}</li>
+          <li>{{tile.grid20.organism}}</li>
+          <li>{{tile.grid21.organism}}</li>
+          <li>{{tile.grid22.organism}}</li>
+          <li>{{tile.grid23.organism}}</li>
+          <li>{{tile.grid24.organism}}</li>
+          <li>{{tile.grid25.organism}}</li>
+        </ul>
+      </div>
+    </section>
+  </section>
+</div>

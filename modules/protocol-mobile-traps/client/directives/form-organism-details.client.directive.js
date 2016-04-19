@@ -19,7 +19,6 @@
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function () {
             scope.form.organismDetailsForm.$setPristine();
-            console.log('scope', scope);
           });
 
           scope.submitForm = function(organismDetails, isValid) {

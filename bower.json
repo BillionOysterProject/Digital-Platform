@@ -33,12 +33,15 @@
     "ngCytoscape": "^0.0.5",
     "angular-agility": "^0.8.32",
     "angular-bootstrap-colorpicker": "^3.0.25",
-    "ui-iconpicker": "^0.1.4"
+    "ui-iconpicker": "^0.1.4",
+    "angular-moment": "^0.10.3",
+    "moment": "^2.12.0"
   },
   "resolutions": {
     "angular": "~1.3",
     "select2": "~3.5.2",
     "angular-mocks": "~1.3",
-    "angular-bootstrap": "~1.0"
+    "angular-bootstrap": "~1.0",
+    "moment": ">=2.8.0 <2.11.0"
   }
 }
