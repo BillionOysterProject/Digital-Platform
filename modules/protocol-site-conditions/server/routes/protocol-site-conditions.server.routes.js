@@ -20,6 +20,9 @@ module.exports = function (app) {
   app.route('/api/protocol-site-conditions/:siteConditionId/upload-land-condition').all(siteConditionsPolicy.isAllowed)
     .post(siteConditions.uploadLandConditionPicture);
 
+  app.route('/api/protocol-site-conditions/:siteConditionId/incremental-save').all(siteConditionsPolicy.isAllowed)
+    .post(siteConditions.incrementalSave);
+
   // Single Protocol Site Condition routes
   app.route('/api/protocol-site-conditions/:siteConditionId').all(siteConditionsPolicy.isAllowed)
     .get(siteConditions.read)

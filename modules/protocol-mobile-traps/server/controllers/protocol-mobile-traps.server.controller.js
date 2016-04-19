@@ -14,8 +14,33 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   moment = require('moment');
 
+var emptyString = function(string) {
+  if (!string || string === null || string === '') {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
   var errorMessages = [];
+
+  if (mobileTrap.mobileOrganisms.length < 0) {
+    errorCallback.push('At least one mobile organism is required');
+  } else {
+    for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+      var mobileOrganism = mobileTrap.mobileOrganisms[i];
+      if (!mobileOrganism.organism) {
+        errorCallback.push('Mobile organism is required');
+      }
+      if (mobileOrganism.count <= 0) {
+        errorCallback.push('Count of mobile organism is required');
+      }
+      if (!mobileOrganism.sketchPhoto) {
+        errorCallback.push('Sketch or photo of mobile organism is required');
+      }
+    }
+  }
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -31,6 +56,8 @@ exports.create = function (req, res) {
   validateMobileTrap(req.body,
   function(mobileTrapJSON) {
     var mobileTrap = new ProtocolMobileTrap(mobileTrapJSON);
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.scribeMember = req.user;
 
     mobileTrap.save(function (err) {
       if (err) {
@@ -58,6 +85,30 @@ exports.read = function (req, res) {
   res.json(mobileTrap);
 };
 
+exports.incrementalSave = function (req, res) {
+  var mobileTrap = req.mobileTrap;
+
+  if (mobileTrap) {
+    mobileTrap = _.extend(mobileTrap, req.body);
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.scribeMember = req.user;
+
+    mobileTrap.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(mobileTrap);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Protocol mobile trap not found'
+    });
+  }
+};
+
 /**
  * Update a protocol mobile trap
  */
@@ -68,6 +119,10 @@ exports.update = function (req, res) {
 
     if (mobileTrap) {
       mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
+      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      mobileTrap.scribeMember = req.user;
+      mobileTrap.status = 'submitted';
+      mobileTrap.submitted = new Date();
 
       mobileTrap.save(function (err) {
         if (err) {

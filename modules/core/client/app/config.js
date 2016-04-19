@@ -20,7 +20,8 @@ var ApplicationConfiguration = (function () {
     'dndLists',
     'ngCytoscape',
     'chart.js',
-    'ngLodash'];
+    'ngLodash',
+    'angularMoment'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

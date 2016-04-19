@@ -78,7 +78,6 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
-    lesson.status = 'pending';
     lesson.returnedNotes = '';
 
     var existingHandouts = [];

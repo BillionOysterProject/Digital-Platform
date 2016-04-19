@@ -18,33 +18,34 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ui-sref="expeditions.create-protocols">
-                    <td><h3><i class="glyphicon glyphicon-unchecked red"></i></h3></td>
-                    <td><h4>Protocol 1, 2, 3</h4></td>
-                    <td>Ocean Expedition<br/><small>June 1, 2016</small></td>
-                    <td><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"><b>Daryl Jones</b><br/><p class="text-muted">Team New York</p></td>
-                    <td class="text-right"><span class="label label-danger">Needs Review</span></td>
-                </tr>
-                <tr ui-sref="expeditions.create-protocols">
-                    <td><h3><i class="glyphicon glyphicon-check text-muted"></i></h3></td>
-                    <td><h4>Protocol 4</h4></td>
-                    <td>NY Harbor Expedition<br/><small>March 26, 2016</small></td>
-                    <td><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"><b>James Smith</b><br/><p class="text-muted">Team New York</p></td>
-                    <td class="text-right"><span class="label label-default">Returned</span></td>
-                </tr>
-                <tr ui-sref="expeditions.create-protocols">
-                    <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
-                    <td><h4>Protocol 1, 3</h4></td>
-                    <td>Baltimore Harbor Expedition<br/><small>March 22, 2016</small></td>
-                    <td><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"><b>Chris Jones</b><br/><p class="text-muted">Team New York</p></td>
-                    <td class="text-right"><span class="label label-success">Published</span></td>
-                </tr>
-                <tr ui-sref="expeditions.create-protocols">
-                    <td><h3><i class="glyphicon glyphicon-check green"></i></h3></td>
-                    <td><h4>Protocol 2, 5</h4></td>
-                    <td>River Expedition<br/><small>March 5, 2016</small></td>
-                    <td><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"><b>Kay Martin</b><br/><p class="text-muted">Team New York</p></td>
-                    <td class="text-right"><span class="label label-success">Published</span></td>
+                <tr ng-repeat="activity in vm.activities"
+                  ui-sref="expeditions.protocols({ expeditionId: activity.expedition._id })">
+                  <td ng-show="vm.isUpcoming(activity.expedition)">
+                    <i class="glyphicon glyphicon-unchecked"></i>
+                  </td>
+                  <td ng-show="activity.expedition.status === 'incomplete' || activity.expedition.status === 'returned' ||
+                  activity.expedition.status === 'pending'">
+                    <i class="glyphicon glyphicon-unchecked red"></i>
+                  </td>
+                  <td ng-show="activity.expedition.status === 'published'">
+                    <i class="glyphicon glyphicon-check green"></i>
+                  </td>
+                    <td><h4>{{vm.displaySubmittedProtocols(activity)}}</h4></td>
+                    <td>{{activity.expedition.name}}<br/><small>{{vm.getExpeditionDate(activity.expedition)}}</small></td>
+                    <td><img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">
+                      <b>{{activity.user.displayName}}</b><br/><p class="text-muted">{{activity.team.name}}</p></td>
+                      <td class="text-right" ng-show="vm.isUpcoming(activity.expedition)">
+                        <span class="label label-default">Coming up</span>
+                      </td>
+                      <td class="text-right" ng-show="activity.expedition.status === 'incomplete' || activity.expedition.status === 'returned'">
+                        <span class="label label-danger">Incomplete</span>
+                      </td>
+                      <td class="text-right" ng-show="activity.expedition.status === 'pending'">
+                        <span class="label label-danger">Needs Review</span>
+                      </td>
+                      <td class="text-right" ng-show="activity.expedition.status === 'published'">
+                        <span class="label label-success">Published</span>
+                      </td>
                 </tr>
             </tbody>
         </table>

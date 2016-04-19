@@ -10,30 +10,32 @@ var mongoose = require('mongoose'),
  * Mobile Trap Schema
  */
 var ProtocolMobileTrapSchema = new Schema({
-  expedition: {
+  collectionTime: Date,
+  latitude: Number,
+  longitude: Number,
+  scribeMember: {
     type: Schema.ObjectId,
-    ref: 'Expedition',
-    //required: true TODO: will be required
-  },
-  team: {
-    type: Schema.ObjectId,
-    ref: 'Team',
-    //required: true TODO: will be required
+    ref: 'User'
   },
   teamMembers: [{
     type: Schema.ObjectId,
-    ref: 'User',
-    //required: true TODO: will be required
+    ref: 'User'
   }],
+  notes: String,
+  status: {
+    type: String,
+    enum: ['incomplete','submitted'],
+    default: ['incomplete'],
+    required: true
+  },
+  submitted: Date,
   mobileOrganisms: [{
     organism: {
       type: Schema.ObjectId,
       ref: 'MobileOrganism',
-      required: true
     },
     count: {
       type: Number,
-      required: true,
       default: 0
     },
     sketchPhoto: {

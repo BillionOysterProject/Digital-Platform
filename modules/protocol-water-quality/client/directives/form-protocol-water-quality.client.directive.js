@@ -9,6 +9,9 @@
         templateUrl: 'modules/protocol-water-quality/client/views/form-protocol-water-quality.client.view.html',
         controller: 'ProtocolWaterQualityController',
         controllerAs: 'wq',
+        scope: {
+          protocolWaterQuality: '='
+        }
       };
     });
 })();

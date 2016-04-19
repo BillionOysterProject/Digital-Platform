@@ -100,6 +100,13 @@ module.exports = {
         fileSize: 10*1024*1024
       }
     },
+    settlementTilesUpload: {
+      s3dest: 'uploads/protocols/settlement-tiles/img/tilePhoto/',
+      dest: './modules/protocol-settlement-tiles/client/img/tile/uploads/', // Protocol settlement tile upload destination path
+      limits: {
+        fileSize: 10*1024*1024
+      }
+    },
     lessonFeaturedImageUpload: {
       s3dest: 'uploads/lessons/img/featured-images/',
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
