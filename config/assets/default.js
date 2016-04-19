@@ -44,7 +44,8 @@ module.exports = {
         'public/lib/angular-chart.js/dist/angular-chart.js',
         'public/lib/ng-lodash/build/ng-lodash.min.js',
         'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
-        'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js'
+        //'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js',
+        'modules/core/client/css/js/ui-iconpicker.js' // customized version of plugin to make it work
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
