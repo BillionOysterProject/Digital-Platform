@@ -77,7 +77,7 @@
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-primary">Next</button>
+            <!-- <button type="button" class="btn btn-primary">Next</button> -->
             <div ng-show="st.error" class="text-danger">
                 <strong ng-bind="st.error"></strong>
             </div>
@@ -93,7 +93,7 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-settlement-tile-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-settlement-tile" latitude="st.protocolSettlementTiles.latitude"
+    <map-select modal-id="modal-settlement-tile-map" latitude="st.protocolSettlementTiles.latitude"
     longitude="st.protocolSettlementTiles.longitude"></map-select>
 </div>
 

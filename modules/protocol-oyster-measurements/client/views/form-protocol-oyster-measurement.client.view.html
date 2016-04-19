@@ -108,22 +108,25 @@
                 maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
                 average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
                 total oysters alive is <b>{{om.protocolOysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
-            <p ng-show="om.previous &&
-            om.previous.totalNumberOfAllLiveOysters > om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
-            Compared to your last expedition, your oyster population has
-              experienced a mortality rate of <b>{{(om.previous.totalNumberOfAllLiveOysters / om.protocolOysterMeasurement.totalNumberOfAllLiveOysters).toFixed(2)}}%</b>.</p>
-            <p ng-show="om.previous &&
-            om.previous.totalNumberOfAllLiveOysters < om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
-            Compared to your last expedition, your oyster population has
-              experienced a growth rate of <b>{{(om.protocolOysterMeasurement.totalNumberOfAllLiveOysters / om.previous.totalNumberOfAllLiveOysters).toFixed(2)}}%</b>.</p>
               <p ng-show="om.previous &&
               om.previous.totalNumberOfAllLiveOysters === om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
               Compared to your last expedition, your oyster population has stayed the same.</p>
+            <p ng-show="om.previous">
+              Since your last expedition, your oyster population has experienced a mortality rate of
+              <b>{{om.previous.mortality}}%</b> </span>
+              and a growth rate of <b>{{om.previous.growth}}%</b>. </span>
+              The minimum shell size has
+              <span ng-show="om.previous.min >= 0">increased <b>{{om.previous.min}}%</b>, </span>
+              <span ng-show="om.previous.min < 0">decreased <b>{{om.previous.min}}%</b>, </span>
+              and the maximum shell size has
+              <span ng-show="om.previous.max >= 0">increased <b>{{om.previous.max}}%</b>.</span>
+              <span ng-show="om.previous.max < 0">decreased <b>{{om.previous.max}}%</b>.</span>
+            </p>
         </section>
     </section>
     <section class="content">
         <section class="container">
-            <button type="submit" class="btn btn-primary">Next</button>
+            <!-- <button type="button" class="btn btn-primary">Next</button> -->
             <div ng-show="om.error" class="text-danger">
                 <strong ng-bind="om.error"></strong>
             </div>

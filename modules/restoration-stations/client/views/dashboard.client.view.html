@@ -141,15 +141,35 @@
                             <tr class="text-muted" ng-repeat="expedition in vm.expeditions"
                              ui-sref="expeditions.protocols({ expeditionId: expedition._id })">
                                 <td ng-show="vm.isUpcoming(expedition)"><i class="glyphicon glyphicon-unchecked"></i></td>
-                                <td ng-show="expedition.status === 'incomplete' || expedition.status === 'pending' ||
-                                  expedition.status === 'returned'"><i class="glyphicon glyphicon-unchecked red"></i></td>
+                                <td ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                                ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)">
+                                  <i class="glyphicon glyphicon-unchecked red"></i>
+                                </td>
+                                <td ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">
+                                  <i class="glyphicon glyphicon-check red"></i>
+                                </td>
+                                <td ng-show="expedition.status === 'pending' && vm.isTeamLead">
+                                  <i class="glyphicon glyphicon-unchecked red"></i>
+                                </td>
                                 <td ng-show="expedition.status === 'published'"><i class="glyphicon glyphicon-check green"></i></td>
                                 <td><b>{{expedition.name}}</b><br/><p class="text-muted">{{vm.getExpeditionDate(expedition)}}</br>
                                   {{vm.getExpeditionTimeRange(expedition)}}</p></td>
-                                <td class="text-right" ng-show="vm.isUpcoming(expedition)"><span class="label label-default">Coming up</span></td>
-                                <td class="text-right" ng-show="expedition.status === 'incomplete' || expedition.status === 'pending' ||
-                                  expedition.status === 'returned'"><span class="label label-danger">Incomplete</span></td>
-                                <td class="text-right" ng-show="expedition.status === 'published'"><span class="label label-success">Published</span></td>
+                                <td class="text-right" ng-show="vm.isUpcoming(expedition)">
+                                  <span class="label label-default">Coming up</span>
+                                </td>
+                                <td class="text-right" ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                                ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)">
+                                  <span class="label label-danger">Incomplete</span>
+                                </td>
+                                <td class="text-right" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">
+                                  <span class="label label-danger">Pending</span>
+                                </td>
+                                <td class="text-right" ng-show="expedition.status === 'pending' && vm.isTeamLead">
+                                  <span class="label label-danger">Submitted</span>
+                                </td>
+                                <td class="text-right" ng-show="expedition.status === 'published'">
+                                  <span class="label label-success">Published</span>
+                                </td>
                             </tr>
                         </table>
                     </div>

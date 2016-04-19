@@ -235,7 +235,7 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).populate('teamLead', 'displayName')
+  Team.findById(id).populate('teamLead', 'displayName email profileImageURL')
   .populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .exec(function (err, team) {
     if (err) {

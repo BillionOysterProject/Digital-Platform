@@ -58,7 +58,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (emptyString(siteCondition.tideConditions.closestHighTide)) {
     errorMessages.push('Closest high tide is required');
   } else {
-    if (!moment(siteCondition.tideConditions.closestHighTide, 'MM/DD/YYYY HH:mm').isValid()) {
+    if (!moment(siteCondition.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
       errorMessages.push('Tide Conditions - Closest High Tide is not valid');
     }
   }
@@ -66,7 +66,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (emptyString(siteCondition.tideConditions.closestLowTide)) {
     errorMessages.push('Closest low tide is required');
   } else {
-    if (!moment(siteCondition.tideConditions.closestLowTide, 'MM/DD/YYYY HH:mm').isValid()) {
+    if (!moment(siteCondition.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
       errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
     }
   }
@@ -202,10 +202,12 @@ exports.create = function (req, res) {
   validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'MM/DD/YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'MM/DD/YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.scribeMember = req.user;
 
     siteCondition.save(function (err) {
       if (err) {
@@ -229,8 +231,12 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
-  siteCondition.tideConditions.closestHighTide = moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
-  siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
+  // siteCondition.collectionTime =
+  //   moment(req.body.collection, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  // siteCondition.tideConditions.closestHighTide =
+  //   moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  // siteCondition.tideConditions.closestLowTide =
+  //   moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
   res.json(siteCondition);
 };
@@ -240,10 +246,12 @@ exports.incrementalSave = function (req, res) {
 
   if (siteCondition) {
     siteCondition = _.extend(siteCondition, req.body);
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.scribeMember = req.user;
 
     siteCondition.save(function (err) {
       if (err) {
@@ -271,10 +279,14 @@ exports.update = function (req, res) {
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
+      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
+        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
+        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      siteCondition.scribeMember = req.user;
+      siteCondition.status = 'submitted';
+      siteCondition.submitted = new Date();
 
       siteCondition.save(function (err) {
         if (err) {

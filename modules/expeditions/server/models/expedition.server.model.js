@@ -85,7 +85,7 @@ var ExpeditionSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['incomplete','returned','pending','published'],
+    enum: ['incomplete','pending','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },

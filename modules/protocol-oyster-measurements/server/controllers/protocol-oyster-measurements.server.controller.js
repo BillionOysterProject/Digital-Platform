@@ -32,54 +32,60 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   var errorMessages = [];
 
   if (!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
-    errorCallback.push('Submerged depth of oyster cage is required');
+    errorMessages.push('Submerged depth of oyster cage is required');
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
-    errorCallback.push('Condition of oyster cage data is required');
+    errorMessages.push('Condition of oyster cage data is required');
   } else {
     if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
-      errorCallback.push('Photo of oyster cage is required');
+      errorMessages.push('Photo of oyster cage is required');
     }
     if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
-      errorCallback.push('Bioaccumulation on cage is required');
+      errorMessages.push('Bioaccumulation on cage is required');
     }
     if (emptyString(oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage)) {
-      errorCallback.push('Notes on damage to cage is required');
+      errorMessages.push('Notes on damage to cage is required');
     }
   }
 
   if (!oysterMeasurement.measuringOysterGrowth || oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
-    errorCallback.push('Substrate shell measurements are required');
+    errorMessages.push('Substrate shell measurements are required');
   } else {
     for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
       var substrateShell = oysterMeasurement.measuringOysterGrowth.substrateShells[j];
       if (!substrateShell.outerSidePhoto) {
-        errorCallback.push('Outer side photo is required for Substrate Shell #' + j+1);
+        errorMessages.push('Outer side photo is required for Substrate Shell #' + j+1);
       }
       if (!substrateShell.innerSidePhoto) {
-        errorCallback.push('Inner side photo is required for Substrate Shell #' + j+1);
+        errorMessages.push('Inner side photo is required for Substrate Shell #' + j+1);
       }
       if (substrateShell.totalNumberOfLiveOystersOnShell <= 0) {
-        errorCallback.push('The total number of live oysters on the shell must be greater than 0');
+        errorMessages.push('The total number of live oysters on the shell must be greater than 0');
       } else {
-        if (substrateShell.totalNumberOfLiveOystersOnShell !== substrateShell.measurements.length) {
-          errorCallback.push('The number of measurements must be equal to the total number of live oysters on the shell');
+        var filledOutCount = 0;
+        for (var k = 0; k < substrateShell.measurements.length; k++) {
+          if (substrateShell.measurements[k].sizeOfLiveOysterMM !== null) {
+            filledOutCount++;
+          }
+        }
+        if (substrateShell.totalNumberOfLiveOystersOnShell !== filledOutCount) {
+          errorMessages.push('The number of measurements must be equal to the total number of live oysters on the shell');
         }
       }
     }
   }
   if (oysterMeasurement.minimumSizeOfAllLiveOysters < 0) {
-    errorCallback.push('The minimum size of all live oysters must be positive');
+    errorMessages.push('The minimum size of all live oysters must be positive');
   }
   if (oysterMeasurement.maximumSizeOfAllLiveOysters < 0) {
-    errorCallback.push('The maximum size of all live oysters must be positive');
+    errorMessages.push('The maximum size of all live oysters must be positive');
   }
   if (oysterMeasurement.averageSizeOfAllLiveOysters < 0) {
-    errorCallback.push('The average size of all live oysters must be positive');
+    errorMessages.push('The average size of all live oysters must be positive');
   }
   if (oysterMeasurement.totalNumberOfAllLiveOysters < 0) {
-    errorCallback.push('The total number of all live oysters must be positive');
+    errorMessages.push('The total number of all live oysters must be positive');
   }
 
   if (errorMessages.length > 0) {
@@ -96,6 +102,8 @@ exports.create = function (req, res) {
   validateOysterMeasurement(req.body,
   function(oysterMeasurementJSON) {
     var oysterMeasurement = new ProtocolOysterMeasurement(oysterMeasurementJSON);
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
       if (err) {
@@ -128,6 +136,8 @@ exports.incrementalSave = function (req, res) {
 
   if (oysterMeasurement) {
     oysterMeasurement = _.extend(oysterMeasurement, req.body);
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
       if (err) {
@@ -155,6 +165,10 @@ exports.update = function (req, res) {
 
     if (oysterMeasurement) {
       oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
+      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      oysterMeasurement.scribeMember = req.user;
+      oysterMeasurement.status = 'submitted';
+      oysterMeasurement.submitted = new Date();
 
       oysterMeasurement.save(function (err) {
         if (err) {

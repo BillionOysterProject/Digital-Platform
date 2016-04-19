@@ -5,11 +5,11 @@
     .module('protocol-settlement-tiles')
     .controller('ProtocolSettlementTilesController', ProtocolSettlementTilesController);
 
-  ProtocolSettlementTilesController.$inject = ['$scope', '$state', '$http', 'moment', 'Authentication', '$stateParams',
-  'ProtocolSettlementTilesService', 'SessileOrganismsService', 'TeamMembersService', 'FileUploader'];
+  ProtocolSettlementTilesController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  'Authentication', 'ProtocolSettlementTilesService', 'SessileOrganismsService', 'TeamMembersService', 'FileUploader'];
 
-  function ProtocolSettlementTilesController($scope, $state, $http, moment, Authentication, $stateParams,
-    ProtocolSettlementTilesService, SessileOrganismsService, TeamMembersService, FileUploader) {
+  function ProtocolSettlementTilesController($scope, $rootScope, $state, $http, moment, $stateParams,
+    Authentication, ProtocolSettlementTilesService, SessileOrganismsService, TeamMembersService, FileUploader) {
     var st = this;
 
     st.tileCount = 4;
@@ -91,7 +91,6 @@
         setupSettlementTileGrid();
       }
       st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
-      console.log('protocolSettlementTiles', st.protocolSettlementTiles);
     } else {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService();
       setupSettlementTileGrid();
@@ -140,10 +139,17 @@
       }
     };
 
+    $scope.$on('saveSettlementTiles', function() {
+      st.form.settlementTilesForm.$setSubmitted(true);
+      st.save(st.form.settlementTilesForm.$valid);
+    });
+
     // Save protocol settlement tile
     st.save = function(isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+        $rootScope.$broadcast('saveSettlementTilesError');
+        return false;
       }
 
       var errorMessages = [];
@@ -174,6 +180,7 @@
           st.error = errorMessages.join();
         }
         $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+        $rootScope.$broadcast('saveSettlementTilesError');
         return false;
       }
 
@@ -186,12 +193,6 @@
 
       function successCallback(res) {
         var settlementTileId = res._id;
-
-        function goToView(settlementTileId) {
-          $state.go('protocol-settlement-tiles.view', {
-            protocolSettlementTileId: settlementTileId
-          });
-        }
 
         function uploadAllSettlementTilePhotos (settlementTileId, tilePhotosSuccessCallback, tilePhotosErrorCallback) {
           function uploadSettlementTilePhoto(settlementTileId, index, tilePhotoSuccessCallback, tilePhotoErrorCallback) {
@@ -227,14 +228,17 @@
         }
 
         uploadAllSettlementTilePhotos(settlementTileId, function() {
-          goToView(settlementTileId);
+          $rootScope.$broadcast('saveSettlementTilesSuccessful');
         }, function(errorMessage) {
           st.error = errorMessage;
+          $rootScope.$broadcast('saveSettlementTilesError');
+          return false;
         });
       }
 
       function errorCallback(res) {
         st.error = res.data.message;
+        $rootScope.$broadcast('saveSettlementTilesError');
       }
     };
 

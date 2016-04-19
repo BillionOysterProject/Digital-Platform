@@ -153,7 +153,10 @@ exports.update = function (req, res) {
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
+      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       settlementTiles.scribeMember = req.user;
+      settlementTiles.status = 'submitted';
+      settlementTiles.submitted = new Date();
 
       settlementTiles.save(function (err) {
         if (err) {

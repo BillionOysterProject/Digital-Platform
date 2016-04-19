@@ -113,6 +113,8 @@ exports.update = function (req, res) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
       waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
       waterQuality.scribeMember = req.user;
+      waterQuality.status = 'submitted';
+      waterQuality.submitted = new Date();
 
       waterQuality.save(function (err) {
         if (err) {

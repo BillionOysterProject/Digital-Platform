@@ -5,11 +5,11 @@
     .module('protocol-oyster-measurements')
     .controller('ProtocolOysterMeasurementsController', ProtocolOysterMeasurementsController);
 
-  ProtocolOysterMeasurementsController.$inject = ['$scope', '$state', '$http', 'moment', 'Authentication', '$stateParams',
-    'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
+  ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+    'Authentication', 'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
 
-  function ProtocolOysterMeasurementsController($scope, $state, $http, moment, Authentication, $stateParams,
-    FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
+  function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams,
+    Authentication, FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
     var om = this;
 
     om.substrateCount = 10;
@@ -67,12 +67,11 @@
         om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
       });
     } else if ($scope.protocolOysterMeasurement) {
-      om.protocolOysterMeasurement = $scope.protocolOysterMeasurement;
+      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService($scope.protocolOysterMeasurement);
       om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
       om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
-      console.log('measuringOysterGrowth', om.protocolOysterMeasurement.measuringOysterGrowth);
       if (!om.protocolOysterMeasurement.measuringOysterGrowth ||
         !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells ||
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length < om.substrateCount) {
@@ -87,8 +86,16 @@
     if (om.protocolOysterMeasurement._id) {
       $http.get('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/previous')
       .success(function (data, status, headers, config) {
-        om.previous = data;
-        console.log('previous', om.previous);
+        var mortality = (((om.protocolOysterMeasurement.totalNumberOfAllLiveOysters - data.totalNumberOfAllLiveOysters) / data.totalNumberOfAllLiveOysters)*-100).toFixed(2);
+        var growth = (((om.protocolOysterMeasurement.averageSizeOfAllLiveOysters - data.averageSizeOfAllLiveOysters) / data.averageSizeOfAllLiveOysters)*100).toFixed(2);
+        var min = (((om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters - data.minimumSizeOfAllLiveOysters) / data.minimumSizeOfAllLiveOysters)*100).toFixed(2);
+        var max = (((om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters - data.maximumSizeOfAllLiveOysters) / data.maximumSizeOfAllLiveOysters)*100).toFixed(2);
+        om.previous = {
+          mortality: mortality,
+          growth: growth,
+          min: min,
+          max: max
+        };
       })
       .error(function (data, status, headers, config) {
         console.log('Could not find previous');
@@ -138,10 +145,17 @@
       }
     };
 
+    $scope.$on('saveOysterMeasurement', function() {
+      om.form.oysterMeasurementForm.$setSubmitted(true);
+      om.save(om.form.oysterMeasurementForm.$valid);
+    });
+
     // Save protocol oyster measurement
     om.save = function(isValid) {
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'om.form.protocolOysterMeasurementForm');
+        $scope.$broadcast('show-errors-check-validity', 'om.form.oysterMeasurementForm');
+        $rootScope.$broadcast('saveOysterMeasurementError');
+        console.log('form error');
         return false;
       }
 
@@ -152,32 +166,40 @@
       var imageErrorMessages = [];
       if (!om.cageConditionPhotoURL || om.cageConditionPhotoURL === '') {
         imageErrorMessages.push('Cage Condition photo is required');
+        console.log('cage condition photo required');
+        return false;
       }
 
-      om.substratesValid = false;
+      om.substratesValid = true;
       for (var i = 0; i < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
         if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
-          om.substratesValid = true;
+          console.log('no source');
+          om.substratesValid = false;
+        }
 
-          if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto ||
-          !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path ||
-          om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path === '') {
-            imageErrorMessages.push('Outer Side Photo is required for Substrate Shell #' + i+1);
-            om.substratesValid = false;
-          }
-          if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto ||
-          !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path ||
-          om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path === '') {
-            imageErrorMessages.push('Inner Side Photo is required for Substrate Shell #' + i+1);
-            om.substratesValid = false;
-          }
+        if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto ||
+        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path === '') {
+          imageErrorMessages.push('Outer Side Photo is required for Substrate Shell #' + i+1);
+          console.log('outer side photo missing');
+          om.substratesValid = false;
+        }
+
+        if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto ||
+        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path === '') {
+          imageErrorMessages.push('Inner Side Photo is required for Substrate Shell #' + i+1);
+          console.log('inner side photo missing');
+          om.substratesValid = false;
         }
       }
       if (!om.substratesValid) {
         if (imageErrorMessages.length > 0) {
           om.error = imageErrorMessages.join();
         }
-        $scope.$broadcast('show-errors-check-validity', 'om.form.protocolOysterMeasurementForm');
+        $scope.$broadcast('show-errors-check-validity', 'om.form.oysterMeasurementForm');
+        $rootScope.$broadcast('saveOysterMeasurementError');
+        console.log('substrate invalid');
         return false;
       }
 
@@ -190,12 +212,6 @@
 
       function successCallback(res) {
         var oysterMeasurementId = res._id;
-
-        function goToView(oysterMeasurementId) {
-          $state.go('protocol-oyster-measurements.view', {
-            protocolOysterMeasurementId: oysterMeasurementId
-          });
-        }
 
         function uploadCageConditionPhoto(oysterMeasurementId, cagePhotoSuccessCallback, cagePhotoErrorCallback) {
           if (om.cageConditionUploader.queue.length > 0) {
@@ -285,23 +301,30 @@
         uploadCageConditionPhoto(oysterMeasurementId, function() {
           uploadAllOuterPhotos(oysterMeasurementId, function() {
             uploadAllInnerPhotos(oysterMeasurementId, function() {
-              goToView(oysterMeasurementId);
+              $rootScope.$broadcast('saveOysterMeasurementSuccessful');
             }, function(errorMessage) {
               delete om.protocolOysterMeasurement._id;
               om.error = errorMessage;
+              $rootScope.$broadcast('saveOysterMeasurementError');
+              return false;
             });
           }, function(errorMessage) {
             delete om.protocolOysterMeasurement._id;
             om.error = errorMessage;
+            $rootScope.$broadcast('saveOysterMeasurementError');
+            return false;
           });
         }, function(errorMessage) {
           delete om.protocolOysterMeasurement._id;
           om.error = errorMessage;
+          $rootScope.$broadcast('saveOysterMeasurementError');
+          return false;
         });
       }
 
       function errorCallback(res) {
         om.error = res.data.message;
+        $rootScope.$broadcast('saveOysterMeasurementError');
       }
     };
 

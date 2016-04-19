@@ -5,11 +5,11 @@
     .module('protocol-water-quality')
     .controller('ProtocolWaterQualityController', ProtocolWaterQualityController);
 
-  ProtocolWaterQualityController.$inject = ['$scope', '$state', '$stateParams', '$http', 'moment', 'Authentication',
-  'ProtocolWaterQualityService', 'TeamMembersService'];
+  ProtocolWaterQualityController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment',
+  'Authentication', 'ProtocolWaterQualityService', 'TeamMembersService'];
 
-  function ProtocolWaterQualityController($scope, $state, $stateParams, $http, moment, Authentication,
-    ProtocolWaterQualityService, TeamMembersService) {
+  function ProtocolWaterQualityController($scope, $rootScope, $state, $stateParams, $http, moment,
+    Authentication, ProtocolWaterQualityService, TeamMembersService) {
     var wq = this;
 
     wq.waterTemperatureMethods = [
@@ -80,8 +80,28 @@
       { name: 'PPM', value: 'ppm' }
     ];
 
+    wq.saveOnBlur = function() {
+      if (wq.protocolWaterQuality._id) {
+        $http.post('/api/protocol-water-quality/' + wq.protocolWaterQuality._id + '/incremental-save',
+        wq.protocolWaterQuality)
+        .success(function (data, status, headers, config) {
+          wq.protocolWaterQuality = data;
+          wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).toDate();
+
+          console.log('saved');
+        })
+        .error(function (data, status, headers, config) {
+          wq.error = data.message;
+        });
+      }
+    };
+
     wq.addSampleForm = function () {
       wq.protocolWaterQuality.samples.push({
+        locationOfWaterSample: {
+          latitude: wq.protocolWaterQuality.latitude,
+          longitude: wq.protocolWaterQuality.longitude
+        },
         waterTemperature: {
           results: []
         },
@@ -107,10 +127,12 @@
           results: []
         }]
       });
+      wq.saveOnBlur();
     };
 
     wq.removeSampleForm = function (index) {
       wq.protocolWaterQuality.samples.splice(index, 1);
+      wq.saveOnBlur();
     };
 
     // Set up Protocol Water Quality
@@ -123,7 +145,7 @@
         wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).toDate();
       });
     } else if ($scope.protocolWaterQuality) {
-      wq.protocolWaterQuality = $scope.protocolWaterQuality;
+      wq.protocolWaterQuality = new ProtocolWaterQualityService($scope.protocolWaterQuality);
       if (!wq.protocolWaterQuality.samples || wq.protocolWaterQuality.samples.length === 0) {
         wq.protocolWaterQuality.samples = [];
         wq.addSampleForm();
@@ -162,9 +184,16 @@
       }
     };
 
+    $scope.$on('saveWaterQuality', function() {
+      wq.form.waterQualityForm.$setSubmitted(true);
+      wq.save(wq.form.waterQualityForm.$valid);
+
+    });
+
     wq.save = function(isValid) {
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'wq.form.protocolWaterQualityForm');
+        $scope.$broadcast('show-errors-check-validity', 'wq.form.waterQualityForm');
+        $rootScope.$broadcast('saveWaterQualityError');
         return false;
       }
 
@@ -177,34 +206,17 @@
 
       function successCallback(res) {
         var waterQualityId = res._id;
-
-        $state.go('protocol-water-quality.view', {
-          protocolWaterQualityId: waterQualityId
-        });
+        $rootScope.$broadcast('saveWaterQualitySuccessful');
       }
 
       function errorCallback(res) {
         wq.error = res.data.message;
+        $rootScope.$broadcast('saveWaterQualityError');
       }
     };
 
     wq.cancel = function() {
       $state.go('protocol-water-quality.main');
-    };
-
-    wq.saveOnBlur = function() {
-      if (wq.protocolWaterQuality._id) {
-        $http.post('/api/protocol-water-quality/' + wq.protocolWaterQuality._id + '/incremental-save',
-        wq.protocolWaterQuality)
-        .success(function (data, status, headers, config) {
-          wq.protocolWaterQuality = data;
-          wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).toDate();
-          console.log('saved');
-        })
-        .error(function (data, status, headers, config) {
-          wq.error = data.message;
-        });
-      }
     };
   }
 })();
