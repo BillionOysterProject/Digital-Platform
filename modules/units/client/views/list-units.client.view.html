@@ -11,7 +11,7 @@
             <div ng-repeat="unit in vm.units" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" style="background: {{unit.color}}; color: #fff" ui-sref="units.view({ unitId: unit._id })">
                     <div class="panel-body text-center">
-                        <h1 class="glyphicon {{unit.icon}}"></h1>
+                        <h1><i class="{{unit.icon}}"></i></h1>
                         <h4>{{unit.title}}</h4>
                     </div>
                 </div>

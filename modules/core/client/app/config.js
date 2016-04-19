@@ -20,7 +20,9 @@ var ApplicationConfiguration = (function () {
     'dndLists',
     'ngCytoscape',
     'chart.js',
-    'ngLodash'];
+    'ngLodash',
+    'colorpicker.module',
+    'ui-iconpicker'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

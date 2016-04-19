@@ -11,7 +11,9 @@ module.exports = {
         'public/lib/select2/select2.css',
         'public/lib/select2/select2-bootstrap.css',
         'public/lib/leaflet/dist/leaflet.css',
-        'public/lib/angular-chart.js/dist/angular-chart.css'
+        'public/lib/angular-chart.js/dist/angular-chart.css',
+        'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+        'public/lib/ui-iconpicker/dist/styles/ui-iconpicker.min.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -40,7 +42,9 @@ module.exports = {
         'public/lib/cytoscape/dist/cytoscape.js',
         'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
-        'public/lib/ng-lodash/build/ng-lodash.min.js'
+        'public/lib/ng-lodash/build/ng-lodash.min.js',
+        'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
+        'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
