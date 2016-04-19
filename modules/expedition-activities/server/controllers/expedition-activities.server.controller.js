@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   ExpeditionActivity = mongoose.model('ExpeditionActivity'),
+  Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -41,18 +42,88 @@ exports.read = function (req, res) {
  * List of Expedition Activities
  */
 exports.list = function (req, res) {
-  ExpeditionActivity.find()
-  .populate('user', 'displayName email profileImageURL')
-  .populate('expedition', 'name')
-  .sort('-created').exec(function (err, activities) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(activities);
+  var getQuery = function(teamIds) {
+    var query;
+    var and = [];
+
+    if (req.query.teamId) {
+      and.push({ 'team': req.query.teamId });
     }
-  });
+
+    if (teamIds) {
+      and.push({ 'team': { $in: teamIds } });
+    }
+
+    if (and.length === 1) {
+      query = ExpeditionActivity.find(and[0]);
+    } else if (and.length > 0) {
+      query = ExpeditionActivity.find({ $and : and });
+    } else {
+      query = ExpeditionActivity.find();
+    }
+
+    if (req.query.sort) {
+
+    } else {
+      query.sort('-created');
+    }
+
+    if (req.query.limit) {
+      if (req.query.page) {
+        query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+      }
+    } else {
+      query.limit(req.query.limit);
+    }
+
+    query.populate('user', 'displayName email profileImageURL')
+    .populate('team', 'name')
+    .populate('expedition', 'name status monitoringStartDate');
+
+    return query;
+  };
+
+
+  if (req.query.byOwner) {
+    Team.find({ 'teamLead': req.user }).exec(function(err, teams) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (!teams) {
+        return res.status(400).send({
+          message: 'User does not have teams'
+        });
+      } else {
+        var teamIds = [];
+        for (var i = 0; i < teams.length; i++) {
+          teamIds.push(teams[i]._id);
+        }
+        var query = getQuery(teamIds);
+        query.exec(function (err, activities) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(activities);
+          }
+        });
+      }
+    });
+  } else {
+    var query = getQuery();
+    query.exec(function (err, activities) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(activities);
+      }
+    });
+  }
+
 };
 
 /**
