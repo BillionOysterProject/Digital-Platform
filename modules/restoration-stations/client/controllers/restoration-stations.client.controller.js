@@ -5,165 +5,63 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', 'lodash', 'moment', 'Authentication',
-  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService'];
+  RestorationStationsController.$inject = ['$scope', '$http'];
 
-  function RestorationStationsController($scope, lodash, moment, Authentication,
-    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
-    ExpeditionActivitiesService) {
-    var vm = this;
-    vm.user = Authentication.user;
+  function RestorationStationsController($scope, $http) {
+    $scope.canGeocode = true;
+    $scope.canMoveMarker = true;
+    $scope.showMarker = true;
 
-    vm.filter = {
-      teamId: ''
-    };
+    $scope.mapControls = {};
 
-    var checkRole = function(role) {
-      var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
-        return o === role;
-      });
-      return (teamLeadIndex > -1) ? true : false;
-    };
+    $scope.save = function(isValid) {
+      console.log('save');
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.teamMemberForm');
+        return false;
+      }
 
-    vm.isTeamLead = checkRole('team lead');
-    vm.isTeamMember = checkRole('team member');
-
-    vm.findTeams = function() {
-      var byOwner, byMember;
-      if (vm.isTeamLead) {
-        byOwner = true;
+      if ($scope.station._id) {
+        $scope.station.$update(successCallback, errorCallback);
       } else {
-        byMember = true;
+        $scope.station.$save(successCallback, errorCallback);
       }
-      TeamsService.query({
-        byOwner: byOwner,
-        byMember: byMember
-      }, function(data) {
-        vm.teams = data;
-        vm.initializeBasedOnTeam();
-      });
-    };
 
-    vm.findTeamValues = function() {
-      TeamMembersService.query({
-        byOwner: true,
-        teamId: vm.filter.teamId
-      }, function(data) {
-        vm.members = data;
-      });
+      function successCallback(res) {
+        $scope.saveFunction();
+      }
 
-      RestorationStationsService.query({
-        teamId: vm.filter.teamId
-      }, function(data) {
-        vm.stations = data;
-      });
-
-      var byMember = (vm.isTeamLead) ? '' : true;
-      ExpeditionsService.query({
-        teamId: vm.filter.teamId,
-        byMember: byMember,
-        limit: 5
-      }, function(data) {
-        vm.expeditions = data;
-      });
-
-      ExpeditionActivitiesService.query({
-        teamId: vm.filter.teamId,
-        limit: 5
-      }, function(data) {
-        vm.activities = data;
-      });
-    };
-
-    vm.findTeams();
-
-    vm.initializeBasedOnTeam = function() {
-      if (!vm.filter.teamId || vm.filter.teamId === '') {
-        vm.filter.teamId = (vm.teams.length > 0) ? vm.teams[0]._id : '';
-        vm.team = vm.teams[0];
-        console.log('teamId', vm.filter.teamId);
-        vm.findTeamValues();
+      function errorCallback(res) {
+        console.log('error: ' + res.data.message);
+        $scope.error = res.data.message;
       }
     };
 
-    vm.fieldChanged = function(team) {
-      vm.filter.teamId = (team) ? team._id : '';
-      vm.team = team;
-      vm.findTeamValues();
+    // Remove existing Lesson
+    $scope.remove = function() {
+      $scope.station.$remove();
+      $scope.cancelFunction();
     };
 
-    vm.isUpcoming = function(expedition) {
-      return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
-    };
-
-    vm.getExpeditionDate = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
-
-    vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
-    };
-
-    vm.checkWrite = function(teamList) {
-      if (checkRole('team lead')) {
-        return true;
-      } else {
-        var teamListIndex = lodash.findIndex(teamList, function(m) {
-          return m.username === vm.user.username;
-        });
-        return (teamListIndex > -1) ? true : false;
+    $scope.placeSelected = function (place) {
+      if (place.location) {
+        $scope.mapControls.zoomToLocation(place.location);
+        updateCoords(place.location);
       }
+
     };
 
-    vm.checkStatusIncomplete = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'incomplete' && !protocolsComplete;
+    $scope.mapClick = function(e){
+      updateCoords(e.latlng);
     };
 
-    vm.checkStatusPending = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'pending' || (protocolsComplete && expedition.status !== 'published');
+    $scope.markerDragEnd = function(location){
+      updateCoords(location);
     };
 
-    vm.checkStatusReturned = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'returned' && !protocolsComplete;
-    };
-
-    vm.displaySubmittedProtocols = function(activity) {
-      var changed = [];
-      if (activity.protocols.siteCondition) changed.push('Protocol 1');
-      if (activity.protocols.oysterMeasurement) changed.push('Protocol 2');
-      if (activity.protocols.mobileTrap) changed.push('Protocol 3');
-      if (activity.protocols.settlementTiles) changed.push('Protocol 4');
-      if (activity.protocols.waterQuality) changed.push('Protocol 5');
-      var formatted = '';
-      for (var i = 0; i < changed.length; i++) {
-        formatted += changed[i];
-        if (i === changed.length - 2 && changed.length > 1) {
-          formatted += ' & ';
-        } else if (i < changed.length - 1 && changed.length > 1) {
-          formatted += ', ';
-        }
-      }
-      return formatted;
-    };
+    function updateCoords(coords) {
+      $scope.station.latitude = coords.lat;
+      $scope.station.longitude = coords.lng;
+    }
   }
 })();
