@@ -33,7 +33,8 @@
     "ngCytoscape": "^0.0.5",
     "angular-agility": "^0.8.32",
     "angular-moment": "^0.10.3",
-    "moment": "^2.12.0"
+    "moment": "^2.12.0",
+    "Leaflet.awesome-markers": "^2.0.2"
   },
   "resolutions": {
     "angular": "~1.3",
