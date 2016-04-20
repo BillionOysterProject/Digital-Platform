@@ -40,7 +40,7 @@
     // Remove existing Lesson
     $scope.remove = function() {
       $scope.station.$remove();
-      $scope.cancelFunction();
+      $scope.removeFunction();
     };
 
     $scope.placeSelected = function (place) {

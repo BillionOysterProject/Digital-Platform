@@ -19,6 +19,12 @@
       teamId: ''
     };
 
+    vm.canGeocode = true;
+    vm.canMoveMarker = true;
+    vm.showMarker = true;
+
+    vm.mapControls = {};
+
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
@@ -54,9 +60,28 @@
       });
 
       RestorationStationsService.query({
-        schoolOrgId: vm.team.schoolOrg._id
+        teamId: vm.filter.teamId
       }, function(data) {
         vm.stations = data;
+      });
+
+      RestorationStationsService.query({
+        schoolOrgId: vm.team.schoolOrg._id
+      }, function(data) {
+        vm.mapPoints = [];
+        for (var i = 0; i < data.length; i++) {
+          var station = data[i];
+          vm.mapPoints.push({
+            lat: station.latitude,
+            lng: station.longitude,
+            icon: {
+              icon: 'glyphicon-map-marker',
+              prefix: 'glyphicon',
+              markerColor: (station.status === 'Active') ? 'green' : 'red'
+            }
+          });
+        }
+        console.log('mapPoints', vm.mapPoints);
       });
 
       var byMember = (vm.isTeamLead) ? '' : true;
@@ -82,8 +107,6 @@
       if (!vm.filter.teamId || vm.filter.teamId === '') {
         vm.filter.teamId = (vm.teams.length > 0) ? vm.teams[0]._id : '';
         vm.team = vm.teams[0];
-        console.log('team', vm.team);
-        console.log('teamId', vm.filter.teamId);
         vm.findTeamValues();
       }
     };
@@ -92,6 +115,13 @@
       vm.filter.teamId = (team) ? team._id : '';
       vm.team = team;
       vm.findTeamValues();
+    };
+
+    vm.expeditionLink = function(expedition) {
+      return (vm.isTeamLead && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.edit({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
     };
 
     vm.isUpcoming = function(expedition) {
@@ -176,12 +206,28 @@
 
     vm.openFormRestorationStation = function(station) {
       vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (!vm.station.team) vm.station.team = vm.filter.teamId;
 
       angular.element('#modal-station-register').modal('show');
     };
 
     vm.saveFormRestorationStation = function() {
-      vm.findTeamValues();
+      RestorationStationsService.query({
+        teamId: vm.filter.teamId
+      }, function(data) {
+        vm.stations = data;
+      });
+      vm.station = {};
+
+      angular.element('#modal-station-register').modal('hide');
+    };
+
+    vm.removeFormRestorationStation = function() {
+      RestorationStationsService.query({
+        teamId: vm.filter.teamId
+      }, function(data) {
+        vm.stations = data;
+      });
       vm.station = {};
 
       angular.element('#modal-station-register').modal('hide');
@@ -192,5 +238,26 @@
 
       angular.element('#modal-station-register').modal('hide');
     };
+
+    vm.placeSelected = function (place) {
+      if (place.location) {
+        vm.mapControls.zoomToLocation(place.location);
+        updateCoords(place.location);
+      }
+
+    };
+
+    vm.mapClick = function(e){
+      updateCoords(e.latlng);
+    };
+
+    vm.markerDragEnd = function(location){
+      updateCoords(location);
+    };
+
+    function updateCoords(coords) {
+      $scope.station.latitude = coords.lat;
+      $scope.station.longitude = coords.lng;
+    }
   }
 })();

@@ -28,10 +28,9 @@
                         <h4>Oyster Restoration Stations</h4>
                     </div>
                     <div class="panel-body">
-                      <leaflet-map map-controls="" map-click-event="" marker-drag-end-event=""
-                                   can-move-marker="" show-marker="" add-points="[{lat:40.668514 , lng:-74.077721,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'green'}},
-{lat:40.600774 , lng:-74.056435,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'red'}},
-{lat:40.545488 , lng:-73.949318,icon: {icon: 'glyphicon-map-marker',  prefix: 'glyphicon',markerColor: 'green'}}]"></leaflet-map>
+                      <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick"
+                      marker-drag-end-event="vm.markerDragEnd" can-move-marker="vm.canMoveMarker"
+                      show-marker="vm.showMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
                 <div class="row" ng-show="vm.isTeamLead">
@@ -119,7 +118,7 @@
                     <div class="panel-body">
                         <table class="table table-hover">
                             <tr class="text-muted" ng-repeat="expedition in vm.expeditions"
-                             ui-sref="expeditions.protocols({ expeditionId: expedition._id })">
+                             ui-sref="{{vm.expeditionLink(expedition)}}">
                                 <td ng-show="vm.isUpcoming(expedition)"><i class="glyphicon glyphicon-unchecked"></i></td>
                                 <td ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
                                 ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)">
@@ -170,5 +169,5 @@
 
 <!-- MODALS -->
 <form-restoration-station-modal station="vm.station" teams="vm.teams" save-function="vm.saveFormRestorationStation"
-cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
+remove-function="vm.removeFormRestorationStation" cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
 <!--END MODALS-->

@@ -11,12 +11,16 @@
           station: '=',
           teams: '=',
           saveFunction: '=',
+          removeFunction: '=',
           cancelFunction: '='
         },
         controller: 'RestorationStationsController',
         replace: true,
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function () {
+            scope.form.restorationStationForm.$setSubmitted(false);
+            scope.form.restorationStationForm.$setPristine();
+          });
         }
       };
     });
