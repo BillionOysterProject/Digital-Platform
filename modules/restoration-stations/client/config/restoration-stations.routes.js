@@ -17,7 +17,7 @@
       .state('restoration-stations.dashboard', {
         url: '',
         templateUrl: 'modules/restoration-stations/client/views/dashboard.client.view.html',
-        controller: 'RestorationStationsController',
+        controller: 'RestorationStationsDashboardController',
         controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'partner', 'admin'],
@@ -27,7 +27,7 @@
       .state('restoration-stations.list', {
         url: '/stations',
         templateUrl: 'modules/restoration-stations/client/views/list-stations.client.view.html',
-        controller: 'RestorationStationsController',
+        controller: 'RestorationStationsDashboardController',
         controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'partner', 'admin'],

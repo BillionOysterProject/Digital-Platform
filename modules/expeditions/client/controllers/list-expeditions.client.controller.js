@@ -29,7 +29,10 @@
     });
 
     vm.expeditionLink = function(expedition) {
-      return (vm.isTeamLead) ? 'expeditions.edit({ expeditionId: expedition._id })' : 'expeditions.protocols({ expeditionId: expedition._id })';
+      return (vm.isTeamLead && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.edit({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
     };
 
     vm.isUpcoming = function(expedition) {

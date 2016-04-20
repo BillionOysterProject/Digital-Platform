@@ -13,7 +13,6 @@
     var vm = this;
 
     vm.expedition = expedition;
-    console.log('expedition', expedition);
     vm.teamId = '';
     vm.authentication = Authentication;
     vm.error = null;
@@ -28,7 +27,6 @@
 
     if (vm.expedition._id) {
       vm.teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
-      console.log('vm.expedition.team', vm.expedition.team);
 
       vm.expedition.monitoringStartDate = moment(vm.expedition.monitoringStartDate).toDate();
       vm.expedition.monitoringEndDate = moment(vm.expedition.monitoringEndDate).toDate();
@@ -68,7 +66,7 @@
       });
 
       RestorationStationsService.query({
-        teamId: vm.teamId
+        schoolOrgId: vm.team.schoolOrg._id
       }, function(data) {
         vm.stations = data;
         if (!vm.expedition.station || vm.expedition.station === undefined) {
@@ -109,9 +107,6 @@
         return t._id === vm.teamId;
       });
       if (index > -1) vm.expedition.team = vm.teams[index];
-
-      console.log('expedition start', vm.expedition.monitoringStartDate);
-      console.log('expedition end', vm.expedition.monitoringEndDate);
 
       // TODO: move create/update logic to service
       if (vm.expedition._id) {

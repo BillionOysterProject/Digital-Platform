@@ -14,7 +14,8 @@
           mapControls:'=',
           mapClickEvent:'&',
           markerDragEndEvent:'&',
-          showMarker:'='
+          showMarker:'=',
+          addPoints:'='
           
         },
         
