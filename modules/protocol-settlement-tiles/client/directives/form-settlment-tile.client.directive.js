@@ -17,6 +17,7 @@
         replace: true,
         link: function (scope, element, attrs) {
           element.bind('show.bs.modal', function () {
+            scope.form.settlementTileForm.$setSubmitted(false);
             scope.form.settlementTileForm.$setPristine();
           });
 

@@ -12,7 +12,7 @@
     var mapSelectMap;
     var mapMarker = null;
     var addPointsGroup = new L.featureGroup();
-    
+
 
     var settings = {
       defaults:{
@@ -40,7 +40,7 @@
       if(mapMarker){
         mapMarker.setLatLng(coords);
       }
-      
+
     };
 
     var zoomToLocation = function(location){
@@ -64,7 +64,7 @@
     activate();
 
     function activate(){
-      
+
       if(vm.mapControls){
         vm.mapControls.resizeMap = resizeMap;
         vm.mapControls.moveMarker = moveMarker;
@@ -73,7 +73,7 @@
         vm.mapControls.zoomOut = zoomOut;
         vm.mapControls.zoomIn = zoomIn;
       }
-      
+
       $timeout(function() {
         //timeout needed to wait for html to bind to controller so the id can be set dynamically
         mapSelectMap = L.map($scope.mapUniqueId).setView(settings.defaults.center, settings.defaults.zoom);
@@ -93,7 +93,7 @@
               vm.mapClickEvent()(e);
             }
           });
-          
+
         });
 
         if(vm.showMarker){
@@ -117,7 +117,7 @@
           }
         }
 
-        
+
       });
 
       $scope.$on('$destroy', function () {
@@ -125,16 +125,24 @@
         if(mapMarker){
           mapMarker.off('dragend');
         }
-        
+
         angular.element(document.querySelector('#'+vm.modalId)).unbind('shown.bs.modal');
       });
-      
+
+      $scope.$watch('vm.addPoints', function(oldValue, newValue) {
+        if(vm.addPoints && angular.isArray(vm.addPoints)){
+          if(vm.addPoints.length > 0){
+            loadPoints();
+          }
+        }
+      });
+
     }
 
     function loadPoints(){
 
       addPointsGroup.clearLayers();
-      
+
       for (var i = 0; i < vm.addPoints.length; i++) {
         var marker = new L.marker([vm.addPoints[i].lat,vm.addPoints[i].lng],{ icon:L.AwesomeMarkers.icon(vm.addPoints[i].icon) });
 
@@ -145,8 +153,8 @@
       mapSelectMap.addLayer(addPointsGroup);
       mapSelectMap.fitBounds(addPointsGroup.getBounds());
       zoomOut();
-      
-      
+
+
     }
   }
 })();
