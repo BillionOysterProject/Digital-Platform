@@ -1,6 +1,8 @@
 Hi <%= FirstName %>,
 
-Congrats, your request to be a Team Lead was approved! Your Billion Oyster Project account is now active. You can login at <%= LinkLogin %>.
+Congrats, your organization <%= OrgName %> was approved! Your Billion Oyster Project account is now active.
+
+Visit <%= LinkLogin %> to login.
 
 We're glad to have you!
 The Billion Oyster Project
