@@ -20,7 +20,7 @@ angular.module('users').controller('ClaimUserController', ['$scope', '$statePara
         return false;
       }
 
-      $http.post('/api/auth/reset/' + $stateParams.token, {
+      $http.post('/api/auth/claim-user/' + $stateParams.token, {
         passwordDetails: $scope.passwordDetails,
         username: $scope.username
       }).success(function (response) {

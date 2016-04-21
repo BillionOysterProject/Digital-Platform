@@ -314,7 +314,8 @@ var sendInviteEmail = function(user, host, teamLeadName, teamName, token, succes
     FirstName: user.firstName,
     TeamLeadName: teamLeadName,
     TeamName: teamName,
-    Url: httpTransport + host + '/api/auth/claim-user/' + token
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   }, function(info) {
     successCallback();
   }, function(errorMessage) {

@@ -106,7 +106,7 @@ exports.validateNewUserToken = function (req, res) {
 /**
  * New User POST from email token
  */
-exports.newUser = function (req, res, next) {
+exports.newUser = function (req, res) {
   // Init Variables
   var passwordDetails = req.body.passwordDetails;
   var username = req.body.username;
@@ -121,7 +121,7 @@ exports.newUser = function (req, res, next) {
         }
       }, function (err, user) {
         if (!err && user) {
-          if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
+          if (passwordDetails.password === passwordDetails.verifyPassword) {
             user.password = passwordDetails.newPassword;
             user.username = username;
             user.resetPasswordToken = undefined;
@@ -164,7 +164,9 @@ exports.newUser = function (req, res, next) {
     },
   ], function (err) {
     if (err) {
-      return next(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     }
   });
 };

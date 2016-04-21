@@ -21,17 +21,8 @@ var toAddresses = function(to) {
 };
 
 var runTemplate = function(string, data) {
-  console.log('data', data);
   var compiled = _.template(string);
   return compiled(data);
-
-  // for (var key in data) {
-  //   console.log('key', key);
-  //   console.log('value', data[key]);
-  //
-  //   string = _.replace(string, /{{key}}/g, data[key]);
-  // }
-  // return string;
 };
 
 
@@ -63,17 +54,13 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
 
     var textContent = fs.readFileSync(
       path.resolve('./modules/core/server/templates/email-text/' + bodyTemplate + '.txt'), 'binary');
-    //console.log('textContent', textContent);
 
     var htmlContent = fs.readFileSync(
       path.resolve('./modules/core/server/templates/email-html/' + bodyTemplate + '.html'), 'binary');
-    console.log('htmlContent', htmlContent);
 
     var bodyText = runTemplate(textContent, data);
-    //console.log('bodyText', bodyText);
     var bodyHtml = runTemplate(htmlContent, data);
-    console.log('bodyHtml', bodyHtml);
-
+    
     transporter.sendMail({
       from: from,
       to: to,

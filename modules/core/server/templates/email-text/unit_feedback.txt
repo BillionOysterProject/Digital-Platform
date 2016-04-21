@@ -1,8 +1,12 @@
 Hi <%= FirstName %>,
 
-Congrats, your request to be a Team Lead was approved! Your Billion Oyster Project account is now active. You can login at <%= LinkLogin %>.
+<%= UnitFeedbackName %> just gave you feedback on your unit <%= UnitName %>:
 
-We're glad to have you!
+<%= UnitFeedbackNote %>
+
+Visit your unit at <%= LinkUnit %> to edit and republish at any time.
+
+Thanks!
 The Billion Oyster Project
 
 You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

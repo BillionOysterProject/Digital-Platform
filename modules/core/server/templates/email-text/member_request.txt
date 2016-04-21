@@ -1,0 +1,8 @@
+Hi <%= FirstName %>,
+
+<%= TeamMemberName %> has just requested to join your team <%= TeamName %>. You can view the request at any time in your Member settings or by visiting <%= LinkMemberRequest %>.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

@@ -2,8 +2,7 @@ Hi <%= FirstName %>,
 
 Welcome, you've been invited by <%= TeamLeadName %> to join the team <%= TeamName %> at the Billion Oyster Project.
 
-
-Join team
+Visit <%= LinkCreateAccount %> to join the team.
 
 So glad to have you join!
 
