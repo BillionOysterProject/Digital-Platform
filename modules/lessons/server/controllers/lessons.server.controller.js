@@ -142,7 +142,6 @@ exports.publish = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //TODO: changed to actual user email address
         email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
         'Your lesson has been approved and is now visible on the lessons page.',
         '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
