@@ -54,7 +54,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
           return (teamLeadIndex > -1) ? true : false;
         };
 
-        var dashboard = checkRole('team lead') ? 'curriculum.overview' : 'restoration-stations.dashboard';
+        var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
+          'curriculum.overview' : 'restoration-stations.dashboard';
 
         //$state.go($state.previous.state.name || 'home', $state.previous.params);
         $state.go(dashboard);
@@ -85,7 +86,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     });
 
     $scope.schoolOrgFieldSelected = function(schoolOrgId) {
-      if (schoolOrgId && $scope.credentials.userrole === 'team member') {
+      if (schoolOrgId && $scope.credentials.userrole === 'team member pending') {
         $scope.schoolOrgSelected = true;
         $http.get('/api/school-orgs/' + schoolOrgId + '/team-leads').success(function (response) {
           console.log('teamLeads', response);

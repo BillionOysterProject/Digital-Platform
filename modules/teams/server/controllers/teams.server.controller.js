@@ -7,8 +7,12 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  _ = require('lodash'),
+  async = require('async'),
+  crypto = require('crypto');
 
 /**
  * Create a team
@@ -274,20 +278,47 @@ exports.memberByID = function (req, res, next, id) {
  * Team Member methods
  */
 var createMemberInternal = function(userJSON, successCallback, errorCallback) {
-  var user = new User(userJSON);
-  user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
-  user.roles = ['team member', 'user'];
-  user.username = user.email.substring(0, user.email.indexOf('@'));
-  user.pending = true;
-
-  // Then save the user
-  user.save(function (err) {
-    if (err) {
-      errorCallback(errorHandler.getErrorMessage(err));
-    } else {
+  User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
+    if (userErr) {
+      errorCallback(errorHandler.getErrorMessage(userErr));
+    } else if (user) {
       successCallback(user);
+    } else {
+      crypto.randomBytes(20, function (err, buffer) {
+        var token = buffer.toString('hex');
+        //create user
+        user = new User(userJSON);
+        user.provider = 'local';
+        user.displayName = user.firstName + ' ' + user.lastName;
+        user.roles = ['team member pending', 'user'];
+        user.username = user.email.substring(0, user.email.indexOf('@'));
+        user.pending = true;
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+
+        // Then save the user
+        user.save(function (err) {
+          if (err) errorCallback(errorHandler.getErrorMessage(err));
+          successCallback(user, token);
+        });
+      });
     }
+  });
+};
+
+var sendInviteEmail = function(user, host, teamLeadName, teamName, token, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'member_invite', {
+    FirstName: user.firstName,
+    TeamLeadName: teamLeadName,
+    TeamName: teamName,
+    Url: httpTransport + host + '/api/auth/claim-user/' + token
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
   });
 };
 
@@ -295,7 +326,7 @@ exports.createMember = function (req, res) {
   delete req.body.roles;
 
   createMemberInternal(req.body,
-    function(member) {
+    function(member, token) {
       if (req.body.newTeamName) {
         var teamJSON = {
           name: req.body.newTeamName,
@@ -304,7 +335,12 @@ exports.createMember = function (req, res) {
         };
         createInternal(teamJSON, req.user,
           function(team) {
-            res.json(member);
+            if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+              function() {
+                res.json(member);
+              }, function() {
+                res.json(member);
+              });
           }, function(err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
@@ -325,7 +361,12 @@ exports.createMember = function (req, res) {
                   message: 'Error adding member to team'
                 });
               } else {
-                res.json(member);
+                if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                  function() {
+                    res.json(member);
+                  }, function() {
+                    res.json(member);
+                  });
               }
             });
           }
@@ -478,8 +519,9 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
 exports.createMemberCsv = function (req, res) {
   convertCsvMember(req.body.member,
     function(memberJSON) {
+      var teamName = (req.body.newTeamName) ? req.body.newTeamName : req.body.team.name;
       createMemberInternal(memberJSON,
-        function(member) {
+        function(member, token) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
               if (teamByNameErr) {
@@ -495,7 +537,12 @@ exports.createMemberCsv = function (req, res) {
                       message: 'Error adding member to team'
                     });
                   } else {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, teamByName.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }
                 });
               } else {
@@ -507,7 +554,12 @@ exports.createMemberCsv = function (req, res) {
 
                 createInternal(teamJSON, req.user,
                   function(team) {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }, function(err) {
                     return res.status(400).send({
                       message: errorHandler.getErrorMessage(err)
@@ -530,7 +582,12 @@ exports.createMemberCsv = function (req, res) {
                       message: 'Error adding member to team'
                     });
                   } else {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }
                 });
               }

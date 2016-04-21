@@ -4,10 +4,13 @@
  * Module dependencies
  */
 var path = require('path'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
   User = mongoose.model('User'),
+  async = require('async'),
   TeamRequest = mongoose.model('TeamRequest');
 
 // URLs for which user can't be redirected on signin
@@ -51,7 +54,7 @@ exports.signup = function (req, res) {
       };
 
       // Add team request
-      if (req.body.userrole === 'team member') {
+      if (req.body.userrole === 'team member pending') {
         var request = new TeamRequest({
           requester: user,
           teamLead: req.body.teamLead
@@ -63,12 +66,105 @@ exports.signup = function (req, res) {
               message: errorHandler.getErrorMessage(saveErr)
             });
           } else {
-            loginNewUser();
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+            email.sendEmailTemplate(user.email, user.displayName + ' has just requested to join your team ' + req.body.team.name,
+            'member_request', {
+              FirstName: req.body.teamLead.firstName,
+              TeamMemberName: user.displayName,
+              TeamName: req.body.team.name,
+              Url: httpTransport + req.headers.host + '/settings/members'
+            }, function(info) {
+              loginNewUser();
+            }, function(errorMessage) {
+              loginNewUser();
+            });
           }
         });
       } else {
         loginNewUser();
       }
+    }
+  });
+};
+
+exports.validateNewUserToken = function (req, res) {
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: {
+      $gt: Date.now()
+    }
+  }, function (err, user) {
+    if (!user) {
+      return res.redirect('/claim-user/invalid');
+    }
+
+    res.redirect('/claim-user/' + req.params.token);
+  });
+};
+
+/**
+ * New User POST from email token
+ */
+exports.newUser = function (req, res, next) {
+  // Init Variables
+  var passwordDetails = req.body.passwordDetails;
+  var username = req.body.username;
+
+  async.waterfall([
+
+    function (done) {
+      User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {
+          $gt: Date.now()
+        }
+      }, function (err, user) {
+        if (!err && user) {
+          if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
+            user.password = passwordDetails.newPassword;
+            user.username = username;
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+            user.pending = false;
+            user.roles = ['user', 'team member'];
+
+            user.save(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                req.login(user, function (err) {
+                  if (err) {
+                    res.status(400).send(err);
+                  } else {
+                    // Remove sensitive data before return authenticated user
+                    user.password = undefined;
+                    user.salt = undefined;
+
+                    res.json(user);
+
+                    done(err);
+                  }
+                });
+              }
+            });
+          } else {
+            return res.status(400).send({
+              message: 'Passwords do not match'
+            });
+          }
+        } else {
+          return res.status(400).send({
+            message: 'Password reset token is invalid or has expired.'
+          });
+        }
+      });
+    },
+  ], function (err) {
+    if (err) {
+      return next(err);
     }
   });
 };

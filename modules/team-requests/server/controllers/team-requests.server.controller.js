@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   TeamRequest = mongoose.model('TeamRequest'),
   Team = mongoose.model('Team'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -138,7 +139,17 @@ exports.approve = function (req, res) {
                 message: errorHandler.getErrorMessage(delErr)
               });
             } else {
-              res.json(teamRequest);
+              User.findOne({ '_id': teamRequest.requester }).exec(function (err, user) {
+                if (user) {
+                  user.roles = ['user', 'team member'];
+
+                  user.save(function (err) {
+                    res.json(teamRequest);
+                  });
+                } else {
+                  res.json(teamRequest);
+                }
+              });
             }
           });
         }
