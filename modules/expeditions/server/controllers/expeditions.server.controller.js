@@ -12,6 +12,7 @@ var path = require('path'),
   ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   ExpeditionActivity = mongoose.model('ExpeditionActivity'),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   moment = require('moment'),
   _ = require('lodash');
