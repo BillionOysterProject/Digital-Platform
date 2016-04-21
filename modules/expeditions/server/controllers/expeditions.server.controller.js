@@ -195,8 +195,15 @@ exports.submit = function (req, res) {
           updateActivity(function() {
             Team.findById(expedition.team).populate('teamLead', 'email displayName profileImageURL').
             exec(function(err, team) {
-              if (team) {
-                //email.sendEmail(team.teamLead.email, '')
+              if (team) {//TODO
+                email.sendEmailTemplate(team.teamLead.email, '', '', 
+                function(info) {
+                  res.json(expedition);
+                }, function(errorMessage) {
+                  return res.status(400).send({
+                    message: errorMessage
+                  });
+                });
               } else {
                 res.json(expedition);
               }
