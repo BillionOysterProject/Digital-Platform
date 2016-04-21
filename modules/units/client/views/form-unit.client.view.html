@@ -23,8 +23,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="color" class="control-label required">Color *</label>
-                                        <small>Enter a hex code</small>
-                                        <input type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required/>
+                                        <input colorpicker colorpicker-size="200" type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
+                                        <span class="help-block">Hint: Pick a dark color so it can be used as a background for white text</span>
                                         <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                                             <p class="help-block error-text" ng-message="required">Color is required.</p>
                                         </div>
@@ -33,13 +33,13 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="icon" class="control-label required">Icon *</label>
-                                        <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons" target="_blank">glyphicon</a> name</small>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-                                                <!-- TODO: Update with their inputed selection -->
-                                            </span>
-                                            <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" id="icon" ng-model="vm.unit.icon" required/>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <ui-iconpicker groups="font-awesome" value="{{vm.unit.icon}}" ng-model="vm.unit.icon"></ui-iconpicker>
+                                                </div>
+                                                <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
+                                            </div>
                                             <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
                                                 <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                             </div>

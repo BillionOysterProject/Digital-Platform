@@ -12,6 +12,8 @@ module.exports = {
         'public/lib/select2/select2-bootstrap.css',
         'public/lib/leaflet/dist/leaflet.css',
         'public/lib/angular-chart.js/dist/angular-chart.css',
+        'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+        'public/lib/ui-iconpicker/dist/styles/ui-iconpicker.min.css',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
       ],
       js: [
@@ -42,6 +44,9 @@ module.exports = {
         'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
         'public/lib/ng-lodash/build/ng-lodash.min.js',
+        'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
+        //'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js',
+        'modules/core/client/css/js/ui-iconpicker.js', // customized version of plugin to make it work
         'public/lib/moment/min/moment.min.js',
         'public/lib/angular-moment/angular-moment.min.js',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js'
