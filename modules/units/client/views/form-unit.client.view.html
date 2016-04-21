@@ -33,16 +33,18 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="icon" class="control-label required">Icon *</label>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-btn">
-                                                    <ui-iconpicker groups="font-awesome" value="{{vm.unit.icon}}" ng-model="vm.unit.icon"></ui-iconpicker>
-                                                </div>
-                                                <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
+                                        <div role="iconpicker"></div>
+                                        <!--OTHER IMPLEMENTATION: http://victor-valencia.github.io/bootstrap-iconpicker/ 
+                                        <a class="btn btn-default" role="iconpicker" data-iconset="fontawesome" data-icon="{{vm.unit.icon}}" name="icon" id="icon"></a>-->
+                                        
+                                        <!--OTHER PLUGIN: <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <ui-iconpicker groups="font-awesome" value="{{vm.unit.icon}}" ng-model="vm.unit.icon"></ui-iconpicker>
                                             </div>
-                                            <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
-                                                <p class="help-block error-text" ng-message="required">Icon is required.</p>
-                                            </div>
+                                            <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
+                                        </div>-->
+                                        <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
+                                            <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                         </div>
                                     </div>
                                 </div>

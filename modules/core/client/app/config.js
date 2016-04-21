@@ -22,7 +22,6 @@ var ApplicationConfiguration = (function () {
     'chart.js',
     'ngLodash',
     'colorpicker.module',
-    'ui-iconpicker',
     'angularMoment'];
 
   // Add a new vertical module

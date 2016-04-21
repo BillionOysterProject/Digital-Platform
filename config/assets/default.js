@@ -13,7 +13,7 @@ module.exports = {
         'public/lib/leaflet/dist/leaflet.css',
         'public/lib/angular-chart.js/dist/angular-chart.css',
         'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
-        'public/lib/ui-iconpicker/dist/styles/ui-iconpicker.min.css',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/css/bootstrap-iconpicker.min.css',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
       ],
       js: [
@@ -22,6 +22,8 @@ module.exports = {
         'public/lib/Chart.js/Chart.js',
         'public/lib/isotope/dist/isotope.pkgd.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/iconset/iconset-fontawesome-4.2.0.min.js',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js',
         'public/lib/quill/dist/quill.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',
@@ -45,8 +47,6 @@ module.exports = {
         'public/lib/angular-chart.js/dist/angular-chart.js',
         'public/lib/ng-lodash/build/ng-lodash.min.js',
         'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
-        //'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js',
-        'modules/core/client/css/js/ui-iconpicker.js', // customized version of plugin to make it work
         'public/lib/moment/min/moment.min.js',
         'public/lib/angular-moment/angular-moment.min.js',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js'

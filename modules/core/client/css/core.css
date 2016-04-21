@@ -639,21 +639,6 @@ h6, .h6 {
 
 /* ICON PICKER */
 
-.ui-iconpicker > ul.dropdown-menu {
-    max-height: none !important;
-    padding: 5px;
-    width: 47em !important;
-    overflow-y: auto;
-}
-
-    @media (max-width: 992px) {
-        .ui-iconpicker > ul.dropdown-menu {
-            right: auto;
-            left: 0;
-            width: 20em !important;
-        }
-    }
-
 
 /* DRAG AND DROP */
 
