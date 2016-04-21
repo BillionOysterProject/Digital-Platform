@@ -6,8 +6,20 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
+  Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
+
+var getTeam = function(teamId, successCallback, errorCallback) {
+  // Get School/Organization from team
+  Team.findById(teamId).exec(function (err, team) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(team);
+    }
+  });
+};
 
 /**
  * Create a restoration station
@@ -15,14 +27,22 @@ var path = require('path'),
 exports.create = function (req, res) {
   var station = new RestorationStation(req.body);
 
-  station.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(station);
-    }
+  getTeam(req.body.team, function(team) {
+    station.schoolOrg = team.schoolOrg;
+
+    station.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(station);
+      }
+    });
+  }, function(errorMessage) {
+    return res.status(400).send({
+      message: errorMessage
+    });
   });
 };
 
@@ -45,14 +65,22 @@ exports.update = function (req, res) {
   if (station) {
     station = _.extend(station, req.body);
 
-    station.save(function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(station);
-      }
+    getTeam(req.body.team, function(team) {
+      station.schoolOrg = team.schoolOrg;
+
+      station.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(station);
+        }
+      });
+    }, function(errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
     });
   }
 };
@@ -83,6 +111,9 @@ exports.list = function (req, res) {
 
   if (req.query.teamId) {
     and.push({ 'team': req.query.teamId });
+  }
+  if (req.query.schoolOrgId) {
+    and.push({ 'schoolOrg': req.query.schoolOrgId });
   }
 
   if (and.length === 1) {

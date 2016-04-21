@@ -13,7 +13,8 @@ module.exports = {
         'public/lib/leaflet/dist/leaflet.css',
         'public/lib/angular-chart.js/dist/angular-chart.css',
         'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
-        'public/lib/ui-iconpicker/dist/styles/ui-iconpicker.min.css'
+        'public/lib/ui-iconpicker/dist/styles/ui-iconpicker.min.css',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -47,7 +48,8 @@ module.exports = {
         //'public/lib/ui-iconpicker/dist/scripts/ui-iconpicker.js',
         'modules/core/client/css/js/ui-iconpicker.js', // customized version of plugin to make it work
         'public/lib/moment/min/moment.min.js',
-        'public/lib/angular-moment/angular-moment.min.js'
+        'public/lib/angular-moment/angular-moment.min.js',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
