@@ -39,6 +39,7 @@
                                         <button class="btn btn-default form-control" id="iconpicker" name="icon" role="iconpicker" data-iconset="fontawesome" data-icon="{{vm.unit.icon}}" data-rows="10" data-cols="10" ng-click="vm.iconChanged(data-icon)" required></button>-->
                                         <!--TODO: Remove editable input after iconpicker is wired up-->
                                         <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
+                                        <span class="help-block">Visit <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">the icon list</a> to select an icon. Syntax should be <b>fa fa-iconName</b></span>
                                         <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
                                             <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                         </div>
