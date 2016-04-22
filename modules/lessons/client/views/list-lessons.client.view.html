@@ -27,7 +27,9 @@
                       <li role="separator" class="divider"></li>
 
                       <li ng-repeat="subject in vm.subjectAreas">
-                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.subject}}</a>
+                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">
+                            <i class="fa fa-circle" style="color:{{subject.color}}"></i> {{subject.subject}}
+                        </a>
                       </li>
                     </ul>
                 </li>
@@ -49,7 +51,7 @@
                       <li><a ok-sel="*" ng-click="vm.unitSelected()">Show all</a></li>
                       <li ng-repeat="unit in vm.units">
                         <a ok-sel=".{{unit._id}}" ng-click="vm.unitSelected(unit)">
-                          <i class="fa fa-circle text-primary"></i> {{unit.title}}
+                          <i class="fa fa-circle" style="color:{{unit.color}}"></i> {{unit.title}}
                         </a>
                       </li>
                     </ul>
