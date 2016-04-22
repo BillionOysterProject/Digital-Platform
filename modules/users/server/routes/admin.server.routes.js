@@ -14,6 +14,14 @@ module.exports = function (app) {
   app.route('/api/users')
     .get(adminPolicy.isAllowed, admin.list);
 
+  // Team Lead approve
+  app.route('/api/users/:userId/approve')
+    .post(adminPolicy.isAllowed, admin.approve);
+
+  // Team Lead deny
+  app.route('/api/users/:userId/deny')
+    .post(adminPolicy.isAllowed, admin.deny);
+
   // Single user routes
   app.route('/api/users/:userId')
     .get(adminPolicy.isAllowed, admin.read)

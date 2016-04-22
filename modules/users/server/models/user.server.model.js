@@ -115,6 +115,10 @@ var UserSchema = new Schema({
   resetPasswordExpires: {
     type: Date
   },
+  schoolOrg: {
+    type: Schema.ObjectId,
+    ref: 'SchoolOrg'
+  },
   pending: {
     type: Boolean,
     default: false

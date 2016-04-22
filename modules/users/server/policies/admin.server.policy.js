@@ -18,6 +18,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users',
       permissions: '*'
     }, {
+      resources: '/api/users/:userId/approve',
+      permissions: '*'
+    }, {
+      resources: '/api/users/:userId/deny',
+      permissions: '*'
+    }, {
       resources: '/api/users/:userId',
       permissions: '*'
     }]
