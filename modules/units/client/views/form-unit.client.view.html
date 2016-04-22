@@ -23,8 +23,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="color" class="control-label required">Color *</label>
-                                        <small>Enter a hex code</small>
-                                        <input type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required/>
+                                        <input colorpicker colorpicker-size="200" type="text" class="form-control" placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
+                                        <span class="help-block">Hint: Pick a dark color so it can be used as a background for white text</span>
                                         <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                                             <p class="help-block error-text" ng-message="required">Color is required.</p>
                                         </div>
@@ -33,16 +33,15 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="icon" class="control-label required">Icon *</label>
-                                        <small>Enter a <a href="http://getbootstrap.com/components/#glyphicons" target="_blank">glyphicon</a> name</small>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-                                                <!-- TODO: Update with their inputed selection -->
-                                            </span>
-                                            <input type="text" class="form-control" placeholder="glyphicon-grain" name="icon" id="icon" ng-model="vm.unit.icon" required/>
-                                            <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
-                                                <p class="help-block error-text" ng-message="required">Icon is required.</p>
-                                            </div>
+                                        <!--TODO: Needs wired up to data, fix button click going to Unit submit bug :
+                                        IMPORTANT: Database should be "fa fa-iconname" syntax (with the extra fa class) so that we can easily switch out iconsets/add icons/etc later and that's no longer saved in every single HTML view of the icon
+
+                                        <button class="btn btn-default form-control" id="iconpicker" name="icon" role="iconpicker" data-iconset="fontawesome" data-icon="{{vm.unit.icon}}" data-rows="10" data-cols="10" ng-click="vm.iconChanged(data-icon)" required></button>-->
+                                        <!--TODO: Remove editable input after iconpicker is wired up-->
+                                        <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
+                                        <span class="help-block">Visit <a href="https://fortawesome.github.io/Font-Awesome/icons/" target="_blank">the icon list</a> to select an icon. Syntax should be <b>fa fa-iconName</b></span>
+                                        <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
+                                            <p class="help-block error-text" ng-message="required">Icon is required.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -210,13 +209,6 @@
         </form>
     </section>
 </section>
-
-
-
-
-
-
-
 
 <!-- MODALS -->
 <delete-unit-modal callback-function="vm.confirmDeleteUnit"></delete-unit-modal>
