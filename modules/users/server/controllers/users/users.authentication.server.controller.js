@@ -66,20 +66,37 @@ exports.signup = function (req, res) {
               message: errorHandler.getErrorMessage(saveErr)
             });
           } else {
-            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+            User.findById(req.body.teamLead).exec(function(err, teamLead) {
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-            email.sendEmailTemplate(user.email, user.displayName + ' has just requested to join your team ' + req.body.team.name,
-            'member_request', {
-              FirstName: req.body.teamLead.firstName,
-              TeamMemberName: user.displayName,
-              TeamName: req.body.team.name,
-              Url: httpTransport + req.headers.host + '/settings/members'
-            }, function(info) {
-              loginNewUser();
-            }, function(errorMessage) {
-              loginNewUser();
+              email.sendEmailTemplate(teamLead.email, user.displayName + ' has just requested to join your team ',
+              'member_request', {
+                FirstName: teamLead.firstName,
+                TeamMemberName: user.displayName,
+                LinkMemberRequest: httpTransport + req.headers.host + '/settings/members',
+                LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+              }, function(info) {
+                loginNewUser();
+              }, function(errorMessage) {
+                loginNewUser();
+              });
             });
           }
+        });
+      } else if (req.body.userrole === 'team lead pending') {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
+          FirstName: user.firstName,
+          TeamMemberName: user.displayName,
+          LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        }, function(info) {
+          loginNewUser();
+        }, function(errorMessage) {
+          loginNewUser();
         });
       } else {
         loginNewUser();

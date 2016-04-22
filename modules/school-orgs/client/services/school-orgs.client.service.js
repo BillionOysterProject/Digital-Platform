@@ -3,11 +3,11 @@
 
   angular
     .module('school-orgs.services')
-    .factory('SchooleOrganizationsService', SchooleOrganizationsService);
+    .factory('SchoolOrganizationsService', SchoolOrganizationsService);
 
-  SchooleOrganizationsService.$inject = ['$resource'];
+  SchoolOrganizationsService.$inject = ['$resource'];
 
-  function SchooleOrganizationsService($resource) {
+  function SchoolOrganizationsService($resource) {
     return $resource('api/school-orgs/:schoolOrgId', {
       schoolOrgId: '@_id'
     }, {

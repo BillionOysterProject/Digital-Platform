@@ -1,6 +1,6 @@
 Hi <%= FirstName %>,
 
-<%= TeamMemberName %> has just requested to join your team <%= TeamName %>. You can view the request at any time in your Member settings or by visiting <%= LinkMemberRequest %>.
+<%= TeamMemberName %> has just requested to join your team. You can view the request at any time in your Member settings or by visiting <%= LinkMemberRequest %>.
 
 Thanks!
 The Billion Oyster Project

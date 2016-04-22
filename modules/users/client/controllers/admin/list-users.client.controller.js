@@ -1,11 +1,45 @@
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin',
-  function ($scope, $filter, Admin) {
-    Admin.query(function (data) {
-      $scope.users = data;
-      $scope.buildPager();
-    });
+angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin', 'SchoolOrganizationsService',
+  function ($scope, $filter, Admin, SchoolOrganizationsService) {
+    $scope.filter = {
+      organizationId: '',
+      role: '',
+      searchString: '',
+      sort: '',
+      limit: 20,
+      page: 1
+    };
+
+    $scope.organizations = SchoolOrganizationsService.query();
+
+    $scope.fieldChanged = function(selection) {
+      $scope.findUsers();
+    };
+
+    $scope.searchChange = function($event) {
+      if ($scope.filter.searchString.length >= 3 || $scope.filter.searchString.length === 0) {
+        $scope.filter.page = 1;
+        $scope.findUsers();
+        $scope.figureOutItemsToDisplay();
+      }
+    };
+
+    $scope.findUsers = function() {
+      Admin.query({
+        organizationId: $scope.filter.organizationId,
+        role: $scope.filter.role,
+        searchString: $scope.filter.searchString,
+        sort: $scope.filter.sort,
+        limit: $scope.filter.limit,
+        page: $scope.filter.page,
+        showTeams: true
+      }, function (data) {
+        $scope.users = data;
+        $scope.buildPager();
+      });
+    };
+    $scope.findUsers();
 
     $scope.buildPager = function () {
       $scope.pagedItems = [];

@@ -1,19 +1,20 @@
 <div class="row">
     <div class="col-md-2 col-sm-4">
         <div class="form-group">
-            <select class="form-control"><!--TODO: Wire up filters-->
+            <select class="form-control" name="role" id="role" ng-model="filter.role"
+            ng-change="fieldChanged()">
                 <option value="">Show all roles</option>
-                <option value="">Team Leads</option>
-                <option value="">Admin</option>
+                <option value="team lead">Team Lead</option>
+                <option value="admin">Admin</option>
             </select>
         </div>
     </div>
     <div class="col-md-3 col-sm-4">
         <div class="form-group">
-            <select class="form-control"><!--TODO: Wire up filters-->
+            <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
+              ng-change="fieldChanged()">
                 <option value="">Show all organizations</option>
-                <option value="">Organization 1</option>
-                <option value="">Organization 2</option>
+                <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
             </select>
         </div>
     </div>
@@ -23,13 +24,14 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
                 </span>
-                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-model="filter.searchString"
+                ng-change="searchChange()" />
             </div>
         </div>
     </div>
     <div class="col-md-4 text-right">
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a>
-        <a class="btn btn-primary">Import team leads</a><!-- TODO: This should open modal duplicated from "Import Team Members" but with different text-->
+        <!-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a> TODO-->
+        <!-- <a class="btn btn-primary">Import team leads</a> TODO: This should open modal duplicated from "Import Team Members" but with different text-->
     </div>
 </div>
 <div class="row">
@@ -40,11 +42,12 @@
 <div class="row">
     <div class="col-md-12">
         <table class="table table-verticalalign table-responsive">
-            <tr ng-repeat="user in pagedItems"><!--TODO: Only show Team Leads and Admin -- no Team Members -->
-                <td><img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png"></td><!--TODO: Pull in user's image-->
+            <tr ng-repeat="user in pagedItems">
+                <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
                 <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
-                <td>Organization</td>
+                <td>{{user.schoolOrg}}</td>
                 <td>Role</td>
+                <td></td>
                 <td><a data-toggle="modal" data-target="#modal-team">Team</a>, <a data-toggle="modal" data-target="#modal-team">Team 2</a></td>
                 <td class="text-right">
                     <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-editadd">
@@ -56,7 +59,7 @@
                 </td>
             </tr>
         </table>
-        
+
         <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
     </div>
 </div>
@@ -251,7 +254,7 @@
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination><!--TODO: Change to only 7 per page -->
                     </div>
                 </div>

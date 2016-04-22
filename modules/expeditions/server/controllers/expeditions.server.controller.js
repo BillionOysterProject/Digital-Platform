@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  config = require(path.resolve('./config/config')),
   Expedition = mongoose.model('Expedition'),
   ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
@@ -195,8 +196,17 @@ exports.submit = function (req, res) {
           updateActivity(function() {
             Team.findById(expedition.team).populate('teamLead', 'email displayName profileImageURL').
             exec(function(err, team) {
-              if (team) {//TODO
-                email.sendEmailTemplate(team.teamLead.email, '', '', 
+              if (team) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+                email.sendEmailTemplate(team.teamLead.email, 'Your team has submitted all of the protocols for the expedition ' + expedition.name,
+                'expedition_completed', {
+                  FirstName: team.teamLead.firstName,
+                  ExpeditionName: expedition.name,
+                  LinkPublishExpedition: httpTransport + req.headers.host + 'expeditions/' + expedition._id + '/protocols',
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                  Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                },
                 function(info) {
                   res.json(expedition);
                 }, function(errorMessage) {

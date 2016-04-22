@@ -19,6 +19,18 @@ angular.module('users.admin').factory('Admin', ['$resource',
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET',
+        params: {
+          role: '@role',
+          organizationId: '@organizationId',
+          searchString: '@searchString',
+          sort: '@sort',
+          limit: '@limit',
+          page: '@page'
+        },
+        isArray: true
       }
     });
   }
