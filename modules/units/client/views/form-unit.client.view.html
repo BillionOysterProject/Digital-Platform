@@ -33,10 +33,10 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="icon" class="control-label required">Icon *</label>
-                                        <!--TODO: Needs wired up to data:
-                                        IMPORTANT: Database should be "fa fa-iconname" syntax (with the extra fa class) so that we can easily switch out iconsets/add icons/etc later and that's no longer saved in every single HTML view of the icon -->
+                                        <!--TODO: Needs wired up to data, fix button click going to Unit submit bug :
+                                        IMPORTANT: Database should be "fa fa-iconname" syntax (with the extra fa class) so that we can easily switch out iconsets/add icons/etc later and that's no longer saved in every single HTML view of the icon
 
-                                        <a class="btn btn-default form-control" id="iconpicker" name="icon" role="iconpicker" data-iconset="fontawesome" data-icon="{{vm.unit.icon}}" data-rows="10" data-cols="10" ng-click="vm.iconChanged(data-icon)" required></a>
+                                        <button class="btn btn-default form-control" id="iconpicker" name="icon" role="iconpicker" data-iconset="fontawesome" data-icon="{{vm.unit.icon}}" data-rows="10" data-cols="10" ng-click="vm.iconChanged(data-icon)" required></button>-->
                                         <!--TODO: Remove editable input after iconpicker is wired up-->
                                         <input class="form-control" type="text" ng-model="vm.unit.icon" name="icon" id="icon" required />
                                         <div ng-messages="vm.form.unitForm.icon.$error" role="alrt">
