@@ -102,7 +102,11 @@
       });
       element.modal('hide');
     };
-    
-    $('#iconpicker').iconpicker();
+
+    //$('#iconpicker').iconpicker();
+    vm.iconChanged = function(dataIcon) {
+      console.log('dataIcon', dataIcon);
+      angular.element('#iconpicker').iconpicker();
+    };
   }
 })();
