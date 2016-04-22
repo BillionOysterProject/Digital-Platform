@@ -1,0 +1,10 @@
+Hi <%= FirstName %>,
+
+Congrats, your organization <%= OrgName %> was approved! Your Billion Oyster Project account is now active.
+
+Visit <%= LinkLogin %> to login.
+
+We're glad to have you!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

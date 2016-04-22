@@ -1,19 +1,20 @@
 <div class="row">
     <div class="col-md-2 col-sm-4">
         <div class="form-group">
-            <select class="form-control"><!--TODO: Wire up filters-->
+            <select class="form-control" name="role" id="role" ng-model="filter.role"
+            ng-change="fieldChanged()">
                 <option value="">Show all roles</option>
-                <option value="">Team Leads</option>
-                <option value="">Admin</option>
+                <option value="team lead">Team Lead</option>
+                <option value="admin">Admin</option>
             </select>
         </div>
     </div>
     <div class="col-md-3 col-sm-4">
         <div class="form-group">
-            <select class="form-control"><!--TODO: Wire up filters-->
+            <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
+              ng-change="fieldChanged()">
                 <option value="">Show all organizations</option>
-                <option value="">Organization 1</option>
-                <option value="">Organization 2</option>
+                <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
             </select>
         </div>
     </div>
@@ -23,40 +24,43 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
                 </span>
-                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+                <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-model="filter.searchString"
+                ng-change="searchChange()" />
             </div>
         </div>
     </div>
     <div class="col-md-4 text-right">
-        <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a>
-        <a class="btn btn-primary">Import team leads</a><!-- TODO: This should open modal duplicated from "Import Team Members" but with different text-->
+        <!-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a> TODO-->
+        <!-- <a class="btn btn-primary">Import team leads</a> TODO: This should open modal duplicated from "Import Team Members" but with different text-->
     </div>
 </div>
-<div class="row">
+<div class="row" ng-show="leadRequests && leadRequests.length > 0">
     <div class="col-md-12">
-        <div class="alert alert-success" role="alert">You have <b>5</b> new team lead requests. <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modal-team-lead-requests">Respond</a></div>
+        <div class="alert alert-success" role="alert">You have <b>{{leadRequests.length}}</b> new team lead requests. <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a></div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-verticalalign table-responsive">
-            <tr ng-repeat="user in pagedItems"><!--TODO: Only show Team Leads and Admin -- no Team Members -->
-                <td><img ng-src="modules/users/client/img/profile/default.png" class="profile-image" src="modules/users/client/img/profile/default.png"></td><!--TODO: Pull in user's image-->
+            <tr ng-repeat="user in pagedItems">
+                <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
                 <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
-                <td>Organization</td>
-                <td>Role</td>
-                <td><a data-toggle="modal" data-target="#modal-team">Team</a>, <a data-toggle="modal" data-target="#modal-team">Team 2</a></td>
+                <td>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</td>
+                <td>{{listRoles(user)}}</td>
+                <!-- <td>{{listTeams(user)}}</td> -->
+                <td><span ng-repeat="team in user.teams"><a ng-click="openAdminTeam(team)">{{team.name}}</a><span ng-if="!$last">, </span></span></td>
                 <td class="text-right">
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-editadd">
-                      <i class="glyphicon glyphicon-edit"></i><!--TODO: Move modal to  ui-sref="settings.admin-user-edit({userId: user._id})" -->
+                    <a class="btn btn-default" ng-click="openAdminTeamLeadForm(user)">
+                      <i class="glyphicon glyphicon-edit"></i>
+
                     </a>
-                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-user-delete">
-                      <i class="glyphicon glyphicon-trash"></i><!--TODO: Wire up delete modal, move to it's own page -->
+                    <a class="btn btn-danger" ng-click="openDeleteAdminTeamLead(user)">
+                      <i class="glyphicon glyphicon-trash"></i>
                     </a>
                 </td>
             </tr>
         </table>
-        
+
         <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
     </div>
 </div>
@@ -67,199 +71,8 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-team-lead-editadd" tabindex="-1" role="dialog"><!--TODO: Copied form from add member, needs updated wiring -->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form name="form.teamMemberForm" ng-submit="save(form.teamMemberForm.$valid)" novalidate>
-        <fieldset>
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{{teamMember._id ? 'Update user' : 'Add a team lead'}}</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="form-group col-md-6" show-errors>
-                <label for="firstName" class="control-label required">First Name</label>
-                <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
-              </div>
-              <div class="form-group col-md-6" show-errors>
-                <label for="lastName" class="control-label required">Last Name</label>
-                <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
-              </div>
-              <div class="form-group col-md-6" show-errors>
-                <label for="email" class="control-label required">Email</label>
-                <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id && teamMember.pending === false" required>
-              </div>
-              <div class="form-group col-sm-6" show-errors>
-                <label for="team" class="control-label required">Organization</label>
-                <select name="team" class="form-control" required>
-                  <option disabled selected value>
-                  <option>List all organizations here</option><!--TODO: Wire up-->
-                </select>
-              </div>
-              <div class="form-group col-sm-12" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
-                <label class="control-label required">Role</label>
-                <select class="form-control" required>
-                  <option>Team Lead</option>
-                  <option>Team Member</option><!--TODO: Only show if EDITING current user (not creating new) -->
-                  <option>Admin</option>
-                </select>
-              </div>
-              <!--TODO: Only show if Editing, and "Team Member" is selected --
-              <div class="form-group col-sm-6" show-errors>
-                <label for="team" class="control-label required">Team Assignment</label>
-                <select name="team" class="form-control" ng-model="teamMember.team._id" required>
-                  <option disabled selected value>
-                  <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option><!--TODO: Show all teams in above-selected Org--
-                </select>
-              </div>-->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
-            <button type="submit" class="btn btn-primary">{{teamMember._id ? 'Update' : 'Send Invite'}}</button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="modal-team-lead-requests" tabindex="-1" role="dialog"><!-- TODO: Form copied from member requests -- needs updated wiring -->
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Team Lead Requests</h4>
-      </div><!--
-      <div class="modal-body" ng-show="teamRequests.length === 0">
-        <p>There are no requests.</p>
-      </div>
-      <div class="modal-footer" ng-show="teamRequests.length === 0">
-        <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
-      </div>-->
-      <form name="form.approveTeamRequestsForm" ng-submit="save(form.approveTeamRequestsForm.$valid)" novalidate>
-        <div class="modal-body"> <!-- ng-show="teamRequests.length > 0" -->
-          <p>Accepted team leads will be invited to join and added to the organization you select. Rejected team leads will be removed from the list.</p>
-          <div class="row">
-            <div class="col-sm-6 col-md-4" ng-repeat="request in teamRequests">
-              <div class="panel panel-default">
-                <div class="panel-body text-center">
-                  <img ng-src="{{request.requester.profileImageURL}}" class="profile-image">
-                  <h4>{{request.requester.displayName}}</h4>
-                  <p class="text-muted small">{{request.requester.email}}<br/><b>{{ORGANIZATION}}</b></p><!--TODO: Wire up org -->
-                  <div class="btn-group">
-                    <a class="btn btn-success btn-sm" title="Accept" ng-model="request.approve"
-                      uib-btn-radio="true"><i class="glyphicon glyphicon-ok" ng-click="approve()"></i></a>
-                    <a class="btn btn-danger btn-sm" title="Reject" ng-model="request.approve"
-                      uib-btn-radio="false"><i class="glyphicon glyphicon-remove" ng-click="deny()"></i></a>
-                  </div>
-                  <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">
-                    <strong ng-bind="request.error"></strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="text-danger row" ng-show="error">
-            <strong ng-bind="error"></strong>
-          </div>
-        </div>
-        <div class="modal-footer" ng-show="teamRequests.length > 0">
-          <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="modal-user-delete" tabindex="-1" role="dialog"><!--TODO: Copied form, needs updated wiring -->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Are you sure you want to delete <span class="red">{{user.displayName}}</span>?</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p>This action cannot be reversed.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
-                <button type="button" class="btn btn-danger" ng-click="deleteFunction(teamMember)">Delete</button>
-            </div>
-        </div>
-        <div class="modal-content"><!--TODO: Show this instead if trying to delete Team Lead who has Team Members -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><span class="red">{{user.name}}</span> cannot be deleted</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p>This team lead currently leads active teams with members. To delete the team lead, you must first either delete the current member accounts or move each one to another team/team lead.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-team" tabindex="-1" role="dialog"><!--TODO: Wire up data-->
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Team Name</h4>
-                <hr/>
-                <div class="row">
-                    <div class="col-md-3">
-                        <img ng-src="modules/users/client/img/profile/default.png" class="profile-image pull-left" src="modules/users/client/img/profile/default.png"><!--TODO: Pull in user's image-->
-                        <p>Team Lead Name<br/><span class="text-muted">Organization</span></p>
-                    </div>
-                    <div class="col-md-3 text-muted">
-                        <h6><span class="red">15</span> Members</h6>
-                    </div>
-                    <div class="col-md-3 text-muted">
-                        <h6><span class="red">2</span> Expeditions</h6>
-                    </div>
-                    <div class="col-md-3 text-muted">
-                        <h6><span class="red">10</span> ORS</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-verticalalign table-responsive">
-                            <tr ng-repeat="user in pagedItems"><!--TODO: Only show team members in that Team -->
-                                <td><img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png"></td><!--TODO: Pull in user's image-->
-                                <td><b>{{user.firstName}} {{user.lastName}}</b></td>
-                                <td class="text-muted">{{user.username}}</td>
-                                <td class="text-muted">{{user.email}}</td>
-                                <td class="text-right">
-                                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-editadd">
-                                      <i class="glyphicon glyphicon-edit"></i>
-                                    </a>
-                                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-user-delete">
-                                      <i class="glyphicon glyphicon-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination><!--TODO: Change to only 7 per page -->
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<form-admin-team-lead-modal user="formUser" organizations="organizations" save-function="saveAdminTeamLeadForm" cancel-function="cancelAdminTeamLeadForm"></form-admin-team-lead-modal>
+<delete-admin-team-lead-modal user="userToDelete" delete-function="deleteAdminTeamLead" cancel-function="cancelDeleteAdminTeamLead"></delete-admin-team-lead-modal>
+<approve-team-leads-modal lead-requests="leadRequests" save-function="saveApproveTeamLeads" cancel-function="closeApproveTeamLeads"></approve-team-leads-modal>
+<view-admin-team-modal team="team" close-function="closeAdminTeam"></view-admin-team-modal>
 <!-- END MODALS -->

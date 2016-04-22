@@ -22,7 +22,9 @@
     "by",
     "browser",
     "element",
-    "Spinner"
+    "Spinner",
+    "L",
+    "AwesomeMarkers"
   ],
   "devel": true // Allow development statements e.g. `console.log();`.
 }

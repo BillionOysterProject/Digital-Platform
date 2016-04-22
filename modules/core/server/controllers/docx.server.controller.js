@@ -76,7 +76,7 @@ var convertProtocolConnections = function(protocolConnections) {
 
 var convertHtmlToText = function(html) {
   if (html && html !== '') {
-    html = _.replace(html, '<li>', '\n<li>');
+    html = _.replace(html, /<li>/ig, '\n<li>');
     var text = htmlToText.fromString(html, {});
     return text;
   } else {

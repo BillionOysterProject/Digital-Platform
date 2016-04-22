@@ -8,18 +8,30 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   ses = require('nodemailer-ses-transport');
 
-var from = process.env.MAILER_FROM || 'bop@fearless.tech';
+var from = process.env.MAILER_FROM || 'Billion Oyster Project <bop@fearless.tech>';
 
 var transporter = nodemailer.createTransport(ses(config.mailer.options.ses));
+
+var toAddresses = function(to) {
+  if (_.isArray(to)) {
+    return to.join(', ');
+  } else {
+    return to;
+  }
+};
+
+var runTemplate = function(string, data) {
+  var compiled = _.template(string);
+  return compiled(data);
+};
+
 
 /**
  * Send email
  */
 exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, errorCallback) {
   if (to && subject && bodyText && bodyHtml) {
-    if (_.isArray(to)) {
-      to = to.join(', ');
-    }
+    to = toAddresses(to);
 
     transporter.sendMail({
       from: from,
@@ -33,5 +45,33 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
     });
   } else {
     errorCallback('Must have to address(es), subject, and body');
+  }
+};
+
+exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCallback, errorCallback) {
+  if (to && subject && bodyTemplate && data) {
+    to = toAddresses(to);
+
+    var textContent = fs.readFileSync(
+      path.resolve('./modules/core/server/templates/email-text/' + bodyTemplate + '.txt'), 'binary');
+
+    var htmlContent = fs.readFileSync(
+      path.resolve('./modules/core/server/templates/email-html/' + bodyTemplate + '.html'), 'binary');
+
+    var bodyText = runTemplate(textContent, data);
+    var bodyHtml = runTemplate(htmlContent, data);
+    
+    transporter.sendMail({
+      from: from,
+      to: to,
+      subject: subject,
+      text: bodyText,
+      html: bodyHtml
+    }, function(err, info) {
+      if (err) errorCallback(err.message);
+      successCallback(info);
+    });
+  } else {
+    errorCallback('Must have to addresses(es), subject, and body');
   }
 };

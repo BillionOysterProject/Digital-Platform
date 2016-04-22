@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  config = require(path.resolve('./config/config')),
   Expedition = mongoose.model('Expedition'),
   ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
@@ -12,6 +13,8 @@ var path = require('path'),
   ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   ExpeditionActivity = mongoose.model('ExpeditionActivity'),
+  Team = mongoose.model('Team'),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   moment = require('moment'),
   _ = require('lodash');
@@ -146,6 +149,35 @@ exports.update = function (req, res) {
 exports.submit = function (req, res) {
   var expedition = req.expedition;
 
+  var updateActivity = function(callback) {
+    var protocolsSubmitted = {};
+    if (req.body.protocols.siteCondition) protocolsSubmitted.siteCondition = req.body.protocols.siteCondition;
+    if (req.body.protocols.oysterMeasurement) protocolsSubmitted.oysterMeasurement = req.body.protocols.oysterMeasurement;
+    if (req.body.protocols.mobileTrap) protocolsSubmitted.mobileTrap = req.body.protocols.mobileTrap;
+    if (req.body.protocols.settlementTiles) protocolsSubmitted.settlementTiles = req.body.protocols.settlementTiles;
+    if (req.body.protocols.waterQuality) protocolsSubmitted.waterQuality = req.body.protocols.waterQuality;
+
+    var status = (expedition.status === 'incomplete') ? 'submitted' : 'resubmitted';
+
+    var activity = new ExpeditionActivity({
+      status: status,
+      protocols: protocolsSubmitted,
+      team: expedition.team,
+      expedition: expedition,
+      user: req.user
+    });
+
+    activity.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        callback();
+      }
+    });
+  };
+
   if (expedition) {
     if (expedition.protocols.siteCondition.status === 'submitted' &&
       expedition.protocols.oysterMeasurement.status === 'submitted' &&
@@ -161,36 +193,38 @@ exports.submit = function (req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          var protocolsSubmitted = {};
-          if (req.body.protocols.siteCondition) protocolsSubmitted.siteCondition = req.body.protocols.siteCondition;
-          if (req.body.protocols.oysterMeasurement) protocolsSubmitted.oysterMeasurement = req.body.protocols.oysterMeasurement;
-          if (req.body.protocols.mobileTrap) protocolsSubmitted.mobileTrap = req.body.protocols.mobileTrap;
-          if (req.body.protocols.settlementTiles) protocolsSubmitted.settlementTiles = req.body.protocols.settlementTiles;
-          if (req.body.protocols.waterQuality) protocolsSubmitted.waterQuality = req.body.protocols.waterQuality;
+          updateActivity(function() {
+            Team.findById(expedition.team).populate('teamLead', 'email displayName profileImageURL').
+            exec(function(err, team) {
+              if (team) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          var status = (expedition.status === 'incomplete') ? 'submitted' : 'resubmitted';
-
-          var activity = new ExpeditionActivity({
-            status: status,
-            protocols: protocolsSubmitted,
-            team: expedition.team,
-            expedition: expedition,
-            user: req.user
-          });
-
-          activity.save(function (err) {
-            if (err) {
-              return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-              });
-            } else {
-              res.json(expedition);
-            }
+                email.sendEmailTemplate(team.teamLead.email, 'Your team has submitted all of the protocols for the expedition ' + expedition.name,
+                'expedition_completed', {
+                  FirstName: team.teamLead.firstName,
+                  ExpeditionName: expedition.name,
+                  LinkPublishExpedition: httpTransport + req.headers.host + 'expeditions/' + expedition._id + '/protocols',
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                  Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                },
+                function(info) {
+                  res.json(expedition);
+                }, function(errorMessage) {
+                  return res.status(400).send({
+                    message: errorMessage
+                  });
+                });
+              } else {
+                res.json(expedition);
+              }
+            });
           });
         }
       });
     } else {
-      res.json(expedition);
+      updateActivity(function() {
+        res.json(expedition);
+      });
     }
   } else {
     return res.status(400).send({

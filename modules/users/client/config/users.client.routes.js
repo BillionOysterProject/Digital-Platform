@@ -176,6 +176,25 @@
           pageTitle: 'Signin'
         }
       })
+      .state('claim-user', {
+        abstract: true,
+        url: '/claim-user',
+        template: '<ui-view/>'
+      })
+      .state('claim-user.invalid', {
+        url: '/invalid',
+        templateUrl: 'modules/users/client/views/authentication/claim-user-invalid.client.view.html',
+        data: {
+          pageTitle: 'Claim user token invalid'
+        }
+      })
+      .state('claim-user.form', {
+        url: '/:token',
+        templateUrl: 'modules/users/client/views/authentication/claim-user.client.view.html',
+        data: {
+          pageTitle: 'Claim user form'
+        }
+      })
       .state('password', {
         abstract: true,
         url: '/password',

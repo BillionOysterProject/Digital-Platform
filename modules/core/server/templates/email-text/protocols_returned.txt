@@ -1,0 +1,8 @@
+Hi <%=FirstName%>,
+
+Bummer, your work on the protocol(s) for <%= ExpeditionName %> were returned. Check your data to make sure everything is complete, and then resubmit once you've corrected any errors. You can view your work at <%= LinkExpedition %>.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

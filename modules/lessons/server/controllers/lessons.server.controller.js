@@ -142,10 +142,16 @@ exports.publish = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //TODO: changed to actual user email address
-        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-        'Your lesson has been approved and is now visible on the lessons page.',
-        '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+        'lesson_approved', {
+          FirstName: lesson.user.firstName,
+          LessonName: lesson.title,
+          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        },
         function(response) {
           res.json(lesson);
         }, function(errorMessage) {
@@ -178,11 +184,17 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-        'Your lesson has been returned, the following changes need to be made: ' + lesson.returnedNotes + '\n' +
-        'You can edit the lesson on the My Library page.',
-        '<p>Your lesson has been returned, the following changes need to be made: <br/>' + lesson.returnedNotes + '<br/>' +
-        'You can edit the lesson on the My Library page.</p>',
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+        'lesson_returned', {
+          FirstName: lesson.user.firstName,
+          LessonName: lesson.title,
+          LessonReturnedNote: lesson.returnedNotes,
+          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        },
         function(response) {
           res.json(lesson);
         }, function(errorMessage) {
@@ -671,7 +683,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'displayName email team profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email team profileImageURL')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {

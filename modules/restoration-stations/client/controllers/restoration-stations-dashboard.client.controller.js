@@ -47,7 +47,14 @@
         byMember: byMember
       }, function(data) {
         vm.teams = data;
-        vm.initializeBasedOnTeam();
+
+        if (!vm.filter.teamId || vm.filter.teamId === '') {
+          if (vm.teams.length > 0) {
+            vm.team = vm.teams[0];
+            vm.filter.teamId = (vm.team) ? vm.team._id : '';
+            vm.findTeamValues();
+          }
+        }
       });
     };
 
@@ -65,6 +72,7 @@
         vm.stations = data;
       });
 
+      console.log('schoolOrgId', vm.team.schoolOrg._id);
       RestorationStationsService.query({
         schoolOrgId: vm.team.schoolOrg._id
       }, function(data) {
@@ -102,14 +110,6 @@
     };
 
     vm.findTeams();
-
-    vm.initializeBasedOnTeam = function() {
-      if (!vm.filter.teamId || vm.filter.teamId === '') {
-        vm.filter.teamId = (vm.teams.length > 0) ? vm.teams[0]._id : '';
-        vm.team = vm.teams[0];
-        vm.findTeamValues();
-      }
-    };
 
     vm.fieldChanged = function(team) {
       vm.filter.teamId = (team) ? team._id : '';

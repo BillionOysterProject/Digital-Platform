@@ -1,0 +1,12 @@
+Hi <%= FirstName %>,
+
+<%= UnitFeedbackName %> just gave you feedback on your unit <%= UnitName %>:
+
+<%= UnitFeedbackNote %>
+
+Visit your unit at <%= LinkUnit %> to edit and republish at any time.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
