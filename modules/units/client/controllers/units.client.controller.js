@@ -102,5 +102,7 @@
       });
       element.modal('hide');
     };
+    
+    $('#iconpicker').iconpicker();
   }
 })();
