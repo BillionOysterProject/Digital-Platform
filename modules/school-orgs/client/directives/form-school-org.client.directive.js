@@ -9,10 +9,13 @@
         templateUrl: 'modules/school-orgs/client/views/form-school-org.client.view.html',
         scope: {
           schoolOrg: '=',
+          saveSchoolOrg: '=',
           saveFunction: '=',
           cancelFunction: '='
         },
         controller: 'FormSchoolOrgController',
+        controllerAs: 'so',
+        bindToController: true,
         replace: true,
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function () {

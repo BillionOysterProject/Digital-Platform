@@ -8,27 +8,36 @@
   FormSchoolOrgController.$inject = ['$scope', '$http'];
 
   function FormSchoolOrgController($scope, $http) {
-    $scope.save = function(isValid) {
+    var so = this;
+    so.save = function(isValid) {
 
       if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'form.schoolOrgForm');
+        $scope.$broadcast('show-errors-check-validity', 'so.form.schoolOrgForm');
         return false;
       }
 
-      if ($scope.schoolOrg._id) {
-        $scope.schoolOrg.$update(successCallback, errorCallback);
+      if (so.saveSchoolOrg === 'true' || so.saveSchoolOrg === true) {
+        if (so.schoolOrg._id) {
+          so.schoolOrg.$update(successCallback, errorCallback);
+        } else {
+          so.schoolOrg.$save(successCallback, errorCallback);
+        }
       } else {
-        $scope.schoolOrg.$save(successCallback, errorCallback);
+        so.saveFunction(so.schoolOrg);
       }
 
       function successCallback(res) {
-        $scope.saveFunction($scope.schoolOrg);
+        so.saveFunction(so.schoolOrg);
       }
 
       function errorCallback(res) {
         console.log('error: ' + res.data.message);
-        $scope.error = res.data.message;
+        so.error = res.data.message;
       }
+    };
+
+    so.cancel = function() {
+      so.cancelFunction();
     };
   }
 })();

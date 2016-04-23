@@ -8,7 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   ses = require('nodemailer-ses-transport');
 
-var from = process.env.MAILER_FROM || 'Billion Oyster Project <bop@fearless.tech>';
+var defaultFrom = process.env.MAILER_FROM || 'Billion Oyster Project <bop@fearless.tech>';
 
 var transporter = nodemailer.createTransport(ses(config.mailer.options.ses));
 
@@ -34,7 +34,7 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
     to = toAddresses(to);
 
     transporter.sendMail({
-      from: from,
+      from: defaultFrom,
       to: to,
       subject: subject,
       text: bodyText,
@@ -48,7 +48,7 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
   }
 };
 
-exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCallback, errorCallback) {
+var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallback, errorCallback) {
   if (to && subject && bodyTemplate && data) {
     to = toAddresses(to);
 
@@ -60,7 +60,7 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
 
     var bodyText = runTemplate(textContent, data);
     var bodyHtml = runTemplate(htmlContent, data);
-    
+
     transporter.sendMail({
       from: from,
       to: to,
@@ -74,4 +74,48 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
   } else {
     errorCallback('Must have to addresses(es), subject, and body');
   }
+};
+
+exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCallback, errorCallback) {
+  sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback);
+};
+
+var sendFeedback = function(to, from, template, res, req) {
+  if (to && from && req.body.subject && template && req.body.data) {
+    sendTemplate(to, from, req.body.subject, template, req.body.data,
+    function(info) {
+      res.status(200).send({
+        message: 'Feedback send successfully'
+      });
+    }, function(errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
+    });
+  } else {
+    res.status(400).send({
+      message: 'Must have to address, from address, subject, and body'
+    });
+  }
+};
+
+exports.sendBugReport = function(req, res) {
+  if (req.body.data) req.body.data.browser = req.headers['user-agent'];
+  sendFeedback('jira@fearless.jira.com', defaultFrom, '', req, res);
+};
+
+exports.sendGeneralFeedback = function(req, res) {
+  sendFeedback(defaultFrom, req.user.email, '', req, res);
+};
+
+exports.sendHelpQuestion = function(req, res) {
+  sendFeedback(defaultFrom, req.user.email, '', req, res);
+};
+
+exports.sendLessonFeedback = function(req, res) {
+  sendFeedback(req.body.to, req.user.email, 'lesson_feedback', req, res);
+};
+
+exports.sendUnitFeedback = function(req, res) {
+  sendFeedback(req.body.to, req.user.email, 'unit_feedback', req, res);
 };

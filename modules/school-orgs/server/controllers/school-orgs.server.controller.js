@@ -26,12 +26,7 @@ var isAdmin = function(user) {
 exports.create = function(req, res) {
   var schoolOrg = new SchoolOrg(req.body);
   schoolOrg.creator = req.user;
-
-  if (req.user && isAdmin(req.user)) {
-    schoolOrg.pending = false;
-  } else {
-    schoolOrg.pending = true;
-  }
+  schoolOrg.pending = false;
 
   schoolOrg.save(function (err) {
     if (err) {
@@ -39,23 +34,7 @@ exports.create = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      if (schoolOrg.pending) {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-
-        email.sendEmailTemplate(req.user.email, 'Your request to be a Team Lead  on The Billion Oyster Project was approved',
-        'org_pending', {
-          FirstName: req.user.firstName,
-          LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
-        }, function(info) {
-          res.json(schoolOrg);
-        }, function(errorMessage) {
-          res.json(schoolOrg);
-        });
-      } else {
-        res.json(schoolOrg);
-      }
+      res.json(schoolOrg);
     }
   });
 };

@@ -10,6 +10,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   passport = require('passport'),
   User = mongoose.model('User'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
   async = require('async'),
   TeamRequest = mongoose.model('TeamRequest');
 
@@ -31,6 +32,7 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = [req.body.userrole, 'user'];
+  if (req.body.schoolOrg === 'new') user.schoolOrg = null;
 
   // Then save the user
   user.save(function (err) {
@@ -85,19 +87,66 @@ exports.signup = function (req, res) {
           }
         });
       } else if (req.body.userrole === 'team lead pending') {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var sendNewTeamLeadEmail = function() {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-        email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
-          FirstName: user.firstName,
-          TeamMemberName: user.displayName,
-          LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
-        }, function(info) {
-          loginNewUser();
-        }, function(errorMessage) {
-          loginNewUser();
-        });
+          email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
+            FirstName: user.firstName,
+            TeamMemberName: user.displayName,
+            LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+            Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          }, function(info) {
+            loginNewUser();
+          }, function(errorMessage) {
+            loginNewUser();
+          });
+        };
+
+        if (req.body.schoolOrg === 'new') {
+          if (req.body.addSchoolOrg) {
+            var schoolOrg = new SchoolOrg(req.body.addSchoolOrg);
+            schoolOrg.creator = user;
+            schoolOrg.pending = true;
+
+            schoolOrg.save(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                user.schoolOrg = schoolOrg._id;
+                user.save(function(err) {
+                  if (err) {
+                    console.log('err', err);
+                    return res.status(400).send({
+                      message: errorHandler.getErrorMessage(err)
+                    });
+                  }
+
+                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+                  console.log('email', user.email);
+                  email.sendEmailTemplate(user.email, 'Your new organization request for ' + schoolOrg.name + ' is pending admin approval',
+                  'org_pending', {
+                    FirstName: user.firstName,
+                    OrgName: schoolOrg.name,
+                    LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+                    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                  }, function(info) {
+                    sendNewTeamLeadEmail();
+                  }, function(errorMessage) {
+                    sendNewTeamLeadEmail();
+                  });
+                });
+              }
+            });
+          } else {
+            sendNewTeamLeadEmail();
+          }
+        } else {
+          sendNewTeamLeadEmail();
+        }
       } else {
         loginNewUser();
       }
