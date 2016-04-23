@@ -52,7 +52,7 @@
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#modal-feedback">Send feedback</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#modal-feedback">Support</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
                         <li class="divider"></li>
                         <li><a href="/api/auth/signout" target="_self">Signout</a></li>
@@ -74,8 +74,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Send feedback or a bug report</h4>
-                <p>Thanks for helping us improve! All feedback and bug reports are appreciated.</p>
+                <h4 class="modal-title">Support</h4>
+                <p>Thanks for helping us improve! All feedback is appreciated.</p>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -84,17 +84,19 @@
                             <label class="control-label">Type</label>
                             <select class="form-control">
                                 <option>General feedback</option>
+                                <option>Help needed</option>
                                 <option>Bug report</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-12"><!--Show if they selected "General feedback" in <select> above -->
+                    <div class="col-sm-12"><!--Show if they selected "General feedback" or "Help needed" in <select> above -->
                         <div class="form-group">
                             <label class="control-label">Message</label>
                             <textarea class="form-control" rows="4"></textarea>
                         </div>
                     </div>
-                    <div class="col-sm-12"><!--Show if they selected "Bug report" in <select> above -->
+                    <!--Show if they selected "Bug report" in <select> above 
+                    <div class="col-sm-12">
                         <div class="form-group">
                             <label class="control-label">Specific location (page, lesson, or area)</label>
                             <input type="text" class="form-control" />
@@ -107,7 +109,7 @@
                             <label class="control-label">Describe the issue</label>
                             <textarea class="form-control" rows="4"></textarea>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div class="modal-footer">

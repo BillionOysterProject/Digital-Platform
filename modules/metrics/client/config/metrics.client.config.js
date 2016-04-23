@@ -9,11 +9,11 @@
 
   function MenuConfig(Menus) {
 
-    Menus.addSubMenuItem('account', 'settings', {
-      title: 'Metrics',
-      state: 'metrics.dashboard',
-      roles: ['admin']
-    });
+    //Menus.addSubMenuItem('account', 'settings', {
+    //  title: 'Metrics',
+    //  state: 'metrics.dashboard',
+    //  roles: ['admin']
+    //});
 
   }
 })();

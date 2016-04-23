@@ -21,6 +21,7 @@ var ApplicationConfiguration = (function () {
     'ngCytoscape',
     'chart.js',
     'ngLodash',
+    'colorpicker.module',
     'angularMoment'];
 
   // Add a new vertical module
