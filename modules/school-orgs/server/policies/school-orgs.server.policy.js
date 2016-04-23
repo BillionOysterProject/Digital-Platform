@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
       permissions: 'get'
     }, {
       resources: '/api/school-orgs',
-      permissions: 'get'
+      permissions: '*'
     }, {
       resources: '/api/school-orgs/:schoolOrgId',
       permissions: 'get'

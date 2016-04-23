@@ -1,0 +1,32 @@
+<div class="modal fade" id="modal-org-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete <span class="red">{{schoolOrg.name}}</span>?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                        <!-- TODO: If there are team leads/teams/members assigned to org, show the <p> and <form group> below -->
+                        <p>There are currently <b>6</b> team leads, <b>20</b> teams, and <b>108</b> team members in this organization. Before deleting, you must select another organization to transfer all of these accounts.</p>
+                        <div class="form-group">
+                            <label>Organization to transfer accounts</label>
+                            <select class="form-control">
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                                <option>Org Name</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="deleteFunction(teamMember)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

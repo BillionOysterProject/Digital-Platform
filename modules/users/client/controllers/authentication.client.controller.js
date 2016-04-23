@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'lodash', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, lodash, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window',
+'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
+  function ($scope, $state, $http, $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -79,11 +80,30 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     $scope.teamMemberSelected = false;
     $scope.teamLeads = [];
     $scope.schoolOrgSelected = false;
+    $scope.newSchoolOrg = new SchoolOrganizationsService();
 
-    $http.get('/api/school-orgs').success(function (response) {
-      $scope.schoolOrgs = response;
-    }).error(function (response) {
-    });
+    $scope.findOrganizations = function (newOrg) {
+      SchoolOrganizationsService.query({
+        approvedOnly: true
+      }, function(data) {
+        $scope.schoolOrgs = [];
+        for (var i = 0; i < data.length; i++) {
+          $scope.schoolOrgs.push({
+            '_id' : data[i]._id,
+            'name' : data[i].name
+          });
+        }
+        if ($scope.newSchoolOrg && $scope.newSchoolOrg.name) {
+          console.log('adding new org to dropdown', $scope.newSchoolOrg);
+          $scope.schoolOrgs.push({
+            '_id' : '0',
+            'name' : $scope.newSchoolOrg.name
+          });
+        }
+        console.log('$scope.schoolOrgs', $scope.schoolOrgs);
+      });
+    };
+    $scope.findOrganizations();
 
     $scope.schoolOrgFieldSelected = function(schoolOrgId) {
       if (schoolOrgId && $scope.credentials.userrole === 'team member pending') {
@@ -97,6 +117,26 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
       } else {
         $scope.schoolOrgSelected = false;
       }
+    };
+
+    $scope.openSchoolOrgForm = function() {
+      $scope.newSchoolOrg = new SchoolOrganizationsService();
+      angular.element('#modal-org-editadd').modal('show');
+    };
+
+    $scope.saveSchoolOrgForm = function(newSchoolOrg) {
+      console.log('$scope.credentials.userrole', $scope.credentials.userrole);
+      $scope.credentials.schoolOrg = '0';
+      $scope.newSchoolOrg = angular.copy(newSchoolOrg);
+      $scope.findOrganizations();
+      console.log('newSchoolOrg', $scope.newSchoolOrg);
+      console.log('schoolOrg', $scope.credentials.schoolOrg);
+      angular.element('#modal-org-editadd').modal('hide');
+    };
+
+    $scope.cancelSchoolOrgForm = function() {
+      $scope.newSchoolOrg = {};
+      angular.element('#modal-org-editadd').modal('hide');
     };
   }
 ]);
