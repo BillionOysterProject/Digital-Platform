@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
       permissions: 'get'
     }, {
       resources: '/api/school-orgs',
-      permissions: 'get'
+      permissions: '*'
     }, {
       resources: '/api/school-orgs/:schoolOrgId',
       permissions: 'get'
@@ -43,6 +43,12 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/school-orgs',
+      permissions: '*'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId/approve',
+      permissions: '*'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId/deny',
       permissions: '*'
     }, {
       resources: '/api/school-orgs/:schoolOrgId',

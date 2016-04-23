@@ -1,0 +1,44 @@
+<div class="modal fade" id="modal-org-editadd" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="form.schoolOrgForm" ng-submit="so.save(form.schoolOrgForm.$valid)" novalidate>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">{{so.schoolOrg._id ? 'Update organization' : 'Add an organization'}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="name" class="control-label required">Organization Name</label>
+                <input type="text" name="name" class="form-control" ng-model="so.schoolOrg.name" required/>
+              </div>
+              <div class="form-group">
+                <label for="streetAddress" class="control-label required">Street Address</label>
+                <input type="text" name="streetAddress" class="form-control" ng-model="so.schoolOrg.streetAddress" required/>
+              </div>
+              <div class="row">
+                <div class="form-group col-sm-6">
+                  <label for="city" class="control-label required">City</label>
+                  <input type="text" name="city" class="form-control" ng-model="so.schoolOrg.city" required/>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="state" class="control-label required">State</label>
+                  <input type="text" name="state" class="form-control" ng-model="so.schoolOrg.state" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description" class="control-label required">Organization Description</label>
+                <textarea class="form-control" name="description" rows="5" ng-model="so.schoolOrg.description" required></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="so.cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{so.schoolOrg._id ? 'Update' : 'Add'}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

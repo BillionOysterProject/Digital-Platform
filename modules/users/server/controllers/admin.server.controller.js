@@ -187,7 +187,7 @@ exports.list = function (req, res) {
   }
 
   query.populate('user', 'displayName email profileImageURL')
-  .populate('schoolOrg', 'name').exec(function (err, users) {
+  .populate('schoolOrg', 'name pending').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

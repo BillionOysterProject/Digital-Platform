@@ -13,6 +13,18 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET',
+        params: {
+          pending: '@pending',
+          searchString: '@searchString',
+          showTeams: '@showTeams',
+          sort: '@sort',
+          limit: '@limit',
+          page: '@page'
+        },
+        isArray: true
       }
     });
   }

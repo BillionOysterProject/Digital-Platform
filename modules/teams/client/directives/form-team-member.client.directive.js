@@ -16,7 +16,7 @@
         controller: 'TeamMemberController',
         replace: true,
         link: function(scope, element, attrs) {
-
+          
         }
       };
     }]);
