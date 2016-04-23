@@ -46,6 +46,7 @@
         pending: true
       }, function(data) {
         vm.orgRequests = data;
+        console.log('orgRequests', vm.orgRequests);
       });
     };
     vm.findOrgRequests();
@@ -65,6 +66,23 @@
     vm.cancelSchoolOrgForm = function() {
       vm.schoolOrg = {};
       angular.element('#modal-org-editadd').modal('hide');
+    };
+
+    vm.openApproveSchoolOrgs = function() {
+      vm.findOrgRequests();
+      angular.element('#modal-org-requests').modal('show');
+    };
+
+    vm.saveApproveSchoolOrgs = function() {
+      vm.findOrganizations();
+      vm.findOrgRequests();
+      angular.element('#modal-org-requests').modal('hide');
+    };
+
+    $scope.closeApproveSchoolOrgs = function() {
+      vm.findOrganizations();
+      vm.findOrgRequests();
+      angular.element('#modal-org-requests').modal('hide');
     };
   }
 })();

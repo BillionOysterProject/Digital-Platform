@@ -9,8 +9,8 @@
         templateUrl: 'modules/school-orgs/client/views/form-school-org.client.view.html',
         scope: {
           schoolOrg: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          saveFunction: '&',
+          cancelFunction: '&'
         },
         replace: true,
         link: function(scope, element, attrs) {

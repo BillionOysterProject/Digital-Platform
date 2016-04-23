@@ -123,7 +123,17 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         role: 'team lead pending',
         showTeams: true
       }, function (data) {
-        $scope.leadRequests = data;
+        $scope.leadRequests = [];
+        $scope.leadRequestsOrgPending = [];
+
+        for (var i = 0; i < data.length; i++) {
+          console.log('pending', data[i].schoolOrg.pending);
+          if (data[i].schoolOrg.pending) {
+            $scope.leadRequestsOrgPending.push(data[i]);
+          } else {
+            $scope.leadRequests.push(data[i]);
+          }
+        }
       });
     };
     $scope.findLeadRequests();

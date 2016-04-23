@@ -26,7 +26,7 @@
         return false;
       }
 
-      var spinner = new Spinner({}).spin(document.getElementById('modal-team-member-requests'));
+      var spinner = new Spinner({}).spin(document.getElementById('modal-team-lead-requests'));
 
       var finishedApprovingCount = 0;
       var done = function() {

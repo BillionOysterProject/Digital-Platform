@@ -91,6 +91,61 @@ exports.update = function (req, res) {
   }
 };
 
+exports.approve = function (req, res) {
+  var schoolOrg = req.schoolOrg;
+
+  if (schoolOrg && isAdmin(req.user)) {
+    schoolOrg.pending = false;
+
+    schoolOrg.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(schoolOrg.creator.email, 'Your organization ' + schoolOrg.name + ' was approved',
+        'org_approved', {
+          FirstName: schoolOrg.creator.firstName,
+          OrgName: schoolOrg.name,
+          LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        }, function(info) {
+          res.json(schoolOrg);
+        }, function(errorMessage) {
+          res.json(schoolOrg);
+        });
+      }
+    });
+  } else {
+    return res.status(403).send({
+      message: 'Permission denied'
+    });
+  }
+};
+
+exports.deny = function (req, res) {
+  var schoolOrg = req.schoolOrg;
+
+  if (schoolOrg && isAdmin(req.user)) {
+    schoolOrg.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(schoolOrg);
+      }
+    });
+  } else {
+    return res.status(403).send({
+      message: 'Permission denied'
+    });
+  }
+};
+
 /**
  * Delete a school/organization
  */
@@ -278,7 +333,7 @@ exports.schoolOrgByID = function (req, res, next, id) {
     });
   }
 
-  SchoolOrg.findById(id).exec(function (err, schoolOrg) {
+  SchoolOrg.findById(id).populate('creator', 'firstName displayName email').exec(function (err, schoolOrg) {
     if (err) {
       return next(err);
     } else if (!schoolOrg) {
