@@ -33,7 +33,6 @@ module.exports = {
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-bootstrap/ui-bootstrap.js',
-        'public/lib/angular-isotope/dist/angular-isotope.js',
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
@@ -49,7 +48,8 @@ module.exports = {
         'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
         'public/lib/moment/min/moment.min.js',
         'public/lib/angular-moment/angular-moment.min.js',
-        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js'
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
+        'public/lib/angular-isotope/dist/angular-isotope.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
