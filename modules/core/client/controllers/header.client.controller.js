@@ -22,5 +22,9 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     $scope.$on('$stateChangeSuccess', function () {
       $scope.isCollapsed = false;
     });
+
+    $scope.openFeedback = function() {
+      angular.element('#modal-feedback').modal('show');
+    };
   }
 ]);

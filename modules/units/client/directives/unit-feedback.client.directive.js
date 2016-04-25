@@ -31,6 +31,12 @@
               $scope.error = data.message;
             });
           };
+
+          $scope.close = function() {
+            $scope.form.unitFeedbackForm.$setSubmitted(false);
+            $scope.form.unitFeedbackForm.$setPristine(true);
+            $scope.closeFunction();
+          };
         },
         link: function(scope, element, attrs) {
 

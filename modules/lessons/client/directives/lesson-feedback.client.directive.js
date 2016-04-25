@@ -20,7 +20,6 @@
               return false;
             }
 
-
             $http.post('/api/email/lesson-feedback', {
               lesson: $scope.lesson,
               message: $scope.message
@@ -31,6 +30,12 @@
             .error(function(data, status, headers, config) {
               $scope.error = data.message;
             });
+          };
+
+          $scope.close = function() {
+            $scope.form.lessonFeedbackForm.$setSubmitted(false);
+            $scope.form.lessonFeedbackForm.$setPristine(true);
+            $scope.closeFunction();
           };
         },
         link: function(scope, element, attrs) {

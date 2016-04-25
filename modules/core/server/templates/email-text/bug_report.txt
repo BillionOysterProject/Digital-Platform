@@ -1,0 +1,4 @@
+User: <%= UserName %>
+Browser: <%= BrowserDetails %>
+Location of Issue: <%= Location %>
+Issue: <%= Issue %>

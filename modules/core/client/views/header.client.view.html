@@ -52,7 +52,7 @@
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#modal-feedback">Support</a></li>
+                        <li><a href="#" ng-click="openFeedback()">Support</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
                         <li class="divider"></li>
                         <li><a href="/api/auth/signout" target="_self">Signout</a></li>

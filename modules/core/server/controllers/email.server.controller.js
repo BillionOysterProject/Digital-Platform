@@ -101,8 +101,13 @@ exports.sendFeedback = function(to, from, subject, data, template, req, res) {
 };
 
 exports.sendBugReport = function(req, res) {
-  if (req.body.data) req.body.data.browser = req.headers['user-agent'];
-  exports.sendFeedback('jira@fearless.jira.com', defaultFrom, 'Bug Report from the Billion Oyster Project', req.body.data, '', req, res);
+  var data = {
+    UserName: req.user.displayName + '<' + req.user.email + '>',
+    BrowserDetails: req.headers['user-agent'],
+    Location: req.body.location,
+    Issue: req.body.issue
+  };
+  exports.sendFeedback('jira@fearless.jira.com', req.user.email, 'Bug Report from the Billion Oyster Project', data, 'bug_report', req, res);
 };
 
 exports.sendGeneralFeedback = function(req, res) {
