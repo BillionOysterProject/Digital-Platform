@@ -114,7 +114,7 @@ body {
 
             .sidebar .navbar-brand > img {
                 width: 60px;
-                display: inline;
+                display: inline-block;
             }
 
     .sidebar ul.nav,
@@ -191,7 +191,7 @@ body {
     }
 
         .sidebar .navbar-footer img {
-            display: inline;
+            display: inline-block;
             width: 40px;
         }
 
@@ -607,8 +607,10 @@ h6, .h6 {
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -moz-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
     -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -635,9 +637,6 @@ h6, .h6 {
 .ql-snow.ql-toolbar {
     border-bottom: 1px solid #eee;
 }
-
-
-/* ICON PICKER */
 
 
 /* DRAG AND DROP */
@@ -667,7 +666,7 @@ h6, .h6 {
 
 .multiDemo ul[dnd-list] {
     min-height: 42px;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .multiDemo ul[dnd-list] .dndPlaceholder {
@@ -757,6 +756,7 @@ form.ng-submitted .ng-invalid {
 .library-item .panel {
     border-color: #ddd;
     cursor: pointer;
+    -moz-transition: border .2s ease-in-out;
     -webkit-transition: border .2s ease-in-out;
     -o-transition: border .2s ease-in-out;
     transition: border .2s ease-in-out;
