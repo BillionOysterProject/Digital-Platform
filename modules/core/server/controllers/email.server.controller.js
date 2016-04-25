@@ -9,6 +9,7 @@ var path = require('path'),
   ses = require('nodemailer-ses-transport');
 
 var defaultFrom = process.env.MAILER_FROM || 'Billion Oyster Project <bop@fearless.tech>';
+var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
 var transporter = nodemailer.createTransport(ses(config.mailer.options.ses));
 
@@ -80,9 +81,9 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
   sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback);
 };
 
-var sendFeedback = function(to, from, template, res, req) {
-  if (to && from && req.body.subject && template && req.body.data) {
-    sendTemplate(to, from, req.body.subject, template, req.body.data,
+exports.sendFeedback = function(to, from, subject, data, template, req, res) {
+  if (to && from && subject && template && data) {
+    sendTemplate(to, from, subject, template, data,
     function(info) {
       res.status(200).send({
         message: 'Feedback send successfully'
@@ -100,22 +101,59 @@ var sendFeedback = function(to, from, template, res, req) {
 };
 
 exports.sendBugReport = function(req, res) {
-  if (req.body.data) req.body.data.browser = req.headers['user-agent'];
-  sendFeedback('jira@fearless.jira.com', defaultFrom, '', req, res);
+  var data = {
+    UserName: req.user.displayName + '<' + req.user.email + '>',
+    BrowserDetails: req.headers['user-agent'],
+    Location: req.body.location,
+    Issue: req.body.issue
+  };
+  exports.sendFeedback('jira@fearless.jira.com', req.user.email, 'Bug Report from the Billion Oyster Project', data, 'bug_report', req, res);
 };
 
 exports.sendGeneralFeedback = function(req, res) {
-  sendFeedback(defaultFrom, req.user.email, '', req, res);
+  var data = {
+    FeedbackNote: req.body.message,
+    FeedbackName: req.user.displayName,
+    OrgName: req.user.schoolOrg.name,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(defaultFrom, req.user.email, 'General Feedback from the Billion Oyster Project', data, 'feedback', req, res);
 };
 
 exports.sendHelpQuestion = function(req, res) {
-  sendFeedback(defaultFrom, req.user.email, '', req, res);
+  var data = {
+    FeedbackNote: req.body.message,
+    FeedbackName: req.user.displayName,
+    OrgName: req.user.schoolOrg.name,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(defaultFrom, req.user.email, 'Help Question from the Billion Oyster Project', data, 'feedback', req, res);
 };
 
 exports.sendLessonFeedback = function(req, res) {
-  sendFeedback(req.body.to, req.user.email, 'lesson_feedback', req, res);
+  var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+  var data = {
+    FirstName: req.body.lesson.user.firstName,
+    LessonFeedbackName: req.user.displayName,
+    LessonName: req.body.lesson.title,
+    LessonFeedbackNote: req.body.message,
+    LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(req.body.lesson.user.email, req.user.email, subject, data, 'lesson_feedback', req, res);
 };
 
 exports.sendUnitFeedback = function(req, res) {
-  sendFeedback(req.body.to, req.user.email, 'unit_feedback', req, res);
+  var subject = 'Feedback from ' + req.user.displayName + ' about your unit ' + req.body.unit.title;
+  var data = {
+    FirstName: req.body.unit.user.firstName,
+    UnitFeedbackName: req.user.displayName,
+    UnitName: req.body.unit.title,
+    UnitFeedbackNote: req.body.message,
+    LinkUnit: httpTransport + req.headers.host + '/units/' + req.body.unit._id,
+    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(req.body.unit.user.email, req.user.email, subject, data, 'unit_feedback', req, res);
 };

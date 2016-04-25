@@ -9,38 +9,56 @@
         templateUrl: 'modules/core/client/views/site-feedback.client.view.html',
         scope: true,
         controller: function($scope, $http) {
-          $scope.save = function(isValid) {
+          $scope.sent = false;
+          $scope.send = function(isValid) {
+            if (!isValid) {
+              $scope.$broadcast('show-errors-check-validity', 'form.siteFeedbackForm');
+              return false;
+            }
+
             if ($scope.type === 'bug') {
               $http.post('/api/email/bug-report', {
-                data: {
-                  location: $scope.location,
-                  issue: $scope.issue
-                }
+                location: $scope.location,
+                issue: $scope.issue
               })
-              .success(function(data, status, headers, config) { })
-              .error(function(data, status, headers, config) { });
+              .success(function(data, status, headers, config) {
+                $scope.sent = true;
+              })
+              .error(function(data, status, headers, config) {
+                $scope.error = data.message;
+              });
             } else if ($scope.type === 'help') {
               $http.post('/api/email/help', {
-                data: {
-                  message: $scope.message,
-                }
+                message: $scope.message,
               })
-              .success(function(data, status, headers, config) { })
-              .error(function(data, status, headers, config) { });
+              .success(function(data, status, headers, config) {
+                $scope.sent = true;
+              })
+              .error(function(data, status, headers, config) {
+                $scope.error = data.message;
+              });
             } else {
               $http.post('/api/email/general-feedback', {
-                data: {
-                  message: $scope.message,
-                }
+                message: $scope.message,
               })
-              .success(function(data, status, headers, config) { })
-              .error(function(data, status, headers, config) { });
+              .success(function(data, status, headers, config) {
+                $scope.sent = true;
+              })
+              .error(function(data, status, headers, config) {
+                $scope.error = data.message;
+              });
             }
           };
 
-          $scope.cancel = function() {
+          $scope.close = function() {
             $scope.form.siteFeedbackForm.$setSubmitted(false);
             $scope.form.siteFeedbackForm.$setPristine(true);
+            $scope.type = null;
+            $scope.location = null;
+            $scope.issue = null;
+            $scope.message = null;
+            $scope.sent = false;
+            angular.element('#modal-feedback').modal('hide');
           };
         },
         link: function(scope, elem, attrs) {

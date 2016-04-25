@@ -1,0 +1,43 @@
+<div class="modal fade" id="modal-unit-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-hide="sent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Send feedback to the author</h4>
+                <p>Thanks for contributing input! All feedback is appreciated.</p>
+            </div>
+            <form name="form.unitFeedbackForm" ng-submit="send(form.unitFeedbackForm.$valid)" novalidate>
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="form-group">
+                              <label class="control-label">Message</label>
+                              <textarea class="form-control" rows="10" ng-model="message"></textarea>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </form>
+        </div>
+        <div class="modal-content" ng-show="sent">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Your message has been sent!</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- <p>Your message has been sent!</p> -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+          </div>
+        </div>
+    </div>
+</div>

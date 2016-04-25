@@ -58,7 +58,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         };
 
         var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
-          'curriculum.overview' : 'restoration-stations.dashboard';
+          'lessons.list' : 'restoration-stations.dashboard';
 
         //$state.go($state.previous.state.name || 'home', $state.previous.params);
         $state.go(dashboard);
