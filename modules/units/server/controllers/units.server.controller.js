@@ -142,7 +142,8 @@ exports.unitByID = function (req, res, next, id) {
     });
   }
 
-  Unit.findById(id).populate('user', 'displayName').exec(function (err, unit) {
+  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL')
+  .exec(function (err, unit) {
     if (err) {
       return next(err);
     } else if (!unit) {

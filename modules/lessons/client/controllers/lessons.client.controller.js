@@ -526,5 +526,13 @@
       angular.element('#modal-download-lesson').modal('hide');
       vm.download = {};
     };
+
+    vm.openLessonFeedback = function() {
+      angular.element('#modal-lesson-feedback').modal('show');
+    };
+
+    vm.closeLessonFeedback = function() {
+      angular.element('#modal-lesson-feedback').modal('hide');
+    };
   }
 })();
