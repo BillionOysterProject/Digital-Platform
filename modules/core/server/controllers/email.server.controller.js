@@ -111,11 +111,23 @@ exports.sendBugReport = function(req, res) {
 };
 
 exports.sendGeneralFeedback = function(req, res) {
-  exports.sendFeedback(defaultFrom, req.user.email, 'General Feedback from the Billion Oyster Project', req.body.data, '', req, res);
+  var data = {
+    FeedbackNote: req.body.message,
+    FeedbackName: req.user.displayName,
+    OrgName: req.user.schoolOrg.name,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(defaultFrom, req.user.email, 'General Feedback from the Billion Oyster Project', data, 'feedback', req, res);
 };
 
 exports.sendHelpQuestion = function(req, res) {
-  exports.sendFeedback(defaultFrom, req.user.email, 'Help Question from the Billion Oyster Project', req.body.data, '', req, res);
+  var data = {
+    FeedbackNote: req.body.message,
+    FeedbackName: req.user.displayName,
+    OrgName: req.user.schoolOrg.name,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  };
+  exports.sendFeedback(defaultFrom, req.user.email, 'Help Question from the Billion Oyster Project', data, 'feedback', req, res);
 };
 
 exports.sendLessonFeedback = function(req, res) {

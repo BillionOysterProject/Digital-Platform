@@ -54,6 +54,10 @@
             $scope.form.siteFeedbackForm.$setSubmitted(false);
             $scope.form.siteFeedbackForm.$setPristine(true);
             $scope.type = null;
+            $scope.location = null;
+            $scope.issue = null;
+            $scope.message = null;
+            $scope.sent = false;
             angular.element('#modal-feedback').modal('hide');
           };
         },

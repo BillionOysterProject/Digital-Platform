@@ -1,8 +1,8 @@
 <div class="sidebar navbar navbar-fixed-top navbar-inverse" ng-controller="HeaderController">
     <div class="navbar-header">
-        <a ui-sref="home" class="navbar-brand">
+        <div class="navbar-brand"> <!--  ui-sref="home"  -->
             <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
-        </a>
+        </div>
     </div>
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
         <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">

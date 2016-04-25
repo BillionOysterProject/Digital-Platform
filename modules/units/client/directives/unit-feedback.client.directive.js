@@ -35,6 +35,9 @@
           $scope.close = function() {
             $scope.form.unitFeedbackForm.$setSubmitted(false);
             $scope.form.unitFeedbackForm.$setPristine(true);
+            $scope.sent = false;
+            $scope.unit = null;
+            $scope.message = null;
             $scope.closeFunction();
           };
         },
