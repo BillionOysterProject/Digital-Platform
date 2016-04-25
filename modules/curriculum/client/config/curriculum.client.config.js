@@ -17,11 +17,12 @@
       position: 1
     });
 
-    Menus.addSubMenuItem('topbar', 'curriculum', {
-      title: 'Overview',
-      state: 'curriculum.overview',
-      roles: ['team lead', 'admin'],
-      position: 0
-    });
+    //COMMENT OUT NODE GRAPH
+    //Menus.addSubMenuItem('topbar', 'curriculum', {
+    //  title: 'Overview',
+    //  state: 'curriculum.overview',
+    //  roles: ['team lead', 'admin'],
+    //  position: 0
+    //});
   }
 })();
