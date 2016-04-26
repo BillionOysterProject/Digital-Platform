@@ -20,7 +20,7 @@
         controller: 'RestorationStationsDashboardController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead', 'team member', 'partner', 'admin'],
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
           pageTitle: 'Restoration Stations Dashboard'
         }
       })
@@ -30,7 +30,7 @@
         controller: 'RestorationStationsDashboardController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead', 'team member', 'partner', 'admin'],
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
           pageTitle: 'Restoration Stations Dashboard'
         }
       });

@@ -26,7 +26,7 @@
                     </ul>
                 </li>
             </ul>
-            <a class="btn btn-primary pull-right" ng-click="vm.openAddEdit()" ng-show="vm.hasRole('team lead') || vm.hasRole('admin')">Add a vocabulary term</a>
+            <a class="btn btn-primary pull-right" ng-click="vm.openAddEdit()" view-permissions="admin,team lead">Add a vocabulary term</a>
         </nav>
         <table class="table">
             <tr ng-repeat="term in vm.glossary">

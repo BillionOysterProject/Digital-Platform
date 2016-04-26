@@ -13,7 +13,7 @@
       title: 'Restoration Stations',
       state: 'restoration-stations',
       type: 'dropdown',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
+      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
       icon: 'glyphicon glyphicon-map-marker',
       position: 2
     });
@@ -21,7 +21,7 @@
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Dashboard',
       state: 'restoration-stations.dashboard',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
+      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
       position: 1
     });
 
@@ -35,14 +35,14 @@
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Expeditions',
       state: 'expeditions.list',
-      roles: ['team lead', 'team member', 'partner', 'admin'],
+      roles: ['admin', 'team lead', 'team member', 'partner'],
       position: 2
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Submissions',
       state: 'expeditions.submitted',
-      roles: ['team lead', 'partner', 'admin'],
+      roles: ['admin', 'team lead', 'partner'],
       position: 3
     });
   }

@@ -20,7 +20,7 @@
         controller: 'LessonsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team lead', 'admin'],
+          roles: ['admin', 'team lead', 'team lead pending'],
           pageTitle: 'Lessons List'
         }
       })
@@ -33,7 +33,7 @@
           lessonResolve: newLesson
         },
         data: {
-          roles: ['team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Lesson Create'
         }
       })
@@ -46,7 +46,7 @@
           lessonResolve: getLesson
         },
         data: {
-          roles: ['team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Edit Lesson {{ lessonResolve.title }}'
         }
       })
@@ -59,7 +59,7 @@
           lessonResolve: getLessonDuplicate
         },
         data: {
-          roles: ['team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Duplicate Lesson'
         }
       })
@@ -72,6 +72,7 @@
           lessonResolve: getLessonFull
         },
         data: {
+          roles: ['admin', 'team lead', 'team lead pending'],
           pageTitle: 'Lesson {{ lessonResolve.title }}'
         }
       });

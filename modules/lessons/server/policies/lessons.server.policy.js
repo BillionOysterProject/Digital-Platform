@@ -85,6 +85,30 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId',
       permissions: '*'
     }]
+  }, {
+    roles: ['team lead pending'],
+    allows: [{
+      resources: '/api/lessons',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/download-file',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/favorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/lessons/:lessonId/unfavorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/lessons/:lessonId/download',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/favorites',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId',
+      permissions: ['get']
+    }]
   }]);
 };
 
