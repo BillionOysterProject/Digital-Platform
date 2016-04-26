@@ -630,10 +630,6 @@ h6, .h6 {
     padding: 6px 12px;
 }
 
-.ql-container {
-    min-height: 300px;
-}
-
 .ql-snow.ql-toolbar {
     border-bottom: 1px solid #eee;
 }
