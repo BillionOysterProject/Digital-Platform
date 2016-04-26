@@ -85,8 +85,8 @@ exports.sendFeedback = function(to, from, subject, data, template, req, res) {
   if (to && from && subject && template && data) {
     sendTemplate(to, from, subject, template, data,
     function(info) {
-      res.status(200).send({
-        message: 'Feedback send successfully'
+      return res.status(200).send({
+        message: 'Feedback sent successfully'
       });
     }, function(errorMessage) {
       return res.status(400).send({
@@ -94,7 +94,7 @@ exports.sendFeedback = function(to, from, subject, data, template, req, res) {
       });
     });
   } else {
-    res.status(400).send({
+    return res.status(400).send({
       message: 'Must have to address, from address, subject, and body'
     });
   }
