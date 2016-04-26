@@ -20,6 +20,7 @@
         controller: 'UnitsListController',
         controllerAs: 'vm',
         data: {
+          roles: ['admin', 'team lead', 'team lead pending'],
           pageTitle: 'Units List'
         }
       })
@@ -58,6 +59,7 @@
           unitResolve: getUnit
         },
         data:{
+          roles: ['admin', 'team lead', 'team lead pending'],
           pageTitle: 'Unit {{ unitResolve.title }}'
         }
       });

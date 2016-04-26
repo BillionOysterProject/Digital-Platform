@@ -20,10 +20,12 @@
 
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
+    vm.isTeamLeadPending = checkRole('team lead pending');
+    vm.isTeamMemberPending = checkRole('team member pending');
 
     ExpeditionsService.query({
-      byOwner: (vm.isTeamLead) ? true : '',
-      byMember: (vm.isTeamMember) ? true : '',
+      byOwner: (vm.isTeamLead || vm.isTeamLeadPending) ? true : '',
+      byMember: (vm.isTeamMember || vm.isTeamMemberPending) ? true : '',
     }, function(data) {
       vm.expeditions = data;
     });

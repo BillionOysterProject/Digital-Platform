@@ -12,10 +12,10 @@
                         <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
                       </ul>
                     </div>
-                    <div class="btn-group pull-right" ng-show="vm.teams.length < 1">
+                    <div class="btn-group pull-right" ng-show="vm.teams.length === 1">
                       <button type="button" class="btn btn-lg btn-success">{{vm.team.name}}</button>
                     </div>
-                    <h5><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
+                    <h5 ng-show="vm.teams.length > 0"><img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left"> {{vm.team.teamLead.displayName}}<br />
                       <small class="text-muted">{{vm.team.schoolOrg.city}}, {{vm.team.schoolOrg.state}}</small>
                     </h5>
                 </div>
@@ -33,9 +33,9 @@
                       show-marker="vm.showMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
-                <div class="row" ng-show="vm.isTeamLead">
+                <div class="row" ng-show="vm.isTeamLead || vm.isTeamLeadPending">
                     <div class="col-lg-4">
-                        <div class="panel panel-default">
+                        <div class="panel panel-default" ng-show="vm.isTeamLead">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" ng-show="vm.isTeamLead">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isTeamLeadPending">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -111,7 +111,7 @@
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()">Register a station</a>
                     </div>
                 </div>
-                <div class="panel panel-default">
+                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isTeamMember">
                     <div class="panel-heading">
                         <h4>Team Expeditions</h4>
                     </div>

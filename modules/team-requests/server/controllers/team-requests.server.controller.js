@@ -255,7 +255,9 @@ exports.list = function(req, res) {
     query.limit(req.query.limit);
   }
 
-  query.populate('requester', 'displayName email profileImageURL').exec(function(err, teamRequests) {
+  query.populate('requester', 'displayName email profileImageURL')
+  .populate('teamLead', 'displayName email profileImageURL schoolOrg')
+  .exec(function(err, teamRequests) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
+  LessonActivity = mongoose.model('LessonActivity'),
   SavedLesson = mongoose.model('SavedLesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -67,7 +68,19 @@ exports.read = function(req, res) {
     delete lesson.returnedNotes;
   }
 
-  res.json(lesson);
+  if (!lesson.isCurrentUserOwner) {
+    var activity = new LessonActivity({
+      user: req.user,
+      lesson: lesson,
+      activity: (req.query.duplicate) ? 'duplicated' : 'viewed'
+    });
+
+    activity.save(function(err) {
+      res.json(lesson);
+    });
+  } else {
+    res.json(lesson);
+  }
 };
 
 /**
@@ -660,7 +673,15 @@ exports.downloadZip = function(req, res) {
     getLessonContent(function() {
       getHandouts(function() {
         getResources(function() {
-          archive.finalize();
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: req.lesson,
+            activity: 'downloaded'
+          });
+
+          activity.save(function(err) {
+            archive.finalize();
+          });
         });
       });
     });

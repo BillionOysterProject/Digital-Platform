@@ -10,6 +10,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   passport = require('passport'),
   User = mongoose.model('User'),
+  UserActivity = mongoose.model('UserActivity'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   async = require('async'),
   TeamRequest = mongoose.model('TeamRequest');
@@ -253,7 +254,14 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          res.json(user);
+          var activity = new UserActivity({
+            user: user,
+            activity: 'login'
+          });
+
+          activity.save(function(err) {
+            res.json(user);
+          });
         }
       });
     }

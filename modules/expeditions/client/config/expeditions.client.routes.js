@@ -20,7 +20,7 @@
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle: 'Expeditions List'
         }
       })
@@ -33,7 +33,7 @@
           expeditionResolve: newExpedition
         },
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle : 'Expeditions Create'
         }
       })
@@ -43,7 +43,7 @@
         controller: 'SubmittedExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team member', 'team lead', 'partner', 'admin'],
+          roles: ['admin', 'team lead', 'partner'],
           pageTitle: 'Submitted Expeditions'
         }
       })
@@ -56,7 +56,7 @@
           expeditionResolve: getExpedition
         },
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle: 'Edit Expedition {{ expeditionResolve.title }}'
         }
       })
@@ -69,7 +69,7 @@
           expeditionResolve: getFullExpedition
         },
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle : 'Expedition Protocols'
         }
       })
@@ -82,6 +82,7 @@
           expeditionResolve: getFullExpedition
         },
         data:{
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
         }
       });

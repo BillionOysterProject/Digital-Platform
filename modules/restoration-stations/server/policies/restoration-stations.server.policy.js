@@ -22,7 +22,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'team member', 'partner'],
+    roles: ['user', 'team member', 'partner', 'team lead pending', 'team member pending'],
     allows: [{
       resources: '/api/restoration-stations',
       permissions: ['get']

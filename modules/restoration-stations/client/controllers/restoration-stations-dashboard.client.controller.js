@@ -7,11 +7,11 @@
 
   RestorationStationsDashboardController.$inject = ['$scope', 'lodash', 'moment', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService'];
+  'ExpeditionActivitiesService', 'TeamRequestsService'];
 
   function RestorationStationsDashboardController($scope, lodash, moment, Authentication,
     TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
-    ExpeditionActivitiesService) {
+    ExpeditionActivitiesService, TeamRequestsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -34,6 +34,8 @@
 
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
+    vm.isTeamLeadPending = checkRole('team lead pending');
+    vm.isTeamMemberPending = checkRole('team member pending');
 
     vm.findTeams = function() {
       var byOwner, byMember;
@@ -58,23 +60,19 @@
       });
     };
 
-    vm.findTeamValues = function() {
-      TeamMembersService.query({
-        byOwner: true,
-        teamId: vm.filter.teamId
+    vm.findTeamRequests = function() {
+      TeamRequestsService.query({
+        byMember: true
       }, function(data) {
-        vm.members = data;
+        if (data.length > 0) {
+          vm.findSchoolOrgRestorationStations(data[0].teamLead.schoolOrg);
+        }
       });
+    };
 
+    vm.findSchoolOrgRestorationStations = function(schoolOrgId) {
       RestorationStationsService.query({
-        teamId: vm.filter.teamId
-      }, function(data) {
-        vm.stations = data;
-      });
-
-      console.log('schoolOrgId', vm.team.schoolOrg._id);
-      RestorationStationsService.query({
-        schoolOrgId: vm.team.schoolOrg._id
+        schoolOrgId: schoolOrgId
       }, function(data) {
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
@@ -91,6 +89,23 @@
         }
         console.log('mapPoints', vm.mapPoints);
       });
+    };
+
+    vm.findTeamValues = function() {
+      TeamMembersService.query({
+        byOwner: true,
+        teamId: vm.filter.teamId
+      }, function(data) {
+        vm.members = data;
+      });
+
+      RestorationStationsService.query({
+        teamId: vm.filter.teamId
+      }, function(data) {
+        vm.stations = data;
+      });
+
+      vm.findSchoolOrgRestorationStations(vm.team.schoolOrg._id);
 
       var byMember = (vm.isTeamLead) ? '' : true;
       ExpeditionsService.query({
@@ -109,7 +124,13 @@
       });
     };
 
-    vm.findTeams();
+    if (vm.isTeamLead || vm.isTeamMember) {
+      vm.findTeams();
+    } else if (vm.isTeamMemberPending) {
+      vm.findTeamRequests();
+    } else {
+      vm.findSchoolOrgRestorationStations(vm.user.schoolOrg);
+    }
 
     vm.fieldChanged = function(team) {
       vm.filter.teamId = (team) ? team._id : '';

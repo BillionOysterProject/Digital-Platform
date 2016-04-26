@@ -19,6 +19,14 @@ var path = require('path'),
   moment = require('moment'),
   _ = require('lodash');
 
+var checkRole = function(user, role) {
+  var index = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (index > -1) ? true : false;
+};
+
+
 /**
  * Create a expedition
  */
@@ -434,6 +442,11 @@ exports.list = function (req, res) {
     or.push({ 'teamLists.settlementTiles': req.user });
     or.push({ 'teamLists.waterQuality': req.user });
     and.push({ $or: or });
+  }
+
+  if (checkRole('team lead pending') || checkRole('team member pending')) {
+    console.log('only getting published');
+    and.push({ 'status': 'published' });
   }
 
   if (and.length === 1) {

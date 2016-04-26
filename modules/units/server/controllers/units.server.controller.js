@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Unit = mongoose.model('Unit'),
+  UnitActivity = mongoose.model('UnitActivity'),
   Lesson = mongoose.model('Lesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
@@ -44,10 +45,25 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var unit = req.unit ? req.unit.toJSON() : {};
 
+  unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true : false;
+
   Lesson.find({ unit: unit }).exec(function(err, lessons) {
     console.log('lessons', lessons);
     unit.hasLessons = (lessons && lessons.length > 0) ? true : false;
-    res.json(unit);
+
+    if (!unit.isCurrentUserOwner) {
+      var activity = new UnitActivity({
+        user: req.user,
+        unit: unit,
+        activity: 'viewed'
+      });
+
+      activity.save(function(err) {
+        res.json(unit);
+      });
+    } else {
+      res.json(unit);
+    }
   });
 };
 

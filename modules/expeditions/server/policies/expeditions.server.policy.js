@@ -46,7 +46,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'partner', 'guest'],
+    roles: ['user', 'partner', 'guest', 'team lead pending', 'team member pending'],
     allows: [{
       resources: '/api/expeditions/:expeditionId',
       permissions: ['get']
