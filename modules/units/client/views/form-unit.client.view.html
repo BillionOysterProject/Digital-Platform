@@ -201,6 +201,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="alert alert-danger" ng-repeat="(key, errors) in vm.form.unitForm.$error track by $index">
+                        <h4>Sorry, you can't submit just yet!</h4>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
+                        </ul>
+                    </div> 
                     <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
                     <button class="btn btn-primary" type="submit">{{vm.unit._id ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
                     <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>

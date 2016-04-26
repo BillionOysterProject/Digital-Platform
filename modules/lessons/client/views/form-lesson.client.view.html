@@ -345,13 +345,11 @@
               </div>
             </div>
           </div>
-          <div class="alert alert-danger">
+          <div class="alert alert-danger" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
             <h4>Sorry, you can't submit just yet!</h4>
-            <span ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index"> <!--<strong>{{ key }}</strong> errors-->
-                <ul class="list-unstyled">
-                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
-                </ul>
-            </span>
+            <ul class="list-unstyled">
+                <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
+            </ul>
           </div> 
           <div>
             <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
