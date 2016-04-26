@@ -69,8 +69,11 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
       text: bodyText,
       html: bodyHtml
     }, function(err, info) {
-      if (err) errorCallback(err.message);
-      successCallback(info);
+      if (err) {
+        errorCallback(err.message);
+      } else {
+        successCallback(info);
+      }
     });
   } else {
     errorCallback('Must have to addresses(es), subject, and body');
@@ -86,7 +89,7 @@ exports.sendFeedback = function(to, from, subject, data, template, req, res) {
     sendTemplate(to, from, subject, template, data,
     function(info) {
       return res.status(200).send({
-        message: 'Feedback sent successfully'
+        message: 'Feedback send successfully'
       });
     }, function(errorMessage) {
       return res.status(400).send({
