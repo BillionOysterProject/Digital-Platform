@@ -70,8 +70,10 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
       html: bodyHtml
     }, function(err, info) {
       if (err) {
+        console.log('err', err);
         errorCallback(err.message);
       } else {
+        console.log('info', info);
         successCallback(info);
       }
     });
