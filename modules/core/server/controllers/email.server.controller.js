@@ -63,7 +63,8 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
     var bodyHtml = runTemplate(htmlContent, data);
 
     transporter.sendMail({
-      from: from,
+      from: defaultFrom,
+      replyTo: from,
       to: to,
       subject: subject,
       text: bodyText,
@@ -119,6 +120,7 @@ exports.sendGeneralFeedback = function(req, res) {
   var data = {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
+    FeedbackEmail: req.user.email,
     OrgName: req.user.schoolOrg.name,
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };
@@ -129,6 +131,7 @@ exports.sendHelpQuestion = function(req, res) {
   var data = {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
+    FeedbackEmail: req.user.email,
     OrgName: req.user.schoolOrg.name,
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };

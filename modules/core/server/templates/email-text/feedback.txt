@@ -4,4 +4,5 @@ Hi BOP Support,
 
 Thanks!
 <%= FeedbackName %>
+<%= FeedbackEmail %>
 <%= OrgName %>
