@@ -15,6 +15,7 @@
     vm.expedition = expedition;
     vm.teamId = '';
     vm.authentication = Authentication;
+    vm.user = vm.authentication.user;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
@@ -53,26 +54,30 @@
 
     vm.findTeamValues = function() {
       if (vm.teamId === '') {
-        vm.team = vm.teams[0];
-        vm.teamId = vm.team._id;
+        vm.team = (vm.teams && vm.teams.length > 0) ? vm.teams[0] : null;
+        vm.teamId = (vm.team) ? vm.team._id : '';
       }
 
-      TeamMembersService.query({
-        teamId: vm.teamId
-      }, function(data) {
-        vm.members = data;
-        vm.memberLists.members = angular.copy(data);
-        vm.member = null;
-      });
+      if (vm.teamId) {
+        TeamMembersService.query({
+          teamId: vm.teamId
+        }, function(data) {
+          vm.members = data;
+          vm.memberLists.members = angular.copy(data);
+          vm.member = null;
+        });
+      }
 
-      RestorationStationsService.query({
-        schoolOrgId: vm.team.schoolOrg._id
-      }, function(data) {
-        vm.stations = data;
-        if (!vm.expedition.station || vm.expedition.station === undefined) {
-          vm.expedition.station = vm.stations[0];
-        }
-      });
+      if (vm.team) {
+        RestorationStationsService.query({
+          schoolOrgId: (vm.team.schoolOrg._id) ? vm.team.schoolOrg._id : vm.team.schoolOrg
+        }, function(data) {
+          vm.stations = data;
+          if (!vm.expedition.station || vm.expedition.station === undefined) {
+            vm.expedition.station = vm.stations[0];
+          }
+        });
+      }
 
       vm.memberLists.protocols = {
         'Site Conditions': [],
