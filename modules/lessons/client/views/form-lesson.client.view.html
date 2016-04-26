@@ -345,6 +345,14 @@
               </div>
             </div>
           </div>
+          <div class="alert alert-danger">
+            <h4>Sorry, you can't submit just yet!</h4>
+            <span ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index"> <!--<strong>{{ key }}</strong> errors-->
+                <ul class="list-unstyled">
+                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
+                </ul>
+            </span>
+          </div> 
           <div>
             <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
             <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button>
@@ -355,13 +363,6 @@
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>
-        <!-- <ul>
-                    <li ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index"> <strong>{{ key }}</strong> errors
-                        <ul>
-                            <li ng-repeat="e in errors">{{ e.$name }} has an error: <strong>{{ key }}</strong>.</li>
-                        </ul>
-                    </li>
-                </ul> -->
       </fieldset>
     </form>
   </section>
