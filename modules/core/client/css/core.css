@@ -464,6 +464,10 @@ h6, .h6 {
     word-break: break-all;
 }
 
+.nobreak {
+    word-break: keep-all;
+}
+
 .list-inline li {
     padding-right: 0;
 }
