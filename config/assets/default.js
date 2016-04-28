@@ -35,7 +35,6 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap.js',
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
-
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngQuill/src/ng-quill.js',
         'public/lib/angular-agility/dist/angular-agility.js',

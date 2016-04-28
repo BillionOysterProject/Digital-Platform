@@ -32,6 +32,7 @@
     "ng-lodash": "^0.4.0",
     "ngCytoscape": "^0.0.5",
     "angular-agility": "^0.8.32",
+    "select2": "~3.5.2",
     "angular-bootstrap-colorpicker": "^3.0.25",
     "angular-moment": "^0.10.3",
     "moment": "^2.12.0",
