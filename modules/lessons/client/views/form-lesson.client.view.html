@@ -97,7 +97,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row">
+                  <!--<div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="protocolConnections" class="control-label required">Protocol Connections *</label>
@@ -109,11 +109,10 @@
                       </div>
                     <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate
                       Selections should turn into "tags" using select2. Multiple selections should be able to be made.
-                      Similar to https://select2.github.io/examples.html#data-ajax except with multiples -->
+                      Similar to https://select2.github.io/examples.html#data-ajax except with multiples --
                     </div>
-                  </div>
+                  </div>-->
                 </div>
-                <!-- TODO: Pull this list dynamically from wherever admins will CRUD subject fields -->
                 <div class="col-md-6">
                   <div class="form-group" show-errors>
                     <label for="subjectAreas" class="control-label required">Subject Area(s) *</label>
@@ -178,20 +177,14 @@
                 <div class="col-md-6">
                   <!-- TODO: Give location for upload files to be stored in the lesson -->
                   <div class="form-group">
-                    <label for="handouts" class="control-label">Handouts *</label>
+                    <label for="handouts" class="control-label">Handouts</label>
                     <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"></multiple-file-drop-zone>
-                    <div ng-show="vm.form.lessonForm.$submitted && vm.handouts.length <= 0">
-                      <p class="red">Handouts are required.</p>
-                    </div>
                   </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
-                        <label for="vocabulary" class="control-label">Teacher Resources *</label>
-                        <div ng-show="vm.form.lessonForm.$submitted && vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0">
-                          <p class="red">Teacher Resources are required.</p>
-                        </div>
+                        <label for="vocabulary" class="control-label">Teacher Resources</label>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
                     </div>
                     <table class="table">
                       <tr ng-repeat="link in vm.resourceLinks">
@@ -345,9 +338,9 @@
               </div>
             </div>
           </div>
-          <div class="alert alert-danger" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
+          <div class="alert alert-danger" ng-show="vm.form.lessonForm.$invalid">
             <h4>Sorry, you can't submit just yet!</h4>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
                 <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
             </ul>
           </div> 

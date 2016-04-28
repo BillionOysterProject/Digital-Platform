@@ -30,11 +30,11 @@
         </nav>
         <table class="table">
             <tr ng-repeat="term in vm.glossary">
-                <td><h4 ng-bind="term.term"></h4><td>
+                <td><h4 ng-bind="term.term" class="nobreak"></h4><td>
                 <td><p class="text-muted" ng-bind="term.definition"></p></td>
                 <td class="text-right col-md-2">
                     <a class="btn btn-primary" title="See uses" ng-click="vm.goToLesson(term)">
-                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                      <i class="glyphicon glyphicon-search"></i>
                     </a>
                     <a class="btn btn-default" ng-click="vm.openAddEdit(term)" ng-show="term.isCurrentUserOwner || vm.hasRole('admin')">
                       <i class="glyphicon glyphicon-edit"></i>
