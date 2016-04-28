@@ -129,7 +129,7 @@
             <div class="alert alert-danger" ng-show="vm.form.expeditionForm.$invalid">
                 <h4>Sorry, you can't submit just yet!</h4>
                 <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.expeditionForm.$error track by $index">
-                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
+                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
                 </ul>
             </div> 
         </section>
