@@ -52,7 +52,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }]
   }, {
-    roles: ['user', 'partner'],
+    roles: ['user', 'partner', 'team lead pending', 'team member pending'],
     allows: [{
       resources: '/api/teams/members',
       permissions: ['get']

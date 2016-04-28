@@ -85,6 +85,7 @@ exports.create = function (req, res) {
                         siteCondition: siteCondition,
                         oysterMeasurement: oysterMeasurement,
                         mobileTrap: mobileTrap,
+                        settlementTiles: settlementTile,
                         waterQuality: waterQuality
                       };
                       expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();

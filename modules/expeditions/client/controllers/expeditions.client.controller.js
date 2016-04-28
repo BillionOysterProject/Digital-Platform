@@ -79,13 +79,22 @@
         });
       }
 
-      vm.memberLists.protocols = {
-        'Site Conditions': [],
-        'Oyster Measurements': [],
-        'Mobile Trap': [],
-        'Settlement Tiles': [],
-        'Water Quality': []
-      };
+      if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) {
+        vm.expedition.teamLists = {
+          siteCondition: [],
+          oysterMeasurement: [],
+          mobileTrap: [],
+          settlementTiles: [],
+          waterQuality: [],
+        };
+      }
+      // vm.memberLists.protocols = {
+      //   'Site Conditions': [],
+      //   'Oyster Measurements': [],
+      //   'Mobile Trap': [],
+      //   'Settlement Tiles': [],
+      //   'Water Quality': []
+      // };
     };
 
     vm.fieldChanged = function(team) {
@@ -145,26 +154,33 @@
 
     vm.autoAssign = function() {
       var keys = [];
-      angular.forEach(vm.memberLists.protocols, function(value, key) {
+      angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });
+      console.log('vm.memberLists.members', vm.memberLists.members);
+      console.log('vm.expedition.teamLists', vm.expedition.teamLists);
+      console.log('keys', keys);
       if (vm.memberLists.members.length < keys.length) {
+        console.log('less members than member lists');
         var ml = 0;
         for (var l = 0; l < keys.length; l++) {
-          vm.memberLists.protocols[keys[l]].push(vm.memberLists.members[ml]);
+          console.log('key', keys[l]);
+          console.log('member', vm.memberLists.members[ml]);
+          vm.expedition.teamLists[keys[l]].push(vm.memberLists.members[ml]);
           ml++;
           if (ml >= vm.memberLists.members.length) {
+            console.log('resetting member index');
             ml = 0;
           }
         }
       } else if (vm.memberLists.members.length === keys.length) {
         for (var e = 0; e < keys.length; e++) {
-          vm.memberLists.protocols[keys[e]].push(vm.memberLists.members[e]);
+          vm.expedition.teamLists[keys[e]].push(vm.memberLists.members[e]);
         }
       } else {
         var ll = 0;
         for (var g = 0; g < vm.memberLists.members.length; g++) {
-          vm.memberLists.protocols[keys[ll]].push(vm.memberLists.members[g]);
+          vm.expedition.teamLists[keys[ll]].push(vm.memberLists.members[g]);
           ll++;
           if (ll >= keys.length) {
             ll = 0;
