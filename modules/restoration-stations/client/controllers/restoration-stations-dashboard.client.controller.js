@@ -65,7 +65,8 @@
         byMember: true
       }, function(data) {
         if (data.length > 0) {
-          vm.findSchoolOrgRestorationStations(data[0].teamLead.schoolOrg);
+          vm.findSchoolOrgRestorationStations((data[0].teamLead.schoolOrg._id) ?
+            data[0].teamLead.schoolOrg._id : data[0].teamLead.schoolOrg);
         }
       });
     };
@@ -105,7 +106,7 @@
         vm.stations = data;
       });
 
-      vm.findSchoolOrgRestorationStations(vm.team.schoolOrg._id);
+      vm.findSchoolOrgRestorationStations((vm.team.schoolOrg._id) ? vm.team.schoolOrg._id : vm.team.schoolOrg);
 
       var byMember = (vm.isTeamLead) ? '' : true;
       ExpeditionsService.query({
@@ -129,7 +130,7 @@
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
     } else {
-      vm.findSchoolOrgRestorationStations(vm.user.schoolOrg);
+      vm.findSchoolOrgRestorationStations((vm.user.schoolOrg._id) ? vm.user.schoolOrg._id : vm.user.schoolOrg);
     }
 
     vm.fieldChanged = function(team) {
