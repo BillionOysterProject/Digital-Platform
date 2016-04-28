@@ -70,7 +70,8 @@
 
       if (vm.team) {
         RestorationStationsService.query({
-          schoolOrgId: (vm.team.schoolOrg._id) ? vm.team.schoolOrg._id : vm.team.schoolOrg
+          schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ? 
+            vm.team.schoolOrg._id : vm.team.schoolOrg
         }, function(data) {
           vm.stations = data;
           if (!vm.expedition.station || vm.expedition.station === undefined) {
@@ -157,15 +158,9 @@
       angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });
-      console.log('vm.memberLists.members', vm.memberLists.members);
-      console.log('vm.expedition.teamLists', vm.expedition.teamLists);
-      console.log('keys', keys);
       if (vm.memberLists.members.length < keys.length) {
-        console.log('less members than member lists');
         var ml = 0;
         for (var l = 0; l < keys.length; l++) {
-          console.log('key', keys[l]);
-          console.log('member', vm.memberLists.members[ml]);
           vm.expedition.teamLists[keys[l]].push(vm.memberLists.members[ml]);
           ml++;
           if (ml >= vm.memberLists.members.length) {

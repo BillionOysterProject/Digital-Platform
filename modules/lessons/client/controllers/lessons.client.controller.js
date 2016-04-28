@@ -236,21 +236,35 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
-      if (vm.handouts.length <= 0) {
+
+      if ((vm.lesson.instructionPlan === undefined) ||
+      ((vm.lesson.instructionPlan.engage === undefined || vm.lesson.instructionPlan.engage === '') &&
+       (vm.lesson.instructionPlan.explore === undefined || vm.lesson.instructionPlan.explore === '') &&
+       (vm.lesson.instructionPlan.explain === undefined || vm.lesson.instructionPlan.explain === '') &&
+       (vm.lesson.instructionPlan.elaborate === undefined || vm.lesson.instructionPlan.elaborate === '') &&
+       (vm.lesson.instructionPlan.evaluate === undefined || vm.lesson.instructionPlan.evaluate === ''))) {
+        vm.error = 'At least one Instruction Plan is required';
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
 
-      if (vm.resourceLinks.length <= 0 && vm.resourceFiles.length <= 0) {
+      if ((vm.lesson.standards === undefined) ||
+      ((vm.lesson.standards.cclsElaScienceTechnicalSubjects === undefined || vm.lesson.standards.cclsElaScienceTechnicalSubjects.length === 0) &&
+      (vm.lesson.standards.cclsMathematics === undefined || vm.lesson.standards.cclsMathematics.length === 0) &&
+      (vm.lesson.standards.ngssCrossCuttingConcepts === undefined || vm.lesson.standards.ngssCrossCuttingConcepts.length === 0) &&
+      (vm.lesson.standards.ngssDisciplinaryCoreIdeas === undefined || vm.lesson.standards.ngssDisciplinaryCoreIdeas.length === 0) &&
+      (vm.lesson.standards.ngssScienceEngineeringPractices === undefined || vm.lesson.standards.ngssScienceEngineeringPractices.length === 0) &&
+      (vm.lesson.standards.nycsssUnits === undefined || vm.lesson.standards.nycsssUnits.length === 0) &&
+      (vm.lesson.standards.nysssKeyIdeas === undefined || vm.lesson.standards.nysssKeyIdeas.length === 0) &&
+      (vm.lesson.standards.nysssMajorUnderstandings === undefined || vm.lesson.standards.nysssMajorUnderstandings.length === 0) &&
+      (vm.lesson.standards.nysssMst === undefined || vm.lesson.standards.nysssMst.length === 0))) {
+        vm.error = 'At least one Standard is required';
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
-        return false;
-      }
-
-      if (vm.lesson.lessonOverview.protocolConnections.length <= 0) {
         return false;
       }
 
       if (vm.lesson.lessonOverview.subjectAreas.length <= 0) {
+        vm.error = 'Subject area is required';
         return false;
       }
 
