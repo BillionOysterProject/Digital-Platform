@@ -7,20 +7,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="name">Name your expedition</label>
-                        <input type="text" class="form-control" name="name" ng-model="vm.expedition.name"/>
+                        <label for="name" required>Name your expedition *</label>
+                        <input type="text" class="form-control" name="name" ng-model="vm.expedition.name" required/>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="team">Select a team</label>
+                            <label for="team" required>Select a team *</label>
                             <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
-                            name="team" id="team">
+                            name="team" id="team" required>
                               <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
                             </select>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="station">Select a location</label>
-                            <select class="form-control" ng-model="vm.expedition.station._id" name="station" id="station">
+                            <label for="station" required>Select a location *</label>
+                            <select class="form-control" ng-model="vm.expedition.station._id" name="station" id="station" required>
                               <option ng-repeat="station in vm.stations" value="{{station._id}}">{{station.name}}</option>
                             </select>
                         </div>
@@ -29,18 +29,18 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="form-group">
-                            <label for="startTime">Start time</label>
+                            <label for="startTime" required>Start time *</label>
                             <input type="datetime-local" class="form-control" name="startTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
-                            ng-model="vm.expedition.monitoringStartDate"/>
+                            ng-model="vm.expedition.monitoringStartDate" required/>
                         </div>
                       </div>
                       <div class="row">
                         <div class="form-group">
-                            <label for="endTime">Stop time</label>
+                            <label for="endTime" required>Stop time *</label>
                             <input type="datetime-local" class="form-control" name="endTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
-                            ng-model="vm.expedition.monitoringEndDate"/>
+                            ng-model="vm.expedition.monitoringEndDate" required/>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
     <section class="content">
         <section class="container">
             <div class="form-group">
-                <label>Assign students to protocols</label>
+                <label>Assign students to protocols *</label>
                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()">Auto Assign</button>
                 <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
             </div>
@@ -126,16 +126,18 @@
                 </div>
               </div>
             </div>
+            <div class="alert alert-danger" ng-show="vm.form.expeditionForm.$invalid">
+                <h4>Sorry, you can't submit just yet!</h4>
+                <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.expeditionForm.$error track by $index">
+                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> {{ e.$name }} is <strong>{{ key }}</strong></li>
+                </ul>
+            </div> 
         </section>
     </section>
     <section class="content shaded">
         <section class="container">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
-                </div>
-                <div ng-show="vm.error" class="text-danger">
-                    <strong ng-bind="vm.error"></strong>
-                </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
             </div>
         </section>
     </section>
