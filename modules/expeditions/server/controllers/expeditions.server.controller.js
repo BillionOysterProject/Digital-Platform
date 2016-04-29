@@ -515,7 +515,7 @@ exports.expeditionByID = function (req, res, next, id) {
   }
 
   var query = Expedition.findById(id).populate('team').populate('team.teamLead', 'email displayName profileImageURL')
-  .populate('station')
+  .populate('station', 'name')
   .populate('teamLists.siteCondition', 'displayName username profileImageURL')
   .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
   .populate('teamLists.mobileTrap', 'displayName username profileImageURL')

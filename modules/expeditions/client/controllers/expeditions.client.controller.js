@@ -27,7 +27,11 @@
     };
 
     if (vm.expedition._id) {
-      vm.teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
+      vm.teamId = (vm.expedition.team && vm.expedition.team._id) ? vm.expedition.team._id : vm.expedition.team;
+      vm.stationId = (vm.expedition.station && vm.expedition.station._id) ? vm.expedition.station._id : vm.expedition.station;
+      
+      console.log('vm.teamId', vm.teamId);
+      console.log('vm.stationId', vm.stationId);
 
       vm.expedition.monitoringStartDate = moment(vm.expedition.monitoringStartDate).toDate();
       vm.expedition.monitoringEndDate = moment(vm.expedition.monitoringEndDate).toDate();
@@ -46,6 +50,7 @@
         byOwner: true
       }, function(data) {
         vm.teams = data;
+        console.log('teams', vm.teams);
         vm.findTeamValues();
       });
     };
@@ -56,6 +61,13 @@
       if (vm.teamId === '') {
         vm.team = (vm.teams && vm.teams.length > 0) ? vm.teams[0] : null;
         vm.teamId = (vm.team) ? vm.team._id : '';
+      } else {
+        console.log('teamId not null');
+        var teamIndex = lodash.findIndex(vm.teams, function(t) {
+          return t._id === vm.teamId;
+        });
+        vm.team = vm.teams[teamIndex];
+        console.log('vm.team', vm.team);
       }
 
       if (vm.teamId) {
@@ -90,13 +102,6 @@
           waterQuality: [],
         };
       }
-      // vm.memberLists.protocols = {
-      //   'Site Conditions': [],
-      //   'Oyster Measurements': [],
-      //   'Mobile Trap': [],
-      //   'Settlement Tiles': [],
-      //   'Water Quality': []
-      // };
     };
 
     vm.fieldChanged = function(team) {
@@ -131,18 +136,26 @@
         vm.expedition.teamLists.mobileTrap.length === 0 ||
         vm.expedition.teamLists.settlementTiles.length === 0 ||
         vm.expedition.teamLists.waterQuality.length === 0) {
-        console.log('teams not assigned');
-        vm.error = 'Every protocol needs at least one person assigned to it. Try using auto assign.';
         vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }
 
       // set team
-      var index = lodash.findIndex(vm.teams, function(t) {
+      var teamIndex = lodash.findIndex(vm.teams, function(t) {
         return t._id === vm.teamId;
       });
-      if (index > -1) vm.expedition.team = vm.teams[index];
+      if (teamIndex > -1) vm.expedition.team = vm.teams[teamIndex];
+
+      var stationIndex = lodash.findIndex(vm.stations, function(s) {
+        console.log('s', s);
+        return s._id === vm.stationId;
+      });
+      if (stationIndex > -1) vm.expedition.station = vm.stations[stationIndex];
+      console.log('stationIndex', stationIndex);
+      console.log('vm.stations', vm.stations);
+      console.log('vm.stations[stationIndex]', vm.stations[stationIndex]);
+      console.log('vm.expedition.station', vm.expedition.station);
 
       // TODO: move create/update logic to service
       if (vm.expedition._id) {
