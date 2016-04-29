@@ -33,6 +33,9 @@
         page: vm.filter.page
       }, function(data) {
         vm.lessons = data;
+        vm.error = null;
+      }, function(error) {
+        vm.error = error.data.message;
       });
     };
 

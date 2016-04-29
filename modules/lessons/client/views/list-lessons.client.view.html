@@ -4,10 +4,13 @@
             <h2>Lessons</h2>
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
-                placeholder="Search for a Lesson by title, lesson summary, lesson objective, vocabulary...">
+                placeholder="Search for a Lesson by title, lesson summary, lesson objective...">
+            </div>
+            <div ng-show="vm.error" class="alert alert-danger">
+              <p ng-bind="vm.error"></p>
             </div>
         </section>
     </section>
