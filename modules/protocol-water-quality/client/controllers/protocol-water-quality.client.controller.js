@@ -69,7 +69,7 @@
     ];
 
     wq.turbidityUnits = [
-      { name: 'NTU**', value: 'ntu' }
+      { name: 'CM', value: 'cm' }
     ];
 
     wq.ammoniaUnits = [

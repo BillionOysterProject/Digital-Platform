@@ -277,7 +277,13 @@
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
       // TODO: move create/update logic to service
-      if (!vm.lesson._id) angular.element('#modal-saved-lesson').modal('show');
+      var content;
+      if (vm.lesson._id) {
+        content = angular.element('#modal-updated-lesson');
+      } else {
+        content = angular.element('#modal-saved-lesson');
+      }
+      content.modal('show');
 
       $timeout(function () {
         if (vm.lesson._id) {
@@ -293,7 +299,7 @@
           var lessonId = res._id;
 
           function goToView(lessonId) {
-            angular.element('#modal-saved-lesson').modal('hide');
+            content.modal('hide');
             $timeout(function () {
               $state.go('lessons.view', {
                 lessonId: lessonId

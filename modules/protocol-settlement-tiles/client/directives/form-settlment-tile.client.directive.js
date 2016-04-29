@@ -15,26 +15,34 @@
           index: '@'
         },
         replace: true,
-        link: function (scope, element, attrs) {
-          element.bind('show.bs.modal', function () {
-            scope.form.settlementTileForm.$setSubmitted(false);
-            scope.form.settlementTileForm.$setPristine();
-          });
-
-          scope.submitForm = function(settlementTile, isValid) {
-            console.log('submitForm');
+        controller: function($scope, $http) {
+          $scope.save = function(isValid) {
             if (!isValid) {
-              scope.$broadcast('show-errors-check-validity', 'form.settlementTileForm');
+              $scope.$broadcast('show-errors-check-validity', 'form.tileForm');
               return false;
             }
 
-            scope.saveFunction(settlementTile, scope.index, isValid);
+            $scope.saveFunction($scope.grids, $scope.index, isValid);
           };
 
-          scope.cancelForm = function(index) {
-            scope.form.settlementTileForm.$setPristine();
-            scope.cancelFunction(index);
+          $scope.cancelForm = function(index) {
+            $scope.$broadcast('show-errors-reset', 'form.tileForm');
+            $scope.form.tileForm.$setSubmitted(false);
+            // $scope.form.tileForm.$setPristine(true);
+            // $scope.form.tileForm.$valid = true;
+            // $scope.form.tileForm.$invalid = false;
+            $scope.cancelFunction(index);
           };
+        },
+        link: function (scope, element, attrs) {
+          element.bind('show.bs.modal', function () {
+            // console.log('open');
+            scope.$broadcast('show-errors-reset', 'form.tileForm');
+            scope.form.tileForm.$setSubmitted(false);
+            // scope.form.tileForm.$setPristine(true);
+            // scope.form.tileForm.$valid = true;
+            // scope.form.tileForm.$invalid = false;
+          });
         }
       };
     });

@@ -5,15 +5,52 @@
     .module('protocol-settlement-tiles')
     .controller('ProtocolSettlementTilesController', ProtocolSettlementTilesController);
 
-  ProtocolSettlementTilesController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  ProtocolSettlementTilesController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
   'Authentication', 'ProtocolSettlementTilesService', 'SessileOrganismsService', 'TeamMembersService', 'FileUploader'];
 
-  function ProtocolSettlementTilesController($scope, $rootScope, $state, $http, moment, $stateParams,
+  function ProtocolSettlementTilesController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     Authentication, ProtocolSettlementTilesService, SessileOrganismsService, TeamMembersService, FileUploader) {
     var st = this;
 
     st.tileCount = 4;
     st.gridCount = 25;
+
+    var tileDone = function(settlementTile) {
+      var done = true;
+      for (var i = 1; i <= st.gridCount; i++) {
+        if (!settlementTile['grid'+i] ||
+          ((!settlementTile['grid'+i].organism || settlementTile['grid'+i].organism === undefined ||
+          settlementTile['grid'+i].organism === '' || settlementTile['grid'+i].organism === null) &&
+          (!settlementTile['grid'+i].notes ||
+          settlementTile['grid'+i].notes === undefined || settlementTile['grid'+i].notes === ''))) {
+          done = false;
+        }
+      }
+      return done;
+    };
+
+    var setupTiles = function() {
+      for (var i = 0; i < st.protocolSettlementTiles.settlementTiles.length; i++) {
+        st.protocolSettlementTiles.settlementTiles[i].done = tileDone(st.protocolSettlementTiles.settlementTiles[i]);
+        st.protocolSettlementTiles.settlementTiles[i].imageUrl = (st.protocolSettlementTiles.settlementTiles[i].tilePhoto) ?
+          st.protocolSettlementTiles.settlementTiles[i].tilePhoto.path : '';
+      }
+    };
+
+    st.saveOnBlur = function() {
+      if (st.protocolSettlementTiles._id) {
+        $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
+        st.protocolSettlementTiles)
+        .success(function (data, status, headers, config) {
+          st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          setupTiles();
+        })
+        .error(function (data, status, header, config) {
+          st.error = data.message;
+        });
+      }
+    };
 
     var setupSettlementTileGrid = function() {
       if (!st.protocolSettlementTiles.settlementTiles) {
@@ -52,28 +89,7 @@
           grid25: { notes: '' }
         });
       }
-    };
-
-    var tileDone = function(settlementTile) {
-      var done = true;
-      for (var i = 1; i <= st.gridCount; i++) {
-        if (!settlementTile['grid'+i] ||
-          ((!settlementTile['grid'+i].organism || settlementTile['grid'+i].organism === undefined ||
-          settlementTile['grid'+i].organism === '' || settlementTile['grid'+i].organism === null) &&
-          (!settlementTile['grid'+i].notes ||
-          settlementTile['grid'+i].notes === undefined || settlementTile['grid'+i].notes === ''))) {
-          done = false;
-        }
-      }
-      return done;
-    };
-
-    var setupTiles = function() {
-      for (var i = 0; i < st.protocolSettlementTiles.settlementTiles.length; i++) {
-        st.protocolSettlementTiles.settlementTiles[i].done = tileDone(st.protocolSettlementTiles.settlementTiles[i]);
-        st.protocolSettlementTiles.settlementTiles[i].imageUrl = (st.protocolSettlementTiles.settlementTiles[i].tilePhoto) ?
-          st.protocolSettlementTiles.settlementTiles[i].tilePhoto.path : '';
-      }
+      st.saveOnBlur();
     };
 
     // Set up Protocol Settlement Tiles
@@ -247,7 +263,6 @@
     };
 
     st.openSettlementTileForm = function(index) {
-      var content = angular.element('#modal-settlementtile'+index);
       st.grids = [];
       var tile = st.protocolSettlementTiles.settlementTiles[index-1];
       for (var i = 1; i <= st.gridCount; i++) {
@@ -262,43 +277,29 @@
           notes: tile['grid'+i].notes
         };
       }
-      content.modal('show');
+      angular.element('#modal-settlementtile'+index).modal('show');
     };
 
     st.saveSettlementTileForm = function(grids, index, isValid) {
       angular.element('#modal-settlementtile'+index).modal('hide');
 
-      st.protocolSettlementTiles.settlementTiles[index-1].done =
-        tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
-      for (var i = 1; i <= grids.length; i++) {
-        st.protocolSettlementTiles.settlementTiles[index-1]['grid'+i] = {
-          organism: (grids[i-1].organismId !== '-1') ? grids[i-1].organismId : undefined,
-          notes: grids[i-1].notes
-        };
-      }
-      st.protocolSettlementTiles.settlementTiles[index-1].done =
-        tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
-      st.saveOnBlur();
+      $timeout(function() {
+        st.protocolSettlementTiles.settlementTiles[index-1].done =
+          tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
+        for (var i = 1; i <= grids.length; i++) {
+          st.protocolSettlementTiles.settlementTiles[index-1]['grid'+i] = {
+            organism: (grids[i-1].organismId !== '-1') ? grids[i-1].organismId : undefined,
+            notes: grids[i-1].notes
+          };
+        }
+        st.protocolSettlementTiles.settlementTiles[index-1].done =
+          tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
+        st.saveOnBlur();
+      }, 1000);
     };
 
     st.cancelSettlementTileForm = function(index) {
       angular.element('#modal-settlementtile'+index).modal('hide');
-    };
-
-    st.saveOnBlur = function() {
-      if (st.protocolSettlementTiles._id) {
-        $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
-        st.protocolSettlementTiles)
-        .success(function (data, status, headers, config) {
-          st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
-          setupTiles();
-          console.log('saved');
-        })
-        .error(function (data, status, header, config) {
-          st.error = data.message;
-        });
-      }
     };
 
     var saveImageOnBlur = function(index, successCallback, errorCallback) {
@@ -335,6 +336,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -348,6 +350,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -361,6 +364,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -374,6 +378,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
           setupTiles();
         });
       }, function(errorMessage) {

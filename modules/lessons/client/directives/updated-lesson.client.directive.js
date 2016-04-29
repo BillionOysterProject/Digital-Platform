@@ -3,10 +3,10 @@
 
   angular
     .module('lessons')
-    .directive('savedLessonModal', function() {
+    .directive('updatedLessonModal', function() {
       return {
         restrict: 'E',
-        templateUrl: 'modules/lessons/client/views/saved-lesson.client.view.html',
+        templateUrl: 'modules/lessons/client/views/updated-lesson.client.view.html',
         scope: true
       };
     });

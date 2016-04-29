@@ -26,8 +26,17 @@
         sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
           sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
         sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
-        sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
-        sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+        if (sc.protocolSiteCondition.tideConditions === undefined) {
+          sc.protocolSiteCondition.tideConditions = {
+            closestHighTide: moment().toDate(),
+            closestLowTide: moment().toDate()
+          };
+        } else {
+          sc.protocolSiteCondition.tideConditions.closestHighTide = (sc.protocolSiteCondition.tideConditions.closestHighTide) ?
+            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().toDate();
+          sc.protocolSiteCondition.tideConditions.closestLowTide = (sc.protocolSiteCondition.tideConditions.closestLowTide) ?
+            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().toDate();
+        }
       });
     } else if ($scope.protocolSiteCondition) {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService($scope.protocolSiteCondition);
@@ -38,8 +47,17 @@
         sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
         sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
       sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
-      sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
-      sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+      if (sc.protocolSiteCondition.tideConditions === undefined) {
+        sc.protocolSiteCondition.tideConditions = {
+          closestHighTide: moment().toDate(),
+          closestLowTide: moment().toDate()
+        };
+      } else {
+        sc.protocolSiteCondition.tideConditions.closestHighTide = (sc.protocolSiteCondition.tideConditions.closestHighTide) ?
+          moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().toDate();
+        sc.protocolSiteCondition.tideConditions.closestLowTide = (sc.protocolSiteCondition.tideConditions.closestLowTide) ?
+          moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().toDate();
+      }
       if (!sc.protocolSiteCondition.landConditions) {
         sc.protocolSiteCondition.landConditions = {
           shorelineSurfaceCoverEstPer: {
@@ -60,8 +78,10 @@
       };
       sc.waterConditionPhotoURL = '';
       sc.landConditionPhotoURL = '';
-      sc.protocolSiteCondition.tideConditions.closestHighTide = moment().toDate();
-      sc.protocolSiteCondition.tideConditions.closestLowTide = moment().toDate();
+      sc.protocolSiteCondition.tideConditions = {
+        closestHighTide: moment().toDate(),
+        closestLowTide: moment().toDate()
+      };
     }
 
     sc.weatherConditions = WeatherConditionsService.query();

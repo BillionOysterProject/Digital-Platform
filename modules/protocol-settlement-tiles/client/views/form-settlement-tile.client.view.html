@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Settlement Tile {{index}}</h4>
             </div>
-            <form name="form.settlementTileForm" ng-submit="submitForm(grids, form.settlementTileForm.$valid)" novalidate>
+            <form name="form.tileForm" ng-submit="save(form.tileForm.$valid)" novalidate>
               <div class="modal-body">
                   <div class="row">
                       <div class="col-sm-3">
@@ -23,8 +23,8 @@
                               <tr ng-repeat="grid in grids">
                                   <td class="text-right"><h3>{{$index+1}}</h3></td>
                                   <td class="form-group" show-errors>
-                                    <select class="form-control" name="organism{{$index}}" ng-model="grid.organismId"
-                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms" required>
+                                    <select class="form-control" ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
+                                    ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}" ng-required>
                                     </select>
                                   </td>
                                   <td><input class="form-control" type="text" placeholder="Notes or Questions" ng-model="grid.notes"/></td>

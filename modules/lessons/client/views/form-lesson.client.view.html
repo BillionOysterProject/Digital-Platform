@@ -343,7 +343,7 @@
             <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
                 <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
             </ul>
-          </div> 
+          </div>
           <div ng-show="vm.error" class="alert alert-danger">
               <p ng-bind="vm.error"></p>
           </div>
@@ -361,6 +361,7 @@
 
   <!-- MODALS -->
   <saved-lesson-modal></saved-lesson-modal>
+  <updated-lesson-modal></updated-lesson-modal>
   <div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
