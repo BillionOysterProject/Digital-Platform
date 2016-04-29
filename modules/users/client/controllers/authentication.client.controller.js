@@ -32,6 +32,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
+        console.log('response', response);
         vm.error = response.message;
       });
     };

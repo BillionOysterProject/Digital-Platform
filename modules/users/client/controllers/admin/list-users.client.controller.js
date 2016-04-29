@@ -37,6 +37,7 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       }, function (data) {
         $scope.users = data;
         $scope.buildPager();
+        $scope.findLeadRequests();
       });
     };
     $scope.findUsers();
@@ -127,7 +128,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.leadRequestsOrgPending = [];
 
         for (var i = 0; i < data.length; i++) {
-          console.log('pending', data[i].schoolOrg.pending);
           if (data[i].schoolOrg.pending) {
             $scope.leadRequestsOrgPending.push(data[i]);
           } else {
@@ -136,22 +136,20 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         }
       });
     };
-    $scope.findLeadRequests();
+
 
     $scope.openApproveTeamLeads = function() {
-      $scope.findLeadRequests();
+      $scope.findUsers();
       angular.element('#modal-team-lead-requests').modal('show');
     };
 
     $scope.saveApproveTeamLeads = function() {
       $scope.findUsers();
-      $scope.findLeadRequests();
       angular.element('#modal-team-lead-requests').modal('hide');
     };
 
     $scope.closeApproveTeamLeads = function() {
       $scope.findUsers();
-      $scope.findLeadRequests();
       angular.element('#modal-team-lead-requests').modal('hide');
     };
 

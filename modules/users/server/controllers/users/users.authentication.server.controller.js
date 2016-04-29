@@ -38,8 +38,14 @@ exports.signup = function (req, res) {
   // Then save the user
   user.save(function (err) {
     if (err) {
+      var errorMessage = errorHandler.getErrorMessage(err);
+      if (errorMessage.indexOf('username already exists') > -1) {
+        errorMessage = 'Username already exists';
+      } else if (errorMessage.indexOf('email already exists') > -1) {
+        errorMessage = 'Email already exists';
+      }
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorMessage
       });
     } else {
       // Remove sensitive data before login
@@ -49,7 +55,9 @@ exports.signup = function (req, res) {
       var loginNewUser = function() {
         req.login(user, function (err) {
           if (err) {
-            res.status(400).send(err);
+            res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
           } else {
             res.json(user);
           }
@@ -119,14 +127,12 @@ exports.signup = function (req, res) {
                 user.schoolOrg = schoolOrg._id;
                 user.save(function(err) {
                   if (err) {
-                    console.log('err', err);
                     return res.status(400).send({
                       message: errorHandler.getErrorMessage(err)
                     });
                   }
 
                   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-                  console.log('email', user.email);
                   email.sendEmailTemplate(user.email, 'Your new organization request for ' + schoolOrg.name + ' is pending admin approval',
                   'org_pending', {
                     FirstName: user.firstName,
@@ -189,7 +195,7 @@ exports.newUser = function (req, res) {
       }, function (err, user) {
         if (!err && user) {
           if (passwordDetails.password === passwordDetails.verifyPassword) {
-            user.password = passwordDetails.newPassword;
+            user.password = passwordDetails.password;
             user.username = username;
             user.resetPasswordToken = undefined;
             user.resetPasswordExpires = undefined;

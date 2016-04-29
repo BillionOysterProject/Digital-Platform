@@ -224,6 +224,8 @@ exports.list = function (req, res) {
           console.log('users', updatedUsers);
           res.json(updatedUsers);
         });
+      } else {
+        res.json(users);
       }
     } else {
       res.json(users);
