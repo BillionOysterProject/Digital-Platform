@@ -53,7 +53,7 @@
     <section class="content">
         <section class="container">
             <div class="form-group">
-                <label>Assign students to protocols *</label>
+                <label>Assign members to protocols *</label>
                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()">Auto Assign</button>
                 <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
             </div>
@@ -126,12 +126,13 @@
                 </div>
               </div>
             </div>
-            <div class="alert alert-danger" ng-show="vm.form.expeditionForm.$invalid">
+            <div class="alert alert-danger" ng-show="vm.form.expeditionForm.$invalid && vm.form.expeditionForm.$submitted">
                 <h4>Sorry, you can't submit just yet!</h4>
-                <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.expeditionForm.$error track by $index">
-                    <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
+                <ul ng-messages="vm.form.expeditionForm.$error" class="list-unstyled" ng-repeat="(key, errors) in vm.form.expeditionForm.$error track by $index">
+                    <li ng-message="required"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ errors[$index].$name }}</b> is required.</li>
+                    <li ng-message="lists"><i class="glyphicon glyphicon-remove-sign"></i> Every protocol needs at least one person assigned to it. Try using auto assign.</li>
                 </ul>
-            </div> 
+            </div>
         </section>
     </section>
     <section class="content shaded">

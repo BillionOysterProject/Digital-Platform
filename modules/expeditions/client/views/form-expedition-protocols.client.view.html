@@ -20,10 +20,10 @@
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
-                        ng-show="vm.checkStatusPending() && vm.isTeamLead">Return</button>
+                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
-                        ng-show="vm.checkStatusPending() && vm.isTeamLead">Publish</button>
+                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Publish</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
@@ -34,16 +34,16 @@
                         <!-- Show if team lead: -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.unpublish()"
-                        ng-show="vm.expedition.status === 'published' && vm.isTeamLead">Unpublish</button>
+                        ng-show="vm.expedition.status === 'published' && (vm.isTeamLead || vm.isAdmin)">Unpublish</button>
 
                         <!-- TODO: Wire up statuses
                         If submitted by team member -->
                         <!-- Show if team lead: -->
                         <h6 class="navbar-text"
-                        ng-show="vm.checkStatusPending() && vm.isTeamLead">Needs Review</h6>
+                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Needs Review</h6>
                         <!-- Show if team member: -->
                         <h6 class="navbar-text"
-                        ng-show="vm.checkStatusPending() && vm.isTeamMember">Under Review</h6>
+                        ng-show="vm.checkStatusPending() && vm.isTeamMember && !vm.isTeamLead">Under Review</h6>
 
                         <!-- If returned by team lead -->
                         <!-- Show if team lead: -->

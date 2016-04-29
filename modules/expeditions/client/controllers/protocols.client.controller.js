@@ -37,9 +37,10 @@
 
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
+    vm.isAdmin = checkRole('admin');
 
     vm.checkWrite = function(teamList) {
-      if (checkRole('team lead')) {
+      if (checkRole('team lead') || checkRole('admin')) {
         return true;
       } else {
         var teamListIndex = lodash.findIndex(teamList, function(m) {

@@ -69,8 +69,9 @@
       }
 
       if (vm.team) {
+        console.log('vm.team', vm.team);
         RestorationStationsService.query({
-          schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ? 
+          schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
             vm.team.schoolOrg._id : vm.team.schoolOrg
         }, function(data) {
           vm.stations = data;
@@ -100,6 +101,13 @@
 
     vm.fieldChanged = function(team) {
       vm.team = team;
+      vm.expedition.teamLists = {
+        siteCondition: [],
+        oysterMeasurement: [],
+        mobileTrap: [],
+        settlementTiles: [],
+        waterQuality: [],
+      };
       vm.findTeamValues();
     };
 
@@ -113,6 +121,19 @@
     // Save Expedition
     function save(isValid) {
       if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
+        return false;
+      }
+
+      // check protocol team lists
+      if (vm.expedition.teamLists.siteCondition.length === 0 ||
+        vm.expedition.teamLists.oysterMeasurement.length === 0 ||
+        vm.expedition.teamLists.mobileTrap.length === 0 ||
+        vm.expedition.teamLists.settlementTiles.length === 0 ||
+        vm.expedition.teamLists.waterQuality.length === 0) {
+        console.log('teams not assigned');
+        vm.error = 'Every protocol needs at least one person assigned to it. Try using auto assign.';
+        vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }

@@ -35,23 +35,23 @@
                       show-marker="vm.showMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
-                <div class="row" ng-show="vm.isTeamLead || vm.isTeamLeadPending">
+                <div class="row" ng-show="vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin">
                     <div class="col-lg-4">
-                        <div class="panel panel-default" ng-show="vm.isTeamLead">
+                        <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                                 <!-- TODO: Wire up alerts -->
-                                <div class="alert" ng-show="vm.members.length === 0">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
+                                <div class="alert" ng-show="vm.members.length === 0 && vm.isTeamLead">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add members</a>
+                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner" ng-show="vm.isTeamLead">Add members</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" ng-show="vm.isTeamLead">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isAdmin">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activities.length}}</span></h4>
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isTeamLeadPending">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="vm.isTeamLead">
+                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin">
                     <div class="panel-heading">
                         <h4>Team ORS</h4>
                     </div>
@@ -112,15 +112,15 @@
                               </tr>
                         </table>
                         <!-- TODO: Wire up alerts -->
-                        <div class="alert" ng-show="vm.stations.length === 0">
+                        <div class="alert" ng-show="vm.stations.length === 0 && (vm.isTeamLead || vm.isAdmin)">
                             No team ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()">register one</a>?
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()">Register a station</a>
+                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" ng-show="vm.isTeamLead || vm.isAdmin">Register a station</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isTeamMember">
+                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isTeamMember || vm.isAdmin">
                     <div class="panel-heading">
                         <h4>Team Expeditions</h4>
                     </div>
@@ -129,9 +129,10 @@
                             <tr class="text-muted" ng-repeat="expedition in vm.expeditions" ui-sref="{{vm.expeditionLink(expedition)}}">
                                 <td>
                                     <i class="glyphicon glyphicon-unchecked" ng-show="vm.isUpcoming(expedition)"></i>
-                                    <i class="glyphicon glyphicon-unchecked red" ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)"></i>
+                                    <i class="glyphicon glyphicon-unchecked red" ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                                      ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))"></i>
                                     <i class="glyphicon glyphicon-check red" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember"></i>
-                                    <i class="glyphicon glyphicon-unchecked red" ng-show="expedition.status === 'pending' && vm.isTeamLead"></i>
+                                    <i class="glyphicon glyphicon-unchecked red" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember"></i>
                                     <i class="glyphicon glyphicon-check green" ng-show="expedition.status === 'published'"></i>
                                 </td>
                                 <td>
@@ -140,18 +141,19 @@
                                 </td>
                                 <td class="text-right">
                                     <span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>
-                                    <span class="label label-danger"ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && vm.isTeamLead)">Incomplete</span>
+                                    <span class="label label-danger"ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                                      ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))">Incomplete</span>
                                     <span class="label label-danger" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
-                                    <span class="label label-danger" ng-show="expedition.status === 'pending' && vm.isTeamLead">Submitted</span>
+                                    <span class="label label-danger" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
                                     <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
                                 </td>
                             </tr>
                         </table>
                         <!-- TODO: Wire up alerts -->
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead && !vm.isAdmin">
                             No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
                         </div>
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && !vm.isTeamLead">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember && !vm.isAdmin && !vm.isTeamLead">
                             No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
                         </div>
                     </div>

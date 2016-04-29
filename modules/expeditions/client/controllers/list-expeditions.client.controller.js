@@ -22,16 +22,24 @@
     vm.isTeamMember = checkRole('team member');
     vm.isTeamLeadPending = checkRole('team lead pending');
     vm.isTeamMemberPending = checkRole('team member pending');
+    vm.isAdmin = checkRole('admin');
+
+    var byOwner, byMember;
+    if (vm.isTeamLead || vm.isTeamLeadPending) {
+      byOwner = true;
+    } else {
+      byMember = true;
+    }
 
     ExpeditionsService.query({
-      byOwner: (vm.isTeamLead || vm.isTeamLeadPending) ? true : '',
-      byMember: (vm.isTeamMember || vm.isTeamMemberPending) ? true : '',
+      byOwner: byOwner,
+      byMember: byMember,
     }, function(data) {
       vm.expeditions = data;
     });
 
     vm.expeditionLink = function(expedition) {
-      return (vm.isTeamLead && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
         expedition.status === 'unpublished')) ?
       'expeditions.edit({ expeditionId: expedition._id })' :
       'expeditions.protocols({ expeditionId: expedition._id })';
@@ -51,7 +59,7 @@
     };
 
     vm.checkWrite = function(teamList) {
-      if (checkRole('team lead')) {
+      if (checkRole('team lead') || checkRole('admin')) {
         return true;
       } else {
         var teamListIndex = lodash.findIndex(teamList, function(m) {

@@ -36,11 +36,14 @@
     vm.isTeamMember = checkRole('team member');
     vm.isTeamLeadPending = checkRole('team lead pending');
     vm.isTeamMemberPending = checkRole('team member pending');
+    vm.isAdmin = checkRole('admin');
 
     vm.findTeams = function() {
       var byOwner, byMember;
-      if (vm.isTeamLead) {
+      if (vm.isTeamLead || vm.isTeamLeadPending) {
         byOwner = true;
+      // } else if (vm.isAdmin) {
+      //
       } else {
         byMember = true;
       }
@@ -94,7 +97,7 @@
 
     vm.findTeamValues = function() {
       TeamMembersService.query({
-        byOwner: true,
+        byOwner: (vm.isTeamLead || vm.isTeamLeadPending) ? true : '',
         teamId: vm.filter.teamId
       }, function(data) {
         vm.members = data;
@@ -109,7 +112,7 @@
       vm.findSchoolOrgRestorationStations((vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
         vm.team.schoolOrg._id : vm.team.schoolOrg);
 
-      var byMember = (vm.isTeamLead) ? '' : true;
+      var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
       ExpeditionsService.query({
         teamId: vm.filter.teamId,
         byMember: byMember,
@@ -126,7 +129,7 @@
       });
     };
 
-    if (vm.isTeamLead || vm.isTeamMember) {
+    if (vm.isTeamLead || vm.isTeamMember || vm.isAdmin) {
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
@@ -142,7 +145,7 @@
     };
 
     vm.expeditionLink = function(expedition) {
-      return (vm.isTeamLead && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
         expedition.status === 'unpublished')) ?
       'expeditions.edit({ expeditionId: expedition._id })' :
       'expeditions.protocols({ expeditionId: expedition._id })';
@@ -162,7 +165,7 @@
     };
 
     vm.checkWrite = function(teamList) {
-      if (checkRole('team lead')) {
+      if (checkRole('team lead') || checkRole('admin')) {
         return true;
       } else {
         var teamListIndex = lodash.findIndex(teamList, function(m) {
