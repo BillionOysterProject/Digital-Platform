@@ -68,7 +68,12 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
       to: to,
       subject: subject,
       text: bodyText,
-      html: bodyHtml
+      html: bodyHtml,
+      attachments: [{
+        filename: 'logo.png',
+        path: 'https://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/logo.png',
+        cid: 'bop-logo.ee' //same cid value as in the html img src
+      }]
     }, function(err, info) {
       if (err) {
         console.log('err', err);
