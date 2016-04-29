@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('lessons')
-    .directive('deleteLessonModal', function() {
+    .module('expeditions')
+    .directive('deleteExpeditionModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/lessons/client/views/delete-lesson.client.view.html',
+        templateUrl: 'modules/expeditions/client/views/delete-expedition.client.view.html',
         scope: {
           callbackFunction: '='
         },

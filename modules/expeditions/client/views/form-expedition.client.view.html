@@ -150,7 +150,10 @@
         <section class="container">
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
+                <button type="button" class="btn btn-danger pull-right" ng-show="vm.expedition._id" ng-click="vm.openDeleteExpedition()">Delete</button>
             </div>
         </section>
     </section>
 </form>
+
+<delete-expedition-modal callback-function="vm.confirmDeleteExpedition"></delete-expedition-modal>

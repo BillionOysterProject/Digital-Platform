@@ -29,7 +29,7 @@
     if (vm.expedition._id) {
       vm.teamId = (vm.expedition.team && vm.expedition.team._id) ? vm.expedition.team._id : vm.expedition.team;
       vm.stationId = (vm.expedition.station && vm.expedition.station._id) ? vm.expedition.station._id : vm.expedition.station;
-      
+
       console.log('vm.teamId', vm.teamId);
       console.log('vm.stationId', vm.stationId);
 
@@ -118,9 +118,7 @@
 
     // Remove existing Expedition
     function remove() {
-      if (confirm('Are you sure you want to delete?')) {
-        vm.expedition.$remove($state.go('expeditions.list'));
-      }
+      vm.expedition.$remove($state.go('restoration-stations.dashboard'));
     }
 
     // Save Expedition
@@ -216,6 +214,18 @@
           }
         }
       }
+    };
+
+    vm.openDeleteExpedition = function() {
+      angular.element('#modal-delete-expedition').modal('show');
+    };
+
+    vm.confirmDeleteExpedition = function(shouldDelete) {
+      var element = angular.element('#modal-delete-expedition');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
+      });
+      element.modal('hide');
     };
   }
 })();
