@@ -512,6 +512,10 @@ h6, .h6 {
     border-color: #ddd;
 }
 
+blockquote {
+    font-size: inherit;
+}
+
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -632,9 +636,9 @@ h6, .h6 {
         }
 
 
-/* SELECT2 & WYSIWYG EDITOR PLUGIN */
+/* SELECT2 & WYSIWYG PLUGIN */
 
-.advanced-wrapper,
+.ta-editor,
 .select2-container-multi .select2-choices,
 .select2-dropdown-open.select2-drop-above .select2-choice,
 .select2-dropdown-open.select2-drop-above .select2-choices {
@@ -652,27 +656,59 @@ h6, .h6 {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
-.tab-content .advanced-wrapper {
-    border-top: none;
-    box-shadow: none;
-    border-top-right-radius: 0;
+
+/* WYSIWYG PLUGIN */
+
+.ta-editor {
     border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
 }
 
-
-/* WYSIWYG EDITOR PLUGIN */
-
-.advanced-wrapper {
-    padding: 6px 12px;
+.ta-toolbar {
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-left: 0;
+    border-radius: 4px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.ql-container {
-    height: 300px;
-}
+    .tab-pane .ta-toolbar {
+        border-top: none;
+    }
 
-.ql-snow.ql-toolbar {
-    border-bottom: 1px solid #eee;
-}
+    .ta-toolbar .btn-default[disabled],
+    .ta-toolbar .btn-default[disabled]:hover,
+    .ta-toolbar .btn-default[disabled]:active,
+    .ta-toolbar .btn-default[disabled]:focus {
+        background-color: transparent;
+        color: #777;
+        cursor: default;
+    }
+
+    .ta-toolbar .btn-default,
+    .ta-toolbar .btn-default:hover,
+    .ta-toolbar .btn-default:active,
+    .ta-toolbar .btn-default:focus {
+        background-color: transparent;
+        color: #000;
+    }
+
+    .ta-toolbar .btn-default.active,
+    .ta-toolbar .btn-default.active:hover,
+    .ta-toolbar .btn-default.active:active,
+    .ta-toolbar .btn-default.active:focus {
+        background-color: #426ca9;
+        color: #fff;
+    }
+
+    .ta-toolbar .btn-default[disabled].active,
+    .ta-toolbar .btn-default[disabled].active:hover,
+    .ta-toolbar .btn-default[disabled].active:active,
+    .ta-toolbar .btn-default[disabled].active:focus {
+        background-color: #ddd;
+    }
 
 
 /* DRAG AND DROP */
