@@ -160,7 +160,14 @@ exports.listMembers = function (req, res) {
   var searchRe;
   var or = [];
   if (req.query.searchString) {
-    searchRe = new RegExp(req.query.searchString, 'i');
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+    
     or.push({ 'displayName': searchRe });
     or.push({ 'email': searchRe });
     or.push({ 'username': searchRe });

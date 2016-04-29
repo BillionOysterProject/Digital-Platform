@@ -9,8 +9,11 @@
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
                 placeholder="Search for a Lesson by title, lesson summary, lesson objective...">
             </div>
-            <div ng-show="vm.error" class="alert alert-danger">
+            <div class="alert alert-danger text-center" ng-show="vm.error">
               <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
             </div>
         </section>
     </section>

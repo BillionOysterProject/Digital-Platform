@@ -9,6 +9,12 @@
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
                 placeholder="Search for a vocabulary term...">
             </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.glossary.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
         </section>
     </section>
 </div>

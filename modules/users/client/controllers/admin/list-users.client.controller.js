@@ -36,8 +36,11 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         showTeams: true
       }, function (data) {
         $scope.users = data;
+        $scope.error = null;
         $scope.buildPager();
         $scope.findLeadRequests();
+      }, function(error) {
+        $scope.error = error.data.message;
       });
     };
     $scope.findUsers();

@@ -37,6 +37,9 @@
         page: vm.filter.page
       }, function(data) {
         vm.organizations = data;
+        vm.error = null;
+      }, function(error) {
+        vm.error = error.data.message;
       });
     };
     vm.findOrganizations();

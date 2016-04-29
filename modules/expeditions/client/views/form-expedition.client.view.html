@@ -14,15 +14,13 @@
                         <div class="form-group col-sm-6">
                             <label for="team" required>Select a team *</label>
                             <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
-                            name="team" id="team" required>
-                              <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+                            ng-options="team._id as team.name for team in vm.teams" name="team" id="team" required>
                             </select>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="station" required>Select a location *</label>
                             <select class="form-control" ng-model="vm.stationId" name="station" id="station"
                               ng-options="station._id as station.name for station in vm.stations" required>
-                              <!-- <option ng-repeat="station in vm.stations" value="{{station._id}}">{{vm.stationId === station._id}} - {{station._id}} - {{station.name}}</option> -->
                             </select>
                         </div>
                     </div>

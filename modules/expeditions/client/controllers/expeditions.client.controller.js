@@ -5,10 +5,10 @@
     .module('expeditions')
     .controller('ExpeditionsController', ExpeditionsController);
 
-  ExpeditionsController.$inject = ['$scope', '$state', 'moment', 'lodash', 'expeditionResolve', 'Authentication',
+  ExpeditionsController.$inject = ['$scope', '$rootScope', '$state', 'moment', 'lodash', 'expeditionResolve', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService'];
 
-  function ExpeditionsController($scope, $state, moment, lodash, expedition, Authentication,
+  function ExpeditionsController($scope, $rootScope, $state, moment, lodash, expedition, Authentication,
   TeamsService, TeamMembersService, RestorationStationsService) {
     var vm = this;
 
@@ -30,12 +30,10 @@
       vm.teamId = (vm.expedition.team && vm.expedition.team._id) ? vm.expedition.team._id : vm.expedition.team;
       vm.stationId = (vm.expedition.station && vm.expedition.station._id) ? vm.expedition.station._id : vm.expedition.station;
 
-      console.log('vm.teamId', vm.teamId);
-      console.log('vm.stationId', vm.stationId);
-
       vm.expedition.monitoringStartDate = moment(vm.expedition.monitoringStartDate).toDate();
       vm.expedition.monitoringEndDate = moment(vm.expedition.monitoringEndDate).toDate();
     } else {
+      vm.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
       vm.expedition.monitoringStartDate = moment().startOf('day').hours(8).toDate();
       vm.expedition.monitoringEndDate = moment().startOf('day').hours(16).toDate();
     }
@@ -50,7 +48,6 @@
         byOwner: true
       }, function(data) {
         vm.teams = data;
-        console.log('teams', vm.teams);
         vm.findTeamValues();
       });
     };
@@ -62,12 +59,10 @@
         vm.team = (vm.teams && vm.teams.length > 0) ? vm.teams[0] : null;
         vm.teamId = (vm.team) ? vm.team._id : '';
       } else {
-        console.log('teamId not null');
         var teamIndex = lodash.findIndex(vm.teams, function(t) {
           return t._id === vm.teamId;
         });
         vm.team = vm.teams[teamIndex];
-        console.log('vm.team', vm.team);
       }
 
       if (vm.teamId) {
@@ -81,7 +76,6 @@
       }
 
       if (vm.team) {
-        console.log('vm.team', vm.team);
         RestorationStationsService.query({
           schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
             vm.team.schoolOrg._id : vm.team.schoolOrg
@@ -118,7 +112,10 @@
 
     // Remove existing Expedition
     function remove() {
-      vm.expedition.$remove($state.go('restoration-stations.dashboard'));
+      vm.expedition.$remove(function(err) {
+        $rootScope.teamId = vm.teamId;
+        $state.go('expeditions.list');
+      });
     }
 
     // Save Expedition
@@ -146,14 +143,9 @@
       if (teamIndex > -1) vm.expedition.team = vm.teams[teamIndex];
 
       var stationIndex = lodash.findIndex(vm.stations, function(s) {
-        console.log('s', s);
         return s._id === vm.stationId;
       });
       if (stationIndex > -1) vm.expedition.station = vm.stations[stationIndex];
-      console.log('stationIndex', stationIndex);
-      console.log('vm.stations', vm.stations);
-      console.log('vm.stations[stationIndex]', vm.stations[stationIndex]);
-      console.log('vm.expedition.station', vm.expedition.station);
 
       // TODO: move create/update logic to service
       if (vm.expedition._id) {
@@ -163,7 +155,8 @@
       }
 
       function successCallback(res) {
-        $state.go('restoration-stations.dashboard');
+        $rootScope.teamId = vm.teamId;
+        $state.go('expeditions.list');
       }
 
       function errorCallback(res) {
@@ -196,7 +189,6 @@
           vm.expedition.teamLists[keys[l]].push(vm.memberLists.members[ml]);
           ml++;
           if (ml >= vm.memberLists.members.length) {
-            console.log('resetting member index');
             ml = 0;
           }
         }

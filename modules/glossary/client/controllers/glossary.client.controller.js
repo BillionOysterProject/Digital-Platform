@@ -25,6 +25,9 @@
         page: vm.filter.page
       }, function(data) {
         vm.glossary = data;
+        vm.error = null;
+      }, function(error) {
+        vm.error = error.data.message;
       });
     };
 

@@ -45,6 +45,9 @@
         limit: vm.filter.limit
       }, function(data) {
         vm.members = data;
+        vm.error = null;
+      }, function(error) {
+        vm.error = error.data.message;
       });
     };
 
