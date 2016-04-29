@@ -13,7 +13,7 @@ var ApplicationConfiguration = (function () {
     'ui.bootstrap.tpls',
     'ui.utils',
     'angularFileUpload',
-    'ngQuill',
+    'textAngular',
     'iso.directives',
     'aa.select2',
     'omr.angularFileDnD',

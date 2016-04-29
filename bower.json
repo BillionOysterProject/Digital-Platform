@@ -37,7 +37,8 @@
     "angular-moment": "^0.10.3",
     "moment": "^2.12.0",
     "Leaflet.awesome-markers": "^2.0.2",
-    "bootstrap-iconpicker": "^1.7.0"
+    "bootstrap-iconpicker": "^1.7.0",
+    "textAngular": "^1.5.1"
   },
   "resolutions": {
     "angular": "~1.3",
