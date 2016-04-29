@@ -49,5 +49,8 @@
                 </tr>
             </tbody>
         </table>
+        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead">
+            No team submissions yet! Once you <a ui-sref="expeditions.create">create an expedition</a>, assigned protocols will appear here.
+        </div>
     </section>
 </section>
