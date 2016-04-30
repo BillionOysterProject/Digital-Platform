@@ -5,12 +5,13 @@
     .module('core')
     .controller('LeafletMapController', LeafletMapController);
 
-  LeafletMapController.$inject = ['$scope', 'L','$timeout'];
+  LeafletMapController.$inject = ['$scope', 'L','$timeout','$compile'];
 
-  function LeafletMapController($scope, L,$timeout) {
+  function LeafletMapController($scope, L,$timeout,$compile) {
     var vm = this;
     var mapSelectMap;
     var mapMarker = null;
+    var popupScope = null;
     var addPointsGroup = new L.featureGroup();
 
 
@@ -149,8 +150,28 @@
       for (var i = 0; i < vm.addPoints.length; i++) {
         var marker = new L.marker([vm.addPoints[i].lat,vm.addPoints[i].lng],{ icon:L.AwesomeMarkers.icon(vm.addPoints[i].icon) });
 
-        addPointsGroup.addLayer(marker);
+        if(vm.addPoints[i].info && vm.addPoints[i].info.html){
 
+          var popup = L.popup({
+            minWidth:100,
+            closeButton:true
+          });
+
+          var html = vm.addPoints[i].info.html;
+
+          popupScope = $scope.$new(true);
+
+          angular.forEach(vm.addPoints[i].info, definePopupScope);
+
+          var linkFn = $compile(html);
+          var content = linkFn(popupScope);
+
+          popup.setContent(content[0]);
+          marker.bindPopup(popup);
+
+          addPointsGroup.addLayer(marker);
+          
+        }
 
       }
       mapSelectMap.addLayer(addPointsGroup);
@@ -158,6 +179,10 @@
       zoomOut();
 
 
+    }
+    
+    function definePopupScope(value,key){
+      popupScope[key] = value;
     }
   }
 })();
