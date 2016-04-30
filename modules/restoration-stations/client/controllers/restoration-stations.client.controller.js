@@ -11,6 +11,7 @@
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
+    $scope.canClickMapToAddMarker = true;
 
     $scope.mapControls = {};
 

@@ -22,6 +22,7 @@
     vm.canGeocode = true;
     vm.canMoveMarker = true;
     vm.showMarker = true;
+    vm.canClickMapToAddMarker = false;
 
     vm.mapControls = {};
 

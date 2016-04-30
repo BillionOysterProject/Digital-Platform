@@ -85,16 +85,19 @@
         }).addTo(mapSelectMap);
         mapSelectMap.scrollWheelZoom.disable();
 
-        mapSelectMap.on('click', function(e){
-          //since this event is outside angular world, must call apply so the ui looks for changes
-          $scope.$apply(function () {
-            moveMarker(e.latlng);
-            if(angular.isFunction(vm.mapClickEvent())) {
-              vm.mapClickEvent()(e);
-            }
-          });
+        if(vm.canClickMapToAddMarker){
+          mapSelectMap.on('click', function(e){
+            //since this event is outside angular world, must call apply so the ui looks for changes
+            $scope.$apply(function () {
+              moveMarker(e.latlng);
+              if(angular.isFunction(vm.mapClickEvent())) {
+                vm.mapClickEvent()(e);
+              }
+            });
 
-        });
+          });
+        }
+
 
         if(vm.showMarker){
           mapMarker = L.marker([settings.defaults.center[0], settings.defaults.center[1]],{ draggable:vm.canMoveMarker || false }).addTo(mapSelectMap);
