@@ -7,7 +7,7 @@
 </div>
 <section class="content">
     <section class="container">
-        <table class="table table-hover">
+        <table class="table table-hover" ng-show="vm.activities && vm.activities.length > 0">
             <thead>
                 <tr>
                     <th></th>
@@ -49,5 +49,8 @@
                 </tr>
             </tbody>
         </table>
+        <div class="alert" ng-show="vm.activities && vm.activities.length === 0">
+          No expeditions submitted yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+        </div>
     </section>
 </section>

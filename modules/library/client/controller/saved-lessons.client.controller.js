@@ -5,18 +5,23 @@
     .module('library')
     .controller('SavedLessonsController', SavedLessonsController);
 
-  SavedLessonsController.$inject = ['$scope', 'SavedLessonsService', '$http'];
+  SavedLessonsController.$inject = ['$scope', 'SavedLessonsService', '$http', '$timeout'];
 
-  function SavedLessonsController($scope, SavedLessonsService, $http) {
-    var vm = this;
+  function SavedLessonsController($scope, SavedLessonsService, $http, $timeout) {
+    var sv = this;
 
-    vm.findSavedLessons = function() {
-      SavedLessonsService.query({  
+    sv.findSavedLessons = function() {
+      SavedLessonsService.query({
       }, function(data) {
-        vm.savedLessons = data;
+        sv.savedLessons = data;
+        //$scope.$emit('iso-method', { name: null, params: null });
+        $scope.$emit('iso-method', { name: 'reloadItems' });
+
+        //$scope.$emit('iso-method', { name: 'layout', params: { sortBy: 'title' } });
+        //$scope.$emit('iso-method', { name: null, params: { sortBy: 'title' } });
       });
     };
 
-    vm.findSavedLessons();
+    sv.findSavedLessons();
   }
 })();

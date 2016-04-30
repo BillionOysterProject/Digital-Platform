@@ -19,16 +19,22 @@
                               </select>
                           </div>
                       </div>
+                      <div class="col-sm-12" ng-show="type">
+                          <div class="form-group">
+                            <label class="control-label">Subject</label>
+                            <input type="text" class="form-control" ng-model="subject" required/>
+                          </div>
+                      </div>
                       <div class="col-sm-12" ng-show="type === 'general' || type === 'help'">
                           <div class="form-group">
                               <label class="control-label">Message</label>
-                              <textarea class="form-control" rows="4" ng-model="message"></textarea>
+                              <textarea class="form-control" rows="4" ng-model="message" ng-required="type === 'general' || type === 'help'"></textarea>
                           </div>
                       </div>
                       <div class="col-sm-12" ng-show="type === 'bug'">
                           <div class="form-group">
                               <label class="control-label">Specific location (page, lesson, or area)</label>
-                              <input type="text" class="form-control" ng-model="location"/>
+                              <input type="text" class="form-control" ng-model="location" ng-required="type === bug"/>
                           </div>
                           <!-- <div class="form-group">
                               <label class="control-label">Browser</label>
@@ -36,7 +42,7 @@
                           </div> -->
                           <div class="form-group">
                               <label class="control-label">Describe the issue</label>
-                              <textarea class="form-control" rows="4" ng-model="issue"></textarea>
+                              <textarea class="form-control" rows="4" ng-model="issue" ng-required="type === bug"></textarea>
                           </div>
                       </div>
                   </div>

@@ -14,14 +14,13 @@
                         <div class="form-group col-sm-6">
                             <label for="team" required>Select a team *</label>
                             <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
-                            name="team" id="team" required>
-                              <option ng-repeat="team in vm.teams" value="{{team._id}}">{{team.name}}</option>
+                            ng-options="team._id as team.name for team in vm.teams" name="team" id="team" required>
                             </select>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="station" required>Select a location *</label>
-                            <select class="form-control" ng-model="vm.expedition.station._id" name="station" id="station" required>
-                              <option ng-repeat="station in vm.stations" value="{{station._id}}">{{station.name}}</option>
+                            <select class="form-control" ng-model="vm.stationId" name="station" id="station"
+                              ng-options="station._id as station.name for station in vm.stations" required>
                             </select>
                         </div>
                     </div>
@@ -82,6 +81,8 @@
                           <a ng-repeat="item in vm.expedition.teamLists.siteCondition" class="draggable" dnd-draggable="item"
                             dnd-moved="vm.expedition.teamLists.siteCondition.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
+                            <button type="button" class="close" aria-label="Removed"
+                            ng-click="vm.expedition.teamLists.siteCondition.splice($index,1)"><span aria-hidden="true">&times;</span></button>
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
@@ -91,6 +92,8 @@
                           <a ng-repeat="item in vm.expedition.teamLists.oysterMeasurement" class="draggable" dnd-draggable="item"
                             dnd-moved="vm.expedition.teamLists.oysterMeasurement.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
+                            <button type="button" class="close" aria-label="Removed"
+                            ng-click="vm.expedition.teamLists.oysterMeasurement.splice($index,1)"><span aria-hidden="true">&times;</span></button>
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
@@ -100,6 +103,8 @@
                           <a ng-repeat="item in vm.expedition.teamLists.mobileTrap" class="draggable" dnd-draggable="item"
                             dnd-moved="vm.expedition.teamLists.mobileTrap.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
+                            <button type="button" class="close" aria-label="Removed"
+                            ng-click="vm.expedition.teamLists.mobileTrap.splice($index,1)"><span aria-hidden="true">&times;</span></button>
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
@@ -109,6 +114,8 @@
                           <a ng-repeat="item in vm.expedition.teamLists.settlementTiles" class="draggable" dnd-draggable="item"
                             dnd-moved="vm.expedition.teamLists.settlementTiles.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
+                            <button type="button" class="close" aria-label="Removed"
+                            ng-click="vm.expedition.teamLists.settlementTiles.splice($index,1)"><span aria-hidden="true">&times;</span></button>
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
@@ -118,6 +125,8 @@
                           <a ng-repeat="item in vm.expedition.teamLists.waterQuality" class="draggable" dnd-draggable="item"
                             dnd-moved="vm.expedition.teamLists.waterQuality.splice($index,1)" dnd-effect-allowed="move"
                             dnd-selected="vm.memberLists.selected = item" ng-class="{'selected': vm.memberLists.selected === item}">
+                            <button type="button" class="close" aria-label="Removed"
+                            ng-click="vm.expedition.teamLists.waterQuality.splice($index,1)"><span aria-hidden="true">&times;</span></button>
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
@@ -139,7 +148,10 @@
         <section class="container">
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
+                <button type="button" class="btn btn-danger pull-right" ng-show="vm.expedition._id" ng-click="vm.openDeleteExpedition()">Delete</button>
             </div>
         </section>
     </section>
 </form>
+
+<delete-expedition-modal callback-function="vm.confirmDeleteExpedition"></delete-expedition-modal>

@@ -5,11 +5,11 @@
     .module('restoration-stations')
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
-  RestorationStationsDashboardController.$inject = ['$scope', 'lodash', 'moment', 'Authentication',
+  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
   'ExpeditionActivitiesService', 'TeamRequestsService'];
 
-  function RestorationStationsDashboardController($scope, lodash, moment, Authentication,
+  function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
     TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
     ExpeditionActivitiesService, TeamRequestsService) {
     var vm = this;
@@ -43,8 +43,6 @@
       var byOwner, byMember;
       if (vm.isTeamLead || vm.isTeamLeadPending) {
         byOwner = true;
-      // } else if (vm.isAdmin) {
-      //
       } else {
         byMember = true;
       }
@@ -54,7 +52,15 @@
       }, function(data) {
         vm.teams = data;
 
-        if (!vm.filter.teamId || vm.filter.teamId === '') {
+        if ($rootScope.teamId) {
+          vm.filter.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
+
+          var teamIndex = lodash.findIndex(vm.teams, function(t) {
+            return t._id === vm.filter.teamId;
+          });
+          if (teamIndex > -1) vm.team = vm.teams[teamIndex];
+          vm.fieldChanged(vm.team);
+        } else if (!vm.filter.teamId || vm.filter.teamId === '') {
           if (vm.teams.length > 0) {
             vm.team = vm.teams[0];
             vm.filter.teamId = (vm.team) ? vm.team._id : '';
@@ -92,7 +98,6 @@
             }
           });
         }
-        console.log('mapPoints', vm.mapPoints);
       });
     };
 
@@ -287,5 +292,10 @@
       $scope.station.latitude = coords.lat;
       $scope.station.longitude = coords.lng;
     }
+
+    vm.createExpedition = function() {
+      $rootScope.teamId = vm.filter.teamId;
+      $state.go('expeditions.create');
+    };
   }
 })();

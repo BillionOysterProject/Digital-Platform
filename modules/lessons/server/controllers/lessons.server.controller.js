@@ -8,6 +8,7 @@ var path = require('path'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
   SavedLesson = mongoose.model('SavedLesson'),
+  Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -386,14 +387,20 @@ exports.list = function(req, res) {
     }
   }
 
-  var searchRe;
   var or = [];
+  var searchRe;
   if (req.query.searchString) {
-    searchRe = new RegExp(req.query.searchString, 'i');
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
     or.push({ 'title': searchRe });
     or.push({ 'lessonOverview.lessonSummary': searchRe });
     or.push({ 'lessonObjectives': searchRe });
-    or.push({ 'materialsResources.vocabulary': searchRe });
 
     and.push({ $or: or });
   }

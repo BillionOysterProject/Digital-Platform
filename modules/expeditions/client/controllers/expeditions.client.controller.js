@@ -5,10 +5,10 @@
     .module('expeditions')
     .controller('ExpeditionsController', ExpeditionsController);
 
-  ExpeditionsController.$inject = ['$scope', '$state', 'moment', 'lodash', 'expeditionResolve', 'Authentication',
+  ExpeditionsController.$inject = ['$scope', '$rootScope', '$state', 'moment', 'lodash', 'expeditionResolve', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService'];
 
-  function ExpeditionsController($scope, $state, moment, lodash, expedition, Authentication,
+  function ExpeditionsController($scope, $rootScope, $state, moment, lodash, expedition, Authentication,
   TeamsService, TeamMembersService, RestorationStationsService) {
     var vm = this;
 
@@ -27,11 +27,13 @@
     };
 
     if (vm.expedition._id) {
-      vm.teamId = (vm.expedition.team) ? vm.expedition.team._id : '';
+      vm.teamId = (vm.expedition.team && vm.expedition.team._id) ? vm.expedition.team._id : vm.expedition.team;
+      vm.stationId = (vm.expedition.station && vm.expedition.station._id) ? vm.expedition.station._id : vm.expedition.station;
 
       vm.expedition.monitoringStartDate = moment(vm.expedition.monitoringStartDate).toDate();
       vm.expedition.monitoringEndDate = moment(vm.expedition.monitoringEndDate).toDate();
     } else {
+      vm.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
       vm.expedition.monitoringStartDate = moment().startOf('day').hours(8).toDate();
       vm.expedition.monitoringEndDate = moment().startOf('day').hours(16).toDate();
     }
@@ -56,6 +58,11 @@
       if (vm.teamId === '') {
         vm.team = (vm.teams && vm.teams.length > 0) ? vm.teams[0] : null;
         vm.teamId = (vm.team) ? vm.team._id : '';
+      } else {
+        var teamIndex = lodash.findIndex(vm.teams, function(t) {
+          return t._id === vm.teamId;
+        });
+        vm.team = vm.teams[teamIndex];
       }
 
       if (vm.teamId) {
@@ -69,7 +76,6 @@
       }
 
       if (vm.team) {
-        console.log('vm.team', vm.team);
         RestorationStationsService.query({
           schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
             vm.team.schoolOrg._id : vm.team.schoolOrg
@@ -90,13 +96,6 @@
           waterQuality: [],
         };
       }
-      // vm.memberLists.protocols = {
-      //   'Site Conditions': [],
-      //   'Oyster Measurements': [],
-      //   'Mobile Trap': [],
-      //   'Settlement Tiles': [],
-      //   'Water Quality': []
-      // };
     };
 
     vm.fieldChanged = function(team) {
@@ -113,9 +112,10 @@
 
     // Remove existing Expedition
     function remove() {
-      if (confirm('Are you sure you want to delete?')) {
-        vm.expedition.$remove($state.go('expeditions.list'));
-      }
+      vm.expedition.$remove(function(err) {
+        $rootScope.teamId = vm.teamId;
+        $state.go('expeditions.list');
+      });
     }
 
     // Save Expedition
@@ -131,18 +131,21 @@
         vm.expedition.teamLists.mobileTrap.length === 0 ||
         vm.expedition.teamLists.settlementTiles.length === 0 ||
         vm.expedition.teamLists.waterQuality.length === 0) {
-        console.log('teams not assigned');
-        vm.error = 'Every protocol needs at least one person assigned to it. Try using auto assign.';
         vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }
 
       // set team
-      var index = lodash.findIndex(vm.teams, function(t) {
+      var teamIndex = lodash.findIndex(vm.teams, function(t) {
         return t._id === vm.teamId;
       });
-      if (index > -1) vm.expedition.team = vm.teams[index];
+      if (teamIndex > -1) vm.expedition.team = vm.teams[teamIndex];
+
+      var stationIndex = lodash.findIndex(vm.stations, function(s) {
+        return s._id === vm.stationId;
+      });
+      if (stationIndex > -1) vm.expedition.station = vm.stations[stationIndex];
 
       // TODO: move create/update logic to service
       if (vm.expedition._id) {
@@ -152,7 +155,8 @@
       }
 
       function successCallback(res) {
-        $state.go('restoration-stations.dashboard');
+        $rootScope.teamId = vm.teamId;
+        $state.go('expeditions.list');
       }
 
       function errorCallback(res) {
@@ -185,7 +189,6 @@
           vm.expedition.teamLists[keys[l]].push(vm.memberLists.members[ml]);
           ml++;
           if (ml >= vm.memberLists.members.length) {
-            console.log('resetting member index');
             ml = 0;
           }
         }
@@ -203,6 +206,18 @@
           }
         }
       }
+    };
+
+    vm.openDeleteExpedition = function() {
+      angular.element('#modal-delete-expedition').modal('show');
+    };
+
+    vm.confirmDeleteExpedition = function(shouldDelete) {
+      var element = angular.element('#modal-delete-expedition');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
+      });
+      element.modal('hide');
     };
   }
 })();

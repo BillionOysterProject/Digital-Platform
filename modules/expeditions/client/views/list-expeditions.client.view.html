@@ -2,13 +2,13 @@
   <section class="content">
     <section class="container">
       <h2>Expeditions</h2>
-      <a class="btn btn-primary" ui-sref="expeditions.create">Create an expedition</a>
+      <a class="btn btn-primary" ui-sref="expeditions.create" ng-show="vm.isTeamLead">Create an expedition</a>
     </section>
   </section>
 </div>
 <section class="content">
   <section class="container">
-    <table class="table table-hover">
+    <table class="table table-hover" ng-show="vm.expeditions && vm.expeditions.length > 0">
       <thead>
         <tr>
           <th></th>
@@ -23,8 +23,8 @@
         <tr ng-repeat="expedition in vm.expeditions" ui-sref="{{vm.expeditionLink(expedition)}}">
             <td>
                 <i class="glyphicon glyphicon-unchecked" ng-show="vm.isUpcoming(expedition)"></i>
-                <i class="glyphicon glyphicon-unchecked red" ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))"></i>
+                <i class="glyphicon glyphicon-unchecked red" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))"></i>
                 <i class="glyphicon glyphicon-check red" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember"></i>
                 <i class="glyphicon glyphicon-unchecked red" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember"></i>
                 <i class="glyphicon glyphicon-check green" ng-show="expedition.status === 'published'"></i>
@@ -41,8 +41,8 @@
             <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
             <td class="text-right">
                 <span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>
-                <span class="label label-danger" ng-show="((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                  ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))">Incomplete</span>
+                <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                  ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))">Incomplete</span>
                 <span class="label label-danger" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
                 <span class="label label-danger" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
                 <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
@@ -50,5 +50,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamLead">
+        No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+    </div>
+    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamMember">
+        No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
+    </div>
   </section>
 </section>

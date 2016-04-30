@@ -5,9 +5,9 @@
     .module('lessons')
     .controller('LessonsListController', LessonsListController);
 
-  LessonsListController.$inject = ['$scope', '$rootScope', 'LessonsService', 'UnitsService', 'SubjectAreasService'];
+  LessonsListController.$inject = ['$scope', '$rootScope', '$timeout', 'LessonsService', 'UnitsService', 'SubjectAreasService'];
 
-  function LessonsListController($scope, $rootScope, LessonsService, UnitsService, SubjectAreasService) {
+  function LessonsListController($scope, $rootScope, $timeout, LessonsService, UnitsService, SubjectAreasService) {
     var vm = this;
 
     vm.filter = {
@@ -33,6 +33,9 @@
         page: vm.filter.page
       }, function(data) {
         vm.lessons = data;
+        vm.error = null;
+      }, function(error) {
+        vm.error = error.data.message;
       });
     };
 

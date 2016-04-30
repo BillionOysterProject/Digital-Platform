@@ -9,9 +9,9 @@
   <section class="container-fluid">
     <div>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab">Created Lessons</a></li>
-        <li role="presentation" view-permissions="admin,team lead,team lead pending" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="graph" role="tab" data-toggle="tab">Saved Lessons</a></li>
-        <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="graph" role="tab" data-toggle="tab">Submitted Lessons</a></li>
+        <li role="presentation" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Created Lessons</a></li>
+        <li role="presentation" view-permissions="admin,team lead,team lead pending" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Saved Lessons</a></li>
+        <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Submitted Lessons</a></li>
       </ul>
       <div class="tab-content">
         <br />

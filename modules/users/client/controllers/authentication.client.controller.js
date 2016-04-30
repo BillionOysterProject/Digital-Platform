@@ -101,9 +101,23 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
             'name' : data[i].name
           });
         }
+        if (vm.credentials && vm.credentials.userrole === 'team member pending') {
+          var orgIndex = lodash.findIndex(vm.schoolOrgs, function(o) {
+            return o.name === 'Unaffiliated/None';
+          });
+          if (orgIndex > -1) {
+            vm.schoolOrgs.splice(orgIndex, 1);
+          }
+        }
       });
     };
     vm.findOrganizations();
+
+    vm.roleFieldSelected = function(role) {
+      if (role === 'team member pending') {
+        vm.findOrganizations();
+      }
+    };
 
     vm.schoolOrgFieldSelected = function(schoolOrgId) {
       if (schoolOrgId && vm.credentials.userrole === 'team member pending') {

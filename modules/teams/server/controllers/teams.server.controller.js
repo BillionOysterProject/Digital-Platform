@@ -160,7 +160,14 @@ exports.listMembers = function (req, res) {
   var searchRe;
   var or = [];
   if (req.query.searchString) {
-    searchRe = new RegExp(req.query.searchString, 'i');
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+    
     or.push({ 'displayName': searchRe });
     or.push({ 'email': searchRe });
     or.push({ 'username': searchRe });
@@ -198,7 +205,6 @@ exports.listMembers = function (req, res) {
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
-      console.log('error', err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
@@ -323,6 +329,23 @@ var sendInviteEmail = function(user, host, teamLeadName, teamName, token, succes
   });
 };
 
+var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'member_existing_invite', {
+    FirstName: user.firstName,
+    TeamLeadName: teamLeadName,
+    TeamName: teamName,
+    LinkLogin: httpTransport + host + '/authentication/signin',
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
 exports.createMember = function (req, res) {
   delete req.body.roles;
 
@@ -336,12 +359,21 @@ exports.createMember = function (req, res) {
         };
         createInternal(teamJSON, req.user,
           function(team) {
-            if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+            if (token) {
+              sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
               function() {
                 res.json(member);
               }, function() {
                 res.json(member);
               });
+            } else {
+              sendExistingInviteEmail(member, req.headers.host, req.user.displayName, team.name,
+              function() {
+                res.json(member);
+              }, function() {
+                res.json(member);
+              });
+            }
           }, function(err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
@@ -362,12 +394,21 @@ exports.createMember = function (req, res) {
                   message: 'Error adding member to team'
                 });
               } else {
-                if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                if (token) {
+                  sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
                   function() {
                     res.json(member);
                   }, function() {
                     res.json(member);
                   });
+                } else {
+                  sendExistingInviteEmail(member, req.headers.host, req.user.displayName, team.name,
+                  function() {
+                    res.json(member);
+                  }, function() {
+                    res.json(member);
+                  });
+                }
               }
             });
           }
@@ -448,47 +489,72 @@ exports.deleteMember = function (req, res) {
   var member = req.member;
   var team = req.team;
 
-  if (team) {
-    if (member) {
-      var index = _.findIndex(team.teamMembers, function(m) { return m._id.toString() === member._id.toString(); });
-      //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1;
-      if (index > -1) {
-        team.teamMembers.splice(index, 1);
-
-        team.save(function (delSaveErr) {
-          if (delSaveErr) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(delSaveErr)
-            });
-          } else {
-            if (member.pending === true) {
-              member.remove(function (errDelUser) {
-                if (errDelUser) {
-                  return res.status(400).send({
-                    message: errorHandler.getErrorMessage(errDelUser)
-                  });
-                } else {
-                  res.json(member);
-                }
-              });
-            } else {
-              res.json(member);
-            }
-          }
+  var deleteUser = function() {
+    member.remove(function (errDelUser) {
+      if (errDelUser) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(errDelUser)
         });
       } else {
+        res.json(member);
+      }
+    });
+  };
+
+  var memberIndex = function(member, team) {
+    var index = _.findIndex(team.teamMembers, function(m) {
+      return m._id.toString() === member._id.toString();
+    });
+    return index;
+  };
+
+  var removeMemberFromTeam = function(team, index, callback) {
+    team.teamMembers.splice(index, 1);
+
+    team.save(function (delSaveErr) {
+      if (delSaveErr) {
+        callback(delSaveErr);
+      } else {
+        if (member.pending === true) {
+          member.remove(function (errDelUser) {
+            if (errDelUser) {
+              callback(errDelUser);
+            } else {
+              callback();
+            }
+          });
+        } else {
+          callback();
+        }
+      }
+    });
+  };
+
+  // Remove the user from the team
+  var mIndex = memberIndex(member, team);
+  if (mIndex > -1) {
+    removeMemberFromTeam(team, mIndex, function(err) {
+      if (err) {
         return res.status(400).send({
-          message: 'Could not find member to delete in team'
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        Team.find({ 'teamMembers': member }).exec(function(err, teams) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else if (teams && teams.length > 0) {
+            res.json(member);
+          } else {
+            deleteUser();
+          }
         });
       }
-    } else {
-      return res.status(400).send({
-        message: 'Cound not find member to delete'
-      });
-    }
+    });
   } else {
     return res.status(400).send({
-      message: 'Could not find team to delete member from'
+      message: 'Member was not found in team'
     });
   }
 };

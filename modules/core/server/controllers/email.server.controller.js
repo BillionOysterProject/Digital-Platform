@@ -68,7 +68,12 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
       to: to,
       subject: subject,
       text: bodyText,
-      html: bodyHtml
+      html: bodyHtml,
+      attachments: [{
+        filename: 'logo.png',
+        path: 'https://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/logo.png',
+        cid: 'bop-logo.ee' //same cid value as in the html img src
+      }]
     }, function(err, info) {
       if (err) {
         console.log('err', err);
@@ -113,7 +118,7 @@ exports.sendBugReport = function(req, res) {
     Location: req.body.location,
     Issue: req.body.issue
   };
-  exports.sendFeedback('jira@fearless.jira.com', req.user.email, 'Bug Report from the Billion Oyster Project', data, 'bug_report', req, res);
+  exports.sendFeedback('jira@fearless.jira.com', req.user.email, req.body.subject, data, 'bug_report', req, res);
 };
 
 exports.sendGeneralFeedback = function(req, res) {
@@ -124,7 +129,7 @@ exports.sendGeneralFeedback = function(req, res) {
     OrgName: req.user.schoolOrg.name,
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };
-  exports.sendFeedback(defaultFrom, req.user.email, 'General Feedback from the Billion Oyster Project', data, 'feedback', req, res);
+  exports.sendFeedback(defaultFrom, req.user.email, 'BOP General Feedback: ' + req.body.subject, data, 'feedback', req, res);
 };
 
 exports.sendHelpQuestion = function(req, res) {
@@ -135,7 +140,7 @@ exports.sendHelpQuestion = function(req, res) {
     OrgName: req.user.schoolOrg.name,
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };
-  exports.sendFeedback(defaultFrom, req.user.email, 'Help Question from the Billion Oyster Project', data, 'feedback', req, res);
+  exports.sendFeedback(defaultFrom, req.user.email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);
 };
 
 exports.sendLessonFeedback = function(req, res) {
