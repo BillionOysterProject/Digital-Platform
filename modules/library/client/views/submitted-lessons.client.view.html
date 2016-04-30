@@ -1,5 +1,5 @@
-<div class="row" isotope-container="isotope-container" id="isotope-container" ng-cloak="" ng-show="sub.submittedLessons.length > 0">
-    <div ng-repeat="submitted in sub.submittedLessons track by submitted._id" isotope-item="isotope-item"
+<div class="row" isotope-container="isotope-container-submitted" id="isotope-container-submitted" ng-cloak="" >
+    <div ng-repeat="submitted in sub.submittedLessons track by submitted._id" isotope-item="isotope-item-submitted"
     class="col-sm-6 col-md-4 col-lg-3 library-item">
         <div class="panel">
             <div class="panel-heading" style="background: {{submitted.unit.color}}">

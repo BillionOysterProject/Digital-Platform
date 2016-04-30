@@ -1,7 +1,7 @@
-<div class="row" isotope-container="isotope-container" id="isotope-container" ng-cloak="">
-    <div ng-repeat="created in vm.createdLessons track by created._id" isotope-item="isotope-item"
+<div class="row" isotope-container="isotope-container-created" id="isotope-container-created" ng-cloak="">
+    <div ng-repeat="created in vm.createdLessons track by created._id" isotope-item="isotope-item-created"
     class="col-sm-6 col-md-4 col-lg-3 library-item">
-        <div class="panel" data-category="transition">
+        <div class="panel">
             <div class="panel-heading" style="background: {{created.unit.color}}">
                 <span class="pull-right">{{created.lessonOverview.grade}}</span>
                 <h3 class="panel-title">

@@ -1,5 +1,5 @@
 <div class="row" isotope-container="isotope-container-saved" id="isotope-container-saved" ng-cloak="" ng-show="sv.savedLessons.length > 0">
-    <div ng-repeat="saved in sv.savedLessons track by saved._id" isotope-item="isotope-item-saved"
+    <div ng-repeat="saved in sv.savedLessons track by saved.title" isotope-item="isotope-item-saved"
     class="col-sm-6 col-md-4 col-lg-3 library-item">
         <div class="panel" ui-sref="lessons.view({ lessonId: saved._id })">
             <div class="panel-heading" style="background: {{saved.unit.color}}">

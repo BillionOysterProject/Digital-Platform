@@ -16,7 +16,8 @@
       }, function(data) {
         sub.submittedLessons = data;
         //$scope.$emit('iso-method', { name: 'reloadItems' });
-        //$scope.$emit('iso-method', { name: null, params: null });
+        //$scope.$emit('iso-method', { name: 'layout', params: null });
+        //$scope.$emit('iso-method', { name: null, params: { sortBy: 'title' } });
       });
     };
 
