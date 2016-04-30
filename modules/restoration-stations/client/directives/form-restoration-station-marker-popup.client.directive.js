@@ -13,14 +13,29 @@
         },
         replace: true,
         link: function(scope, element, attrs) {
+
+          var viewKey = 'modules/restoration-stations/client/views/form-restoration-station-marker-popup.client.view.html';
+
+          var html = $templateCache.get(viewKey);
           
-          $http.get('modules/restoration-stations/client/views/form-restoration-station-marker-popup.client.view.html',{cache:$templateCache}).then(function(results){
-            
-            var html = results.data;
+          if(html){
+            appendHtml();
+
+          }
+          else{
+            $http.get(viewKey,{ cache:$templateCache }).then(function(results){
+
+              html = results.data;
+              appendHtml();
+
+            });
+          }
+          
+          function appendHtml(){
             var template = $compile(html)(scope);
 
             element.append(template);
-          });
+          }
           
           
         }
