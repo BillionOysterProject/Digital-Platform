@@ -8,15 +8,15 @@
               Select picture <input type="file" nv-file-select uploader="uploader">
             </span>
         </div>
-        <div class="text-center form-group" ng-show="uploader.queue.length">
-            <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
-            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload selected picture</button>
-        </div>
         <div ng-show="success" class="text-center alert alert-success">
             <strong>Picture changed successfully</strong>
         </div>
         <div ng-show="error" class="text-center alert alert-danger">
             <strong ng-bind="error"></strong>
+        </div>
+        <div class="text-center form-group" ng-show="uploader.queue.length">
+            <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
+            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload selected picture</button>
         </div>
     </div>
     <div class="col-md-8" ng-controller="EditProfileController">
