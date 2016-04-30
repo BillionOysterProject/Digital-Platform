@@ -12,7 +12,7 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'Glossary',
       state: 'glossary.main',
-      roles: ['team lead', 'admin'],
+      roles: ['admin', 'team lead', 'team lead pending'],
       position: 4
     });
   }

@@ -20,6 +20,14 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       }
     });
 
+    $scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
+      console.info('onWhenAddingFileFailed', item, filter, options);
+      console.log('item', item);
+      console.log('filter', filter);
+      console.log('options', options);
+      $scope.error = 'Only images are allowed for this upload';
+    };
+
     // Called after the user selected a new picture file
     $scope.uploader.onAfterAddingFile = function (fileItem) {
       if ($window.FileReader) {
@@ -51,8 +59,12 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
       // Clear upload buttons
       $scope.cancelUpload();
 
-      // Show error message
-      $scope.error = response.message;
+      if (response.message === 'LIMIT_FILE_SIZE') {
+        $scope.error = 'Your picture is too large. Please upload a picture under 10 MB.';
+      } else {
+        // Show error message
+        $scope.error = response.message;
+      }
     };
 
     // Change user profile picture

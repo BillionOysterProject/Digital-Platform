@@ -8,8 +8,10 @@
         restrict: 'E',
         templateUrl: 'modules/library/client/views/submitted-lessons.client.view.html',
         controller: 'SubmittedLessonsController',
-        controllerAs: 'vm',
-        scope: true
+        controllerAs: 'sub',
+        scope: {
+          
+        }
       };
     });
 })();

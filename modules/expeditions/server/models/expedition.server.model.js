@@ -10,37 +10,89 @@ var mongoose = require('mongoose'),
  * Expedition Schema
  */
 var ExpeditionSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
   team: {
     type: Schema.ObjectId,
     ref: 'Team'
   },
-  teamMembers: [{
+  teamLead: {
     type: Schema.ObjectId,
     ref: 'User'
-  }],
-  site: {
+  },
+  station: {
     type: Schema.ObjectId,
-    ref: 'Site'
+    ref: 'RestorationStation'
   },
-  latitude: {
-    type: Number,
-    required: true
-  }, 
-  longitude: {
-    type: Number,
+  monitoringStartDate: {
+    type: Date,
     required: true
   },
-  monitoringDate: {
+  monitoringEndDate: {
     type: Date,
     required: true
   },
   notes: String,
+  protocols: {
+    siteCondition: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolSiteCondition'
+    },
+    oysterMeasurement: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolOysterMeasurement'
+    },
+    mobileTrap: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolMobileTrap'
+    },
+    settlementTiles: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolSettlementTile'
+    },
+    waterQuality: {
+      type: Schema.ObjectId,
+      ref: 'ProtocolWaterQuality'
+    }
+  },
+  teamLists: {
+    siteCondition: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+    oysterMeasurement: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+    mobileTrap: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+    settlementTiles: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+    waterQuality: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+  },
   created: {
     type: Date,
     required: true
   },
   updated: {
     type: Date
-  }
+  },
+  status: {
+    type: String,
+    enum: ['incomplete','pending','returned','published','unpublished'],
+    default: ['incomplete'],
+    required: true
+  },
+  published: Date
 });
 mongoose.model('Expedition', ExpeditionSchema);

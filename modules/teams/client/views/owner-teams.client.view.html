@@ -29,13 +29,19 @@
         <a class="btn btn-primary" ng-click="vm.openImportTeamMembers()">Import members</a>
     </div>
 </div>
+<div class="alert alert-danger text-center" ng-show="vm.error">
+  <p ng-bind="vm.error"></p>
+</div>
+<div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
+    No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+</div>
+<div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString !== '' && !vm.error">
+    Sorry, no results found for that search term
+</div>
 <div class="row" ng-show="vm.teamRequests.length > 0">
     <div class="col-md-12">
         <div class="alert alert-success" role="alert">You have <b>{{vm.teamRequests.length}}</b> team member requests. <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a></div>
     </div>
-</div>
-<div class="alert alert-info text-center" ng-show="vm.members.length === 0">
-    No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
 </div>
 <div class="row">
     <div class="col-md-12">

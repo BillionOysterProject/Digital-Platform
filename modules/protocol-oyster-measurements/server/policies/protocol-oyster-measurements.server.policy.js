@@ -13,7 +13,7 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member', 'team lead', 'user'],
+    roles: ['team member', 'team lead', 'admin'],
     allows: [{
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate',
       permissions: '*'
@@ -24,6 +24,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
       permissions: '*'
     }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-oyster-measurements/:currentOysterMeasurementId/previous',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: '*'
     }, {
@@ -31,7 +37,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['admin', 'partner', 'guest'],
+    roles: ['user', 'partner', 'guest'],
     allows: [{
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: ['get']

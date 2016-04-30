@@ -9,6 +9,12 @@
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
                 placeholder="Search for a vocabulary term...">
             </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.glossary.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
         </section>
     </section>
 </div>
@@ -26,15 +32,15 @@
                     </ul>
                 </li>
             </ul>
-            <a class="btn btn-primary pull-right" ng-click="vm.openAddEdit()" ng-show="vm.hasRole('team lead') || vm.hasRole('admin')">Add a vocabulary term</a>
+            <a class="btn btn-primary pull-right" ng-click="vm.openAddEdit()" view-permissions="admin,team lead">Add a vocabulary term</a>
         </nav>
         <table class="table">
             <tr ng-repeat="term in vm.glossary">
-                <td><h4 ng-bind="term.term"></h4><td>
+                <td><h4 ng-bind="term.term" class="nobreak"></h4><td>
                 <td><p class="text-muted" ng-bind="term.definition"></p></td>
                 <td class="text-right col-md-2">
                     <a class="btn btn-primary" title="See uses" ng-click="vm.goToLesson(term)">
-                      <i class="glyphicon glyphicon-search"></i><!--TODO: link to main Lesson page filtered with that vocab term-->
+                      <i class="glyphicon glyphicon-search"></i>
                     </a>
                     <a class="btn btn-default" ng-click="vm.openAddEdit(term)" ng-show="term.isCurrentUserOwner || vm.hasRole('admin')">
                       <i class="glyphicon glyphicon-edit"></i>

@@ -14,14 +14,6 @@
         url: '/library',
         template: '<ui-view/>'
       })
-      .state('library.main', {
-        url: '',
-        templateUrl: 'modules/library/client/views/library.client.view.html',
-        data: {
-          pageTitle: 'Library',
-          roles: ['admin', 'team lead']
-        }
-      })
       .state('library.user', {
         url: '/user',
         templateUrl: 'modules/library/client/views/user-library.client.view.html',
@@ -29,7 +21,7 @@
         controllerAs: 'vm',
         data: {
           pageTitle: 'My Library',
-          roles: ['admin', 'team lead']
+          roles: ['admin', 'team lead', 'team lead pending']
         }
       });
   }

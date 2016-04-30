@@ -4,10 +4,15 @@
  * Module dependencies
  */
 var path = require('path'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
   User = mongoose.model('User'),
+  UserActivity = mongoose.model('UserActivity'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
+  async = require('async'),
   TeamRequest = mongoose.model('TeamRequest');
 
 // URLs for which user can't be redirected on signin
@@ -28,12 +33,19 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = [req.body.userrole, 'user'];
+  if (req.body.schoolOrg === 'new') user.schoolOrg = null;
 
   // Then save the user
   user.save(function (err) {
     if (err) {
+      var errorMessage = errorHandler.getErrorMessage(err);
+      if (errorMessage.indexOf('username already exists') > -1) {
+        errorMessage = 'Username already exists';
+      } else if (errorMessage.indexOf('email already exists') > -1) {
+        errorMessage = 'Email already exists';
+      }
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: errorMessage
       });
     } else {
       // Remove sensitive data before login
@@ -43,7 +55,9 @@ exports.signup = function (req, res) {
       var loginNewUser = function() {
         req.login(user, function (err) {
           if (err) {
-            res.status(400).send(err);
+            res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
           } else {
             res.json(user);
           }
@@ -51,7 +65,7 @@ exports.signup = function (req, res) {
       };
 
       // Add team request
-      if (req.body.userrole === 'team member') {
+      if (req.body.userrole === 'team member pending') {
         var request = new TeamRequest({
           requester: user,
           teamLead: req.body.teamLead
@@ -63,12 +77,169 @@ exports.signup = function (req, res) {
               message: errorHandler.getErrorMessage(saveErr)
             });
           } else {
-            loginNewUser();
+            User.findById(req.body.teamLead).exec(function(err, teamLead) {
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+              email.sendEmailTemplate(teamLead.email, user.displayName + ' has just requested to join your team ',
+              'member_request', {
+                FirstName: teamLead.firstName,
+                TeamMemberName: user.displayName,
+                LinkMemberRequest: httpTransport + req.headers.host + '/settings/members',
+                LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+              }, function(info) {
+                loginNewUser();
+              }, function(errorMessage) {
+                loginNewUser();
+              });
+            });
           }
         });
+      } else if (req.body.userrole === 'team lead pending') {
+        var sendNewTeamLeadEmail = function() {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
+            FirstName: user.firstName,
+            TeamMemberName: user.displayName,
+            LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+            Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          }, function(info) {
+            loginNewUser();
+          }, function(errorMessage) {
+            loginNewUser();
+          });
+        };
+
+        if (req.body.schoolOrg === 'new') {
+          if (req.body.addSchoolOrg) {
+            var schoolOrg = new SchoolOrg(req.body.addSchoolOrg);
+            schoolOrg.creator = user;
+            schoolOrg.pending = true;
+
+            schoolOrg.save(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                user.schoolOrg = schoolOrg._id;
+                user.save(function(err) {
+                  if (err) {
+                    return res.status(400).send({
+                      message: errorHandler.getErrorMessage(err)
+                    });
+                  }
+
+                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+                  email.sendEmailTemplate(user.email, 'Your new organization request for ' + schoolOrg.name + ' is pending admin approval',
+                  'org_pending', {
+                    FirstName: user.firstName,
+                    OrgName: schoolOrg.name,
+                    LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+                    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+                    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                  }, function(info) {
+                    sendNewTeamLeadEmail();
+                  }, function(errorMessage) {
+                    sendNewTeamLeadEmail();
+                  });
+                });
+              }
+            });
+          } else {
+            sendNewTeamLeadEmail();
+          }
+        } else {
+          sendNewTeamLeadEmail();
+        }
       } else {
         loginNewUser();
       }
+    }
+  });
+};
+
+exports.validateNewUserToken = function (req, res) {
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: {
+      $gt: Date.now()
+    }
+  }, function (err, user) {
+    if (!user) {
+      return res.redirect('/claim-user/invalid');
+    }
+
+    res.redirect('/claim-user/' + req.params.token);
+  });
+};
+
+/**
+ * New User POST from email token
+ */
+exports.newUser = function (req, res) {
+  // Init Variables
+  var passwordDetails = req.body.passwordDetails;
+  var username = req.body.username;
+
+  async.waterfall([
+
+    function (done) {
+      User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {
+          $gt: Date.now()
+        }
+      }, function (err, user) {
+        if (!err && user) {
+          if (passwordDetails.password === passwordDetails.verifyPassword) {
+            user.password = passwordDetails.password;
+            user.username = username;
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+            user.pending = false;
+            user.roles = ['user', 'team member'];
+
+            user.save(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                req.login(user, function (err) {
+                  if (err) {
+                    res.status(400).send(err);
+                  } else {
+                    // Remove sensitive data before return authenticated user
+                    user.password = undefined;
+                    user.salt = undefined;
+
+                    res.json(user);
+
+                    done(err);
+                  }
+                });
+              }
+            });
+          } else {
+            return res.status(400).send({
+              message: 'Passwords do not match'
+            });
+          }
+        } else {
+          return res.status(400).send({
+            message: 'Password reset token is invalid or has expired.'
+          });
+        }
+      });
+    },
+  ], function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     }
   });
 };
@@ -89,7 +260,14 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          res.json(user);
+          var activity = new UserActivity({
+            user: user,
+            activity: 'login'
+          });
+
+          activity.save(function(err) {
+            res.json(user);
+          });
         }
       });
     }

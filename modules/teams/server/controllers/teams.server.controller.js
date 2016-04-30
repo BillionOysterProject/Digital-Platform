@@ -7,8 +7,12 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
+  config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  _ = require('lodash'),
+  async = require('async'),
+  crypto = require('crypto');
 
 /**
  * Create a team
@@ -27,7 +31,7 @@ var createInternal = function(teamJSON, user, successCallback, errorCallback) {
 };
 
 exports.create = function (req, res) {
-  createInternal(req.body, req.user, 
+  createInternal(req.body, req.user,
     function(team) {
       res.json(team);
     }, function(err) {
@@ -89,7 +93,7 @@ exports.delete = function (req, res) {
   });
 };
 
-/** 
+/**
  * List of Teams
  */
 exports.list = function (req, res) {
@@ -131,7 +135,7 @@ exports.list = function (req, res) {
   }
 
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName').exec(function (err, teams) {
+  .populate('teamLead', 'displayName profileImageURL').populate('schoolOrg').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -152,15 +156,22 @@ exports.listMembers = function (req, res) {
   if (req.query.teamId) {
     and.push({ '_id': req.query.teamId });
   }
-  
+
   var searchRe;
   var or = [];
   if (req.query.searchString) {
-    searchRe = new RegExp(req.query.searchString, 'i');
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+    
     or.push({ 'displayName': searchRe });
     or.push({ 'email': searchRe });
-    or.push({ 'username': searchRe }); 
-    
+    or.push({ 'username': searchRe });
+
     and.push({ $or: or });
   }
 
@@ -194,7 +205,6 @@ exports.listMembers = function (req, res) {
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
-      console.log('error', err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
@@ -235,7 +245,7 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).populate('teamLead', 'displayName')
+  Team.findById(id).populate('teamLead', 'displayName email profileImageURL')
   .populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .exec(function (err, team) {
     if (err) {
@@ -274,37 +284,96 @@ exports.memberByID = function (req, res, next, id) {
  * Team Member methods
  */
 var createMemberInternal = function(userJSON, successCallback, errorCallback) {
-  var user = new User(userJSON);
-  user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
-  user.roles = ['team member', 'user'];
-  user.username = user.email.substring(0, user.email.indexOf('@'));
-  user.pending = true;
-
-  // Then save the user
-  user.save(function (err) {
-    if (err) {
-      errorCallback(errorHandler.getErrorMessage(err));
-    } else {
+  User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
+    if (userErr) {
+      errorCallback(errorHandler.getErrorMessage(userErr));
+    } else if (user) {
       successCallback(user);
+    } else {
+      crypto.randomBytes(20, function (err, buffer) {
+        var token = buffer.toString('hex');
+        //create user
+        user = new User(userJSON);
+        user.provider = 'local';
+        user.displayName = user.firstName + ' ' + user.lastName;
+        user.roles = ['team member pending', 'user'];
+        user.username = user.email.substring(0, user.email.indexOf('@'));
+        user.pending = true;
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+
+        // Then save the user
+        user.save(function (err) {
+          if (err) errorCallback(errorHandler.getErrorMessage(err));
+          successCallback(user, token);
+        });
+      });
     }
+  });
+};
+
+var sendInviteEmail = function(user, host, teamLeadName, teamName, token, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'member_invite', {
+    FirstName: user.firstName,
+    TeamLeadName: teamLeadName,
+    TeamName: teamName,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
+var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'member_existing_invite', {
+    FirstName: user.firstName,
+    TeamLeadName: teamLeadName,
+    TeamName: teamName,
+    LinkLogin: httpTransport + host + '/authentication/signin',
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
   });
 };
 
 exports.createMember = function (req, res) {
   delete req.body.roles;
 
-  createMemberInternal(req.body, 
-    function(member) {
+  createMemberInternal(req.body,
+    function(member, token) {
       if (req.body.newTeamName) {
         var teamJSON = {
           name: req.body.newTeamName,
           schoolOrg: req.user.schoolOrg,
           teamMembers: [member]
         };
-        createInternal(teamJSON, req.user, 
+        createInternal(teamJSON, req.user,
           function(team) {
-            res.json(member);
+            if (token) {
+              sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+              function() {
+                res.json(member);
+              }, function() {
+                res.json(member);
+              });
+            } else {
+              sendExistingInviteEmail(member, req.headers.host, req.user.displayName, team.name,
+              function() {
+                res.json(member);
+              }, function() {
+                res.json(member);
+              });
+            }
           }, function(err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
@@ -325,7 +394,21 @@ exports.createMember = function (req, res) {
                   message: 'Error adding member to team'
                 });
               } else {
-                res.json(member);
+                if (token) {
+                  sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                  function() {
+                    res.json(member);
+                  }, function() {
+                    res.json(member);
+                  });
+                } else {
+                  sendExistingInviteEmail(member, req.headers.host, req.user.displayName, team.name,
+                  function() {
+                    res.json(member);
+                  }, function() {
+                    res.json(member);
+                  });
+                }
               }
             });
           }
@@ -362,7 +445,7 @@ exports.updateMember = function (req, res) {
                 schoolOrg: req.user.schoolOrg,
                 teamMembers: [member]
               };
-              createInternal(teamJSON, req.user, 
+              createInternal(teamJSON, req.user,
                 function(team) {
                   res.json(member);
                 }, function(err) {
@@ -405,48 +488,73 @@ exports.updateMember = function (req, res) {
 exports.deleteMember = function (req, res) {
   var member = req.member;
   var team = req.team;
-  
-  if (team) {
-    if (member) {
-      var index = _.findIndex(team.teamMembers, function(m) { return m._id.toString() === member._id.toString(); });
-      //var index = team.teamMembers ? team.teamMembers.indexOf(member._id) : -1; 
-      if (index > -1) {
-        team.teamMembers.splice(index, 1);
 
-        team.save(function (delSaveErr) {
-          if (delSaveErr) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(delSaveErr)
-            });
-          } else {
-            if (member.pending === true) {
-              member.remove(function (errDelUser) {
-                if (errDelUser) {
-                  return res.status(400).send({
-                    message: errorHandler.getErrorMessage(errDelUser)
-                  });
-                } else {
-                  res.json(member);
-                }
-              });
-            } else {
-              res.json(member);
-            }
-          }
+  var deleteUser = function() {
+    member.remove(function (errDelUser) {
+      if (errDelUser) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(errDelUser)
         });
       } else {
+        res.json(member);
+      }
+    });
+  };
+
+  var memberIndex = function(member, team) {
+    var index = _.findIndex(team.teamMembers, function(m) {
+      return m._id.toString() === member._id.toString();
+    });
+    return index;
+  };
+
+  var removeMemberFromTeam = function(team, index, callback) {
+    team.teamMembers.splice(index, 1);
+
+    team.save(function (delSaveErr) {
+      if (delSaveErr) {
+        callback(delSaveErr);
+      } else {
+        if (member.pending === true) {
+          member.remove(function (errDelUser) {
+            if (errDelUser) {
+              callback(errDelUser);
+            } else {
+              callback();
+            }
+          });
+        } else {
+          callback();
+        }
+      }
+    });
+  };
+
+  // Remove the user from the team
+  var mIndex = memberIndex(member, team);
+  if (mIndex > -1) {
+    removeMemberFromTeam(team, mIndex, function(err) {
+      if (err) {
         return res.status(400).send({
-          message: 'Could not find member to delete in team'
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        Team.find({ 'teamMembers': member }).exec(function(err, teams) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else if (teams && teams.length > 0) {
+            res.json(member);
+          } else {
+            deleteUser();
+          }
         });
       }
-    } else {
-      return res.status(400).send({
-        message: 'Cound not find member to delete'
-      });
-    }
+    });
   } else {
     return res.status(400).send({
-      message: 'Could not find team to delete member from'
+      message: 'Member was not found in team'
     });
   }
 };
@@ -476,10 +584,11 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
 };
 
 exports.createMemberCsv = function (req, res) {
-  convertCsvMember(req.body.member, 
+  convertCsvMember(req.body.member,
     function(memberJSON) {
-      createMemberInternal(memberJSON, 
-        function(member) {
+      var teamName = (req.body.newTeamName) ? req.body.newTeamName : req.body.team.name;
+      createMemberInternal(memberJSON,
+        function(member, token) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
               if (teamByNameErr) {
@@ -495,7 +604,12 @@ exports.createMemberCsv = function (req, res) {
                       message: 'Error adding member to team'
                     });
                   } else {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, teamByName.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }
                 });
               } else {
@@ -505,9 +619,14 @@ exports.createMemberCsv = function (req, res) {
                   teamMembers: [member]
                 };
 
-                createInternal(teamJSON, req.user, 
+                createInternal(teamJSON, req.user,
                   function(team) {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }, function(err) {
                     return res.status(400).send({
                       message: errorHandler.getErrorMessage(err)
@@ -530,7 +649,12 @@ exports.createMemberCsv = function (req, res) {
                       message: 'Error adding member to team'
                     });
                   } else {
-                    res.json(member);
+                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                      function() {
+                        res.json(member);
+                      }, function() {
+                        res.json(member);
+                      });
                   }
                 });
               }
@@ -546,4 +670,11 @@ exports.createMemberCsv = function (req, res) {
         message: err
       });
     });
+};
+
+exports.readMember = function(req, res) {
+  // convert mongoose document to JSON
+  var member = req.member ? req.member.toJSON() : {};
+
+  res.json(member);
 };

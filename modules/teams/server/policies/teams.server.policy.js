@@ -34,7 +34,25 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'team member', 'partner'],
+    roles: ['team member'],
+    allows: [{
+      resources: '/api/teams/members',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/:teamId/members/:memberId',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/:teamId',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['user', 'partner', 'team lead pending', 'team member pending'],
     allows: [{
       resources: '/api/teams/members',
       permissions: ['get']

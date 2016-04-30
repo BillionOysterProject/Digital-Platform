@@ -1,7 +1,7 @@
 <div class="jumbotron dark text-center" style="background: {{vm.unit.color}}">
     <section class="content">
         <section class="container-fluid">
-            <h2><i class="glyphicon {{vm.unit.icon}}"></i> {{vm.unit.title}}</h2>
+            <h2><i class="{{vm.unit.icon}}"></i> {{vm.unit.title}}</h2>
         </section>
     </section>
 </div>
@@ -11,7 +11,8 @@
             <div class="col-sm-12">
                 <div class="pull-right">
                     <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })">Edit</a>
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
+                    <a class="btn btn-default" ng-click="vm.openUnitFeedback()">Send feedback</a>
+                    <!-- TODO: Wire up download <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>-->
                 </div>
                 <p class="text-muted">
                     Posted on
@@ -26,6 +27,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="well">
+                    <h6>Lessons inside this unit</h6>
                     <ul class="row list-unstyled">
                         <li class="col-md-4" ng-repeat="lesson in vm.lessons">
                           <a href="#" ui-sref="lessons.view({ lessonId: lesson._id })">{{lesson.title}}</a>
@@ -142,4 +144,5 @@
         </div>
     </div>
 </div>
-<!--END MODALS-->
+<unit-feedback-modal unit="vm.unit" close-function="vm.closeUnitFeedback"></unit-feedback-modal>
+<!-- END MODALS -->

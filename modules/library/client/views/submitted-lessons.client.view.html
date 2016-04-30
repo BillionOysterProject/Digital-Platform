@@ -1,26 +1,27 @@
-<div class="row" isotope-container="isotope-container">
-    <div ng-repeat="lesson in vm.submittedLessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
-        <div class="panel" data-category="transition">
-            <div class="panel-heading" style="background: {{lesson.unit.color}}">
-                <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+<div class="row" isotope-container="isotope-container-submitted" id="isotope-container-submitted" ng-cloak="" >
+    <div ng-repeat="submitted in sub.submittedLessons track by submitted._id" isotope-item="isotope-item-submitted"
+    class="col-sm-6 col-md-4 col-lg-3 library-item">
+        <div class="panel">
+            <div class="panel-heading" style="background: {{submitted.unit.color}}">
+                <span class="pull-right">{{submitted.lessonOverview.grade}}</span>
                 <h3 class="panel-title">
-                    <i class="glyphicon {{lesson.unit.icon}}"></i>
-                    {{lesson.unit.title}}
+                    <i class="{{submitted.unit.icon}}"></i>
+                    {{submitted.unit.title}}
                 </h3>
             </div>
             <div class="panel-body">
-                <small>{{lesson.lessonOverview.setting}}</small>
-                <h4>{{lesson.title}}</h4>
-                <p ng-bind="lesson.lessonOverview.lessonSummary | limitTo:200"></p>
-                <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
+                <small>{{submitted.lessonOverview.setting}}</small>
+                <h4>{{submitted.title}}</h4>
+                <p ng-bind="submitted.lessonOverview.lessonSummary | limitTo:200"></p>
+                <img ng-show="submitted.featuredImage" ng-src="{{submitted.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
-                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: lesson._id })">
+                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: submitted._id })">
                   <i class="glyphicon glyphicon-pencil"></i></a>
-                  <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.view({ lessonId: lesson._id })">
+                  <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.view({ lessonId: submitted._id })">
                     <i class="glyphicon glyphicon-eye-open"></i></a>
-                <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openReturnModal(lesson)"><i class="glyphicon glyphicon-remove"></i></a>
-                <a class="btn btn-sm btn-success pull-right" ng-click="vm.openPublishModal(lesson)"><i class="glyphicon glyphicon-ok"></i></a>
+                <a class="btn btn-sm btn-danger pull-right" ng-click="sub.openReturnModal(submitted)"><i class="glyphicon glyphicon-remove"></i></a>
+                <a class="btn btn-sm btn-success pull-right" ng-click="sub.openPublishModal(submitted)"><i class="glyphicon glyphicon-ok"></i></a>
                 <h6 class="blue">Awaiting Approval</h6>
             </div>
         </div>
@@ -28,5 +29,5 @@
 </div>
 
 <!-- Modals -->
-<return-lesson lesson="vm.lesson" save-function="vm.returnModal" cancel-function="vm.closeReturnModal"></return-lesson>
-<publish-lesson lesson="vm.lesson" save-function="vm.publishModal" cancel-function="vm.closePublishModal"></publish-lesson>
+<return-lesson lesson="sub.lesson" save-function="sub.returnModal" cancel-function="sub.closeReturnModal"></return-lesson>
+<publish-lesson lesson="sub.lesson" save-function="sub.publishModal" cancel-function="sub.closePublishModal"></publish-lesson>

@@ -36,8 +36,8 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
   if (req && res && localUploader && uploadConfig) {
     localUploader(req, res, function(localUploadError) {
       if (localUploadError) {
-        console.log('localUploadError', localUploadError);
-        errorCallback('Error occurred while uploading local file');
+        console.log('localUploadError', localUploadError.code);
+        errorCallback(localUploadError.code);
       } else {
         if (req.file) {
           var file = req.file;

@@ -4,10 +4,16 @@
             <h2>Lessons</h2>
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search and filters-->
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
-                placeholder="Search for a Lesson by title, lesson summary, lesson objective, vocabulary...">
+                placeholder="Search for a Lesson by title, lesson summary, lesson objective...">
+            </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
             </div>
         </section>
     </section>
@@ -27,7 +33,9 @@
                       <li role="separator" class="divider"></li>
 
                       <li ng-repeat="subject in vm.subjectAreas">
-                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">{{subject.subject}}</a>
+                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">
+                            <i class="fa fa-circle" style="color:{{subject.color}}"></i> {{subject.subject}}
+                        </a>
                       </li>
                     </ul>
                 </li>
@@ -49,7 +57,7 @@
                       <li><a ok-sel="*" ng-click="vm.unitSelected()">Show all</a></li>
                       <li ng-repeat="unit in vm.units">
                         <a ok-sel=".{{unit._id}}" ng-click="vm.unitSelected(unit)">
-                          <i class="fa fa-circle text-primary"></i> {{unit.title}}
+                          <i class="fa fa-circle" style="color:{{unit.color}}"></i> {{unit.title}}
                         </a>
                       </li>
                     </ul>
@@ -57,13 +65,13 @@
             </ul>
         </nav>
 
-        <div class="row" isotope-container="isotope-container">
-            <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
+        <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
+            <div ng-repeat="lesson in vm.lessons track by lesson._id" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
                 <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
                     <div class="panel-heading" style="background: {{lesson.unit.color}}">
                         <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
                         <h3 class="panel-title">
-                            <i class="glyphicon {{lesson.unit.icon}}"></i>
+                            <i class="{{lesson.unit.icon}}"></i>
                             {{lesson.unit.title}}
                         </h3>
                     </div>
@@ -83,7 +91,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin,team lead">
                 <div class="panel panel-default" ui-sref="lessons.create">
                     <div class="panel-body text-center text-muted">
                         <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>

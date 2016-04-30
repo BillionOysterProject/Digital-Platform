@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('library')
+    .module('lessons')
     .directive('savedLessonModal', function() {
       return {
         restrict: 'E',

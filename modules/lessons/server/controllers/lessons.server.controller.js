@@ -6,7 +6,9 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
+  LessonActivity = mongoose.model('LessonActivity'),
   SavedLesson = mongoose.model('SavedLesson'),
+  Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -67,7 +69,19 @@ exports.read = function(req, res) {
     delete lesson.returnedNotes;
   }
 
-  res.json(lesson);
+  if (!lesson.isCurrentUserOwner) {
+    var activity = new LessonActivity({
+      user: req.user,
+      lesson: lesson,
+      activity: (req.query.duplicate) ? 'duplicated' : 'viewed'
+    });
+
+    activity.save(function(err) {
+      res.json(lesson);
+    });
+  } else {
+    res.json(lesson);
+  }
 };
 
 /**
@@ -78,7 +92,6 @@ exports.update = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
-    lesson.status = 'pending';
     lesson.returnedNotes = '';
 
     var existingHandouts = [];
@@ -143,10 +156,16 @@ exports.publish = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        //TODO: changed to actual user email address
-        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-        'Your lesson has been approved and is now visible on the lessons page.',
-        '<p>Your lesson has been approved and is now visible on the lessons page.</p>',
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+        'lesson_approved', {
+          FirstName: lesson.user.firstName,
+          LessonName: lesson.title,
+          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        },
         function(response) {
           res.json(lesson);
         }, function(errorMessage) {
@@ -179,11 +198,17 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        email.sendEmail(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-        'Your lesson has been returned, the following changes need to be made: ' + lesson.returnedNotes + '\n' +
-        'You can edit the lesson on the My Library page.',
-        '<p>Your lesson has been returned, the following changes need to be made: <br/>' + lesson.returnedNotes + '<br/>' +
-        'You can edit the lesson on the My Library page.</p>',
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+        'lesson_returned', {
+          FirstName: lesson.user.firstName,
+          LessonName: lesson.title,
+          LessonReturnedNote: lesson.returnedNotes,
+          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
+          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        },
         function(response) {
           res.json(lesson);
         }, function(errorMessage) {
@@ -362,14 +387,20 @@ exports.list = function(req, res) {
     }
   }
 
-  var searchRe;
   var or = [];
+  var searchRe;
   if (req.query.searchString) {
-    searchRe = new RegExp(req.query.searchString, 'i');
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
     or.push({ 'title': searchRe });
     or.push({ 'lessonOverview.lessonSummary': searchRe });
     or.push({ 'lessonObjectives': searchRe });
-    or.push({ 'materialsResources.vocabulary': searchRe });
 
     and.push({ $or: or });
   }
@@ -649,7 +680,15 @@ exports.downloadZip = function(req, res) {
     getLessonContent(function() {
       getHandouts(function() {
         getResources(function() {
-          archive.finalize();
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: req.lesson,
+            activity: 'downloaded'
+          });
+
+          activity.save(function(err) {
+            archive.finalize();
+          });
         });
       });
     });
@@ -672,7 +711,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'displayName email team profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email team profileImageURL')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {

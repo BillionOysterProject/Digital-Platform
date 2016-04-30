@@ -147,6 +147,16 @@
           roles: ['team lead']
         }
       })
+      .state('settings.admin-organizations', {
+        url: '/organizations',
+        templateUrl: 'modules/school-orgs/client/views/list-school-orgs.client.view.html',
+        controller: 'SchoolOrganizationsControllers',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Schools/Organizations',
+          roles: ['admin']
+        }
+      })
       .state('authentication', {
         abstract: true,
         url: '/authentication',
@@ -155,6 +165,8 @@
       .state('authentication.signup', {
         url: '/signup',
         templateUrl: 'modules/users/client/views/authentication/signup.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'Signup'
         }
@@ -162,8 +174,29 @@
       .state('authentication.signin', {
         url: '/signin?err',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'Signin'
+        }
+      })
+      .state('claim-user', {
+        abstract: true,
+        url: '/claim-user',
+        template: '<ui-view/>'
+      })
+      .state('claim-user.invalid', {
+        url: '/invalid',
+        templateUrl: 'modules/users/client/views/authentication/claim-user-invalid.client.view.html',
+        data: {
+          pageTitle: 'Claim user token invalid'
+        }
+      })
+      .state('claim-user.form', {
+        url: '/:token',
+        templateUrl: 'modules/users/client/views/authentication/claim-user.client.view.html',
+        data: {
+          pageTitle: 'Claim user form'
         }
       })
       .state('password', {

@@ -46,7 +46,8 @@ var UserSchema = new Schema({
   },
   email: {
     type: String,
-    unique: true,
+    unique: 'Email already exists',
+    required: 'Please fill in an email',
     lowercase: true,
     trim: true,
     default: '',
@@ -68,7 +69,7 @@ var UserSchema = new Schema({
   },
   profileImageURL: {
     type: String,
-    default: 'modules/users/client/img/profile/default.png'
+    default: 'modules/users/client/img/profile/avatar-gray.png'
   },
   provider: {
     type: String,
@@ -96,7 +97,7 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'admin', 'team lead', 'team member', 'partner']
+      enum: ['user', 'admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending']
     }],
     default: ['user'],
     required: 'Please provide at least one role'
@@ -114,6 +115,10 @@ var UserSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  schoolOrg: {
+    type: Schema.ObjectId,
+    ref: 'SchoolOrg'
   },
   pending: {
     type: Boolean,

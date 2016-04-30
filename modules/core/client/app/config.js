@@ -13,14 +13,16 @@ var ApplicationConfiguration = (function () {
     'ui.bootstrap.tpls',
     'ui.utils',
     'angularFileUpload',
-    'ngQuill',
+    'textAngular',
     'iso.directives',
     'aa.select2',
     'omr.angularFileDnD',
     'dndLists',
     'ngCytoscape',
     'chart.js',
-    'ngLodash'];
+    'ngLodash',
+    'colorpicker.module',
+    'angularMoment'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

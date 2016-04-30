@@ -24,6 +24,12 @@ module.exports = function (app) {
     .get(schoolOrgs.list)
     .post(schoolOrgs.create);
 
+  app.route('/api/school-orgs/:schoolOrgId/approve').all(schoolOrgsPolicy.isAllowed)
+    .post(schoolOrgs.approve);
+
+  app.route('/api/school-orgs/:schoolOrgId/deny').all(schoolOrgsPolicy.isAllowed)
+    .post(schoolOrgs.deny);
+
   app.route('/api/school-orgs/:schoolOrgId').all(schoolOrgsPolicy.isAllowed)
     .get(schoolOrgs.read)
     .put(schoolOrgs.update)

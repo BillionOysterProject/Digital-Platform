@@ -29,43 +29,20 @@
       selector: 'node',
       style: {
         'content': 'data(name)',
-        'text-valign': 'center',
-        'background-color': 'data(color)',
+        'shape': 'circle',
         'height': 'data(size)',
-        'width': 'data(size)'
+        'width': 'data(size)',
+        'background-color': 'data(color)',
+        'color': '#fff',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'labelFontSize': '150', // isn't working
+        'labelFontWeight': 'bold', // isn't working
+        'labelFontName': 'Roboto', // isn't working
+        'text-wrap': 'wrap',
+        'text-max-width': '100'
       }
     }];
-
-    // vm.style = [{
-    //   selector: 'node',
-    //   style: {
-    //     'shape': 'ELLIPSE',
-    //     'background-color': 'data(color)',
-    //     'color': '#333333',
-    //     'opacity': '1',
-    //     'size': {
-    //       'defaultValue': '12',
-    //       'continuousMapper': {
-    //         'attrName': 'data(size)',
-    //         'minValue': '12',
-    //         'maxValue': '56'
-    //       }
-    //     },
-    //     'borderColor': '#000000',
-    //     'label': 'data(name)',
-    //     'tooltipText': '<b>data(name)</b>'
-    //   },
-    // }, {
-    //   selector: 'edge',
-    //   style: {
-    //     'color': '#999999',
-    //     'width': '2',
-    //     'mergeWidth': '2',
-    //     'opacity': '1',
-    //     'labelFontSize': '10',
-    //     'labelFontWeight': 'bold'
-    //   }
-    // }];
 
     vm.unitOpen = null;
 
@@ -76,8 +53,8 @@
         data: {
           id: 'curriculum',
           name: 'Curriculum',
-          color: '#cccccc',
-          size: 50,
+          color: '#2C3C56',
+          size: 150,
           type: 'curriculum'
         }
       }];
@@ -94,7 +71,7 @@
               id: 'unit'+i,
               name: vm.units[i].title,
               color: vm.units[i].color,
-              size: 30,
+              size: 130,
               type: 'unit',
               _id: vm.units[i]._id
             }
@@ -128,7 +105,7 @@
               id: 'lesson'+i,
               name: vm.lessons[i].title,
               color: unitData.color,
-              size: 30,
+              size: 100,
               type: 'lesson',
               _id: vm.lessons[i]._id
             }

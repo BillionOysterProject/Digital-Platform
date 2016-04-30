@@ -6,12 +6,14 @@ module.exports = {
       css: [
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-        'public/lib/quill/dist/quill.base.css',
-        'public/lib/quill/dist/quill.snow.css',
+        'public/lib/textAngular/dist/textAngular.css',
         'public/lib/select2/select2.css',
         'public/lib/select2/select2-bootstrap.css',
         'public/lib/leaflet/dist/leaflet.css',
-        'public/lib/angular-chart.js/dist/angular-chart.css'
+        'public/lib/angular-chart.js/dist/angular-chart.css',
+        'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/css/bootstrap-iconpicker.min.css',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -19,7 +21,8 @@ module.exports = {
         'public/lib/Chart.js/Chart.js',
         'public/lib/isotope/dist/isotope.pkgd.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
-        'public/lib/quill/dist/quill.js',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/iconset/iconset-fontawesome-4.2.0.min.js',
+        'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-animate/angular-animate.js',
@@ -28,11 +31,12 @@ module.exports = {
         'public/lib/angular-ui-utils/ui-utils.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-bootstrap/ui-bootstrap.js',
-        'public/lib/angular-isotope/dist/angular-isotope.js',
         'public/lib/angular-file-upload/angular-file-upload.js',
         'public/lib/angular-file-dnd/dist/angular-file-dnd.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
-        'public/lib/ngQuill/src/ng-quill.js',
+        'public/lib/textAngular/dist/textAngular-rangy.min.js',
+        'public/lib/textAngular/dist/textAngular-sanitize.min.js',
+        'public/lib/textAngular/dist/textAngular.min.js',
         'public/lib/angular-agility/dist/angular-agility.js',
         'public/lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js',
         'public/lib/spin.js/spin.js',
@@ -40,7 +44,12 @@ module.exports = {
         'public/lib/cytoscape/dist/cytoscape.js',
         'public/lib/ngCytoscape/dst/ngCytoscape.js',
         'public/lib/angular-chart.js/dist/angular-chart.js',
-        'public/lib/ng-lodash/build/ng-lodash.min.js'
+        'public/lib/ng-lodash/build/ng-lodash.min.js',
+        'public/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
+        'public/lib/moment/min/moment.min.js',
+        'public/lib/angular-moment/angular-moment.min.js',
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
+        'public/lib/angular-isotope/dist/angular-isotope.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

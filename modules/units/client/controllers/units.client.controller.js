@@ -102,5 +102,19 @@
       });
       element.modal('hide');
     };
+
+    //$('#iconpicker').iconpicker();
+    vm.iconChanged = function(dataIcon) {
+      console.log('dataIcon', dataIcon);
+      angular.element('#iconpicker').iconpicker();
+    };
+
+    vm.openUnitFeedback = function() {
+      angular.element('#modal-unit-feedback').modal('show');
+    };
+
+    vm.closeUnitFeedback = function() {
+      angular.element('#modal-unit-feedback').modal('hide');
+    };
   }
 })();

@@ -10,25 +10,28 @@ var mongoose = require('mongoose'),
  * Water Quality Schema
  */
 var ProtocolWaterQualitySchema = new Schema({
-  expedition: {
+  collectionTime: Date,
+  latitude: Number,
+  longitude: Number,
+  scribeMember: {
     type: Schema.ObjectId,
-    ref: 'Expedition',
-    //required: true TODO: will be required
-  },
-  team: {
-    type: Schema.ObjectId,
-    ref: 'Team',
-    //required: true TODO: will be required
+    ref: 'User'
   },
   teamMembers: [{
     type: Schema.ObjectId,
-    ref: 'User',
-    //required: true TODO: will be required
+    ref: 'User'
   }],
+  notes: String,
+  status: {
+    type: String,
+    enum: ['incomplete','submitted'],
+    default: ['incomplete'],
+    required: true
+  },
+  submitted: Date,
   samples: [{
     depthOfWaterSampleM: {
-      type: Number,
-      required: true
+      type: Number
     },
     locationOfWaterSample: {
       latitude: Number,

@@ -1,8 +1,8 @@
 <div class="sidebar navbar navbar-fixed-top navbar-inverse" ng-controller="HeaderController">
     <div class="navbar-header">
-        <a ui-sref="home" class="navbar-brand">
+        <div class="navbar-brand"> <!--  ui-sref="home"  -->
             <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
-        </a>
+        </div>
     </div>
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
         <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
@@ -15,6 +15,11 @@
             <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
         </li>
     </ul>
+    <div class="navbar-footer">
+        <a href="http://www.stemccers.com" target="_blank">
+            <img alt="Billion Oyster Project" src="modules/core/client/img/ccers_whiteout.png" />
+        </a>
+    </div>
 </div>
 
 <div class="navbar navbar-fixed-top navbar-default" ng-controller="HeaderController">
@@ -47,12 +52,70 @@
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                         </li>
                         <li class="divider"></li>
-                        <li>
-                            <a href="/api/auth/signout" target="_self">Signout</a>
-                        </li>
+                        <li><a href="#" ng-click="openFeedback()">Support</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/api/auth/signout" target="_self">Signout</a></li>
                     </ul>
                 </li>
             </ul>
         </nav>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- MODALS -->
+<site-feedback></site-feedback>
+<div class="modal fade" id="modal-about" tabindex="-1" role="dialog" aria-labelledby="modal-about">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">About the project</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <p>The Billion Oyster Project Curriculum and Community Enterprise for Restoration Science (BOP-CCERS) aims to improve STEM education in public schools by linking teaching and learning to ecosystem restoration and engaging students in hands-on environmental field science during their regular school day. The project also strongly emphasizes the use of computer science and digital tools for environmental monitoring, citizen science, stewardship, and advocacy. BOP-CCERS is a research-based partnership initiative between
+                        <a href="https://www.newyorkharborschool.org/crew/new-york-harbor-foundation/" target="_blank">New York Harbor Foundation</a>,
+                        <a href="http://www.pace.edu/" target="_blank">Pace University</a>,
+                        <a href="http://schools.nyc.gov/default.htm" target="_blank">New York City Department of Education</a>,
+                        <a href="http://www.ldeo.columbia.edu/" target="_blank">Columbia University Lamont-Doherty Earth Observatory</a>,
+                        <a href="http://www.nyas.org/" target="_blank">New York Academy of Sciences</a>,
+                        <a href="http://www.umces.edu/" target="_blank">University of Maryland Center for Environmental Science</a>,
+                        <a href="http://www.wcs.org/" target="_blank">New York Aquarium</a>,
+                        <a href="http://www.riverprojectnyc.org/" target="_blank">The River Project</a>, and
+                        <a href="http://goodshepherds.org/" target="_blank">Good Shepherd Services</a>.
+                        We are a diverse community of students and teachers, professional scientists and citizen scientist volunteers, schools, universities, businesses, and community organizations, all working together to conduct oyster restoration-based scientific research in New York Harbor.</p>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="CCERS" src="modules/core/client/img/ccers.jpg" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <img alt="Partners" src="modules/core/client/img/partners.png" class="img-responsive" />
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="National Science Foundation" src="modules/core/client/img/nsf.jpg" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <p>Our work is supported by the <a href="http://www.nsf.gov/" target="_blank">National Science Foundation</a> through NSF DRL1440869.</p>
+                        <p>Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

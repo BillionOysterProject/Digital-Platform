@@ -12,7 +12,7 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'Lessons',
       state: 'lessons.list',
-      roles: ['team lead', 'admin'],
+      roles: ['admin', 'team lead', 'team lead pending'],
       position: 2
     });
   }

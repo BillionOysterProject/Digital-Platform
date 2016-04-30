@@ -1,0 +1,12 @@
+Hi <%=FirstName%>,
+
+Bummer, your lesson <%= LessonName %> was returned, with the following note:
+
+<%= LessonReturnedNote %>
+
+You can visit <%= LinkLesson %> to edit your lesson and resubmit at any time.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

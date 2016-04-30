@@ -8,8 +8,10 @@
         restrict: 'E',
         templateUrl: 'modules/library/client/views/saved-lessons.client.view.html',
         controller: 'SavedLessonsController',
-        controllerAs: 'vm',
-        scope: true
+        controllerAs: 'sv',
+        scope: {
+
+        }
       };
     });
 })();

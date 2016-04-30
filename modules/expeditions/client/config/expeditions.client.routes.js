@@ -20,21 +20,8 @@
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle: 'Expeditions List'
-        }
-      })
-      .state('expeditions.create-protocols', {
-        url: '/create/protocols',
-        templateUrl: 'modules/expeditions/client/views/form-expedition-protocols.client.view.html',
-        controller: 'ExpeditionsController',
-        controllerAs: 'vm',
-        resolve: {
-          expeditionResolve: newExpedition
-        },
-        data: {
-          roles: ['team member', 'team lead', 'admin'],
-          pageTitle : 'Expeditions Create'
         }
       })
       .state('expeditions.create', {
@@ -46,8 +33,18 @@
           expeditionResolve: newExpedition
         },
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle : 'Expeditions Create'
+        }
+      })
+      .state('expeditions.submitted', {
+        url: '/submitted',
+        templateUrl: 'modules/expeditions/client/views/submitted-expeditions.client.view.html',
+        controller: 'SubmittedExpeditionsListController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin', 'team lead', 'partner'],
+          pageTitle: 'Submitted Expeditions'
         }
       })
       .state('expeditions.edit', {
@@ -59,30 +56,34 @@
           expeditionResolve: getExpedition
         },
         data: {
-          roles: ['team member', 'team lead', 'admin'],
+          roles: ['admin', 'team member', 'team lead'],
           pageTitle: 'Edit Expedition {{ expeditionResolve.title }}'
+        }
+      })
+      .state('expeditions.protocols', {
+        url: '/:expeditionId/protocols',
+        templateUrl: 'modules/expeditions/client/views/form-expedition-protocols.client.view.html',
+        controller: 'ExpeditionProtocolsController',
+        controllerAs: 'vm',
+        resolve: {
+          expeditionResolve: getFullExpedition
+        },
+        data: {
+          roles: ['admin', 'team member', 'team lead'],
+          pageTitle : 'Expedition Protocols'
         }
       })
       .state('expeditions.view', {
         url: '/:expeditionId',
         templateUrl: 'modules/expeditions/client/views/view-expedition.client.view.html',
-        controller: 'ExpeditionsController',
+        controller: 'ExpeditionProtocolsController',
         controllerAs: 'vm',
         resolve: {
-          expeditionResolve: getExpedition
+          expeditionResolve: getFullExpedition
         },
         data:{
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
-        }
-      })
-      .state('expeditions.submitted', {
-        url: '/submitted',
-        templateUrl: 'modules/expeditions/client/views/submitted-expeditions.client.view.html',
-        controller: 'ExpeditionsListController',
-        controllerAs: 'vm',
-        data: {
-          roles: ['team member', 'team lead', 'partner', 'admin'],
-          pageTitle: 'Submitted Expeditions'
         }
       });
   }
@@ -91,7 +92,16 @@
 
   function getExpedition($stateParams, ExpeditionsService) {
     return ExpeditionsService.get({
-      expeditionId: $stateParams.expeditionId
+      expeditionId: $stateParams.expeditionId,
+    }).$promise;
+  }
+
+  getFullExpedition.$inject = ['$stateParams', 'ExpeditionsService'];
+
+  function getFullExpedition($stateParams, ExpeditionsService) {
+    return ExpeditionsService.get({
+      expeditionId: $stateParams.expeditionId,
+      full: true
     }).$promise;
   }
 

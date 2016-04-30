@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   TeamRequest = mongoose.model('TeamRequest'),
   Team = mongoose.model('Team'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -138,7 +139,17 @@ exports.approve = function (req, res) {
                 message: errorHandler.getErrorMessage(delErr)
               });
             } else {
-              res.json(teamRequest);
+              User.findOne({ '_id': teamRequest.requester }).exec(function (err, user) {
+                if (user) {
+                  user.roles = ['user', 'team member'];
+
+                  user.save(function (err) {
+                    res.json(teamRequest);
+                  });
+                } else {
+                  res.json(teamRequest);
+                }
+              });
             }
           });
         }
@@ -244,7 +255,9 @@ exports.list = function(req, res) {
     query.limit(req.query.limit);
   }
 
-  query.populate('requester', 'displayName email profileImageURL').exec(function(err, teamRequests) {
+  query.populate('requester', 'displayName email profileImageURL')
+  .populate('teamLead', 'displayName email profileImageURL schoolOrg')
+  .exec(function(err, teamRequests) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

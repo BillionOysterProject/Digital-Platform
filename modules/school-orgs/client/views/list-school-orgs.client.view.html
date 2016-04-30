@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input class="form-control col-md-4" type="text" ng-model="vm.filter.searchString" placeholder="Search" ng-change="vm.searchChange()"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-right">
+        <a class="btn btn-primary" ng-click="vm.openSchoolOrgForm()">Add organization</a>
+    </div>
+</div>
+<div class="alert alert-danger text-center" ng-show="vm.error">
+  <p ng-bind="vm.error"></p>
+</div>
+<div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
+    No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
+</div>
+<div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString !== '' && !vm.error">
+    Sorry, no results found for that search term
+</div>
+<div class="row" ng-show="vm.orgRequests && vm.orgRequests.length > 0">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>{{vm.orgRequests.length}}</b> new organization requests.
+          <a class="btn btn-sm btn-default" ng-click="vm.openApproveSchoolOrgs()">Respond</a></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-verticalalign table-responsive">
+            <tr ng-repeat="org in vm.organizations">
+                <td><h4>{{org.name}}</h4><br />{{org.streetAddress}}, {{org.city}}, {{org.state}}<br/><small class="text-muted">Requested by {{org.creator.displayName}}</small></td>
+                <td class="col-xs-6"><small class="text-muted">{{org.description}}</small></td>
+                <td ng-show="org.pending"><i>pending</i></td>
+                <td ng-hide="org.pending">&nbsp;</td>
+                <td ng-show="org.teams"><h6>
+                  <span class="red">{{org.teams.teamLeadCount}}</span> Team Leads<br/>
+                  <span class="red">{{org.teams.teamCount}}</span> Teams<br/>
+                  <span class="red">{{org.teams.teamMemberCount}}</span> Team Members
+                </h6></td>
+                <td ng-hide="org.teams"></td>
+                <td class="text-right">
+                    <a class="btn btn-default" ng-click="vm.openSchoolOrgForm(org)">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <!-- <a class="btn btn-danger" data-toggle="modal" data-target="#modal-org-delete">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a> -->
+                </td>
+            </tr>
+        </table>
+
+        <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    </div>
+</div>
+
+
+
+<!-- MODALS -->
+<form-school-org-modal school-org="vm.schoolOrg" save-school-org="true" save-function="vm.saveSchoolOrgForm" cancel-function="vm.cancelSchoolOrgForm"></form-school-org-modal>
+<!-- <delete-school-org-modal ></delete-school-org-modal> -->
+
+<approve-school-org-modal org-requests="vm.orgRequests" save-function="vm.saveApproveSchoolOrgs" cancel-function="vm.closeApproveSchoolOrgs"></approve-school-org-modal>
+
+<!--END MODALS-->

@@ -13,9 +13,12 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member', 'team lead', 'user'],
+    roles: ['team member', 'team lead', 'admin'],
     allows: [{
       resources: '/api/protocol-mobile-traps/:mobileTrapId/organisms/:organismId/upload-sketch-photo',
+      permissions: '*'
+    }, {
+      resources: '/api/protocol-mobile-traps/:mobileTrapId/incremental-save',
       permissions: '*'
     }, {
       resources: '/api/protocol-mobile-traps/:mobileTrapId',
@@ -25,7 +28,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['admin', 'partner', 'guest'],
+    roles: ['partner', 'guest', 'user'],
     allows: [{
       resources: '/api/protocol-mobile-traps/:mobileTrapId',
       permissions: ['get']

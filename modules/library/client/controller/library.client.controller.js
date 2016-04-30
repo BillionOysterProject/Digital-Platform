@@ -5,9 +5,9 @@
     .module('library')
     .controller('LibraryController', LibraryController);
 
-  LibraryController.$inject = ['$scope', 'LessonsService'];
+  LibraryController.$inject = ['$scope', '$rootScope', 'LessonsService'];
 
-  function LibraryController($scope, LessonsService) {
+  function LibraryController($scope, $rootScope, LessonsService) {
     var vm = this;
 
     vm.findCreatedLessons = function() {
@@ -28,5 +28,9 @@
 
     vm.findCreatedLessons();
     vm.findSubmittedLessons();
+
+    vm.switchTab = function() {
+      $rootScope.$broadcast('iso-method', { name:null, params:null });
+    };
   }
 })();

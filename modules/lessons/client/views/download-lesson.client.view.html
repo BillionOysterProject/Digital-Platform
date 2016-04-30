@@ -8,6 +8,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
+                        <p>Select the lesson pieces to include in the download.</p>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label><input type="checkbox" ng-model="download.content" ng-true-value="'YES'" ng-false-value="'NO'"> Lesson content</label>
@@ -19,8 +20,9 @@
                                 <label><input type="checkbox" ng-model="download.resources" ng-true-value="'YES'" ng-false-value="'NO'"> Teacher Resources</label>
                             </div>
                         </div>
+                        <!-- TODO: Uncomment when unit download is wired up
                         <p>To download other associated lessons in the unit, or the entire unit, visit
-                          <a href="#" ng-click="unitFunction()">{{lesson.unit.title}}</a>.</p>
+                          <a href="#" ng-click="unitFunction()">{{lesson.unit.title}}</a>.</p>-->
                     </div>
                 </div>
             </div>
