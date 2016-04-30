@@ -72,7 +72,6 @@
         mt.foundOrganisms[organismId].imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
         mt.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
       }
-      angular.element('#isotope-container').isotope();
     };
 
     mt.foundOrganisms = {};

@@ -8,50 +8,51 @@
   SubmittedLessonsController.$inject = ['$scope', 'LessonsService', '$http'];
 
   function SubmittedLessonsController($scope, LessonsService, $http) {
-    var vm = this;
+    var sub = this;
 
-    vm.findSubmittedLessons = function() {
+    sub.findSubmittedLessons = function() {
       LessonsService.query({
         status: 'pending'
       }, function(data) {
-        vm.submittedLessons = data;
-        $scope.$emit('iso-method', { name: 'reloadItems' });
+        sub.submittedLessons = data;
+        //$scope.$emit('iso-method', { name: 'reloadItems' });
+        //$scope.$emit('iso-method', { name: null, params: null });
       });
     };
 
-    vm.findSubmittedLessons();
+    sub.findSubmittedLessons();
 
-    vm.openReturnModal = function(lesson) {
-      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+    sub.openReturnModal = function(lesson) {
+      sub.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
 
       angular.element('#modal-return').modal('show');
     };
 
-    vm.returnModal = function() {
-      vm.lesson = {};
+    sub.returnModal = function() {
+      sub.lesson = {};
       angular.element('#modal-return').modal('hide');
-      vm.findSubmittedLessons();
+      sub.findSubmittedLessons();
     };
 
-    vm.closeReturnModal = function() {
-      vm.lesson = {};
+    sub.closeReturnModal = function() {
+      sub.lesson = {};
       angular.element('#modal-return').modal('hide');
     };
 
-    vm.openPublishModal = function(lesson) {
-      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+    sub.openPublishModal = function(lesson) {
+      sub.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
 
       angular.element('#modal-accept').modal('show');
     };
 
-    vm.publishModal = function() {
-      vm.lesson = {};
+    sub.publishModal = function() {
+      sub.lesson = {};
       angular.element('#modal-accept').modal('hide');
-      vm.findSubmittedLessons();
+      sub.findSubmittedLessons();
     };
 
-    vm.closePublishModal = function() {
-      vm.lesson = {};
+    sub.closePublishModal = function() {
+      sub.lesson = {};
       angular.element('#modal-accept').modal('hide');
     };
   }

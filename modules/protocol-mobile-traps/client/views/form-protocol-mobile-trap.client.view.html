@@ -56,7 +56,7 @@
                 </ul>
             </nav>
             <div class="row" isotope-container="isotope-container" id="isotope-container">
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item" ng-repeat="organism in mt.mobileOrganisms">
+                <div class="col-md-3 col-sm-4" isotope-item="isotope-item" ng-repeat="organism in mt.mobileOrganisms track by organism._id">
                     <div class="thumbnail">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>

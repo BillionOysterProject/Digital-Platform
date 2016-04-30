@@ -1,22 +1,23 @@
-<div class="row" isotope-container="isotope-container" ng-show="vm.savedLessons.length > 0">
-    <div ng-repeat="lesson in vm.savedLessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
-        <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-            <div class="panel-heading" style="background: {{lesson.unit.color}}">
-                <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
+<div class="row" isotope-container="isotope-container-saved" id="isotope-container-saved" ng-cloak="" ng-show="sv.savedLessons.length > 0">
+    <div ng-repeat="saved in sv.savedLessons track by saved._id" isotope-item="isotope-item-saved"
+    class="col-sm-6 col-md-4 col-lg-3 library-item">
+        <div class="panel" ui-sref="lessons.view({ lessonId: saved._id })">
+            <div class="panel-heading" style="background: {{saved.unit.color}}">
+                <span class="pull-right">{{saved.lessonOverview.grade}}</span>
                 <h3 class="panel-title">
-                    <i class="{{lesson.unit.icon}}"></i>
-                    {{lesson.unit.title}}
+                    <i class="{{saved.unit.icon}}"></i>
+                    {{saved.unit.title}}
                 </h3>
             </div>
             <div class="panel-body">
-                <small>{{lesson.lessonOverview.setting}}</small>
-                <h4>{{lesson.title}}</h4>
-                <p ng-bind="lesson.lessonOverview.lessonSummary | limitTo:200"></p>
-                <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
+                <small>{{saved.lessonOverview.setting}}</small>
+                <h4>{{saved.title}}</h4>
+                <p ng-bind="saved.lessonOverview.lessonSummary | limitTo:200"></p>
+                <img ng-show="saved.featuredImage" ng-src="{{saved.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
                 <ul class="list-inline">
-                  <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                  <li ng-repeat="subject in saved.lessonOverview.subjectAreas">
                       <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
                       class="label label-default"></span>
                   </li>
@@ -25,6 +26,6 @@
         </div>
     </div>
 </div>
-<div class="alert alert-info text-center" ng-show="vm.savedLessons.length === 0">
+<div class="alert alert-info text-center" ng-show="sv.savedLessons.length === 0">
     No saved lessons yet! When viewing a lesson, click the star in the title to save your favorites here.
 </div>

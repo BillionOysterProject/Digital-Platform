@@ -8,15 +8,16 @@
   SavedLessonsController.$inject = ['$scope', 'SavedLessonsService', '$http'];
 
   function SavedLessonsController($scope, SavedLessonsService, $http) {
-    var vm = this;
+    var sv = this;
 
-    vm.findSavedLessons = function() {
-      SavedLessonsService.query({  
+    sv.findSavedLessons = function() {
+      SavedLessonsService.query({
       }, function(data) {
-        vm.savedLessons = data;
+        sv.savedLessons = data;
+        $scope.$emit('iso-method', { name: null, params: null });
       });
     };
 
-    vm.findSavedLessons();
+    sv.findSavedLessons();
   }
 })();

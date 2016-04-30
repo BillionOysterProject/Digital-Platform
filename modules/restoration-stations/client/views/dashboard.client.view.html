@@ -151,10 +151,11 @@
                             </tr>
                         </table>
                         <!-- TODO: Wire up alerts -->
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead && !vm.isAdmin">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead === true && vm.isAdmin === false">
                             No team expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
                         </div>
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember && !vm.isAdmin && !vm.isTeamLead">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember === true &&
+                        vm.isAdmin === false && vm.isTeamLead === false">
                             No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
                         </div>
                     </div>
