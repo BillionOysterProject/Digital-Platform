@@ -10,6 +10,7 @@
         restrict: 'AE',
         templateUrl: 'modules/core/client/views/leaflet-map.client.view.html',
         scope: {
+          canClickMapToAddMarker:'=',
           canMoveMarker:'=',
           mapControls:'=',
           mapClickEvent:'&',

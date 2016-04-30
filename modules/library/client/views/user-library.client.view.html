@@ -9,20 +9,20 @@
   <section class="container-fluid">
     <div>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Created Lessons</a></li>
-        <li role="presentation" view-permissions="admin,team lead,team lead pending" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Saved Lessons</a></li>
-        <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab()">Submitted Lessons</a></li>
+        <li role="presentation" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Lessons</a></li>
+        <li role="presentation" view-permissions="admin,team lead,team lead pending" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Saved Lessons</a></li>
+        <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Lessons</a></li>
       </ul>
       <div class="tab-content">
         <br />
         <div role="tabpanel" class="tab-pane" id="created" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}">
-          <created-lessons></created-lessons>
+          <created-lessons ng-show="vm.active === 'created' || !vm.active"></created-lessons>
         </div>
         <div role="tabpanel" class="tab-pane" id="saved" view-permissions="admin,team lead,team lead pending" ng-class="{active: vm.createdLessons.length === 0}">
-          <saved-lessons></saved-lessons>
+          <saved-lessons ng-show="vm.active === 'saved'"></saved-lessons>
         </div>
         <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin">
-          <submitted-lessons></submitted-lessons>
+          <submitted-lessons ng-show="vm.active === 'submitted'"></submitted-lessons>
         </div>
       </div>
     </div>

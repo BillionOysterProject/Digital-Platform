@@ -5,10 +5,10 @@
     .module('protocol-mobile-traps')
     .controller('ProtocolMobileTrapsController', ProtocolMobileTrapsController);
 
-  ProtocolMobileTrapsController.$inject = ['$scope', '$rootScope', '$state', 'moment', '$http', '$stateParams',
+  ProtocolMobileTrapsController.$inject = ['$scope', '$rootScope', '$state', 'moment', '$http', '$stateParams', '$timeout',
     'Authentication', 'FileUploader', 'ProtocolMobileTrapsService', 'MobileOrganismsService', 'TeamMembersService'];
 
-  function ProtocolMobileTrapsController($scope, $rootScope, $state, moment, $http, $stateParams,
+  function ProtocolMobileTrapsController($scope, $rootScope, $state, moment, $http, $stateParams, $timeout,
     Authentication, FileUploader, ProtocolMobileTrapsService, MobileOrganismsService, TeamMembersService) {
     var mt = this;
 
@@ -36,6 +36,10 @@
         category: mt.filter.category
       }, function(data) {
         mt.mobileOrganisms = data;
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        });
         if (callback) callback();
       });
     };

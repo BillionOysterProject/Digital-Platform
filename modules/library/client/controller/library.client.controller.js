@@ -5,16 +5,23 @@
     .module('library')
     .controller('LibraryController', LibraryController);
 
-  LibraryController.$inject = ['$scope', '$rootScope', 'LessonsService'];
+  LibraryController.$inject = ['$scope', '$rootScope', 'LessonsService', '$timeout'];
 
-  function LibraryController($scope, $rootScope, LessonsService) {
+  function LibraryController($scope, $rootScope, LessonsService, $timeout) {
     var vm = this;
+    vm.active = 'created';
 
     vm.findCreatedLessons = function() {
       LessonsService.query({
         byCreator: true
       }, function(data) {
         vm.createdLessons = data;
+
+        if (vm.createdLessons.length > 0) {
+          vm.switchTab('created');
+        } else {
+          vm.switchTab('saved');
+        }
       });
     };
 
@@ -29,8 +36,15 @@
     vm.findCreatedLessons();
     vm.findSubmittedLessons();
 
-    vm.switchTab = function() {
-      $rootScope.$broadcast('iso-method', { name:null, params:null });
+    vm.switchTab = function(activeTab) {
+      vm.active = activeTab;
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
     };
+
+    // $scope.$on('$viewContentLoaded', function(){
+    //   $scope.$emit('iso-method', { name:'reloadItems', params:null });
+    // });
   }
 })();

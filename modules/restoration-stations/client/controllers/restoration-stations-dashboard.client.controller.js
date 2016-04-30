@@ -22,6 +22,7 @@
     vm.canGeocode = true;
     vm.canMoveMarker = true;
     vm.showMarker = true;
+    vm.canClickMapToAddMarker = false;
 
     vm.mapControls = {};
 
@@ -87,15 +88,24 @@
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
           var station = data[i];
-          vm.mapPoints.push({
+
+          var stationMap = {
             lat: station.latitude,
             lng: station.longitude,
             icon: {
               icon: 'glyphicon-map-marker',
               prefix: 'glyphicon',
               markerColor: (station.status === 'Active') ? 'green' : 'red'
+            },
+            info:{
+              name: station.name,
+              bodyOfWater: station.bodyOfWater,
+              team: station.team.name,
+              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team="team"> </form-restoration-station-marker-popup>'
             }
-          });
+          };
+
+          vm.mapPoints.push(stationMap);
         }
       });
     };

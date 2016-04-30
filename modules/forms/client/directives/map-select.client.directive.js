@@ -10,6 +10,7 @@
         restrict: 'AE',
         templateUrl: 'modules/forms/client/views/map-select.client.view.html',
         scope: {
+          canClickMapToAddMarker:'=',
           canGeocode:'=',
           canMoveMarker:'=',
           latitude: '=',
