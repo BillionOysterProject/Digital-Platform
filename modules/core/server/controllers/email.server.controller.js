@@ -126,7 +126,7 @@ exports.sendGeneralFeedback = function(req, res) {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
     FeedbackEmail: req.user.email,
-    OrgName: req.user.schoolOrg.name,
+    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : '',
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };
   exports.sendFeedback(defaultFrom, req.user.email, 'BOP General Feedback: ' + req.body.subject, data, 'feedback', req, res);
@@ -137,7 +137,7 @@ exports.sendHelpQuestion = function(req, res) {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
     FeedbackEmail: req.user.email,
-    OrgName: req.user.schoolOrg.name,
+    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : '',
     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
   };
   exports.sendFeedback(defaultFrom, req.user.email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);

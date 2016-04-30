@@ -5,13 +5,13 @@
     .module('expeditions')
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
-  ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', 'lodash', 'expeditionResolve',
-  'Authentication', 'TeamsService', 'ProtocolMobileTrapsService', 'ProtocolOysterMeasurementsService',
+  ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', 'lodash', '$timeout',
+  'expeditionResolve', 'Authentication', 'TeamsService', 'ProtocolMobileTrapsService', 'ProtocolOysterMeasurementsService',
   'ProtocolSettlementTilesService', 'ProtocolSiteConditionsService', 'ProtocolWaterQualityService',
   'ExpeditionsService', 'ExpeditionActivitiesService'];
 
-  function ExpeditionProtocolsController($scope, $rootScope, $state, $http, moment, lodash, expedition,
-    Authentication, TeamsService, ProtocolMobileTrapsService, ProtocolOysterMeasurementsService,
+  function ExpeditionProtocolsController($scope, $rootScope, $state, $http, moment, lodash, $timeout,
+    expedition, Authentication, TeamsService, ProtocolMobileTrapsService, ProtocolOysterMeasurementsService,
     ProtocolSettlementTilesService, ProtocolSiteConditionsService, ProtocolWaterQualityService,
     ExpeditionsService, ExpeditionActivitiesService) {
     var vm = this;
@@ -296,5 +296,10 @@
       checkAllSaveSuccessful();
     });
 
+    vm.refreshTiles = function() {
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    };
   }
 })();
