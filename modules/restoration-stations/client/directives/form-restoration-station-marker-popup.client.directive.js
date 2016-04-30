@@ -17,27 +17,20 @@
           var viewKey = 'modules/restoration-stations/client/views/form-restoration-station-marker-popup.client.view.html';
 
           var html = $templateCache.get(viewKey);
-          
+
           if(html){
             appendHtml();
-
-          }
-          else{
+          } else{
             $http.get(viewKey,{ cache:$templateCache }).then(function(results){
-
               html = results.data;
               appendHtml();
-
             });
           }
-          
+
           function appendHtml(){
             var template = $compile(html)(scope);
-
             element.append(template);
           }
-          
-          
         }
       };
     }]);

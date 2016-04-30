@@ -140,7 +140,7 @@ exports.list = function (req, res) {
     query.limit(req.query.limit);
   }
 
-  query.exec(function (err, stations) {
+  query.populate('team', 'name').exec(function (err, stations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
