@@ -66,7 +66,7 @@
                                 <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}">Mark the location on a map</a>
                             </div>
                             <div class="modal fade" id="modal-map-sample{{$index}}" tabindex="-1" role="dialog">
-                                <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
+                                <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true" can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
                             </div>
                         </div>
                     </div>
@@ -220,5 +220,5 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-water-quality-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-water-quality-map" latitude="wq.protocolWaterQuality.latitude"
-    longitude="wq.protocolWaterQuality.longitude"></map-select>
+    longitude="wq.protocolWaterQuality.longitude" can-click-map-to-add-marker="true"></map-select>
 </div>

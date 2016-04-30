@@ -5,14 +5,21 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', '$http'];
+  RestorationStationsController.$inject = ['$scope', '$http','$timeout'];
 
-  function RestorationStationsController($scope, $http) {
+  function RestorationStationsController($scope, $http, $timeout) {
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
+    $scope.canClickMapToAddMarker = true;
 
     $scope.mapControls = {};
+
+    angular.element(document.querySelector('#modal-station-register')).on('shown.bs.modal', function(){
+      $timeout(function() {
+        $scope.mapControls.resizeMap();
+      });
+    });
 
     $scope.save = function(isValid) {
       console.log('save');

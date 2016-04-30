@@ -93,7 +93,7 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
-    longitude="mt.protocolMobileTrap.longitude"></map-select>
+    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"></map-select>
 </div>
 
 <form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>
