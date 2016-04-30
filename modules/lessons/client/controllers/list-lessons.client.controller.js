@@ -34,10 +34,19 @@
       }, function(data) {
         vm.lessons = data;
         vm.error = null;
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        });
       }, function(error) {
         vm.error = error.data.message;
       });
     };
+
+    // $scope.$on('$viewContentLoaded', function(){
+    //   $timeout(function() {
+    //     $rootScope.$broadcast('iso-method', { name:null, params:null });
+    //   });
+    // });
 
     if ($rootScope.vocabulary) {
       console.log('vocabulary', $rootScope.vocabulary);
