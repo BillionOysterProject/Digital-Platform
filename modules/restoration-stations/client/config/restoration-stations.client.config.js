@@ -35,14 +35,14 @@
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Expeditions',
       state: 'expeditions.list',
-      roles: ['team lead', 'team member', 'partner'],
+      roles: ['team lead', 'team member', 'partner', 'admin'],
       position: 2
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Submissions',
       state: 'expeditions.submitted',
-      roles: ['team lead', 'partner'],
+      roles: ['team lead', 'partner', 'admin'],
       position: 3
     });
   }
