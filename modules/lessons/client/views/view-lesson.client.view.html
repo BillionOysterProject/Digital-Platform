@@ -16,8 +16,8 @@
                 <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
                 <h6 ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="lessons.edit({ lessonId: vm.lesson._id })">Edit</a>
-                <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a><!--TODO: Wire up modal, DON'T SHOW if author-->
-                <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a><!--Only show if a teacher role, take to Create New Lesson page but input all forked data-->
+                <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
+                <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a>
                 <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
             </div>
         </div>
