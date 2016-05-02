@@ -1,7 +1,15 @@
 <div class="row" isotope-container="isotope-container-submitted" id="isotope-container-submitted" ng-cloak="" >
     <div ng-repeat="submitted in sub.submittedLessons track by submitted._id" isotope-item="isotope-item-submitted"
     class="col-sm-6 col-md-4 col-lg-3 library-item">
-        <div class="panel">
+        <div class="panel-overlay">
+            <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: submitted._id })">
+                <i class="glyphicon glyphicon-pencil"></i></a>
+            <a class="btn btn-sm btn-danger pull-right" ng-click="sub.openReturnModal(submitted)">
+                <i class="glyphicon glyphicon-remove"></i></a>
+            <a class="btn btn-sm btn-success pull-right" ng-click="sub.openPublishModal(submitted)">
+                <i class="glyphicon glyphicon-ok"></i></a>
+        </div>
+        <div class="panel" ui-sref="lessons.view({ lessonId: submitted._id })">
             <div class="panel-heading" style="background: {{submitted.unit.color}}">
                 <span class="pull-right">{{submitted.lessonOverview.grade}}</span>
                 <h3 class="panel-title">
@@ -16,13 +24,12 @@
                 <img ng-show="submitted.featuredImage" ng-src="{{submitted.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
-                <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.edit({ lessonId: submitted._id })">
-                  <i class="glyphicon glyphicon-pencil"></i></a>
-                  <a class="btn btn-sm btn-primary pull-right" ui-sref="lessons.view({ lessonId: submitted._id })">
-                    <i class="glyphicon glyphicon-eye-open"></i></a>
-                <a class="btn btn-sm btn-danger pull-right" ng-click="sub.openReturnModal(submitted)"><i class="glyphicon glyphicon-remove"></i></a>
-                <a class="btn btn-sm btn-success pull-right" ng-click="sub.openPublishModal(submitted)"><i class="glyphicon glyphicon-ok"></i></a>
-                <h6 class="blue">Awaiting Approval</h6>
+                <ul class="list-inline">
+                  <li ng-repeat="subject in submitted.lessonOverview.subjectAreas">
+                      <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                      class="label label-default"></span>
+                  </li>
+                </ul>
             </div>
         </div>
     </div>
