@@ -94,7 +94,7 @@
             <div class="col-md-4">
                 <div class="panel panel-default" ng-show="vm.isTeamLead">
                     <div class="panel-heading">
-                        <h4>Team ORS</h4>
+                        <h4>My ORS</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
@@ -114,16 +114,16 @@
                         </table>
                         <!-- TODO: Wire up alerts -->
                         <div class="alert" ng-show="vm.stations.length === 0 && (vm.isTeamLead || vm.isAdmin)">
-                            No team ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()">register one</a>?
+                            No ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()">register one</a>?
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" ng-show="vm.isTeamLead || vm.isAdmin">Register a station</a>
+                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" ng-show="vm.isTeamLead || vm.isAdmin">Register an ORS</a>
                     </div>
                 </div>
                 <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isTeamMember">
                     <div class="panel-heading">
-                        <h4>Team Expeditions</h4>
+                        <h4>My Expeditions</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
@@ -152,7 +152,7 @@
                         </table>
                         <!-- TODO: Wire up alerts -->
                         <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead === true && vm.isAdmin === false">
-                            No team expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
+                            No expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
                         </div>
                         <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember === true &&
                         vm.isAdmin === false && vm.isTeamLead === false">
