@@ -6,15 +6,15 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" ng-hide="station._id">Register a Station</h4>
-          <h4 class="modal-title" ng-show="station._id">Update the <span class="red">{{station.title}}</span> Station</h4>
+          <h4 class="modal-title" ng-hide="station._id">Register an ORS</h4>
+          <h4 class="modal-title" ng-show="station._id">Update the <span class="red">{{station.title}}</span> ORS</h4>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-12">
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label>Station Name</label>
+                        <label>ORS Name</label>
                         <input type="text" class="form-control" ng-model="station.name" required/>
                     </div>
                     <div class="form-group col-sm-6">
