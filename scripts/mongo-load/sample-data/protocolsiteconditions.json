@@ -1,0 +1,12 @@
+{"_id":{"$oid":"56e634111a5ce1c93200fb10"},"landConditions":{"shoreLineType":"fixed-pier","garbage":{"garbagePresent":false},"shorelineSurfaceCoverEstPer":{"imperviousSurfacePer":10,"perviousSurfacePer":10,"vegetatedSurfacePer":80},"landConditionPhoto":{"path":"./modules/protocol-site-conditions/client/img/land-condition/uploads/c6922ab16018f9d58042bab479981298","filename":"c6922ab16018f9d58042bab479981298","mimetype":"image/jpeg","originalname":"Beach-Water-4.jpg"}},"waterConditions":{"waterColor":"darkBlue","oilSheen":false,"unmarkedOutfallPipes":{"unmarkedPipePresent":false},"markedCombinedSewerOverflowPipes":{"markedCSOPresent":false},"garbage":{"garbagePresent":false},"waterConditionPhoto":{"path":"./modules/protocol-site-conditions/client/img/water-condition/uploads/5294eb24909f160e9ee232a8fa1e59ea","filename":"5294eb24909f160e9ee232a8fa1e59ea","mimetype":"image/jpeg","originalname":"Beach-Water-4.jpg"}},"tideConditions":{"closestLowTide":{"$date":"1970-01-01T00:00:00.000Z"},"closestHighTide":{"$date":"1970-01-01T00:00:00.000Z"},"currentSpeedMPH":6,"currentDirection":"east","tidalCurrent":"ebb-current"},"recentRainfall":{"rainedIn7Days":true,"rainedIn72Hours":true,"rainedIn24Hours":true},"meteorologicalConditions":{"weatherConditions":"cloudy","windSpeedMPH":5,"windDirection":"southwest","humidityPer":2,"airTemperatureC":21},"__v":0}
+{"_id":{"$oid":"571e6c4e422debb023702048"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"571faf8c0c0e334c0a052f0a"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"572179fa8e23037b25180dec"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"572179fa8e23037b25180df2"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"57217a0b8e23037b25180df8"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"57217a188e23037b25180dfe"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"57217fa98e23037b25180e09"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"5722545e6476c2065215c082"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"5722760c8bf0b6ca68800c03"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"57227a2cd3444e216c62bcb9"},"status":"incomplete","teamMembers":[],"__v":0}
+{"_id":{"$oid":"57239873d1aabb3e49569e0e"},"status":"incomplete","teamMembers":[],"__v":0}
