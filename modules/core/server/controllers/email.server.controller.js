@@ -66,6 +66,7 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
       from: defaultFrom,
       replyTo: from,
       to: to,
+      bcc: 'sjanis@nyharbor.org',
       subject: subject,
       text: bodyText,
       html: bodyHtml,
