@@ -49,8 +49,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert" ng-show="vm.activities && vm.activities.length === 0">
+        <div class="alert" ng-show="vm.activities && vm.activities.length === 0 && vm.teams && vm.teams.length > 0">
           No expeditions submitted yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+        </div>
+        <div class="alert" ng-show="vm.activities && vm.activities.length === 0 && (!vm.teams || vm.teams.length === 0)">
+          You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
         </div>
     </section>
 </section>

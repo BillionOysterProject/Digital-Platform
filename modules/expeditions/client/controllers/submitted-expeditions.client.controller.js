@@ -6,10 +6,10 @@
     .controller('SubmittedExpeditionsListController', SubmittedExpeditionsListController);
 
   SubmittedExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication',
-  'ExpeditionsService', 'ExpeditionActivitiesService'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService'];
 
   function SubmittedExpeditionsListController(moment, lodash, Authentication,
-    ExpeditionsService, ExpeditionActivitiesService) {
+    ExpeditionsService, ExpeditionActivitiesService, TeamsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -17,6 +17,12 @@
       byOwner: true,
     }, function(data) {
       vm.activities = data;
+    });
+
+    TeamsService.query({
+      byOwner: true
+    }, function(data) {
+      vm.teams = data;
     });
 
     vm.isUpcoming = function(expedition) {

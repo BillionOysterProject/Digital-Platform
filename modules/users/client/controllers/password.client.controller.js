@@ -24,6 +24,7 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
         // Show user success message and clear form
         $scope.credentials = null;
         $scope.success = response.message;
+        $scope.forgotPasswordForm.$setPristine();
 
       }).error(function (response) {
         // Show user error message and clear form

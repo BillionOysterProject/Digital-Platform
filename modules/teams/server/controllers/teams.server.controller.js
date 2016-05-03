@@ -167,7 +167,7 @@ exports.listMembers = function (req, res) {
         message: 'Search string is invalid'
       });
     }
-    
+
     or.push({ 'displayName': searchRe });
     or.push({ 'email': searchRe });
     or.push({ 'username': searchRe });
@@ -283,7 +283,7 @@ exports.memberByID = function (req, res, next, id) {
 /**
  * Team Member methods
  */
-var createMemberInternal = function(userJSON, successCallback, errorCallback) {
+var createMemberInternal = function(userJSON, schoolOrg, successCallback, errorCallback) {
   User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
     if (userErr) {
       errorCallback(errorHandler.getErrorMessage(userErr));
@@ -301,6 +301,7 @@ var createMemberInternal = function(userJSON, successCallback, errorCallback) {
         user.pending = true;
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+        user.schoolOrg = schoolOrg;
 
         // Then save the user
         user.save(function (err) {
@@ -349,7 +350,7 @@ var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, succe
 exports.createMember = function (req, res) {
   delete req.body.roles;
 
-  createMemberInternal(req.body,
+  createMemberInternal(req.body, req.user.schoolOrg,
     function(member, token) {
       if (req.body.newTeamName) {
         var teamJSON = {
@@ -587,7 +588,7 @@ exports.createMemberCsv = function (req, res) {
   convertCsvMember(req.body.member,
     function(memberJSON) {
       var teamName = (req.body.newTeamName) ? req.body.newTeamName : req.body.team.name;
-      createMemberInternal(memberJSON,
+      createMemberInternal(memberJSON, req.user.schoolOrg,
         function(member, token) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {

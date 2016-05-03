@@ -5,9 +5,9 @@
     .module('expeditions')
     .controller('ExpeditionsListController', ExpeditionsListController);
 
-  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService'];
+  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService'];
 
-  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService) {
+  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -36,6 +36,12 @@
       byMember: byMember,
     }, function(data) {
       vm.expeditions = data;
+    });
+
+    TeamsService.query({
+      byOwner: true
+    }, function(data) {
+      vm.teams = data;
     });
 
     vm.expeditionLink = function(expedition) {

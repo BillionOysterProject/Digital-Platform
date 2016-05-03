@@ -59,7 +59,8 @@ exports.forgot = function (req, res, next) {
 
       email.sendEmailTemplate(user.email, 'Password Reset', 'password_request', {
         FirstName: user.firstName,
-        Url: httpTransport + req.headers.host + '/api/auth/reset/' + token
+        LinkResetPassword: httpTransport + req.headers.host + '/api/auth/reset/' + token,
+        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
       }, function(info) {
         res.send({
           message: 'An email has been sent to the provided email with further instructions.'
@@ -133,8 +134,6 @@ exports.reset = function (req, res, next) {
                     user.password = undefined;
                     user.salt = undefined;
 
-                    res.json(user);
-
                     done(err, user);
                   }
                 });
@@ -153,9 +152,14 @@ exports.reset = function (req, res, next) {
       });
     },
     function (user, done) {
+      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
       email.sendEmailTemplate(user.email, 'Your password has been changed', 'reset_password', {
-        FirstName: user.firstName
+        FirstName: user.firstName,
+        LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
       }, function(info) {
+        res.json(user);
         done();
       }, function(errorMessage) {
         done(errorMessage);

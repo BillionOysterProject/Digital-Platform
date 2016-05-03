@@ -2,7 +2,7 @@
   <section class="content">
     <section class="container">
       <h2>Expeditions</h2>
-      <a class="btn btn-primary" ui-sref="expeditions.create" ng-show="vm.isTeamLead">Create an expedition</a>
+      <a class="btn btn-primary" ui-sref="expeditions.create" ng-show="vm.isTeamLead && vm.teams && vm.teams.length > 0">Create an expedition</a>
     </section>
   </section>
 </div>
@@ -50,8 +50,11 @@
         </tr>
       </tbody>
     </table>
-    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamLead">
+    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
         No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+    </div>
+    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
+        You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
     </div>
     <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamMember">
         No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.

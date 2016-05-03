@@ -378,6 +378,7 @@ a {
     .btn-info.active, 
     .btn-warning.active, 
     .btn-danger.active {
+        -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
     }
@@ -810,11 +811,32 @@ form.ng-submitted .ng-invalid {
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-.panel .panel-footer {
-    text-align: right;
+.panel {
+    position: relative;
 }
 
-    .panel .panel-footer .btn {
+    .panel .panel-footer {
+        text-align: right;
+    }
+
+        .panel .panel-footer .btn {
+            margin-left: 5px;
+        }
+
+.panel-overlay {
+    position: absolute;
+    top: 1px;
+    right: 16px;
+    background: #fff;
+    padding: 10px 10px 10px 5px;
+    z-index: 2;
+    border-radius: 4px;
+    -webkit-box-shadow: -1px 1px 10px -1px rgba(0,0,0,0.5);
+    -moz-box-shadow: -1px 1px 10px -1px rgba(0,0,0,0.5);
+    box-shadow: -1px 1px 10px -1px rgba(0,0,0,0.5);
+}
+
+    .panel-overlay .btn {
         margin-left: 5px;
     }
 

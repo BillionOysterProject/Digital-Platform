@@ -42,11 +42,11 @@
       });
     };
 
-    // $scope.$on('$viewContentLoaded', function(){
-    //   $timeout(function() {
-    //     $rootScope.$broadcast('iso-method', { name:null, params:null });
-    //   });
-    // });
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    });
 
     if ($rootScope.vocabulary) {
       console.log('vocabulary', $rootScope.vocabulary);
