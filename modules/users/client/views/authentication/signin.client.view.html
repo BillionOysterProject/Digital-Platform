@@ -17,6 +17,9 @@
             <p class="help-block error-text" ng-message="required">Password is required.</p>
           </div>
         </div>
+        <uib-alert type="danger" ng-show="vm.error" class="text-center text-danger">
+          <span ng-bind="vm.error"></span>
+        </uib-alert>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Sign in</button>
           &nbsp; or&nbsp;
@@ -25,9 +28,6 @@
         <div class="text-center forgot-password">
           <a ui-sref="password.forgot">Forgot your password?</a>
         </div>
-        <uib-alert type="danger" ng-show="vm.error" class="text-center text-danger">
-          <span ng-bind="vm.error"></span>
-        </uib-alert>
       </fieldset>
     </form>
   </div>
