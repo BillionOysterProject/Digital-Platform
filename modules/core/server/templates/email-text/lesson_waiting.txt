@@ -1,8 +1,6 @@
-Hi Admin,
+Hi <%= FirstName %>,
 
-There is a new lesson awaiting approval.
-
-Visit this website to login: <%= LinkLogin %>
+<%= TeamLeadName %> just requested approval for the lesson <%= LessonName %>. You can view and respond to the request at <%= LinkLessonRequest %>
 
 Thanks,
 The Billion Oyster Project

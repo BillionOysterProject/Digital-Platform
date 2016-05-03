@@ -1,8 +1,6 @@
-Hi Admin,
+Hi <%= FirstName %>,
 
-There is a new team lead awaiting approval.
-
-Visit this website to login: <%= LinkLogin %>
+<%= TeamLeadName %> just requested approval to be a Team Lead. You can view and respond to the request at <%= LinkTeamLeadRequest %>
 
 Thanks,
 The Billion Oyster Project

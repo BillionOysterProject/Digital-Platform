@@ -1,8 +1,6 @@
-Hi Admin,
+Hi <%= FirstName %>,
 
-There is a new organization awaiting approval.
-
-Visit this website to login: <%= LinkLogin %>
+<%= TeamLeadName %> just requested approval for the organization <%= OrgName %>. You can view and respond to the request at <%= LinkOrgRequest %>
 
 Thanks,
 The Billion Oyster Project
