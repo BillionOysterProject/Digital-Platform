@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row">
-            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember), 'col-md-12': (vm.isAdmin || vm.isTeamLeadPending || vm.isTeamMemberPending) }">
+            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamLeadPending || vm.isTeamMemberPending) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>Oyster Restoration Stations</h4>
@@ -36,23 +36,23 @@
                       show-marker="vm.showMarker" can-click-map-to-add-marker="vm.canClickMapToAddMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
-                <div class="row" ng-show="vm.isTeamLead">
+                <div class="row" ng-show="vm.isTeamLead || vm.isAdmin">
                     <div class="col-lg-4">
-                        <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                                 <!-- TODO: Wire up alerts -->
-                                <div class="alert" ng-show="vm.members.length === 0 && vm.isTeamLead">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
+                                <div class="alert" ng-show="vm.members.length === 0">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner" ng-show="vm.isTeamLead">Add members</a>
+                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add members</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" ng-show="vm.isTeamLead">
+                    <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activities.length}}</span></h4>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isTeamLeadPending">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -92,7 +92,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="vm.isTeamLead">
+                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
                     </div>
@@ -113,15 +113,15 @@
                               </tr>
                         </table>
                         <!-- TODO: Wire up alerts -->
-                        <div class="alert" ng-show="vm.stations.length === 0 && (vm.isTeamLead || vm.isAdmin)">
+                        <div class="alert" ng-show="vm.stations.length === 0">
                             No ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()">register one</a>?
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" ng-show="vm.isTeamLead || vm.isAdmin">Register an ORS</a>
+                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isTeamMember">
+                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamMember">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
@@ -151,7 +151,7 @@
                             </tr>
                         </table>
                         <!-- TODO: Wire up alerts -->
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamLead === true && vm.isAdmin === false">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isAdmin)">
                             No expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
                         </div>
                         <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember === true &&
@@ -161,7 +161,7 @@
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
-                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead">Create an expedition</a>
+                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isAdmin">Create an expedition</a>
                     </div>
                 </div>
             </div>
