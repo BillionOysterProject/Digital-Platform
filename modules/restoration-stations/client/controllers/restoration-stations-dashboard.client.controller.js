@@ -85,6 +85,7 @@
       RestorationStationsService.query({
         schoolOrgId: schoolOrgId
       }, function(data) {
+        console.log('findSchoolOrgRestorationStations called', data);
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
           var station = data[i];

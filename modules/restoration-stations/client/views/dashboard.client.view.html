@@ -16,6 +16,15 @@
                     <div class="pull-right" ng-show="vm.teams.length === 1">
                       <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
                     </div>
+                    <div class="pull-right" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
+                      You don't have any teams yet, click here to <span class="btn btn-lg btn-success" ui-sref="settings.admin-team-owner">Create a team</span>
+                    </div>
+                    <div class="pull-right" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLeadPending">
+                      You don't have any teams yet, you will be able to add some when you are approved.
+                    </div>
+                    <div class="pull-right" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMember || vm.isTeamLeadPending)">
+                      You don't have any teams yet, when your team lead adds you to a team, you will see that data here.
+                    </div>
                     <p ng-show="vm.teams.length > 0">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
@@ -25,7 +34,7 @@
             </div>
         </div>
         <div class="row">
-            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamLeadPending || vm.isTeamMemberPending) }">
+            <div ng-class="{ 'col-md-8': ((vm.isTeamLead || vm.isTeamMember || vm.isAdmin) && vm.team), 'col-md-12': (vm.isTeamLeadPending || vm.isTeamMemberPending || !vm.team) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>Oyster Restoration Stations</h4>
@@ -36,8 +45,8 @@
                       show-marker="vm.showMarker" can-click-map-to-add-marker="vm.canClickMapToAddMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
-                <div class="row" ng-show="vm.isTeamLead || vm.isAdmin">
-                    <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead && vm.team">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
@@ -53,7 +62,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="panel panel-default">
+                        <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activities.length}}</span></h4>
                             </div>
@@ -92,7 +101,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin">
+                <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
                     </div>
@@ -121,7 +130,7 @@
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamMember">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
