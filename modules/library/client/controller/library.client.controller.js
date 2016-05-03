@@ -42,9 +42,5 @@
         $rootScope.$broadcast('iso-method', { name:null, params:null });
       });
     };
-
-    // $scope.$on('$viewContentLoaded', function(){
-    //   $scope.$emit('iso-method', { name:'reloadItems', params:null });
-    // });
   }
 })();

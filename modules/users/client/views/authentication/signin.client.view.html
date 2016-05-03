@@ -25,8 +25,8 @@
         <div class="text-center forgot-password">
           <a ui-sref="password.forgot">Forgot your password?</a>
         </div>
-        <uib-alert type="danger" ng-show="error" class="text-center text-danger">
-          <span ng-bind="error"></span>
+        <uib-alert type="danger" ng-show="vm.error" class="text-center text-danger">
+          <span ng-bind="vm.error"></span>
         </uib-alert>
       </fieldset>
     </form>

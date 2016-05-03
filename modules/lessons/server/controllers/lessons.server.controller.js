@@ -39,7 +39,16 @@ exports.create = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(lesson);
+      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+      email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+        LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+        Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+      }, function(info) {
+        res.json(lesson);
+      }, function(errorMessage) {
+        res.json(lesson);
+      });
     }
   });
 };

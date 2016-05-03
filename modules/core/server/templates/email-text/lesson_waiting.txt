@@ -1,0 +1,8 @@
+Hi Admin,
+
+There is a new lesson awaiting approval.
+
+Visit this website to login: <%= LinkLogin %>
+
+Thanks,
+The Billion Oyster Project

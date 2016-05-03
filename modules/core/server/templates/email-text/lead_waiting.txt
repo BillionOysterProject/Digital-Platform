@@ -1,0 +1,8 @@
+Hi Admin,
+
+There is a new team lead awaiting approval.
+
+Visit this website to login: <%= LinkLogin %>
+
+Thanks,
+The Billion Oyster Project

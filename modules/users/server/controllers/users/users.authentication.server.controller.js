@@ -96,6 +96,19 @@ exports.signup = function (req, res) {
           }
         });
       } else if (req.body.userrole === 'team lead pending') {
+        var sendAdminNewTeamLeadEmail = function(callback) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
+            LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+            Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          }, function(info) {
+            if (callback) callback();
+          }, function(errorMessage) {
+            if (callback) callback();
+          });
+        };
+
         var sendNewTeamLeadEmail = function() {
           var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -106,9 +119,9 @@ exports.signup = function (req, res) {
             LinkProfile: httpTransport + req.headers.host + '/settings/profile',
             Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
           }, function(info) {
-            loginNewUser();
+            sendAdminNewTeamLeadEmail(loginNewUser());
           }, function(errorMessage) {
-            loginNewUser();
+            sendAdminNewTeamLeadEmail(loginNewUser());
           });
         };
 
@@ -131,8 +144,19 @@ exports.signup = function (req, res) {
                       message: errorHandler.getErrorMessage(err)
                     });
                   }
-
                   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+                  var sendAdminNewOrganizationEmail = function(callback) {
+                    email.sendEmailTemplate(config.mailer.admin, 'A new organization is pending approval', 'org_waiting', {
+                      LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+                      Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                    }, function(info) {
+                      if (callback) callback();
+                    }, function(errorMessage) {
+                      if (callback) callback();
+                    });
+                  };
+
                   email.sendEmailTemplate(user.email, 'Your new organization request for ' + schoolOrg.name + ' is pending admin approval',
                   'org_pending', {
                     FirstName: user.firstName,
@@ -141,9 +165,9 @@ exports.signup = function (req, res) {
                     LinkProfile: httpTransport + req.headers.host + '/settings/profile',
                     Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
                   }, function(info) {
-                    sendNewTeamLeadEmail();
+                    sendAdminNewOrganizationEmail(sendNewTeamLeadEmail());
                   }, function(errorMessage) {
-                    sendNewTeamLeadEmail();
+                    sendAdminNewOrganizationEmail(sendNewTeamLeadEmail());
                   });
                 });
               }

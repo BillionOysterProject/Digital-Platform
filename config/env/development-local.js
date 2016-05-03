@@ -71,6 +71,7 @@ module.exports = {
   },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',
+    admin: process.env.MAILER_ADMIN || 'Billion Oyster Project <bop@fearless.tech>',
     options: {
       service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
       auth: {
