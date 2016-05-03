@@ -7,6 +7,11 @@
 </div>
 <section class="content">
     <section class="container-fluid">
+        <nav class="navbar" view-permissions="admin">
+            <a class="btn btn-default pull-right" ui-sref="units.create">
+                <i class="glyphicon glyphicon-plus"></i> Create new unit
+            </a>
+        </nav>
         <div class="row" isotope-container="isotope-container">
             <div ng-repeat="unit in vm.units track by unit._id" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" style="background: {{unit.color}}; color: #fff" ui-sref="units.view({ unitId: unit._id })">
@@ -16,14 +21,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin">
+            <!--<div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin">
                 <div class="panel panel-default" ui-sref="units.create">
                     <div class="panel-body text-center text-muted">
                         <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
                         <h4>Create new unit</h4>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <!-- ng-if="vm.units.$resolved && !vm.units.length"    to show if no units -->
     </section>
