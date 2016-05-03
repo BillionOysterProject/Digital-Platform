@@ -52,7 +52,9 @@ exports.signup = function (req, res) {
 
             var sendAdminNewOrganizationEmail = function(callback) {
               email.sendEmailTemplate(config.mailer.admin, 'A new organization is pending approval', 'org_waiting', {
-                LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+                TeamLeadName: user.displayName,
+                OrgName: schoolOrg.name,
+                LinkOrgRequest: httpTransport + req.headers.host + '/settings/organizations',
                 Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
               }, function(info) {
                 if (callback) callback();
@@ -152,7 +154,8 @@ exports.signup = function (req, res) {
 
           var sendAdminNewTeamLeadEmail = function(callback) {
             email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
-              LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+              TeamLeadName: user.displayName,
+              LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users',
               Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
             }, function(info) {
               if (callback) callback();

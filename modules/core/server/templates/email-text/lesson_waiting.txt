@@ -1,4 +1,4 @@
-Hi <%= FirstName %>,
+Hi Admin,
 
 <%= TeamLeadName %> just requested approval for the lesson <%= LessonName %>. You can view and respond to the request at <%= LinkLessonRequest %>
 

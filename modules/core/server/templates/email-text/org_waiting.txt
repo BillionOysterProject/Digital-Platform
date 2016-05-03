@@ -1,4 +1,4 @@
-Hi <%= FirstName %>,
+Hi Admin,
 
 <%= TeamLeadName %> just requested approval for the organization <%= OrgName %>. You can view and respond to the request at <%= LinkOrgRequest %>
 
