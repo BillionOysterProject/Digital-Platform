@@ -22,7 +22,7 @@ module.exports = {
   },
   s3: {
     region: 'us-west-1',
-    bucket: 'digital-platform-dev-files',
+    bucket: 'digital-platform-staging-files',
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
