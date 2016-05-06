@@ -251,6 +251,7 @@
     };
 
     $scope.$on('incrementalSaveSiteCondition', function() {
+      console.log('incrementalSaveSiteCondition');
       sc.saveOnBlur();
     });
 
@@ -346,6 +347,12 @@
           sc.landConditionUploader.uploadAll();
         }
       }
+    });
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('incrementalSaveSiteCondition');
+      });
     });
   }
 })();

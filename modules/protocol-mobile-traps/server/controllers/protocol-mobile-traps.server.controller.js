@@ -26,18 +26,18 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
   var errorMessages = [];
 
   if (mobileTrap.mobileOrganisms.length < 0) {
-    errorCallback.push('At least one mobile organism is required');
+    errorMessages.push('At least one mobile organism is required');
   } else {
     for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
       var mobileOrganism = mobileTrap.mobileOrganisms[i];
       if (!mobileOrganism.organism) {
-        errorCallback.push('Mobile organism is required');
+        errorMessages.push('Mobile organism is required');
       }
       if (mobileOrganism.count <= 0) {
-        errorCallback.push('Count of mobile organism is required');
+        errorMessages.push('Count of mobile organism is required');
       }
       if (!mobileOrganism.sketchPhoto) {
-        errorCallback.push('Sketch or photo of mobile organism is required');
+        errorMessages.push('Sketch or photo of mobile organism is required');
       }
     }
   }
@@ -99,7 +99,18 @@ exports.incrementalSave = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(mobileTrap);
+        validateMobileTrap(req.body,
+        function(mobileTrapJSON) {
+          res.json({
+            mobileTrap: mobileTrap,
+            successful: true
+          });
+        }, function(errorMessages) {
+          res.json({
+            mobileTrap: mobileTrap,
+            errors: errorMessages.join()
+          });
+        });
       }
     });
   } else {

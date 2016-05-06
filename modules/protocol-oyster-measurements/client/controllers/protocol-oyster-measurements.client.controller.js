@@ -5,10 +5,10 @@
     .module('protocol-oyster-measurements')
     .controller('ProtocolOysterMeasurementsController', ProtocolOysterMeasurementsController);
 
-  ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
     'Authentication', 'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
 
-  function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams,
+  function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     Authentication, FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
     var om = this;
 
@@ -540,6 +540,7 @@
     };
 
     $scope.$on('incrementalSaveOysterMeasurement', function() {
+      console.log('incrementalSaveOysterMeasurement');
       om.saveOnBlur();
     });
 
@@ -595,6 +596,12 @@
         $rootScope.$broadcast('savingStart');
         om.cageConditionUploader.uploadAll();
       }
+    });
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('incrementalSaveOysterMeasurement');
+      });
     });
   }
 })();

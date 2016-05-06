@@ -5,10 +5,10 @@
     .module('protocol-water-quality')
     .controller('ProtocolWaterQualityController', ProtocolWaterQualityController);
 
-  ProtocolWaterQualityController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment',
+  ProtocolWaterQualityController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', '$timeout',
   'Authentication', 'ProtocolWaterQualityService', 'TeamMembersService'];
 
-  function ProtocolWaterQualityController($scope, $rootScope, $state, $stateParams, $http, moment,
+  function ProtocolWaterQualityController($scope, $rootScope, $state, $stateParams, $http, moment, $timeout,
     Authentication, ProtocolWaterQualityService, TeamMembersService) {
     var wq = this;
 
@@ -81,6 +81,7 @@
     ];
 
     $scope.$on('incrementalSaveWaterQuality', function() {
+      console.log('incrementalSaveWaterQuality');
       wq.saveOnBlur();
     });
 
@@ -222,5 +223,11 @@
     wq.cancel = function() {
       $state.go('protocol-water-quality.main');
     };
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('incrementalSaveWaterQuality');
+      });
+    });
   }
 })();

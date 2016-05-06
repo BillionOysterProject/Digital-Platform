@@ -183,6 +183,7 @@
 
       if (mt.protocolMobileTrap.mobileOrganisms.length <= 0) {
         console.log('no found ids');
+        mt.error = 'No mobile organisms specified';
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
       }
@@ -334,18 +335,25 @@
     };
 
     $scope.$on('incrementalSaveMobileTrap', function() {
+      console.log('incrementalSaveMobileTrap');
       mt.saveOnBlur();
     });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
       if (mt.protocolMobileTrap._id) {
-        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {
-          mt.protocolMobileTrap = data;
+          mt.protocolMobileTrap = new ProtocolMobileTrapsService(data.mobileTrap);
           mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
           setupMobileOrganisms();
+          if (data.errors) {
+            mt.error = data.errors;
+          }
+          if (data.successful) {
+            mt.error = null;
+            $rootScope.$broadcast('saveMobileTrap');
+          }
           if (successCallback) successCallback();
         })
         .error(function (data, status, headers, config) {
@@ -354,5 +362,11 @@
         });
       }
     };
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('incrementalSaveMobileTrap');
+      });
+    });
   }
 })();

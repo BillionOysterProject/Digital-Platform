@@ -38,6 +38,7 @@
     };
 
     $scope.$on('incrementalSaveSettlementTiles', function() {
+      console.log('incrementalSaveSettlementTiles');
       st.saveOnBlur();
     });
 
@@ -392,6 +393,12 @@
         });
       }, function(errorMessage) {
         st.error = errorMessage;
+      });
+    });
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('incrementalSaveSettlementTiles');
       });
     });
   }
