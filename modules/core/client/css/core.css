@@ -15,6 +15,8 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
+.content-fixed { position: fixed; z-index: 1; }
+.content-fixed + div { padding-top: 125px; }
 
 .popover {
   position: absolute;
@@ -725,6 +727,8 @@ blockquote {
         width: 100%;
         border: 1px dashed #ddd;
         margin-bottom: 10px;
+        word-break: keep-all;
+        font-size: 85%;
     }
 
     .droppable {
