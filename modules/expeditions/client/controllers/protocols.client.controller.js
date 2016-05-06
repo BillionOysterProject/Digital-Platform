@@ -17,6 +17,8 @@
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
+    vm.activeTab = 'protocol1';
+    vm.savingLoop = true;
 
     TeamsService.get({
       teamId: vm.expedition.team._id
@@ -50,17 +52,21 @@
       }
     };
 
-    vm.setupInputValues = function(protocol, teamList) {
+    vm.setupInputValues = function(protocol, teamList, incrementalSaveUrl, callback) {
+      var changed = false;
       if (vm.expedition.station) {
         if (!protocol.latitude && vm.expedition.station.latitude) {
+          changed = true;
           protocol.latitude = vm.expedition.station.latitude;
         }
         if (!protocol.longitude && vm.expedition.station.longitude) {
+          changed = true;
           protocol.longitude = vm.expedition.station.longitude;
         }
       }
       if (vm.expedition.monitoringStartDate) {
         if (!protocol.collectionTime) {
+          changed = true;
           protocol.collectionTime = moment(vm.expedition.monitoringStartDate).toDate();
         }
       }
@@ -76,20 +82,75 @@
         }
         protocol.teamMembers = lodash.uniq(protocol.teamMembers);
       }
-      return protocol;
+      // if (changed) {
+      //   $http.post(incrementalSaveUrl, protocol)
+      //   .success(function (data, status, headers, config) {
+      //     protocol = data;
+      //     callback(protocol);
+      //   })
+      //   .error(function (data, status, headers, config) {
+      //     callback(protocol);
+      //   });
+      // } else {
+      callback(protocol);
+      // }
     };
 
-    vm.siteCondition = vm.setupInputValues(vm.expedition.protocols.siteCondition, vm.expedition.teamLists.siteCondition);
-    vm.oysterMeasurement = vm.setupInputValues(vm.expedition.protocols.oysterMeasurement, vm.expedition.teamLists.oysterMeasurement);
-    vm.mobileTrap = vm.setupInputValues(vm.expedition.protocols.mobileTrap, vm.expedition.teamLists.mobileTrap);
-    vm.settlementTiles = vm.setupInputValues(vm.expedition.protocols.settlementTiles, vm.expedition.teamLists.settlementTiles);
-    vm.waterQuality = vm.setupInputValues(vm.expedition.protocols.waterQuality, vm.expedition.teamLists.waterQuality);
-
-    vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
-    vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
-    vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
-    vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
-    vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
+    vm.setupInputValues(vm.expedition.protocols.siteCondition, vm.expedition.teamLists.siteCondition,
+      '/api/protocol-site-conditions/' + vm.expedition.protocols.siteCondition._id + '/incremental-save',
+      function(protocol) {
+        if (protocol && protocol !== null) {
+          vm.siteCondition = protocol;
+          vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
+        } else {
+          vm.siteCondition = null;
+          vm.viewSiteCondition = false;
+        }
+      });
+    vm.setupInputValues(vm.expedition.protocols.oysterMeasurement, vm.expedition.teamLists.oysterMeasurement,
+      '/api/protocol-oyster-measurements/' + vm.expedition.protocols.oysterMeasurement._id + '/incremental-save',
+      function(protocol) {
+        if (protocol && protocol !== null) {
+          vm.oysterMeasurement = protocol;
+          vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
+        } else {
+          vm.oysterMeasurement = null;
+          vm.viewOysterMeasurement = false;
+        }
+      });
+    vm.setupInputValues(vm.expedition.protocols.mobileTrap, vm.expedition.teamLists.mobileTrap,
+      '/api/protocol-mobile-traps/' + vm.expedition.protocols.mobileTrap._id + '/incremental-save',
+      function(protocol) {
+        if (protocol && protocol !== null) {
+          vm.mobileTrap = protocol;
+          vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
+        } else {
+          vm.mobileTrap = null;
+          vm.viewMobileTrap = false;
+        }
+      });
+    vm.setupInputValues(vm.expedition.protocols.settlementTiles, vm.expedition.teamLists.settlementTiles,
+      '/api/protocol-settlement-tiles/' + vm.expedition.protocols.settlementTiles._id + '/incremental-save',
+      function(protocol) {
+        if (protocol && protocol !== null) {
+          vm.settlementTiles = protocol;
+          vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
+        } else {
+          vm.settlementTiles = null;
+          vm.viewSettlementTiles = false;
+        }
+      });
+    vm.setupInputValues(vm.expedition.protocols.waterQuality, vm.expedition.teamLists.waterQuality,
+      '/api/protocol-water-quality/' + vm.expedition.protocols.waterQuality._id + '/incremental-save',
+      function(protocol) {
+        if (protocol && protocol !== null) {
+          vm.waterQuality = protocol;
+          vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
+        } else {
+          vm.waterQuality = null;
+          vm.viewWaterQuality = false;
+        }
+      });
 
     vm.tabs = {
       protocol1: { isActive: false, visible: vm.viewSiteCondition, error: '' },
@@ -102,9 +163,14 @@
     for (var key in vm.tabs) {
       if (vm.tabs[key].visible) {
         vm.tabs[key].isActive = true;
+        vm.activeTab = key;
         break;
       }
     }
+
+    vm.switchTabs = function(key) {
+      vm.activeTab = key;
+    };
 
     vm.checkStatusIncomplete = function() {
       var protocolsComplete = true;
@@ -143,6 +209,40 @@
       if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
       if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
     };
+
+    var timeIntervalInSec = 15;
+    var incrementalSave = function(fn, timeInterval) {
+      var promise = $timeout(fn, timeInterval);
+
+      return promise.then(function(){
+        incrementalSave(fn, timeInterval);
+      });
+    };
+    var activeProtocolCall = function() {
+      console.log('activeKey', vm.activeTab);
+      switch(vm.activeTab) {
+        case 'protocol1': return 'incrementalSaveSiteCondition';
+        case 'protocol2': return 'incrementalSaveOysterMeasurement';
+        case 'protocol3': return 'incrementalSaveMobileTrap';
+        case 'protocol4': return 'incrementalSaveSettlementTiles';
+        case 'protocol5': return 'incrementalSaveWaterQuality';
+      }
+    };
+    incrementalSave(function() {
+      if (vm.savingLoop) {
+        var saveCall = activeProtocolCall();
+        $rootScope.$broadcast(saveCall);
+        $scope.$emit('savingStart');
+      }
+    }, 1000 * timeIntervalInSec);
+
+    $scope.$on('stopSaving', function() {
+      vm.savingLoop = false;
+    });
+
+    $scope.$on('startSaving', function() {
+      vm.savingLoop = true;
+    });
 
     var checkAllSaveSuccessful = function() {
       var allSavedSuccessfully = true;
@@ -301,5 +401,12 @@
         $rootScope.$broadcast('iso-method', { name:null, params:null });
       });
     };
+
+    $scope.$on('savingStart', function() {
+      vm.saving = true;
+      $timeout(function() {
+        vm.saving = false;
+      }, 1500);
+    });
   }
 })();

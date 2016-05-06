@@ -1,4 +1,4 @@
-<form name="form.settlementTilesForm" ng-submit="st.save(st.form.settlementTilesForm.$valid)" novalidate>
+<form name="form.settlementTilesForm" ng-submit="st.save(st.form.settlementTilesForm.$valid)" novalidate ng-cloak>
   <section>
     <section class="content">
         <section class="container">
@@ -10,24 +10,24 @@
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
                         placeholder="yyyy-MM-ddTHH:mm:ss" min="{{st.dateTime.min}}" max="{{st.dateTime.max}}"
-                        ng-model="st.protocolSettlementTiles.collectionTime" ng-blur="st.saveOnBlur()"/>
+                        ng-model="st.protocolSettlementTiles.collectionTime" />
                     </div>
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile-map">Mark location on map</a>
                         <input class="form-control" type="text" value="{{st.protocolSettlementTiles.latitude}}, {{st.protocolSettlementTiles.longitude}}"
                         data-toggle="modal" data-target="#modal-settlement-tile-map" ng-show="st.protocolSettlementTiles.latitude && st.protocolSettlementTiles.longitude"
-                        ng-blur="st.saveOnBlur()" readonly/>
+                         readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="st.protocolSettlementTiles.teamMembers"
-                        label-class="control-label" select-config="st.teamMemberSelectConfig" ng-blur="st.saveOnBlur()"></select-tags>
+                        label-class="control-label" select-config="st.teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="st.protocolSettlementTiles.notes" ng-blur="st.saveOnBlur()"></textarea>
+                        <textarea class="form-control" rows="7" ng-model="st.protocolSettlementTiles.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                     </h4>
                     <div class="form-group">
                         <label>General tile description (condition, damage, sedimentation)</label>
-                        <textarea rows="5" class="form-control" ng-model="tile.description" ng-blur="st.saveOnBlur()"></textarea>
+                        <textarea rows="5" class="form-control" ng-model="tile.description" ></textarea>
                     </div>
                     <div class="form-group">
                         <label>Tile photograph</label>

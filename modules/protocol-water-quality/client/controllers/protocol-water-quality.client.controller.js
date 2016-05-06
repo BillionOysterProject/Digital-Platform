@@ -80,14 +80,18 @@
       { name: 'PPM', value: 'ppm' }
     ];
 
+    $scope.$on('incrementalSaveWaterQuality', function() {
+      wq.saveOnBlur();
+    });
+
     wq.saveOnBlur = function() {
       if (wq.protocolWaterQuality._id) {
+        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-water-quality/' + wq.protocolWaterQuality._id + '/incremental-save',
         wq.protocolWaterQuality)
         .success(function (data, status, headers, config) {
           wq.protocolWaterQuality = data;
           wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).toDate();
-
           console.log('saved');
         })
         .error(function (data, status, headers, config) {

@@ -5,11 +5,11 @@
     .module('protocol-site-conditions')
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
-  ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
   'Authentication', 'FileUploader', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
   'WaterFlowService', 'ShorelineTypesService', 'TeamMembersService'];
 
-  function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams,
+  function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     Authentication, FileUploader, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, TeamMembersService) {
     var sc = this;
@@ -67,6 +67,7 @@
           }
         };
       }
+
     } else {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService();
       sc.protocolSiteCondition.landConditions = {
@@ -248,6 +249,10 @@
     sc.cancel = function() {
       $state.go('protocol-site-conditions.main');
     };
+
+    $scope.$on('incrementalSaveSiteCondition', function() {
+      sc.saveOnBlur();
+    });
 
     sc.saveOnBlur = function() {
       if (sc.protocolSiteCondition._id) {

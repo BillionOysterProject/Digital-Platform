@@ -37,8 +37,13 @@
       }
     };
 
+    $scope.$on('incrementalSaveSettlementTiles', function() {
+      st.saveOnBlur();
+    });
+
     st.saveOnBlur = function() {
       if (st.protocolSettlementTiles._id) {
+        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
@@ -263,6 +268,7 @@
     };
 
     st.openSettlementTileForm = function(index) {
+      $rootScope.$broadcast('stopSaving');
       st.grids = [];
       var tile = st.protocolSettlementTiles.settlementTiles[index-1];
       for (var i = 1; i <= st.gridCount; i++) {
@@ -295,11 +301,13 @@
         st.protocolSettlementTiles.settlementTiles[index-1].done =
           tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
         st.saveOnBlur();
+        $rootScope.$broadcast('startSaving');
       }, 1000);
     };
 
     st.cancelSettlementTileForm = function(index) {
       angular.element('#modal-settlementtile'+index).modal('hide');
+      $rootScope.$broadcast('startSaving');
     };
 
     var saveImageOnBlur = function(index, successCallback, errorCallback) {
@@ -320,6 +328,7 @@
             uploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/index/' + index + '/upload-tile-photo';
             };
+            $rootScope.$broadcast('savingStart');
             uploader.uploadAll();
           } else {
             successCallback();

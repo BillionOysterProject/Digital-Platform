@@ -1,4 +1,4 @@
-<form name="wq.form.waterQualityForm" ng-submit="wq.save(wq.form.waterQualityForm.$valid)" novalidate>
+<form name="wq.form.waterQualityForm" ng-submit="wq.save(wq.form.waterQualityForm.$valid)" novalidate ng-cloak>
     <section>
         <section class="content">
             <section class="container">
@@ -10,24 +10,24 @@
                             <label for="collectionTime">Date and time of data collection</label>
                             <input type="datetime-local" class="form-control" name="collectionTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{wq.dateTime.min}}" max="{{wq.dateTime.max}}"
-                            ng-model="wq.protocolWaterQuality.collectionTime" ng-blur="wq.saveOnBlur()"/>
+                            ng-model="wq.protocolWaterQuality.collectionTime" />
                         </div>
                         <div class="form-group">
                             <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-water-quality-map">Mark location on map</a>
                             <input class="form-control" type="text" value="{{wq.protocolWaterQuality.latitude}}, {{wq.protocolWaterQuality.longitude}}"
                             data-toggle="modal" data-target="#modal-water-quality-map" ng-show="wq.protocolWaterQuality.latitude && wq.protocolWaterQuality.longitude"
-                            ng-blur="wq.saveOnBlur()" readonly/>
+                             readonly/>
                         </div>
                         <div class="form-group">
                             <select-tags outer-column="" name="teamMembers"
                             in-title="Names of team members" ng-model="wq.protocolWaterQuality.teamMembers"
-                            label-class="control-label" select-config="wq.teamMemberSelectConfig" ng-blur="wq.saveOnBlur()"></select-tags>
+                            label-class="control-label" select-config="wq.teamMemberSelectConfig" ></select-tags>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
                             <label>Notes or other observations</label>
-                            <textarea class="form-control" rows="7" ng-model="wq.protocolWaterQuality.notes" ng-blur="wq.saveOnBlur()"></textarea>
+                            <textarea class="form-control" rows="7" ng-model="wq.protocolWaterQuality.notes" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div class="form-group col-md-6">
                         <h6>Water Quality Parameters</h6>
                         <label>Depth of Water Sample (m)</label>
-                        <input type="number" class="form-control" ng-model="sample.depthOfWaterSampleM" ng-blur="wq.saveOnBlur()"/>
+                        <input type="number" class="form-control" ng-model="sample.depthOfWaterSampleM" />
                         <span class="help-block">Type 0 if at surface</span>
                     </div>
                     <div class="form-group col-md-6">
@@ -88,115 +88,115 @@
                                 <td class="text-right"><h4>Water Temperature</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.waterTemperature.method"
-                                  ng-options="method.value as method.name for method in wq.waterTemperatureMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.waterTemperatureMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.waterTemperature.units"
-                                  ng-options="method.value as method.name for method in wq.waterTemperatureUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.waterTemperatureUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Dissolved Oxygen</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.dissolvedOxygen.method"
-                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.dissolvedOxygen.units"
-                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Salinity</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.salinity.method"
-                                  ng-options="method.value as method.name for method in wq.salinityMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.salinityMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.salinity.units"
-                                  ng-options="method.value as method.name for method in wq.salinityUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.salinityUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>pH</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.pH.method"
-                                  ng-options="method.value as method.name for method in wq.pHMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.pHMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.pH.units"
-                                  ng-options="method.value as method.name for method in wq.pHUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.pHUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Turbidity</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.turbidity.method"
-                                  ng-options="method.value as method.name for method in wq.turbidityMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.turbidityMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.turbidity.units"
-                                  ng-options="method.value as method.name for method in wq.turbidityUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.turbidityUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Ammonia</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.ammonia.method"
-                                  ng-options="method.value as method.name for method in wq.ammoniaMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.ammoniaMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.ammonia.units"
-                                  ng-options="method.value as method.name for method in wq.ammoniaUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.ammoniaUnits"  required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Nitrates</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.nitrates.method"
-                                  ng-options="method.value as method.name for method in wq.nitratesMethods" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.nitratesMethods"  required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]" ng-blur="wq.saveOnBlur()" required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average" ng-blur="wq.saveOnBlur()" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average"  required/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.nitrates.units"
-                                  ng-options="method.value as method.name for method in wq.nitratesUnits" ng-blur="wq.saveOnBlur()" required></select>
+                                  ng-options="method.value as method.name for method in wq.nitratesUnits"  required></select>
                                 </td>
                             </tr>
                             <tr ng-repeat="other in sample.others">
-                                <td><input type="text" class="form-control" placeholder="Other" ng-model="other.label" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="text" class="form-control" placeholder="Method" ng-model="other.method" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="other.average" ng-blur="wq.saveOnBlur()" /></td>
-                                <td><input type="text" class="form-control" placeholder="Units" ng-model="other.units" ng-blur="wq.saveOnBlur()" /></td>
+                                <td><input type="text" class="form-control" placeholder="Other" ng-model="other.label"  /></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="other.method"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]"  /></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="other.average"  /></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="other.units"  /></td>
                             </tr>
                         </table>
                     </div>
