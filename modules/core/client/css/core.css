@@ -725,6 +725,8 @@ blockquote {
         width: 100%;
         border: 1px dashed #ddd;
         margin-bottom: 10px;
+        word-break: keep-all;
+        font-size: 85%;
     }
 
     .droppable {
