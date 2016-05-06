@@ -58,7 +58,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (emptyString(siteCondition.tideConditions.closestHighTide)) {
     errorMessages.push('Closest high tide is required');
   } else {
-    if (!moment(siteCondition.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
+    if (!moment(siteCondition.tideConditions.closestHighTide).isValid()) {
       errorMessages.push('Tide Conditions - Closest High Tide is not valid');
     }
   }
@@ -66,7 +66,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (emptyString(siteCondition.tideConditions.closestLowTide)) {
     errorMessages.push('Closest low tide is required');
   } else {
-    if (!moment(siteCondition.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isValid()) {
+    if (!moment(siteCondition.tideConditions.closestLowTide).isValid()) {
       errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
     }
   }
@@ -108,15 +108,14 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     if (emptyString(siteCondition.waterConditions.garbage.organic)) {
       errorMessages.push('Water Condition - Organic extent is required.');
     }
-    if (emptyString(siteCondition.waterConditions.garbage.other.description)) {
-      errorMessages.push('Water Condition - Other garbage description is required.');
-    }
-    if (emptyString(siteCondition.waterConditions.garbage.other.extent)) {
+    if (siteCondition.waterConditions.garbage.other &&
+      !emptyString(siteCondition.waterConditions.garbage.other.description) &&
+      emptyString(siteCondition.waterConditions.garbage.other.extent)) {
       errorMessages.push('Water Condition - Other garbage extent is required.');
     }
   }
 
-  if (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) {
+  if (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true) {
     if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude ||
       siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - marked CSO pipe latitude is required.');
@@ -132,7 +131,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     }
   }
 
-  if (siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) {
+  if (siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true) {
     if (!siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude ||
       siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude === 0) {
       errorMessages.push('Water Condition - unmarked pipe latitude is required.');
@@ -180,17 +179,20 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     if (emptyString(siteCondition.landConditions.garbage.organic)) {
       errorMessages.push('Land Condition - Organic extent is required.');
     }
-    if (emptyString(siteCondition.landConditions.garbage.other.description)) {
-      errorMessages.push('Land Condition - Other garbage description is required.');
-    }
-    if (emptyString(siteCondition.landConditions.garbage.other.extent)) {
+
+    if (siteCondition.landConditions.garbage.other &&
+      !emptyString(siteCondition.landConditions.garbage.other.description) &&
+      emptyString(siteCondition.landConditions.garbage.other.extent)) {
       errorMessages.push('Land Condition - Other garbage extent is required.');
     }
   }
 
   if (errorMessages.length > 0) {
+    console.log('errorMessages', errorMessages);
+    console.log('error');
     errorCallback(errorMessages);
   } else {
+    console.log('success');
     successCallback(siteCondition);
   }
 };
@@ -259,7 +261,17 @@ exports.incrementalSave = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(siteCondition);
+        validateSiteCondition(siteCondition, function(siteConditionJSON) {
+          res.json({
+            siteCondition: siteCondition,
+            successful: true
+          });
+        }, function(errorMessages) {
+          res.json({
+            siteCondition: siteCondition,
+            errors: errorMessages.join()
+          });
+        });
       }
     });
   } else {

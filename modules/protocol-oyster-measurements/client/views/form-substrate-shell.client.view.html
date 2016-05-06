@@ -43,7 +43,8 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="text" class="form-control" ng-model="substrate.setDate" placeholder="MM-DD-YYYY" name="setDate" id="setDate" required/>
+                                                    <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
+                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
                                             <div class="form-group">

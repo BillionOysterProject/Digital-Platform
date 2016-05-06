@@ -52,25 +52,48 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   if (!oysterMeasurement.measuringOysterGrowth || oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
     errorMessages.push('Substrate shell measurements are required');
   } else {
+    var oneSuccessfulSubstrateShell = false;
+
+    var allOystersMeasured = function(substrateShell) {
+      var filledOutCount = 0;
+      for (var k = 0; k < substrateShell.measurements.length; k++) {
+        if (substrateShell.measurements[k].sizeOfLiveOysterMM !== null) {
+          filledOutCount++;
+        }
+      }
+      return substrateShell.totalNumberOfLiveOystersOnShell === filledOutCount;
+    };
+
     for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
       var substrateShell = oysterMeasurement.measuringOysterGrowth.substrateShells[j];
-      if (!substrateShell.outerSidePhoto) {
-        errorMessages.push('Outer side photo is required for Substrate Shell #' + j+1);
-      }
-      if (!substrateShell.innerSidePhoto) {
-        errorMessages.push('Inner side photo is required for Substrate Shell #' + j+1);
-      }
-      if (substrateShell.totalNumberOfLiveOystersOnShell <= 0) {
-        errorMessages.push('The total number of live oysters on the shell must be greater than 0');
+      if (substrateShell.outerSidePhoto && substrateShell.outerSidePhoto.path !== undefined &&
+        substrateShell.outerSidePhoto.path !== '' && substrateShell.innerSidePhoto &&
+        substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
+        substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
+        oneSuccessfulSubstrateShell = true;
+        console.log('success');
+      } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
+        substrateShell.outerSidePhoto.path === '') && (!substrateShell.innerSidePhoto ||
+        substrateShell.innerSidePhoto.path === undefined || substrateShell.innerSidePhoto.path === '') &&
+        substrateShell.totalNumberOfLiveOystersOnShell === undefined) {
+        console.log('skip');
       } else {
-        var filledOutCount = 0;
-        for (var k = 0; k < substrateShell.measurements.length; k++) {
-          if (substrateShell.measurements[k].sizeOfLiveOysterMM !== null) {
-            filledOutCount++;
-          }
+        console.log('errors');
+        var shellNumber = 1+j;
+        if (!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === '' ||
+        substrateShell.outerSidePhoto.path === undefined) {
+          errorMessages.push('Outer side photo is required for Substrate Shell #' + shellNumber);
         }
-        if (substrateShell.totalNumberOfLiveOystersOnShell !== filledOutCount) {
-          errorMessages.push('The number of measurements must be equal to the total number of live oysters on the shell');
+        if (!substrateShell.innerSidePhoto || substrateShell.innerSidePhoto.path === '' ||
+        substrateShell.innerSidePhoto.path === undefined) {
+          errorMessages.push('Inner side photo is required for Substrate Shell #' + shellNumber);
+        }
+        if (substrateShell.totalNumberOfLiveOystersOnShell <= 0) {
+          errorMessages.push('The total number of live oysters on the shell must be greater than 0');
+        } else {
+          if (!allOystersMeasured(substrateShell)) {
+            errorMessages.push('The number of measurements must be equal to the total number of live oysters on the shell');
+          }
         }
       }
     }
@@ -145,7 +168,18 @@ exports.incrementalSave = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(oysterMeasurement);
+        validateOysterMeasurement(oysterMeasurement,
+        function(oysterMeasurementJSON) {
+          res.json({
+            oysterMeasurement: oysterMeasurement,
+            successful: true
+          });
+        }, function(errorMessages) {
+          res.json({
+            oysterMeasurement: oysterMeasurement,
+            errors: errorMessages.join()
+          });
+        });
       }
     });
   } else {

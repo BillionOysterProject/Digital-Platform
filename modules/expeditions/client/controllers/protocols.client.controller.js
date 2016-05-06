@@ -55,6 +55,7 @@
     vm.setupInputValues = function(protocol, teamList, incrementalSaveUrl, callback) {
       var changed = false;
       if (vm.expedition.station) {
+
         if (!protocol.latitude && vm.expedition.station.latitude) {
           changed = true;
           protocol.latitude = vm.expedition.station.latitude;
@@ -168,7 +169,43 @@
       }
     }
 
+    var timeIntervalInSec = 15;
+    var incrementalSave = function(fn, timeInterval) {
+      var promise = $timeout(fn, timeInterval);
+
+      return promise.then(function(){
+        incrementalSave(fn, timeInterval);
+      });
+    };
+    var activeProtocolCall = function() {
+      console.log('activeKey', vm.activeTab);
+      switch(vm.activeTab) {
+        case 'protocol1': return 'incrementalSaveSiteCondition';
+        case 'protocol2': return 'incrementalSaveOysterMeasurement';
+        case 'protocol3': return 'incrementalSaveMobileTrap';
+        case 'protocol4': return 'incrementalSaveSettlementTiles';
+        case 'protocol5': return 'incrementalSaveWaterQuality';
+      }
+    };
+    incrementalSave(function() {
+      if (vm.savingLoop) {
+        var saveCall = activeProtocolCall();
+        $rootScope.$broadcast(saveCall);
+        $scope.$emit('savingStart');
+      }
+    }, 1000 * timeIntervalInSec);
+
+    $scope.$on('stopSaving', function() {
+      vm.savingLoop = false;
+    });
+
+    $scope.$on('startSaving', function() {
+      vm.savingLoop = true;
+    });
+
     vm.switchTabs = function(key) {
+      var saveCall = activeProtocolCall();
+      $rootScope.$broadcast(saveCall);
       vm.activeTab = key;
     };
 
@@ -209,40 +246,6 @@
       if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
       if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
     };
-
-    var timeIntervalInSec = 15;
-    var incrementalSave = function(fn, timeInterval) {
-      var promise = $timeout(fn, timeInterval);
-
-      return promise.then(function(){
-        incrementalSave(fn, timeInterval);
-      });
-    };
-    var activeProtocolCall = function() {
-      console.log('activeKey', vm.activeTab);
-      switch(vm.activeTab) {
-        case 'protocol1': return 'incrementalSaveSiteCondition';
-        case 'protocol2': return 'incrementalSaveOysterMeasurement';
-        case 'protocol3': return 'incrementalSaveMobileTrap';
-        case 'protocol4': return 'incrementalSaveSettlementTiles';
-        case 'protocol5': return 'incrementalSaveWaterQuality';
-      }
-    };
-    incrementalSave(function() {
-      if (vm.savingLoop) {
-        var saveCall = activeProtocolCall();
-        $rootScope.$broadcast(saveCall);
-        $scope.$emit('savingStart');
-      }
-    }, 1000 * timeIntervalInSec);
-
-    $scope.$on('stopSaving', function() {
-      vm.savingLoop = false;
-    });
-
-    $scope.$on('startSaving', function() {
-      vm.savingLoop = true;
-    });
 
     var checkAllSaveSuccessful = function() {
       var allSavedSuccessfully = true;
