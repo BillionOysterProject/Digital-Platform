@@ -262,6 +262,7 @@
     };
 
     mt.openOrganismDetails = function(organism) {
+      $rootScope.$broadcast('stopSaving');
       var content = angular.element('#modal-organism-details-'+organism._id);
 
       mt.organismDetails = mt.getFoundOrganism(organism);
@@ -302,6 +303,7 @@
         $scope.$broadcast('show-errors-check-validity', 'form.organismDetailsForm');
         return false;
       } else {
+        $rootScope.$broadcast('savingStart');
         angular.element('#modal-organism-details-'+organismId).modal('hide');
         mt.foundOrganisms[organismDetails.organism._id] = organismDetails;
 
@@ -312,11 +314,14 @@
           saveImageOnBlur(organismId, function() {
             mt.organismDetails = {};
             mt.sketchPhotoUrl = '';
+            $rootScope.$broadcast('startSaving');
           }, function(errorMessage) {
             mt.error = errorMessage;
+            $rootScope.$broadcast('startSaving');
           });
         }, function(errorMessage) {
           mt.error = errorMessage;
+          $rootScope.$broadcast('startSaving');
         });
       }
     };
@@ -325,10 +330,16 @@
       angular.element('#modal-organism-details-'+organismId).modal('hide');
       mt.organismDetails = {};
       mt.sketchPhotoUrl = '';
+      $rootScope.$broadcast('startSaving');
     };
+
+    $scope.$on('incrementalSaveMobileTrap', function() {
+      mt.saveOnBlur();
+    });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
       if (mt.protocolMobileTrap._id) {
+        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {

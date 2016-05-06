@@ -1,4 +1,4 @@
-<form name="om.form.oysterMeasurementForm" ng-submit="om.save(om.form.oysterMeasurementForm.$valid)" novalidate>
+<form name="om.form.oysterMeasurementForm" ng-submit="om.save(om.form.oysterMeasurementForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
             <h2>Protocol 2 <small>Oyster Measurements</small></h2>
@@ -9,24 +9,24 @@
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
                         placeholder="yyyy-MM-ddTHH:mm:ss" min="{{om.dateTime.min}}" max="{{om.dateTime.max}}"
-                        ng-model="om.protocolOysterMeasurement.collectionTime" ng-blur="om.saveOnBlur()"/>
+                        ng-model="om.protocolOysterMeasurement.collectionTime" />
                     </div>
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile">Mark location on map</a>
                         <input class="form-control" type="text" value="{{om.protocolOysterMeasurement.latitude}}, {{om.protocolOysterMeasurement.longitude}}"
                         data-toggle="modal" data-target="#modal-settlement-tile" ng-show="om.protocolOysterMeasurement.latitude && om.protocolOysterMeasurement.longitude"
-                        ng-blur="om.saveOnBlur()" readonly/>
+                         readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="om.protocolOysterMeasurement.teamMembers"
-                        label-class="control-label" select-config="om.teamMemberSelectConfig" ng-blur="om.saveOnBlur()"></select-tags>
+                        label-class="control-label" select-config="om.teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="om.protocolOysterMeasurement.notes" ng-blur="om.saveOnBlur()"></textarea>
+                        <textarea class="form-control" rows="7" ng-model="om.protocolOysterMeasurement.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -55,11 +55,11 @@
                     </div>
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
-                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage" ng-blur="om.saveOnBlur()" name="bioaccumulation" id="bioaccumulation" required></select>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
-                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage" ng-blur="om.saveOnBlur()"></textarea>
+                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage" ></textarea>
                     </div>
                 </div>
             </div>
