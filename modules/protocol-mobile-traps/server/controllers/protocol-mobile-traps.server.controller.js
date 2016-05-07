@@ -197,8 +197,10 @@ exports.delete = function (req, res) {
 };
 
 var uploadFileSuccess = function(mobileTrap, res) {
+  console.log('mobileTrap', mobileTrap);
   mobileTrap.save(function (saveError) {
     if (saveError) {
+      console.log('save error', saveError);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(saveError)
       });
@@ -232,12 +234,14 @@ exports.uploadSketchPhoto = function (req, res) {
 
   // Filtering to upload only images
   upload.fileFilter = sketchPhotoUploadFileFilter;
-
   if (mobileTrap) {
     var index = -1;
+    console.log('organismId', organismId);
     for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+      console.log('organism._id', mobileTrap.mobileOrganisms[i].organism._id);
       if (mobileTrap.mobileOrganisms[i].organism._id.toString() === organismId.toString()) {
         index = i;
+        console.log('set equal');
       }
     }
 

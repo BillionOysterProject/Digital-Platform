@@ -44,7 +44,6 @@
 
     st.saveOnBlur = function() {
       if (st.protocolSettlementTiles._id) {
-        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
@@ -329,7 +328,6 @@
             uploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/index/' + index + '/upload-tile-photo';
             };
-            $rootScope.$broadcast('savingStart');
             uploader.uploadAll();
           } else {
             successCallback();

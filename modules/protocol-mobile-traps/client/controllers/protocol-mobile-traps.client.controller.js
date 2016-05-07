@@ -228,7 +228,7 @@
           uploadSketchPhoto(mobileTrapId, 0, foundIds, function() {
             sketchPhotosSuccessCallback();
           }, function(organismId) {
-            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id' + organismId);
+            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id ' + organismId);
           });
         }
 
@@ -304,18 +304,18 @@
         $scope.$broadcast('show-errors-check-validity', 'form.organismDetailsForm');
         return false;
       } else {
-        $rootScope.$broadcast('savingStart');
         angular.element('#modal-organism-details-'+organismId).modal('hide');
         mt.foundOrganisms[organismDetails.organism._id] = organismDetails;
 
         var imageErrorMessage = '';
         var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
 
-        mt.saveOnBlur(function() {
+        mt.saveOnBlur(function(successful) {
           saveImageOnBlur(organismId, function() {
             mt.organismDetails = {};
             mt.sketchPhotoUrl = '';
             $rootScope.$broadcast('startSaving');
+            if (successful) $rootScope.$broadcast('saveMobileTrap');
           }, function(errorMessage) {
             mt.error = errorMessage;
             $rootScope.$broadcast('startSaving');
@@ -352,9 +352,8 @@
           }
           if (data.successful) {
             mt.error = null;
-            $rootScope.$broadcast('saveMobileTrap');
           }
-          if (successCallback) successCallback();
+          if (successCallback) successCallback(data.successful);
         })
         .error(function (data, status, headers, config) {
           mt.error = data.message;

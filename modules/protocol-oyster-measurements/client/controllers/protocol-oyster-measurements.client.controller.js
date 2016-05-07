@@ -546,7 +546,6 @@
 
     om.saveOnBlur = function(successCallback, errorCallback) {
       if (om.protocolOysterMeasurement._id) {
-        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
         om.protocolOysterMeasurement)
         .success(function (data, status, headers, config) {
@@ -593,7 +592,6 @@
         om.cageConditionUploader.onBeforeUploadItem = function(item) {
           item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/upload-oyster-cage-condition';
         };
-        $rootScope.$broadcast('savingStart');
         om.cageConditionUploader.uploadAll();
       }
     });
