@@ -49,7 +49,16 @@
             <tr ng-repeat="member in vm.members">
                 <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td>
                 <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{member.email}}</span></td>
-                <td ng-show="{{member.pending === true}}"><em class="text-muted">Pending</em></td>
+                <td ng-show="{{member.pending === true}}">
+                    <em class="text-muted">Pending<br/>
+                        <!--WIRE UP: 
+                        <a href="#">Send reminder</a>
+                        -->
+                        <!-- REPLACE <A> WITH THIS <SPAN> ONCE LINK IS CLICKED (revert back to link after 5-10 seconds? Next day? How often are we allowing reminders to be sent?): 
+                        <span class="green"><i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                        -->
+                    </em>
+                </td>
                 <td ng-hide="{{member.pending === true}}"></td>
                 <td>{{member.team.name}}</td>
                 <td class="text-right">

@@ -30,9 +30,22 @@ var validateWaterQuality = function(waterQuality, successCallback, errorCallback
       if (sample.depthOfWaterSampleM < 0) {
         errorMessages.push('Depth of water sample must be positive');
       }
+      if (!sample.waterTemperature.results[0] || !sample.waterTemperature.results[1] ||
+        !sample.waterTemperature.average) {
+        errorMessages.push('Water temperature measurements are required');
+      }
+      if (!sample.dissolvedOxygen.results[0] || !sample.dissolvedOxygen.results[1] ||
+        !sample.dissolvedOxygen.average) {
+        errorMessages.push('Dissolved oxygen measurements are required');
+      }
+      if (!sample.salinity.results[0] || !sample.salinity.results[1] || !sample.salinity.average) {
+        errorMessages.push('Salinity measurements are required');
+      }
+      if (!sample.pH.results[0] || !sample.pH.results[1] || !sample.pH.average) {
+        errorMessages.push('pH measurements are required');
+      }
     }
   }
-
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -91,7 +104,18 @@ exports.incrementalSave = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(waterQuality);
+        validateWaterQuality(waterQuality,
+        function(waterQualityJSON) {
+          res.json({
+            waterQuality: waterQuality,
+            successful: true
+          });
+        }, function (errorMessages) {
+          res.json({
+            waterQuality: waterQuality,
+            errors: errorMessages.join()
+          });  
+        });
       }
     });
   } else {

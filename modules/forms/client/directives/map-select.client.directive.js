@@ -5,7 +5,7 @@
     .module('forms')
     .directive('mapSelect', ['$timeout', 'L',function($timeout, L) {
       var mapUniqueId = 1;
-      
+
       return {
         restrict: 'AE',
         templateUrl: 'modules/forms/client/views/map-select.client.view.html',
@@ -16,12 +16,13 @@
           latitude: '=',
           longitude: '=',
           modalId:'@',
-          showMarker:'='
+          showMarker:'=',
+          dismissFunction: '='
         },
-        
+
         link: function(scope, elem, attrs) {
           scope.mapUniqueId = 'forms-map-select-map' + mapUniqueId++;
-          
+
         },
         controller: 'MapSelectController',
         controllerAs: 'vm',

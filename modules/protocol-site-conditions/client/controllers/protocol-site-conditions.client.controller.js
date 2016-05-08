@@ -5,11 +5,11 @@
     .module('protocol-site-conditions')
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
-  ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
   'Authentication', 'FileUploader', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
   'WaterFlowService', 'ShorelineTypesService', 'TeamMembersService'];
 
-  function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams,
+  function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     Authentication, FileUploader, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, TeamMembersService) {
     var sc = this;
@@ -67,6 +67,7 @@
           }
         };
       }
+
     } else {
       sc.protocolSiteCondition = new ProtocolSiteConditionsService();
       sc.protocolSiteCondition.landConditions = {
@@ -249,19 +250,33 @@
       $state.go('protocol-site-conditions.main');
     };
 
+    $scope.$on('incrementalSaveSiteCondition', function() {
+      console.log('incrementalSaveSiteCondition');
+      sc.saveOnBlur();
+    });
+
     sc.saveOnBlur = function() {
       if (sc.protocolSiteCondition._id) {
         $http.post('/api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/incremental-save',
         sc.protocolSiteCondition)
         .success(function (data, status, headers, config) {
-          sc.protocolSiteCondition = data;
+          sc.protocolSiteCondition = new ProtocolSiteConditionsService(data.siteCondition);
           sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
             sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
           sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
             sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
           sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
-          sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
-          sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+          sc.protocolSiteCondition.tideConditions.closestHighTide =
+            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
+          sc.protocolSiteCondition.tideConditions.closestLowTide =
+            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+          if (data.errors) {
+            sc.error = data.errors;
+          }
+          if (data.successful) {
+            sc.error = null;
+            $rootScope.$broadcast('incrementalSaveSiteConditionSuccessful');
+          }
           console.log('saved');
         })
         .error(function (data, status, headers, config) {
@@ -333,5 +348,18 @@
         }
       }
     });
+
+    $timeout(function() {
+      console.log('check site condition');
+      sc.saveOnBlur();
+    });
+
+    sc.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    sc.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" ng-click="cancelFunction(index)"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Substrate Shell {{substrate.substrateShellNumber}}</h4>
             </div>
             <form name="form.substrateForm" ng-submit="submitForm(substrate, form.substrateForm.$valid)" novalidate>
@@ -43,7 +43,8 @@
                                                 </div>
                                                 <div class="form-group col-sm-6">
                                                     <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="text" class="form-control" ng-model="substrate.setDate" placeholder="MM-DD-YYYY" name="setDate" id="setDate" required/>
+                                                    <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
+                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
                                             <div class="form-group">

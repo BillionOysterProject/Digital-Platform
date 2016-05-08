@@ -1,4 +1,4 @@
-<form name="mt.form.mobileTrapForm" ng-submit="mt.save(mt.form.mobileTrapForm.$valid)" novalidate>
+<form name="mt.form.mobileTrapForm" ng-submit="mt.save(mt.form.mobileTrapForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
@@ -9,24 +9,26 @@
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
                         placeholder="yyyy-MM-ddTHH:mm:ss" min="{{mt.dateTime.min}}" max="{{mt.dateTime.max}}"
-                        ng-model="mt.protocolMobileTrap.collectionTime" ng-blur="mt.saveOnBlur()"/>
+                        ng-model="mt.protocolMobileTrap.collectionTime" />
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map"
+                        ng-click="mt.openMap()">Mark location on map</a>
                         <input class="form-control" type="text" value="{{mt.protocolMobileTrap.latitude}}, {{mt.protocolMobileTrap.longitude}}"
-                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
-                        ng-blur="mt.saveOnBlur()" readonly/>
+                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-click="mt.openMap()"
+                        ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
+                         readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="mt.protocolMobileTrap.teamMembers"
-                        label-class="control-label" select-config="mt.teamMemberSelectConfig" ng-blur="mt.saveOnBlur()"></select-tags>
+                        label-class="control-label" select-config="mt.teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="mt.protocolMobileTrap.notes" ng-blur="mt.saveOnBlur()"></textarea>
+                        <textarea class="form-control" rows="7" ng-model="mt.protocolMobileTrap.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -93,7 +95,8 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
-    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"></map-select>
+    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"
+    dismiss-function="mt.closeMap"></map-select>
 </div>
 
 <form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>

@@ -183,6 +183,7 @@
 
       if (mt.protocolMobileTrap.mobileOrganisms.length <= 0) {
         console.log('no found ids');
+        mt.error = 'No mobile organisms specified';
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
       }
@@ -227,7 +228,7 @@
           uploadSketchPhoto(mobileTrapId, 0, foundIds, function() {
             sketchPhotosSuccessCallback();
           }, function(organismId) {
-            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id' + organismId);
+            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id ' + organismId);
           });
         }
 
@@ -262,6 +263,7 @@
     };
 
     mt.openOrganismDetails = function(organism) {
+      $rootScope.$broadcast('stopSaving');
       var content = angular.element('#modal-organism-details-'+organism._id);
 
       mt.organismDetails = mt.getFoundOrganism(organism);
@@ -308,15 +310,19 @@
         var imageErrorMessage = '';
         var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
 
-        mt.saveOnBlur(function() {
+        mt.saveOnBlur(function(successful) {
           saveImageOnBlur(organismId, function() {
             mt.organismDetails = {};
             mt.sketchPhotoUrl = '';
+            $rootScope.$broadcast('startSaving');
+            if (successful) $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
           }, function(errorMessage) {
             mt.error = errorMessage;
+            $rootScope.$broadcast('startSaving');
           });
         }, function(errorMessage) {
           mt.error = errorMessage;
+          $rootScope.$broadcast('startSaving');
         });
       }
     };
@@ -325,23 +331,52 @@
       angular.element('#modal-organism-details-'+organismId).modal('hide');
       mt.organismDetails = {};
       mt.sketchPhotoUrl = '';
+      $rootScope.$broadcast('startSaving');
     };
+
+    $scope.$on('incrementalSaveMobileTrap', function() {
+      console.log('incrementalSaveMobileTrap');
+      mt.saveOnBlur();
+    });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
       if (mt.protocolMobileTrap._id) {
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {
-          mt.protocolMobileTrap = data;
+          mt.protocolMobileTrap = new ProtocolMobileTrapsService(data.mobileTrap);
           mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
           setupMobileOrganisms();
-          if (successCallback) successCallback();
+          if (data.errors) {
+            mt.error = data.errors;
+          }
+          if (data.successful) {
+            mt.error = null;
+          }
+          if (successCallback) {
+            successCallback(data.successful);
+          } else {
+            $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+          }
         })
         .error(function (data, status, headers, config) {
           mt.error = data.message;
           if (errorCallback) errorCallback(data.message);
         });
       }
+    };
+
+    $timeout(function() {
+      console.log('check mobile trap');
+      mt.saveOnBlur();
+    }, 2000);
+
+    mt.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    mt.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
     };
   }
 })();

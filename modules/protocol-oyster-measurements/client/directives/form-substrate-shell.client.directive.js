@@ -3,7 +3,7 @@
 
   angular
     .module('protocol-oyster-measurements')
-    .directive('formSubstrateShell', function() {
+    .directive('formSubstrateShell', function(moment) {
       return {
         restrict: 'AE',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-substrate-shell.client.view.html',
@@ -20,6 +20,12 @@
         },
         replace: true,
         link: function (scope, element, attrs) {
+          scope.dateTime = {
+            min: moment().subtract(7, 'days').toDate(),
+            max: moment().add(1, 'year').toDate()
+          };
+          if (!scope.substrate.setDate) scope.substrate.setDate = new Date();
+
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
           });
