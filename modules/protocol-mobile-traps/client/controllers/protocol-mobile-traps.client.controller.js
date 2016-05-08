@@ -366,10 +366,17 @@
       }
     };
 
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function() {
-        $rootScope.$broadcast('incrementalSaveMobileTrap');
-      });
-    });
+    $timeout(function() {
+      console.log('check mobile trap');
+      mt.saveOnBlur();
+    }, 4000);
+
+    mt.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    mt.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

@@ -12,9 +12,11 @@
                       ng-model="sc.protocolSiteCondition.collectionTime" />
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-site-condition-map">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-site-condition-map"
+                        ng-click="sc.openMap()">Mark location on map</a>
                         <input class="form-control" type="text" value="{{sc.protocolSiteCondition.latitude}}, {{sc.protocolSiteCondition.longitude}}"
-                        data-toggle="modal" data-target="#modal-site-condition-map" ng-show="sc.protocolSiteCondition.latitude && sc.protocolSiteCondition.longitude"
+                        data-toggle="modal" data-target="#modal-site-condition-map" ng-click="sc.openMap()"
+                        ng-show="sc.protocolSiteCondition.latitude && sc.protocolSiteCondition.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
@@ -281,10 +283,11 @@
                           What is the location?</label>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked"
                         ng-hide="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
-                        sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude">Mark the location on a map</a>
+                        sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
+                        ng-click="sc.openMap()">Mark the location on a map</a>
                         <input class="form-control" type="text" name="csoLocation"
                         value="{{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}"
-                        data-toggle="modal" data-target="#modal-map-marked"
+                        data-toggle="modal" data-target="#modal-map-marked" ng-click="sc.openMap()"
                         ng-show="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
                         sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly
                         ng-required="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"/>
@@ -311,10 +314,12 @@
                     <div class="form-group">
                         <label for="unmarkedLocation" ng-class="{ required: sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent }">
                           What is the location?</label>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked" ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude">Mark the location on a map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
+                        ng-hide="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
+                        ng-click="sc.openMap()">Mark the location on a map</a>
                         <input class="form-control" type="text" name="unmarkedLocation"
                         value="{{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
-                        data-toggle="modal" data-target="#modal-map-unmarked"
+                        data-toggle="modal" data-target="#modal-map-unmarked" ng-click="sc.openMap()"
                         ng-show="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude &&
                         sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly
                         ng-required="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"/>
@@ -482,14 +487,22 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-map-marked" can-click-map-to-add-marker="true" latitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude" longitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
+    <map-select modal-id="modal-map-marked" can-click-map-to-add-marker="true"
+    latitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"
+    longitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
+    dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
-    <map-select modal-id="modal-map-unmarked" can-click-map-to-add-marker="true" latitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude" longitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
+    <map-select modal-id="modal-map-unmarked" can-click-map-to-add-marker="true"
+    latitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"
+    longitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
+    dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-site-condition-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-site-condition-map" can-click-map-to-add-marker="true" latitude="sc.protocolSiteCondition.latitude"
-    longitude="sc.protocolSiteCondition.longitude"></map-select>
+    <map-select modal-id="modal-site-condition-map" can-click-map-to-add-marker="true"
+    latitude="sc.protocolSiteCondition.latitude"
+    longitude="sc.protocolSiteCondition.longitude"
+    dismiss-function="sc.closeMap"></map-select>
 </div>

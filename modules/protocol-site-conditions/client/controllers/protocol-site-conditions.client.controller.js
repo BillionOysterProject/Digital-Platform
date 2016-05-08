@@ -349,10 +349,17 @@
       }
     });
 
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function() {
-        $rootScope.$broadcast('incrementalSaveSiteCondition');
-      });
+    $timeout(function() {
+      console.log('check site condition');
+      sc.saveOnBlur();
     });
+
+    sc.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    sc.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

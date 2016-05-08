@@ -12,9 +12,11 @@
                         ng-model="om.protocolOysterMeasurement.collectionTime" />
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-oyster-measurement-map"
+                        ng-click="om.openMap()">Mark location on map</a>
                         <input class="form-control" type="text" value="{{om.protocolOysterMeasurement.latitude}}, {{om.protocolOysterMeasurement.longitude}}"
-                        data-toggle="modal" data-target="#modal-settlement-tile" ng-show="om.protocolOysterMeasurement.latitude && om.protocolOysterMeasurement.longitude"
+                        data-toggle="modal" data-target="#modal-oyster-measurement-map" ng-click="om.openMap()"
+                        ng-show="om.protocolOysterMeasurement.latitude && om.protocolOysterMeasurement.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
@@ -135,4 +137,14 @@
 </form>
 
 <!-- MODALS -->
-<form-substrate-shell ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells" substrate="substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerUploaders[$index]" inner-substrate-uploader="om.innerUploaders[$index]" outer-substrate-url="om.outerSubstrateURL" inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>
+<form-substrate-shell ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
+substrate="substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerUploaders[$index]"
+inner-substrate-uploader="om.innerUploaders[$index]" outer-substrate-url="om.outerSubstrateURL"
+inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm"
+index="{{$index}}"></form-substrate-shell>
+
+<div class="modal fade" id="modal-oyster-measurement-map" tabindex="-1" role="dialog">
+    <map-select modal-id="modal-oyster-measurement-map" latitude="om.protocolOysterMeasurement.latitude"
+    longitude="om.protocolOysterMeasurement.longitude" can-click-map-to-add-marker="true"
+    dismiss-function="om.closeMap"></map-select>
+</div>

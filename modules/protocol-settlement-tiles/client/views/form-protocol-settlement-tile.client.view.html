@@ -13,9 +13,11 @@
                         ng-model="st.protocolSettlementTiles.collectionTime" />
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile-map">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile-map"
+                        ng-click="st.openMap()">Mark location on map</a>
                         <input class="form-control" type="text" value="{{st.protocolSettlementTiles.latitude}}, {{st.protocolSettlementTiles.longitude}}"
-                        data-toggle="modal" data-target="#modal-settlement-tile-map" ng-show="st.protocolSettlementTiles.latitude && st.protocolSettlementTiles.longitude"
+                        data-toggle="modal" data-target="#modal-settlement-tile-map" ng-click="st.openMap()"
+                        ng-show="st.protocolSettlementTiles.latitude && st.protocolSettlementTiles.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
@@ -96,7 +98,8 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-settlement-tile-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-settlement-tile-map" latitude="st.protocolSettlementTiles.latitude"
-    longitude="st.protocolSettlementTiles.longitude" can-click-map-to-add-marker="true"></map-select>
+    longitude="st.protocolSettlementTiles.longitude" can-click-map-to-add-marker="true"
+    dismiss-function="st.closeMap"></map-select>
 </div>
 
 <!-- <form-settlement-tile ng-repeat="tile in st.protocolSettlementTiles.settlementTiles" settlement-tile="tile" save-function="" cancel-function="" index="{{$index}}"></form-settlement-tile> -->

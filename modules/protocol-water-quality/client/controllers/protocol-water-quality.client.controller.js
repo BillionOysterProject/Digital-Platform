@@ -80,6 +80,24 @@
       { name: 'PPM', value: 'ppm' }
     ];
 
+    var updateAverages = function() {
+      for (var i = 0; i < wq.protocolWaterQuality.samples.length; i++) {
+        var sample = wq.protocolWaterQuality.samples[i];
+        wq.waterTemperatureAverage(sample);
+        wq.dissolvedOxygenAverage(sample);
+        wq.salinityAverage(sample);
+        wq.pHAverage(sample);
+        wq.turbidityAverage(sample);
+        wq.ammoniaAverage(sample);
+        wq.nitratesAverage(sample);
+
+        for (var j = 0; j < sample.others.length; j++) {
+          var other = sample.others[j];
+          wq.otherAverage(other);
+        }
+      }
+    };
+
     $scope.$on('incrementalSaveWaterQuality', function() {
       console.log('incrementalSaveWaterQuality');
       wq.saveOnBlur();
@@ -87,6 +105,8 @@
 
     wq.saveOnBlur = function() {
       if (wq.protocolWaterQuality._id) {
+        updateAverages();
+
         $http.post('/api/protocol-water-quality/' + wq.protocolWaterQuality._id + '/incremental-save',
         wq.protocolWaterQuality)
         .success(function (data, status, headers, config) {
@@ -215,7 +235,7 @@
     };
 
     wq.waterTemperatureAverage = function(sample) {
-      sample.waterTemperature.average = average(sample.waterTemperature.result[0], sample.waterTemperature.results[1],
+      sample.waterTemperature.average = average(sample.waterTemperature.results[0], sample.waterTemperature.results[1],
         sample.waterTemperature.results[2]);
     };
 
@@ -270,6 +290,7 @@
         $rootScope.$broadcast('saveWaterQualityError');
         return false;
       }
+      updateAverages();
 
       // TODO: move create/update logic to service
       if (wq.protocolWaterQuality._id) {
@@ -293,10 +314,17 @@
       $state.go('protocol-water-quality.main');
     };
 
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function() {
-        $rootScope.$broadcast('incrementalSaveWaterQuality');
-      });
-    });
+    $timeout(function() {
+      console.log('check water quality');
+      wq.saveOnBlur();
+    }, 8000);
+
+    wq.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    wq.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

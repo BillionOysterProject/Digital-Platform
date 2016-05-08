@@ -252,6 +252,7 @@
     };
 
     var checkAllSaveSuccessful = function() {
+      console.log('checkAllSaveSuccessful');
       var allSavedSuccessfully = checkAllSuccessful();
 
       if (allSavedSuccessfully) {
@@ -283,6 +284,7 @@
     };
 
     vm.submitTeamMember = function() {
+      console.log('submitTeamMember');
       if (checkAllSuccessful()) {
         checkAllSaveSuccessful();
       } else {

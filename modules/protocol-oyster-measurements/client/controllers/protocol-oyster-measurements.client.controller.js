@@ -596,10 +596,17 @@
       }
     });
 
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function() {
-        $rootScope.$broadcast('incrementalSaveOysterMeasurement');
-      });
-    });
+    $timeout(function() {
+      console.log('check oyster measurement');
+      om.saveOnBlur();
+    }, 2000);
+
+    om.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    om.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

@@ -420,10 +420,17 @@
       });
     });
 
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function() {
-        $rootScope.$broadcast('incrementalSaveSettlementTiles');
-      });
-    });
+    $timeout(function() {
+      console.log('check settlement tiles');
+      st.saveOnBlur();
+    }, 6000);
+
+    st.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    st.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();
