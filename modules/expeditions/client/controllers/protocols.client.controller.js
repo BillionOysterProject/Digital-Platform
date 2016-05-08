@@ -239,23 +239,20 @@
       return vm.expedition.status === 'returned' && !protocolsComplete;
     };
 
-    vm.submitTeamMember = function() {
-      if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
-      if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
-      if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
-      if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
-      if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
-    };
-
-    var checkAllSaveSuccessful = function() {
-      var allSavedSuccessfully = true;
+    var checkAllSuccessful = function() {
+      var allSuccessful = true;
       for (var key in vm.tabs) {
         if (vm.tabs[key].visible) {
           if (vm.tabs[key].saveSuccessful === undefined || !vm.tabs[key].saveSuccessful) {
-            allSavedSuccessfully = false;
+            allSuccessful = false;
           }
         }
       }
+      return allSuccessful;
+    };
+
+    var checkAllSaveSuccessful = function() {
+      var allSavedSuccessfully = checkAllSuccessful();
 
       if (allSavedSuccessfully) {
         console.log('submitting');
@@ -282,6 +279,18 @@
           vm.error = data.message;
           console.log('error submitting');
         });
+      }
+    };
+
+    vm.submitTeamMember = function() {
+      if (checkAllSuccessful()) {
+        checkAllSaveSuccessful();
+      } else {
+        if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
+        if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
+        if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
+        if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
+        if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
       }
     };
 
@@ -338,6 +347,26 @@
         vm.error = data.message;
       });
     };
+
+    $scope.$on('incrementalSaveSiteConditionSuccessful', function() {
+      vm.tabs.protocol1.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveOysterMeasurementSuccessful', function() {
+      vm.tabs.protocol2.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveMobileTrapSuccessful', function() {
+      vm.tabs.protocol3.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveSettlementTilesSuccessful', function() {
+      vm.tabs.protocol4.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveWaterQualitySuccessful', function() {
+      vm.tabs.protocol5.saveSuccessful = true;
+    });
 
     $scope.$on('saveSiteConditionSuccessful', function() {
       vm.tabs.protocol1.saveSuccessful = true;

@@ -2,23 +2,23 @@
   <div class="form-group" ng-show="imageUrl">
     <img ng-src="{{imageUrl}}" alt="{{imageAlt}}" class="img-thumbnail">
   </div>
-  <div>
+  <div class="form-group">
     <div ng-show="uploader.isHTML5">
       <div nv-file-drop="" uploader="uploader">
-        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+        <div class="well my-drop-zone col-md-12" nv-file-over="" uploader="uploader">
           Drop Image Here
         </div>
       </div>
     </div>
-    <div>
-      <span class="btn btn-default btn-file">
+    <div class="form-group">
+      <span class="btn btn-default btn-file" ng-class="{ 'col-md-12': !imageUrl, 'col-md-6': imageUrl }">
           Select Image <input type="file" nv-file-select uploader="uploader">
       </span>
-      <span class="btn btn-default" ng-click="cancelUpload()">
+      <span class="btn btn-default col-md-6" ng-click="cancelUpload()" ng-show="imageUrl">
         Remove Image
       </span>
     </div>
-    <div ng-show="error" class="text-danger">
+    <div ng-show="error" class="text-danger col-md-12">
         <strong ng-bind="error"></strong>
     </div>
   </div>

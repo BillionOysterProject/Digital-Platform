@@ -275,7 +275,7 @@
           }
           if (data.successful) {
             sc.error = null;
-            $rootScope.$broadcast('saveSiteCondition');
+            $rootScope.$broadcast('incrementalSaveSiteConditionSuccessful');
           }
           console.log('saved');
         })

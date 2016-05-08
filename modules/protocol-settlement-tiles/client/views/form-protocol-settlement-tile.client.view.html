@@ -1,4 +1,4 @@
-<form name="form.settlementTilesForm" ng-submit="st.save(st.form.settlementTilesForm.$valid)" novalidate ng-cloak>
+<form name="st.form.settlementTilesForm" ng-submit="st.save(st.form.settlementTilesForm.$valid)" novalidate ng-cloak>
   <section>
     <section class="content">
         <section class="container">
@@ -50,25 +50,27 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6" ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
-                    <h4>
+                    <h4 class="row col-md-12">
                       <i class="glyphicon glyphicon-check" ng-show="tile.done"></i>
                       <i class="glyphicon glyphicon-unchecked red" ng-hide="tile.done"></i>
                       Settlement Tile {{$index+1}}
                     </h4>
-                    <div class="form-group">
+                    <div class="row col-md-12">
                         <label>General tile description (condition, damage, sedimentation)</label>
                         <textarea rows="5" class="form-control" ng-model="tile.description" ></textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="row col-md-12">
                         <label>Tile photograph</label>
                         <single-image-drop-zone uploader="st.settlementTilePhotoUploaders[$index]"
                         image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"></single-image-drop-zone>
                     </div>
                     <!-- TODO: Each opens its own modal-->
-                    <a class="btn btn-default btn-sm btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
-                    <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
-                    save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"
-                    index="{{$index+1}}"></form-settlement-tile>
+                    <div class="row col-md-12">
+                      <a class="btn btn-default btn-sm btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
+                      <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
+                      save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"
+                      index="{{$index+1}}"></form-settlement-tile>
+                    </div>
                     <!--TODO: Show this button instead if data is already added:
                     <a class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-settlementtile">Edit Organism ID Entries</a>-->
                 </div>

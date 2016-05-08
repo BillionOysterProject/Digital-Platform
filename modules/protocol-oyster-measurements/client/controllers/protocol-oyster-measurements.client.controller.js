@@ -560,7 +560,7 @@
           }
           if (data.successful) {
             om.error = null;
-            $rootScope.$broadcast('saveOysterMeasurement');
+            $rootScope.$broadcast('incrementalSaveOysterMeasurementSuccessful');
           }
           if (successCallback) successCallback();
         })

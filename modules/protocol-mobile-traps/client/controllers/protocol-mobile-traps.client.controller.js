@@ -315,7 +315,7 @@
             mt.organismDetails = {};
             mt.sketchPhotoUrl = '';
             $rootScope.$broadcast('startSaving');
-            if (successful) $rootScope.$broadcast('saveMobileTrap');
+            if (successful) $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
           }, function(errorMessage) {
             mt.error = errorMessage;
             $rootScope.$broadcast('startSaving');
@@ -353,7 +353,11 @@
           if (data.successful) {
             mt.error = null;
           }
-          if (successCallback) successCallback(data.successful);
+          if (successCallback) {
+            successCallback(data.successful);
+          } else {
+            $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+          }
         })
         .error(function (data, status, headers, config) {
           mt.error = data.message;
