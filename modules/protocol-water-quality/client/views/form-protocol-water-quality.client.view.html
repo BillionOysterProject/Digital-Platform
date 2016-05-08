@@ -13,15 +13,16 @@
                             ng-model="wq.protocolWaterQuality.collectionTime" />
                         </div>
                         <div class="form-group">
-                            <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-water-quality-map">Mark location on map</a>
+                            <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-water-quality-map"
+                            ng-click="wq.openMap()">Mark location on map</a>
                             <input class="form-control" type="text" value="{{wq.protocolWaterQuality.latitude}}, {{wq.protocolWaterQuality.longitude}}"
-                            data-toggle="modal" data-target="#modal-water-quality-map" ng-show="wq.protocolWaterQuality.latitude && wq.protocolWaterQuality.longitude"
-                             readonly/>
+                            data-toggle="modal" data-target="#modal-water-quality-map" ng-click="wq.openMap()"
+                            ng-show="wq.protocolWaterQuality.latitude && wq.protocolWaterQuality.longitude" readonly/>
                         </div>
                         <div class="form-group">
                             <select-tags outer-column="" name="teamMembers"
                             in-title="Names of team members" ng-model="wq.protocolWaterQuality.teamMembers"
-                            label-class="control-label" select-config="wq.teamMemberSelectConfig" ></select-tags>
+                            label-class="control-label" select-config="wq.teamMemberSelectConfig"></select-tags>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -59,14 +60,21 @@
                         <span class="help-block">Describe location or mark exact coordinates on map</span>
                         <div class="row">
                             <div class="col-sm-6">
-                                <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
-                                <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
+                                <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}"
+                                data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-click="wq.openMap()"
+                                ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
+                                <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly
+                                ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"
+                                ng-click="wq.openMap()"/>
                             </div>
                             <div class="col-sm-6">
-                                <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}">Mark the location on a map</a>
+                                <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}"
+                                ng-click="wq.openMap()">Mark the location on a map</a>
                             </div>
                             <div class="modal fade" id="modal-map-sample{{$index}}" tabindex="-1" role="dialog">
-                                <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true" can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude" longitude="sample.locationOfWaterSample.longitude"></map-select>
+                                <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
+                                can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
+                                longitude="sample.locationOfWaterSample.longitude" dismiss-function="wq.closeMap"></map-select>
                             </div>
                         </div>
                     </div>
@@ -85,118 +93,146 @@
                                 <th>Units</th>
                             </tr>
                             <tr>
-                                <td class="text-right"><h4>Water Temperature</h4></td>
+                                <td class="text-right"><h4>Water Temperature *</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.waterTemperature.method"
-                                  ng-options="method.value as method.name for method in wq.waterTemperatureMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.waterTemperatureMethods" required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]"
+                                  ng-blur="wq.waterTemperatureAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]"
+                                  ng-blur="wq.waterTemperatureAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]"
+                                  ng-blur="wq.waterTemperatureAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average"
+                                  required readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.waterTemperature.units"
-                                  ng-options="method.value as method.name for method in wq.waterTemperatureUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.waterTemperatureUnits" required></select>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right"><h4>Dissolved Oxygen</h4></td>
+                                <td class="text-right"><h4>Dissolved Oxygen *</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.dissolvedOxygen.method"
-                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenMethods" required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]"
+                                  ng-blur="wq.dissolvedOxygenAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]"
+                                  ng-blur="wq.dissolvedOxygenAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]"
+                                  ng-blur="wq.dissolvedOxygenAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average"
+                                  required readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.dissolvedOxygen.units"
-                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.dissolvedOxygenUnits" required></select>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right"><h4>Salinity</h4></td>
+                                <td class="text-right"><h4>Salinity *</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.salinity.method"
-                                  ng-options="method.value as method.name for method in wq.salinityMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.salinityMethods" required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]"
+                                  ng-blur="wq.salinityAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]"
+                                  ng-blur="wq.salinityAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]"
+                                  ng-blur="wq.salinityAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average"
+                                  required readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.salinity.units"
-                                  ng-options="method.value as method.name for method in wq.salinityUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.salinityUnits" required></select>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-right"><h4>pH</h4></td>
+                                <td class="text-right"><h4>pH *</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.pH.method"
-                                  ng-options="method.value as method.name for method in wq.pHMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.pHMethods" required></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]"
+                                  ng-blur="wq.pHAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]"
+                                  ng-blur="wq.pHAverage(sample)" required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]"
+                                  ng-blur="wq.pHAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average"
+                                  required readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.pH.units"
-                                  ng-options="method.value as method.name for method in wq.pHUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.pHUnits" required></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Turbidity</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.turbidity.method"
-                                  ng-options="method.value as method.name for method in wq.turbidityMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.turbidityMethods"></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]"
+                                  ng-blur="wq.turbidityAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]"
+                                  ng-blur="wq.turbidityAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]"
+                                  ng-blur="wq.turbidityAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average" readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.turbidity.units"
-                                  ng-options="method.value as method.name for method in wq.turbidityUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.turbidityUnits"></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Ammonia</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.ammonia.method"
-                                  ng-options="method.value as method.name for method in wq.ammoniaMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.ammoniaMethods"></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]"
+                                  ng-blur="wq.ammoniaAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]"
+                                  ng-blur="wq.ammoniaAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]"
+                                  ng-blur="wq.ammoniaAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average" readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.ammonia.units"
-                                  ng-options="method.value as method.name for method in wq.ammoniaUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.ammoniaUnits"></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="text-right"><h4>Nitrates</h4></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.nitrates.method"
-                                  ng-options="method.value as method.name for method in wq.nitratesMethods"  required></select>
+                                  ng-options="method.value as method.name for method in wq.nitratesMethods"></select>
                                 </td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]"  required/></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average"  required/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]"
+                                  ng-blur="wq.nitratesAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]"
+                                  ng-blur="wq.nitratesAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]"
+                                  ng-blur="wq.nitratesAverage(sample)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average" readonly/></td>
                                 <td>
                                   <select class="form-control" ng-model="sample.nitrates.units"
-                                  ng-options="method.value as method.name for method in wq.nitratesUnits"  required></select>
+                                  ng-options="method.value as method.name for method in wq.nitratesUnits"></select>
                                 </td>
                             </tr>
                             <tr ng-repeat="other in sample.others">
-                                <td><input type="text" class="form-control" placeholder="Other" ng-model="other.label"  /></td>
-                                <td><input type="text" class="form-control" placeholder="Method" ng-model="other.method"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]"  /></td>
-                                <td><input type="number" class="form-control" placeholder="Average" ng-model="other.average"  /></td>
-                                <td><input type="text" class="form-control" placeholder="Units" ng-model="other.units"  /></td>
+                                <td><input type="text" class="form-control" placeholder="Other" ng-model="other.label"/></td>
+                                <td><input type="text" class="form-control" placeholder="Method" ng-model="other.method"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]"
+                                  ng-blur="wq.otherAverage(other)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]"
+                                  ng-blur="wq.otherAverage(other)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]"
+                                  ng-blur="wq.otherAverage(other)"/></td>
+                                <td><input type="number" class="form-control" placeholder="Average" ng-model="other.average" readonly/></td>
+                                <td><input type="text" class="form-control" placeholder="Units" ng-model="other.units"/></td>
                             </tr>
                         </table>
                     </div>
@@ -220,5 +256,6 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-water-quality-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-water-quality-map" latitude="wq.protocolWaterQuality.latitude"
-    longitude="wq.protocolWaterQuality.longitude" can-click-map-to-add-marker="true"></map-select>
+    longitude="wq.protocolWaterQuality.longitude" can-click-map-to-add-marker="true"
+     dismiss-function="wq.closeMap"></map-select>
 </div>

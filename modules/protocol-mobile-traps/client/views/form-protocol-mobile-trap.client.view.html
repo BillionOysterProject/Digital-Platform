@@ -12,9 +12,11 @@
                         ng-model="mt.protocolMobileTrap.collectionTime" />
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map">Mark location on map</a>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map"
+                        ng-click="mt.openMap()">Mark location on map</a>
                         <input class="form-control" type="text" value="{{mt.protocolMobileTrap.latitude}}, {{mt.protocolMobileTrap.longitude}}"
-                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
+                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-click="mt.openMap()"
+                        ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
@@ -93,7 +95,8 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
-    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"></map-select>
+    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"
+    dismiss-function="mt.closeMap"></map-select>
 </div>
 
 <form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>

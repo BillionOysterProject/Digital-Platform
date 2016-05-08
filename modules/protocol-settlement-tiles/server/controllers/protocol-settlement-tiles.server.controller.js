@@ -28,30 +28,43 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
   if (!settlementTiles.settlementTiles || settlementTiles.settlementTiles.length < 1) {
     errorMessages.push('Must have at least one settlement tile');
   } else {
-    for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
-      var tile = settlementTiles.settlementTiles[i];
-      if (!tile.description) {
-        errorMessages.push('Settlement Tile #' + (i+1) + ' description is required');
-      }
-      if (!tile.tilePhoto) {
-        errorMessages.push('Settlement Tile #' + (i+1) + ' photo is required');
-      }
+    var oneSuccessfulSettlementTile = false;
 
+    var allGridsFilledIn = function(tile, i, printErrorMessage) {
       var successfulGrids = true;
       for (var j = 1; j <= 25; j++) {
         if (tile['grid'+j]) {
-          console.log('grid', tile['grid'+j]);
           if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
           emptyString(tile['grid'+j].notes)) {
             successfulGrids = false;
-            errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominate species selected for grid space ' + (j));
+            if (printErrorMessage) errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominate species selected for grid space ' + (j));
           }
         } else {
           successfulGrids = false;
         }
       }
-      if (!successfulGrids) {
-        errorMessages.push('Settlement Tile #' + (i+1) + ' must have 25 dominant organisms');
+      return successfulGrids;
+    };
+
+    for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
+      var tile = settlementTiles.settlementTiles[i];
+      if (tile.tilePhoto && tile.tilePhoto.path !== undefined &&
+        tile.tilePhoto.path !== '' && allGridsFilledIn(tile, i, false)) {
+        oneSuccessfulSettlementTile = true;
+      } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
+        tile.tilePhoto === '') && !allGridsFilledIn(tile, i, false)) {
+        console.log('skip');
+      } else {
+        if (!tile.description) {
+          errorMessages.push('Settlement Tile #' + (i+1) + ' description is required');
+        }
+        if (!tile.tilePhoto) {
+          errorMessages.push('Settlement Tile #' + (i+1) + ' photo is required');
+        }
+
+        if (!allGridsFilledIn(tile, i, true)) {
+          errorMessages.push('Settlement Tile #' + (i+1) + ' must have 25 dominant organisms');
+        }
       }
     }
   }
@@ -120,7 +133,6 @@ exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
   if (settlementTiles) {
-    console.log('req.body', req.body);
     //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
@@ -132,7 +144,18 @@ exports.incrementalSave = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(settlementTiles);
+        validateSettlementTiles(settlementTiles,
+        function(settlementTilesJSON) {
+          res.json({
+            settlementTiles: settlementTiles,
+            successful: true
+          });
+        }, function(errorMessages) {
+          res.json({
+            settlementTiles: settlementTiles,
+            errors: errorMessages.join()
+          });
+        });
       }
     });
   } else {

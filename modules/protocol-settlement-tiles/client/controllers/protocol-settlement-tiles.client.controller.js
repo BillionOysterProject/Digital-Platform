@@ -38,17 +38,26 @@
     };
 
     $scope.$on('incrementalSaveSettlementTiles', function() {
+      console.log('incrementalSaveSettlementTiles');
       st.saveOnBlur();
     });
 
     st.saveOnBlur = function() {
       if (st.protocolSettlementTiles._id) {
-        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
-          st.protocolSettlementTiles = data;
+          st.protocolSettlementTiles = new ProtocolSettlementTilesService(data.settlementTiles);
           st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          if (data.errors) {
+            st.error = data.errors;
+            console.log('errors', st.error);
+          }
+          if (data.successful) {
+            console.log('data successful');
+            st.error = null;
+            $rootScope.$broadcast('incrementalSaveSettlementTilesSuccessful');
+          }
           setupTiles();
         })
         .error(function (data, status, header, config) {
@@ -174,29 +183,46 @@
       }
 
       var errorMessages = [];
-      st.settlementTilesValid = true;
+      console.log('save');
+
+      var oneSuccessfulSettlementTile = false;
+
+      var allGridsFilledIn = function(tile, i, printErrorMessage) {
+        var successfulGrids = true;
+        for (var j = 1; j <= st.gridCount; j++) {
+          if (tile['grid'+j]) {
+            if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
+            (tile['grid'+j].notes === '' || tile['grid'+j].notes === null || tile['grid'+j].notes === undefined)) {
+              successfulGrids = false;
+              if (printErrorMessage) errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
+            }
+          } else {
+            successfulGrids = false;
+          }
+          return successfulGrids;
+        }
+      };
+
       for (var i = 0; i < st.protocolSettlementTiles.settlementTiles.length; i++) {
         var tile = st.protocolSettlementTiles.settlementTiles[i];
 
-        tile.tilePhoto = {
-          path: tile.imageUrl
-        };
-
-        if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
-          errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
-          st.settlementTilesValid = false;
-        }
-
-        for (var j = 1; j <= st.gridCount; j++) {
-          var grid = tile['grid'+j];
-          if (!grid.organism) {
-            st.settlementTilesValid = false;
-            errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
+        if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
+        allGridsFilledIn(tile, i, false)) {
+          console.log('successful');
+          oneSuccessfulSettlementTile = true;
+        } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
+        tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i, false)) {
+          console.log('skip');
+        } else {
+          console.log('errors');
+          if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
+            errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
           }
+          allGridsFilledIn(tile, i , true);
         }
       }
 
-      if (!st.settlementTilesValid) {
+      if (!oneSuccessfulSettlementTile) {
         if (errorMessages.length > 0) {
           st.error = errorMessages.join();
         }
@@ -328,7 +354,6 @@
             uploader.onBeforeUploadItem = function(item) {
               item.url = 'api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/index/' + index + '/upload-tile-photo';
             };
-            $rootScope.$broadcast('savingStart');
             uploader.uploadAll();
           } else {
             successCallback();
@@ -394,5 +419,18 @@
         st.error = errorMessage;
       });
     });
+
+    $timeout(function() {
+      console.log('check settlement tiles');
+      st.saveOnBlur();
+    }, 3000);
+
+    st.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    st.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

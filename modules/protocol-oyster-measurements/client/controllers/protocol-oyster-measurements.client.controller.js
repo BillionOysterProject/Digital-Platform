@@ -5,10 +5,10 @@
     .module('protocol-oyster-measurements')
     .controller('ProtocolOysterMeasurementsController', ProtocolOysterMeasurementsController);
 
-  ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams',
+  ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
     'Authentication', 'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
 
-  function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams,
+  function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     Authentication, FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
     var om = this;
 
@@ -84,23 +84,32 @@
       setupSubstrateShells();
     }
 
-    if (om.protocolOysterMeasurement._id) {
+    var findPreviousValues = function() {
       $http.get('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/previous')
       .success(function (data, status, headers, config) {
-        var mortality = (((om.protocolOysterMeasurement.totalNumberOfAllLiveOysters - data.totalNumberOfAllLiveOysters) / data.totalNumberOfAllLiveOysters)*-100).toFixed(2);
-        var growth = (((om.protocolOysterMeasurement.averageSizeOfAllLiveOysters - data.averageSizeOfAllLiveOysters) / data.averageSizeOfAllLiveOysters)*100).toFixed(2);
-        var min = (((om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters - data.minimumSizeOfAllLiveOysters) / data.minimumSizeOfAllLiveOysters)*100).toFixed(2);
-        var max = (((om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters - data.maximumSizeOfAllLiveOysters) / data.maximumSizeOfAllLiveOysters)*100).toFixed(2);
-        om.previous = {
-          mortality: mortality,
-          growth: growth,
-          min: min,
-          max: max
-        };
+        if (om.protocolOysterMeasurement.totalNumberOfAllLiveOysters && data.totalNumberOfAllLiveOysters &&
+        om.protocolOysterMeasurement.averageSizeOfAllLiveOysters && data.averageSizeOfAllLiveOysters &&
+        om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters && data.minimumSizeOfAllLiveOysters &&
+        om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters && data.maximumSizeOfAllLiveOysters) {
+          var mortality = (((om.protocolOysterMeasurement.totalNumberOfAllLiveOysters - data.totalNumberOfAllLiveOysters) / data.totalNumberOfAllLiveOysters)*-100).toFixed(2);
+          var growth = (((om.protocolOysterMeasurement.averageSizeOfAllLiveOysters - data.averageSizeOfAllLiveOysters) / data.averageSizeOfAllLiveOysters)*100).toFixed(2);
+          var min = (((om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters - data.minimumSizeOfAllLiveOysters) / data.minimumSizeOfAllLiveOysters)*100).toFixed(2);
+          var max = (((om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters - data.maximumSizeOfAllLiveOysters) / data.maximumSizeOfAllLiveOysters)*100).toFixed(2);
+          om.previous = {
+            mortality: mortality,
+            growth: growth,
+            min: min,
+            max: max
+          };
+        }
       })
       .error(function (data, status, headers, config) {
         console.log('Could not find previous');
       });
+    };
+
+    if (om.protocolOysterMeasurement._id) {
+      findPreviousValues();
     }
 
 
@@ -173,25 +182,52 @@
 
       om.substratesValid = true;
       for (var i = 0; i < om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
-        if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
-          console.log('no source');
-          om.substratesValid = false;
-        }
+        var substrateShell = om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i];
 
-        if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto ||
-        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path ||
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path === '') {
-          imageErrorMessages.push('Outer Side Photo is required for Substrate Shell #' + i+1);
-          console.log('outer side photo missing');
-          om.substratesValid = false;
-        }
+        var oneSuccessfulSubstrateShell = false;
 
-        if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto ||
-        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path ||
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path === '') {
-          imageErrorMessages.push('Inner Side Photo is required for Substrate Shell #' + i+1);
-          console.log('inner side photo missing');
-          om.substratesValid = false;
+        var allOystersMeasured = function(substrateShell) {
+          var filledOutCount = 0;
+          for (var k = 0; k < substrateShell.measurements.length; k++) {
+            if (substrateShell.measurements[k].sizeOfLiveOysterMM !== null) {
+              filledOutCount++;
+            }
+          }
+          return substrateShell.totalNumberOfLiveOystersOnShell === filledOutCount;
+        };
+
+        if (substrateShell.outerSidePhoto && substrateShell.outerSidePhoto.path !== undefined &&
+          substrateShell.outerSidePhoto.path !== '' && substrateShell.innerSidePhoto &&
+          substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
+          substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
+          oneSuccessfulSubstrateShell = true;
+          console.log('success');
+        } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
+          substrateShell.outerSidePhoto.path === '') && (!substrateShell.innerSidePhoto ||
+          substrateShell.innerSidePhoto.path === undefined || substrateShell.innerSidePhoto.path === '') &&
+          substrateShell.totalNumberOfLiveOystersOnShell === undefined) {
+          console.log('skip');
+        } else {
+          if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
+            console.log('no source');
+            om.substratesValid = false;
+          }
+
+          if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto ||
+          !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path ||
+          om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto.path === '') {
+            imageErrorMessages.push('Outer side photo is required for Substrate Shell #' + (i+1));
+            console.log('outer side photo missing');
+            om.substratesValid = false;
+          }
+
+          if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto ||
+          !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path ||
+          om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto.path === '') {
+            imageErrorMessages.push('Inner side photo is required for Substrate Shell #' + (i+1));
+            console.log('inner side photo missing');
+            om.substratesValid = false;
+          }
         }
       }
       if (!om.substratesValid) {
@@ -408,7 +444,6 @@
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
         return false;
       } else {
-        $rootScope.$broadcast('savingStart');
         angular.element('#modal-substrateshell'+index).modal('hide');
         substrate = om.findSubstrateStats(substrate);
         substrate.outerSidePhoto = {
@@ -437,29 +472,30 @@
     };
 
     om.findSubstrateStats = function(substrate) {
-      var min = Number.MAX_VALUE;
-      var max = Number.MIN_VALUE;
-      var count = 0;
-      var totalSize = 0;
+      if (substrate.measurements && substrate.measurements.length > 0) {
+        var min = Number.MAX_VALUE;
+        var max = Number.MIN_VALUE;
+        var count = 0;
+        var totalSize = 0;
 
-      for (var i = 0; i < substrate.measurements.length; i++) {
-        var size = substrate.measurements[i].sizeOfLiveOysterMM;
-        if (size !== null) {
-          if (size > max) {
-            max = size;
+        for (var i = 0; i < substrate.measurements.length; i++) {
+          var size = substrate.measurements[i].sizeOfLiveOysterMM;
+          if (size !== null) {
+            if (size > max) {
+              max = size;
+            }
+            if (size < min) {
+              min = size;
+            }
+            count++;
+            totalSize += size;
           }
-          if (size < min) {
-            min = size;
-          }
-          count++;
-          totalSize += size;
         }
+
+        substrate.minimumSizeOfLiveOysters = min;
+        substrate.maximumSizeOfLiveOysters = max;
+        substrate.averageSizeOfLiveOysters = (totalSize/count);
       }
-
-      substrate.minimumSizeOfLiveOysters = min;
-      substrate.maximumSizeOfLiveOysters = max;
-      substrate.averageSizeOfLiveOysters = (totalSize/count);
-
       return substrate;
     };
 
@@ -487,10 +523,14 @@
         }
       }
 
-      om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters = min;
-      om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters = max;
-      om.protocolOysterMeasurement.averageSizeOfAllLiveOysters = (totalSize/count);
-      om.protocolOysterMeasurement.totalNumberOfAllLiveOysters = count;
+      if (min < Number.MAX_VALUE && max > Number.MIN_VALUE && count > 0 && totalSize > 0) {
+        om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters = min;
+        om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters = max;
+        om.protocolOysterMeasurement.averageSizeOfAllLiveOysters = (totalSize/count);
+        om.protocolOysterMeasurement.totalNumberOfAllLiveOysters = count;
+
+        findPreviousValues();
+      }
     };
 
     om.cancelSubstrateForm = function(index) {
@@ -500,20 +540,28 @@
     };
 
     $scope.$on('incrementalSaveOysterMeasurement', function() {
+      console.log('incrementalSaveOysterMeasurement');
       om.saveOnBlur();
     });
 
     om.saveOnBlur = function(successCallback, errorCallback) {
       if (om.protocolOysterMeasurement._id) {
-        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
         om.protocolOysterMeasurement)
         .success(function (data, status, headers, config) {
-          om.protocolOysterMeasurement = data;
+          console.log('data.oysterMeasurement', data.oysterMeasurement);
+          om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService(data.oysterMeasurement);
           om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).toDate();
           om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
             om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
           console.log('save');
+          if (data.errors) {
+            om.error = data.errors;
+          }
+          if (data.successful) {
+            om.error = null;
+            $rootScope.$broadcast('incrementalSaveOysterMeasurementSuccessful');
+          }
           if (successCallback) successCallback();
         })
         .error(function (data, status, headers, config) {
@@ -544,9 +592,21 @@
         om.cageConditionUploader.onBeforeUploadItem = function(item) {
           item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/upload-oyster-cage-condition';
         };
-        $rootScope.$broadcast('savingStart');
         om.cageConditionUploader.uploadAll();
       }
     });
+
+    $timeout(function() {
+      console.log('check oyster measurement');
+      om.saveOnBlur();
+    }, 1000);
+
+    om.openMap = function() {
+      $rootScope.$broadcast('stopSaving');
+    };
+
+    om.closeMap = function() {
+      $rootScope.$broadcast('startSaving');
+    };
   }
 })();

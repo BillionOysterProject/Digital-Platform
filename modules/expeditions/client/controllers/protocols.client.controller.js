@@ -55,6 +55,7 @@
     vm.setupInputValues = function(protocol, teamList, incrementalSaveUrl, callback) {
       var changed = false;
       if (vm.expedition.station) {
+
         if (!protocol.latitude && vm.expedition.station.latitude) {
           changed = true;
           protocol.latitude = vm.expedition.station.latitude;
@@ -168,48 +169,6 @@
       }
     }
 
-    vm.switchTabs = function(key) {
-      vm.activeTab = key;
-    };
-
-    vm.checkStatusIncomplete = function() {
-      var protocolsComplete = true;
-      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return vm.expedition.status === 'incomplete' && !protocolsComplete;
-    };
-
-    vm.checkStatusPending = function() {
-      var protocolsComplete = true;
-      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return vm.expedition.status === 'pending' || (protocolsComplete && vm.expedition.status !== 'published');
-    };
-
-    vm.checkStatusReturned = function() {
-      var protocolsComplete = true;
-      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return vm.expedition.status === 'returned' && !protocolsComplete;
-    };
-
-    vm.submitTeamMember = function() {
-      if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
-      if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
-      if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
-      if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
-      if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
-    };
-
     var timeIntervalInSec = 15;
     var incrementalSave = function(fn, timeInterval) {
       var promise = $timeout(fn, timeInterval);
@@ -244,15 +203,57 @@
       vm.savingLoop = true;
     });
 
-    var checkAllSaveSuccessful = function() {
-      var allSavedSuccessfully = true;
+    vm.switchTabs = function(key) {
+      var saveCall = activeProtocolCall();
+      $rootScope.$broadcast(saveCall);
+      vm.activeTab = key;
+    };
+
+    vm.checkStatusIncomplete = function() {
+      var protocolsComplete = true;
+      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
+      return vm.expedition.status === 'incomplete' && !protocolsComplete;
+    };
+
+    vm.checkStatusPending = function() {
+      var protocolsComplete = true;
+      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
+      return vm.expedition.status === 'pending' || (protocolsComplete && vm.expedition.status !== 'published');
+    };
+
+    vm.checkStatusReturned = function() {
+      var protocolsComplete = true;
+      if (vm.viewSiteCondition && vm.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewOysterMeasurement && vm.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewMobileTrap && vm.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewSettlementTiles && vm.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (vm.viewWaterQuality && vm.waterQuality.status === 'incomplete') protocolsComplete = false;
+      return vm.expedition.status === 'returned' && !protocolsComplete;
+    };
+
+    var checkAllSuccessful = function() {
+      var allSuccessful = true;
       for (var key in vm.tabs) {
         if (vm.tabs[key].visible) {
           if (vm.tabs[key].saveSuccessful === undefined || !vm.tabs[key].saveSuccessful) {
-            allSavedSuccessfully = false;
+            allSuccessful = false;
           }
         }
       }
+      return allSuccessful;
+    };
+
+    var checkAllSaveSuccessful = function() {
+      console.log('checkAllSaveSuccessful');
+      var allSavedSuccessfully = checkAllSuccessful();
 
       if (allSavedSuccessfully) {
         console.log('submitting');
@@ -279,6 +280,19 @@
           vm.error = data.message;
           console.log('error submitting');
         });
+      }
+    };
+
+    vm.submitTeamMember = function() {
+      console.log('submitTeamMember');
+      if (checkAllSuccessful()) {
+        checkAllSaveSuccessful();
+      } else {
+        if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
+        if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
+        if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
+        if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
+        if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
       }
     };
 
@@ -335,6 +349,26 @@
         vm.error = data.message;
       });
     };
+
+    $scope.$on('incrementalSaveSiteConditionSuccessful', function() {
+      vm.tabs.protocol1.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveOysterMeasurementSuccessful', function() {
+      vm.tabs.protocol2.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveMobileTrapSuccessful', function() {
+      vm.tabs.protocol3.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveSettlementTilesSuccessful', function() {
+      vm.tabs.protocol4.saveSuccessful = true;
+    });
+
+    $scope.$on('incrementalSaveWaterQualitySuccessful', function() {
+      vm.tabs.protocol5.saveSuccessful = true;
+    });
 
     $scope.$on('saveSiteConditionSuccessful', function() {
       vm.tabs.protocol1.saveSuccessful = true;
