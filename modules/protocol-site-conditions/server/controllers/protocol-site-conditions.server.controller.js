@@ -193,11 +193,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   }
 
   if (errorMessages.length > 0) {
-    console.log('errorMessages', errorMessages);
-    console.log('error');
     errorCallback(errorMessages);
   } else {
-    console.log('success');
     successCallback(siteCondition);
   }
 };

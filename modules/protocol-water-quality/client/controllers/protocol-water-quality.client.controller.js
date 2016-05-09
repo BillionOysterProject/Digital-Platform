@@ -99,7 +99,6 @@
     };
 
     $scope.$on('incrementalSaveWaterQuality', function() {
-      console.log('incrementalSaveWaterQuality');
       wq.saveOnBlur();
     });
 
@@ -120,7 +119,6 @@
             wq.error = null;
             $rootScope.$broadcast('incrementalSaveWaterQualitySuccessful');
           }
-          console.log('saved');
         })
         .error(function (data, status, headers, config) {
           wq.error = data.message;
@@ -317,7 +315,6 @@
     };
 
     $timeout(function() {
-      console.log('check water quality');
       wq.saveOnBlur();
     }, 4000);
 

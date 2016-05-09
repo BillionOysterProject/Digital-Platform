@@ -26,7 +26,7 @@ var emptyString = function(string) {
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
     oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate, 'MM-DD-YYYY').toDate();
+      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).toDate();
   }
 
   var errorMessages = [];
@@ -38,7 +38,9 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   if (!oysterMeasurement.conditionOfOysterCage) {
     errorMessages.push('Cage Condition photo is required');
   } else {
-    if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
+    if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === '') {
       errorMessages.push('Photo of oyster cage is required');
     }
     if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
@@ -68,14 +70,12 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
         substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
         substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
         oneSuccessfulSubstrateShell = true;
-        console.log('success');
       } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
         substrateShell.outerSidePhoto.path === '') && (!substrateShell.innerSidePhoto ||
         substrateShell.innerSidePhoto.path === undefined || substrateShell.innerSidePhoto.path === '') &&
         substrateShell.totalNumberOfLiveOystersOnShell === undefined) {
-        console.log('skip');
+
       } else {
-        console.log('errors');
         var shellNumber = 1+j;
         if (!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === '' ||
         substrateShell.outerSidePhoto.path === undefined) {
@@ -466,7 +466,6 @@ exports.previousOysterMeasurement = function (req, res, next, id) {
           message: errorHandler.getErrorMessage(err)
         });
       } else if (!previousPublished) {
-        console.log('no previous published, checking team');
         Expedition.find({ 'station': expedition.station, 'team': expedition.team, '_id': { $ne: expedition._id } })
         .populate('protocols.oysterMeasurement').sort('-monitoringStartDate').exec(function (err, previousTeams) {
           if (err) {
@@ -474,7 +473,6 @@ exports.previousOysterMeasurement = function (req, res, next, id) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            console.log('previous team expedition', previousTeams);
             req.oysterMeasurement = (previousTeams && previousTeams.length > 0) ?
               previousTeams[0].protocols.oysterMeasurement : null;
             next();

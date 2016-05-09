@@ -167,7 +167,6 @@
     // Save protocol mobile trap
     mt.save = function(isValid) {
       if (!isValid) {
-        console.log('mobile trap invalid');
         $scope.$broadcast('show-errors-check-validity', 'mt.form.mobileTrapForm');
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
@@ -182,7 +181,6 @@
       }
 
       if (mt.protocolMobileTrap.mobileOrganisms.length <= 0) {
-        console.log('no found ids');
         mt.error = 'At least one mobile organism is required';
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
@@ -273,7 +271,7 @@
     };
 
     var saveImageOnBlur = function(organismId, successCallback, errorCallback) {
-      if (mt.protocolMobileTrap._id) {
+      if (mt.protocolMobileTrap._id && mt.foundOrganisms[organismId].imageUrl !== '') {
         if (organismId) {
           var uploader = mt.foundOrganisms[organismId].uploader;
           if (uploader.queue.length > 0) {
@@ -296,6 +294,8 @@
         } else {
           errorCallback('Error with organism id');
         }
+      } else if (mt.protocolMobileTrap._id && mt.foundOrganisms[organismId].imageUrl === '') {
+        mt.saveOnBlur();
       }
     };
 
@@ -335,7 +335,6 @@
     };
 
     $scope.$on('incrementalSaveMobileTrap', function() {
-      console.log('incrementalSaveMobileTrap');
       mt.saveOnBlur();
     });
 
@@ -374,7 +373,6 @@
 
     $timeout(function() {
       $rootScope.$broadcast('iso-method', { name:null, params:null });
-      console.log('check mobile trap');
       mt.saveOnBlur();
     }, 2000);
 

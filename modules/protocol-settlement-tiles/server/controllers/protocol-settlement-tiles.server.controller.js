@@ -53,7 +53,7 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
         oneSuccessfulSettlementTile = true;
       } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
         tile.tilePhoto === '') && !allGridsFilledIn(tile, i)) {
-        console.log('skip');
+
       } else {
         if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
           errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
@@ -131,8 +131,6 @@ var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback
   if (updatedSt) {
     if (updatedSt.settlementTiles && updatedSt.settlementTiles.length > 0) {
       for (var i = 0; i < updatedSt.settlementTiles.length; i++) {
-        console.log('existingSt path', existingSt.settlementTiles[i].tilePhoto.path);
-        console.log('updatedSt path', updatedSt.settlementTiles[i].tilePhoto.path);
         if (existingSt.settlementTiles[i].tilePhoto.path !== '' &&
           updatedSt.settlementTiles[i].tilePhoto.path === '') {
           filesToDelete.push(existingSt.settlementTiles[i].tilePhoto.path);
@@ -185,9 +183,9 @@ exports.incrementalSave = function (req, res) {
           });
         }
       });
-    }, function() {
+    }, function(err) {
       return res.status(400).send({
-        message: 'Could not update settlement tiles'
+        message: err
       });
     });
   } else {
@@ -213,14 +211,21 @@ exports.update = function (req, res) {
       settlementTiles.status = 'submitted';
       settlementTiles.submitted = new Date();
 
-      settlementTiles.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(settlementTiles);
-        }
+      removeFiles(req.settlementTiles, settlementTiles,
+      function() {
+        settlementTiles.save(function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(settlementTiles);
+          }
+        });
+      }, function(err) {
+        return res.status(400).send({
+          message: err
+        });
       });
     } else {
       return res.status(400).send({

@@ -43,7 +43,6 @@
 
     st.saveOnBlur = function() {
       if (st.protocolSettlementTiles._id) {
-        console.log('tile 1', st.protocolSettlementTiles.settlementTiles[0].tilePhoto.path);
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
@@ -210,12 +209,9 @@
           if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
           allGridsFilledIn(tile, i)) {
             oneSuccessfulSettlementTile = true;
-            console.log('success ' + (i+1));
           } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
           tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i)) {
-            console.log('skip ' + (i+1));
           } else {
-            console.log('errors ' + (i+1));
             if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
               errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
             }

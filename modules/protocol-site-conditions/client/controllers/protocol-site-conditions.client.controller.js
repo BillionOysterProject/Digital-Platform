@@ -146,14 +146,12 @@
     // Save protocol site condition
     sc.save = function(isValid) {
       if (!isValid) {
-        console.log('form invalid');
         $scope.$broadcast('show-errors-check-validity', 'sc.form.siteConditionForm');
         $rootScope.$broadcast('saveSiteConditionError');
         return false;
       }
 
       if (!sc.waterConditionPhotoURL || sc.waterConditionPhotoURL === '') {
-        console.log('water photo invalid');
         sc.error = 'Water Condition photo is required';
         $rootScope.$broadcast('saveSiteConditionError');
         return false;
@@ -164,7 +162,6 @@
       }
 
       if (!sc.landConditionPhotoURL || sc.landConditionPhotoURL === '') {
-        console.log('land photo invalid');
         sc.error = 'Land Condition photo is required';
         $rootScope.$broadcast('saveSiteConditionError');
         return false;
@@ -177,7 +174,6 @@
       if (sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
         sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
         sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
-        console.log('estimated percent surface cover invalid');
         sc.error = 'Estimated percent surface cover should add up to 100%';
         $rootScope.$broadcast('saveSiteConditionError');
         return false;
@@ -260,7 +256,6 @@
     };
 
     $scope.$on('incrementalSaveSiteCondition', function() {
-      console.log('incrementalSaveSiteCondition');
       sc.saveOnBlur();
     });
 
@@ -287,7 +282,6 @@
             sc.error = null;
             $rootScope.$broadcast('incrementalSaveSiteConditionSuccessful');
           }
-          console.log('saved');
         })
         .error(function (data, status, headers, config) {
           sc.error = data.message;
@@ -297,11 +291,10 @@
     };
 
     $scope.$watch('sc.waterConditionPhotoURL', function(newValue, oldValue) {
-      if (sc.protocolSiteCondition._id) {
+      if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL !== '') {
         if (sc.waterConditionUploader.queue.length > 0) {
           sc.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
             sc.waterConditionUploader.removeFromQueue(fileItem);
-            console.log('saved');
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
@@ -325,15 +318,17 @@
           };
           sc.waterConditionUploader.uploadAll();
         }
+      } else if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL === '') {
+        sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path = '';
+        sc.saveOnBlur();
       }
     });
 
     $scope.$watch('sc.landConditionPhotoURL', function(newValue, oldValue) {
-      if (sc.protocolSiteCondition._id) {
+      if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL !== '') {
         if (sc.landConditionUploader.queue.length > 0) {
           sc.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
             sc.landConditionUploader.removeFromQueue(fileItem);
-            console.log('saved');
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
@@ -357,11 +352,13 @@
           };
           sc.landConditionUploader.uploadAll();
         }
+      } else if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL === '') {
+        sc.protocolSiteCondition.landConditions.landConditionPhoto.path = '';
+        sc.saveOnBlur();
       }
     });
 
     $timeout(function() {
-      console.log('check site condition');
       sc.saveOnBlur();
     });
 
