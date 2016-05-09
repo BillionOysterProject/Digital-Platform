@@ -183,7 +183,7 @@
 
       if (mt.protocolMobileTrap.mobileOrganisms.length <= 0) {
         console.log('no found ids');
-        mt.error = 'No mobile organisms specified';
+        mt.error = 'At least one mobile organism is required';
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
       }

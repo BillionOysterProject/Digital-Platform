@@ -25,7 +25,7 @@ var emptyString = function(string) {
 var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
   var errorMessages = [];
 
-  if (mobileTrap.mobileOrganisms.length < 0) {
+  if (mobileTrap.mobileOrganisms.length <= 0) {
     errorMessages.push('At least one mobile organism is required');
   } else {
     for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {

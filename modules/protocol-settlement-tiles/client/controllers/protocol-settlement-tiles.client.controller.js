@@ -185,50 +185,55 @@
       var errorMessages = [];
       console.log('save');
 
-      var oneSuccessfulSettlementTile = false;
+      if (!st.protocolSettlementTiles || st.protocolSettlementTiles.length < 1) {
+        errorMessages.push('Must have at least one settlement tile');
+      } else {
+        var oneSuccessfulSettlementTile = false;
 
-      var allGridsFilledIn = function(tile, i, printErrorMessage) {
-        var successfulGrids = true;
-        for (var j = 1; j <= st.gridCount; j++) {
-          if (tile['grid'+j]) {
-            if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
-            (tile['grid'+j].notes === '' || tile['grid'+j].notes === null || tile['grid'+j].notes === undefined)) {
+        var allGridsFilledIn = function(tile, i) {
+          var successfulGrids = true;
+          for (var j = 1; j <= st.gridCount; j++) {
+            if (tile['grid'+j]) {
+              if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
+              (tile['grid'+j].notes === '' || tile['grid'+j].notes === null || tile['grid'+j].notes === undefined)) {
+                successfulGrids = false;
+              }
+            } else {
               successfulGrids = false;
-              if (printErrorMessage) errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
             }
+            return successfulGrids;
+          }
+        };
+
+        for (var i = 0; i < st.protocolSettlementTiles.settlementTiles.length; i++) {
+          var tile = st.protocolSettlementTiles.settlementTiles[i];
+
+          if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
+          allGridsFilledIn(tile, i)) {
+            console.log('successful');
+            oneSuccessfulSettlementTile = true;
+          } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
+          tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i)) {
+            console.log('skip');
           } else {
-            successfulGrids = false;
+            console.log('errors');
+            if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
+              errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
+            }
+            if (!allGridsFilledIn(tile, i)) {
+              errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominant organism specified for all 25 grid spaces');
+            }
           }
-          return successfulGrids;
         }
-      };
 
-      for (var i = 0; i < st.protocolSettlementTiles.settlementTiles.length; i++) {
-        var tile = st.protocolSettlementTiles.settlementTiles[i];
-
-        if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
-        allGridsFilledIn(tile, i, false)) {
-          console.log('successful');
-          oneSuccessfulSettlementTile = true;
-        } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
-        tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i, false)) {
-          console.log('skip');
-        } else {
-          console.log('errors');
-          if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
-            errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
+        if (!oneSuccessfulSettlementTile) {
+          if (errorMessages.length > 0) {
+            st.error = errorMessages.join();
           }
-          allGridsFilledIn(tile, i , true);
+          $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+          $rootScope.$broadcast('saveSettlementTilesError');
+          return false;
         }
-      }
-
-      if (!oneSuccessfulSettlementTile) {
-        if (errorMessages.length > 0) {
-          st.error = errorMessages.join();
-        }
-        $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
-        $rootScope.$broadcast('saveSettlementTilesError');
-        return false;
       }
 
       // TODO: move create/update logic to service
