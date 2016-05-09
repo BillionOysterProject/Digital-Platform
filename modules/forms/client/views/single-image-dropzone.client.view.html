@@ -11,10 +11,10 @@
       </div>
     </div>
     <div class="form-group">
-      <span class="btn btn-default btn-file" ng-class="{ 'col-md-12': !imageUrl, 'col-md-6': imageUrl }">
+      <span class="btn btn-default btn-file" ng-class="{ 'btn-block': !imageUrl, '': imageUrl }">
           Select Image <input type="file" nv-file-select uploader="uploader">
       </span>
-      <span class="btn btn-default col-md-6" ng-click="cancelUpload()" ng-show="imageUrl">
+      <span class="btn btn-default" ng-click="cancelUpload()" ng-show="imageUrl">
         Remove Image
       </span>
     </div>
