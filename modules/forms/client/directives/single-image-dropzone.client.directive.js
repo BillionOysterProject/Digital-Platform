@@ -11,7 +11,7 @@
           uploader: '=',
           imageUrl: '=',
           imageAlt: '@'
-        }, 
+        },
         controller: 'ImageDropzoneController',
         controllerAs: 'vm'
       };

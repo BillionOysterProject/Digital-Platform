@@ -174,6 +174,15 @@
         };
       }
 
+      if (sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
+        sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
+        sc.protocolSiteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
+        console.log('estimated percent surface cover invalid');
+        sc.error = 'Estimated percent surface cover should add up to 100%';
+        $rootScope.$broadcast('saveSiteConditionError');
+        return false;
+      }
+
       // TODO: move create/update logic to service
       if (sc.protocolSiteCondition._id) {
         sc.protocolSiteCondition.$update(successCallback, errorCallback);

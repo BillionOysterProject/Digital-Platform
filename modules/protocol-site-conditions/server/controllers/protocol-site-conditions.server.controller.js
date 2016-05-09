@@ -157,6 +157,11 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.landConditions.landConditionPhoto) {
     errorMessages.push('Land condition photo is required');
   }
+  if (siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
+    siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
+    siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
+    errorMessages.push('Estimated percent surface cover should add up to 100%');
+  }
   if (emptyString(siteCondition.landConditions.shoreLineType)) {
     errorMessages.push('Shore line type is required');
   }
@@ -222,7 +227,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -269,7 +274,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             siteCondition: siteCondition,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -316,7 +321,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

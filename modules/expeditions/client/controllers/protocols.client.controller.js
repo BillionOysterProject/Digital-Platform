@@ -274,17 +274,22 @@
           if(vm.viewMobileTrap) vm.mobileTrap.status = 'submitted';
           if(vm.viewSettlementTiles) vm.settlementTiles.status = 'submitted';
           if(vm.viewWaterQuality) vm.waterQuality.status = 'submitted';
+          vm.submitting = false;
           console.log('submitted');
         }).
         error(function(data, status, headers, config) {
           vm.error = data.message;
           console.log('error submitting');
+          vm.submitting = false;
         });
+      } else {
+        vm.submitting = false;
       }
     };
 
     vm.submitTeamMember = function() {
       console.log('submitTeamMember');
+      vm.submitting = true;
       if (checkAllSuccessful()) {
         checkAllSaveSuccessful();
       } else {

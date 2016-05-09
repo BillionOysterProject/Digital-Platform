@@ -44,9 +44,6 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
     if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
       errorMessages.push('Bioaccumulation on cage is required');
     }
-    if (emptyString(oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage)) {
-      errorMessages.push('Notes on damage to cage is required');
-    }
   }
 
   if (!oysterMeasurement.measuringOysterGrowth || oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
@@ -139,7 +136,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -177,7 +174,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             oysterMeasurement: oysterMeasurement,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -220,7 +217,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

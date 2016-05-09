@@ -70,7 +70,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -108,7 +108,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             mobileTrap: mobileTrap,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -151,7 +151,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

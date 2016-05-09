@@ -232,7 +232,7 @@
       }
       if (!om.substratesValid) {
         if (imageErrorMessages.length > 0) {
-          om.error = imageErrorMessages.join();
+          om.error = imageErrorMessages;
         }
         $scope.$broadcast('show-errors-check-validity', 'om.form.oysterMeasurementForm');
         $rootScope.$broadcast('saveOysterMeasurementError');

@@ -38,12 +38,12 @@
     };
 
     $scope.$on('incrementalSaveSettlementTiles', function() {
-      console.log('incrementalSaveSettlementTiles');
       st.saveOnBlur();
     });
 
     st.saveOnBlur = function() {
       if (st.protocolSettlementTiles._id) {
+        console.log('tile 1', st.protocolSettlementTiles.settlementTiles[0].tilePhoto.path);
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
@@ -51,11 +51,9 @@
           st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
           if (data.errors) {
             st.error = data.errors;
-            console.log('errors', st.error);
             $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
           if (data.successful) {
-            console.log('data successful');
             st.error = null;
             $rootScope.$broadcast('incrementalSaveSettlementTilesSuccessful');
           }
@@ -185,7 +183,6 @@
       }
 
       var errorMessages = [];
-      console.log('save');
 
       if (!st.protocolSettlementTiles || st.protocolSettlementTiles.length < 1) {
         errorMessages.push('Must have at least one settlement tile');
@@ -212,13 +209,13 @@
 
           if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
           allGridsFilledIn(tile, i)) {
-            console.log('successful');
             oneSuccessfulSettlementTile = true;
+            console.log('success ' + (i+1));
           } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
           tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i)) {
-            console.log('skip');
+            console.log('skip ' + (i+1));
           } else {
-            console.log('errors');
+            console.log('errors ' + (i+1));
             if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
               errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
             }
@@ -230,7 +227,7 @@
 
         if (!oneSuccessfulSettlementTile) {
           if (errorMessages.length > 0) {
-            st.error = errorMessages.join();
+            st.error = errorMessages;
           }
           $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
           $rootScope.$broadcast('saveSettlementTilesError');
@@ -344,7 +341,7 @@
     };
 
     var saveImageOnBlur = function(index, successCallback, errorCallback) {
-      if (st.protocolSettlementTiles._id) {
+      if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles[index].imageUrl !== '') {
         if (index < st.settlementTilePhotoUploaders.length && st.settlementTilePhotoUploaders[index]) {
           var uploader = st.settlementTilePhotoUploaders[index];
           if (uploader.queue.length > 0) {
@@ -368,6 +365,9 @@
         } else {
           errorCallback('Error with tile');
         }
+      } else if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles[index].imageUrl === '') {
+        st.protocolSettlementTiles.settlementTiles[index].tilePhoto.path = '';
+        st.saveOnBlur();
       }
     };
 
@@ -428,7 +428,6 @@
     });
 
     $timeout(function() {
-      console.log('check settlement tiles');
       st.saveOnBlur();
     }, 3000);
 
