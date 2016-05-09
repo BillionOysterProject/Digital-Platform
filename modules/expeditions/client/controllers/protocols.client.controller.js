@@ -30,6 +30,13 @@
       return moment(vm.expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
     };
 
+    vm.expeditionLink = function(expedition) {
+      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.edit({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
+    };
+
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
