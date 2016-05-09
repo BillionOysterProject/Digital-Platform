@@ -272,6 +272,7 @@
             moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
           if (data.errors) {
             sc.error = data.errors;
+            $rootScope.$broadcast('incrementalSaveSiteConditionError');
           }
           if (data.successful) {
             sc.error = null;
@@ -281,6 +282,7 @@
         })
         .error(function (data, status, headers, config) {
           sc.error = data.message;
+          $rootScope.$broadcast('incrementalSaveSiteConditionError');
         });
       }
     };

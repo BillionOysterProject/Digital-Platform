@@ -349,18 +349,24 @@
           setupMobileOrganisms();
           if (data.errors) {
             mt.error = data.errors;
+            if (errorCallback) {
+              errorCallback(data.errors);
+            } else {
+              $rootScope.$broadcast('incrementalSaveMobileTrapError');
+            }
           }
           if (data.successful) {
             mt.error = null;
-          }
-          if (successCallback) {
-            successCallback(data.successful);
-          } else {
-            $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+            if (successCallback) {
+              successCallback(data.successful);
+            } else {
+              $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+            }
           }
         })
         .error(function (data, status, headers, config) {
           mt.error = data.message;
+          $rootScope.$broadcast('incrementalSaveMobileTrapError');
           if (errorCallback) errorCallback(data.message);
         });
       }
