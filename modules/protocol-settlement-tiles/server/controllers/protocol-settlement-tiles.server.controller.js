@@ -30,14 +30,13 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
   } else {
     var oneSuccessfulSettlementTile = false;
 
-    var allGridsFilledIn = function(tile, i, printErrorMessage) {
+    var allGridsFilledIn = function(tile, i) {
       var successfulGrids = true;
       for (var j = 1; j <= 25; j++) {
         if (tile['grid'+j]) {
           if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
           emptyString(tile['grid'+j].notes)) {
             successfulGrids = false;
-            if (printErrorMessage) errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominate species selected for grid space ' + (j));
           }
         } else {
           successfulGrids = false;
@@ -48,22 +47,20 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
 
     for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
       var tile = settlementTiles.settlementTiles[i];
+
       if (tile.tilePhoto && tile.tilePhoto.path !== undefined &&
-        tile.tilePhoto.path !== '' && allGridsFilledIn(tile, i, false)) {
+        tile.tilePhoto.path !== '' && allGridsFilledIn(tile, i)) {
         oneSuccessfulSettlementTile = true;
       } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
-        tile.tilePhoto === '') && !allGridsFilledIn(tile, i, false)) {
+        tile.tilePhoto === '') && !allGridsFilledIn(tile, i)) {
         console.log('skip');
       } else {
-        if (!tile.description) {
-          errorMessages.push('Settlement Tile #' + (i+1) + ' description is required');
-        }
-        if (!tile.tilePhoto) {
-          errorMessages.push('Settlement Tile #' + (i+1) + ' photo is required');
+        if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
+          errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
         }
 
-        if (!allGridsFilledIn(tile, i, true)) {
-          errorMessages.push('Settlement Tile #' + (i+1) + ' must have 25 dominant organisms');
+        if (!allGridsFilledIn(tile, i)) {
+          errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominant organism specified for all 25 grid spaces');
         }
       }
     }

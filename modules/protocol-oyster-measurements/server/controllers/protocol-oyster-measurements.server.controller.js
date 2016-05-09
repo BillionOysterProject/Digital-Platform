@@ -36,7 +36,7 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
-    errorMessages.push('Condition of oyster cage data is required');
+    errorMessages.push('Cage Condition photo is required');
   } else {
     if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
       errorMessages.push('Photo of oyster cage is required');
