@@ -107,12 +107,12 @@
 
     vm.displayAssignedProtocols = function(expedition) {
       var assigned = [];
-      if (vm.checkWrite(expedition.teamLists.siteCondition)) assigned.push('Protocol 1');
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement)) assigned.push('Protocol 2');
-      if (vm.checkWrite(expedition.teamLists.mobileTrap)) assigned.push('Protocol 3');
-      if (vm.checkWrite(expedition.teamLists.settlementTiles)) assigned.push('Protocol 4');
-      if (vm.checkWrite(expedition.teamLists.waterQuality)) assigned.push('Protocol 5');
-      var formatted = '';
+      if (vm.checkWrite(expedition.teamLists.siteCondition)) assigned.push('1');
+      if (vm.checkWrite(expedition.teamLists.oysterMeasurement)) assigned.push('2');
+      if (vm.checkWrite(expedition.teamLists.mobileTrap)) assigned.push('3');
+      if (vm.checkWrite(expedition.teamLists.settlementTiles)) assigned.push('4');
+      if (vm.checkWrite(expedition.teamLists.waterQuality)) assigned.push('5');
+      var formatted = (assigned.length === 1) ? 'Protocol ' : 'Protocols ';
       for (var i = 0; i < assigned.length; i++) {
         formatted += assigned[i];
         if (i === assigned.length - 2 && assigned.length > 1) {
