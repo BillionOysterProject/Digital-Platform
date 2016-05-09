@@ -114,6 +114,7 @@
           wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).toDate();
           if (data.errors) {
             wq.error = data.errors;
+            $rootScope.$broadcast('incrementalSaveWaterQualityError');
           }
           if (data.successful) {
             wq.error = null;
@@ -123,6 +124,7 @@
         })
         .error(function (data, status, headers, config) {
           wq.error = data.message;
+          $rootScope.$broadcast('incrementalSaveWaterQualityError');
         });
       }
     };

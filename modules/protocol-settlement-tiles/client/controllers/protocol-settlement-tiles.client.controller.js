@@ -52,6 +52,7 @@
           if (data.errors) {
             st.error = data.errors;
             console.log('errors', st.error);
+            $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
           if (data.successful) {
             console.log('data successful');
@@ -62,6 +63,7 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
+          $rootScope.$broadcast('incrementalSaveSettlementTilesError');
         });
       }
     };

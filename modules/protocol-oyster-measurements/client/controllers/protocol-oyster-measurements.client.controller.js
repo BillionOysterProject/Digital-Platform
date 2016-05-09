@@ -557,6 +557,7 @@
           console.log('save');
           if (data.errors) {
             om.error = data.errors;
+            $rootScope.$broadcast('incrementalSaveOysterMeasurementError');
           }
           if (data.successful) {
             om.error = null;
@@ -566,6 +567,7 @@
         })
         .error(function (data, status, headers, config) {
           om.error = data.message;
+          $rootScope.$broadcast('incrementalSaveOysterMeasurementError');
           if (errorCallback) errorCallback();
         });
       }

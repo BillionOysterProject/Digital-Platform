@@ -370,6 +370,26 @@
       vm.tabs.protocol5.saveSuccessful = true;
     });
 
+    $scope.$on('incrementalSaveSiteConditionError', function() {
+      vm.tabs.protocol1.saveSuccessful = false;
+    });
+
+    $scope.$on('incrementalSaveOysterMeasurementError', function() {
+      vm.tabs.protocol2.saveSuccessful = false;
+    });
+
+    $scope.$on('incrementalSaveMobileTrapError', function() {
+      vm.tabs.protocol3.saveSuccessful = false;
+    });
+
+    $scope.$on('incrementalSaveSettlementTilesError', function() {
+      vm.tabs.protocol4.saveSuccessful = false;
+    });
+
+    $scope.$on('incrementalSaveWaterQualityError', function() {
+      vm.tabs.protocol5.saveSuccessful = false;
+    });
+
     $scope.$on('saveSiteConditionSuccessful', function() {
       vm.tabs.protocol1.saveSuccessful = true;
       console.log('successful site conditions');
