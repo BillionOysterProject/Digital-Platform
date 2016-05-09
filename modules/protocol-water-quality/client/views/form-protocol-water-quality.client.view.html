@@ -4,10 +4,10 @@
             <section class="container">
                 <h2>Protocol 5 <small>Water Quality</small></h2>
                 <hr />
-                <div class="alert alert-danger" ng-show="wq.form.settlementTilesForm.$invalid || wq.error">
-                    <h4>Sorry, you can't submit just yet!</h4>
+                <div class="alert alert-danger" ng-show="wq.error">
+                <h4>We're still missing some information.</h4>
                     <ul class="list-unstyled" ng-repeat="error in wq.error">
-                        <li><i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ error }}</b></li>
+                        <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                     </ul>
                 </div>
                 <div class="row">
@@ -44,7 +44,7 @@
         <section class="container">
                 <div class="row">
                     <div class="col-md-6">
-                      <p class="lead red">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
+                      <p class="lead blue">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
                     </div>
                     <div class="col-md-6">
                       <p>Using a bucket suspended from a rope, collect a sample of water from an area where your oyster cage is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first. If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.</p>

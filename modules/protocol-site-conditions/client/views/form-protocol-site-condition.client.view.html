@@ -3,10 +3,10 @@
         <section class="container">
             <h2>Protocol 1 <small>Site Conditions</small></h2>
             <hr />
-            <div class="alert alert-danger" ng-show="sc.form.settlementTilesForm.$invalid || sc.error">
-                <h4>Sorry, you can't submit just yet!</h4>
+            <div class="alert alert-danger" ng-show="sc.error">
+                <h4>We're still missing some information.</h4>
                 <ul class="list-unstyled" ng-repeat="error in sc.error">
-                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ error }}</b></li>
+                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                 </ul>
             </div>
             <div class="row">
@@ -178,7 +178,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Take a photograph of the water with your camera in landscape orientation</label>
+                        <label>Take a photograph of the water with your camera</label>
                         <single-image-drop-zone uploader="sc.waterConditionUploader"
                         image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
@@ -362,7 +362,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Take a photograph of the land with your camera in landscape orientation</label>
+                        <label>Take a photograph of the land with your camera</label>
                         <single-image-drop-zone uploader="sc.landConditionUploader"
                         image-url="sc.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
