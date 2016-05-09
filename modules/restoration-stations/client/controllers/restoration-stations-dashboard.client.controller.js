@@ -223,12 +223,12 @@
 
     vm.displaySubmittedProtocols = function(activity) {
       var changed = [];
-      if (activity.protocols.siteCondition) changed.push('Protocol 1');
-      if (activity.protocols.oysterMeasurement) changed.push('Protocol 2');
-      if (activity.protocols.mobileTrap) changed.push('Protocol 3');
-      if (activity.protocols.settlementTiles) changed.push('Protocol 4');
-      if (activity.protocols.waterQuality) changed.push('Protocol 5');
-      var formatted = '';
+      if (activity.protocols.siteCondition) changed.push('1');
+      if (activity.protocols.oysterMeasurement) changed.push('2');
+      if (activity.protocols.mobileTrap) changed.push('3');
+      if (activity.protocols.settlementTiles) changed.push('4');
+      if (activity.protocols.waterQuality) changed.push('5');
+      var formatted = (changed === 1) ? 'Protocol ': 'Protocols ';
       for (var i = 0; i < changed.length; i++) {
         formatted += changed[i];
         if (i === changed.length - 2 && changed.length > 1) {
