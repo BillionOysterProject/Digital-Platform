@@ -2,18 +2,14 @@
   <section>
     <section class="content">
         <section class="container">
-            <div class="alert alert-danger" ng-show="st.form.settlementTilesForm.$invalid || st.error">
-                <h4>Sorry, you can't submit just yet!</h4>
-                <ul class="list-unstyled" ng-repeat="error in st.error">
-                    <li><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ error }}</b></li>
-                </ul>
-            </div>
-        </section>
-    </section>
-    <section class="content">
-        <section class="container">
             <h2>Protocol 4 <small>Settlement Tiles</small></h2>
             <hr />
+            <div class="alert alert-danger" ng-show="st.error">
+                <h4>We're still missing some information.</h4>
+                <ul class="list-unstyled" ng-repeat="error in st.error">
+                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
+                </ul>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -49,7 +45,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="lead red">Your group is responsible for recording the sessile organisms growing on each of the four settlement tiles.</p>
+                    <p class="lead blue">Your group is responsible for recording the sessile organisms growing on each of the four settlement tiles.</p>
                 </div>
                 <div class="col-md-6">
                     <p>Use the 25-point grid system to locate and ID one organism at the center of each of the 25 cross-hatches (use the overlay diagram). This will result in a total of 25 organism ID entries.</p>
@@ -63,22 +59,20 @@
             <div class="row">
                 <div class="col-md-3 col-sm-6" ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
                     <h4 class="row col-md-12">
-                      <i class="glyphicon glyphicon-check" ng-show="tile.done"></i>
-                      <i class="glyphicon glyphicon-unchecked red" ng-hide="tile.done"></i>
+                      <i class="glyphicon glyphicon-ok-sign green" ng-show="tile.done"></i>
                       Settlement Tile {{$index+1}}
                     </h4>
-                    <div class="row col-md-12">
+                    <div class="form-group">
                         <label>General tile description (condition, damage, sedimentation)</label>
                         <textarea rows="5" class="form-control" ng-model="tile.description" ></textarea>
                     </div>
-                    <div class="row col-md-12">
+                    <div class="form-group">
                         <label>Tile photograph</label>
                         <single-image-drop-zone uploader="st.settlementTilePhotoUploaders[$index]"
                         image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"
                         remove-function="st.removeImage"></single-image-drop-zone>
                     </div>
-                    <!-- TODO: Each opens its own modal-->
-                    <div class="row col-md-12">
+                    <div class="form-group">
                       <a class="btn btn-default btn-sm btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
                       <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
                       save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"

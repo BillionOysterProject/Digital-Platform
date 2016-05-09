@@ -121,7 +121,7 @@
                                 </td>
                                 <td class="text-right">
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
-                                  <span class="label label-default" ng-show="station.status === 'Lost'">Lost</span>
+                                  <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
                                 </td>
                               </tr>
                         </table>
@@ -140,19 +140,12 @@
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
-                            <tr class="text-muted" ng-repeat="expedition in vm.expeditions" ui-sref="{{vm.expeditionLink(expedition)}}">
+                            <tr ng-repeat="expedition in vm.expeditions" ui-sref="{{vm.expeditionLink(expedition)}}">
                                 <td>
-                                    <i class="glyphicon glyphicon-unchecked" ng-show="vm.isUpcoming(expedition)"></i>
-                                    <i class="glyphicon glyphicon-unchecked red" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                                      ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))"></i>
-                                    <i class="glyphicon glyphicon-check red" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember"></i>
-                                    <i class="glyphicon glyphicon-unchecked red" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember"></i>
-                                    <i class="glyphicon glyphicon-check green" ng-show="expedition.status === 'published'"></i>
+                                    {{expedition.name}}<br/>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
                                 </td>
-                                <td>
-                                    <b>{{expedition.name}}</b><br/>
-                                    <p class="text-muted">{{vm.getExpeditionDate(expedition)}}</br>{{vm.getExpeditionTimeRange(expedition)}}</p>
-                                </td>
+                                <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td class="text-right">
                                     <span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>
                                     <span class="label label-danger"ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
