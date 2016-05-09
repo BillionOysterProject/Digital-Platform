@@ -1,16 +1,36 @@
-<div class="shaded">
-  <section class="content">
+<div class="jumbotron"></div>
+<section class="content">
     <section class="container">
-      <div class="page-header">
-        <h1 ng-bind="vm.expedition.site.name"></h1>
-      </div>
-      <!-- vm.expedition.team -->
-      <!-- vm.expedition.teamMembers -->
-      <!-- vm.expedition.site -->
-      <!-- vm.expedition.latitude -->
-      <!-- vm.expedition.longitude -->
-      <!-- vm.expedition.monitoringDate -->
-      <!-- vm.expedition.notes -->
+        <div class="row">
+            <div class="col col-sm-6">
+                <h2>{{vm.expedition.name}}</h2>
+            </div>
+            <div class="col col-sm-6 text-right">
+                <h6 ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned')">Incomplete</h6>
+                <h6 ng-show="expedition.status === 'published'" class="green">Published</h6>
+                
+                <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))">Incomplete</span>
+                <span class="label label-danger" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
+                <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
+                
+                <a class="btn btn-primary" ng-show="" ui-sref="{{vm.expeditionLink(expedition)}}">Edit</a>
+            </div>
+        </div>
+        <div class="row text-muted">
+            <div class="col col-sm-10">
+                <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="img-circle pull-left col-sm-1 col-xs-3">
+                <h3>{{expedition.team.name}}</h3>
+                <b>{{vm.team.teamLead.displayName}}</b><br />
+                <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+            </div>
+            <div class="col col-sm-2 text-right">
+                <p><i class="glyphicon glyphicon-calendar gray"></i> {{vm.getExpeditionDate(expedition)}}</p>
+                <p><i class="glyphicon glyphicon-time gray"></i> {{vm.getExpeditionTimeRange(expedition)}}</p>
+                <p><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <p>{{vm.expedition.notes}}</p>
+        </div>
     </section>
-  </section>
-</div>
+</section>
