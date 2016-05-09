@@ -3,6 +3,12 @@
         <section class="container">
             <h2>Protocol 1 <small>Site Conditions</small></h2>
             <hr />
+            <div class="alert alert-danger" ng-show="sc.form.settlementTilesForm.$invalid || sc.error">
+                <h4>Sorry, you can't submit just yet!</h4>
+                <ul class="list-unstyled" ng-repeat="error in sc.error">
+                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ error }}</b></li>
+                </ul>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -38,7 +44,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="lead red">Your group is responsible for observations about the land, water and air.</p>
+                    <p class="lead blue">Your group is responsible for observations about the land, water and air.</p>
                 </div>
                 <div class="col-md-6">
                     <p>This includes weather, any recent rainfall, tide and current, as well as environmental conditions of the land and the water, pollution, and garbage.</p>
@@ -97,15 +103,15 @@
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="red">24</span> hours?</label>
+                        <label>Has it rained in the past <span class="blue">24</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn24Hours" ></select>
                     </div>
                     <div class="form-group" ng-show="sc.protocolSiteCondition.recentRainfall.rainedIn24Hours === true">
-                        <label>Has it rained in the past <span class="red">72</span> hours?</label>
+                        <label>Has it rained in the past <span class="blue">72</span> hours?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn72Hours" ></select>
                     </div>
                     <div class="form-group" ng-show="sc.protocolSiteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label>Has it rained in the past <span class="red">7</span> days?</label>
+                        <label>Has it rained in the past <span class="blue">7</span> days?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in sc.trueFalse" ng-model="sc.protocolSiteCondition.recentRainfall.rainedIn7Days" ></select>
                     </div>
                 </div>
@@ -465,15 +471,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </section>
-    <section class="content">
-        <section class="container">
-            <!-- <button type="button" class="btn btn-primary">Next</button> -->
-            <button type="submit" class="btn btn-primary" ng-show="false" id="site-condition-submit">Submit</button>
-            <div ng-show="sc.error" class="text-danger">
-                <strong ng-bind="sc.error"></strong>
             </div>
         </section>
     </section>
