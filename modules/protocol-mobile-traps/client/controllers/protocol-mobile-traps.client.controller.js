@@ -373,6 +373,7 @@
     };
 
     $timeout(function() {
+      $rootScope.$broadcast('iso-method', { name:null, params:null });
       console.log('check mobile trap');
       mt.saveOnBlur();
     }, 2000);

@@ -111,7 +111,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -126,6 +126,34 @@ exports.read = function (req, res) {
   res.json(settlementTiles);
 };
 
+var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (updatedSt) {
+    if (updatedSt.settlementTiles && updatedSt.settlementTiles.length > 0) {
+      for (var i = 0; i < updatedSt.settlementTiles.length; i++) {
+        console.log('existingSt path', existingSt.settlementTiles[i].tilePhoto.path);
+        console.log('updatedSt path', updatedSt.settlementTiles[i].tilePhoto.path);
+        if (existingSt.settlementTiles[i].tilePhoto.path !== '' &&
+          updatedSt.settlementTiles[i].tilePhoto.path === '') {
+          filesToDelete.push(existingSt.settlementTiles[i].tilePhoto.path);
+        }
+      }
+    }
+  }
+
+  if (filesToDelete && filesToDelete.length > 0) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      successCallback();
+    }, function(err) {
+      errorCallback(err);
+    });
+  } else {
+    successCallback();
+  }
+};
+
 exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
@@ -135,25 +163,32 @@ exports.incrementalSave = function (req, res) {
     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
     settlementTiles.scribeMember = req.user;
 
-    settlementTiles.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateSettlementTiles(settlementTiles,
-        function(settlementTilesJSON) {
-          res.json({
-            settlementTiles: settlementTiles,
-            successful: true
+    removeFiles(req.settlementTiles, settlementTiles,
+    function() {
+      settlementTiles.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            settlementTiles: settlementTiles,
-            errors: errorMessages.join()
+        } else {
+          validateSettlementTiles(settlementTiles,
+          function(settlementTilesJSON) {
+            res.json({
+              settlementTiles: settlementTiles,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              settlementTiles: settlementTiles,
+              errors: errorMessages
+            });
           });
-        });
-      }
+        }
+      });
+    }, function() {
+      return res.status(400).send({
+        message: 'Could not update settlement tiles'
+      });
     });
   } else {
     return res.status(400).send({
@@ -194,7 +229,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
