@@ -73,13 +73,13 @@
                         remove-function="st.removeImage"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
-                      <a class="btn btn-default btn-sm btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
+                      <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}" ng-click="st.openSettlementTileForm($index+1)">Add Organism ID Entries</a>
                       <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
                       save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"
                       index="{{$index+1}}"></form-settlement-tile>
                     </div>
                     <!--TODO: Show this button instead if data is already added:
-                    <a class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-settlementtile">Edit Organism ID Entries</a>-->
+                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlementtile">Edit Organism ID Entries</a>-->
                 </div>
             </div>
         </section>

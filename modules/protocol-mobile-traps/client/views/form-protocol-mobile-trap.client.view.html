@@ -80,9 +80,9 @@
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or a sketch/photograph</a>
+                        <a href="#" class="btn btn-default btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or an image</a>
                         <!-- TODO: when notes/photo is added, show this instead
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or sketch/photograph</a>-->
+                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or an image</a>-->
                     </div>
                 </div>
             </div>
