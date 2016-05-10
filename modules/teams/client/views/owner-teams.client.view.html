@@ -51,12 +51,10 @@
                 <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{member.email}}</span></td>
                 <td ng-show="{{member.pending === true}}">
                     <em class="text-muted">Pending<br/>
-                        <!--WIRE UP:
-                        <a href="#">Send reminder</a>
-                        -->
-                        <!-- REPLACE <A> WITH THIS <SPAN> ONCE LINK IS CLICKED (revert back to link after 5-10 seconds? Next day? How often are we allowing reminders to be sent?):
-                        <span class="green"><i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
-                        -->
+                      <a ng-click="vm.sendReminder(member, member.team.name)" ng-hide="vm.reminderSent &&
+                        member._id === vm.memberReminderId">Send reminder</a>
+                      <span class="green" ng-show="vm.reminderSent && member._id === vm.memberReminderId">
+                        <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
                     </em>
                 </td>
                 <td ng-hide="{{member.pending === true}}"></td>

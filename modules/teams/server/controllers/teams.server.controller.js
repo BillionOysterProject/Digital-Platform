@@ -348,6 +348,23 @@ var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, succe
   });
 };
 
+var sendReminderInviteEmail = function(user, host, teamLeadName, teamName, token, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'member_invite', {
+    FirstName: user.firstName,
+    TeamLeadName: teamLeadName,
+    TeamName: teamName,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token,
+    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
 exports.createMember = function (req, res) {
   delete req.body.roles;
 
@@ -537,6 +554,17 @@ exports.updateMember = function (req, res) {
       message: 'Could not find member'
     });
   }
+};
+
+exports.remindMember = function (req, res) {
+  var member = req.member;
+
+  sendInviteEmail(member, req.headers.host, member.displayName, req.body.team.name, member.resetPasswordToken,
+  function() {
+    res.json(member);
+  }, function() {
+    res.json(member);
+  });
 };
 
 exports.deleteMember = function (req, res) {
