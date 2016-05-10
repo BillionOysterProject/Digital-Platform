@@ -277,12 +277,8 @@
       vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
 
       // TODO: move create/update logic to service
-      var content;
-      if (vm.lesson._id) {
-        content = angular.element('#modal-updated-lesson');
-      } else {
-        content = angular.element('#modal-saved-lesson');
-      }
+      var content = angular.element('#modal-saved-lesson');
+      
       content.modal('show');
 
       $timeout(function () {

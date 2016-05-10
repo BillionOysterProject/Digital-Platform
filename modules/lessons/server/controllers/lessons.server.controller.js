@@ -104,6 +104,7 @@ exports.update = function(req, res) {
   if (lesson) {
     lesson = _.extend(lesson, req.body);
     lesson.returnedNotes = '';
+    lesson.status = 'pending';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
