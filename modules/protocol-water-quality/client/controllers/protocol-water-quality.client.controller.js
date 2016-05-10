@@ -164,7 +164,9 @@
     });
 
     wq.saveOnBlur = function() {
-      if (wq.protocolWaterQuality._id) {
+      if (wq.protocolWaterQuality._id && ((wq.form.waterQualityForm.$touched && wq.form.waterQualityForm.$dirty) ||
+        wq.form.waterQualityForm.$valid || (wq.protocolWaterQuality.samples && wq.protocolWaterQuality.samples.length > 0 &&
+        wq.protocolWaterQuality.samples[0].depthOfWaterSampleM))) {
         updateAverages();
 
         $http.post('/api/protocol-water-quality/' + wq.protocolWaterQuality._id + '/incremental-save',

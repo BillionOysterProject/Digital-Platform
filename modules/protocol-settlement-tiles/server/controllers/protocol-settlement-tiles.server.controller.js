@@ -65,8 +65,8 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       }
     }
 
-    if (!oneSuccessfulSettlementTile) {
-      errorMessages.push('Must have on settlement tile completed');
+    if (errorMessages.length === 0 && !oneSuccessfulSettlementTile) {
+      errorMessages.push('Must have one settlement tile completed');
     }
   }
 

@@ -42,7 +42,11 @@
     });
 
     st.saveOnBlur = function() {
-      if (st.protocolSettlementTiles._id) {
+      console.log('st.protocolSettlementTiles.settlementTiles[0].grid1.notes', st.protocolSettlementTiles.settlementTiles[0].grid1.notes);
+      if (st.protocolSettlementTiles._id && ((st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
+        (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
+        (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
+        st.protocolSettlementTiles.settlementTiles[0].imageUrl)))) {
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {

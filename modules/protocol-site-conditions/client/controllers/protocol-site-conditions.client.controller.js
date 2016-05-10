@@ -260,7 +260,9 @@
     });
 
     sc.saveOnBlur = function() {
-      if (sc.protocolSiteCondition._id) {
+      if (sc.protocolSiteCondition._id && ((sc.form.siteConditionForm.$touched && sc.form.siteConditionForm.$dirty) ||
+        sc.form.siteConditionForm.$valid || (sc.protocolSiteCondition.meteorologicalConditions &&
+          sc.protocolSiteCondition.meteorologicalConditions.weatherConditions))) {
         $http.post('/api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/incremental-save',
         sc.protocolSiteCondition)
         .success(function (data, status, headers, config) {

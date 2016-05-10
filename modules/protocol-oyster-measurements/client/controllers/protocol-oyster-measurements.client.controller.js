@@ -539,7 +539,9 @@
     });
 
     om.saveOnBlur = function(successCallback, errorCallback) {
-      if (om.protocolOysterMeasurement._id) {
+      if (om.protocolOysterMeasurement._id && ((om.form.oysterMeasurementForm.$touched && om.form.oysterMeasurementForm.$dirty) ||
+        om.form.oysterMeasurementForm.$valid || (om.protocolOysterMeasurement.depthOfOysterCage &&
+        om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM))) {
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
         om.protocolOysterMeasurement)
         .success(function (data, status, headers, config) {

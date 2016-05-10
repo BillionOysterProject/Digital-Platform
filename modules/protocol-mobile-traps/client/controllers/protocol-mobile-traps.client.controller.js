@@ -339,7 +339,8 @@
     });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
-      if (mt.protocolMobileTrap._id) {
+      if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
+        (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {
