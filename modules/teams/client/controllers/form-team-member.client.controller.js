@@ -9,7 +9,6 @@
 
   function TeamMemberController($scope, $http) {
     $scope.save = function(isValid) {
-      console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.teamMemberForm');
         return false;

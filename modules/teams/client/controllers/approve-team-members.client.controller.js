@@ -8,7 +8,6 @@
   TeamApprovalController.$inject = ['$scope', '$http'];
 
   function TeamApprovalController($scope, $http) {
-    console.log('$scope.teams', $scope.teams);
     $scope.team = {
       teamId: null,
       newTeamName: null

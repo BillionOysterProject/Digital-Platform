@@ -558,12 +558,23 @@ exports.updateMember = function (req, res) {
 
 exports.remindMember = function (req, res) {
   var member = req.member;
-
-  sendInviteEmail(member, req.headers.host, member.displayName, req.body.team.name, member.resetPasswordToken,
-  function() {
-    res.json(member);
-  }, function() {
-    res.json(member);
+  User.findById(member._id).exec(function(err, user) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (user) {
+      sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
+      function() {
+        res.json(member);
+      }, function() {
+        res.json(member);
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Member not found'
+      });
+    }
   });
 };
 
