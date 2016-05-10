@@ -546,6 +546,11 @@ blockquote {
     background-color: #f4f7f8;
 }
 
+.table-hover > tbody > tr.nohover:hover {
+    cursor: default;
+    background-color: #fff;
+}
+
 /*.table tr td {
     word-break: break-all;
 }*/

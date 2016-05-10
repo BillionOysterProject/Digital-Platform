@@ -39,11 +39,11 @@
       position: 2
     });
 
-    Menus.addSubMenuItem('topbar', 'restoration-stations', {
-      title: 'Submissions',
-      state: 'expeditions.submitted',
-      roles: ['team lead', 'partner', 'admin'],
-      position: 3
-    });
+    //Menus.addSubMenuItem('topbar', 'restoration-stations', {
+    //  title: 'Submissions',
+    //  state: 'expeditions.submitted',
+    //  roles: ['team lead', 'partner', 'admin'],
+    //  position: 3
+    //});
   }
 })();

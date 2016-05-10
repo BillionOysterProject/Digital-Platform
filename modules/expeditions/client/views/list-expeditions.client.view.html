@@ -27,8 +27,7 @@
             <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
             <td>
                 <span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>
-                <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                  ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))">Incomplete</span>
+                <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))) && !vm.isUpcoming(expedition))">Incomplete</span>
                 <span class="label label-danger" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
                 <span class="label label-danger" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
                 <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
