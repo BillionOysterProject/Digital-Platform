@@ -564,12 +564,38 @@ exports.remindMember = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else if (user) {
-      sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
-      function() {
-        res.json(member);
-      }, function() {
-        res.json(member);
-      });
+      if (user.resetPasswordToken) {
+        sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
+        function() {
+          res.json(member);
+        }, function() {
+          res.json(member);
+        });
+      } else {
+        crypto.randomBytes(20, function (err, buffer) {
+          var token = buffer.toString('hex');
+          //create user
+          user.pending = true;
+          user.resetPasswordToken = token;
+          user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+
+          // Then save the user
+          user.save(function (err) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
+              function() {
+                res.json(member);
+              }, function() {
+                res.json(member);
+              });
+            }
+          });
+        });
+      }
     } else {
       return res.status(400).send({
         message: 'Member not found'
