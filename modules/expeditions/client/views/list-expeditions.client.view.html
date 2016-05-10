@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="expedition in vm.expeditions" ui-sref="{{vm.expeditionLink(expedition)}}">
+        <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
             <td>
                 <h4>{{expedition.name}}</h4><br/>
                 <p class="text-muted">{{expedition.team.name}}</p>

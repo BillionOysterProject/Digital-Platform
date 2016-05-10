@@ -42,7 +42,6 @@
     });
 
     st.saveOnBlur = function() {
-      console.log('st.protocolSettlementTiles.settlementTiles[0].grid1.notes', st.protocolSettlementTiles.settlementTiles[0].grid1.notes);
       if (st.protocolSettlementTiles._id && ((st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
         (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
         (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
