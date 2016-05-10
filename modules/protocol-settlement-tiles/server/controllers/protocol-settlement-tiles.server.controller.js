@@ -64,6 +64,10 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
         }
       }
     }
+
+    if (!oneSuccessfulSettlementTile) {
+      errorMessages.push('Must have on settlement tile completed');
+    }
   }
 
   if (errorMessages.length > 0) {
@@ -97,7 +101,7 @@ exports.create = function (req, res) {
   function(settlementTilesJSON) {
     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {
@@ -158,7 +162,7 @@ exports.incrementalSave = function (req, res) {
   if (settlementTiles) {
     //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
     removeFiles(req.settlementTiles, settlementTiles,
@@ -206,7 +210,7 @@ exports.update = function (req, res) {
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
-      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       settlementTiles.scribeMember = req.user;
       settlementTiles.status = 'submitted';
       settlementTiles.submitted = new Date();

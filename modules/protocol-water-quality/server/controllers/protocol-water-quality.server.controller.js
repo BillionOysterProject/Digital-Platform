@@ -61,7 +61,7 @@ exports.create = function (req, res) {
   validateWaterQuality(req.body,
   function(waterQualityJSON) {
     var waterQuality = new ProtocolWaterQuality(waterQualityJSON);
-    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
@@ -95,7 +95,7 @@ exports.incrementalSave = function (req, res) {
 
   if (waterQuality) {
     waterQuality = _.extend(waterQuality, req.body);
-    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
@@ -135,7 +135,7 @@ exports.update = function (req, res) {
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
-      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       waterQuality.scribeMember = req.user;
       waterQuality.status = 'submitted';
       waterQuality.submitted = new Date();

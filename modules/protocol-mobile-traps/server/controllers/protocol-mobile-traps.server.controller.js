@@ -56,7 +56,7 @@ exports.create = function (req, res) {
   validateMobileTrap(req.body,
   function(mobileTrapJSON) {
     var mobileTrap = new ProtocolMobileTrap(mobileTrapJSON);
-    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     mobileTrap.scribeMember = req.user;
 
     mobileTrap.save(function (err) {
@@ -90,7 +90,7 @@ exports.incrementalSave = function (req, res) {
 
   if (mobileTrap) {
     mobileTrap = _.extend(mobileTrap, req.body);
-    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     mobileTrap.scribeMember = req.user;
 
     mobileTrap.save(function (err) {
@@ -130,7 +130,7 @@ exports.update = function (req, res) {
 
     if (mobileTrap) {
       mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
-      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       mobileTrap.scribeMember = req.user;
       mobileTrap.status = 'submitted';
       mobileTrap.submitted = new Date();

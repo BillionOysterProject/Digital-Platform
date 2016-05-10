@@ -16,7 +16,7 @@
                 <span class="label label-danger" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
                 <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
 
-                <a class="btn btn-primary" ng-show="" ui-sref="{{vm.expeditionLink(expedition)}}">Edit</a>
+                <a class="btn btn-primary" ng-show="" ui-sref="{{vm.expeditionLink(vm.expedition)}}">Edit</a>
             </div>
         </div>
         <div class="row text-muted">

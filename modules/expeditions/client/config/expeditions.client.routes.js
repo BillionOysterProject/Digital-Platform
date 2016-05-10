@@ -82,7 +82,7 @@
           expeditionResolve: getFullExpedition
         },
         data:{
-          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user'],
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
         }
       });

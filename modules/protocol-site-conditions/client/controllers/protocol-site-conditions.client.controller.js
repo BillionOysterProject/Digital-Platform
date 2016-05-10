@@ -25,17 +25,17 @@
           sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
         sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
           sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-        sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
+        sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
         if (sc.protocolSiteCondition.tideConditions === undefined) {
           sc.protocolSiteCondition.tideConditions = {
-            closestHighTide: moment().toDate(),
-            closestLowTide: moment().toDate()
+            closestHighTide: moment().startOf('minute').toDate(),
+            closestLowTide: moment().startOf('minute').toDate()
           };
         } else {
           sc.protocolSiteCondition.tideConditions.closestHighTide = (sc.protocolSiteCondition.tideConditions.closestHighTide) ?
-            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().toDate();
+            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
           sc.protocolSiteCondition.tideConditions.closestLowTide = (sc.protocolSiteCondition.tideConditions.closestLowTide) ?
-            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().toDate();
+            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
         }
       });
     } else if ($scope.protocolSiteCondition) {
@@ -46,17 +46,17 @@
       sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
         sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
         sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-      sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
+      sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
       if (sc.protocolSiteCondition.tideConditions === undefined) {
         sc.protocolSiteCondition.tideConditions = {
-          closestHighTide: moment().toDate(),
-          closestLowTide: moment().toDate()
+          closestHighTide: moment().startOf('minute').toDate(),
+          closestLowTide: moment().startOf('minute').toDate()
         };
       } else {
         sc.protocolSiteCondition.tideConditions.closestHighTide = (sc.protocolSiteCondition.tideConditions.closestHighTide) ?
-          moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().toDate();
+          moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
         sc.protocolSiteCondition.tideConditions.closestLowTide = (sc.protocolSiteCondition.tideConditions.closestLowTide) ?
-          moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().toDate();
+          moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
       }
       if (!sc.protocolSiteCondition.landConditions) {
         sc.protocolSiteCondition.landConditions = {
@@ -80,8 +80,8 @@
       sc.waterConditionPhotoURL = '';
       sc.landConditionPhotoURL = '';
       sc.protocolSiteCondition.tideConditions = {
-        closestHighTide: moment().toDate(),
-        closestLowTide: moment().toDate()
+        closestHighTide: moment().startOf('minute').toDate(),
+        closestLowTide: moment().startOf('minute').toDate()
       };
     }
 
@@ -269,13 +269,14 @@
             sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
           sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
             sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-          sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
+          sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
           sc.protocolSiteCondition.tideConditions.closestHighTide =
-            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
+            moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
           sc.protocolSiteCondition.tideConditions.closestLowTide =
-            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+            moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
           if (data.errors) {
             sc.error = data.errors;
+            sc.form.siteConditionForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveSiteConditionError');
           }
           if (data.successful) {
@@ -285,6 +286,7 @@
         })
         .error(function (data, status, headers, config) {
           sc.error = data.message;
+          sc.form.siteConditionForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveSiteConditionError');
         });
       }
@@ -303,9 +305,9 @@
                 sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
               sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
                 sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
-              sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
-              sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
+              sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
+              sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
             });
           };
 
@@ -318,7 +320,8 @@
           };
           sc.waterConditionUploader.uploadAll();
         }
-      } else if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL === '') {
+      } else if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL === '' &&
+        sc.protocolSiteCondition.waterConditions && sc.protocolSiteCondition.waterConditions.waterConditionPhoto) {
         sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path = '';
         sc.saveOnBlur();
       }
@@ -337,9 +340,9 @@
                 sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
               sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
                 sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).toDate();
-              sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate();
-              sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate();
+              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
+              sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
+              sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
             });
           };
 
@@ -352,7 +355,8 @@
           };
           sc.landConditionUploader.uploadAll();
         }
-      } else if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL === '') {
+      } else if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL === '' &&
+        sc.protocolSiteCondition.landConditions && sc.protocolSiteCondition.landConditions.landConditionPhoto) {
         sc.protocolSiteCondition.landConditions.landConditionPhoto.path = '';
         sc.saveOnBlur();
       }

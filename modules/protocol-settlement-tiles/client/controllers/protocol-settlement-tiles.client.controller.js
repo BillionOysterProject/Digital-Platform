@@ -47,9 +47,10 @@
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
           st.protocolSettlementTiles = new ProtocolSettlementTilesService(data.settlementTiles);
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           if (data.errors) {
             st.error = data.errors;
+            st.form.settlementTilesForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
           if (data.successful) {
@@ -60,6 +61,7 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
+          st.form.settlementTilesForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveSettlementTilesError');
         });
       }
@@ -112,14 +114,14 @@
         settlementTileId: $stateParams.protocolSettlementTileId
       }, function(data) {
         st.protocolSettlementTiles = data;
-        st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+        st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
       });
     } else if ($scope.protocolSettlementTiles) {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService($scope.protocolSettlementTiles);
       if (!st.protocolSettlementTiles.settlementTiles || st.protocolSettlementTiles.settlementTiles.length < st.tileCount) {
         setupSettlementTileGrid();
       }
-      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
     } else {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService();
       setupSettlementTileGrid();
@@ -361,7 +363,10 @@
         } else {
           errorCallback('Error with tile');
         }
-      } else if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles[index].imageUrl === '') {
+      } else if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles &&
+        st.protocolSettlementTiles.settlementTiles[index] &&
+        st.protocolSettlementTiles.settlementTiles[index].tilePhoto &&
+        st.protocolSettlementTiles.settlementTiles[index].imageUrl === '') {
         st.protocolSettlementTiles.settlementTiles[index].tilePhoto.path = '';
         st.saveOnBlur();
       }
@@ -373,7 +378,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -387,7 +392,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -401,7 +406,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -415,7 +420,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {

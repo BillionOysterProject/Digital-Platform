@@ -26,7 +26,7 @@ var emptyString = function(string) {
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
     oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).toDate();
+      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).startOf('minute').toDate();
   }
 
   var errorMessages = [];
@@ -122,7 +122,7 @@ exports.create = function (req, res) {
   validateOysterMeasurement(req.body,
   function(oysterMeasurementJSON) {
     var oysterMeasurement = new ProtocolOysterMeasurement(oysterMeasurementJSON);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
@@ -156,7 +156,7 @@ exports.incrementalSave = function (req, res) {
 
   if (oysterMeasurement) {
     oysterMeasurement = _.extend(oysterMeasurement, req.body);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
@@ -196,7 +196,7 @@ exports.update = function (req, res) {
 
     if (oysterMeasurement) {
       oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       oysterMeasurement.scribeMember = req.user;
       oysterMeasurement.status = 'submitted';
       oysterMeasurement.submitted = new Date();

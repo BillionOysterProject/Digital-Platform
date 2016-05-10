@@ -219,5 +219,12 @@
       });
       element.modal('hide');
     };
+
+    vm.expeditionLink = function(expedition) {
+      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.view({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
+    };
   }
 })();
