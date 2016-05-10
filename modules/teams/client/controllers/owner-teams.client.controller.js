@@ -32,10 +32,6 @@
       }
     };
 
-    vm.pageChanged = function() {
-      vm.findTeamMembers();
-    };
-
     vm.findTeamMembers = function() {
       TeamMembersService.query({
         byOwner: true,
@@ -45,10 +41,28 @@
         limit: vm.filter.limit
       }, function(data) {
         vm.members = data;
+        vm.buildPager();
         vm.error = null;
       }, function(error) {
         vm.error = error.data.message;
       });
+    };
+
+    vm.buildPager = function() {
+      vm.pagedItems = [];
+      vm.itemsPerPage = 15;
+      vm.currentPage = 1;
+      vm.figureOutItemsToDisplay();
+    };
+
+    vm.figureOutItemsToDisplay = function() {
+      var begin = ((vm.currentPage - 1) * vm.itemsPerPage);
+      var end = begin + vm.itemsPerPage;
+      vm.pagedItems = vm.members.slice(begin, end);
+    };
+
+    vm.pageChanged = function() {
+      vm.figureOutItemsToDisplay();
     };
 
     vm.findTeams = function() {
@@ -155,6 +169,7 @@
 
     vm.openApproveTeamMembers = function() {
       vm.findTeamRequests();
+      vm.findTeams();
       angular.element('#modal-team-member-requests').modal('show');
     };
 

@@ -20,7 +20,7 @@
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'team member', 'team lead'],
+          roles: ['admin', 'team member', 'team lead', 'partner'],
           pageTitle: 'Expeditions List'
         }
       })

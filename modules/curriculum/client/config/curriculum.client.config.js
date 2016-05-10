@@ -12,7 +12,7 @@
       title: 'Curriculum',
       state: 'curriculum',
       type: 'dropdown',
-      roles: ['admin', 'team lead', 'team lead pending'],
+      roles: ['admin', 'team lead', 'team lead pending', 'partner'],
       icon: 'glyphicon glyphicon-book',
       position: 1
     });

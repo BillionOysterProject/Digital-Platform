@@ -21,7 +21,7 @@
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
     vm.isTeamLeadPending = checkRole('team lead pending');
-    vm.isTeamMemberPending = checkRole('team member pending');
+    vm.isTeamMemberPending = checkRole('team member pending') || checkRole('partner');
     vm.isAdmin = checkRole('admin');
 
     var byOwner, byMember;

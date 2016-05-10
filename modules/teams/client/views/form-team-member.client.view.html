@@ -39,6 +39,9 @@
             <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
             <button type="submit" class="btn btn-primary">{{teamMember._id ? 'Update' : 'Send Invite'}}</button>
           </div>
+          <div ng-show="error" class="alert alert-danger">
+            <p ng-bind="error"></p>
+          </div>
         </fieldset>
       </form>
     </div>

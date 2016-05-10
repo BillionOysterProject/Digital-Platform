@@ -445,7 +445,7 @@ exports.list = function (req, res) {
     and.push({ $or: or });
   }
 
-  if (checkRole('team lead pending') || checkRole('team member pending')) {
+  if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
     console.log('only getting published');
     and.push({ 'status': 'published' });
   }

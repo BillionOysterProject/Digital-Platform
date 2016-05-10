@@ -11,7 +11,7 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'My Library',
       state: 'library.user',
-      roles: ['admin', 'team lead', 'team lead pending'],
+      roles: ['admin', 'team lead', 'team lead pending', 'partner'],
       position: 3
     });
   }

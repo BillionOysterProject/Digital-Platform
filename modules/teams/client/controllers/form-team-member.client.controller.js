@@ -28,6 +28,9 @@
       function errorCallback(res) {
         console.log('error: ' + res.data.message);
         $scope.error = res.data.message;
+        if ($scope.error.match('email already exists')) {
+          $scope.error = 'Email address already exists in the system';
+        }
       }
     };
   }

@@ -23,9 +23,11 @@
                   <p class="text-muted small">{{request.requester.email}}</p>
                   <div class="btn-group">
                     <a class="btn btn-success" title="Accept" ng-model="request.approve"
-                      uib-btn-radio="true"><i class="glyphicon glyphicon-ok" ng-click="approve()"></i> <span class="hidden">Approve</span></a>
+                      uib-btn-radio="true" ng-click="approve()">
+                      <i class="glyphicon glyphicon-ok"></i> <span class="hidden">Approve</span></a>
                     <a class="btn btn-danger" title="Reject" ng-model="request.approve"
-                      uib-btn-radio="false"><i class="glyphicon glyphicon-remove" ng-click="deny()"></i> <span class="hidden">Reject</span></a>
+                      uib-btn-radio="false" ng-click="deny()">
+                      <i class="glyphicon glyphicon-remove"></i> <span class="hidden">Reject</span></a>
                   </div>
                   <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">
                     <strong ng-bind="request.error"></strong>

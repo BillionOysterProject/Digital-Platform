@@ -424,67 +424,119 @@ exports.createMember = function (req, res) {
 };
 
 exports.updateMember = function (req, res) {
+  console.log('updateMember');
   var member = req.member;
-  Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
-    if (errDelTeam) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(errDelTeam)
-      });
-    } else {
-      var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(member._id) : -1;
-      if (index > -1) {
-        delTeam.teamMembers.splice(index, 1);
-
-        delTeam.save(function (delSaveErr) {
-          if (delSaveErr) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(delSaveErr)
-            });
-          } else {
-            if (req.body.newTeamName) {
-              var teamJSON = {
-                name: req.body.newTeamName,
-                schoolOrg: req.user.schoolOrg,
-                teamMembers: [member]
-              };
-              createInternal(teamJSON, req.user,
-                function(team) {
-                  res.json(member);
-                }, function(err) {
-                  return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                  });
-                });
-            } else {
-              Team.findById(req.body.team._id).exec(function (errTeam, team) {
-                if (errTeam || !team) {
-                  return res.status(400).send({
-                    message: 'Error adding member to team'
-                  });
-                } else {
-                  team.teamMembers.push(member);
-
-                  team.save(function (errSave) {
-                    if (errSave) {
-                      return res.status(400).send({
-                        message: 'Error adding member to team'
-                      });
-                    } else {
-                      res.json(member);
-                    }
-                  });
-                }
-              });
-            }
-          }
+  var changeTeam = function() {
+    Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
+      if (errDelTeam) {
+        console.log('find old team error', errDelTeam);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(errDelTeam)
         });
       } else {
-        return res.status(400).send({
-          message: 'Could not remove member from previous team'
-        });
+        var index = delTeam.teamMembers ? delTeam.teamMembers.indexOf(member._id) : -1;
+        if (index > -1) {
+          delTeam.teamMembers.splice(index, 1);
+
+          delTeam.save(function (delSaveErr) {
+            if (delSaveErr) {
+              console.log('remove from team error', delSaveErr);
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(delSaveErr)
+              });
+            } else {
+              if (req.body.newTeamName) {
+                var teamJSON = {
+                  name: req.body.newTeamName,
+                  schoolOrg: req.user.schoolOrg,
+                  teamMembers: [member]
+                };
+                createInternal(teamJSON, req.user,
+                  function(team) {
+                    res.json(member);
+                  }, function(err) {
+                    console.log('create team', err);
+                    return res.status(400).send({
+                      message: errorHandler.getErrorMessage(err)
+                    });
+                  });
+              } else {
+                Team.findById(req.body.team._id).exec(function (errTeam, team) {
+                  if (errTeam || !team) {
+                    console.log('could not find new team', errTeam);
+                    return res.status(400).send({
+                      message: 'Error adding member to team'
+                    });
+                  } else {
+                    team.teamMembers.push(member);
+
+                    team.save(function (errSave) {
+                      if (errSave) {
+                        console.log('save member to new team', errSave);
+                        return res.status(400).send({
+                          message: 'Error adding member to team'
+                        });
+                      } else {
+                        res.json(member);
+                      }
+                    });
+                  }
+                });
+              }
+            }
+          });
+        } else {
+          console.log('could not remove member from previous team');
+          return res.status(400).send({
+            message: 'Could not remove member from previous team'
+          });
+        }
       }
-    }
-  });
+    });
+  };
+
+  if (member) {
+    console.log('member exists');
+    member = _.extend(member, req.body);
+    member.displayName = member.firstName + ' ' + member.lastName;
+
+    member.save(function(err) {
+      if (err) {
+        console.log('save err', err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        if (req.member.email !== req.body.email) {
+          sendInviteEmail(member, req.headers.host, member.displayName, req.body.team.name, member.resetPasswordToken,
+          function() {
+            if (req.body.oldTeamId !== req.body.team._id) {
+              changeTeam();
+            } else {
+              res.json(member);
+            }
+          }, function() {
+            if (req.body.oldTeamId !== req.body.team._id) {
+              changeTeam();
+            } else {
+              res.json(member);
+            }
+          });
+        } else if (req.body.oldTeamId !== req.body.team._id) {
+          console.log('team changed');
+          changeTeam();
+        } else {
+          console.log('email and team the same');
+          res.json(member);
+        }
+      }
+    });
+  } else {
+    console.log('count not find member');
+    return res.status(400).send({
+      message: 'Could not find member'
+    });
+  }
 };
 
 exports.deleteMember = function (req, res) {
