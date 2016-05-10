@@ -3,16 +3,13 @@
         <section class="container-fluid">
             <div class="row">
                 <nav class="navbar">
-                    <a ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })">
-                        <h6 class="navbar-text blue">{{vm.expedition.name}}</h6>
-                    </a>
-                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.team.teamLead.displayName}}</h6><!-- TODO: Wire up -->
+                    <h6 class="navbar-text blue">{{vm.expedition.name}}</h6>
+                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.team.teamLead.displayName}}</h6>
                     <h6 class="navbar-text">{{vm.getExpeditionDate}}</h6>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
                     <!--<h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.user.displayName}}</h6>-->
                     <div class="pull-right">
-                        <!-- TODO: Wire up buttons
-                        If never submitted (Status: Incomplete) --->
+                        <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
                         ng-show="vm.checkStatusIncomplete() && vm.isTeamMember">Submit</button>
@@ -40,8 +37,7 @@
                         <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
                         <h6 class="navbar-text green" ng-show="vm.submitting"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Submitting</h6>
 
-                        <!-- TODO: Wire up statuses
-                        If submitted by team member -->
+                        <!-- If submitted by team member -->
                         <!-- Show if team lead: -->
                         <h6 class="navbar-text"
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Needs Review</h6>
