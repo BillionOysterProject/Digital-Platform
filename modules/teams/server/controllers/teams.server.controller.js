@@ -351,8 +351,8 @@ var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, succe
 var sendReminderInviteEmail = function(user, host, teamLeadName, teamName, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
-  'member_invite', {
+  email.sendEmailTemplate(user.email, 'Reminder: You\'ve been invited by ' + teamLeadName + ' to join the team ' + teamName,
+  'invite_reminder', {
     FirstName: user.firstName,
     TeamLeadName: teamLeadName,
     TeamName: teamName,
@@ -565,7 +565,7 @@ exports.remindMember = function (req, res) {
       });
     } else if (user) {
       if (user.resetPasswordToken) {
-        sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
+        sendReminderInviteEmail(member, req.headers.host, req.user.displayName, req.body.team.name, user.resetPasswordToken,
         function() {
           res.json(member);
         }, function() {
@@ -586,7 +586,7 @@ exports.remindMember = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
               });
             } else {
-              sendInviteEmail(member, req.headers.host, user.displayName, req.body.team.name, user.resetPasswordToken,
+              sendReminderInviteEmail(member, req.headers.host, req.user.displayName, req.body.team.name, user.resetPasswordToken,
               function() {
                 res.json(member);
               }, function() {
