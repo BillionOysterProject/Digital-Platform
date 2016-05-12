@@ -73,7 +73,6 @@
     //   console.info('onErrorItem', fileItem, response, status, headers);
     //   // Clear upload buttons
     //   $scope.cancelUpload();
-
     //   // Show error message
     //   $scope.error = response.message;
     // };
