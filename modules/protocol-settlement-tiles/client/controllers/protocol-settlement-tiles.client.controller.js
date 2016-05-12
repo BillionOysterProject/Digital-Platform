@@ -41,22 +41,23 @@
       st.saveOnBlur();
     });
 
-    st.saveOnBlur = function() {
-      if (st.protocolSettlementTiles._id && ((st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
+    st.saveOnBlur = function(forceSave) {
+      if (st.protocolSettlementTiles._id && ((st.form && st.form.settlementTilesForm &
+        st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
         (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
         (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
-        st.protocolSettlementTiles.settlementTiles[0].imageUrl)))) {
+        st.protocolSettlementTiles.settlementTiles[0].imageUrl))) || forceSave) {
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
           st.protocolSettlementTiles = new ProtocolSettlementTilesService(data.settlementTiles);
           st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
-          if (data.errors) {
+          if (data.errors && !forceSave) {
             st.error = data.errors;
-            st.form.settlementTilesForm.$setSubmitted(true);
+            if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
-          if (data.successful) {
+          if (data.successful && !forceSave) {
             st.error = null;
             $rootScope.$broadcast('incrementalSaveSettlementTilesSuccessful');
           }
@@ -64,8 +65,8 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
-          st.form.settlementTilesForm.$setSubmitted(true);
-          $rootScope.$broadcast('incrementalSaveSettlementTilesError');
+          if (st.form && st.form.settlementTilesForm && !forceSave) st.form.settlementTilesForm.$setSubmitted(true);
+          if (!forceSave) $rootScope.$broadcast('incrementalSaveSettlementTilesError');
         });
       }
     };
@@ -107,7 +108,7 @@
           grid25: { notes: '' }
         });
       }
-      st.saveOnBlur();
+      st.saveOnBlur(true);
     };
 
     // Set up Protocol Settlement Tiles
@@ -174,8 +175,8 @@
     };
 
     $scope.$on('saveSettlementTiles', function() {
-      st.form.settlementTilesForm.$setSubmitted(true);
-      st.save(st.form.settlementTilesForm.$valid);
+      if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
+      st.save((st.form && st.form.settlementTilesForm) ? st.form.settlementTilesForm.$valid : false);
     });
 
     // Save protocol settlement tile
