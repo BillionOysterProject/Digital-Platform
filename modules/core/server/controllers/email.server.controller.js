@@ -126,8 +126,7 @@ exports.sendGeneralFeedback = function(req, res) {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
     FeedbackEmail: req.user.email,
-    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : '',
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : ''
   };
   exports.sendFeedback(defaultFrom, req.user.email, 'BOP General Feedback: ' + req.body.subject, data, 'feedback', req, res);
 };
@@ -137,8 +136,7 @@ exports.sendHelpQuestion = function(req, res) {
     FeedbackNote: req.body.message,
     FeedbackName: req.user.displayName,
     FeedbackEmail: req.user.email,
-    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : '',
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : ''
   };
   exports.sendFeedback(defaultFrom, req.user.email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);
 };
@@ -151,8 +149,7 @@ exports.sendLessonFeedback = function(req, res) {
     LessonName: req.body.lesson.title,
     LessonFeedbackNote: req.body.message,
     LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
   };
   exports.sendFeedback(req.body.lesson.user.email, req.user.email, subject, data, 'lesson_feedback', req, res);
 };
@@ -165,8 +162,7 @@ exports.sendUnitFeedback = function(req, res) {
     UnitName: req.body.unit.title,
     UnitFeedbackNote: req.body.message,
     LinkUnit: httpTransport + req.headers.host + '/units/' + req.body.unit._id,
-    LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
   };
   exports.sendFeedback(req.body.unit.user.email, req.user.email, subject, data, 'unit_feedback', req, res);
 };

@@ -322,8 +322,7 @@ var sendInviteEmail = function(user, host, teamLeadName, teamName, token, succes
     FirstName: user.firstName,
     TeamLeadName: teamLeadName,
     TeamName: teamName,
-    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token,
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
   }, function(info) {
     successCallback();
   }, function(errorMessage) {
@@ -339,8 +338,7 @@ var sendExistingInviteEmail = function(user, host, teamLeadName, teamName, succe
     FirstName: user.firstName,
     TeamLeadName: teamLeadName,
     TeamName: teamName,
-    LinkLogin: httpTransport + host + '/authentication/signin',
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    LinkLogin: httpTransport + host + '/authentication/signin'
   }, function(info) {
     successCallback();
   }, function(errorMessage) {
@@ -356,8 +354,7 @@ var sendReminderInviteEmail = function(user, host, teamLeadName, teamName, token
     FirstName: user.firstName,
     TeamLeadName: teamLeadName,
     TeamName: teamName,
-    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token,
-    Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
   }, function(info) {
     successCallback();
   }, function(errorMessage) {

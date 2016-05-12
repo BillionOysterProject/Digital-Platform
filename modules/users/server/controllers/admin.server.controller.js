@@ -92,8 +92,7 @@ exports.approve = function (req, res) {
         'lead_approved', {
           FirstName: user.firstName,
           LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
         }, function(info) {
           res.json(user);
         }, function(errorMessage) {
@@ -155,7 +154,7 @@ exports.list = function (req, res) {
         message: 'Search string is invalid'
       });
     }
-    
+
     or.push({ 'firstName': searchRe });
     or.push({ 'lastName': searchRe });
     or.push({ 'email': searchRe });

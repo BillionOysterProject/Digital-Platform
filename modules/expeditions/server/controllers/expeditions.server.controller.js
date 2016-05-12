@@ -213,8 +213,7 @@ exports.submit = function (req, res) {
                   FirstName: team.teamLead.firstName,
                   ExpeditionName: expedition.name,
                   LinkPublishExpedition: httpTransport + req.headers.host + 'expeditions/' + expedition._id + '/protocols',
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-                  Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
                 },
                 function(info) {
                   res.json(expedition);
