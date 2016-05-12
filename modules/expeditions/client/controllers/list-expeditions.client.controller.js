@@ -21,7 +21,7 @@
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
     vm.isTeamLeadPending = checkRole('team lead pending');
-    vm.isTeamMemberPending = checkRole('team member pending');
+    vm.isTeamMemberPending = checkRole('team member pending') || checkRole('partner');
     vm.isAdmin = checkRole('admin');
 
     var byOwner, byMember;
@@ -47,7 +47,7 @@
     vm.expeditionLink = function(expedition) {
       return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
         expedition.status === 'unpublished')) ?
-      'expeditions.edit({ expeditionId: expedition._id })' :
+      'expeditions.view({ expeditionId: expedition._id })' :
       'expeditions.protocols({ expeditionId: expedition._id })';
     };
 

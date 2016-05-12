@@ -20,7 +20,7 @@
         controller: 'LessonsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'team lead', 'team lead pending'],
+          roles: ['admin', 'team lead', 'team lead pending', 'partner'],
           pageTitle: 'Lessons List'
         }
       })
@@ -72,7 +72,7 @@
           lessonResolve: getLessonFull
         },
         data: {
-          roles: ['admin', 'team lead', 'team lead pending'],
+          roles: ['admin', 'team lead', 'team lead pending', 'partner'],
           pageTitle: 'Lesson {{ lessonResolve.title }}'
         }
       });

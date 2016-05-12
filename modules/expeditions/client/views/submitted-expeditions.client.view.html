@@ -10,7 +10,6 @@
         <table class="table table-hover" ng-show="vm.activities && vm.activities.length > 0">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Assignment</th>
                     <th>Expedition</th>
                     <th>Name</th>
@@ -19,14 +18,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="activity in vm.activities"
-                  ui-sref="expeditions.protocols({ expeditionId: activity.expedition._id })">
-                    <td>
-                        <!-- TODO: Wire up ability to see non-submitted submissions
-                        <i class="glyphicon glyphicon-unchecked" ng-show="vm.isUpcoming(activity.expedition)"></i>
-                        -->
-                        <i class="glyphicon glyphicon-unchecked red" ng-show="activity.expedition.status === 'incomplete' || activity.expedition.status === 'returned' || activity.expedition.status === 'pending'"></i>
-                        <i class="glyphicon glyphicon-check green" ng-show="activity.expedition.status === 'published'"></i>
-                    </td>
+                  ui-sref="expeditions.view({ expeditionId: activity.expedition._id })">
                     <td><h4>{{vm.displaySubmittedProtocols(activity)}}</h4></td>
                     <td>{{activity.expedition.name}}<br/><small>{{vm.getExpeditionDate(activity.expedition)}}</small></td>
                     <td><img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">

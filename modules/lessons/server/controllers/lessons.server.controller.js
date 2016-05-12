@@ -44,8 +44,7 @@ exports.create = function(req, res) {
       email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
         TeamLeadName: req.user.displayName,
         LessonName: lesson.title,
-        LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-        Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+        LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
       }, function(info) {
         res.json(lesson);
       }, function(errorMessage) {
@@ -104,6 +103,7 @@ exports.update = function(req, res) {
   if (lesson) {
     lesson = _.extend(lesson, req.body);
     lesson.returnedNotes = '';
+    lesson.status = 'pending';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
@@ -174,8 +174,7 @@ exports.publish = function(req, res) {
           FirstName: lesson.user.firstName,
           LessonName: lesson.title,
           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
         },
         function(response) {
           res.json(lesson);
@@ -217,8 +216,7 @@ exports.return = function(req, res) {
           LessonName: lesson.title,
           LessonReturnedNote: lesson.returnedNotes,
           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
         },
         function(response) {
           res.json(lesson);

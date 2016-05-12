@@ -30,6 +30,18 @@
       return moment(vm.expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
     };
 
+    vm.getExpeditionTimeRange = function(expedition) {
+      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
+        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
+    };
+
+    vm.expeditionLink = function(expedition) {
+      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.edit({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
+    };
+
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
@@ -178,7 +190,6 @@
       });
     };
     var activeProtocolCall = function() {
-      console.log('activeKey', vm.activeTab);
       switch(vm.activeTab) {
         case 'protocol1': return 'incrementalSaveSiteCondition';
         case 'protocol2': return 'incrementalSaveOysterMeasurement';
@@ -251,12 +262,18 @@
       return allSuccessful;
     };
 
-    var checkAllSaveSuccessful = function() {
-      console.log('checkAllSaveSuccessful');
-      var allSavedSuccessfully = checkAllSuccessful();
 
-      if (allSavedSuccessfully) {
-        console.log('submitting');
+    var checkAllSaveSuccessful = function() {
+      var allSuccessful = true;
+      for (var key in vm.tabs) {
+        if (vm.tabs[key].visible) {
+          if (vm.tabs[key].submitSuccessful === undefined || !vm.tabs[key].submitSuccessful) {
+            allSuccessful = false;
+          }
+        }
+      }
+
+      if (allSuccessful) {
         var protocols = {};
         if(vm.viewSiteCondition) protocols.siteCondition = vm.siteCondition;
         if(vm.viewOysterMeasurement) protocols.oysterMeasurement = vm.oysterMeasurement;
@@ -274,26 +291,29 @@
           if(vm.viewMobileTrap) vm.mobileTrap.status = 'submitted';
           if(vm.viewSettlementTiles) vm.settlementTiles.status = 'submitted';
           if(vm.viewWaterQuality) vm.waterQuality.status = 'submitted';
-          console.log('submitted');
+          vm.submitting = false;
+          vm.saving = true;
+          $state.go('expeditions.view', {
+            expeditionId: vm.expedition._id
+          });
         }).
         error(function(data, status, headers, config) {
           vm.error = data.message;
-          console.log('error submitting');
+          vm.submitting = false;
+          vm.saving = true;
         });
       }
     };
 
     vm.submitTeamMember = function() {
-      console.log('submitTeamMember');
-      if (checkAllSuccessful()) {
-        checkAllSaveSuccessful();
-      } else {
-        if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
-        if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
-        if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
-        if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
-        if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
-      }
+      vm.submitting = true;
+      vm.saving = false;
+
+      if (vm.viewSiteCondition) $rootScope.$broadcast('saveSiteCondition');
+      if (vm.viewOysterMeasurement) $rootScope.$broadcast('saveOysterMeasurement');
+      if (vm.viewMobileTrap) $rootScope.$broadcast('saveMobileTrap');
+      if (vm.viewSettlementTiles) $rootScope.$broadcast('saveSettlementTiles');
+      if (vm.viewWaterQuality) $rootScope.$broadcast('saveWaterQuality');
     };
 
     vm.publish = function() {
@@ -392,61 +412,61 @@
 
     $scope.$on('saveSiteConditionSuccessful', function() {
       vm.tabs.protocol1.saveSuccessful = true;
-      console.log('successful site conditions');
+      vm.tabs.protocol1.submitSuccessful = true;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveOysterMeasurementSuccessful', function() {
       vm.tabs.protocol2.saveSuccessful = true;
-      console.log('successful oyster measurement');
+      vm.tabs.protocol2.submitSuccessful = true;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveMobileTrapSuccessful', function() {
       vm.tabs.protocol3.saveSuccessful = true;
-      console.log('successful mobile trap');
+      vm.tabs.protocol3.submitSuccessful = true;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveSettlementTilesSuccessful', function() {
       vm.tabs.protocol4.saveSuccessful = true;
-      console.log('successful settlement tiles');
+      vm.tabs.protocol4.submitSuccessful = true;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveWaterQualitySuccessful', function() {
       vm.tabs.protocol5.saveSuccessful = true;
-      console.log('successful water quality');
+      vm.tabs.protocol5.submitSuccessful = true;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveSiteConditionError', function() {
       vm.tabs.protocol1.saveSuccessful = false;
-      console.log('error site condition');
+      vm.tabs.protocol1.submitSuccessful = false;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveOysterMeasurementError', function() {
       vm.tabs.protocol2.saveSuccessful = false;
-      console.log('error oyster measurement');
+      vm.tabs.protocol2.submitSuccessful = false;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveMobileTrapError', function() {
       vm.tabs.protocol3.saveSuccessful = false;
-      console.log('error mobile trap');
+      vm.tabs.protocol3.submitSuccessful = false;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveSettlementTilesError', function() {
       vm.tabs.protocol4.saveSuccessful = false;
-      console.log('error settlement tiles');
+      vm.tabs.protocol4.submitSuccessful = false;
       checkAllSaveSuccessful();
     });
 
     $scope.$on('saveWaterQualityError', function() {
       vm.tabs.protocol5.saveSuccessful = false;
-      console.log('error water quality');
+      vm.tabs.protocol5.submitSuccessful = false;
       checkAllSaveSuccessful();
     });
 

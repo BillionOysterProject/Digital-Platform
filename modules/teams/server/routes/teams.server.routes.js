@@ -21,6 +21,9 @@ module.exports = function (app) {
     .get(teams.readMember)
     .put(teams.updateMember);
 
+  app.route('/api/teams/members/:memberId/remind').all(teamsPolicy.isAllowed)
+    .post(teams.remindMember);
+
   app.route('/api/teams/:teamId/members/:memberId').all(teamsPolicy.isAllowed)
     //.get(teams.listMembers)
     .delete(teams.deleteMember);

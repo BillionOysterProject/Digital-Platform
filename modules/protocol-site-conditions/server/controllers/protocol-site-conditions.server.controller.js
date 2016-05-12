@@ -157,6 +157,11 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.landConditions.landConditionPhoto) {
     errorMessages.push('Land condition photo is required');
   }
+  if (siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
+    siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
+    siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
+    errorMessages.push('Estimated percent surface cover should add up to 100%');
+  }
   if (emptyString(siteCondition.landConditions.shoreLineType)) {
     errorMessages.push('Shore line type is required');
   }
@@ -188,11 +193,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   }
 
   if (errorMessages.length > 0) {
-    console.log('errorMessages', errorMessages);
-    console.log('error');
     errorCallback(errorMessages);
   } else {
-    console.log('success');
     successCallback(siteCondition);
   }
 };
@@ -204,11 +206,11 @@ exports.create = function (req, res) {
   validateSiteCondition(req.body,
   function(siteConditionJSON) {
     var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
-    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.scribeMember = req.user;
 
     siteCondition.save(function (err) {
@@ -222,7 +224,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -248,11 +250,11 @@ exports.incrementalSave = function (req, res) {
 
   if (siteCondition) {
     siteCondition = _.extend(siteCondition, req.body);
-    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.scribeMember = req.user;
 
     siteCondition.save(function (err) {
@@ -269,7 +271,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             siteCondition: siteCondition,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -291,11 +293,11 @@ exports.update = function (req, res) {
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       siteCondition.scribeMember = req.user;
       siteCondition.status = 'submitted';
       siteCondition.submitted = new Date();
@@ -316,7 +318,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

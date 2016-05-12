@@ -61,7 +61,7 @@ exports.create = function (req, res) {
   validateWaterQuality(req.body,
   function(waterQualityJSON) {
     var waterQuality = new ProtocolWaterQuality(waterQualityJSON);
-    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
@@ -75,7 +75,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -95,7 +95,7 @@ exports.incrementalSave = function (req, res) {
 
   if (waterQuality) {
     waterQuality = _.extend(waterQuality, req.body);
-    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     waterQuality.scribeMember = req.user;
 
     waterQuality.save(function (err) {
@@ -113,8 +113,8 @@ exports.incrementalSave = function (req, res) {
         }, function (errorMessages) {
           res.json({
             waterQuality: waterQuality,
-            errors: errorMessages.join()
-          });  
+            errors: errorMessages
+          });
         });
       }
     });
@@ -135,7 +135,7 @@ exports.update = function (req, res) {
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
-      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       waterQuality.scribeMember = req.user;
       waterQuality.status = 'submitted';
       waterQuality.submitted = new Date();
@@ -156,7 +156,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

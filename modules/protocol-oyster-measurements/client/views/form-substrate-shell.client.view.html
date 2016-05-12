@@ -18,7 +18,7 @@
                                     <br />
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p class="lead red">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
+                                            <p class="lead blue">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
                                             <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
                                             <div class="form-group">
                                                 <label for="outerImg" class="control-label required">Outer side</label>
@@ -42,14 +42,14 @@
                                                     <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
                                                 </div>
                                                 <div class="form-group col-sm-6">
-                                                    <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
-                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
+                                                    <label for="source" class="control-label required">Source *</label>
+                                                    <input type="text" class="form-control" ng-model="substrate.source" name="source" id="source" required/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="source" class="control-label required">Source *</label>
-                                                <input type="text" class="form-control" ng-model="substrate.source" name="source" id="source" required/>
+                                                <label for="setDate" class="control-label required">Set date *</label>
+                                                <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
+                                                name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
@@ -64,7 +64,7 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="substrateshell-measurements{{index}}">
                                     <br />
-                                    <p class="lead red">Measure and record the size (in mm) of each live oyster below.</p>
+                                    <p class="lead blue">Measure and record the size (in mm) of each live oyster below.</p>
                                     <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell in the Description tab</p>
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6" ng-repeat="measurement in substrate.measurements">

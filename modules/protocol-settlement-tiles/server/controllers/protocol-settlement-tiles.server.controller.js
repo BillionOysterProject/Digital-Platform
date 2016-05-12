@@ -53,7 +53,7 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
         oneSuccessfulSettlementTile = true;
       } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
         tile.tilePhoto === '') && !allGridsFilledIn(tile, i)) {
-        console.log('skip');
+
       } else {
         if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
           errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
@@ -63,6 +63,10 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
           errorMessages.push('Settlement Tile #' + (i+1) + ' must have a dominant organism specified for all 25 grid spaces');
         }
       }
+    }
+
+    if (errorMessages.length === 0 && !oneSuccessfulSettlementTile) {
+      errorMessages.push('Must have one settlement tile completed');
     }
   }
 
@@ -97,7 +101,7 @@ exports.create = function (req, res) {
   function(settlementTilesJSON) {
     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {
@@ -111,7 +115,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -126,34 +130,67 @@ exports.read = function (req, res) {
   res.json(settlementTiles);
 };
 
+var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (updatedSt) {
+    if (updatedSt.settlementTiles && updatedSt.settlementTiles.length > 0) {
+      for (var i = 0; i < updatedSt.settlementTiles.length; i++) {
+        if (existingSt.settlementTiles[i].tilePhoto.path !== '' &&
+          updatedSt.settlementTiles[i].tilePhoto.path === '') {
+          filesToDelete.push(existingSt.settlementTiles[i].tilePhoto.path);
+        }
+      }
+    }
+  }
+
+  if (filesToDelete && filesToDelete.length > 0) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      successCallback();
+    }, function(err) {
+      errorCallback(err);
+    });
+  } else {
+    successCallback();
+  }
+};
+
 exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
   if (settlementTiles) {
     //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
     settlementTiles = _.extend(settlementTiles, req.body);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
-    settlementTiles.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateSettlementTiles(settlementTiles,
-        function(settlementTilesJSON) {
-          res.json({
-            settlementTiles: settlementTiles,
-            successful: true
+    removeFiles(req.settlementTiles, settlementTiles,
+    function() {
+      settlementTiles.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            settlementTiles: settlementTiles,
-            errors: errorMessages.join()
+        } else {
+          validateSettlementTiles(settlementTiles,
+          function(settlementTilesJSON) {
+            res.json({
+              settlementTiles: settlementTiles,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              settlementTiles: settlementTiles,
+              errors: errorMessages
+            });
           });
-        });
-      }
+        }
+      });
+    }, function(err) {
+      return res.status(400).send({
+        message: err
+      });
     });
   } else {
     return res.status(400).send({
@@ -173,19 +210,26 @@ exports.update = function (req, res) {
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
-      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       settlementTiles.scribeMember = req.user;
       settlementTiles.status = 'submitted';
       settlementTiles.submitted = new Date();
 
-      settlementTiles.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(settlementTiles);
-        }
+      removeFiles(req.settlementTiles, settlementTiles,
+      function() {
+        settlementTiles.save(function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(settlementTiles);
+          }
+        });
+      }, function(err) {
+        return res.status(400).send({
+          message: err
+        });
       });
     } else {
       return res.status(400).send({
@@ -194,7 +238,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };

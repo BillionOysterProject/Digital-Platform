@@ -5,10 +5,10 @@
     .module('teams')
     .controller('TeamsOwnerController', TeamsOwnerController);
 
-  TeamsOwnerController.$inject = ['$scope', '$state', 'Authentication', 'TeamsService',
+  TeamsOwnerController.$inject = ['$scope', '$state', '$http', '$timeout', 'Authentication', 'TeamsService',
   'TeamMembersService', 'TeamRequestsService', 'TeamMembersDeleteService'];
 
-  function TeamsOwnerController($scope, $state, Authentication, TeamsService,
+  function TeamsOwnerController($scope, $state, $http, $timeout, Authentication, TeamsService,
     TeamMembersService, TeamRequestsService, TeamMembersDeleteService) {
     var vm = this;
 
@@ -32,10 +32,6 @@
       }
     };
 
-    vm.pageChanged = function() {
-      vm.findTeamMembers();
-    };
-
     vm.findTeamMembers = function() {
       TeamMembersService.query({
         byOwner: true,
@@ -45,10 +41,28 @@
         limit: vm.filter.limit
       }, function(data) {
         vm.members = data;
+        vm.buildPager();
         vm.error = null;
       }, function(error) {
         vm.error = error.data.message;
       });
+    };
+
+    vm.buildPager = function() {
+      vm.pagedItems = [];
+      vm.itemsPerPage = 15;
+      vm.currentPage = 1;
+      vm.figureOutItemsToDisplay();
+    };
+
+    vm.figureOutItemsToDisplay = function() {
+      var begin = ((vm.currentPage - 1) * vm.itemsPerPage);
+      var end = begin + vm.itemsPerPage;
+      vm.pagedItems = vm.members.slice(begin, end);
+    };
+
+    vm.pageChanged = function() {
+      vm.figureOutItemsToDisplay();
     };
 
     vm.findTeams = function() {
@@ -155,6 +169,7 @@
 
     vm.openApproveTeamMembers = function() {
       vm.findTeamRequests();
+      vm.findTeams();
       angular.element('#modal-team-member-requests').modal('show');
     };
 
@@ -167,6 +182,30 @@
 
     vm.closeApproveTeamMembers = function() {
       angular.element('#modal-team-member-requests').modal('hide');
+    };
+
+    vm.sendReminder = function(member, teamName) {
+      vm.reminderSent = true;
+      vm.memberReminderId = member._id;
+
+      $http.post('/api/teams/members/' + member._id + '/remind', {
+        team: {
+          name: teamName
+        }
+      }).
+      success(function(data, status, headers, config) {
+        $timeout(function() {
+          vm.reminderSent = false;
+          vm.memberReminderId = '';
+        }, 15000);
+      }).
+      error(function(data, status, headers, config) {
+        $scope.error = data.res.message;
+        $timeout(function() {
+          vm.reminderSent = false;
+          vm.memberReminderId = '';
+        }, 15000);
+      });
     };
   }
 })();

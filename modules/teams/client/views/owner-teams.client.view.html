@@ -46,17 +46,15 @@
 <div class="row">
     <div class="col-md-12">
         <table class="table table-verticalalign table-responsive">
-            <tr ng-repeat="member in vm.members">
+            <tr ng-repeat="member in vm.pagedItems">
                 <td><img ng-src="{{member.profileImageURL}}" class="profile-image"></td>
                 <td><h4>{{member.displayName}}</h4><br /><span class="text-muted">{{member.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{member.email}}</span></td>
                 <td ng-show="{{member.pending === true}}">
                     <em class="text-muted">Pending<br/>
-                        <!--WIRE UP: 
-                        <a href="#">Send reminder</a>
-                        -->
-                        <!-- REPLACE <A> WITH THIS <SPAN> ONCE LINK IS CLICKED (revert back to link after 5-10 seconds? Next day? How often are we allowing reminders to be sent?): 
-                        <span class="green"><i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
-                        -->
+                      <a ng-click="vm.sendReminder(member, member.team.name)" ng-hide="vm.reminderSent &&
+                        member._id === vm.memberReminderId">Send reminder</a>
+                      <span class="green" ng-show="vm.reminderSent && member._id === vm.memberReminderId">
+                        <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
                     </em>
                 </td>
                 <td ng-hide="{{member.pending === true}}"></td>
@@ -72,7 +70,8 @@
             </tr>
         </table>
         <div>
-            <uib-pagination boundary-links="true" max-size="vm.filter.limit" total-items="totalItems" ng-model="vm.filter.page" ng-change="vm.pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+            <!-- <uib-pagination boundary-links="true" max-size="8" total-items="vm.members.length" ng-model="vm.currentPage" ng-change="vm.pageChanged()" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination> -->
+            <uib-pagination boundary-links="true" max-size="8" items-per-page="vm.itemsPerPage" total-items="vm.members.length" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
         </div>
     </div>
 </div>

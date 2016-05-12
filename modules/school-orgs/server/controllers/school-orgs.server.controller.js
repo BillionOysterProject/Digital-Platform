@@ -89,8 +89,7 @@ exports.approve = function (req, res) {
           FirstName: schoolOrg.creator.firstName,
           OrgName: schoolOrg.name,
           LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-          Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
         }, function(info) {
           res.json(schoolOrg);
         }, function(errorMessage) {

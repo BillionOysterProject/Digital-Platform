@@ -20,7 +20,7 @@
         controller: 'GlossaryController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'team lead', 'team member', 'team lead pending', 'team member pending'],
+          roles: ['admin', 'team lead', 'team member', 'team lead pending', 'team member pending', 'partner'],
           pageTitle: 'Glossary'
         }
       });

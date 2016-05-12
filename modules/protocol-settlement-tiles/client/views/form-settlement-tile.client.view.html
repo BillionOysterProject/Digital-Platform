@@ -23,8 +23,9 @@
                               <tr ng-repeat="grid in grids">
                                   <td class="text-right"><h3>{{$index+1}}</h3></td>
                                   <td class="form-group" show-errors>
-                                    <select class="form-control" ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                    ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}" ng-required>
+                                    <select class="form-control" ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}"
+                                    ng-options="organism.commonName for organism in sessileOrganisms track by organism._id"
+                                    required>
                                     </select>
                                   </td>
                                   <td><input class="form-control" type="text" placeholder="Notes or Questions" ng-model="grid.notes"/></td>

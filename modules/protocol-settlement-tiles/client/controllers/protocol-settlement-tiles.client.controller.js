@@ -38,24 +38,25 @@
     };
 
     $scope.$on('incrementalSaveSettlementTiles', function() {
-      console.log('incrementalSaveSettlementTiles');
       st.saveOnBlur();
     });
 
     st.saveOnBlur = function() {
-      if (st.protocolSettlementTiles._id) {
+      if (st.protocolSettlementTiles._id && ((st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
+        (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
+        (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
+        st.protocolSettlementTiles.settlementTiles[0].imageUrl)))) {
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
           st.protocolSettlementTiles = new ProtocolSettlementTilesService(data.settlementTiles);
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           if (data.errors) {
             st.error = data.errors;
-            console.log('errors', st.error);
+            st.form.settlementTilesForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
           if (data.successful) {
-            console.log('data successful');
             st.error = null;
             $rootScope.$broadcast('incrementalSaveSettlementTilesSuccessful');
           }
@@ -63,6 +64,7 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
+          st.form.settlementTilesForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveSettlementTilesError');
         });
       }
@@ -115,14 +117,14 @@
         settlementTileId: $stateParams.protocolSettlementTileId
       }, function(data) {
         st.protocolSettlementTiles = data;
-        st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+        st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
       });
     } else if ($scope.protocolSettlementTiles) {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService($scope.protocolSettlementTiles);
       if (!st.protocolSettlementTiles.settlementTiles || st.protocolSettlementTiles.settlementTiles.length < st.tileCount) {
         setupSettlementTileGrid();
       }
-      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
     } else {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService();
       setupSettlementTileGrid();
@@ -185,7 +187,6 @@
       }
 
       var errorMessages = [];
-      console.log('save');
 
       if (!st.protocolSettlementTiles || st.protocolSettlementTiles.length < 1) {
         errorMessages.push('Must have at least one settlement tile');
@@ -212,13 +213,10 @@
 
           if (tile.tilePhoto && tile.tilePhoto.path !== undefined && tile.tilePhoto.path !== '' &&
           allGridsFilledIn(tile, i)) {
-            console.log('successful');
             oneSuccessfulSettlementTile = true;
           } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
           tile.tilePhoto.path === '') && !allGridsFilledIn(tile, i)) {
-            console.log('skip');
           } else {
-            console.log('errors');
             if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
               errorMessages.push('Photo is required for Settlement Tile #' + (i+1));
             }
@@ -230,7 +228,7 @@
 
         if (!oneSuccessfulSettlementTile) {
           if (errorMessages.length > 0) {
-            st.error = errorMessages.join();
+            st.error = errorMessages;
           }
           $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
           $rootScope.$broadcast('saveSettlementTilesError');
@@ -344,7 +342,7 @@
     };
 
     var saveImageOnBlur = function(index, successCallback, errorCallback) {
-      if (st.protocolSettlementTiles._id) {
+      if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles[index].imageUrl !== '') {
         if (index < st.settlementTilePhotoUploaders.length && st.settlementTilePhotoUploaders[index]) {
           var uploader = st.settlementTilePhotoUploaders[index];
           if (uploader.queue.length > 0) {
@@ -368,6 +366,12 @@
         } else {
           errorCallback('Error with tile');
         }
+      } else if (st.protocolSettlementTiles._id && st.protocolSettlementTiles.settlementTiles &&
+        st.protocolSettlementTiles.settlementTiles[index] &&
+        st.protocolSettlementTiles.settlementTiles[index].tilePhoto &&
+        st.protocolSettlementTiles.settlementTiles[index].imageUrl === '') {
+        st.protocolSettlementTiles.settlementTiles[index].tilePhoto.path = '';
+        st.saveOnBlur();
       }
     };
 
@@ -377,7 +381,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -391,7 +395,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -405,7 +409,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -419,7 +423,7 @@
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
           st.protocolSettlementTiles = data;
-          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).toDate();
+          st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
         });
       }, function(errorMessage) {
@@ -428,7 +432,6 @@
     });
 
     $timeout(function() {
-      console.log('check settlement tiles');
       st.saveOnBlur();
     }, 3000);
 

@@ -9,7 +9,6 @@
 
   function TeamMemberController($scope, $http) {
     $scope.save = function(isValid) {
-      console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.teamMemberForm');
         return false;
@@ -28,6 +27,9 @@
       function errorCallback(res) {
         console.log('error: ' + res.data.message);
         $scope.error = res.data.message;
+        if ($scope.error.match('email already exists')) {
+          $scope.error = 'Email address already exists in the system';
+        }
       }
     };
   }

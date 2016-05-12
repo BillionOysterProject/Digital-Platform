@@ -1,16 +1,107 @@
-<div class="shaded">
-  <section class="content">
+<section class="content shaded">
     <section class="container">
-      <div class="page-header">
-        <h1 ng-bind="vm.expedition.site.name"></h1>
-      </div>
-      <!-- vm.expedition.team -->
-      <!-- vm.expedition.teamMembers -->
-      <!-- vm.expedition.site -->
-      <!-- vm.expedition.latitude -->
-      <!-- vm.expedition.longitude -->
-      <!-- vm.expedition.monitoringDate -->
-      <!-- vm.expedition.notes -->
+        <div class="row">
+            <div class="col col-sm-6">
+                <h2>{{vm.expedition.name}}</h2>
+            </div>
+            <div class="col col-sm-6 text-right">
+                <h6 ng-show="vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned'">Incomplete</h6>
+                <h6 ng-show="vm.expedition.status === 'pending'" class="green">Submitted</h6>
+                <h6 ng-show="vm.expedition.status === 'published'" class="green">Published</h6>
+                <h6 ng-show="vm.expedition.status === 'unpublished'" class="green">Unpublished</h6>
+                <a class="btn btn-primary" ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })"
+                  view-permissions="team lead">Edit</a>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-3">
+                <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="profile-image pull-left">
+                <p>
+                    <b>{{vm.team.name}}</b><br/>
+                    {{vm.team.teamLead.displayName}}<br/>
+                    <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                </p>
+            </div>
+            <div class="col-sm-3">
+                <p>
+                    <i class="glyphicon glyphicon-calendar gray"></i> <b>{{vm.getExpeditionDate(vm.expedition)}}, {{vm.getExpeditionTimeRange(vm.expedition)}}</b><br/>
+                    <i class="glyphicon glyphicon-map-marker gray"></i> {{vm.expedition.station.name}}
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <p>{{vm.expedition.notes}}</p>
+            </div>
+        </div>
     </section>
-  </section>
-</div>
+</section>
+<section class="content">
+    <section class="container">
+        <h3 class="gray">Protocols</h3>
+        <table class="table" ng-class="{'table-hover' : (vm.isTeamLead || vm.isAdmin ||
+          (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))}">
+            <tbody>
+              <tr ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" ng-show="(vm.isTeamLead || vm.isAdmin ||
+                (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))">
+                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
+                  <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
+                  <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
+              </tr>
+              <tr ng-show="(vm.isTeamMember && (vm.expedition.status === 'pending' || vm.expedition.status === 'published' ||
+                vm.expedition.status === 'unpublished'))">
+                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
+                  <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
+                  <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
+              </tr>
+                <tr ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" ng-show="(vm.isTeamLead || vm.isAdmin ||
+                  (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))">
+                    <td><h6>Protocol 2</h6><br/><h4 class="blue">Oyster Measurements</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.oysterMeasurement"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.oysterMeasurement.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ng-show="(vm.isTeamMember && (vm.expedition.status === 'pending' || vm.expedition.status === 'published' ||
+                  vm.expedition.status === 'unpublished'))">
+                    <td><h6>Protocol 2</h6><br/><h4 class="blue">Oyster Measurements</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.oysterMeasurement"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.oysterMeasurement.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" ng-show="(vm.isTeamLead || vm.isAdmin ||
+                  (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))">
+                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ng-show="(vm.isTeamMember && (vm.expedition.status === 'pending' || vm.expedition.status === 'published' ||
+                  vm.expedition.status === 'unpublished'))">
+                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" ng-show="(vm.isTeamLead || vm.isAdmin ||
+                  (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))">
+                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ng-show="(vm.isTeamMember && (vm.expedition.status === 'pending' || vm.expedition.status === 'published' ||
+                  vm.expedition.status === 'unpublished'))">
+                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" ng-show="(vm.isTeamLead || vm.isAdmin ||
+                  (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))">
+                    <td><h6>Protocol 5</h6><br/><h4 class="blue">Water Quality</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.waterQuality"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.waterQuality.status}}"></view-protocol-status></td>
+                </tr>
+                <tr ng-show="(vm.isTeamMember && (vm.expedition.status === 'pending' || vm.expedition.status === 'published' ||
+                  vm.expedition.status === 'unpublished'))">
+                    <td><h6>Protocol 5</h6><br/><h4 class="blue">Water Quality</h4></td>
+                    <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.waterQuality"></view-protocol-team-list-summary></td>
+                    <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.waterQuality.status}}"></view-protocol-status></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</section>

@@ -213,8 +213,7 @@ exports.submit = function (req, res) {
                   FirstName: team.teamLead.firstName,
                   ExpeditionName: expedition.name,
                   LinkPublishExpedition: httpTransport + req.headers.host + 'expeditions/' + expedition._id + '/protocols',
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-                  Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
                 },
                 function(info) {
                   res.json(expedition);
@@ -445,7 +444,7 @@ exports.list = function (req, res) {
     and.push({ $or: or });
   }
 
-  if (checkRole('team lead pending') || checkRole('team member pending')) {
+  if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
     console.log('only getting published');
     and.push({ 'status': 'published' });
   }
@@ -515,6 +514,7 @@ exports.expeditionByID = function (req, res, next, id) {
   }
 
   var query = Expedition.findById(id).populate('team').populate('team.teamLead', 'email displayName profileImageURL')
+  .populate('team.schoolOrg', 'name')
   .populate('station', 'name latitude longitude')
   .populate('teamLists.siteCondition', 'displayName username profileImageURL')
   .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')

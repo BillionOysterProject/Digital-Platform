@@ -25,9 +25,10 @@
             console.log('submitting');
             if (scope.sketchPhotoUrl === undefined || scope.sketchPhotoUrl === null || scope.sketchPhotoUrl === '') {
               scope.form.organismDetailsForm.$setValidity('sketchPhoto', false);
-              isValid = false;
+              return false;
             }
-            scope.saveFunction(organismDetails, scope.organismId, isValid);
+            console.log('calling save function');
+            scope.saveFunction(organismDetails, scope.organismId, true);
           };
         }
       };

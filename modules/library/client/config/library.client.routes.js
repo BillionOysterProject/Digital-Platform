@@ -21,7 +21,7 @@
         controllerAs: 'vm',
         data: {
           pageTitle: 'My Library',
-          roles: ['admin', 'team lead', 'team lead pending']
+          roles: ['admin', 'team lead', 'team lead pending', 'partner']
         }
       });
   }

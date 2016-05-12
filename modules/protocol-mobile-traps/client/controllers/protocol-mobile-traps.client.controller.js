@@ -91,12 +91,12 @@
           mobileTrapId: $stateParams.protocolMobileTrapId
         }, function(data) {
           mt.protocolMobileTrap = data;
-          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
+          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
           setupMobileOrganisms();
         });
       } else if ($scope.protocolMobileTrap) {
         mt.protocolMobileTrap = new ProtocolMobileTrapsService($scope.protocolMobileTrap);
-        mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
+        mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
         if (!mt.protocolMobileTrap.mobileOrganisms) {
           mt.protocolMobileTrap.mobileOrganisms = [];
         } else {
@@ -167,7 +167,6 @@
     // Save protocol mobile trap
     mt.save = function(isValid) {
       if (!isValid) {
-        console.log('mobile trap invalid');
         $scope.$broadcast('show-errors-check-validity', 'mt.form.mobileTrapForm');
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
@@ -182,7 +181,6 @@
       }
 
       if (mt.protocolMobileTrap.mobileOrganisms.length <= 0) {
-        console.log('no found ids');
         mt.error = 'At least one mobile organism is required';
         $rootScope.$broadcast('saveMobileTrapError');
         return false;
@@ -273,7 +271,7 @@
     };
 
     var saveImageOnBlur = function(organismId, successCallback, errorCallback) {
-      if (mt.protocolMobileTrap._id) {
+      if (mt.protocolMobileTrap._id && mt.foundOrganisms[organismId].imageUrl !== '') {
         if (organismId) {
           var uploader = mt.foundOrganisms[organismId].uploader;
           if (uploader.queue.length > 0) {
@@ -296,6 +294,8 @@
         } else {
           errorCallback('Error with organism id');
         }
+      } else if (mt.protocolMobileTrap._id && mt.foundOrganisms[organismId].imageUrl === '') {
+        mt.saveOnBlur();
       }
     };
 
@@ -335,23 +335,24 @@
     };
 
     $scope.$on('incrementalSaveMobileTrap', function() {
-      console.log('incrementalSaveMobileTrap');
       mt.saveOnBlur();
     });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
-      if (mt.protocolMobileTrap._id) {
+      if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
+        (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {
           mt.protocolMobileTrap = new ProtocolMobileTrapsService(data.mobileTrap);
-          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).toDate();
+          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
           setupMobileOrganisms();
           if (data.errors) {
             mt.error = data.errors;
             if (errorCallback) {
               errorCallback(data.errors);
             } else {
+              mt.form.mobileTrapForm.$setSubmitted(true);
               $rootScope.$broadcast('incrementalSaveMobileTrapError');
             }
           }
@@ -366,6 +367,7 @@
         })
         .error(function (data, status, headers, config) {
           mt.error = data.message;
+          mt.form.mobileTrapForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveMobileTrapError');
           if (errorCallback) errorCallback(data.message);
         });
@@ -373,7 +375,7 @@
     };
 
     $timeout(function() {
-      console.log('check mobile trap');
+      $rootScope.$broadcast('iso-method', { name:null, params:null });
       mt.saveOnBlur();
     }, 2000);
 

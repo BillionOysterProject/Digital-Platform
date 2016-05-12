@@ -1,0 +1,9 @@
+Hi <%= FirstName %>,
+
+Your invite is waiting from <%= TeamLeadName %> to join the team <%= TeamName %> at the Billion Oyster Project.
+
+Visit <%= LinkCreateAccount %> to join the team.
+
+So glad to have you on board!
+
+The Billion Oyster Project

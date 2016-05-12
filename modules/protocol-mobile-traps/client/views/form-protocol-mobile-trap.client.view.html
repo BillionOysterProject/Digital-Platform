@@ -3,6 +3,12 @@
         <section class="container">
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
             <hr />
+            <div class="alert alert-danger" ng-show="mt.error">
+                <h4>We're still missing some information.</h4>
+                <ul class="list-unstyled" ng-repeat="error in mt.error">
+                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
+                </ul>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -38,7 +44,7 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="lead red">Your group is responsible for observations about the types and quantities of mobile organisms found within the two compartments of the mobile trap, one containing mesh and the other containing oyster shells.</p>
+                    <p class="lead blue">Your group is responsible for observations about the types and quantities of mobile organisms found within the two compartments of the mobile trap, one containing mesh and the other containing oyster shells.</p>
                 </div>
                 <div class="col-md-6">
                     <h6>Mobile Trap</h6>
@@ -65,8 +71,8 @@
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-default" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]" ng-click="mt.removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left red" ng-show="mt.foundOrganisms[organism._id]">&nbsp;{{mt.foundOrganisms[organism._id].count}}&nbsp;</b>
-                                <b class="pull-left red" ng-show="!mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
+                                <b class="pull-left" ng-show="mt.foundOrganisms[organism._id]">&nbsp;{{mt.foundOrganisms[organism._id].count}}&nbsp;</b>
+                                <b class="pull-left" ng-show="!mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
                                 <button type="button" class="btn btn-default" ng-click="mt.addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
@@ -74,19 +80,11 @@
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
-                        <a href="#" class="btn btn-default btn-sm btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or a sketch/photograph</a>
+                        <a href="#" class="btn btn-default btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or an image</a>
                         <!-- TODO: when notes/photo is added, show this instead
-                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or sketch/photograph</a>-->
+                        <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or an image</a>-->
                     </div>
                 </div>
-            </div>
-        </section>
-    </section>
-    <section class="content">
-        <section class="container">
-            <!-- <button type="button" class="btn btn-primary">Next</button> -->
-            <div ng-show="mt.error" class="text-danger">
-                <strong ng-bind="mt.error"></strong>
             </div>
         </section>
     </section>
@@ -99,4 +97,7 @@
     dismiss-function="mt.closeMap"></map-select>
 </div>
 
-<form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails" sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl" save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails" organism-id="{{organismDetails.organism._id}}"></form-organism-details>
+<form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails"
+sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl"
+save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails"
+organism-id="{{organismDetails.organism._id}}"></form-organism-details>

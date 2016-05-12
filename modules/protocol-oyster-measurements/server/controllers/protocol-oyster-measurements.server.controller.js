@@ -26,7 +26,7 @@ var emptyString = function(string) {
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
     oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate, 'MM-DD-YYYY').toDate();
+      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).startOf('minute').toDate();
   }
 
   var errorMessages = [];
@@ -38,14 +38,13 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   if (!oysterMeasurement.conditionOfOysterCage) {
     errorMessages.push('Cage Condition photo is required');
   } else {
-    if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
+    if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === '') {
       errorMessages.push('Photo of oyster cage is required');
     }
     if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
       errorMessages.push('Bioaccumulation on cage is required');
-    }
-    if (emptyString(oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage)) {
-      errorMessages.push('Notes on damage to cage is required');
     }
   }
 
@@ -71,14 +70,12 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
         substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
         substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
         oneSuccessfulSubstrateShell = true;
-        console.log('success');
       } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
         substrateShell.outerSidePhoto.path === '') && (!substrateShell.innerSidePhoto ||
         substrateShell.innerSidePhoto.path === undefined || substrateShell.innerSidePhoto.path === '') &&
         substrateShell.totalNumberOfLiveOystersOnShell === undefined) {
-        console.log('skip');
+
       } else {
-        console.log('errors');
         var shellNumber = 1+j;
         if (!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === '' ||
         substrateShell.outerSidePhoto.path === undefined) {
@@ -125,7 +122,7 @@ exports.create = function (req, res) {
   validateOysterMeasurement(req.body,
   function(oysterMeasurementJSON) {
     var oysterMeasurement = new ProtocolOysterMeasurement(oysterMeasurementJSON);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
@@ -139,7 +136,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -159,7 +156,7 @@ exports.incrementalSave = function (req, res) {
 
   if (oysterMeasurement) {
     oysterMeasurement = _.extend(oysterMeasurement, req.body);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
 
     oysterMeasurement.save(function (err) {
@@ -177,7 +174,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             oysterMeasurement: oysterMeasurement,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -199,7 +196,7 @@ exports.update = function (req, res) {
 
     if (oysterMeasurement) {
       oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       oysterMeasurement.scribeMember = req.user;
       oysterMeasurement.status = 'submitted';
       oysterMeasurement.submitted = new Date();
@@ -220,7 +217,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -469,7 +466,6 @@ exports.previousOysterMeasurement = function (req, res, next, id) {
           message: errorHandler.getErrorMessage(err)
         });
       } else if (!previousPublished) {
-        console.log('no previous published, checking team');
         Expedition.find({ 'station': expedition.station, 'team': expedition.team, '_id': { $ne: expedition._id } })
         .populate('protocols.oysterMeasurement').sort('-monitoringStartDate').exec(function (err, previousTeams) {
           if (err) {
@@ -477,7 +473,6 @@ exports.previousOysterMeasurement = function (req, res, next, id) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            console.log('previous team expedition', previousTeams);
             req.oysterMeasurement = (previousTeams && previousTeams.length > 0) ?
               previousTeams[0].protocols.oysterMeasurement : null;
             next();

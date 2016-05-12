@@ -56,7 +56,7 @@ exports.create = function (req, res) {
   validateMobileTrap(req.body,
   function(mobileTrapJSON) {
     var mobileTrap = new ProtocolMobileTrap(mobileTrapJSON);
-    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     mobileTrap.scribeMember = req.user;
 
     mobileTrap.save(function (err) {
@@ -70,7 +70,7 @@ exports.create = function (req, res) {
     });
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -90,7 +90,7 @@ exports.incrementalSave = function (req, res) {
 
   if (mobileTrap) {
     mobileTrap = _.extend(mobileTrap, req.body);
-    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     mobileTrap.scribeMember = req.user;
 
     mobileTrap.save(function (err) {
@@ -108,7 +108,7 @@ exports.incrementalSave = function (req, res) {
         }, function(errorMessages) {
           res.json({
             mobileTrap: mobileTrap,
-            errors: errorMessages.join()
+            errors: errorMessages
           });
         });
       }
@@ -130,7 +130,7 @@ exports.update = function (req, res) {
 
     if (mobileTrap) {
       mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
-      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       mobileTrap.scribeMember = req.user;
       mobileTrap.status = 'submitted';
       mobileTrap.submitted = new Date();
@@ -151,7 +151,7 @@ exports.update = function (req, res) {
     }
   }, function(errorMessages) {
     return res.status(400).send({
-      message: errorMessages.join()
+      message: errorMessages
     });
   });
 };
@@ -197,10 +197,8 @@ exports.delete = function (req, res) {
 };
 
 var uploadFileSuccess = function(mobileTrap, res) {
-  console.log('mobileTrap', mobileTrap);
   mobileTrap.save(function (saveError) {
     if (saveError) {
-      console.log('save error', saveError);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(saveError)
       });
@@ -236,12 +234,9 @@ exports.uploadSketchPhoto = function (req, res) {
   upload.fileFilter = sketchPhotoUploadFileFilter;
   if (mobileTrap) {
     var index = -1;
-    console.log('organismId', organismId);
     for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
-      console.log('organism._id', mobileTrap.mobileOrganisms[i].organism._id);
       if (mobileTrap.mobileOrganisms[i].organism._id.toString() === organismId.toString()) {
         index = i;
-        console.log('set equal');
       }
     }
 

@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams/members',
       permissions: '*'
     }, {
+      resources: '/api/teams/members/:memberId/remind',
+      permissions: '*'
+    }, {
       resources: '/api/teams/members/:memberId',
       permissions: '*'
     }, {

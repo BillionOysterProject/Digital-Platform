@@ -54,8 +54,7 @@ exports.signup = function (req, res) {
               email.sendEmailTemplate(config.mailer.admin, 'A new organization is pending approval', 'org_waiting', {
                 TeamLeadName: user.displayName,
                 OrgName: schoolOrg.name,
-                LinkOrgRequest: httpTransport + req.headers.host + '/settings/organizations',
-                Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                LinkOrgRequest: httpTransport + req.headers.host + '/settings/organizations'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
@@ -68,8 +67,7 @@ exports.signup = function (req, res) {
               FirstName: user.firstName,
               OrgName: schoolOrg.name,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-              Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
             }, function(info) {
               sendAdminNewOrganizationEmail(function() {
                 orgCallback();
@@ -139,8 +137,7 @@ exports.signup = function (req, res) {
                   FirstName: teamLead.firstName,
                   TeamMemberName: user.displayName,
                   LinkMemberRequest: httpTransport + req.headers.host + '/settings/members',
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-                  Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
                 }, function(info) {
                   loginNewUser();
                 }, function(errorMessage) {
@@ -155,8 +152,7 @@ exports.signup = function (req, res) {
           var sendAdminNewTeamLeadEmail = function(callback) {
             email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
               TeamLeadName: user.displayName,
-              LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users',
-              Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+              LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users'
             }, function(info) {
               if (callback) callback();
             }, function(errorMessage) {
@@ -168,8 +164,7 @@ exports.signup = function (req, res) {
             FirstName: user.firstName,
             TeamMemberName: user.displayName,
             LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile',
-            Logo: 'http://staging.bop.fearless.tech/modules/core/client/img/brand/logo.svg'
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
           }, function(info) {
             sendAdminNewTeamLeadEmail(loginNewUser());
           }, function(errorMessage) {

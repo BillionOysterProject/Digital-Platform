@@ -16,7 +16,10 @@
         controller: 'TeamMemberController',
         replace: true,
         link: function(scope, element, attrs) {
-          
+          element.bind('show.bs.modal', function () {
+            scope.form.teamMemberForm.$setSubmitted(false);
+            scope.form.teamMemberForm.$setPristine();
+          });
         }
       };
     }]);
