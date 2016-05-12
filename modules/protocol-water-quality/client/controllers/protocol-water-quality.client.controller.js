@@ -164,8 +164,10 @@
     });
 
     wq.saveOnBlur = function() {
-      if (wq.protocolWaterQuality._id && ((wq.form.waterQualityForm.$touched && wq.form.waterQualityForm.$dirty) ||
-        wq.form.waterQualityForm.$valid || (wq.protocolWaterQuality.samples && wq.protocolWaterQuality.samples.length > 0 &&
+      if (wq.protocolWaterQuality._id && ((wq.form && wq.form.waterQualityForm &&
+        wq.form.waterQualityForm.$touched && wq.form.waterQualityForm.$dirty) ||
+        (wq.form && wq.form.waterQualityForm && wq.form.waterQualityForm.$valid) ||
+        (wq.protocolWaterQuality.samples && wq.protocolWaterQuality.samples.length > 0 &&
         wq.protocolWaterQuality.samples[0].depthOfWaterSampleM))) {
         updateAverages();
 
@@ -176,7 +178,7 @@
           wq.protocolWaterQuality.collectionTime = moment(wq.protocolWaterQuality.collectionTime).startOf('minute').toDate();
           if (data.errors) {
             wq.error = data.errors;
-            wq.form.waterQualityForm.$setSubmitted(true);
+            if (wq.form && wq.form.waterQualityForm) wq.form.waterQualityForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveWaterQualityError');
           }
           if (data.successful) {
@@ -186,7 +188,7 @@
         })
         .error(function (data, status, headers, config) {
           wq.error = data.message;
-          wq.form.waterQualityForm.$setSubmitted(true);
+          if (wq.form && wq.form.waterQualityForm) wq.form.waterQualityForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveWaterQualityError');
         });
       }
@@ -285,8 +287,8 @@
     };
 
     $scope.$on('saveWaterQuality', function() {
-      wq.form.waterQualityForm.$setSubmitted(true);
-      wq.save(wq.form.waterQualityForm.$valid);
+      if (wq.form && wq.form.waterQualityForm) wq.form.waterQualityForm.$setSubmitted(true);
+      wq.save((wq.form && wq.form.waterQualityForm) ? wq.form.waterQualityForm.$valid : false);
 
     });
 

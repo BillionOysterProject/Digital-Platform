@@ -42,7 +42,8 @@
     });
 
     st.saveOnBlur = function() {
-      if (st.protocolSettlementTiles._id && ((st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
+      if (st.protocolSettlementTiles._id && ((st.form && st.form.settlementTilesForm &
+        st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
         (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
         (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
         st.protocolSettlementTiles.settlementTiles[0].imageUrl)))) {
@@ -53,7 +54,7 @@
           st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           if (data.errors) {
             st.error = data.errors;
-            st.form.settlementTilesForm.$setSubmitted(true);
+            if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
             $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           }
           if (data.successful) {
@@ -64,7 +65,7 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
-          st.form.settlementTilesForm.$setSubmitted(true);
+          if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveSettlementTilesError');
         });
       }
@@ -174,8 +175,8 @@
     };
 
     $scope.$on('saveSettlementTiles', function() {
-      st.form.settlementTilesForm.$setSubmitted(true);
-      st.save(st.form.settlementTilesForm.$valid);
+      if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
+      st.save((st.form && st.form.settlementTilesForm) ? st.form.settlementTilesForm.$valid : false);
     });
 
     // Save protocol settlement tile

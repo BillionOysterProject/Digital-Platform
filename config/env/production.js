@@ -1,12 +1,13 @@
 'use strict';
 
 module.exports = {
-  secure: {
-    ssl: true,
-    privateKey: './config/sslcerts/key.pem',
-    certificate: './config/sslcerts/cert.pem'
-  },
-  port: process.env.PORT || 8443,
+  // secure: {
+  //   ssl: true,
+  //   privateKey: './config/sslcerts/key.pem',
+  //   certificate: './config/sslcerts/cert.pem'
+  // },
+  // port: process.env.PORT || 8443,
+  port: process.env.PORT || 8081,
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '0.0.0.0',
   db: {
@@ -17,6 +18,10 @@ module.exports = {
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
+  },
+  s3: {
+    region: 'us-west-1',
+    bucket: 'digital-platform-prod-files',
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
@@ -36,6 +41,9 @@ module.exports = {
         }
       }
     }
+  },
+  app: {
+    title: 'Billion Oyster Project'
   },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
@@ -70,121 +78,135 @@ module.exports = {
   },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',
+    admin: process.env.MAILER_ADMIN || 'Sam Janis <sjanis@nyharbor.org>',
     options: {
       service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
       auth: {
         user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
         pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+      },
+      ses: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'YOUR_AMAZON_KEY',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'YOUR_AMAZON_SECRET_KEY'
       }
     }
   },
+  livereload: false,
   seedDB: {
-    seed: process.env.MONGO_SEED === 'true' ? true : false,
-    options: {
-      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
-      seedUser: {
-        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
-        provider: 'local',
-        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
-        firstName: 'User',
-        lastName: 'Local',
-        displayName: 'User Local',
-        roles: ['user']
-      },
-      seedAdmin: {
-        username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
-        provider: 'local',
-        email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
-        firstName: 'Admin',
-        lastName: 'Local',
-        displayName: 'Admin Local',
-        roles: ['user', 'admin']
-      }
-    }
+    seed: false
+    // seed: process.env.MONGO_SEED === 'true' ? true : false,
+    // options: {
+    //   logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
+    //   seedUser: {
+    //     username: process.env.MONGO_SEED_USER_USERNAME || 'user',
+    //     provider: 'local',
+    //     email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
+    //     firstName: 'User',
+    //     lastName: 'Local',
+    //     displayName: 'User Local',
+    //     roles: ['user']
+    //   },
+    //   seedAdmin: {
+    //     username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',
+    //     provider: 'local',
+    //     email: process.env.MONGO_SEED_ADMIN_EMAIL || 'admin@localhost.com',
+    //     firstName: 'Admin',
+    //     lastName: 'Local',
+    //     displayName: 'Admin Local',
+    //     roles: ['user', 'admin']
+    //   }
+    // }
   },
   uploads: {
     profileUpload: {
       s3dest: 'uploads/users/img/profile/',
       dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
     },
     waterConditionUpload: {
       s3dest: 'uploads/protocols/site-conditions/img/water-conditions/',
       dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
     },
     landConditionUpload: {
       s3dest: 'uploads/protocols/site-conditions/img/land-conditions/',
       dest: './modules/protocol-site-conditions/client/img/land-condition/uploads/', // Protocol site condition upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
     },
     oysterCageConditionUpload: {
       s3dest: 'uploads/protocols/oyster-measurements/img/oyster-cage-condition/',
       dest: './modules/protocol-oyster-measurements/client/img/oyster-cage/uploads/', // Protocol oyster measurement upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     outerSubstrateUpload: {
       s3dest: 'uploads/protocols/oyster-measurements/img/outer-substrates/',
       dest: './modules/protocol-oyster-measurements/client/img/outer-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     innerSubstrateUpload: {
       s3dest: 'uploads/protocols/oyster-measurements/img/inner-substrates',
       dest: './modules/protocol-oyster-measurements/client/img/inner-substrate/uploads/', // Protocol oyster measurement upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     organismImageUpload: {
       s3dest: 'uploads/organisms/img/mobile-organisms/',
       dest: './modules/mobile-organisms/client/img/organisms/', // Meta organisms upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     mobileTrapSketchPhotoUpload: {
       s3dest: 'uploads/protocols/mobile-traps/img/sketchPhotos/',
       dest: './modules/protocol-mobile-traps/client/img/sketchPhoto/uploads/', // Protocol mobile trap upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
+      }
+    },
+    settlementTilesUpload: {
+      s3dest: 'uploads/protocols/settlement-tiles/img/tilePhoto/',
+      dest: './modules/protocol-settlement-tiles/client/img/tile/uploads/', // Protocol settlement tile upload destination path
+      limits: {
+        fileSize: 20*1024*1024
       }
     },
     lessonFeaturedImageUpload: {
       s3dest: 'uploads/lessons/img/featured-images/',
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     lessonHandoutsUpload: {
       s3dest: 'uploads/lessons/files/handouts/',
       dest: './modules/lessons/client/files/handouts/uploads/', // Lesson upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     lessonTeacherResourcesUpload: {
       s3dest: 'uploads/lessons/files/teacher-resources/',
       dest: './modules/lessons/client/files/teacher-resources/uploads/', // Lesson upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     },
     lessonStateTestQuestionsUpload: {
       s3dest: 'uploads/lessons/img/state-test-questions/',
       dest: './modules/lessons/client/img/state-test-questions/uploads/', // Lesson upload destination path
       limits: {
-        fileSize: 1*1024*1024
+        fileSize: 20*1024*1024
       }
     }
   }
