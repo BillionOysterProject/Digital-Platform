@@ -202,43 +202,47 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol settlement tiles
  */
-exports.update = function (req, res) {
-  validateSettlementTiles(req.body,
+exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, successCallback, errorCallback) {
+  validateSettlementTiles(settlementTilesBody,
   function(settlementTilesJSON) {
-    var settlementTiles = req.settlementTiles;
+    var settlementTiles = settlementTilesReq;
 
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
-      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      settlementTiles.scribeMember = req.user;
-      settlementTiles.status = 'submitted';
+      settlementTiles.collectionTime = moment(settlementTilesBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      settlementTiles.scribeMember = user;
       settlementTiles.submitted = new Date();
 
-      removeFiles(req.settlementTiles, settlementTiles,
+      removeFiles(settlementTilesReq, settlementTiles,
       function() {
         settlementTiles.save(function (err) {
           if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
+            errorCallback(errorHandler.getErrorMessage(err));
           } else {
-            res.json(settlementTiles);
+            successCallback(settlementTiles);
           }
         });
       }, function(err) {
-        return res.status(400).send({
-          message: err
-        });
+        errorCallback(err);
       });
     } else {
-      return res.status(400).send({
-        message: 'Protocol settlement tiles not found'
-      });
+      errorCallback('Protocol settlement tiles not found');
     }
   }, function(errorMessages) {
+    errorCallback(errorMessages);
+  });
+};
+
+exports.update = function (req, res) {
+  var settlementTilesBody = req.body;
+  settlementTilesBody.status = 'submitted';
+  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user,
+  function(settlementTiles) {
+    res.json(settlementTiles);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };

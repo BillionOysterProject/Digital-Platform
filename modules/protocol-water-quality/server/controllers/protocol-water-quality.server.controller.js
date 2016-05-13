@@ -128,35 +128,42 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol water quality
  */
-exports.update = function (req, res) {
-  validateWaterQuality(req.body,
+exports.updateInternal = function(waterQualityReq, waterQualityBody, user, successCallback, errorCallback) {
+  validateWaterQuality(waterQualityBody,
   function(waterQualityJSON) {
-    var waterQuality = req.waterQuality;
+    var waterQuality = waterQualityReq;
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
-      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      waterQuality.scribeMember = req.user;
-      waterQuality.status = 'submitted';
+      waterQuality.collectionTime = moment(waterQualityBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      waterQuality.scribeMember = user;
       waterQuality.submitted = new Date();
 
       waterQuality.save(function (err) {
         if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+          errorCallback(errorHandler.getErrorMessage(err));
         } else {
-          res.json(waterQuality);
+          successCallback(waterQuality);
         }
       });
     } else {
-      return res.status(400).send({
-        message: 'Protocol water quality not found'
-      });
+      errorCallback('Protocol water quality not found');
     }
   }, function(errorMessages) {
+    errorCallback(errorMessages);
+  });
+};
+
+exports.update = function (req, res) {
+  var waterQualityBody = req.body;
+  waterQualityBody.status = 'submitted';
+
+  exports.updateInternal(req.waterQuality, waterQualityBody, req.user,
+  function(waterQuality) {
+    res.json(waterQuality);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };

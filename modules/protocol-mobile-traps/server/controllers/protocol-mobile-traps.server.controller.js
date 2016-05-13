@@ -123,35 +123,41 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol mobile trap
  */
+exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successCallback, errorCallback) {
+  validateMobileTrap(mobileTrapBody,
+    function(mobileTrapJSON) {
+      var mobileTrap = mobileTrapReq;
+
+      if (mobileTrap) {
+        mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
+        mobileTrap.collectionTime = moment(mobileTrapBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        mobileTrap.scribeMember = user;
+        mobileTrap.submitted = new Date();
+
+        mobileTrap.save(function (err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(mobileTrap);
+          }
+        });
+      } else {
+        errorCallback('Protocol mobile trap not found');
+      }
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+};
+
 exports.update = function (req, res) {
-  validateMobileTrap(req.body,
-  function(mobileTrapJSON) {
-    var mobileTrap = req.mobileTrap;
-
-    if (mobileTrap) {
-      mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
-      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      mobileTrap.scribeMember = req.user;
-      mobileTrap.status = 'submitted';
-      mobileTrap.submitted = new Date();
-
-      mobileTrap.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(mobileTrap);
-        }
-      });
-    } else {
-      return res.status(400).send({
-        message: 'Protocol mobile trap not found'
-      });
-    }
-  }, function(errorMessages) {
+  var mobileTrapBody = req.body;
+  mobileTrapBody.status = 'submitted';
+  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user, 
+  function(mobileTrap) {
+    res.json(mobileTrap);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };

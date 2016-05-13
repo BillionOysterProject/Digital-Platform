@@ -10,7 +10,8 @@
         controller: 'ProtocolWaterQualityController',
         controllerAs: 'wq',
         scope: {
-          protocolWaterQuality: '='
+          protocolWaterQuality: '=',
+          error: '='
         }
       };
     });
