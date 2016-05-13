@@ -256,37 +256,57 @@
     };
 
     vm.protocolsSuccessful = function() {
-      var successful = true;
+      if (vm.saving === true) {
+        return false;
+      } else {
+        var successful = true;
 
-      if(vm.viewSiteCondition && !vm.tabs.protocol1.saveSuccessful) successful = false;
-      if(vm.viewOysterMeasurement && !vm.tabs.protocol2.saveSuccessful) successful = false;
-      if(vm.viewMobileTrap && !vm.tabs.protocol3.saveSuccessful) successful = false;
-      if(vm.viewSettlementTiles && !vm.tabs.protocol4.saveSuccessful) successful = false;
-      if(vm.viewWaterQuality && !vm.tabs.protocol5.saveSuccessful) successful = false;
+        if(vm.viewSiteCondition && !vm.tabs.protocol1.saveSuccessful) successful = false;
+        if(vm.viewOysterMeasurement && !vm.tabs.protocol2.saveSuccessful) successful = false;
+        if(vm.viewMobileTrap && !vm.tabs.protocol3.saveSuccessful) successful = false;
+        if(vm.viewSettlementTiles && !vm.tabs.protocol4.saveSuccessful) successful = false;
+        if(vm.viewWaterQuality && !vm.tabs.protocol5.saveSuccessful) successful = false;
 
-      return successful;
+        return successful;
+      }
     };
 
     vm.protocolsLoaded = function() {
-      var successful = true;
+      if (vm.saving === true) {
+        return false;
+      } else {
+        var successful = true;
 
-      if(vm.viewSiteCondition && vm.tabs.protocol1.saveSuccessful !== true &&
-        vm.tabs.protocol1.saveSuccessful !== false) successful = false;
-      if(vm.viewOysterMeasurement && vm.tabs.protocol2.saveSuccessful !== true &&
-        vm.tabs.protocol2.saveSuccessful !== false) successful = false;
-      if(vm.viewMobileTrap && vm.tabs.protocol3.saveSuccessful !== true &&
-        vm.tabs.protocol3.saveSuccessful !== false) successful = false;
-      if(vm.viewSettlementTiles && vm.tabs.protocol4.saveSuccessful !== true &&
-        vm.tabs.protocol4.saveSuccessful !== false) successful = false;
-      if(vm.viewWaterQuality && vm.tabs.protocol5.saveSuccessful !== true &&
-        vm.tabs.protocol5.saveSuccessful !== false) successful = false;
+        if(vm.viewSiteCondition && vm.tabs.protocol1.saveSuccessful !== true &&
+          vm.tabs.protocol1.saveSuccessful !== false) successful = false;
+        if(vm.viewOysterMeasurement && vm.tabs.protocol2.saveSuccessful !== true &&
+          vm.tabs.protocol2.saveSuccessful !== false) successful = false;
+        if(vm.viewMobileTrap && vm.tabs.protocol3.saveSuccessful !== true &&
+          vm.tabs.protocol3.saveSuccessful !== false) successful = false;
+        if(vm.viewSettlementTiles && vm.tabs.protocol4.saveSuccessful !== true &&
+          vm.tabs.protocol4.saveSuccessful !== false) successful = false;
+        if(vm.viewWaterQuality && vm.tabs.protocol5.saveSuccessful !== true &&
+          vm.tabs.protocol5.saveSuccessful !== false) successful = false;
 
-      return successful;
+        return successful;
+      }
+    };
+
+    var waitWhileSaving = function() {
+      var wait = function() {
+        console.log('waiting to finish saving');
+      };
+
+      while(vm.saving === true) {
+        $timeout(wait, 1000);
+      }
     };
 
     vm.submitTeamMember = function() {
+      waitWhileSaving();
       vm.submitting = true;
       vm.saving = false;
+      vm.savingLoop = false;
 
       if (vm.protocolsSuccessful()) {
         var protocols = {};
@@ -308,7 +328,7 @@
           if(vm.viewWaterQuality) vm.waterQuality = vm.expedition.protocols.waterQuality;
 
           vm.submitting = false;
-          vm.saving = true;
+          vm.savingLoop = true;
           $state.go('expeditions.view', {
             expeditionId: vm.expedition._id
           });
@@ -320,16 +340,18 @@
           vm.settlementTilesErrors = data.message.settlementTiles;
           vm.waterQualityErrors = data.message.waterQuality;
           vm.submitting = false;
-          vm.saving = true;
+          vm.savingLoop = true;
         });
       } else {
         vm.submitting = false;
-        vm.saving = true;
+        vm.savingLoop = true;
       }
     };
 
     vm.publish = function() {
+      waitWhileSaving();
       vm.saving = false;
+      vm.savingLoop = false;
 
       if (vm.protocolsSuccessful()) {
         var protocols = {};
@@ -349,7 +371,7 @@
           if(vm.viewMobileTrap) vm.mobileTrap.status = 'published';
           if(vm.viewSettlementTiles) vm.settlementTiles.status = 'published';
           if(vm.viewWaterQuality) vm.waterQuality.status = 'published';
-          vm.saving = true;
+          vm.savingLoop = true;
           $state.go('expeditions.view', {
             expeditionId: vm.expedition._id
           });
@@ -360,15 +382,17 @@
           vm.mobileTrapErrors = data.message.mobileTrap;
           vm.settlementTilesErrors = data.message.settlementTiles;
           vm.waterQualityErrors = data.message.waterQuality;
-          vm.saving = true;
+          vm.savingLoop = true;
         });
       } else {
-        vm.saving = true;
+        vm.savingLoop = true;
       }
     };
 
     vm.return = function() {
+      waitWhileSaving();
       vm.saving = false;
+      vm.savingLoop = false;
 
       if (vm.protocolsSuccessful()) {
         var protocols = {};
@@ -394,7 +418,7 @@
           if(vm.viewMobileTrap) vm.mobileTrap.status = 'returned';
           if(vm.viewSettlementTiles) vm.settlementTiles.status = 'returned';
           if(vm.viewWaterQuality) vm.waterQuality.status = 'returned';
-          vm.saving = true;
+          vm.savingLoop = true;
           $state.go('expeditions.view', {
             expeditionId: vm.expedition._id
           });
@@ -405,15 +429,17 @@
           vm.mobileTrapErrors = data.message.mobileTrap;
           vm.settlementTilesErrors = data.message.settlementTiles;
           vm.waterQualityErrors = data.message.waterQuality;
-          vm.saving = true;
+          vm.savingLoop = true;
         });
       } else {
-        vm.saving = true;
+        vm.savingLoop = true;
       }
     };
 
     vm.unpublish = function() {
+      waitWhileSaving();
       vm.saving = false;
+      vm.savingLoop = false;
 
       if (vm.protocolsSuccessful()) {
         var protocols = {};
@@ -433,7 +459,7 @@
           if(vm.viewMobileTrap) vm.mobileTrap.status = 'unpublished';
           if(vm.viewSettlementTiles) vm.settlementTiles.status = 'unpublished';
           if(vm.viewWaterQuality) vm.waterQuality.status = 'unpublished';
-          vm.saving = true;
+          vm.savingLoop = true;
           $state.go('expeditions.view', {
             expeditionId: vm.expedition._id
           });
@@ -444,10 +470,10 @@
           vm.mobileTrapErrors = data.message.mobileTrap;
           vm.settlementTilesErrors = data.message.settlementTiles;
           vm.waterQualityErrors = data.message.waterQuality;
-          vm.saving = true;
+          vm.savingLoop = true;
         });
       } else {
-        vm.saving = true;
+        vm.savingLoop = true;
       }
     };
 
