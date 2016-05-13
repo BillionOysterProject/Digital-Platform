@@ -131,8 +131,6 @@ exports.read = function (req, res) {
  * Update a expedition, assumes req.query.full was used
  */
 var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, user, callback) {
-  console.log('siteConditionReq', siteConditionReq);
-  console.log('siteConditionBody', siteConditionBody);
   if (siteConditionBody) {
     siteConditionBody.status = status;
     siteConditionHandler.updateInternal(siteConditionReq, siteConditionBody, user,
@@ -207,6 +205,7 @@ var updateProtocols = function(expedition, siteCondition, oysterMeasurement, mob
   var errorMessages = {};
   var allSuccessful = true;
   console.log('update protocols');
+
   updateSiteCondition(expedition.protocols.siteCondition, siteCondition, status, user,
   function(siteConditionSaved, siteConditionErrorMessages) {
     if (siteConditionErrorMessages) {
@@ -243,10 +242,8 @@ var updateProtocols = function(expedition, siteCondition, oysterMeasurement, mob
               allSuccessful = false;
             }
 
-            console.log('protocols errorMessages', errorMessages);
             console.log('protocols errorMessages === {}', JSON.stringify(errorMessages) === '{}');
             if (JSON.stringify(errorMessages) === '{}') errorMessages = null;
-            console.log('updated protocols errorMessages', errorMessages);
             callback(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurmentSaved, mobileTrapSaved,
               settlementTilesSaved, waterQualitySaved);
           });
@@ -293,10 +290,6 @@ exports.submit = function (req, res) {
   var mobileTrap = req.body.protocols.mobileTrap;
   var settlementTiles = req.body.protocols.settlementTiles;
   var waterQuality = req.body.protocols.waterQuality;
-
-  console.log('siteCondition', siteCondition);
-
-  var errorMessages = {};
 
   var updateActivity = function(callback) {
     var protocolsSubmitted = {};
@@ -406,8 +399,6 @@ exports.publish = function (req, res) {
   var settlementTiles = req.body.protocols.settlementTiles;
   var waterQuality = req.body.protocols.waterQuality;
 
-  var errorMessages = {};
-
   if (expedition) {
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
       waterQuality,'published', req.user,
@@ -451,11 +442,9 @@ exports.unpublish = function (req, res) {
   var settlementTiles = req.body.protocols.settlementTiles;
   var waterQuality = req.body.protocols.waterQuality;
 
-  var errorMessages = {};
-
   if (expedition) {
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
-      waterQuality, 'unpublished', req.user,
+      waterQuality, 'submitted', req.user,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurmentSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
 
@@ -464,7 +453,7 @@ exports.unpublish = function (req, res) {
           message: errorMessages
         });
       } else {
-        expedition.status = 'unpublished';
+        expedition.status = 'pending';
 
         expedition.save(function(err) {
           if (err) {

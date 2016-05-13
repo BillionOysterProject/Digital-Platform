@@ -253,11 +253,16 @@
     mt.addOrganism = function(organism) {
       var organismDetails = mt.getFoundOrganism(organism);
       organismDetails.count = organismDetails.count+1;
+
+      mt.foundOrganisms[organism._id] = organismDetails;
     };
 
     mt.removeOrganism = function(organism) {
       var organismDetails = mt.getFoundOrganism(organism);
       organismDetails.count = organismDetails.count-1;
+      if (organismDetails.count < 0) organismDetails.count = 0;
+
+      mt.foundOrganisms[organism._id] = organismDetails;
     };
 
     mt.openOrganismDetails = function(organism) {
@@ -346,6 +351,9 @@
     });
 
     mt.saveOnBlur = function(successCallback, errorCallback) {
+      setupMobileOrganisms();
+      foundOrganismsToMobileOrganisms();
+
       if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
         (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',

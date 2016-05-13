@@ -36,7 +36,7 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
       if (mobileOrganism.count <= 0) {
         errorMessages.push('Count of mobile organism is required');
       }
-      if (!mobileOrganism.sketchPhoto) {
+      if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
         errorMessages.push('Sketch or photo of mobile organism is required');
       }
     }
@@ -152,7 +152,7 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successC
 exports.update = function (req, res) {
   var mobileTrapBody = req.body;
   mobileTrapBody.status = 'submitted';
-  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user, 
+  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user,
   function(mobileTrap) {
     res.json(mobileTrap);
   }, function(errorMessage) {

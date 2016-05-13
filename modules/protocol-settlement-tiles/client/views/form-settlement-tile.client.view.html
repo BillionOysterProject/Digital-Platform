@@ -24,7 +24,7 @@
                                   <td class="text-right"><h3>{{$index+1}}</h3></td>
                                   <td class="form-group" show-errors>
                                     <select class="form-control" ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}"
-                                    ng-options="organism.commonName for organism in sessileOrganisms track by organism._id"
+                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
                                     required>
                                     </select>
                                   </td>

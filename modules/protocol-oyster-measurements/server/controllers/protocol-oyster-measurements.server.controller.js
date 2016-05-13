@@ -31,12 +31,14 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
 
   var errorMessages = [];
 
-  if (!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
+  if (!oysterMeasurement.depthOfOysterCage || !oysterMeasurement.depthOfOysterCage.submergedDepthofCageM ||
+    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
     errorMessages.push('Submerged depth of oyster cage is required');
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
     errorMessages.push('Cage Condition photo is required');
+    errorMessages.push('Bioaccumulation on cage is required');
   } else {
     if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
       oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
@@ -48,7 +50,8 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
     }
   }
 
-  if (!oysterMeasurement.measuringOysterGrowth || oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
+  if (!oysterMeasurement.measuringOysterGrowth || !oysterMeasurement.measuringOysterGrowth.substrateShells ||
+    oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
     errorMessages.push('Substrate shell measurements are required');
   } else {
     var oneSuccessfulSubstrateShell = false;
@@ -93,6 +96,10 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
           }
         }
       }
+    }
+
+    if (!oneSuccessfulSubstrateShell) {
+      errorMessages.push('There must be at least one substrate shell');
     }
   }
   if (oysterMeasurement.minimumSizeOfAllLiveOysters < 0) {
@@ -218,7 +225,7 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
 exports.update = function (req, res) {
   var oysterMeasurementBody = req.body;
   oysterMeasurementBody.status = 'submitted';
-  
+
   exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user,
   function(oysterMeasurement) {
     res.json(oysterMeasurement);
