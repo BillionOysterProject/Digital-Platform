@@ -34,8 +34,8 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       var successfulGrids = true;
       for (var j = 1; j <= 25; j++) {
         if (tile['grid'+j]) {
-          if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
-          emptyString(tile['grid'+j].notes)) {
+          if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined ||
+          tile['grid'+j].organism === '') && tile['grid'+j].notes === '') {
             successfulGrids = false;
           }
         } else {
@@ -45,6 +45,19 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       return successfulGrids;
     };
 
+    var noGridsFilledIn = function(tile, i) {
+      var emptyGrids = true;
+      for (var j = 1; j <= 25; j++) {
+        if (tile['grid'+j]) {
+          if (tile['grid'+j].organism !== null && tile['grid'+j].organism !== undefined &&
+          tile['grid'+j].organism !== '') {
+            emptyGrids = false;
+          }
+        }
+      }
+      return emptyGrids;
+    };
+
     for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
       var tile = settlementTiles.settlementTiles[i];
 
@@ -52,7 +65,7 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
         tile.tilePhoto.path !== '' && allGridsFilledIn(tile, i)) {
         oneSuccessfulSettlementTile = true;
       } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
-        tile.tilePhoto === '') && !allGridsFilledIn(tile, i)) {
+        tile.tilePhoto.path === '') && noGridsFilledIn(tile, i)) {
 
       } else {
         if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {

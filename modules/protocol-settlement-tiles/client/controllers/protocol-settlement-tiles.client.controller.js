@@ -15,8 +15,24 @@
     st.tileCount = 4;
     st.gridCount = 25;
 
+    st.tileStarted = function(settlementTile) {
+      var started = false;
+      for (var i = 1; i <= st.gridCount; i++) {
+        if (settlementTile['grid'+i] && settlementTile['grid'+i].organism &&
+          settlementTile['grid'+i].organism !== undefined && settlementTile['grid'+i].organism !== '' &&
+          settlementTile['grid'+i].organism !== null) {
+          started = true;
+        }
+      }
+      return started;
+    };
+
     var tileDone = function(settlementTile) {
       var done = true;
+      if (!settlementTile.tilePhoto || !settlementTile.tilePhoto.path || settlementTile.tilePhoto.path === '') {
+        done = false;
+      }
+
       for (var i = 1; i <= st.gridCount; i++) {
         if (!settlementTile['grid'+i] ||
           ((!settlementTile['grid'+i].organism || settlementTile['grid'+i].organism === undefined ||
@@ -41,11 +57,11 @@
       st.saveOnBlur();
     });
 
-    st.saveOnBlur = function(forceSave) {
+    st.saveOnBlur = function(forceSave, callback) {
       if (st.protocolSettlementTiles._id && ((st.form && st.form.settlementTilesForm &
         st.form.settlementTilesForm.$touched && st.form.settlementTilesForm.$dirty) ||
         (st.protocolSettlementTiles.settlementTiles && st.protocolSettlementTiles.settlementTiles.length > 0 &&
-        (st.protocolSettlementTiles.settlementTiles[0].grid1.notes !== '' ||
+        (st.tileStarted(st.protocolSettlementTiles.settlementTiles[0]) ||
         st.protocolSettlementTiles.settlementTiles[0].imageUrl))) || forceSave) {
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
@@ -62,12 +78,16 @@
             $rootScope.$broadcast('incrementalSaveSettlementTilesSuccessful');
           }
           setupTiles();
+          if (callback) callback();
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
           if (st.form && st.form.settlementTilesForm && !forceSave) st.form.settlementTilesForm.$setSubmitted(true);
           if (!forceSave) $rootScope.$broadcast('incrementalSaveSettlementTilesError');
+          if (callback) callback();
         });
+      } else {
+        if (callback) callback();
       }
     };
 
@@ -304,16 +324,25 @@
       st.grids = [];
       var tile = st.protocolSettlementTiles.settlementTiles[index-1];
       for (var i = 1; i <= st.gridCount; i++) {
-        var organismId = (tile['grid'+i] && tile['grid'+i].organism && tile['grid'+i].organism._id) ?
+        if (tile['grid'+i]) {
+          var organismId = (tile['grid'+i].organism && tile['grid'+i].organism._id) ?
             tile['grid'+i].organism._id : tile['grid'+i].organism;
-        if ((!organismId || organismId === undefined || organismId === null || organismId === '') &&
+
+          if ((!organismId || organismId === undefined || organismId === null || organismId === '') &&
           tile['grid'+i].notes !== '') {
-          organismId = '-1';
+            organismId = '-1';
+          }
+          st.grids[i-1] = {
+            organismId: organismId,
+            notes: tile['grid'+i].notes
+          };
+
+        } else {
+          st.grids[i-1] = {
+            organismId: null,
+            notes: null
+          };
         }
-        st.grids[i-1] = {
-          organismId: organismId,
-          notes: tile['grid'+i].notes
-        };
       }
       angular.element('#modal-settlementtile'+index).modal('show');
     };
@@ -322,8 +351,6 @@
       angular.element('#modal-settlementtile'+index).modal('hide');
 
       $timeout(function() {
-        st.protocolSettlementTiles.settlementTiles[index-1].done =
-          tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
         for (var i = 1; i <= grids.length; i++) {
           st.protocolSettlementTiles.settlementTiles[index-1]['grid'+i] = {
             organism: (grids[i-1].organismId !== '-1') ? grids[i-1].organismId : undefined,
@@ -332,8 +359,9 @@
         }
         st.protocolSettlementTiles.settlementTiles[index-1].done =
           tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
-        st.saveOnBlur();
-        $rootScope.$broadcast('startSaving');
+        st.saveOnBlur(true, function() {
+          $rootScope.$broadcast('startSaving');
+        });
       }, 1000);
     };
 
@@ -349,11 +377,13 @@
           if (uploader.queue.length > 0) {
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
               uploader.removeFromQueue(fileItem);
+              st.error = null;
               successCallback();
             };
 
             uploader.onErrorItem = function (fileItem, response, status, header) {
               st.protocolSettlementTiles.settlementTiles[index].tilePhoto.error = response.message;
+              st.error = response.message;
               errorCallback();
             };
 
@@ -384,6 +414,7 @@
           st.protocolSettlementTiles = data;
           st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
           setupTiles();
+
         });
       }, function(errorMessage) {
         st.error = errorMessage;

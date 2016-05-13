@@ -22,6 +22,7 @@ var emptyString = function(string) {
 var validateWaterQuality = function(waterQuality, successCallback, errorCallback) {
   var errorMessages = [];
 
+  console.log('waterQuality.samples', waterQuality.samples);
   if (!waterQuality.samples || waterQuality.samples.length <= 0) {
     errorMessages.push('At least one sample is required');
   } else {
