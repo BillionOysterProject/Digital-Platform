@@ -189,35 +189,42 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol oyster measurement
  */
+exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, successCallback, errorCallback) {
+  validateOysterMeasurement(oysterMeasurementBody,
+    function(oysterMeasurementJSON) {
+      var oysterMeasurement = oysterMeasurmentReq;
+
+      if (oysterMeasurement) {
+        oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
+        oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        oysterMeasurement.scribeMember = user;
+        oysterMeasurement.submitted = new Date();
+
+        oysterMeasurement.save(function (err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(oysterMeasurement);
+          }
+        });
+      } else {
+        errorCallback('Protocol oyster measurement not found');
+      }
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+};
+
 exports.update = function (req, res) {
-  validateOysterMeasurement(req.body,
-  function(oysterMeasurementJSON) {
-    var oysterMeasurement = req.oysterMeasurement;
-
-    if (oysterMeasurement) {
-      oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      oysterMeasurement.scribeMember = req.user;
-      oysterMeasurement.status = 'submitted';
-      oysterMeasurement.submitted = new Date();
-
-      oysterMeasurement.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(oysterMeasurement);
-        }
-      });
-    } else {
-      return res.status(400).send({
-        message: 'Protocol oyster measurement not found'
-      });
-    }
-  }, function(errorMessages) {
+  var oysterMeasurementBody = req.body;
+  oysterMeasurementBody.status = 'submitted';
+  
+  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user,
+  function(oysterMeasurement) {
+    res.json(oysterMeasurement);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };

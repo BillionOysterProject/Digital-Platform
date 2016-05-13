@@ -286,39 +286,45 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol site condition
  */
-exports.update = function (req, res) {
-  validateSiteCondition(req.body,
+exports.updateInternal = function(siteConditionReq, siteConditionBody, user, successCallback, errorCallback) {
+  validateSiteCondition(siteConditionBody,
   function(siteConditionJSON) {
-    var siteCondition = req.siteCondition;
+    var siteCondition = siteConditionReq;
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.collectionTime = moment(siteConditionBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        moment(siteConditionBody.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      siteCondition.scribeMember = req.user;
-      siteCondition.status = 'submitted';
+        moment(siteConditionBody.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.scribeMember = user;
       siteCondition.submitted = new Date();
 
       siteCondition.save(function (err) {
         if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+          errorCallback(errorHandler.getErrorMessage(err));
         } else {
-          res.json(siteCondition);
+          successCallback(siteCondition);
         }
       });
     } else {
-      return res.status(400).send({
-        message: 'Protocol site condition not found'
-      });
+      errorCallback('Protocol site condition not found');
     }
   }, function(errorMessages) {
+    errorCallback(errorMessages);
+  });
+};
+
+exports.update = function (req, res) {
+  var siteConditionBody = req.body;
+  siteConditionBody.status = 'submitted';
+  exports.updateInternal(req.siteCondition, siteConditionBody, req.user,
+  function(siteCondition) {
+    res.json(siteCondition);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };

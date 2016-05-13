@@ -277,7 +277,14 @@
           if (uploader.queue.length > 0) {
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
               uploader.removeFromQueue(fileItem);
-              successCallback();
+              ProtocolMobileTrapsService.get({
+                mobileTrapId: mt.protocolMobileTrap._id
+              }, function(data) {
+                mt.protocolMobileTrap = data;
+                mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
+                setupMobileOrganisms();
+                successCallback();
+              });
             };
 
             uploader.onErrorItem = function (fileItem, response, status, headers) {

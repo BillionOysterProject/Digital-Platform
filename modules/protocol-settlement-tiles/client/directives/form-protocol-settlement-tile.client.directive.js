@@ -10,7 +10,8 @@
         controller: 'ProtocolSettlementTilesController',
         controllerAs: 'st',
         scope: {
-          protocolSettlementTiles: '='
+          protocolSettlementTiles: '=',
+          error: '='
         }
       };
     });

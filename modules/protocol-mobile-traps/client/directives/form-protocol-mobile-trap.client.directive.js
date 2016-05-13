@@ -10,7 +10,8 @@
         controller: 'ProtocolMobileTrapsController',
         controllerAs: 'mt',
         scope: {
-          protocolMobileTrap: '='
+          protocolMobileTrap: '=',
+          error: '='
         }
       };
     });
