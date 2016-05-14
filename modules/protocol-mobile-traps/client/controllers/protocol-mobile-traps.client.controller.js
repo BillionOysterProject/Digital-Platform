@@ -392,7 +392,8 @@
     $timeout(function() {
       $rootScope.$broadcast('iso-method', { name:null, params:null });
       mt.saveOnBlur();
-    }, 2000);
+      $rootScope.$broadcast('startSaving');
+    }, 1000);
 
     mt.openMap = function() {
       $rootScope.$broadcast('stopSaving');
