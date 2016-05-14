@@ -211,10 +211,10 @@
         console.log('incremental save vm.savingLoop', vm.savingLoop);
         if (vm.savingLoop === true && (vm.checkStatusIncomplete() ||
           vm.checkStatusPending() || vm.checkStatusReturned())) {
+          vm.saving = true;
           var saveCall = activeProtocolCall();
           console.log('saveCall', saveCall);
           $rootScope.$broadcast(saveCall);
-          $scope.$emit('savingStart');
         } else {
           stopSaving();
         }
@@ -531,42 +531,52 @@
 
     $scope.$on('incrementalSaveSiteConditionSuccessful', function() {
       vm.tabs.protocol1.saveSuccessful = true;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveOysterMeasurementSuccessful', function() {
       vm.tabs.protocol2.saveSuccessful = true;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveMobileTrapSuccessful', function() {
       vm.tabs.protocol3.saveSuccessful = true;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveSettlementTilesSuccessful', function() {
       vm.tabs.protocol4.saveSuccessful = true;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveWaterQualitySuccessful', function() {
       vm.tabs.protocol5.saveSuccessful = true;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveSiteConditionError', function() {
       vm.tabs.protocol1.saveSuccessful = false;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveOysterMeasurementError', function() {
       vm.tabs.protocol2.saveSuccessful = false;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveMobileTrapError', function() {
       vm.tabs.protocol3.saveSuccessful = false;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveSettlementTilesError', function() {
       vm.tabs.protocol4.saveSuccessful = false;
+      vm.savingOff();
     });
 
     $scope.$on('incrementalSaveWaterQualityError', function() {
       vm.tabs.protocol5.saveSuccessful = false;
+      vm.savingOff();
     });
 
     vm.refreshTiles = function() {
@@ -575,17 +585,22 @@
       });
     };
 
-    $scope.$on('savingStart', function() {
-      if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
-        vm.saving = true;
-        $timeout(function() {
-          vm.saving = false;
-        }, 1500);
-      }
-    });
-
-    $scope.$on('savingStop', function() {
-      vm.saving = false;
-    });
+    vm.savingOff = function() {
+      $timeout(function() {
+        vm.saving = false;
+      }, 1500);
+    };
+    // $scope.$on('savingStart', function() {
+    //   if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
+    //     vm.saving = true;
+    //     $timeout(function() {
+    //       vm.saving = false;
+    //     }, 1500);
+    //   }
+    // });
+    //
+    // $scope.$on('savingStop', function() {
+    //   vm.saving = false;
+    // });
   }
 })();
