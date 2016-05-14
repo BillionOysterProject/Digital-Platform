@@ -628,7 +628,8 @@
 
     $timeout(function() {
       om.saveOnBlur();
-    }, 1000);
+      $rootScope.$broadcast('startSaving');
+    }, 500);
 
     om.openMap = function() {
       $rootScope.$broadcast('stopSaving');

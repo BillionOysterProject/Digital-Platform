@@ -465,7 +465,8 @@
 
     $timeout(function() {
       st.saveOnBlur();
-    }, 3000);
+      $rootScope.$broadcast('startSaving');
+    }, 1500);
 
     st.openMap = function() {
       $rootScope.$broadcast('stopSaving');

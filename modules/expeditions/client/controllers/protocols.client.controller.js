@@ -6,19 +6,19 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', 'lodash', '$timeout',
-  'expeditionResolve', 'Authentication', 'TeamsService', 'ProtocolMobileTrapsService', 'ProtocolOysterMeasurementsService',
-  'ProtocolSettlementTilesService', 'ProtocolSiteConditionsService', 'ProtocolWaterQualityService',
-  'ExpeditionsService', 'ExpeditionActivitiesService'];
+  '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'ProtocolMobileTrapsService',
+  'ProtocolOysterMeasurementsService', 'ProtocolSettlementTilesService', 'ProtocolSiteConditionsService',
+  'ProtocolWaterQualityService', 'ExpeditionsService', 'ExpeditionActivitiesService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $http, moment, lodash, $timeout,
-    expedition, Authentication, TeamsService, ProtocolMobileTrapsService, ProtocolOysterMeasurementsService,
-    ProtocolSettlementTilesService, ProtocolSiteConditionsService, ProtocolWaterQualityService,
-    ExpeditionsService, ExpeditionActivitiesService) {
+    $interval, expedition, Authentication, TeamsService, ProtocolMobileTrapsService,
+    ProtocolOysterMeasurementsService, ProtocolSettlementTilesService, ProtocolSiteConditionsService,
+    ProtocolWaterQualityService, ExpeditionsService, ExpeditionActivitiesService) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
     vm.activeTab = 'protocol1';
-    vm.savingLoop = true;
+    vm.savingLoop = false;
     vm.siteConditionErrors = '';
     vm.oysterMeasurementErrors = '';
     vm.mobileTrapErrors = '';
@@ -186,14 +186,6 @@
       }
     }
 
-    var timeIntervalInSec = 15;
-    var incrementalSave = function(fn, timeInterval) {
-      var promise = $timeout(fn, timeInterval);
-
-      return promise.then(function(){
-        incrementalSave(fn, timeInterval);
-      });
-    };
     var activeProtocolCall = function() {
       switch(vm.activeTab) {
         case 'protocol1': return 'incrementalSaveSiteCondition';
@@ -203,26 +195,49 @@
         case 'protocol5': return 'incrementalSaveWaterQuality';
       }
     };
-    incrementalSave(function() {
-      if (vm.savingLoop) {
-        var saveCall = activeProtocolCall();
-        $rootScope.$broadcast(saveCall);
-        $scope.$emit('savingStart');
+
+    var save;
+    var stopSaving = function() {
+      if(angular.isDefined(save)) {
+        $interval.cancel(save);
+        save = undefined;
       }
-    }, 1000 * timeIntervalInSec);
+    };
+
+    var startSaving = function() {
+      if (angular.isDefined(save)) return;
+
+      save = $interval(function() {
+        console.log('incremental save vm.savingLoop', vm.savingLoop);
+        if (vm.savingLoop === true && (vm.checkStatusIncomplete() ||
+          vm.checkStatusPending() || vm.checkStatusReturned())) {
+          var saveCall = activeProtocolCall();
+          console.log('saveCall', saveCall);
+          $rootScope.$broadcast(saveCall);
+          $scope.$emit('savingStart');
+        } else {
+          stopSaving();
+        }
+      }, 15000);
+    };
 
     $scope.$on('stopSaving', function() {
+      console.log('stopSaving');
       vm.savingLoop = false;
+      stopSaving();
     });
 
     $scope.$on('startSaving', function() {
+      console.log('startSaving');
       vm.savingLoop = true;
+      startSaving();
     });
 
     vm.switchTabs = function(key) {
-      var saveCall = activeProtocolCall();
-      $rootScope.$broadcast(saveCall);
       vm.activeTab = key;
+      var saveCall = activeProtocolCall();
+      console.log('switch tabs', saveCall);
+      $rootScope.$broadcast(saveCall);
     };
 
     vm.checkStatusIncomplete = function() {
@@ -298,7 +313,7 @@
       };
 
       while(vm.saving === true) {
-        $timeout(wait, 1000);
+        $timeout(wait, 3000);
       }
     };
 
@@ -307,6 +322,7 @@
       vm.submitting = true;
       vm.saving = false;
       vm.savingLoop = false;
+      console.log('submitting vm.savingLoop', vm.savingLoop);
 
       $timeout(function() {
         if (vm.protocolsSuccessful()) {
@@ -327,9 +343,7 @@
             if(vm.viewMobileTrap) vm.mobileTrap = vm.expedition.protocols.mobileTrap;
             if(vm.viewSettlementTiles) vm.settlementTiles = vm.expedition.protocols.settlementTiles;
             if(vm.viewWaterQuality) vm.waterQuality = vm.expedition.protocols.waterQuality;
-
             vm.submitting = false;
-            vm.savingLoop = true;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
             });
@@ -345,10 +359,12 @@
             }
             vm.submitting = false;
             vm.savingLoop = true;
+            console.log('submit failed vm.savingLoop', vm.savingLoop);
           });
         } else {
           vm.submitting = false;
           vm.savingLoop = true;
+          console.log('submit not successful vm.savingLoop', vm.savingLoop);
         }
       }, 5000);
     };
@@ -357,6 +373,7 @@
       waitWhileSaving();
       vm.saving = false;
       vm.savingLoop = false;
+      console.log('publish vm.savingLoop', vm.savingLoop);
       vm.publishing = true;
 
       $timeout(function() {
@@ -378,7 +395,6 @@
             if(vm.viewMobileTrap) vm.mobileTrap.status = 'published';
             if(vm.viewSettlementTiles) vm.settlementTiles.status = 'published';
             if(vm.viewWaterQuality) vm.waterQuality.status = 'published';
-            vm.savingLoop = true;
             vm.publishing = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -392,11 +408,14 @@
               vm.settlementTilesErrors = data.message.settlementTiles;
               vm.waterQualityErrors = data.message.waterQuality;
             }
+
             vm.savingLoop = true;
+            console.log('publish error vm.savingLoop', vm.savingLoop);
             vm.publishing = false;
           });
         } else {
           vm.savingLoop = true;
+          console.log('publish not successful vm.savingLoop', vm.savingLoop);
           vm.publishing = false;
         }
       }, 5000);
@@ -406,6 +425,7 @@
       waitWhileSaving();
       vm.saving = false;
       vm.savingLoop = false;
+      console.log('return vm.savingLoop', vm.savingLoop);
       vm.returning = true;
 
       $timeout(function() {
@@ -433,7 +453,6 @@
             if(vm.viewMobileTrap) vm.mobileTrap.status = 'returned';
             if(vm.viewSettlementTiles) vm.settlementTiles.status = 'returned';
             if(vm.viewWaterQuality) vm.waterQuality.status = 'returned';
-            vm.savingLoop = true;
             vm.returning = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -448,10 +467,12 @@
               vm.waterQualityErrors = data.message.waterQuality;
             }
             vm.savingLoop = true;
+            console.log('return error vm.savingLoop', vm.savingLoop);
             vm.returning = false;
           });
         } else {
           vm.savingLoop = true;
+          console.log('return not successful vm.savingLoop', vm.savingLoop);
           vm.returning = false;
         }
       }, 5000);
@@ -461,6 +482,7 @@
       waitWhileSaving();
       vm.saving = false;
       vm.savingLoop = false;
+      console.log('unpublish vm.savingLoop', vm.savingLoop);
       vm.unpublishing = true;
 
       $timeout(function() {
@@ -482,7 +504,6 @@
             if(vm.viewMobileTrap) vm.mobileTrap.status = 'unpublished';
             if(vm.viewSettlementTiles) vm.settlementTiles.status = 'unpublished';
             if(vm.viewWaterQuality) vm.waterQuality.status = 'unpublished';
-            vm.savingLoop = true;
             vm.unpublishing = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -497,10 +518,12 @@
               vm.waterQualityErrors = data.message.waterQuality;
             }
             vm.savingLoop = true;
+            console.log('unpublish error vm.savingLoop', vm.savingLoop);
             vm.unpublishing = false;
           });
         } else {
           vm.savingLoop = true;
+          console.log('unpublish not successful vm.savingLoop', vm.savingLoop);
           vm.unpublishing = false;
         }
       }, 5000);
@@ -559,6 +582,10 @@
           vm.saving = false;
         }, 1500);
       }
+    });
+
+    $scope.$on('savingStop', function() {
+      vm.saving = false;
     });
   }
 })();

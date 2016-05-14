@@ -324,7 +324,8 @@
 
     $timeout(function() {
       wq.saveOnBlur();
-    }, 4000);
+      $rootScope.$broadcast('startSaving');
+    }, 2000);
 
     wq.openMap = function() {
       $rootScope.$broadcast('stopSaving');

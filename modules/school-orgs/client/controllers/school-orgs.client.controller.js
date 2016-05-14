@@ -16,9 +16,9 @@
 
     vm.filter = {
       searchString: '',
-      sort: '',
-      limit: 20,
-      page: 1
+      sort: 'name',
+      //limit: 20,
+      //page: 1
     };
 
     vm.searchChange = function($event) {
@@ -33,11 +33,12 @@
         searchString: vm.filter.searchString,
         showTeams: true,
         sort: vm.filter.sort,
-        limit: vm.filter.limit,
-        page: vm.filter.page
+        //limit: vm.filter.limit,
+        //page: vm.filter.page
       }, function(data) {
         vm.organizations = data;
         vm.error = null;
+        vm.buildPager();
       }, function(error) {
         vm.error = error.data.message;
       });
@@ -53,6 +54,23 @@
       });
     };
     vm.findOrgRequests();
+
+    vm.buildPager = function () {
+      vm.pagedItems = [];
+      vm.itemsPerPage = 15;
+      vm.currentPage = 1;
+      vm.figureOutItemsToDisplay();
+    };
+
+    vm.figureOutItemsToDisplay = function () {
+      var begin = ((vm.currentPage - 1) * vm.itemsPerPage);
+      var end = begin + vm.itemsPerPage;
+      vm.pagedItems = vm.organizations.slice(begin, end);
+    };
+
+    vm.pageChanged = function () {
+      vm.figureOutItemsToDisplay();
+    };
 
     vm.openSchoolOrgForm = function(schoolOrg) {
       vm.schoolOrg = (schoolOrg) ? new SchoolOrganizationsService(angular.copy(schoolOrg)) : new SchoolOrganizationsService();
