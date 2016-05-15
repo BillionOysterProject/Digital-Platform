@@ -48,4 +48,5 @@ var ProtocolMobileTrapSchema = new Schema({
   }]
 });
 
+ProtocolMobileTrapSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolMobileTrap', ProtocolMobileTrapSchema);

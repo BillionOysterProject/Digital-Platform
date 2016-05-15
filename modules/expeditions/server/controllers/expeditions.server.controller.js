@@ -228,6 +228,7 @@ var updateProtocols = function(expedition, siteCondition, oysterMeasurement, mob
             allSuccessful = false;
           }
           setTimeout(function() {
+            console.log('updating mobile trap');
             updateMobileTrap(expedition.protocols.mobileTrap, mobileTrap, status, user,
             function(mobileTrapSaved, mobileTrapErrorMessages) {
               if (mobileTrapErrorMessages) {
@@ -308,6 +309,12 @@ exports.submit = function (req, res) {
   var mobileTrap = req.body.protocols.mobileTrap;
   var settlementTiles = req.body.protocols.settlementTiles;
   var waterQuality = req.body.protocols.waterQuality;
+
+  console.log('siteCondition', siteCondition);
+  console.log('oysterMeasurement', oysterMeasurement);
+  console.log('mobileTrap', mobileTrap);
+  console.log('settlementTiles', settlementTiles);
+  console.log('waterQuality', waterQuality);
 
   var updateActivity = function(callback) {
     var protocolsSubmitted = {};
