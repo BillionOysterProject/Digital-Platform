@@ -18,7 +18,6 @@
     vm.expedition = expedition;
     vm.user = Authentication.user;
     vm.activeTab = 'protocol1';
-    vm.savingLoop = false;
     vm.siteConditionErrors = '';
     vm.oysterMeasurementErrors = '';
     vm.mobileTrapErrors = '';
@@ -208,9 +207,7 @@
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
-        console.log('incremental save vm.savingLoop', vm.savingLoop);
-        if (vm.savingLoop === true && (vm.checkStatusIncomplete() ||
-          vm.checkStatusPending() || vm.checkStatusReturned())) {
+        if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
           vm.saving = true;
           var saveCall = activeProtocolCall();
           console.log('saveCall', saveCall);
@@ -223,21 +220,18 @@
 
     $scope.$on('stopSaving', function() {
       console.log('stopSaving');
-      vm.savingLoop = false;
       stopSaving();
     });
 
     $scope.$on('startSaving', function() {
       console.log('startSaving');
-      vm.savingLoop = true;
       startSaving();
     });
 
     vm.switchTabs = function(key) {
-      vm.activeTab = key;
       var saveCall = activeProtocolCall();
-      console.log('switch tabs', saveCall);
       $rootScope.$broadcast(saveCall);
+      vm.activeTab = key;
     };
 
     vm.checkStatusIncomplete = function() {
@@ -321,8 +315,7 @@
       waitWhileSaving();
       vm.submitting = true;
       vm.saving = false;
-      vm.savingLoop = false;
-      console.log('submitting vm.savingLoop', vm.savingLoop);
+      stopSaving();
 
       $timeout(function() {
         if (vm.protocolsSuccessful()) {
@@ -332,6 +325,8 @@
           if(vm.viewMobileTrap) protocols.mobileTrap = vm.mobileTrap;
           if(vm.viewSettlementTiles) protocols.settlementTiles = vm.settlementTiles;
           if(vm.viewWaterQuality) protocols.waterQuality = vm.waterQuality;
+
+          console.log('protocols to submit', protocols);
 
           $http.post('/api/expeditions/' + vm.expedition._id + '/submit?full=true', {
             protocols: protocols
@@ -358,13 +353,11 @@
               vm.waterQualityErrors = data.message.waterQuality;
             }
             vm.submitting = false;
-            vm.savingLoop = true;
-            console.log('submit failed vm.savingLoop', vm.savingLoop);
+            startSaving();
           });
         } else {
           vm.submitting = false;
-          vm.savingLoop = true;
-          console.log('submit not successful vm.savingLoop', vm.savingLoop);
+          startSaving();
         }
       }, 5000);
     };
@@ -372,9 +365,8 @@
     vm.publish = function() {
       waitWhileSaving();
       vm.saving = false;
-      vm.savingLoop = false;
-      console.log('publish vm.savingLoop', vm.savingLoop);
       vm.publishing = true;
+      stopSaving();
 
       $timeout(function() {
         if (vm.protocolsSuccessful()) {
@@ -409,13 +401,11 @@
               vm.waterQualityErrors = data.message.waterQuality;
             }
 
-            vm.savingLoop = true;
-            console.log('publish error vm.savingLoop', vm.savingLoop);
+            startSaving();
             vm.publishing = false;
           });
         } else {
-          vm.savingLoop = true;
-          console.log('publish not successful vm.savingLoop', vm.savingLoop);
+          startSaving();
           vm.publishing = false;
         }
       }, 5000);
@@ -424,9 +414,8 @@
     vm.return = function() {
       waitWhileSaving();
       vm.saving = false;
-      vm.savingLoop = false;
-      console.log('return vm.savingLoop', vm.savingLoop);
       vm.returning = true;
+      stopSaving();
 
       $timeout(function() {
         if (vm.protocolsLoaded()) {
@@ -466,13 +455,11 @@
               vm.settlementTilesErrors = data.message.settlementTiles;
               vm.waterQualityErrors = data.message.waterQuality;
             }
-            vm.savingLoop = true;
-            console.log('return error vm.savingLoop', vm.savingLoop);
+            startSaving();
             vm.returning = false;
           });
         } else {
-          vm.savingLoop = true;
-          console.log('return not successful vm.savingLoop', vm.savingLoop);
+          startSaving();
           vm.returning = false;
         }
       }, 5000);
@@ -481,9 +468,8 @@
     vm.unpublish = function() {
       waitWhileSaving();
       vm.saving = false;
-      vm.savingLoop = false;
-      console.log('unpublish vm.savingLoop', vm.savingLoop);
       vm.unpublishing = true;
+      stopSaving();
 
       $timeout(function() {
         if (vm.protocolsLoaded()) {
@@ -517,13 +503,11 @@
               vm.settlementTilesErrors = data.message.settlementTiles;
               vm.waterQualityErrors = data.message.waterQuality;
             }
-            vm.savingLoop = true;
-            console.log('unpublish error vm.savingLoop', vm.savingLoop);
+            startSaving();
             vm.unpublishing = false;
           });
         } else {
-          vm.savingLoop = true;
-          console.log('unpublish not successful vm.savingLoop', vm.savingLoop);
+          startSaving();
           vm.unpublishing = false;
         }
       }, 5000);
@@ -590,17 +574,17 @@
         vm.saving = false;
       }, 1500);
     };
-    // $scope.$on('savingStart', function() {
-    //   if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
-    //     vm.saving = true;
-    //     $timeout(function() {
-    //       vm.saving = false;
-    //     }, 1500);
-    //   }
-    // });
-    //
-    // $scope.$on('savingStop', function() {
-    //   vm.saving = false;
-    // });
+
+    $scope.$on('savingStart', function() {
+      if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
+        vm.saving = true;
+        stopSaving();
+      }
+    });
+
+    $scope.$on('savingStop', function() {
+      vm.savingOff();
+      startSaving();
+    });
   }
 })();

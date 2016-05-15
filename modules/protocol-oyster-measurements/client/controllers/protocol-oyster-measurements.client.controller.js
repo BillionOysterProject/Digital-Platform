@@ -6,10 +6,10 @@
     .controller('ProtocolOysterMeasurementsController', ProtocolOysterMeasurementsController);
 
   ProtocolOysterMeasurementsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
-    'Authentication', 'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
+    'lodash', 'Authentication', 'FileUploader', 'ProtocolOysterMeasurementsService', 'BioaccumulationService', 'TeamMembersService'];
 
   function ProtocolOysterMeasurementsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
-    Authentication, FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
+    lodash, Authentication, FileUploader, ProtocolOysterMeasurementsService, BioaccumulationService, TeamMembersService) {
     var om = this;
 
     om.substrateCount = 10;
@@ -54,6 +54,19 @@
           done: false
         });
       }
+      $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
+      om.protocolOysterMeasurement)
+      .success(function (data, status, headers, config) {
+        om.protocolOysterMeasurement = lodash.merge(om.protocolOysterMeasurement,
+          new ProtocolOysterMeasurementsService(data.oysterMeasurement));
+        om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
+        om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
+          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+        $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+      })
+      .error(function (data, status, headers, config) {
+      });
     };
 
     // Set up Protocol Oyster Measurements
@@ -68,6 +81,7 @@
           om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
         om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
       });
+      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
     } else if ($scope.protocolOysterMeasurement) {
       om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService($scope.protocolOysterMeasurement);
       om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
@@ -79,10 +93,12 @@
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length < om.substrateCount) {
         setupSubstrateShells();
       }
+      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
     } else {
       om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
       om.cageConditionPhotoURL = '';
       setupSubstrateShells();
+      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
     }
 
     var findPreviousValues = function() {
@@ -440,6 +456,7 @@
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
         return false;
       } else {
+        $rootScope.$broadcast('savingStart');
         angular.element('#modal-substrateshell'+index).modal('hide');
         substrate = om.findSubstrateStats(substrate);
         substrate.outerSidePhoto = {
@@ -457,25 +474,26 @@
               ProtocolOysterMeasurementsService.get({
                 oysterMeasurementId: om.protocolOysterMeasurement._id
               }, function(data) {
-                om.protocolOysterMeasurement = data;
+                om.protocolOysterMeasurement = lodash.merge(om.protocolOysterMeasurement, data);
                 om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
                   om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
                   om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
                 om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
                 angular.element('#modal-substrateshell'+index).modal('hide');
-                $rootScope.$broadcast('startSaving');
+                $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+                $rootScope.$broadcast('savingStop');
               });
             }, function() {
               angular.element('#modal-substrateshell'+index).modal('hide');
-              $rootScope.$broadcast('startSaving');
+              $rootScope.$broadcast('savingStop');
             });
           }, function() {
             angular.element('#modal-substrateshell'+index).modal('hide');
-            $rootScope.$broadcast('startSaving');
+            $rootScope.$broadcast('savingStop');
           });
         }, function() {
           angular.element('#modal-substrateshell'+index).modal('hide');
-          $rootScope.$broadcast('startSaving');
+          $rootScope.$broadcast('savingStop');
         });
       }
     };
@@ -563,10 +581,12 @@
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells !== undefined &&
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0 &&
         om.checkDone(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[0]))))) {
+        $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
         om.protocolOysterMeasurement)
         .success(function (data, status, headers, config) {
-          om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService(data.oysterMeasurement);
+          om.protocolOysterMeasurement = lodash.merge(om.protocolOysterMeasurement,
+            new ProtocolOysterMeasurementsService(data.oysterMeasurement));
           om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
           om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
             om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
@@ -580,15 +600,19 @@
             om.error = null;
             $rootScope.$broadcast('incrementalSaveOysterMeasurementSuccessful');
           }
+          $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+          $rootScope.$broadcast('savingStop');
           if (successCallback) successCallback();
         })
         .error(function (data, status, headers, config) {
           om.error = data.message;
           om.form.oysterMeasurementForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveOysterMeasurementError');
+          $rootScope.$broadcast('savingStop');
           if (errorCallback) errorCallback();
         });
       } else {
+        $rootScope.$broadcast('savingStop');
         if (successCallback) successCallback();
       }
     };
@@ -601,26 +625,31 @@
             ProtocolOysterMeasurementsService.get({
               oysterMeasurementId: om.protocolOysterMeasurement._id
             }, function(data) {
-              om.protocolOysterMeasurement = data;
+              om.protocolOysterMeasurement = lodash.merge(om.protocolOysterMeasurement, data);
               om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
                 om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
                 om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
               om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
+              $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+              $rootScope.$broadcast('savingStop');
             });
           };
 
           om.cageConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
             om.error = response.message;
+            $rootScope.$broadcast('savingStop');
           };
 
           om.cageConditionUploader.onBeforeUploadItem = function(item) {
             item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/upload-oyster-cage-condition';
           };
+          $rootScope.$broadcast('savingStart');
           om.cageConditionUploader.uploadAll();
         }
       } else if (om.protocolOysterMeasurement._id && om.cageConditionPhotoURL === '' &&
         om.protocolOysterMeasurement.conditionOfOysterCage &&
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
+        $rootScope.$broadcast('savingStart');
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = '';
         om.saveOnBlur();
       }
