@@ -699,6 +699,12 @@ exports.expeditionByID = function (req, res, next, id) {
     .populate('protocols.mobileTrap')
     .populate('protocols.settlementTiles')
     .populate('protocols.waterQuality');
+
+    query.populate('protocols.siteCondition.scribeMember', 'displayName')
+    .populate('protocols.oysterMeasurement.scribeMember', 'displayName')
+    .populate('protocols.mobileTrap.scribeMember', 'displayName')
+    .populate('protocols.settlementTiles.scribeMember', 'displayName')
+    .populate('protocols.waterQuality.scribeMember', 'displayName');
   } else {
     query.populate('protocols.siteCondition', 'status')
     .populate('protocols.oysterMeasurement', 'status')
