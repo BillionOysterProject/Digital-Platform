@@ -312,6 +312,7 @@
     };
 
     vm.submitTeamMember = function() {
+      $rootScope.$broadcast('saveValuesToScope');
       waitWhileSaving();
       vm.submitting = true;
       vm.saving = false;
@@ -363,6 +364,7 @@
     };
 
     vm.publish = function() {
+      $rootScope.$broadcast('saveValuesToScope');
       waitWhileSaving();
       vm.saving = false;
       vm.publishing = true;
@@ -412,6 +414,7 @@
     };
 
     vm.return = function() {
+      $rootScope.$broadcast('saveValuesToScope');
       waitWhileSaving();
       vm.saving = false;
       vm.returning = true;
@@ -466,6 +469,7 @@
     };
 
     vm.unpublish = function() {
+      $rootScope.$broadcast('saveValuesToScope');
       waitWhileSaving();
       vm.saving = false;
       vm.unpublishing = true;

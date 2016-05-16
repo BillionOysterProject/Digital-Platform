@@ -178,10 +178,13 @@ exports.incrementalSave = function (req, res) {
     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
+    console.log('settlementTiles', settlementTiles);
+
     removeFiles(req.settlementTiles, settlementTiles,
     function() {
       settlementTiles.save(function (err) {
         if (err) {
+          console.log('settlementTile save error', err);
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });

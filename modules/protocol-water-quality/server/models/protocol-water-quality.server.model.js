@@ -106,4 +106,5 @@ var ProtocolWaterQualitySchema = new Schema({
   bacteriaCountMPN: Number
 });
 
+ProtocolWaterQualitySchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolWaterQuality', ProtocolWaterQualitySchema);

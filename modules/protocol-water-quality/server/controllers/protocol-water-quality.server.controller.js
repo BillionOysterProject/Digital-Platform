@@ -99,8 +99,10 @@ exports.incrementalSave = function (req, res) {
     waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     waterQuality.scribeMember = req.user;
 
+    console.log('waterQuality', waterQuality);
     waterQuality.save(function (err) {
       if (err) {
+        console.log('water quality save error', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });

@@ -88,5 +88,5 @@ var ProtocolOysterMeasurementSchema = new Schema({
     type: Number
   }
 });
-
+ProtocolOysterMeasurementSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolOysterMeasurement', ProtocolOysterMeasurementSchema);

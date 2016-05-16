@@ -259,6 +259,10 @@
     //   $state.go('protocol-site-conditions.main');
     // };
 
+    $scope.$on('saveValuesToScope', function() {
+      $scope.protocolSiteCondition = sc.protocolSiteCondition;
+    });
+
     $scope.$on('incrementalSaveSiteCondition', function() {
       sc.saveOnBlur();
     });
@@ -272,20 +276,20 @@
         $http.post('/api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/incremental-save',
         sc.protocolSiteCondition)
         .success(function (data, status, headers, config) {
-          sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, new ProtocolSiteConditionsService(data.siteCondition));
-          sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
-            sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
-            sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-          sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
-            sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
-            sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-          sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
-          if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
-            sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
-          }
-          if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
-            sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
-          }
+          // sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, new ProtocolSiteConditionsService(data.siteCondition));
+          // sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
+          //   sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
+          //   sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+          // sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
+          //   sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
+          //   sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
+          // sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
+          // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
+          //   sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
+          // }
+          // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
+          //   sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
+          // }
           if (data.errors) {
             sc.error = data.errors;
             sc.form.siteConditionForm.$setSubmitted(true);
@@ -317,20 +321,24 @@
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
-              sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, data);
+              // sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, data);
+              if (!sc.protocolSiteCondition.waterConditions) {
+                sc.protocolSiteCondition.waterConditions = {};
+              }
+              sc.protocolSiteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
               sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
                 sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
                 sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-              sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
-                sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
-                sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
-              if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
-                sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
-              }
-              if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
-                sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
-              }
+              // sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
+              //   sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
+              //   sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
+              // sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
+              // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
+              //   sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
+              // }
+              // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
+              //   sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
+              // }
               $scope.protocolSiteCondition = sc.protocolSiteCondition;
               $rootScope.$broadcast('savingStop');
             });
@@ -363,20 +371,24 @@
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
-              sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, data);
-              sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
-                sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
-                sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+              // sc.protocolSiteCondition = lodash.merge(sc.protocolSiteCondition, data);
+              // sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
+              //   sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
+              //   sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
+              if (!sc.protocolSiteCondition.landConditions) {
+                sc.protocolSiteCondition.landConditions = {};
+              }
+              sc.protocolSiteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
               sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
                 sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
                 sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-              sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
-              if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
-                sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
-              }
-              if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
-                sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
-              }
+              // sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
+              // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestHighTide) {
+              //   sc.protocolSiteCondition.tideConditions.closestHighTide = moment(sc.protocolSiteCondition.tideConditions.closestHighTide).startOf('minute').toDate();
+              // }
+              // if (sc.protocolSiteCondition.tideConditions && sc.protocolSiteCondition.tideConditions.closestLowTide) {
+              //   sc.protocolSiteCondition.tideConditions.closestLowTide = moment(sc.protocolSiteCondition.tideConditions.closestLowTide).startOf('minute').toDate();
+              // }
               $scope.protocolSiteCondition = sc.protocolSiteCondition;
               $rootScope.$broadcast('savingStop');
             });
@@ -413,5 +425,6 @@
     sc.closeMap = function() {
       $rootScope.$broadcast('startSaving');
     };
+
   }
 })();
