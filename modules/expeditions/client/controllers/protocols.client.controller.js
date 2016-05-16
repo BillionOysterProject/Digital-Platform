@@ -314,9 +314,9 @@
               vm.viewWaterQuality = false;
               vm.waterQuality = data.protocols.waterQuality;
             }
-            if (vm.siteCondition.status === 'submitted' && vm.oysterMeasurement.status === 'submitted' &&
-            vm.mobileTrap.status === 'submitted' && vm.settlementTiles.status === 'submitted' &&
-            vm.waterQuality.status === 'submitted') {
+            if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
+            data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
+            data.protocols.waterQuality.status === 'submitted') {
               $state.go('expeditions.view', {
                 expeditionId: vm.expedition._id
               });
