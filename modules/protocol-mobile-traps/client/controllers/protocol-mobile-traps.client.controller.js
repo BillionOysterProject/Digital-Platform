@@ -285,16 +285,18 @@
           if (uploader.queue.length > 0) {
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
               uploader.removeFromQueue(fileItem);
-              ProtocolMobileTrapsService.get({
-                mobileTrapId: mt.protocolMobileTrap._id
-              }, function(data) {
-                mt.protocolMobileTrap = lodash.merge(mt.protocolMobileTrap, data);
-                mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
-                setupMobileOrganisms();
-                $rootScope.$broadcast('savingStop');
-                $scope.protocolMobileTrap = mt.protocolMobileTrap;
-                successCallback();
-              });
+              // ProtocolMobileTrapsService.get({
+              //   mobileTrapId: mt.protocolMobileTrap._id
+              // }, function(data) {
+              //   mt.protocolMobileTrap = lodash.merge(mt.protocolMobileTrap, data);
+              //   mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
+              //   setupMobileOrganisms();
+              //   $rootScope.$broadcast('savingStop');
+              //   $scope.protocolMobileTrap = mt.protocolMobileTrap;
+              //   successCallback();
+              // });
+              $rootScope.$broadcast('savingStop');
+              successCallback();
             };
 
             uploader.onErrorItem = function (fileItem, response, status, headers) {
@@ -332,10 +334,24 @@
 
         mt.saveOnBlur(function(successful) {
           saveImageOnBlur(organismId, function() {
-            mt.organismDetails = {};
-            mt.sketchPhotoUrl = '';
-            $rootScope.$broadcast('savingStop');
-            if (successful) $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+            ProtocolMobileTrapsService.get({
+              mobileTrapId: mt.protocolMobileTrap._id
+            }, function(data) {
+              // mt.protocolMobileTrap = lodash.merge(mt.protocolMobileTrap, data);
+              // mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
+              // setupMobileOrganisms();
+              // $rootScope.$broadcast('savingStop');
+              if (!mt.protocolMobileTrap.mobileOrganisms) {
+                mt.protocolMobileTrap.mobileOrganisms = [];
+              }
+              mt.protocolMobileTrap.mobileOrganisms = data.mobileOrganisms;
+              setupMobileOrganisms();
+              $scope.protocolMobileTrap = mt.protocolMobileTrap;
+              mt.organismDetails = {};
+              mt.sketchPhotoUrl = '';
+              $rootScope.$broadcast('savingStop');
+              if (successful) $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
+            });
           }, function(errorMessage) {
             mt.error = errorMessage;
             $rootScope.$broadcast('savingStop');
@@ -354,6 +370,10 @@
       $rootScope.$broadcast('startSaving');
     };
 
+    $scope.$on('saveValuesToScope', function() {
+      $scope.protocolMobileTrap = mt.protocolMobileTrap;
+    });
+
     $scope.$on('incrementalSaveMobileTrap', function() {
       mt.saveOnBlur();
     });
@@ -368,9 +388,9 @@
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)
         .success(function (data, status, headers, config) {
-          mt.protocolMobileTrap = lodash.merge(mt.protocolMobileTrap, new ProtocolMobileTrapsService(data.mobileTrap));
-          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
-          setupMobileOrganisms();
+          // mt.protocolMobileTrap = lodash.merge(mt.protocolMobileTrap, new ProtocolMobileTrapsService(data.mobileTrap));
+          // mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
+          // setupMobileOrganisms();
           if (data.errors) {
             mt.error = data.errors;
             if (errorCallback) {

@@ -165,4 +165,5 @@ var ProtocolSiteConditionSchema = new Schema({
   }
 });
 
+ProtocolSiteConditionSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolSiteCondition', ProtocolSiteConditionSchema);

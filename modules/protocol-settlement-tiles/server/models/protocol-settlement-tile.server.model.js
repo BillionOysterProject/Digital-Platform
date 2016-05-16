@@ -215,4 +215,5 @@ var ProtocolSettlementTileSchema = new Schema({
   }]
 });
 
+ProtocolSettlementTileSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolSettlementTile', ProtocolSettlementTileSchema);
