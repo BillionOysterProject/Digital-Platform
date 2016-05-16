@@ -61,7 +61,7 @@
             </div>
         </section>
         <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li role="presentation" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
+            <li role="presentation" disable="vm.tabs.protocol1.isDisabled" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
             ng-show="vm.viewSiteCondition" ng-click="vm.switchTabs('protocol1')">
               <a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">
               <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol1.saveSuccessful === false"></i>
@@ -71,7 +71,7 @@
               Protocol 1: Site Conditions</a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol2.isActive === true}"
-            ng-show="vm.viewOysterMeasurement" ng-click="vm.switchTabs('protocol2')">
+            ng-show="vm.viewOysterMeasurement" disable="vm.tabs.protocol2.isDisabled" ng-click="vm.switchTabs('protocol2')">
               <a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol2.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol2.saveSuccessful === true"></i>
@@ -80,7 +80,7 @@
               Protocol 2: Oyster Measurements</a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol3.isActive === true}"
-            ng-show="vm.viewMobileTrap" ng-click="vm.switchTabs('protocol3')">
+            ng-show="vm.viewMobileTrap" disable="vm.tabs.protocol3.isDisabled" ng-click="vm.switchTabs('protocol3')">
               <a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab" ng-click="vm.refreshTiles()">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol3.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol3.saveSuccessful === true"></i>
@@ -89,7 +89,7 @@
               Protocol 3: Mobile Trap</a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol4.isActive === true}"
-            ng-show="vm.viewSettlementTiles" ng-click="vm.switchTabs('protocol4')">
+            ng-show="vm.viewSettlementTiles" disable="vm.tabs.protocol4.isDisabled" ng-click="vm.switchTabs('protocol4')">
               <a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol4.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol4.saveSuccessful === true"></i>
@@ -98,7 +98,7 @@
               Protocol 4: Settlement Tiles</a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol5.isActive === true}"
-            ng-show="vm.viewWaterQuality" ng-click="vm.switchTabs('protocol5')">
+            ng-show="vm.viewWaterQuality" disable="vm.tabs.protocol5.isDisabled" ng-click="vm.switchTabs('protocol5')">
               <a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol5.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol5.saveSuccessful === true"></i>
@@ -124,7 +124,7 @@
             <form-protocol-mobile-trap protocol-mobile-trap="vm.mobileTrap"
             error="vm.mobileTrapErrors" ng-cloak></form-protocol-mobile-trap>
         </div>
-        <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol3.isActive === true}"
+        <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol4.isActive === true}"
         id="protocol4" ng-show="vm.viewSettlementTiles">
             <form-protocol-settlement-tiles protocol-settlement-tiles="vm.settlementTiles"
             error="vm.settlementTilesErrors" ng-cloak></form-protocol-settlement-tiles>
@@ -155,3 +155,6 @@
       </section>
     </section>
 </section>
+
+<!-- modals -->
+<remove-protocol-tab-modal changes="vm.disableProtocolChanges"></remove-protocol-tab-modal>

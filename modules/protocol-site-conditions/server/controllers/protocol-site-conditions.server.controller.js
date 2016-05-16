@@ -22,6 +22,13 @@ var emptyString = function(string) {
   }
 };
 
+var checkRole = function(role, user) {
+  var roleIndex = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
   if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
   if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
@@ -249,33 +256,41 @@ exports.incrementalSave = function (req, res) {
   var siteCondition = req.siteCondition;
 
   if (siteCondition) {
-    siteCondition = _.extend(siteCondition, req.body);
-    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.scribeMember = req.user;
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      siteCondition = _.extend(siteCondition, req.body);
+      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.tideConditions.closestHighTide =
+        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.tideConditions.closestLowTide =
+        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.scribeMember = req.user;
 
-    siteCondition.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateSiteCondition(siteCondition, function(siteConditionJSON) {
-          res.json({
-            siteCondition: siteCondition,
-            successful: true
+      siteCondition.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            siteCondition: siteCondition,
-            errors: errorMessages
+        } else {
+          validateSiteCondition(siteCondition, function(siteConditionJSON) {
+            res.json({
+              siteCondition: siteCondition,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              siteCondition: siteCondition,
+              errors: errorMessages
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     return res.status(400).send({
       message: 'Protocol site condition not found'
@@ -411,15 +426,23 @@ exports.uploadWaterConditionPicture = function (req, res) {
   upload.fileFilter = waterConditionUploadFileFilter;
 
   if (siteCondition) {
-    var uploadRemote = new UploadRemote();
-    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
-    function(fileInfo) {
-      siteCondition.waterConditions.waterConditionPhoto = fileInfo;
-      uploadFileSuccess(siteCondition, res);
-    }, function (errorMessage) {
-      // delete siteCondition
-      uploadFileError(siteCondition, errorMessage, res);
-    });
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
+      function(fileInfo) {
+        siteCondition.waterConditions.waterConditionPhoto = fileInfo;
+        uploadFileSuccess(siteCondition, res);
+      }, function (errorMessage) {
+        // delete siteCondition
+        uploadFileError(siteCondition, errorMessage, res);
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Site condition does not exist'
@@ -436,15 +459,23 @@ exports.uploadLandConditionPicture = function (req, res) {
   upload.fileFilter = landConditionUploadFileFilter;
 
   if (siteCondition) {
-    var uploadRemote = new UploadRemote();
-    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
-    function(fileInfo) {
-      siteCondition.landConditions.landConditionPhoto = fileInfo;
-      uploadFileSuccess(siteCondition, res);
-    }, function(errorMessage) {
-      // delete siteCondition
-      uploadFileError(siteCondition, errorMessage, res);
-    });
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
+      function(fileInfo) {
+        siteCondition.landConditions.landConditionPhoto = fileInfo;
+        uploadFileSuccess(siteCondition, res);
+      }, function(errorMessage) {
+        // delete siteCondition
+        uploadFileError(siteCondition, errorMessage, res);
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Site condition does not exist'
@@ -477,7 +508,8 @@ exports.siteConditionByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolSiteCondition.findById(id).populate('teamLead', 'displayName').exec(function (err, siteCondition) {
+  ProtocolSiteCondition.findById(id).populate('teamLead', 'displayName username').populate('scribeMember', 'displayName username')
+  .exec(function (err, siteCondition) {
     if (err) {
       return next(err);
     } else if (!siteCondition) {
