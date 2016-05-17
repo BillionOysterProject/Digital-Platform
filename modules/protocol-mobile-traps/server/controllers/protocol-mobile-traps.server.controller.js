@@ -99,7 +99,7 @@ exports.incrementalSave = function (req, res) {
     if (mobileTrap.status === 'incomplete' || mobileTrap.status === 'returned' ||
     (checkRole('team lead', req.user) && mobileTrap.status === 'submitted')) {
       mobileTrap = _.extend(mobileTrap, req.body);
-      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      mobileTrap.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
       mobileTrap.scribeMember = req.user;
 
       mobileTrap.save(function (err) {

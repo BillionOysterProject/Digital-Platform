@@ -121,7 +121,7 @@ exports.create = function (req, res) {
   function(settlementTilesJSON) {
     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {

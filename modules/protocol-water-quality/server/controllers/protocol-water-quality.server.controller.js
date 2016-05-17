@@ -153,7 +153,7 @@ exports.updateInternal = function(waterQualityReq, waterQualityBody, user, succe
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
-      waterQuality.collectionTime = moment(waterQualityBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      waterQuality.collectionTime = moment(waterQualityBody.collectionTime).startOf('minute').toDate();
       waterQuality.scribeMember = user;
       waterQuality.submitted = new Date();
 

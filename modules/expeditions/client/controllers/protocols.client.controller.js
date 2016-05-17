@@ -266,60 +266,70 @@
             var changes = [];
             if (data.protocols.siteCondition.status === 'submitted' && vm.siteCondition.status !== 'submitted' &&
             vm.viewSiteCondition) {
-              changes.push({
-                scribeName: data.protocols.siteCondition.scribeMember.displayName,
-                protocolName: 'Site Conditions',
-                protocol: 'protocol1'
-              });
-              vm.viewSiteCondition = false;
+              if (vm.isTeamMember) {
+                changes.push({
+                  scribeName: data.protocols.siteCondition.scribeMember.displayName,
+                  protocolName: 'Site Conditions',
+                  protocol: 'protocol1'
+                });
+                vm.viewSiteCondition = false;
+              }
               vm.siteCondition = data.protocols.siteCondition;
               $rootScope.$broadcast('readSiteConditionFromScope');
             }
             if (data.protocols.oysterMeasurement.status === 'submitted' && vm.oysterMeasurement.status !== 'submitted' &&
             vm.viewOysterMeasurement) {
-              changes.push({
-                scribeName: data.protocols.oysterMeasurement.scribeMember.displayName,
-                protocolName: 'Oyster Measurements',
-                protocol: 'protocol2'
-              });
-              vm.viewOysterMeasurement = false;
+              if (vm.isTeamMember) {
+                changes.push({
+                  scribeName: data.protocols.oysterMeasurement.scribeMember.displayName,
+                  protocolName: 'Oyster Measurements',
+                  protocol: 'protocol2'
+                });
+                vm.viewOysterMeasurement = false;
+              }
               vm.oysterMeasurement = data.protocols.oysterMeasurement;
               $rootScope.$broadcast('readOysterMeasurementFromScope');
             }
             if (data.protocols.mobileTrap.status === 'submitted' && vm.mobileTrap.status !== 'submitted' &&
             vm.viewMobileTrap) {
-              changes.push({
-                scribeName: data.protocols.mobileTrap.scribeMember.displayName,
-                protocolName: 'Mobile Trap',
-                protocol: 'protocol3'
-              });
-              vm.viewMobileTrap = false;
+              if (vm.isTeamMember) {
+                changes.push({
+                  scribeName: data.protocols.mobileTrap.scribeMember.displayName,
+                  protocolName: 'Mobile Trap',
+                  protocol: 'protocol3'
+                });
+                vm.viewMobileTrap = false;
+              }
               vm.mobileTrap = data.protocols.mobileTrap;
               $rootScope.$broadcast('readMobileTrapFromScope');
             }
             if (data.protocols.settlementTiles.status === 'submitted' && vm.settlementTiles.status !== 'submitted' &&
             vm.viewSettlementTiles) {
-              changes.push({
-                scribeName: data.protocols.settlementTiles.scribeMember.displayName,
-                protocolName: 'Settlement Tiles',
-                protocol: 'protocol4'
-              });
-              vm.viewSettlementTiles = false;
+              if (vm.isTeamMember) {
+                changes.push({
+                  scribeName: data.protocols.settlementTiles.scribeMember.displayName,
+                  protocolName: 'Settlement Tiles',
+                  protocol: 'protocol4'
+                });
+                vm.viewSettlementTiles = false;
+              }
               vm.settlementTiles = data.protocols.settlementTiles;
               $rootScope.$broadcast('readSettlementTilesFromScope');
             }
             if (data.protocols.waterQuality.status === 'submitted' && vm.waterQuality.status !== 'submitted' &&
             vm.viewWaterQuality) {
-              changes.push({
-                scribeName: data.protocols.waterQuality.scribeMember.displayName,
-                protocolName: 'Water Quality',
-                protocol: 'protocol5'
-              });
-              vm.viewWaterQuality = false;
+              if (vm.isTeamMember) {
+                changes.push({
+                  scribeName: data.protocols.waterQuality.scribeMember.displayName,
+                  protocolName: 'Water Quality',
+                  protocol: 'protocol5'
+                });
+                vm.viewWaterQuality = false;
+              }
               vm.waterQuality = data.protocols.waterQuality;
               $rootScope.$broadcast('readWaterQualityFromScope');
             }
-            if (vm.isTeamLead) {
+            if (vm.isTeamMember) {
               if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
               data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
               data.protocols.waterQuality.status === 'submitted') {

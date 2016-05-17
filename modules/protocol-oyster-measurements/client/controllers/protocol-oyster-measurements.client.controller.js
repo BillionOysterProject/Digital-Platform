@@ -268,35 +268,37 @@
         om.saveOnBlur(function() {
           saveSubstrateOuterImagesOnBlur(index, function() {
             saveSubstrateInnerImagesOnBlur(index, function() {
-              ProtocolOysterMeasurementsService.get({
-                oysterMeasurementId: om.protocolOysterMeasurement._id
-              }, function(data) {
-                if (data.scribeMember.username !== Authentication.user.username && data.status === 'submitted') {
-                  $rootScope.$broadcast('removeSubmittedProtocolTab', {
-                    values: {
-                      scribeName: data.scribeMember.displayName,
-                      protocolName: 'Oyster Measurements',
-                      protocol: 'protocol2'
+              $timeout(function() {
+                ProtocolOysterMeasurementsService.get({
+                  oysterMeasurementId: om.protocolOysterMeasurement._id
+                }, function(data) {
+                  if (data.scribeMember.username !== Authentication.user.username && data.status === 'submitted') {
+                    $rootScope.$broadcast('removeSubmittedProtocolTab', {
+                      values: {
+                        scribeName: data.scribeMember.displayName,
+                        protocolName: 'Oyster Measurements',
+                        protocol: 'protocol2'
+                      }
+                    });
+                    $scope.protocolOysterMeasurement = null;
+                  } else {
+                    if (!om.protocolOysterMeasurement.measuringOysterGrowth) {
+                      om.protocolOysterMeasurement.measuringOysterGrowth = {};
                     }
-                  });
-                  $scope.protocolOysterMeasurement = null;
-                } else {
-                  if (!om.protocolOysterMeasurement.measuringOysterGrowth) {
-                    om.protocolOysterMeasurement.measuringOysterGrowth = {};
+                    if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells) {
+                      om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells = [];
+                    }
+                    om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto =
+                      data.measuringOysterGrowth.substrateShells[index].outerSidePhoto;
+                    om.protocolOysterMeasurement.measuringOysterGrowth.substrateShell[index].innerSidePhoto =
+                      data.measuringOysterGrowth.substrateShells[index].innerSidePhoto;
+                    //angular.element('#modal-substrateshell'+index).modal('hide');
+                    $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
                   }
-                  if (!om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells) {
-                    om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells = [];
-                  }
-                  om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto =
-                    data.measuringOysterGrowth.substrateShells[index].outerSidePhoto;
-                  om.protocolOysterMeasurement.measuringOysterGrowth.substrateShell[index].innerSidePhoto =
-                    data.measuringOysterGrowth.substrateShells[index].innerSidePhoto;
-                  //angular.element('#modal-substrateshell'+index).modal('hide');
-                  $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
-                }
-                $rootScope.$broadcast('savingStop');
-                $rootScope.$broadcast('startIncrementalSavingLoop');
-              });
+                  $rootScope.$broadcast('savingStop');
+                  $rootScope.$broadcast('startIncrementalSavingLoop');
+                });
+              }, 500);
             }, function() {
               //angular.element('#modal-substrateshell'+index).modal('hide');
               $rootScope.$broadcast('savingStop');

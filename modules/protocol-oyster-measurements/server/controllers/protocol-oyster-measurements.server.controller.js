@@ -224,7 +224,7 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
 
       if (oysterMeasurement) {
         oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-        oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
         oysterMeasurement.scribeMember = user;
         oysterMeasurement.submitted = new Date();
 

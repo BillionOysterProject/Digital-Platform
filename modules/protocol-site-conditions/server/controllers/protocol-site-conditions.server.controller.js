@@ -339,11 +339,13 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, suc
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.collectionTime = moment(siteConditionBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      console.log('inside updateInternal siteCondition', siteCondition);
+      siteCondition.collectionTime = moment(siteConditionBody.collectionTime).startOf('minute').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(siteConditionBody.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        moment(siteConditionBody.tideConditions.closestHighTide).startOf('minute').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(siteConditionBody.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        moment(siteConditionBody.tideConditions.closestLowTide).startOf('minute').toDate();
+      console.log('after update dates on siteCondition', siteCondition);
       siteCondition.scribeMember = user;
       siteCondition.submitted = new Date();
 
