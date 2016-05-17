@@ -30,11 +30,40 @@ var checkRole = function(role, user) {
 };
 
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
+  if (!siteCondition.recentRainfall) {
+    siteCondition.recentRainfall = {
+      rainedIn24Hours: false,
+      rainedIn72Hours: false,
+      rainedIn7Days: false
+    };
+  }
   if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
   if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
   if (!siteCondition.recentRainfall.rainedIn7Days) siteCondition.recentRainfall.rainedIn7Days = false;
+  if (!siteCondition.landConditions.garbage) {
+    siteCondition.landConditions.garbage = {
+      garbagePresent: false
+    };
+  }
+  if (!siteCondition.landConditions.garbage.garbagePresent) siteCondition.landConditions.garbage.garbagePresent = false;
   if (!siteCondition.waterConditions.oilSheen) siteCondition.waterConditions.oilSheen = false;
+  if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes) {
+    siteCondition.waterConditions.markedCombinedSewerOverflowPipes = {
+      markedCSOPresent: false
+    };
+  }
+  if (!siteCondition.waterConditions.garbage) {
+    siteCondition.waterConditions.garbage = {
+      garbagePresent: false
+    };
+  }
+  if (!siteCondition.waterConditions.garbage.garbagePresent) siteCondition.waterConditions.garbage.garbagePresent = false;
   if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent = false;
+  if (!siteCondition.waterConditions.unmarkedOutfallPipes) {
+    siteCondition.waterConditions.unmarkedOutfallPipes = {
+      unmarkedPipePresent: false
+    };
+  }
   if (!siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent = false;
 
   var errorMessages = [];

@@ -20,7 +20,8 @@
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()" ng-disabled="!vm.protocolsSuccessful()"
-                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Publish</button>
+                        ng-show="(vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) && 
+                        (vm.isTeamLead || vm.isAdmin)">Publish</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->

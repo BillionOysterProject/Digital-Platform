@@ -317,6 +317,7 @@
             if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
             data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
             data.protocols.waterQuality.status === 'submitted') {
+              stopIncrementalSavingLoop();
               $state.go('expeditions.view', {
                 expeditionId: vm.expedition._id
               });
