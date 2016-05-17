@@ -273,6 +273,7 @@
               });
               vm.viewSiteCondition = false;
               vm.siteCondition = data.protocols.siteCondition;
+              $rootScope.$broadcast('readSiteConditionFromScope');
             }
             if (data.protocols.oysterMeasurement.status === 'submitted' && vm.oysterMeasurement.status !== 'submitted' &&
             vm.viewOysterMeasurement) {
@@ -283,6 +284,7 @@
               });
               vm.viewOysterMeasurement = false;
               vm.oysterMeasurement = data.protocols.oysterMeasurement;
+              $rootScope.$broadcast('readOysterMeasurementFromScope');
             }
             if (data.protocols.mobileTrap.status === 'submitted' && vm.mobileTrap.status !== 'submitted' &&
             vm.viewMobileTrap) {
@@ -293,6 +295,7 @@
               });
               vm.viewMobileTrap = false;
               vm.mobileTrap = data.protocols.mobileTrap;
+              $rootScope.$broadcast('readMobileTrapFromScope');
             }
             if (data.protocols.settlementTiles.status === 'submitted' && vm.settlementTiles.status !== 'submitted' &&
             vm.viewSettlementTiles) {
@@ -303,6 +306,7 @@
               });
               vm.viewSettlementTiles = false;
               vm.settlementTiles = data.protocols.settlementTiles;
+              $rootScope.$broadcast('readSettlementTilesFromScope');
             }
             if (data.protocols.waterQuality.status === 'submitted' && vm.waterQuality.status !== 'submitted' &&
             vm.viewWaterQuality) {
@@ -313,6 +317,7 @@
               });
               vm.viewWaterQuality = false;
               vm.waterQuality = data.protocols.waterQuality;
+              $rootScope.$broadcast('readWaterQualityFromScope');
             }
             if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
             data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&

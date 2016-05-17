@@ -83,7 +83,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     if (emptyString(siteCondition.meteorologicalConditions.windDirection)) {
       errorMessages.push('Wind direction is required');
     }
-    if (siteCondition.meteorologicalConditions.humidityPer < 0) {
+    if (siteCondition.meteorologicalConditions.humidityPer === undefined ||
+      siteCondition.meteorologicalConditions.humidityPer < 0) {
       errorMessages.push('Humidity percentage is required');
     }
   }
@@ -106,7 +107,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
     }
   }
-  if (siteCondition.tideConditions.currentSpeedMPH < 0) {
+  if (siteCondition.tideConditions.currentSpeedMPH === undefined ||
+    siteCondition.tideConditions.currentSpeedMPH < 0) {
     errorMessages.push('Current speed must be positive');
   }
   if (emptyString(siteCondition.tideConditions.currentDirection)) {

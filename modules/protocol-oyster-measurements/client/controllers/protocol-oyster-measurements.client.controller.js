@@ -73,6 +73,24 @@
       }
     };
 
+    var readFromScope = function() {
+      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService($scope.protocolOysterMeasurement);
+      om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
+        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+      om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
+      if (!om.protocolOysterMeasurement.measuringOysterGrowth ||
+        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length < om.substrateCount) {
+        setupSubstrateShells();
+      }
+      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+    };
+
+    $scope.$on('readOysterMeasurementFromScope', function() {
+      readFromScope();
+    });
+
     // Set up Protocol Oyster Measurements
     om.protocolOysterMeasurement = {};
     if ($stateParams.protocolOysterMeasurementId) {
@@ -87,17 +105,7 @@
       });
       $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
     } else if ($scope.protocolOysterMeasurement) {
-      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService($scope.protocolOysterMeasurement);
-      om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
-        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
-        om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
-      om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
-      if (!om.protocolOysterMeasurement.measuringOysterGrowth ||
-        !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells ||
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length < om.substrateCount) {
-        setupSubstrateShells();
-      }
-      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+      readFromScope();
     } else {
       om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
       om.cageConditionPhotoURL = '';

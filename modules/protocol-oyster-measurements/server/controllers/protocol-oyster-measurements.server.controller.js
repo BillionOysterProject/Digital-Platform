@@ -89,7 +89,7 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
         substrateShell.outerSidePhoto.path === '' || JSON.stringify(substrateShell.outerSidePhoto) === '{}') &&
         (!substrateShell.innerSidePhoto || substrateShell.innerSidePhoto.path === undefined ||
         substrateShell.innerSidePhoto.path === '' || JSON.stringify(substrateShell.innerSidePhoto) === '{}') &&
-        (substrateShell.totalNumberOfLiveOystersOnShell === undefined || substrateShell.totalNumberOfLiveOystersOnShell <= 0)) {
+        (substrateShell.totalNumberOfLiveOystersOnShell === undefined || substrateShell.totalNumberOfLiveOystersOnShell <= 1)) {
 
       } else {
         var shellNumber = 1+j;

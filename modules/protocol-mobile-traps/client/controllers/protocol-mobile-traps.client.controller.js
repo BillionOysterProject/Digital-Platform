@@ -78,6 +78,21 @@
       }
     };
 
+    var readFromScope = function() {
+      mt.protocolMobileTrap = new ProtocolMobileTrapsService($scope.protocolMobileTrap);
+      mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
+      if (!mt.protocolMobileTrap.mobileOrganisms) {
+        mt.protocolMobileTrap.mobileOrganisms = [];
+      } else {
+        setupMobileOrganisms();
+      }
+      $scope.protocolMobileTrap = mt.protocolMobileTrap;
+    };
+
+    $scope.$on('readMobileTrapFromScope', function() {
+      readFromScope();
+    });
+
     mt.foundOrganisms = {};
     mt.mobileOrganisms = mt.findOrganisms(function() {
       for (var o = 0; o < mt.mobileOrganisms.length; o++) {
@@ -96,14 +111,7 @@
           $scope.protocolMobileTrap = mt.protocolMobileTrap;
         });
       } else if ($scope.protocolMobileTrap) {
-        mt.protocolMobileTrap = new ProtocolMobileTrapsService($scope.protocolMobileTrap);
-        mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
-        if (!mt.protocolMobileTrap.mobileOrganisms) {
-          mt.protocolMobileTrap.mobileOrganisms = [];
-        } else {
-          setupMobileOrganisms();
-        }
-        $scope.protocolMobileTrap = mt.protocolMobileTrap;
+        readFromScope();
       } else {
         mt.protocolMobileTrap = new ProtocolMobileTrapsService();
         mt.protocolMobileTrap.mobileOrganisms = [];
