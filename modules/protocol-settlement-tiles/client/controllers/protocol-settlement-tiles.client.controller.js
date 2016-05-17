@@ -148,6 +148,19 @@
       st.saveOnBlur(true);
     };
 
+    var readFromScope = function() {
+      st.protocolSettlementTiles = new ProtocolSettlementTilesService($scope.protocolSettlementTiles);
+      if (!st.protocolSettlementTiles.settlementTiles || st.protocolSettlementTiles.settlementTiles.length < st.tileCount) {
+        setupSettlementTileGrid();
+      }
+      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
+      $scope.protocolSettlementTiles = st.protocolSettlementTiles;
+    };
+
+    $scope.$on('readSettlementTilesFromScope', function() {
+      readFromScope();
+    });
+
     // Set up Protocol Settlement Tiles
     st.protocolSettlementTiles = {};
     if ($stateParams.protocolSettlementTileId) {
@@ -159,12 +172,7 @@
         $scope.protocolSettlementTiles = st.protocolSettlementTiles;
       });
     } else if ($scope.protocolSettlementTiles) {
-      st.protocolSettlementTiles = new ProtocolSettlementTilesService($scope.protocolSettlementTiles);
-      if (!st.protocolSettlementTiles.settlementTiles || st.protocolSettlementTiles.settlementTiles.length < st.tileCount) {
-        setupSettlementTileGrid();
-      }
-      st.protocolSettlementTiles.collectionTime = moment(st.protocolSettlementTiles.collectionTime).startOf('minute').toDate();
-      $scope.protocolSettlementTiles = st.protocolSettlementTiles;
+      readFromScope();
     } else {
       st.protocolSettlementTiles = new ProtocolSettlementTilesService();
       setupSettlementTileGrid();
