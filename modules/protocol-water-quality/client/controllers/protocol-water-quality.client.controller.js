@@ -310,7 +310,7 @@
 
     $timeout(function() {
       if (wq && wq.protocolWaterQuality && wq.protocolWaterQuality._id) {
-        wq.saveOnBlur();
+        readFromScope();
         $rootScope.$broadcast('startIncrementalSavingLoop');
       }
     }, 2000);

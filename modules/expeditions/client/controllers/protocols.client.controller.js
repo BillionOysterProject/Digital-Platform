@@ -319,15 +319,17 @@
               vm.waterQuality = data.protocols.waterQuality;
               $rootScope.$broadcast('readWaterQualityFromScope');
             }
-            if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
-            data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
-            data.protocols.waterQuality.status === 'submitted') {
-              stopIncrementalSavingLoop();
-              $state.go('expeditions.view', {
-                expeditionId: vm.expedition._id
-              });
-            } else {
-              showTabChanged(changes);
+            if (vm.isTeamLead) {
+              if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
+              data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
+              data.protocols.waterQuality.status === 'submitted') {
+                stopIncrementalSavingLoop();
+                $state.go('expeditions.view', {
+                  expeditionId: vm.expedition._id
+                });
+              } else {
+                showTabChanged(changes);
+              }
             }
           });
         } else {
