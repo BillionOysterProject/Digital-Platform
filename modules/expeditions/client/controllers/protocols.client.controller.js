@@ -724,5 +724,9 @@
       vm.savingOff();
       startIncrementalSavingLoop();
     });
+
+    $scope.$on('$locationChangeStart', function(event) {
+      stopIncrementalSavingLoop();
+    });
   }
 })();
