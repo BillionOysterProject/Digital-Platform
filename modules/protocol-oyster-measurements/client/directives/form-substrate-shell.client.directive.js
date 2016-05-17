@@ -52,6 +52,23 @@
             return isValid;
           };
 
+          $scope.updateMeasurementFields = function() {
+            console.log('updateMeasurementFields');
+            console.log('$scope.substrate.totalNumberOfLiveOystersOnShell', $scope.substrate.totalNumberOfLiveOystersOnShell);
+            console.log('$scope.substrate.measurements.length', $scope.substrate.measurements.length);
+            if ($scope.substrate.totalNumberOfLiveOystersOnShell > $scope.substrate.measurements.length) {
+              for (var i = $scope.substrate.measurements.length; i < $scope.substrate.totalNumberOfLiveOystersOnShell; i++) {
+                $scope.substrate.measurements.push({
+                  sizeOfLiveOysterMM: null
+                });
+              }
+              console.log('add $scope.substrate.measurements', $scope.substrate.measurements);
+            } else if ($scope.substrate.totalNumberOfLiveOystersOnShell < $scope.substrate.measurements.length) {
+              $scope.substrate.measurements.splice($scope.substrate.totalNumberOfLiveOystersOnShell);
+              console.log('remove $scope.substrate.measurements', $scope.substrate.measurements);
+            }
+          };
+
           $scope.submitForm = function(substrate, isValid) {
             $scope.error = [];
             if (!validate()) {

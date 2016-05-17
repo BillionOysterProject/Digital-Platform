@@ -27,11 +27,9 @@
 
     var setupSubstrateShells = function() {
       var measurements = [];
-      for (var j = 0; j < om.liveShellCount; j++) {
-        measurements.push({
-          sizeOfLiveOysterMM: null
-        });
-      }
+      measurements.push({
+        sizeOfLiveOysterMM: null
+      });
 
       if (om.protocolOysterMeasurement.measuringOysterGrowth &&
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells &&
@@ -49,7 +47,7 @@
       for (var i = 1; i <= totalToAdd; i++) {
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.push({
           substrateShellNumber: i,
-          totalNumberOfLiveOystersOnShell: 0,
+          totalNumberOfLiveOystersOnShell: 1,
           measurements: angular.copy(measurements),
           done: false
         });

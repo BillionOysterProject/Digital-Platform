@@ -11,7 +11,14 @@
                         <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                     </ul>
                     <ul class="list-unstyled" ng-repeat="(key, errors) in form.substrateForm.$error track by $index">
-                        <li ng-repeat="e in errors"><i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
+                        <li ng-repeat="e in errors">
+                          <span ng-show="(e.$name === 'total' && key === 'min')"><i class="glyphicon glyphicon-exclamation-sign"></i>
+                            <b>Total Number of live oysters on shell</b> is less than 0</span>
+                          <span ng-show="(e.$name === 'total' && key === 'max')"><i class="glyphicon glyphicon-exclamation-sign"></i>
+                            <b>Total Number of live oysters on shell</b> is more than {{maxLiveOysters}}</span>
+                          <span ng-hide="e.$name === 'total' && (key === 'min' || key === 'max')">
+                            <i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ e.$name | capitalize }}</b> is {{ key }}</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -63,7 +70,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total" id="total" min="1" max="{{maxLiveOysters}}" required/>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
+                                                id="total" min="1" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="notes" class="control-label">Notes</label>

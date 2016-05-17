@@ -134,7 +134,8 @@ var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, 
   if (siteConditionBody) {
     siteConditionReq.status = status;
     siteConditionBody.status = status;
-    siteConditionHandler.updateInternal(siteConditionReq, siteConditionBody, user,
+    var siteCondition = _.merge(siteConditionReq, siteConditionBody);
+    siteConditionHandler.updateInternal(siteCondition, siteCondition, user,
       function(siteConditionSaved) {
         callback(siteConditionSaved);
       }, function(errorMessage) {
@@ -149,7 +150,8 @@ var updateOysterMeasurement = function(oysterMeasurementReq, oysterMeasurementBo
   if (oysterMeasurementBody) {
     oysterMeasurementReq.status = status;
     oysterMeasurementBody.status = status;
-    oysterMeasurementHandler.updateInternal(oysterMeasurementReq, oysterMeasurementBody, user,
+    var oysterMeasurement = _.merge(oysterMeasurementReq, oysterMeasurementBody);
+    oysterMeasurementHandler.updateInternal(oysterMeasurement, oysterMeasurement, user,
     function(oysterMeasurementSaved) {
       callback(oysterMeasurementSaved);
     }, function(errorMessage) {
@@ -164,7 +166,8 @@ var updateMobileTrap = function(mobileTrapReq, mobileTrapBody, status, user, cal
   if (mobileTrapBody) {
     mobileTrapReq.status = status;
     mobileTrapBody.status = status;
-    mobileTrapHandler.updateInternal(mobileTrapReq, mobileTrapBody, user,
+    var mobileTrap = _.merge(mobileTrapReq, mobileTrapBody);
+    mobileTrapHandler.updateInternal(mobileTrap, mobileTrap, user,
     function(mobileTrapSaved) {
       callback(mobileTrapSaved);
     }, function(errorMessage) {
@@ -179,7 +182,8 @@ var updateSettlementTiles = function(settlementTilesReq, settlementTilesBody, st
   if (settlementTilesBody) {
     settlementTilesReq.status = status;
     settlementTilesBody.status = status;
-    settlementTilesHandler.updateInternal(settlementTilesReq, settlementTilesBody, user,
+    var settlementTiles = _.merge(settlementTilesReq, settlementTilesBody);
+    settlementTilesHandler.updateInternal(settlementTiles, settlementTiles, user,
     function(settlementTilesSaved) {
       callback(settlementTilesSaved);
     }, function(errorMessage) {
@@ -194,7 +198,8 @@ var updateWaterQuality = function(waterQualityReq, waterQualityBody, status, use
   if (waterQualityBody) {
     waterQualityReq.status = status;
     waterQualityBody.status = status;
-    waterQualityHandler.updateInternal(waterQualityReq, waterQualityBody, user,
+    var waterQuality = _.merge(waterQualityReq, waterQualityBody);
+    waterQualityHandler.updateInternal(waterQuality, waterQuality, user,
     function(waterQualitySaved) {
       callback(waterQualitySaved);
     }, function(errorMessage) {
@@ -699,12 +704,6 @@ exports.expeditionByID = function (req, res, next, id) {
     .populate('protocols.mobileTrap')
     .populate('protocols.settlementTiles')
     .populate('protocols.waterQuality');
-
-    query.populate('protocols.siteCondition.scribeMember', 'displayName')
-    .populate('protocols.oysterMeasurement.scribeMember', 'displayName')
-    .populate('protocols.mobileTrap.scribeMember', 'displayName')
-    .populate('protocols.settlementTiles.scribeMember', 'displayName')
-    .populate('protocols.waterQuality.scribeMember', 'displayName');
   } else {
     query.populate('protocols.siteCondition', 'status')
     .populate('protocols.oysterMeasurement', 'status')
