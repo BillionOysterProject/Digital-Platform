@@ -38,14 +38,14 @@
                                             <p class="lead blue">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
                                             <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
                                             <div class="form-group">
-                                                <label for="outerImg" class="control-label required">Outer side</label>
+                                                <label for="outerImg" class="control-label required">Outer side *</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader" image-url="outerSubstrateUrl" image-alt="Outer side"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
                                                     <p class="red">Outer side image is required.</p>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="innerImg" class="control-label required">Inner side</label>
+                                                <label for="innerImg" class="control-label required">Inner side *</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader" image-url="innerSubstrateUrl" image-alt="Inner side"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
                                                     <p class="red">Inner side image is required.</p>

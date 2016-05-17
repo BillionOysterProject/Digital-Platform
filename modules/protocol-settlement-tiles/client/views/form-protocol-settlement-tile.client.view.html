@@ -67,20 +67,18 @@
                         <textarea rows="5" class="form-control" ng-model="tile.description" ></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Tile photograph</label>
+                        <label>Tile photograph *</label>
                         <single-image-drop-zone uploader="st.settlementTilePhotoUploaders[$index]"
                         image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"
                         remove-function="st.removeImage"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
                       <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}"
-                      ng-click="st.openSettlementTileForm($index+1)">{{st.tileStarted(tile)? 'Edit': 'Add' }} Organism ID Entries</a>
+                      ng-click="st.openSettlementTileForm($index+1)">{{st.tileStarted(tile)? 'Edit': 'Add' }} Organism ID Entries *</a>
                       <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
                       save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"
                       index="{{$index+1}}"></form-settlement-tile>
                     </div>
-                    <!--TODO: Show this button instead if data is already added:
-                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlementtile">Edit Organism ID Entries</a>-->
                 </div>
             </div>
         </section>
