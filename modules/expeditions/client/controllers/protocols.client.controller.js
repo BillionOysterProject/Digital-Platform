@@ -266,7 +266,7 @@
             var changes = [];
             if (data.protocols.siteCondition.status === 'submitted' && vm.siteCondition.status !== 'submitted' &&
             vm.viewSiteCondition) {
-              if (vm.isTeamMember) {
+              if (vm.isTeamMember === true) {
                 changes.push({
                   scribeName: data.protocols.siteCondition.scribeMember.displayName,
                   protocolName: 'Site Conditions',
@@ -279,7 +279,7 @@
             }
             if (data.protocols.oysterMeasurement.status === 'submitted' && vm.oysterMeasurement.status !== 'submitted' &&
             vm.viewOysterMeasurement) {
-              if (vm.isTeamMember) {
+              if (vm.isTeamMember === true) {
                 changes.push({
                   scribeName: data.protocols.oysterMeasurement.scribeMember.displayName,
                   protocolName: 'Oyster Measurements',
@@ -292,7 +292,7 @@
             }
             if (data.protocols.mobileTrap.status === 'submitted' && vm.mobileTrap.status !== 'submitted' &&
             vm.viewMobileTrap) {
-              if (vm.isTeamMember) {
+              if (vm.isTeamMember === true) {
                 changes.push({
                   scribeName: data.protocols.mobileTrap.scribeMember.displayName,
                   protocolName: 'Mobile Trap',
@@ -305,7 +305,7 @@
             }
             if (data.protocols.settlementTiles.status === 'submitted' && vm.settlementTiles.status !== 'submitted' &&
             vm.viewSettlementTiles) {
-              if (vm.isTeamMember) {
+              if (vm.isTeamMember === true) {
                 changes.push({
                   scribeName: data.protocols.settlementTiles.scribeMember.displayName,
                   protocolName: 'Settlement Tiles',
@@ -318,7 +318,7 @@
             }
             if (data.protocols.waterQuality.status === 'submitted' && vm.waterQuality.status !== 'submitted' &&
             vm.viewWaterQuality) {
-              if (vm.isTeamMember) {
+              if (vm.isTeamMember === true) {
                 changes.push({
                   scribeName: data.protocols.waterQuality.scribeMember.displayName,
                   protocolName: 'Water Quality',
@@ -329,7 +329,7 @@
               vm.waterQuality = data.protocols.waterQuality;
               $rootScope.$broadcast('readWaterQualityFromScope');
             }
-            if (vm.isTeamMember) {
+            if (vm.isTeamMember === true) {
               if (data.protocols.siteCondition.status === 'submitted' && data.protocols.oysterMeasurement.status === 'submitted' &&
               data.protocols.mobileTrap.status === 'submitted' && data.protocols.settlementTiles.status === 'submitted' &&
               data.protocols.waterQuality.status === 'submitted') {
