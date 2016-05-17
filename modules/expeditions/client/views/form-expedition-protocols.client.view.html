@@ -16,11 +16,11 @@
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
-                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()" ng-disabled="!vm.protocolsLoaded()"
+                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()" 
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()" ng-disabled="!vm.protocolsSuccessful()"
-                        ng-show="(vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) && 
+                        ng-show="(vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) &&
                         (vm.isTeamLead || vm.isAdmin)">Publish</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
@@ -31,7 +31,7 @@
                         <!-- If published by team lead (Status: Published) -->
                         <!-- Show if team lead: -->
                         <!-- Show if team lead: -->
-                        <button class="btn btn-danger navbar-btn" ng-click="vm.unpublish()" ng-disabled="!vm.protocolsLoaded()"
+                        <button class="btn btn-danger navbar-btn" ng-click="vm.unpublish()"
                         ng-show="vm.expedition.status === 'published' && (vm.isTeamLead || vm.isAdmin)">Unpublish</button>
 
                         <!-- Show saving when saving -->
