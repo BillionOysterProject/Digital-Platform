@@ -222,30 +222,32 @@
     };
 
     var showTabChanged = function(changes) {
-      var descriptions = [];
-      for (var i = 0; i < changes.length; i++) {
-        descriptions.push(
-          'A team member just submitted your shared ' + changes[i].protocolName +
-          '. This form has been sent to your team lead for review and is no longer editable.'
-        );
-        vm.tabs[changes[i].protocol].isDisabled = true;
-        vm.tabs[changes[i].protocol].isActive = false;
-        vm.tabs[changes[i].protocol].visible = false;
-        console.log('vm.tabs[protocol]', vm.tabs[changes[i].protocol]);
-      }
-      vm.disableProtocolChanges = descriptions;
-
-      for (var key in vm.tabs) {
-        if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
-          vm.tabs[key].isActive = true;
-          vm.activeTab = key;
-          break;
+      if (vm.isTeamMember === true) {
+        var descriptions = [];
+        for (var i = 0; i < changes.length; i++) {
+          descriptions.push(
+            'A team member just submitted your shared ' + changes[i].protocolName +
+            '. This form has been sent to your team lead for review and is no longer editable.'
+          );
+          vm.tabs[changes[i].protocol].isDisabled = true;
+          vm.tabs[changes[i].protocol].isActive = false;
+          vm.tabs[changes[i].protocol].visible = false;
+          console.log('vm.tabs[protocol]', vm.tabs[changes[i].protocol]);
         }
-      }
+        vm.disableProtocolChanges = descriptions;
 
-      if (vm.disableProtocolChanges && vm.disableProtocolChanges.length > 0) {
-        console.log('vm.disableProtocolChanges', vm.disableProtocolChanges);
-        angular.element('#modal-remove-protocol-tab').modal('show');
+        for (var key in vm.tabs) {
+          if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
+            vm.tabs[key].isActive = true;
+            vm.activeTab = key;
+            break;
+          }
+        }
+
+        if (vm.disableProtocolChanges && vm.disableProtocolChanges.length > 0) {
+          console.log('vm.disableProtocolChanges', vm.disableProtocolChanges);
+          angular.element('#modal-remove-protocol-tab').modal('show');
+        }
       }
     };
 
