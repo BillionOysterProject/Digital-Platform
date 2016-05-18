@@ -24,7 +24,7 @@ var ProtocolSettlementTileSchema = new Schema({
   notes: String,
   status: {
     type: String,
-    enum: ['incomplete','submitted'],
+    enum: ['incomplete','submitted','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },
@@ -215,4 +215,5 @@ var ProtocolSettlementTileSchema = new Schema({
   }]
 });
 
+ProtocolSettlementTileSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolSettlementTile', ProtocolSettlementTileSchema);

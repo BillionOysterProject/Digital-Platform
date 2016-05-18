@@ -4,6 +4,23 @@
             <div class="modal-header">
                 <button type="button" class="close" ng-click="cancelFunction(index)"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Substrate Shell {{substrate.substrateShellNumber}}</h4>
+                <hr ng-show="error || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)"/>
+                <div class="alert alert-danger" ng-show="error || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)">
+                    <h4>We're still missing some information.</h4>
+                    <ul class="list-unstyled" ng-repeat="error in error">
+                        <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
+                    </ul>
+                    <ul class="list-unstyled" ng-repeat="(key, errors) in form.substrateForm.$error track by $index">
+                        <li ng-repeat="e in errors">
+                          <span ng-show="(e.$name === 'total' && key === 'min')"><i class="glyphicon glyphicon-exclamation-sign"></i>
+                            <b>Total Number of live oysters on shell</b> is less than 0</span>
+                          <span ng-show="(e.$name === 'total' && key === 'max')"><i class="glyphicon glyphicon-exclamation-sign"></i>
+                            <b>Total Number of live oysters on shell</b> is more than {{maxLiveOysters}}</span>
+                          <span ng-hide="e.$name === 'total' && (key === 'min' || key === 'max')">
+                            <i class="glyphicon glyphicon-exclamation-sign"></i> <b>{{ e.$name | capitalize }}</b> is {{ key }}</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <form name="form.substrateForm" ng-submit="submitForm(substrate, form.substrateForm.$valid)" novalidate>
                 <div class="modal-body">
@@ -21,14 +38,14 @@
                                             <p class="lead blue">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
                                             <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
                                             <div class="form-group">
-                                                <label for="outerImg" class="control-label required">Outer side</label>
+                                                <label for="outerImg" class="control-label required">Outer side *</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader" image-url="outerSubstrateUrl" image-alt="Outer side"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
                                                     <p class="red">Outer side image is required.</p>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="innerImg" class="control-label required">Inner side</label>
+                                                <label for="innerImg" class="control-label required">Inner side *</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader" image-url="innerSubstrateUrl" image-alt="Inner side"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
                                                     <p class="red">Inner side image is required.</p>
@@ -53,7 +70,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total" id="total" min="1" max="{{maxLiveOysters}}" required/>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
+                                                id="total" min="1" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="notes" class="control-label">Notes</label>

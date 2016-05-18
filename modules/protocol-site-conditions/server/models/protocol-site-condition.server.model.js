@@ -24,7 +24,7 @@ var ProtocolSiteConditionSchema = new Schema({
   notes: String,
   status: {
     type: String,
-    enum: ['incomplete','submitted'],
+    enum: ['incomplete','submitted','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },
@@ -165,4 +165,5 @@ var ProtocolSiteConditionSchema = new Schema({
   }
 });
 
+ProtocolSiteConditionSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolSiteCondition', ProtocolSiteConditionSchema);

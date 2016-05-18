@@ -24,7 +24,7 @@ var ProtocolMobileTrapSchema = new Schema({
   notes: String,
   status: {
     type: String,
-    enum: ['incomplete','submitted'],
+    enum: ['incomplete','submitted','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },
@@ -48,4 +48,5 @@ var ProtocolMobileTrapSchema = new Schema({
   }]
 });
 
+ProtocolMobileTrapSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolMobileTrap', ProtocolMobileTrapSchema);

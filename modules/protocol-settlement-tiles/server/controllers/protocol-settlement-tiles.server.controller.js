@@ -22,6 +22,13 @@ var emptyString = function(string) {
   }
 };
 
+var checkRole = function(role, user) {
+  var roleIndex = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
 var validateSettlementTiles = function(settlementTiles, successCallback, errorCallback) {
   var errorMessages = [];
 
@@ -34,8 +41,8 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       var successfulGrids = true;
       for (var j = 1; j <= 25; j++) {
         if (tile['grid'+j]) {
-          if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined) &&
-          emptyString(tile['grid'+j].notes)) {
+          if ((tile['grid'+j].organism === null || tile['grid'+j].organism === undefined ||
+          tile['grid'+j].organism === '') && tile['grid'+j].notes === '') {
             successfulGrids = false;
           }
         } else {
@@ -45,6 +52,19 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
       return successfulGrids;
     };
 
+    var noGridsFilledIn = function(tile, i) {
+      var emptyGrids = true;
+      for (var j = 1; j <= 25; j++) {
+        if (tile['grid'+j]) {
+          if (tile['grid'+j].organism !== null && tile['grid'+j].organism !== undefined &&
+          tile['grid'+j].organism !== '') {
+            emptyGrids = false;
+          }
+        }
+      }
+      return emptyGrids;
+    };
+
     for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
       var tile = settlementTiles.settlementTiles[i];
 
@@ -52,7 +72,7 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
         tile.tilePhoto.path !== '' && allGridsFilledIn(tile, i)) {
         oneSuccessfulSettlementTile = true;
       } else if (!tile.description && (!tile.tilePhoto || tile.tilePhoto.path === undefined ||
-        tile.tilePhoto === '') && !allGridsFilledIn(tile, i)) {
+        tile.tilePhoto.path === '') && noGridsFilledIn(tile, i)) {
 
       } else {
         if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
@@ -101,7 +121,7 @@ exports.create = function (req, res) {
   function(settlementTilesJSON) {
     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    settlementTiles.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
     settlementTiles.scribeMember = req.user;
 
     settlementTiles.save(function (err) {
@@ -160,38 +180,49 @@ exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
   if (settlementTiles) {
-    //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
-    settlementTiles = _.extend(settlementTiles, req.body);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    settlementTiles.scribeMember = req.user;
+    if (settlementTiles.status === 'incomplete' || settlementTiles.status === 'returned' ||
+      (checkRole('team lead', req.user) && settlementTiles.status === 'submitted')) {
+      //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
+      settlementTiles = _.extend(settlementTiles, req.body);
+      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      settlementTiles.scribeMember = req.user;
 
-    removeFiles(req.settlementTiles, settlementTiles,
-    function() {
-      settlementTiles.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          validateSettlementTiles(settlementTiles,
-          function(settlementTilesJSON) {
-            res.json({
-              settlementTiles: settlementTiles,
-              successful: true
+      console.log('settlementTiles', settlementTiles);
+
+      removeFiles(req.settlementTiles, settlementTiles,
+      function() {
+        settlementTiles.save(function (err) {
+          if (err) {
+            console.log('settlementTile save error', err);
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
             });
-          }, function(errorMessages) {
-            res.json({
-              settlementTiles: settlementTiles,
-              errors: errorMessages
+          } else {
+            validateSettlementTiles(settlementTiles,
+            function(settlementTilesJSON) {
+              res.json({
+                settlementTiles: settlementTiles,
+                successful: true
+              });
+            }, function(errorMessages) {
+              res.json({
+                settlementTiles: settlementTiles,
+                errors: errorMessages
+              });
             });
-          });
-        }
+          }
+        });
+      }, function(err) {
+        return res.status(400).send({
+          message: err
+        });
       });
-    }, function(err) {
-      return res.status(400).send({
-        message: err
+    } else {
+      res.json({
+        status: settlementTiles.status,
+        scribe: settlementTiles.scribeMember.displayName
       });
-    });
+    }
   } else {
     return res.status(400).send({
       message: 'Protocol settlement tiles not found'
@@ -202,43 +233,47 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol settlement tiles
  */
-exports.update = function (req, res) {
-  validateSettlementTiles(req.body,
+exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, successCallback, errorCallback) {
+  validateSettlementTiles(settlementTilesBody,
   function(settlementTilesJSON) {
-    var settlementTiles = req.settlementTiles;
+    var settlementTiles = settlementTilesReq;
 
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
-      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      settlementTiles.scribeMember = req.user;
-      settlementTiles.status = 'submitted';
+      settlementTiles.collectionTime = moment(settlementTilesBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      settlementTiles.scribeMember = user;
       settlementTiles.submitted = new Date();
 
-      removeFiles(req.settlementTiles, settlementTiles,
+      removeFiles(settlementTilesReq, settlementTiles,
       function() {
         settlementTiles.save(function (err) {
           if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
+            errorCallback(errorHandler.getErrorMessage(err));
           } else {
-            res.json(settlementTiles);
+            successCallback(settlementTiles);
           }
         });
       }, function(err) {
-        return res.status(400).send({
-          message: err
-        });
+        errorCallback(err);
       });
     } else {
-      return res.status(400).send({
-        message: 'Protocol settlement tiles not found'
-      });
+      errorCallback('Protocol settlement tiles not found');
     }
   }, function(errorMessages) {
+    errorCallback(errorMessages);
+  });
+};
+
+exports.update = function (req, res) {
+  var settlementTilesBody = req.body;
+  settlementTilesBody.status = 'submitted';
+  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user,
+  function(settlementTiles) {
+    res.json(settlementTiles);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };
@@ -320,19 +355,27 @@ exports.uploadSettlementTilePicture = function (req, res) {
   upload.fileFilter = settlementTileUploadFileFilter;
 
   if (settlementTiles) {
-    if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
-      var uploadRemote = new UploadRemote();
-      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
-      function (fileInfo) {
-        settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
+    if (settlementTiles.status === 'incomplete' || settlementTiles.status === 'returned' ||
+      (checkRole('team lead', req.user) && settlementTiles.status === 'submitted')) {
+      if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
+        var uploadRemote = new UploadRemote();
+        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
+        function (fileInfo) {
+          settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
 
-        uploadFileSuccess(settlementTiles, res);
-      }, function(errorMessage) {
-        uploadFileError(settlementTiles, errorMessage, res);
-      });
+          uploadFileSuccess(settlementTiles, res);
+        }, function(errorMessage) {
+          uploadFileError(settlementTiles, errorMessage, res);
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Substrate for settlement tiles does not exist'
+        });
+      }
     } else {
-      return res.status(400).send({
-        message: 'Substrate for settlement tiles does not exist'
+      res.json({
+        status: settlementTiles.status,
+        scribe: settlementTiles.scribeMember.displayName
       });
     }
   } else {
@@ -367,9 +410,9 @@ exports.settlementTilesByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolSettlementTile.findById(id)
+  ProtocolSettlementTile.findById(id).populate('scribeMember', 'displayName username')
   //.populate('settlementTiles.grid1')
-  .exec(function (err, settlementTiles) {
+  .populate('teamLead', 'displayName username').exec(function (err, settlementTiles) {
     if (err) {
       return next(err);
     } else if (!settlementTiles) {

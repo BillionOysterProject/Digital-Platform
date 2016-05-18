@@ -24,7 +24,7 @@ var ProtocolOysterMeasurementSchema = new Schema({
   notes: String,
   status: {
     type: String,
-    enum: ['incomplete','submitted'],
+    enum: ['incomplete','submitted','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },
@@ -88,5 +88,5 @@ var ProtocolOysterMeasurementSchema = new Schema({
     type: Number
   }
 });
-
+ProtocolOysterMeasurementSchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolOysterMeasurement', ProtocolOysterMeasurementSchema);

@@ -3,7 +3,7 @@
         <section class="container">
             <h2>Protocol 2 <small>Oyster Measurements</small></h2>
             <hr />
-            <div class="alert alert-danger" ng-show="om.error">
+            <div class="alert alert-danger" ng-show="om.error" ng-cloak>
                 <h4>We're still missing some information.</h4>
                 <ul class="list-unstyled" ng-repeat="error in om.error">
                     <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
@@ -55,7 +55,7 @@
                 <div class="col-md-6">
                     <h6>Condition of oyster cage</h6>
                     <div class="form-group">
-                        <label>Take a photograph of the oyster cage</label>
+                        <label>Take a photograph of the oyster cage *</label>
                         <single-image-drop-zone uploader="om.cageConditionUploader" image-url="om.cageConditionPhotoURL"
                         image-alt="Oyster Cage Condition"></single-image-drop-zone>
                         <div ng-show="om.form.oysterMeasurementForm.$invalid && om.form.oysterMeasurementForm.$submitted && !om.cageConditionPhotoURL">

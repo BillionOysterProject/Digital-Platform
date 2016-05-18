@@ -22,12 +22,48 @@ var emptyString = function(string) {
   }
 };
 
+var checkRole = function(role, user) {
+  var roleIndex = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
+  if (!siteCondition.recentRainfall) {
+    siteCondition.recentRainfall = {
+      rainedIn24Hours: false,
+      rainedIn72Hours: false,
+      rainedIn7Days: false
+    };
+  }
   if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
   if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
   if (!siteCondition.recentRainfall.rainedIn7Days) siteCondition.recentRainfall.rainedIn7Days = false;
+  if (!siteCondition.landConditions.garbage) {
+    siteCondition.landConditions.garbage = {
+      garbagePresent: false
+    };
+  }
+  if (!siteCondition.landConditions.garbage.garbagePresent) siteCondition.landConditions.garbage.garbagePresent = false;
   if (!siteCondition.waterConditions.oilSheen) siteCondition.waterConditions.oilSheen = false;
+  if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes) {
+    siteCondition.waterConditions.markedCombinedSewerOverflowPipes = {
+      markedCSOPresent: false
+    };
+  }
+  if (!siteCondition.waterConditions.garbage) {
+    siteCondition.waterConditions.garbage = {
+      garbagePresent: false
+    };
+  }
+  if (!siteCondition.waterConditions.garbage.garbagePresent) siteCondition.waterConditions.garbage.garbagePresent = false;
   if (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent = false;
+  if (!siteCondition.waterConditions.unmarkedOutfallPipes) {
+    siteCondition.waterConditions.unmarkedOutfallPipes = {
+      unmarkedPipePresent: false
+    };
+  }
   if (!siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent = false;
 
   var errorMessages = [];
@@ -47,7 +83,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     if (emptyString(siteCondition.meteorologicalConditions.windDirection)) {
       errorMessages.push('Wind direction is required');
     }
-    if (siteCondition.meteorologicalConditions.humidityPer < 0) {
+    if (siteCondition.meteorologicalConditions.humidityPer === undefined ||
+      siteCondition.meteorologicalConditions.humidityPer < 0) {
       errorMessages.push('Humidity percentage is required');
     }
   }
@@ -70,7 +107,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
     }
   }
-  if (siteCondition.tideConditions.currentSpeedMPH < 0) {
+  if (siteCondition.tideConditions.currentSpeedMPH === undefined ||
+    siteCondition.tideConditions.currentSpeedMPH < 0) {
     errorMessages.push('Current speed must be positive');
   }
   if (emptyString(siteCondition.tideConditions.currentDirection)) {
@@ -249,33 +287,41 @@ exports.incrementalSave = function (req, res) {
   var siteCondition = req.siteCondition;
 
   if (siteCondition) {
-    siteCondition = _.extend(siteCondition, req.body);
-    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.tideConditions.closestHighTide =
-      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.tideConditions.closestLowTide =
-      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    siteCondition.scribeMember = req.user;
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      siteCondition = _.extend(siteCondition, req.body);
+      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.tideConditions.closestHighTide =
+        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.tideConditions.closestLowTide =
+        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      siteCondition.scribeMember = req.user;
 
-    siteCondition.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateSiteCondition(siteCondition, function(siteConditionJSON) {
-          res.json({
-            siteCondition: siteCondition,
-            successful: true
+      siteCondition.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            siteCondition: siteCondition,
-            errors: errorMessages
+        } else {
+          validateSiteCondition(siteCondition, function(siteConditionJSON) {
+            res.json({
+              siteCondition: siteCondition,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              siteCondition: siteCondition,
+              errors: errorMessages
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     return res.status(400).send({
       message: 'Protocol site condition not found'
@@ -286,39 +332,47 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol site condition
  */
-exports.update = function (req, res) {
-  validateSiteCondition(req.body,
+exports.updateInternal = function(siteConditionReq, siteConditionBody, user, successCallback, errorCallback) {
+  validateSiteCondition(siteConditionBody,
   function(siteConditionJSON) {
-    var siteCondition = req.siteCondition;
+    var siteCondition = siteConditionReq;
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      console.log('inside updateInternal siteCondition', siteCondition);
+      siteCondition.collectionTime = moment(siteConditionBody.collectionTime).startOf('minute').toDate();
       siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        moment(siteConditionBody.tideConditions.closestHighTide).startOf('minute').toDate();
       siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      siteCondition.scribeMember = req.user;
-      siteCondition.status = 'submitted';
+        moment(siteConditionBody.tideConditions.closestLowTide).startOf('minute').toDate();
+      console.log('after update dates on siteCondition', siteCondition);
+      siteCondition.scribeMember = user;
       siteCondition.submitted = new Date();
 
       siteCondition.save(function (err) {
         if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+          errorCallback(errorHandler.getErrorMessage(err));
         } else {
-          res.json(siteCondition);
+          successCallback(siteCondition);
         }
       });
     } else {
-      return res.status(400).send({
-        message: 'Protocol site condition not found'
-      });
+      errorCallback('Protocol site condition not found');
     }
   }, function(errorMessages) {
+    errorCallback(errorMessages);
+  });
+};
+
+exports.update = function (req, res) {
+  var siteConditionBody = req.body;
+  siteConditionBody.status = 'submitted';
+  exports.updateInternal(req.siteCondition, siteConditionBody, req.user,
+  function(siteCondition) {
+    res.json(siteCondition);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };
@@ -405,15 +459,23 @@ exports.uploadWaterConditionPicture = function (req, res) {
   upload.fileFilter = waterConditionUploadFileFilter;
 
   if (siteCondition) {
-    var uploadRemote = new UploadRemote();
-    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
-    function(fileInfo) {
-      siteCondition.waterConditions.waterConditionPhoto = fileInfo;
-      uploadFileSuccess(siteCondition, res);
-    }, function (errorMessage) {
-      // delete siteCondition
-      uploadFileError(siteCondition, errorMessage, res);
-    });
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.waterConditionUpload,
+      function(fileInfo) {
+        siteCondition.waterConditions.waterConditionPhoto = fileInfo;
+        uploadFileSuccess(siteCondition, res);
+      }, function (errorMessage) {
+        // delete siteCondition
+        uploadFileError(siteCondition, errorMessage, res);
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Site condition does not exist'
@@ -430,15 +492,23 @@ exports.uploadLandConditionPicture = function (req, res) {
   upload.fileFilter = landConditionUploadFileFilter;
 
   if (siteCondition) {
-    var uploadRemote = new UploadRemote();
-    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
-    function(fileInfo) {
-      siteCondition.landConditions.landConditionPhoto = fileInfo;
-      uploadFileSuccess(siteCondition, res);
-    }, function(errorMessage) {
-      // delete siteCondition
-      uploadFileError(siteCondition, errorMessage, res);
-    });
+    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
+    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.landConditionUpload,
+      function(fileInfo) {
+        siteCondition.landConditions.landConditionPhoto = fileInfo;
+        uploadFileSuccess(siteCondition, res);
+      }, function(errorMessage) {
+        // delete siteCondition
+        uploadFileError(siteCondition, errorMessage, res);
+      });
+    } else {
+      res.json({
+        status: siteCondition.status,
+        scribe: siteCondition.scribeMember.displayName
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Site condition does not exist'
@@ -471,7 +541,8 @@ exports.siteConditionByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolSiteCondition.findById(id).populate('teamLead', 'displayName').exec(function (err, siteCondition) {
+  ProtocolSiteCondition.findById(id).populate('teamLead', 'displayName username').populate('scribeMember', 'displayName username')
+  .exec(function (err, siteCondition) {
     if (err) {
       return next(err);
     } else if (!siteCondition) {
