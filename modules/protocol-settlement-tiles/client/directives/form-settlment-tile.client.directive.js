@@ -39,7 +39,7 @@
             // console.log('open');
             scope.$broadcast('show-errors-reset', 'form.tileForm');
             scope.form.tileForm.$setSubmitted(false);
-            // scope.form.tileForm.$setPristine(true);
+            scope.form.tileForm.$setPristine(true);
             // scope.form.tileForm.$valid = true;
             // scope.form.tileForm.$invalid = false;
           });

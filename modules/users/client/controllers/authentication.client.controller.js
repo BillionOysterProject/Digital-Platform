@@ -86,7 +86,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
 
     vm.findOrganizations = function (newOrg) {
       SchoolOrganizationsService.query({
-        approvedOnly: true
+        approvedOnly: true,
+        sort: 'name'
       }, function(data) {
         vm.schoolOrgs = [];
         if (vm.newSchoolOrg && vm.newSchoolOrg.name) {

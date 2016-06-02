@@ -33,23 +33,58 @@
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
           });
+        },
+        controller: ['$scope', function ($scope) {
+          var validate = function() {
+            $scope.error = [];
+            var isValid = true;
+            console.log('scope.outerSubstrateUrl', $scope.outerSubstrateUrl);
+            if ($scope.outerSubstrateUrl === undefined || $scope.outerSubstrateUrl === null || $scope.outerSubstrateUrl === '') {
+              //scope.form.substrateForm.$setValidity('outerImg', false);
+              $scope.error.push('Outer substrate image is required');
+              isValid = false;
+            }
+            if ($scope.innerSubstrateUrl === undefined || $scope.innerSubstrateUrl === null || $scope.innerSubstrateUrl === '') {
+              //scope.form.substrateForm.$setValidity('innerImg', false);
+              $scope.error.push('Inner substrate image is required');
+              isValid = false;
+            }
+            return isValid;
+          };
 
-          scope.submitForm = function(substrate, isValid) {
-            if (scope.outerSubstrateUrl === undefined || scope.outerSubstrateUrl === null || scope.outerSubstrateUrl === '') {
-              scope.form.substrateForm.$setValidity('outerImg', false);
-              isValid = false;
+          $scope.updateMeasurementFields = function() {
+            console.log('updateMeasurementFields');
+            console.log('$scope.substrate.totalNumberOfLiveOystersOnShell', $scope.substrate.totalNumberOfLiveOystersOnShell);
+            console.log('$scope.substrate.measurements.length', $scope.substrate.measurements.length);
+            if ($scope.substrate.totalNumberOfLiveOystersOnShell > $scope.substrate.measurements.length) {
+              for (var i = $scope.substrate.measurements.length; i < $scope.substrate.totalNumberOfLiveOystersOnShell; i++) {
+                $scope.substrate.measurements.push({
+                  sizeOfLiveOysterMM: null
+                });
+              }
+              console.log('add $scope.substrate.measurements', $scope.substrate.measurements);
+            } else if ($scope.substrate.totalNumberOfLiveOystersOnShell < $scope.substrate.measurements.length) {
+              $scope.substrate.measurements.splice($scope.substrate.totalNumberOfLiveOystersOnShell);
+              console.log('remove $scope.substrate.measurements', $scope.substrate.measurements);
             }
-            if (scope.innerSubstrateUrl === undefined || scope.innerSubstrateUrl === null || scope.innerSubstrateUrl === '') {
-              scope.form.substrateForm.$setValidity('innerImg', false);
-              isValid = false;
-            }
-            if (!isValid) {
-              scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
+          };
+
+          $scope.submitForm = function(substrate, isValid) {
+            $scope.error = [];
+            if (!validate()) {
+              $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
               return false;
             }
-            scope.saveFunction(scope.substrate, scope.index, isValid);
+            $scope.saveFunction($scope.substrate, $scope.index, isValid);
           };
-        }
+
+          $scope.$watch('outerSubstrateUrl', function(newValue, oldValue) {
+            if ($scope.form.substrateForm.$submitted || ($scope.error && $scope.error.length > 0)) validate();
+          });
+          $scope.$watch('innerSubstrateUrl', function(newValue, oldValue) {
+            if ($scope.form.substrateForm.$submitted || ($scope.error && $scope.error.length > 0)) validate();
+          });
+        }]
       };
     });
 })();

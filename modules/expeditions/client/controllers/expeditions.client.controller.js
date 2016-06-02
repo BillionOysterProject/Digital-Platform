@@ -98,6 +98,24 @@
       }
     };
 
+    var checkRole = function(role) {
+      var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (teamLeadIndex > -1) ? true : false;
+    };
+
+    vm.checkWrite = function(teamList) {
+      if (checkRole('team lead') || checkRole('admin')) {
+        return true;
+      } else {
+        var teamListIndex = lodash.findIndex(teamList, function(m) {
+          return m.username === vm.user.username;
+        });
+        return (teamListIndex > -1) ? true : false;
+      }
+    };
+
     vm.fieldChanged = function(team) {
       vm.team = team;
       vm.expedition.teamLists = {

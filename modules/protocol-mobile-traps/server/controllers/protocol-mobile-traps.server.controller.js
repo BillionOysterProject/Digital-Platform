@@ -22,6 +22,13 @@ var emptyString = function(string) {
   }
 };
 
+var checkRole = function(role, user) {
+  var roleIndex = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
 var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
   var errorMessages = [];
 
@@ -36,7 +43,7 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
       if (mobileOrganism.count <= 0) {
         errorMessages.push('Count of mobile organism is required');
       }
-      if (!mobileOrganism.sketchPhoto) {
+      if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
         errorMessages.push('Sketch or photo of mobile organism is required');
       }
     }
@@ -89,30 +96,38 @@ exports.incrementalSave = function (req, res) {
   var mobileTrap = req.mobileTrap;
 
   if (mobileTrap) {
-    mobileTrap = _.extend(mobileTrap, req.body);
-    mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    mobileTrap.scribeMember = req.user;
+    if (mobileTrap.status === 'incomplete' || mobileTrap.status === 'returned' ||
+    (checkRole('team lead', req.user) && mobileTrap.status === 'submitted')) {
+      mobileTrap = _.extend(mobileTrap, req.body);
+      mobileTrap.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
+      mobileTrap.scribeMember = req.user;
 
-    mobileTrap.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateMobileTrap(req.body,
-        function(mobileTrapJSON) {
-          res.json({
-            mobileTrap: mobileTrap,
-            successful: true
+      mobileTrap.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            mobileTrap: mobileTrap,
-            errors: errorMessages
+        } else {
+          validateMobileTrap(req.body,
+          function(mobileTrapJSON) {
+            res.json({
+              mobileTrap: mobileTrap,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              mobileTrap: mobileTrap,
+              errors: errorMessages
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      res.json({
+        status: mobileTrap.status,
+        scribe: mobileTrap.scribeMember.displayName
+      });
+    }
   } else {
     return res.status(400).send({
       message: 'Protocol mobile trap not found'
@@ -123,35 +138,42 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol mobile trap
  */
+exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successCallback, errorCallback) {
+  validateMobileTrap(mobileTrapBody,
+    function(mobileTrapJSON) {
+      var mobileTrap = mobileTrapReq;
+
+      if (mobileTrap) {
+        mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
+        mobileTrap.collectionTime = moment(mobileTrapBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+        mobileTrap.scribeMember = user;
+        mobileTrap.submitted = new Date();
+
+        mobileTrap.save(function (err) {
+          if (err) {
+            console.log('mobile trap save err', err);
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(mobileTrap);
+          }
+        });
+      } else {
+        errorCallback('Protocol mobile trap not found');
+      }
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+};
+
 exports.update = function (req, res) {
-  validateMobileTrap(req.body,
-  function(mobileTrapJSON) {
-    var mobileTrap = req.mobileTrap;
-
-    if (mobileTrap) {
-      mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
-      mobileTrap.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      mobileTrap.scribeMember = req.user;
-      mobileTrap.status = 'submitted';
-      mobileTrap.submitted = new Date();
-
-      mobileTrap.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(mobileTrap);
-        }
-      });
-    } else {
-      return res.status(400).send({
-        message: 'Protocol mobile trap not found'
-      });
-    }
-  }, function(errorMessages) {
+  var mobileTrapBody = req.body;
+  mobileTrapBody.status = 'submitted';
+  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user,
+  function(mobileTrap) {
+    res.json(mobileTrap);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };
@@ -233,26 +255,34 @@ exports.uploadSketchPhoto = function (req, res) {
   // Filtering to upload only images
   upload.fileFilter = sketchPhotoUploadFileFilter;
   if (mobileTrap) {
-    var index = -1;
-    for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
-      if (mobileTrap.mobileOrganisms[i].organism._id.toString() === organismId.toString()) {
-        index = i;
+    if (mobileTrap.status === 'incomplete' || mobileTrap.status === 'returned' ||
+    (checkRole('team lead', req.user) && mobileTrap.status === 'submitted')) {
+      var index = -1;
+      for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+        if (mobileTrap.mobileOrganisms[i].organism._id.toString() === organismId.toString()) {
+          index = i;
+        }
       }
-    }
 
-    if (index > -1 && mobileTrap.mobileOrganisms[index]) {
-      var uploadRemote = new UploadRemote();
-      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.mobileTrapSketchPhotoUpload,
-      function (fileInfo) {
-        mobileTrap.mobileOrganisms[index].sketchPhoto = fileInfo;
+      if (index > -1 && mobileTrap.mobileOrganisms[index]) {
+        var uploadRemote = new UploadRemote();
+        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.mobileTrapSketchPhotoUpload,
+        function (fileInfo) {
+          mobileTrap.mobileOrganisms[index].sketchPhoto = fileInfo;
 
-        uploadFileSuccess(mobileTrap, res);
-      }, function (errorMessage) {
-        uploadFileError(mobileTrap, errorMessage, res);
-      });
+          uploadFileSuccess(mobileTrap, res);
+        }, function (errorMessage) {
+          uploadFileError(mobileTrap, errorMessage, res);
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Organism for mobile trap does not exist'
+        });
+      }
     } else {
-      return res.status(400).send({
-        message: 'Organism for mobile trap does not exist'
+      res.json({
+        status: mobileTrap.status,
+        scribe: mobileTrap.scribeMember.displayName
       });
     }
   } else {
@@ -287,7 +317,8 @@ exports.mobileTrapByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolMobileTrap.findById(id).populate('teamLead', 'displayName').populate('mobileOrganisms.organism').exec(function (err, mobileTrap) {
+  ProtocolMobileTrap.findById(id).populate('teamLead', 'displayName username').populate('scribeMember', 'displayName username')
+  .populate('mobileOrganisms.organism').exec(function (err, mobileTrap) {
     if (err) {
       return next(err);
     } else if (!mobileTrap) {

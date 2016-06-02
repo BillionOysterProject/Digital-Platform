@@ -24,7 +24,7 @@ var ProtocolWaterQualitySchema = new Schema({
   notes: String,
   status: {
     type: String,
-    enum: ['incomplete','submitted'],
+    enum: ['incomplete','submitted','returned','published','unpublished'],
     default: ['incomplete'],
     required: true
   },
@@ -106,4 +106,5 @@ var ProtocolWaterQualitySchema = new Schema({
   bacteriaCountMPN: Number
 });
 
+ProtocolWaterQualitySchema.set('versionKey', false); //TODO
 mongoose.model('ProtocolWaterQuality', ProtocolWaterQualitySchema);

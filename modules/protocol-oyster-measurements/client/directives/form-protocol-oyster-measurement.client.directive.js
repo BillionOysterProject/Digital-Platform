@@ -10,7 +10,8 @@
         controller: 'ProtocolOysterMeasurementsController',
         controllerAs: 'om',
         scope: {
-          protocolOysterMeasurement: '='
+          protocolOysterMeasurement: '=',
+          error: '='
         }
       };
     });

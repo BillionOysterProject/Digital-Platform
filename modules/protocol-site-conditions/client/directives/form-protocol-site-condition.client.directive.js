@@ -10,7 +10,8 @@
         controller: 'ProtocolSiteConditionsController',
         controllerAs: 'sc',
         scope: {
-          protocolSiteCondition: '='
+          protocolSiteCondition: '=',
+          error: '='
         }
       };
     });

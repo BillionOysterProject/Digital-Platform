@@ -23,6 +23,13 @@ var emptyString = function(string) {
   }
 };
 
+var checkRole = function(role, user) {
+  var roleIndex = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
     oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
@@ -31,12 +38,14 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
 
   var errorMessages = [];
 
-  if (!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
+  if (!oysterMeasurement.depthOfOysterCage || !oysterMeasurement.depthOfOysterCage.submergedDepthofCageM ||
+    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
     errorMessages.push('Submerged depth of oyster cage is required');
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
     errorMessages.push('Cage Condition photo is required');
+    errorMessages.push('Bioaccumulation on cage is required');
   } else {
     if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
       oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
@@ -48,7 +57,8 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
     }
   }
 
-  if (!oysterMeasurement.measuringOysterGrowth || oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
+  if (!oysterMeasurement.measuringOysterGrowth || !oysterMeasurement.measuringOysterGrowth.substrateShells ||
+    oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
     errorMessages.push('Substrate shell measurements are required');
   } else {
     var oneSuccessfulSubstrateShell = false;
@@ -65,15 +75,21 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
 
     for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
       var substrateShell = oysterMeasurement.measuringOysterGrowth.substrateShells[j];
+
+      console.log('substrateShell.outerSidePhoto', substrateShell.outerSidePhoto);
+      console.log('substrateShell.innerSidePhoto', substrateShell.innerSidePhoto);
+      console.log('substrateShell.totalNumberOfLiveOystersOnShell', substrateShell.totalNumberOfLiveOystersOnShell);
+
       if (substrateShell.outerSidePhoto && substrateShell.outerSidePhoto.path !== undefined &&
         substrateShell.outerSidePhoto.path !== '' && substrateShell.innerSidePhoto &&
         substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
         substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
         oneSuccessfulSubstrateShell = true;
       } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
-        substrateShell.outerSidePhoto.path === '') && (!substrateShell.innerSidePhoto ||
-        substrateShell.innerSidePhoto.path === undefined || substrateShell.innerSidePhoto.path === '') &&
-        substrateShell.totalNumberOfLiveOystersOnShell === undefined) {
+        substrateShell.outerSidePhoto.path === '' || JSON.stringify(substrateShell.outerSidePhoto) === '{}') &&
+        (!substrateShell.innerSidePhoto || substrateShell.innerSidePhoto.path === undefined ||
+        substrateShell.innerSidePhoto.path === '' || JSON.stringify(substrateShell.innerSidePhoto) === '{}') &&
+        (substrateShell.totalNumberOfLiveOystersOnShell === undefined || substrateShell.totalNumberOfLiveOystersOnShell <= 1)) {
 
       } else {
         var shellNumber = 1+j;
@@ -86,13 +102,17 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
           errorMessages.push('Inner side photo is required for Substrate Shell #' + shellNumber);
         }
         if (substrateShell.totalNumberOfLiveOystersOnShell <= 0) {
-          errorMessages.push('The total number of live oysters on the shell must be greater than 0');
+          errorMessages.push('The total number of live oysters on Substrate Shell #' + shellNumber + ' must be greater than 0');
         } else {
           if (!allOystersMeasured(substrateShell)) {
-            errorMessages.push('The number of measurements must be equal to the total number of live oysters on the shell');
+            errorMessages.push('The number of measurements must be equal to the total number of live oysters on Substrate Shell #' + shellNumber);
           }
         }
       }
+    }
+
+    if (!oneSuccessfulSubstrateShell) {
+      errorMessages.push('There must be at least one substrate shell');
     }
   }
   if (oysterMeasurement.minimumSizeOfAllLiveOysters < 0) {
@@ -155,30 +175,38 @@ exports.incrementalSave = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
 
   if (oysterMeasurement) {
-    oysterMeasurement = _.extend(oysterMeasurement, req.body);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    oysterMeasurement.scribeMember = req.user;
+    if (oysterMeasurement.status === 'incomplete' || oysterMeasurement.status === 'returned' ||
+    (checkRole('team lead', req.user) && oysterMeasurement.status === 'submitted')) {
+      oysterMeasurement = _.extend(oysterMeasurement, req.body);
+      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      oysterMeasurement.scribeMember = req.user;
 
-    oysterMeasurement.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        validateOysterMeasurement(oysterMeasurement,
-        function(oysterMeasurementJSON) {
-          res.json({
-            oysterMeasurement: oysterMeasurement,
-            successful: true
+      oysterMeasurement.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
           });
-        }, function(errorMessages) {
-          res.json({
-            oysterMeasurement: oysterMeasurement,
-            errors: errorMessages
+        } else {
+          validateOysterMeasurement(oysterMeasurement,
+          function(oysterMeasurementJSON) {
+            res.json({
+              oysterMeasurement: oysterMeasurement,
+              successful: true
+            });
+          }, function(errorMessages) {
+            res.json({
+              oysterMeasurement: oysterMeasurement,
+              errors: errorMessages
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      res.json({
+        status: oysterMeasurement.status,
+        scribe: oysterMeasurement.scribeMember.displayName
+      });
+    }
   } else {
     return res.status(400).send({
       message: 'Protocol oyster measurement not found'
@@ -189,35 +217,42 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol oyster measurement
  */
+exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, successCallback, errorCallback) {
+  validateOysterMeasurement(oysterMeasurementBody,
+    function(oysterMeasurementJSON) {
+      var oysterMeasurement = oysterMeasurmentReq;
+
+      if (oysterMeasurement) {
+        oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
+        oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
+        oysterMeasurement.scribeMember = user;
+        oysterMeasurement.submitted = new Date();
+
+        oysterMeasurement.save(function (err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(oysterMeasurement);
+          }
+        });
+      } else {
+        errorCallback('Protocol oyster measurement not found');
+      }
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+};
+
 exports.update = function (req, res) {
-  validateOysterMeasurement(req.body,
-  function(oysterMeasurementJSON) {
-    var oysterMeasurement = req.oysterMeasurement;
+  var oysterMeasurementBody = req.body;
+  oysterMeasurementBody.status = 'submitted';
 
-    if (oysterMeasurement) {
-      oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      oysterMeasurement.scribeMember = req.user;
-      oysterMeasurement.status = 'submitted';
-      oysterMeasurement.submitted = new Date();
-
-      oysterMeasurement.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(oysterMeasurement);
-        }
-      });
-    } else {
-      return res.status(400).send({
-        message: 'Protocol oyster measurement not found'
-      });
-    }
-  }, function(errorMessages) {
+  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user,
+  function(oysterMeasurement) {
+    res.json(oysterMeasurement);
+  }, function(errorMessage) {
     return res.status(400).send({
-      message: errorMessages
+      message: errorMessage
     });
   });
 };
@@ -311,23 +346,31 @@ exports.uploadOysterCageConditionPicture = function (req, res) {
   upload.fileFilter = oysterCageConditionUploadFileFilter;
 
   if (oysterMeasurement) {
-    upload(req, res, function (uploadError) {
-      if (uploadError) {
-        return res.status(400).send({
-          message: 'Error occurred while uploading oyster cage condition picture'
-        });
-      } else {
-        var uploadRemote = new UploadRemote();
-        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.oysterCageConditionUpload,
-        function (fileInfo) {
-          oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = fileInfo;
+    if (oysterMeasurement.status === 'incomplete' || oysterMeasurement.status === 'returned' ||
+    (checkRole('team lead', req.user) && oysterMeasurement.status === 'submitted')) {
+      upload(req, res, function (uploadError) {
+        if (uploadError) {
+          return res.status(400).send({
+            message: 'Error occurred while uploading oyster cage condition picture'
+          });
+        } else {
+          var uploadRemote = new UploadRemote();
+          uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.oysterCageConditionUpload,
+          function (fileInfo) {
+            oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = fileInfo;
 
-          uploadFileSuccess(oysterMeasurement, res);
-        }, function (errorMessage) {
-          uploadFileError(oysterMeasurement, errorMessage, res);
-        });
-      }
-    });
+            uploadFileSuccess(oysterMeasurement, res);
+          }, function (errorMessage) {
+            uploadFileError(oysterMeasurement, errorMessage, res);
+          });
+        }
+      });
+    } else {
+      res.json({
+        status: oysterMeasurement.status,
+        scribe: oysterMeasurement.scribeMember.displayName
+      });
+    }
   } else {
     res.status(400).send({
       message: 'Oyster measurement does not exist'
@@ -345,19 +388,27 @@ exports.uploadOuterSubstratePicture = function (req, res) {
   upload.fileFilter = outerSubstrateUploadFileFilter;
 
   if (oysterMeasurement) {
-    if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
-      var uploadRemote = new UploadRemote();
-      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.outerSubstrateUpload,
-      function (fileInfo) {
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto = fileInfo;
+    if (oysterMeasurement.status === 'incomplete' || oysterMeasurement.status === 'returned' ||
+    (checkRole('team lead', req.user) && oysterMeasurement.status === 'submitted')) {
+      if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
+        var uploadRemote = new UploadRemote();
+        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.outerSubstrateUpload,
+        function (fileInfo) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].outerSidePhoto = fileInfo;
 
-        uploadFileSuccess(oysterMeasurement, res);
-      }, function(errorMessage) {
-        uploadFileError(oysterMeasurement, errorMessage, res);
-      });
+          uploadFileSuccess(oysterMeasurement, res);
+        }, function(errorMessage) {
+          uploadFileError(oysterMeasurement, errorMessage, res);
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Substrate for oyster measurement does not exist'
+        });
+      }
     } else {
-      return res.status(400).send({
-        message: 'Substrate for oyster measurement does not exist'
+      res.json({
+        status: oysterMeasurement.status,
+        scribe: oysterMeasurement.scribeMember.displayName
       });
     }
   } else {
@@ -377,19 +428,27 @@ exports.uploadInnerSubstratePicture = function (req, res) {
   upload.fileFilter = innerSubstrateUploadFileFilter;
 
   if (oysterMeasurement) {
-    if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
-      var uploadRemote = new UploadRemote();
-      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.innerSubstrateUpload,
-      function(fileInfo) {
-        oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto = fileInfo;
+    if (oysterMeasurement.status === 'incomplete' || oysterMeasurement.status === 'returned' ||
+    (checkRole('team lead', req.user) && oysterMeasurement.status === 'submitted')) {
+      if (substrateIndex && oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex]) {
+        var uploadRemote = new UploadRemote();
+        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.innerSubstrateUpload,
+        function(fileInfo) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[substrateIndex].innerSidePhoto = fileInfo;
 
-        uploadFileSuccess(oysterMeasurement, res);
-      }, function(errorMessage) {
-        uploadFileError(oysterMeasurement, errorMessage, res);
-      });
+          uploadFileSuccess(oysterMeasurement, res);
+        }, function(errorMessage) {
+          uploadFileError(oysterMeasurement, errorMessage, res);
+        });
+      } else {
+        return res.status(400).send({
+          message: 'Substrate for oyster measurement does not exist'
+        });
+      }
     } else {
-      return res.status(400).send({
-        message: 'Substrate for oyster measurement does not exist'
+      res.json({
+        status: oysterMeasurement.status,
+        scribe: oysterMeasurement.scribeMember.displayName
       });
     }
   } else {
@@ -424,7 +483,8 @@ exports.oysterMeasurementByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolOysterMeasurement.findById(id).populate('teamLead', 'displayName').exec(function (err, oysterMeasurement) {
+  ProtocolOysterMeasurement.findById(id).populate('teamLead', 'displayName username').populate('scribeMember', 'displayName username')
+  .exec(function (err, oysterMeasurement) {
     if (err) {
       return next(err);
     } else if (!oysterMeasurement) {
