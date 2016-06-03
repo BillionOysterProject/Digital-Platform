@@ -247,7 +247,7 @@ body {
         .sidebar .navbar-footer { display: none; }
         .sidebar .navbar-brand { height: 65px; margin: 5px 0 0 0; }
         .sidebar .navbar-brand img, .sidebar:hover .navbar-brand img { width: 50px; }
-        .sidebar .text { display: block; }
+        .sidebar .text, .sidebar .open .dropdown-menu { display: block; }
         
         .navbar .navbar-nav .open .dropdown-menu > .active > a, 
         .navbar .navbar-nav .open .dropdown-menu > .active > a:hover, 
@@ -264,6 +264,12 @@ body {
     }
         
         .navbar-nav { margin-top: 0; margin-bottom: 0; }
+        .navbar-nav > li > a { padding-left: 30px; padding-right: 30px; }
+        
+        .navbar-nav .open .dropdown-menu > li > a, 
+        .navbar-nav .open .dropdown-menu .dropdown-header {
+            padding-left: 68px;
+        }
         
     .content-fixed { position: relative; width: 100%; padding-left: 15px; }
     .content-fixed + div { padding-top: 0; }
@@ -280,6 +286,10 @@ body {
             border-radius: 4px 4px 0 0 !important;
             margin-bottom: 0 !important;
         }
+    
+    .page-header {
+        margin-top: 0;
+    }
 }
 
 

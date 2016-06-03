@@ -5,16 +5,13 @@
                 <h2 class="col-md-8">Dashboard</h2>
                 <div class="col-md-4">
                     <div class="pull-right" ng-show="vm.teams.length > 1">
-                      <a class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false" id="teamMenu">
-                        {{vm.team.name}} <span class="caret"></span>
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="teamMenu">
-                        <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
-                      </ul>
+                        <a class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="teamMenu">{{vm.team.name}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu" aria-labelledby="teamMenu">
+                            <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
+                        </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1">
-                      <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
+                        <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
                     </div>
                     <p ng-show="vm.teams.length > 0">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
