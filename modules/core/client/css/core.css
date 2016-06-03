@@ -245,13 +245,13 @@ body {
     }
     
         .sidebar .navbar-footer { display: none; }
-        .sidebar .navbar-brand { height: 65px; margin: 5px 0 0 0; }
+        .sidebar .navbar-brand { height: 65px; margin: 5px 0; }
         .sidebar .navbar-brand img, .sidebar:hover .navbar-brand img { width: 50px; }
         .sidebar .text, .sidebar .open .dropdown-menu { display: block; }
         
-        .navbar .navbar-nav .open .dropdown-menu > .active > a, 
-        .navbar .navbar-nav .open .dropdown-menu > .active > a:hover, 
-        .navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
+        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a, 
+        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a:hover, 
+        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
             background: transparent;
             color: #fff;
         }
