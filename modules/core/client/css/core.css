@@ -266,8 +266,7 @@ body {
         .navbar-nav { margin-top: 0; margin-bottom: 0; }
         .navbar-nav > li > a { padding-left: 30px; padding-right: 30px; }
         
-        .navbar-nav .open .dropdown-menu > li > a, 
-        .navbar-nav .open .dropdown-menu .dropdown-header {
+        .navbar-default .navbar-nav .open .dropdown-menu > li > a {
             padding-left: 68px;
         }
         
