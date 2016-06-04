@@ -1,6 +1,6 @@
 <div>
-  <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
-    <h3>Sign up</h3><br/>
+  <div class="col-md-offset-3 col-md-6">
+    <h3 class="text-center">Sign up</h3><br/>
     <form name="vm.userForm" ng-submit="vm.signup(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
         <div class="row">
@@ -97,17 +97,17 @@
             </uib-progressbar>
           </div>
         </div>
-        <div class="row">
-          <div class="text-right form-group">
+      </div>
+      <div class="row">
+        <div class="col-sm-12 text-center form-group">
             <button type="submit" class="btn btn-primary">Sign up</button>
-          &nbsp; or&nbsp;
+            &nbsp; or&nbsp;
             <a ui-sref="authentication.signin" class="show-signup">Sign in</a>
-          </div>
         </div>
-        <div class="row">
-          <div ng-show="vm.error" class="text-center text-danger">
-            <strong ng-bind="vm.error"></strong>
-          </div>
+        <div class="col-sm-12">
+            <div ng-show="vm.error" class="alert alert-danger">
+                <strong ng-bind="vm.error"></strong>
+            </div>
         </div>
       </fieldset>
     </form>

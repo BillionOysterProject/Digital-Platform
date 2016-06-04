@@ -26,6 +26,7 @@
 
 <div class="navbar navbar-fixed-top navbar-default" ng-controller="HeaderController">
     <div class="container-fluid">
+        <!-- REMOVE MOBILE COLLAPSING MENU
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
                 <span class="sr-only">Toggle navigation</span>
@@ -35,6 +36,8 @@
             </button>
         </div>
         <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
+        -->
+        <nav role="navigation">
             <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
                 <li ui-sref-active="active">
                     <a ui-sref="authentication.signup">Sign Up</a>

@@ -91,18 +91,18 @@
                 <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
                 ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid &&
                   substrate.totalNumberOfLiveOystersOnShell === 0}">
-                    <td><h4>
-                      <i class="glyphicon glyphicon-ok-sign green" ng-show="om.checkDone(substrate)"></i>
-                      Substrate Shell {{substrate.substrateShellNumber}}</h4></td>
                     <td>
-                        <p class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
+                        <h4><i class="glyphicon glyphicon-ok-sign green" ng-show="om.checkDone(substrate)"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4>
+                    </td>
+                    <td>
+                        <a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="om.openSubstrateForm($index)">Edit measurements</a>
+                        <span class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
                             Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>,
                             Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>,
                             Average size <b>{{substrate.averageSizeOfLiveOysters | number:2}}</b>,
                             Total Alive <b>{{substrate.totalNumberOfLiveOystersOnShell | number}}</b>
-                        </p>
+                        </span>
                     </td>
-                    <td><a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="om.openSubstrateForm($index)">Edit measurements</a></td>
                 </tr>
             </table>
         </section>
