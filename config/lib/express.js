@@ -101,15 +101,6 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
-
-  //force using https
-  app.use(function redirectHTTP(req, res, next) {
-    if (app.locals.secure && req.headers['x-forwarded-proto'] &&
-      req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
-      return res.redirect('https://' + req.headers.host + req.url);
-    }
-    next();
-  });
 };
 
 /**
@@ -277,6 +268,17 @@ module.exports.init = function (db) {
 
   // Configure Socket.io
   app = this.configureSocketIO(app, db);
+
+  //force using https
+  app.use(function redirectHTTP(req, res, next) {
+    console.log('redirectHTTP');
+    if (app.locals.secure && req.headers['x-forwarded-proto'] &&
+      req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
+      console.log('redirect to https');
+      return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+  });
 
   return app;
 };
