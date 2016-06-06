@@ -1,6 +1,6 @@
 <div class="row" isotope-container="isotope-container-created" id="isotope-container-created" ng-cloak="">
     <div ng-repeat="created in vm.createdLessons track by created._id" isotope-item="isotope-item-created"
-    class="col-sm-6 col-md-4 col-lg-3 library-item">
+    class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
         <div class="panel-overlay" ng-show="created.status === 'published'">
             <a class="btn btn-sm btn-primary pull-right" ng-show="created.status === 'published'"
             ui-sref="lessons.edit({ lessonId: created._id })">
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
         <div class="panel panel-default" ui-sref="lessons.create">
             <div class="panel-body text-center text-muted">
                 <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>

@@ -69,7 +69,7 @@
         </nav>
 
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
-            <div ng-repeat="lesson in vm.lessons track by lesson._id" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
+            <div ng-repeat="lesson in vm.lessons track by lesson._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
                 <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
                     <div class="panel-heading" style="background: {{lesson.unit.color}}">
                         <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin,team lead">
+            <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin,team lead">
                 <div class="panel panel-default" ui-sref="lessons.create">
                     <div class="panel-body text-center text-muted">
                         <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
