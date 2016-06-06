@@ -195,12 +195,14 @@
     $scope.$watch('sc.waterConditionPhotoURL', function(newValue, oldValue) {
       if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL !== '') {
         if (sc.waterConditionUploader.queue.length > 0) {
+          var spinner;
           sc.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
             sc.waterConditionUploader.removeFromQueue(fileItem);
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
-              if (data.scribeMember.username !== Authentication.user.username && data.status === 'submitted') {
+              if (data && data.scribeMember && data.scribeMember.username !== Authentication.user.username &&
+                data.status === 'submitted') {
                 $rootScope.$broadcast('removeSubmittedProtocolTab', {
                   values: {
                     scribeName: data.scribeMember.displayName,
@@ -220,18 +222,21 @@
                 $scope.protocolSiteCondition = sc.protocolSiteCondition;
               }
               $rootScope.$broadcast('savingStop');
+              spinner.stop();
             });
           };
 
           sc.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
             sc.error = response.message;
             $rootScope.$broadcast('savingStop');
+            spinner.stop();
           };
 
           sc.waterConditionUploader.onBeforeUploadItem = function(item) {
             item.url = 'api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/upload-water-condition';
           };
           $rootScope.$broadcast('savingStart');
+          spinner = new Spinner({}).spin(document.getElementById('water-condition-image-dropzone'));
           sc.waterConditionUploader.uploadAll();
         }
       } else if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL === '' &&
@@ -245,12 +250,14 @@
     $scope.$watch('sc.landConditionPhotoURL', function(newValue, oldValue) {
       if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL !== '') {
         if (sc.landConditionUploader.queue.length > 0) {
+          var spinner;
           sc.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
             sc.landConditionUploader.removeFromQueue(fileItem);
             ProtocolSiteConditionsService.get({
               siteConditionId: sc.protocolSiteCondition._id
             }, function(data) {
-              if (data.scribeMember.username !== Authentication.user.username && data.status === 'submitted') {
+              if (data && data.scribeMember && data.scribeMember.username !== Authentication.user.username &&
+                data.status === 'submitted') {
                 $rootScope.$broadcast('removeSubmittedProtocolTab', {
                   values: {
                     scribeName: data.scribeMember.displayName,
@@ -270,18 +277,21 @@
                 $scope.protocolSiteCondition = sc.protocolSiteCondition;
               }
               $rootScope.$broadcast('savingStop');
+              spinner.stop();
             });
           };
 
           sc.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
             sc.error = response.message;
             $rootScope.$broadcast('savingStop');
+            spinner.stop();
           };
 
           sc.landConditionUploader.onBeforeUploadItem = function(item) {
             item.url = 'api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/upload-land-condition';
           };
           $rootScope.$broadcast('savingStart');
+          spinner = new Spinner({}).spin(document.getElementById('land-condition-image-dropzone'));
           sc.landConditionUploader.uploadAll();
         }
       } else if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL === '' &&

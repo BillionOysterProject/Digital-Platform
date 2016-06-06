@@ -38,12 +38,40 @@ var checkRole = function(user, role) {
 exports.create = function (req, res) {
   var expedition = new Expedition(req.body);
   expedition.created = new Date();
+  expedition.teamLead = req.user;
+  expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
-  var siteCondition = new ProtocolSiteCondition({});
-  var oysterMeasurement = new ProtocolOysterMeasurement({});
-  var mobileTrap = new ProtocolMobileTrap({});
-  var settlementTile = new ProtocolSettlementTile({});
-  var waterQuality = new ProtocolWaterQuality({});
+  var siteCondition = new ProtocolSiteCondition({
+    collectionTime: expedition.monitoringStartDate,
+    latitude: req.body.station.latitude,
+    longitude: req.body.station.longitude,
+    teamMembers: req.body.teamLists.siteCondition
+  });
+  var oysterMeasurement = new ProtocolOysterMeasurement({
+    collectionTime: expedition.monitoringStartDate,
+    latitude: req.body.station.latitude,
+    longitude: req.body.station.longitude,
+    teamMembers: req.body.teamLists.oysterMeasurement
+  });
+  var mobileTrap = new ProtocolMobileTrap({
+    collectionTime: expedition.monitoringStartDate,
+    latitude: req.body.station.latitude,
+    longitude: req.body.station.longitude,
+    teamMembers: req.body.teamLists.mobileTrap
+  });
+  var settlementTile = new ProtocolSettlementTile({
+    collectionTime: expedition.monitoringStartDate,
+    latitude: req.body.station.latitude,
+    longitude: req.body.station.longitude,
+    teamMembers: req.body.teamLists.settlementTiles
+  });
+  var waterQuality = new ProtocolWaterQuality({
+    collectionTime: expedition.monitoringStartDate,
+    latitude: req.body.station.latitude,
+    longitude: req.body.station.longitude,
+    teamMembers: req.body.teamLists.waterQuality
+  });
 
   siteCondition.save(function (err) {
     if (err) {
@@ -85,7 +113,6 @@ exports.create = function (req, res) {
                         message: 'Could not create a water quality protocol'
                       });
                     } else {
-                      expedition.teamLead = req.user;
                       expedition.protocols = {
                         siteCondition: siteCondition,
                         oysterMeasurement: oysterMeasurement,
@@ -93,8 +120,6 @@ exports.create = function (req, res) {
                         settlementTiles: settlementTile,
                         waterQuality: waterQuality
                       };
-                      expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
-                      expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
                       expedition.save(function (err) {
                         if (err) {

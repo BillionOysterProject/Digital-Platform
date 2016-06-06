@@ -273,10 +273,12 @@
         if (index < st.settlementTilePhotoUploaders.length && st.settlementTilePhotoUploaders[index]) {
           var uploader = st.settlementTilePhotoUploaders[index];
           if (uploader.queue.length > 0) {
+            var spinner;
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
               uploader.removeFromQueue(fileItem);
               st.error = null;
               $rootScope.$broadcast('savingStop');
+              spinner.stop();
               successCallback();
             };
 
@@ -284,6 +286,7 @@
               st.protocolSettlementTiles.settlementTiles[index].tilePhoto.error = response.message;
               st.error = response.message;
               $rootScope.$broadcast('savingStop');
+              spinner.stop();
               errorCallback();
             };
 
@@ -291,6 +294,7 @@
               item.url = 'api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/index/' + index + '/upload-tile-photo';
             };
             $rootScope.$broadcast('savingStart');
+            spinner = new Spinner({}).spin(document.getElementById('settlement-tile-image-dropzone-'+index));
             uploader.uploadAll();
           } else {
             successCallback();

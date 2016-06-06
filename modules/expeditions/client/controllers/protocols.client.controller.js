@@ -6,14 +6,10 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'ProtocolMobileTrapsService',
-  'ProtocolOysterMeasurementsService', 'ProtocolSettlementTilesService', 'ProtocolSiteConditionsService',
-  'ProtocolWaterQualityService', 'ExpeditionsService', 'ExpeditionActivitiesService'];
+  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'ExpeditionsService', 'ExpeditionActivitiesService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, expedition, Authentication, TeamsService, ProtocolMobileTrapsService,
-    ProtocolOysterMeasurementsService, ProtocolSettlementTilesService, ProtocolSiteConditionsService,
-    ProtocolWaterQualityService, ExpeditionsService, ExpeditionActivitiesService) {
+    $timeout, $interval, expedition, Authentication, TeamsService, ExpeditionsService, ExpeditionActivitiesService) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -76,116 +72,55 @@
       }
     };
 
-    vm.setupInputValues = function(protocol, teamList, incrementalSaveUrl, callback) {
-      var changed = false;
-      if (vm.expedition.station) {
+    if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
+      vm.siteCondition = vm.expedition.protocols.siteCondition;
+      vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
+      vm.disabledSiteCondition = false;
+    } else {
+      vm.siteCondition = null;
+      vm.viewSiteCondition = false;
+      vm.disabledSiteCondition = true;
+    }
 
-        if (!protocol.latitude && vm.expedition.station.latitude) {
-          changed = true;
-          protocol.latitude = vm.expedition.station.latitude;
-        }
-        if (!protocol.longitude && vm.expedition.station.longitude) {
-          changed = true;
-          protocol.longitude = vm.expedition.station.longitude;
-        }
-      }
-      if (vm.expedition.monitoringStartDate) {
-        if (!protocol.collectionTime) {
-          changed = true;
-          protocol.collectionTime = moment(vm.expedition.monitoringStartDate).toDate();
-        }
-      }
-      if (teamList) {
-        if (!protocol.teamMembers) {
-          protocol.teamMembers = [];
-        }
-        for (var i = 0; i < teamList.length; i++) {
-          var index = lodash.indexOf(protocol.teamMembers, teamList[i]._id);
-          if (index === -1) {
-            protocol.teamMembers.push(teamList[i]._id);
-          }
-        }
-        protocol.teamMembers = lodash.uniq(protocol.teamMembers);
-      }
-      // if (changed) {
-      //   $http.post(incrementalSaveUrl, protocol)
-      //   .success(function (data, status, headers, config) {
-      //     protocol = data;
-      //     callback(protocol);
-      //   })
-      //   .error(function (data, status, headers, config) {
-      //     callback(protocol);
-      //   });
-      // } else {
-      callback(protocol);
-      // }
-    };
+    if (!vm.checkDisabled(vm.expedition.protocols.oysterMeasurement)) {
+      vm.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+      vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
+      vm.disabledOysterMeasurement = false;
+    } else {
+      vm.oysterMeasurement = null;
+      vm.viewOysterMeasurement = false;
+      vm.disabledOysterMeasurement = true;
+    }
 
-    vm.setupInputValues(vm.expedition.protocols.siteCondition, vm.expedition.teamLists.siteCondition,
-      '/api/protocol-site-conditions/' + vm.expedition.protocols.siteCondition._id + '/incremental-save',
-      function(protocol) {
-        if (protocol && protocol !== null && !vm.checkDisabled(protocol)) {
-          vm.siteCondition = protocol;
-          vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
-          vm.disabledSiteCondition = false;
-        } else {
-          vm.siteCondition = null;
-          vm.viewSiteCondition = false;
-          vm.disabledSiteCondition = true;
-        }
-      });
-    vm.setupInputValues(vm.expedition.protocols.oysterMeasurement, vm.expedition.teamLists.oysterMeasurement,
-      '/api/protocol-oyster-measurements/' + vm.expedition.protocols.oysterMeasurement._id + '/incremental-save',
-      function(protocol) {
-        if (protocol && protocol !== null && !vm.checkDisabled(protocol)) {
-          vm.oysterMeasurement = protocol;
-          vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
-          vm.disabledOysterMeasurement = false;
-        } else {
-          vm.oysterMeasurement = null;
-          vm.viewOysterMeasurement = false;
-          vm.disabledOysterMeasurement = true;
-        }
-      });
-    vm.setupInputValues(vm.expedition.protocols.mobileTrap, vm.expedition.teamLists.mobileTrap,
-      '/api/protocol-mobile-traps/' + vm.expedition.protocols.mobileTrap._id + '/incremental-save',
-      function(protocol) {
-        if (protocol && protocol !== null && !vm.checkDisabled(protocol)) {
-          vm.mobileTrap = protocol;
-          vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
-          vm.disabledMobileTrap = false;
-        } else {
-          vm.mobileTrap = null;
-          vm.viewMobileTrap = false;
-          vm.disabledMobileTrap = true;
-        }
-      });
-    vm.setupInputValues(vm.expedition.protocols.settlementTiles, vm.expedition.teamLists.settlementTiles,
-      '/api/protocol-settlement-tiles/' + vm.expedition.protocols.settlementTiles._id + '/incremental-save',
-      function(protocol) {
-        if (protocol && protocol !== null && !vm.checkDisabled(protocol)) {
-          vm.settlementTiles = protocol;
-          vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
-          vm.disabledSettlementTiles = false;
-        } else {
-          vm.settlementTiles = null;
-          vm.viewSettlementTiles = false;
-          vm.disabledSettlementTiles = true;
-        }
-      });
-    vm.setupInputValues(vm.expedition.protocols.waterQuality, vm.expedition.teamLists.waterQuality,
-      '/api/protocol-water-quality/' + vm.expedition.protocols.waterQuality._id + '/incremental-save',
-      function(protocol) {
-        if (protocol && protocol !== null && !vm.checkDisabled(protocol)) {
-          vm.waterQuality = protocol;
-          vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
-          vm.disabledWaterQuality = false;
-        } else {
-          vm.waterQuality = null;
-          vm.viewWaterQuality = false;
-          vm.disabledWaterQuality = true;
-        }
-      });
+    if (!vm.checkDisabled(vm.expedition.protocols.mobileTrap)) {
+      vm.mobileTrap = vm.expedition.protocols.mobileTrap;
+      vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
+      vm.disabledMobileTrap = false;
+    } else {
+      vm.mobileTrap = null;
+      vm.viewMobileTrap = false;
+      vm.disabledMobileTrap = true;
+    }
+
+    if (!vm.checkDisabled(vm.expedition.protocols.settlementTiles)) {
+      vm.settlementTiles = vm.expedition.protocols.settlementTiles;
+      vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
+      vm.disabledSettlementTiles = false;
+    } else {
+      vm.settlementTiles = null;
+      vm.viewSettlementTiles = false;
+      vm.disabledSettlementTiles = true;
+    }
+
+    if (!vm.checkDisabled(vm.expedition.protocols.waterQuality)) {
+      vm.waterQuality = vm.expedition.protocols.waterQuality;
+      vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
+      vm.disabledWaterQuality = false;
+    } else {
+      vm.waterQuality = null;
+      vm.viewWaterQuality = false;
+      vm.disabledWaterQuality = true;
+    }
 
     vm.tabs = {
       protocol1: { isActive: false, visible: vm.viewSiteCondition, error: '', isDisabled: vm.disabledSiteCondition },
