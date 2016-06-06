@@ -3,11 +3,11 @@
 //var defaultEnvConfig = require('./default');
 
 module.exports = {
-  secure: {
-    ssl: true,
-  //   privateKey: './config/sslcerts/key.pem',
-  //   certificate: './config/sslcerts/cert.pem'
-  },
+  // secure: {
+  //   ssl: true,
+  // //   privateKey: './config/sslcerts/key.pem',
+  // //   certificate: './config/sslcerts/cert.pem'
+  // },
   port: process.env.PORT || 8081,
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '0.0.0.0',

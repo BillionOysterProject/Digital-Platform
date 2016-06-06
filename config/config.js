@@ -76,11 +76,6 @@ var validateSecureMode = function (config) {
     return true;
   }
 
-  if ((!config.secure.privateKey || config.secure.privateKey === '') &&
-    (!config.secure.certificate || config.secure.certificate === '')) {
-    return true;
-  }
-
   var privateKey = fs.existsSync(path.resolve(config.secure.privateKey));
   var certificate = fs.existsSync(path.resolve(config.secure.certificate));
 

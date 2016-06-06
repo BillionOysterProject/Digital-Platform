@@ -48,13 +48,8 @@ module.exports.initLocalVariables = function (app) {
 
   // Passing the request url to environment locals
   app.use(function (req, res, next) {
-    if (app.locals.secure) {
-      res.locals.host = 'https://' + req.hostname;
-      res.locals.url = 'https://' + req.headers.host + req.originalUrl;
-    } else {
-      res.locals.host = req.protocol + '://' + req.hostname;
-      res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
-    }
+    res.locals.host = req.protocol + '://' + req.hostname;
+    res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
     next();
   });
 };
@@ -76,17 +71,6 @@ module.exports.initMiddleware = function (app) {
     },
     level: 9
   }));
-
-  //force using https
-  app.use(function redirectHTTP(req, res, next) {
-    console.log('redirectHTTP');
-    if (app.locals.secure && req.headers['x-forwarded-proto'] &&
-      req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
-      console.log('redirect to https');
-      return res.redirect('https://' + req.headers.host + req.url);
-    }
-    next();
-  });
 
   // Initialize favicon middleware
   app.use(favicon(app.locals.favicon));
