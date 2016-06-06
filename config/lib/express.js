@@ -101,6 +101,15 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
+
+  //force using https
+  app.use(function redirectHTTP(req, res, next) {
+    if (app.locals.secure && req.headers['x-forwarded-proto'] &&
+      req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
+      return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+  });
 };
 
 /**
