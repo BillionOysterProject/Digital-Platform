@@ -105,17 +105,14 @@
         ProtocolMobileTrapsService.get({
           mobileTrapId: $stateParams.protocolMobileTrapId
         }, function(data) {
-          mt.protocolMobileTrap = data;
-          mt.protocolMobileTrap.collectionTime = moment(mt.protocolMobileTrap.collectionTime).startOf('minute').toDate();
-          setupMobileOrganisms();
-          $scope.protocolMobileTrap = mt.protocolMobileTrap;
+          $scope.protocolMobileTrap = data;
+          readFromScope();
         });
       } else if ($scope.protocolMobileTrap) {
         readFromScope();
       } else {
-        mt.protocolMobileTrap = new ProtocolMobileTrapsService();
-        mt.protocolMobileTrap.mobileOrganisms = [];
-        $scope.protocolMobileTrap = mt.protocolMobileTrap;
+        $scope.protocolMobileTrap = new ProtocolMobileTrapsService();
+        readFromScope();
       }
     });
 
@@ -253,6 +250,7 @@
                 mt.protocolMobileTrap.mobileOrganisms = data.mobileOrganisms;
                 setupMobileOrganisms();
                 $scope.protocolMobileTrap = mt.protocolMobileTrap;
+                readFromScope();
                 mt.organismDetails = {};
                 mt.sketchPhotoUrl = '';
               }
@@ -305,6 +303,7 @@
               $rootScope.$broadcast('incrementalSaveMobileTrapError');
             }
             $scope.protocolMobileTrap = mt.protocolMobileTrap;
+            readFromScope();
           } else if (data.scribe) {
             $rootScope.$broadcast('removeSubmittedProtocolTab', {
               values: {
@@ -322,6 +321,7 @@
               $rootScope.$broadcast('incrementalSaveMobileTrapSuccessful');
             }
             $scope.protocolMobileTrap = mt.protocolMobileTrap;
+            readFromScope();
           }
           $rootScope.$broadcast('savingStop');
         })
