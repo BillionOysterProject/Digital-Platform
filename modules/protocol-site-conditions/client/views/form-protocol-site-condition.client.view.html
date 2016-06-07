@@ -486,21 +486,24 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-map-marked" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-map-marked" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"
     longitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
     dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
-    <map-select modal-id="modal-map-unmarked" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-map-unmarked" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"
     longitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
     dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-site-condition-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-site-condition-map" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-site-condition-map" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.latitude"
     longitude="sc.protocolSiteCondition.longitude"
     dismiss-function="sc.closeMap"></map-select>

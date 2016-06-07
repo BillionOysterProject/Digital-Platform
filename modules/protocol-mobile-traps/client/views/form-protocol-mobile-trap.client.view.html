@@ -93,8 +93,8 @@
 <!-- MODALS -->
 <div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
-    longitude="mt.protocolMobileTrap.longitude" can-click-map-to-add-marker="true"
-    dismiss-function="mt.closeMap"></map-select>
+    longitude="mt.protocolMobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true" dismiss-function="mt.closeMap"></map-select>
 </div>
 
 <form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails"
