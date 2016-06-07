@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams/members/csv',
       permissions: '*'
     }, {
+      resources: '/api/teams/members/validate/csv',
+      permissions: '*'
+    }, {
       resources: '/api/teams/members',
       permissions: '*'
     }, {
