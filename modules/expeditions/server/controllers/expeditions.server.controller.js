@@ -492,6 +492,7 @@ exports.publish = function (req, res) {
  * Unpublish an expedition
  */
 exports.unpublish = function (req, res) {
+  console.log('unpublish');
   var expedition = req.expedition;
   var siteCondition = req.body.protocols.siteCondition;
   var oysterMeasurement = req.body.protocols.oysterMeasurement;
@@ -500,11 +501,13 @@ exports.unpublish = function (req, res) {
   var waterQuality = req.body.protocols.waterQuality;
 
   if (expedition) {
+    console.log('expedition found');
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
       waterQuality, 'submitted', req.user,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurementSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
 
+      console.log('updated to submitted');
       if (errorMessages) {
         return res.status(400).send({
           message: errorMessages
@@ -524,6 +527,7 @@ exports.unpublish = function (req, res) {
       }
     });
   } else {
+    console.log('expedition not found');
     return res.status(400).send({
       message: 'Expedition not found'
     });

@@ -97,20 +97,15 @@
       ProtocolOysterMeasurementsService.get({
         oysterMeasurementId: $stateParams.protocolOysterMeasurementId
       }, function(data) {
-        om.protocolOysterMeasurement = data;
-        om.cageConditionPhotoURL = (om.protocolOysterMeasurement.conditionOfOysterCage &&
-          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
-          om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
-        om.protocolOysterMeasurement.collectionTime = moment(om.protocolOysterMeasurement.collectionTime).startOf('minute').toDate();
+        $scope.protocolOysterMeasurement = data;
+        readFromScope();
       });
-      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
     } else if ($scope.protocolOysterMeasurement) {
       readFromScope();
     } else {
-      om.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
       om.cageConditionPhotoURL = '';
-      setupSubstrateShells();
-      $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+      $scope.protocolOysterMeasurement = new ProtocolOysterMeasurementsService();
+      readFromScope();
     }
 
     var findPreviousValues = function() {
@@ -295,10 +290,11 @@
                         }
                         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto =
                           data.measuringOysterGrowth.substrateShells[index].outerSidePhoto;
-                        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShell[index].innerSidePhoto =
+                        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto =
                           data.measuringOysterGrowth.substrateShells[index].innerSidePhoto;
                         //angular.element('#modal-substrateshell'+index).modal('hide');
                         $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+                        readFromScope();
                       }
                       $rootScope.$broadcast('savingStop');
                       $rootScope.$broadcast('startIncrementalSavingLoop');
@@ -425,6 +421,7 @@
             om.error = data.errors;
             om.form.oysterMeasurementForm.$setSubmitted(true);
             $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+            readFromScope();
             $rootScope.$broadcast('incrementalSaveOysterMeasurementError');
           } else if (data.scribe) {
             $rootScope.$broadcast('removeSubmittedProtocolTab', {
@@ -438,6 +435,7 @@
           } else if (data.successful) {
             om.error = null;
             $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+            readFromScope();
             $rootScope.$broadcast('incrementalSaveOysterMeasurementSuccessful');
           }
           $rootScope.$broadcast('savingStop');
@@ -484,6 +482,7 @@
                   om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
                   om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
                 $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
+                readFromScope();
               }
               $rootScope.$broadcast('savingStop');
               spinner.stop();
