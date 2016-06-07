@@ -1,22 +1,16 @@
 <section>
-    <p class="lead blue">For reference, here are the current tide times and meter heights at <span ng-bind="vm.tides.stationName"></span>.</p>
-    <table class="table table-responsive table-condensed">
-        <tr ng-repeat="tide in vm.tides.HighLowValues.item">
-            <td>
-                <p class="blue small nobreak" ng-bind="tide.date"></p>
-            </td>
-            <td>
-                <p ng-show="tide.data[0]"><b>{{tide.data[0].time}}</b> {{tide.data[0].pred}}({{tide.data[0].type}})</p>
-            </td>
-            <td>
-                <p ng-show="tide.data[1]"><b>{{tide.data[1].time}}</b> {{tide.data[1].pred}}({{tide.data[1].type}})</p>
-            </td>
-            <td>
-                <p ng-show="tide.data[2]"><b>{{tide.data[2].time}}</b> {{tide.data[2].pred}}({{tide.data[2].type}})</p>
-            </div>
-            <td>
-                <p ng-show="tide.data[3]"><b>{{tide.data[3].time}}</b> {{tide.data[3].pred}}({{tide.data[3].type}})</p>
-            </td>
+    <p class="lead blue">For reference, here are the current tide times and meter heights at <b ng-bind="vm.tides.stationName"></b>.</p>
+    <table class="table table-striped table-condensed">
+        <tbody ng-repeat="tide in vm.tides.HighLowValues.item">
+            <tr>
+                <td colspan="4"><h6 class="blue nobreak" ng-bind="tide.date"></h6></td>
+            </tr>
+            <tr>
+                <td ng-show="tide.data[0]"><b>{{tide.data[0].time}}</b> {{tide.data[0].pred}}({{tide.data[0].type}})</td>
+                <td ng-show="tide.data[1]"><b>{{tide.data[1].time}}</b> {{tide.data[1].pred}}({{tide.data[1].type}})</td>
+                <td ng-show="tide.data[2]"><b>{{tide.data[2].time}}</b> {{tide.data[2].pred}}({{tide.data[2].type}})</td>
+                <td ng-show="tide.data[3]"><b>{{tide.data[3].time}}</b> {{tide.data[3].pred}}({{tide.data[3].type}})</td>
+            </tr>
         </tr>
     </table>
 </section>

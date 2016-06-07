@@ -1,6 +1,6 @@
 <form name="sc.form.siteConditionForm" id="sc.form.siteConditionForm" ng-submit="sc.save(sc.form.siteConditionForm.$valid)" novalidate ng-cloak>
     <section class="content">
-        <section class="container">
+        <section class="container" id="site-condition-form">
             <h2>Protocol 1 <small>Site Conditions</small></h2>
             <hr />
             <div class="alert alert-danger" ng-show="sc.error">
@@ -180,7 +180,8 @@
                     <div class="form-group">
                         <label>Take a photograph of the water with your camera *</label>
                         <single-image-drop-zone uploader="sc.waterConditionUploader"
-                        image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
+                        image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"
+                        id="water-condition-image-dropzone"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
                         !sc.waterConditionPhotoURL">
                             <p class="red">Water condition image is required.</p>
@@ -364,7 +365,8 @@
                     <div class="form-group">
                         <label>Take a photograph of the land with your camera *</label>
                         <single-image-drop-zone uploader="sc.landConditionUploader"
-                        image-url="sc.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
+                        image-url="sc.landConditionPhotoURL" image-alt="Land Condition"
+                        id="land-condition-image-dropzone"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
                         !sc.landConditionPhotoURL">
                             <p class="red">Land condition image is required.</p>
@@ -484,21 +486,24 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-map-marked" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-map-marked" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"
     longitude="sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
     dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
-    <map-select modal-id="modal-map-unmarked" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-map-unmarked" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"
     longitude="sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
     dismiss-function="sc.closeMap"></map-select>
 </div>
 
 <div class="modal fade" id="modal-site-condition-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-site-condition-map" can-click-map-to-add-marker="true"
+    <map-select modal-id="modal-site-condition-map" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true"
     latitude="sc.protocolSiteCondition.latitude"
     longitude="sc.protocolSiteCondition.longitude"
     dismiss-function="sc.closeMap"></map-select>

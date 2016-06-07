@@ -13,7 +13,7 @@
             </a>
         </nav>
         <div class="row" isotope-container="isotope-container">
-            <div ng-repeat="unit in vm.units track by unit._id" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+            <div ng-repeat="unit in vm.units track by unit._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" style="background: {{unit.color}}; color: #fff" ui-sref="units.view({ unitId: unit._id })">
                     <div class="panel-body text-center">
                         <h1><i class="{{unit.icon}}"></i></h1>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin">
+            <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item" view-permissions="admin">
                 <div class="panel panel-default" ui-sref="units.create">
                     <div class="panel-body text-center text-muted">
                         <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
