@@ -74,7 +74,6 @@
 
     $scope.validate = function() {
       var csvMembers = $scope.csv.result;
-      console.log('$scope.csv.result', $scope.csv.result);
       $scope.totalValidating = csvMembers.length;
       $scope.bulkFileUploaded = true;
 
@@ -104,18 +103,15 @@
             if (!member['Email *']) {
               errorMessages.push('Email is required');
             }
-            console.log('member', member);
 
             $http.post('/api/teams/members/validate/csv', { member: member })
             .success(function(data, status, headers, config) {
-              console.log('successful member');
               member.valid = true;
               $scope.validCsv.push(member);
               done();
               validateMember(currMember+1, csvMembers, callback);
             })
             .error(function(data, status, headers, config) {
-              console.log('error member');
               errorMessages.push(data.message);
               member.errors = errorMessages.join();
               $scope.invalidCsv.push(member);
@@ -164,7 +160,6 @@
             newTeamName: $scope.team.newTeamName
           };
 
-          console.log('toAdd', toAdd);
           $http.post('/api/teams/members/csv', toAdd).
           success(function(data, status, headers, config) {
             $scope.successfullyAdded++;
