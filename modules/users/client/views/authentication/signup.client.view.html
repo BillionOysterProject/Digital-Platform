@@ -46,7 +46,7 @@
             <a href="#" ng-click="vm.openSchoolOrgForm()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
           </label>
           <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="vm.credentials.schoolOrg"
-            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)">
+            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)" required>
             <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
           </select>
         </div>

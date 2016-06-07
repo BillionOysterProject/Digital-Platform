@@ -125,13 +125,13 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     $scope.findLeadRequests = function() {
       Admin.query({
         role: 'team lead pending',
-        showTeams: true
+        //showTeams: true
       }, function (data) {
         $scope.leadRequests = [];
         $scope.leadRequestsOrgPending = [];
 
         for (var i = 0; i < data.length; i++) {
-          if (data[i].schoolOrg.pending) {
+          if (data[i].schoolOrg && data[i].schoolOrg.pending) {
             $scope.leadRequestsOrgPending.push(data[i]);
           } else {
             $scope.leadRequests.push(data[i]);

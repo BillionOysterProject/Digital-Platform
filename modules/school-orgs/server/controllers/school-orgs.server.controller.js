@@ -204,6 +204,15 @@ exports.list = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      //Move Unaffiliated/None to the top of the list
+      var unIndex = _.findIndex(schoolOrgs, function(o) {
+        return o.name === 'Unaffiliated/None';
+      });
+      if (unIndex > -1) {
+        var unObj = schoolOrgs.splice(unIndex, 1);
+        schoolOrgs = unObj.concat(schoolOrgs);
+      }
+
       if (req.query.showTeams) {
         var findTeams = function(org, callback) {
           Team.find({ 'schoolOrg' : org }).exec(function(err, teams) {
