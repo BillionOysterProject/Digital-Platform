@@ -12,6 +12,9 @@ module.exports = function (app) {
     .get(teams.downloadMemberBulkFile)
     .post(teams.createMemberCsv);
 
+  app.route('/api/teams/members/validate/csv').all(teamsPolicy.isAllowed)
+    .post(teams.validateMemberCsv);
+
   // Teams members collection routes
   app.route('/api/teams/members').all(teamsPolicy.isAllowed)
     .get(teams.listMembers)
