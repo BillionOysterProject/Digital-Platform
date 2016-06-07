@@ -1,6 +1,6 @@
 <form name="sc.form.siteConditionForm" id="sc.form.siteConditionForm" ng-submit="sc.save(sc.form.siteConditionForm.$valid)" novalidate ng-cloak>
     <section class="content">
-        <section class="container">
+        <section class="container" id="site-condition-form">
             <h2>Protocol 1 <small>Site Conditions</small></h2>
             <hr />
             <div class="alert alert-danger" ng-show="sc.error">
@@ -180,7 +180,8 @@
                     <div class="form-group">
                         <label>Take a photograph of the water with your camera *</label>
                         <single-image-drop-zone uploader="sc.waterConditionUploader"
-                        image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"></single-image-drop-zone>
+                        image-url="sc.waterConditionPhotoURL" image-alt="Water Condition"
+                        id="water-condition-image-dropzone"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
                         !sc.waterConditionPhotoURL">
                             <p class="red">Water condition image is required.</p>
@@ -364,7 +365,8 @@
                     <div class="form-group">
                         <label>Take a photograph of the land with your camera *</label>
                         <single-image-drop-zone uploader="sc.landConditionUploader"
-                        image-url="sc.landConditionPhotoURL" image-alt="Land Condition"></single-image-drop-zone>
+                        image-url="sc.landConditionPhotoURL" image-alt="Land Condition"
+                        id="land-condition-image-dropzone"></single-image-drop-zone>
                         <div ng-show="sc.form.siteConditionForm.$invalid && sc.form.siteConditionForm.$submitted &&
                         !sc.landConditionPhotoURL">
                             <p class="red">Land condition image is required.</p>
