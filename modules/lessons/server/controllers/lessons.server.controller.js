@@ -252,7 +252,6 @@ exports.favoriteLesson = function(req, res) {
       });
     } else {
       lesson.saved = true;
-      console.log('lesson', lesson);
       res.json(lesson);
     }
   });
@@ -639,23 +638,24 @@ exports.downloadZip = function(req, res) {
     var getHandoutContent = function(index, list, handoutCallback) {
       if (index < list.length) {
         var handout = list[index];
-        console.log('getting handout', handout);
-        request(handout.path, function (error, response, body) {
+        var requestSettings = {
+          method: 'GET',
+          url: handout.path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
           if (!error && response.statusCode === 200) {
-            console.log('body', body);
             archive.append(body, { name: handout.originalname });
           }
           getHandoutContent(index+1, list, handoutCallback);
         });
       } else {
-        console.log('callback');
         handoutCallback();
       }
     };
 
     var getHandouts = function(handoutsCallback) {
       if (req.query.handout === 'YES') {
-        console.log('handouts === YES');
         var resources = lesson.materialsResources.handoutsFileInput;
         getHandoutContent(0, resources, handoutsCallback);
       } else {
@@ -666,7 +666,12 @@ exports.downloadZip = function(req, res) {
     var getResourceContent = function(index, list, resourceCallback) {
       if (index < list.length) {
         var resource = list[index];
-        request(resource.path, function (error, response, body) {
+        var requestSettings = {
+          method: 'GET',
+          url: resource.path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
           if (!error && response.statusCode === 200) {
             archive.append(body, { name: resource.originalname });
           }
