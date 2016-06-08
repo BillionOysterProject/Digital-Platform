@@ -32,7 +32,7 @@
     };
 
     $scope.reset = function() {
-      $scope.csv = {};
+      //$scope.csv = {};
       $scope.csv = {
         content: null,
         header: true,
@@ -78,28 +78,54 @@
       $scope.bulkFileUploaded = true;
 
       if ($scope.csv.headersValid) {
-        var finishedValidatingCount = 0;
-        for (var i = 0; i < csvMembers.length; i++) {
-          var errorMessages = [];
-          if (!csvMembers[i]['First Name *']) {
-            errorMessages.push('First Name is required');
-          }
-          if (!csvMembers[i]['Last Name *']) {
-            errorMessages.push('Last Name is required');
-          }
-          if (!csvMembers[i]['Email *']) {
-            errorMessages.push('Email is required');
-          }
+        var spinner = new Spinner({}).spin(document.getElementById('modal-import-team-members'));
 
-          if (errorMessages.length > 0) {
-            csvMembers[i].errors = errorMessages.join();
-            $scope.invalidCsv.push(csvMembers[i]);
-          } else {
-            csvMembers[i].valid = true;
-            $scope.validCsv.push(csvMembers[i]);
+        var finishedValidatingCount = 0;
+        var done = function() {
+          finishedValidatingCount++;
+          if (finishedValidatingCount === $scope.totalValidating) {
+            spinner.stop();
+            $scope.finishedValidation = true;
           }
-        }
-        $scope.finishedValidation = true;
+        };
+
+        var validateMember = function(currMember, csvMembers, callback) {
+          if (currMember < csvMembers.length) {
+            var member = csvMembers[currMember];
+
+            var errorMessages = [];
+            if (!member['First Name *']) {
+              errorMessages.push('First Name is required');
+            }
+            if (!member['Last Name *']) {
+              errorMessages.push('Last Name is required');
+            }
+            if (!member['Email *']) {
+              errorMessages.push('Email is required');
+            }
+
+            $http.post('/api/teams/members/validate/csv', { member: member })
+            .success(function(data, status, headers, config) {
+              member.valid = true;
+              $scope.validCsv.push(member);
+              done();
+              validateMember(currMember+1, csvMembers, callback);
+            })
+            .error(function(data, status, headers, config) {
+              errorMessages.push(data.message);
+              member.errors = errorMessages.join();
+              $scope.invalidCsv.push(member);
+              done();
+              validateMember(currMember+1, csvMembers, callback);
+            });
+          } else {
+            callback();
+          }
+        };
+
+        validateMember(0, csvMembers, function() {
+
+        });
       } else {
         $scope.headersInvalid = true;
         $scope.finishedValidation = true;
@@ -111,7 +137,7 @@
         $scope.$broadcast('show-errors-check-validity', 'form.importTeamMembersForm');
         return false;
       }
-      
+
       $scope.uploadingCsv = true;
       var spinner = new Spinner({}).spin(document.getElementById('modal-import-team-members'));
 
@@ -120,6 +146,7 @@
         finishedAddingCount++;
         if (finishedAddingCount === $scope.validCsv.length) {
           spinner.stop();
+          $scope.reset();
           $scope.saveFunction();
         }
       };
@@ -127,7 +154,6 @@
 
       var uploadMember = function(currMember, validCsv, callback) {
         if (currMember < validCsv.length) {
-          var csvMember = validCsv[currMember];
           var toAdd = {
             member: validCsv[currMember],
             teamId: $scope.team.teamId,
@@ -144,7 +170,7 @@
             done();
             uploadMember(currMember+1, validCsv, callback);
           });
-          
+
         } else {
           callback();
         }

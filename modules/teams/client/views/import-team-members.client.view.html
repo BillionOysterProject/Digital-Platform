@@ -10,10 +10,10 @@
         <button class="btn btn-default" ng-click="downloadExample()">Download Example</button>
         <br/><br/>
         <p>Please use the headers provided in the example spreadsheet. All columns with an * in their header are required to have values. The spreadsheet must be in CSV (comma separated value) format, you may need to export the files as a CSV from your spreadsheet editor.</p>
-        
+
         <div class="row">
           <div class="col-sm-8">
-            <csv-file-upload class="file-uploader" content="csv.content" result="csv.result" header-list="['First Name *', 'Last Name *', 'Email *']" headers-valid="csv.headersValid" filename="csv.filename"></csv-file-upload>
+            <csv-file-upload class="file-uploader" content="csv.content" result="csv.result" header-list="['First Name *', 'Last Name *', 'Username', 'Email *']" headers-valid="csv.headersValid" filename="csv.filename"></csv-file-upload>
           </div>
           <div class="col-sm-4">
             <button class="btn btn-default btn-block" ng-click="validate()">Upload</button>
@@ -44,6 +44,7 @@
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Email</th>
+                  <th>Username</th>
                   <th></th>
                 </tr>
                 <tr ng-repeat="member in csv.result" ng-class="{'error-text': member.valid === false}">
@@ -54,6 +55,7 @@
                   <td>{{member['First Name *']}}</td>
                   <td>{{member['Last Name *']}}</td>
                   <td>{{member['Email *']}}</td>
+                  <td>{{member['Username']}}</td>
                   <td><em class="red">{{member.errors}}</em></td>
                 </tr>
               </table>

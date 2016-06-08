@@ -298,16 +298,19 @@ var createMemberInternal = function(userJSON, schoolOrg, successCallback, errorC
         user.provider = 'local';
         user.displayName = user.firstName + ' ' + user.lastName;
         user.roles = ['team member pending', 'user'];
-        user.username = user.email.substring(0, user.email.indexOf('@'));
         user.pending = true;
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
         user.schoolOrg = schoolOrg;
+        if (!user.username) user.username = user.email.substring(0, user.email.indexOf('@'));
 
         // Then save the user
         user.save(function (err) {
-          if (err) errorCallback(errorHandler.getErrorMessage(err));
-          successCallback(user, token);
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(user, token);
+          }
         });
       });
     }
@@ -324,7 +327,7 @@ var sendInviteEmail = function(user, host, teamLeadName, teamName, token, succes
     TeamName: teamName,
     LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
   }, function(info) {
-    successCallback();
+    successCallback(info);
   }, function(errorMessage) {
     errorCallback('Failure sending email');
   });
@@ -438,7 +441,6 @@ exports.createMember = function (req, res) {
 };
 
 exports.updateMember = function (req, res) {
-  console.log('updateMember');
   var member = req.member;
   var changeTeam = function() {
     Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
@@ -510,7 +512,6 @@ exports.updateMember = function (req, res) {
   };
 
   if (member) {
-    console.log('member exists');
     member = _.extend(member, req.body);
     member.displayName = member.firstName + ' ' + member.lastName;
 
@@ -537,10 +538,8 @@ exports.updateMember = function (req, res) {
             }
           });
         } else if (req.body.oldTeamId !== req.body.team._id) {
-          console.log('team changed');
           changeTeam();
         } else {
-          console.log('email and team the same');
           res.json(member);
         }
       }
@@ -676,9 +675,9 @@ exports.deleteMember = function (req, res) {
 };
 
 exports.downloadMemberBulkFile = function(req, res) {
-  var csvHeader = ['First Name *', 'Last Name *', 'Email *'];
+  var csvHeader = ['First Name *', 'Last Name *', 'Username', 'Email *'];
 
-  var csvString = csvHeader.join() + '\n' + 'John,Doe,jdoe@email.com';
+  var csvString = csvHeader.join() + '\n' + 'John,Doe,jdoe,jdoe@email.com';
 
   res.setHeader('Content-disposition', 'attachment; filename=employees.csv');
   res.setHeader('content-type', 'text/csv');
@@ -692,6 +691,10 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
     email: csvMember['Email *']
   };
 
+  if (csvMember.Username) {
+    memberValues.username = csvMember.Username;
+  }
+
   if (memberValues.firstName && memberValues.lastName && memberValues.email) {
     successCallback(memberValues);
   } else {
@@ -699,15 +702,68 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
   }
 };
 
+exports.validateMemberCsv = function (req, res) {
+  convertCsvMember(req.body.member,
+    function(memberJSON) {
+      var email = memberJSON.email;
+      var username = email.substring(0, email.indexOf('@'));
+      User.find({ $or: [{ 'email': email },{ 'username': username }] }).exec(function(userErr, users) {
+        if (userErr) {
+          console.log('userErr', userErr);
+          return res.status(400).send({
+            message: userErr
+          });
+        } else {
+          if (users && users.length > 0) {
+            var nameIndex = _.findIndex(users, function(u) {
+              return u.username === username;
+            });
+
+            var emailIndex = _.findIndex(users, function(u) {
+              return u.email === email;
+            });
+
+            if (nameIndex > -1 && emailIndex === -1) {
+              console.log('Email address is already in use');
+              return res.status(400).send({
+                message: 'Email address is already in use'
+              });
+            } else if (nameIndex === -1 && emailIndex > -1) {
+              console.log('Username is already in use');
+              return res.status(400).send({
+                message: 'Username is already in use'
+              });
+            } else {
+              console.log('Username and email address is already in use');
+              return res.status(400).send({
+                message: 'Username and email address is already in use'
+              });
+            }
+          } else {
+            console.log('member is valid');
+            return res.status(200).send({
+              message: 'Valid member'
+            });
+          }
+        }
+      });
+    }, function (err) {
+      console.log('convertCsvMember err', err);
+      return res.status(400).send({
+        message: err
+      });
+    });
+};
+
 exports.createMemberCsv = function (req, res) {
   convertCsvMember(req.body.member,
     function(memberJSON) {
-      var teamName = (req.body.newTeamName) ? req.body.newTeamName : req.body.team.name;
       createMemberInternal(memberJSON, req.user.schoolOrg,
         function(member, token) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
               if (teamByNameErr) {
+                console.log('teamByNameErr', teamByNameErr);
                 return res.status(400).send({
                   message: errorHandler.getErrorMessage(teamByNameErr)
                 });
@@ -720,12 +776,16 @@ exports.createMemberCsv = function (req, res) {
                       message: 'Error adding member to team'
                     });
                   } else {
-                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, teamByName.name, token,
+                    if (token) {
+                      sendInviteEmail(member, req.headers.host, req.user.displayName, teamByName.name, token,
                       function() {
                         res.json(member);
                       }, function() {
                         res.json(member);
                       });
+                    } else {
+                      res.json(member);
+                    }
                   }
                 });
               } else {
@@ -737,12 +797,16 @@ exports.createMemberCsv = function (req, res) {
 
                 createInternal(teamJSON, req.user,
                   function(team) {
-                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                    if (token) {
+                      sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
                       function() {
                         res.json(member);
                       }, function() {
                         res.json(member);
                       });
+                    } else {
+                      res.json(member);
+                    }
                   }, function(err) {
                     return res.status(400).send({
                       message: errorHandler.getErrorMessage(err)
@@ -761,27 +825,34 @@ exports.createMemberCsv = function (req, res) {
 
                 team.save(function (errSave) {
                   if (errSave) {
+                    console.log('errSave', errSave);
                     return res.status(400).send({
                       message: 'Error adding member to team'
                     });
                   } else {
-                    if (token) sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
+                    if (token) {
+                      sendInviteEmail(member, req.headers.host, req.user.displayName, team.name, token,
                       function() {
                         res.json(member);
                       }, function() {
                         res.json(member);
                       });
+                    } else {
+                      res.json(member);
+                    }
                   }
                 });
               }
             });
           }
         }, function(err) {
+          console.log('createMemberInternal err', err);
           return res.status(400).send({
             message: err
           });
         });
     }, function (err) {
+      console.log('convertCsvMember err', err);
       return res.status(400).send({
         message: err
       });
