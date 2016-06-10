@@ -288,7 +288,6 @@
       setupMobileOrganisms();
       foundOrganismsToMobileOrganisms();
 
-      console.log('mt.form.mobileTrapForm.collectionTime.$error', mt.form.mobileTrapForm.collectionTime.$error);
       if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
         (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
         $rootScope.$broadcast('savingStart');
