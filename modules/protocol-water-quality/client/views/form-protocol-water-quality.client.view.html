@@ -17,6 +17,12 @@
                             <input type="datetime-local" class="form-control" name="collectionTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{wq.dateTime.min}}" max="{{wq.dateTime.max}}"
                             ng-model="wq.protocolWaterQuality.collectionTime" />
+                            <div ng-show="wq.form.waterQualityForm.collectionTime.$error.min">
+                                <p class="red">Collection time must not be more than a year in the past.</p>
+                            </div>
+                            <div ng-show="wq.form.waterQualityForm.collectionTime.$error.max">
+                                <p class="red">Collection time must not be more than a year in the future.</p>
+                            </div>
                         </div>
                         <div class="form-group">
                             <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-water-quality-map"

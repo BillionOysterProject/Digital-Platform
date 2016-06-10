@@ -211,7 +211,7 @@
     };
 
     st.dateTime = {
-      min: moment().subtract(7, 'days').toDate(),
+      min: moment().subtract(1, 'year').toDate(),
       max: moment().add(1, 'year').toDate()
     };
 

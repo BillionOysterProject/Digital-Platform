@@ -89,7 +89,7 @@
     };
 
     sc.dateTime = {
-      min: moment().subtract(7, 'days').toDate(),
+      min: moment().subtract(1, 'year').toDate(),
       max: moment().add(1, 'year').toDate()
     };
 
@@ -295,7 +295,7 @@
       }
 
       if (sc.protocolSiteCondition.waterConditions &&
-      sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes && 
+      sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes &&
       sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true &&
       sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location === undefined) {
         sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location = {
