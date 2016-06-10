@@ -133,7 +133,7 @@
     };
 
     mt.dateTime = {
-      min: moment().subtract(7, 'days').toDate(),
+      min: moment().subtract(1, 'year').toDate(),
       max: moment().add(1, 'year').toDate()
     };
 
@@ -288,6 +288,7 @@
       setupMobileOrganisms();
       foundOrganismsToMobileOrganisms();
 
+      console.log('mt.form.mobileTrapForm.collectionTime.$error', mt.form.mobileTrapForm.collectionTime.$error);
       if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
         (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
         $rootScope.$broadcast('savingStart');
