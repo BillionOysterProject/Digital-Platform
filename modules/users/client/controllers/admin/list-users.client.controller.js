@@ -6,9 +6,9 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       organizationId: '',
       role: '',
       searchString: '',
-      sort: '',
-      limit: 20,
-      page: 1
+      sort: 'lastName',
+      //limit: 20,
+      //page: 1
     };
 
     $scope.organizations = SchoolOrganizationsService.query();
@@ -31,8 +31,8 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         role: $scope.filter.role,
         searchString: $scope.filter.searchString,
         sort: $scope.filter.sort,
-        limit: $scope.filter.limit,
-        page: $scope.filter.page,
+        //limit: $scope.filter.limit,
+        //page: $scope.filter.page,
         showTeams: true
       }, function (data) {
         $scope.users = data;
