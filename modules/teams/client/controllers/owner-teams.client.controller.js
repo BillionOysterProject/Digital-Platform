@@ -16,8 +16,8 @@
       byOwner: true,
       teamId: '',
       searchString: '',
-      page: 1,
-      limit: 8
+      //page: 1,
+      //limit: 8
     };
 
     vm.fieldChanged = function($event) {
@@ -37,8 +37,8 @@
         byOwner: true,
         teamId: vm.filter.teamId,
         searchString: vm.filter.searchString,
-        page: vm.filter.page,
-        limit: vm.filter.limit
+        //page: vm.filter.page,
+        //limit: vm.filter.limit
       }, function(data) {
         vm.members = data;
         vm.buildPager();
