@@ -43,7 +43,8 @@ module.exports = {
     }
   },
   app: {
-    title: 'Billion Oyster Project'
+    title: 'Billion Oyster Project',
+    googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
