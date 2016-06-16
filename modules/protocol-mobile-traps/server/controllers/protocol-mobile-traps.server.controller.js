@@ -32,20 +32,16 @@ var checkRole = function(role, user) {
 var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
   var errorMessages = [];
 
-  if (mobileTrap.mobileOrganisms.length <= 0) {
-    errorMessages.push('At least one mobile organism is required');
-  } else {
-    for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
-      var mobileOrganism = mobileTrap.mobileOrganisms[i];
-      if (!mobileOrganism.organism) {
-        errorMessages.push('Mobile organism is required');
-      }
-      if (mobileOrganism.count <= 0) {
-        errorMessages.push('Count of mobile organism is required');
-      }
-      if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
-        errorMessages.push('Sketch or photo of mobile organism is required');
-      }
+  for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
+    var mobileOrganism = mobileTrap.mobileOrganisms[i];
+    if (!mobileOrganism.organism) {
+      errorMessages.push('Mobile organism is required');
+    }
+    if (mobileOrganism.count <= 0) {
+      errorMessages.push('Count of mobile organism is required');
+    }
+    if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
+      errorMessages.push('Sketch or photo of mobile organism is required');
     }
   }
 
