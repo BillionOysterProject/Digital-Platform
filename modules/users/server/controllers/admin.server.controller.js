@@ -31,6 +31,7 @@ exports.update = function (req, res) {
   user.lastName = req.body.lastName;
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = req.body.roles;
+  user.teamLeadType = req.body.teamLeadType;
   user.schoolOrg = req.body.schoolOrg;
 
   user.save(function (err) {
