@@ -8,6 +8,10 @@ var path = require('path'),
   RestorationStation = mongoose.model('RestorationStation'),
   Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
+  path = require('path'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config')),
   _ = require('lodash');
 
 var getTeam = function(teamId, successCallback, errorCallback) {
@@ -173,4 +177,76 @@ exports.stationByID = function (req, res, next, id) {
     req.station = station;
     next();
   });
+};
+
+var deleteInternal = function(station, successCallback, errorCallback) {
+  var filesToDelete = [];
+
+  if (station) {
+    if (station.photo && station.photo.path) {
+      filesToDelete.push(station.photo.path);
+    }
+
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      station.remove(function(err) {
+        if (err) {
+          errorCallback(errorHandler.getErrorMessage(err));
+        } else {
+          successCallback(station);
+        }
+      }, function(err) {
+        errorCallback(err);
+      });
+    });
+  } else {
+    successCallback();
+  }
+};
+
+/**
+ * Upload image to station
+ */
+exports.uploadStationPhoto = function (req, res) {
+  var station = req.station;
+  var upload = multer(config.uploads.stationPhotoUpload).single('stationPhoto');
+  var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = imageUploadFileFilter;
+
+  if (station) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.stationPhotoUpload,
+      function(fileInfo) {
+        station.photo = fileInfo;
+
+        station.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(station);
+          }
+        });
+      }, function(errorMessage) {
+        console.log('errorMessage', errorMessage);
+        deleteInternal(station,
+        function(station) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        }, function(err) {
+          return res.status(400).send({
+            message: err
+          });
+        });
+      });
+  } else {
+    res.status(400).send({
+      message: 'Station does not exist'
+    });
+  }
 };

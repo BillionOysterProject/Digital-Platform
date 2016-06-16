@@ -42,6 +42,12 @@ var RestorationStationSchema = new Schema({
     default: ['Active'],
     required: true
   },
+  photo: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
+  },
   created: {
     type: Date,
     default: Date.now

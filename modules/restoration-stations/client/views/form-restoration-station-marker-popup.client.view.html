@@ -1,3 +1,14 @@
-<div>{{name}}<br/><span class="small text-muted">{{bodyOfWater}}<br />
-    {{team}}</span>
+<div class="row">
+  <div class="row" ng-show="photoUrl">
+    <div class="col-sm-12">
+      <image ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div>{{name}}<br/><span class="small text-muted">{{bodyOfWater}}<br />
+        {{team}}</span>
+      </div>
+    </div>
+  </div>
 </div>

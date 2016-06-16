@@ -20,6 +20,12 @@ var SchoolOrgSchema = new Schema({
     trim: true,
     required: 'Name cannot be blank'
   },
+  organizationType: {
+    type: String,
+    enum: ['school', 'business', 'government', 'property owner', 'community organization', 'other'],
+    default: 'other',
+    required: 'Organization type cannot be blank'
+  },
   description: {
     type: String,
     default: '',

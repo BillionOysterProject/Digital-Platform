@@ -53,6 +53,13 @@
                         <input type="text" class="form-control" placeholder="-76.612189" ng-model="station.longitude" required/>
                     </div>
                 </div>
+                <div class="row">
+                  <div class="form-group col-sm-12">
+                    <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
+                    <single-image-drop-zone uploader="stationPhotoUploader" image-url="stationPhotoURL"
+                    image-alt="Station Photograph"></single-image-drop-zone>
+                  </div>
+                </div>
             </div>
           </div>
         </div>

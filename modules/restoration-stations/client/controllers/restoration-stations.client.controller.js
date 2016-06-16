@@ -5,9 +5,9 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', '$http','$timeout'];
+  RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader'];
 
-  function RestorationStationsController($scope, $http, $timeout) {
+  function RestorationStationsController($scope, $http, $timeout, FileUploader) {
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
@@ -15,9 +15,16 @@
 
     $scope.mapControls = {};
 
+    $scope.stationPhotoUploader = new FileUploader({
+      alias: 'stationPhoto'
+    });
+
     angular.element(document.querySelector('#modal-station-register')).on('shown.bs.modal', function(){
       $timeout(function() {
         $scope.mapControls.resizeMap();
+
+        $scope.stationPhotoURL = ($scope.station && $scope.station.photo && $scope.station.photo.path) ?
+          $scope.station.photo.path : '';
       });
     });
 
@@ -35,7 +42,38 @@
       }
 
       function successCallback(res) {
-        $scope.saveFunction();
+        console.log('successful');
+        var stationId = res._id;
+
+        function uploadStationPhoto(stationId, imageSuccessCallback, imageErrorCallback) {
+          if ($scope.stationPhotoUploader.queue.length > 0) {
+            $scope.stationPhotoUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              imageSuccessCallback();
+            };
+
+            $scope.stationPhotoUploader.onErrorItem = function (fileItem, response, sttus, headers) {
+              imageErrorCallback(response.message);
+            };
+
+            $scope.stationPhotoUploader.onBeforeUploadItem = function (item) {
+              item.url = 'api/restoration-stations/' + stationId + '/upload-image';
+            };
+            $scope.stationPhotoUploader.uploadAll();
+          } else {
+            imageSuccessCallback();
+          }
+        }
+
+        var unsubmitStation = function(errorMessage) {
+          delete $scope.station._id;
+          $scope.error = errorMessage;
+        };
+
+        uploadStationPhoto(stationId, function() {
+          $scope.saveFunction();
+        }, function(errorMessage) {
+          unsubmitStation(errorMessage);
+        });
       }
 
       function errorCallback(res) {
@@ -70,5 +108,6 @@
       $scope.station.latitude = coords.lat;
       $scope.station.longitude = coords.lng;
     }
+
   }
 })();

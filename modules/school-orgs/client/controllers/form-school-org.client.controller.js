@@ -9,6 +9,16 @@
 
   function FormSchoolOrgController($scope, $http) {
     var so = this;
+
+    so.organizationTypes = [
+      { label: 'School', value: 'school' },
+      { label: 'Business', value: 'business' },
+      { label: 'Government', value: 'government' },
+      { label: 'Property Owner', value: 'property owner' },
+      { label: 'Community Organization', value: 'community organization' },
+      { label: 'Other', value: 'other' }, 
+    ];
+
     so.save = function(isValid) {
 
       if (!isValid) {
