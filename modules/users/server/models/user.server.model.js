@@ -148,10 +148,11 @@ UserSchema.pre('save', function (next) {
  */
 UserSchema.pre('validate', function (next) {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
-    var result = owasp.test(this.password);
-    if (result.errors.length) {
-      var error = result.errors.join(' ');
-      this.invalidate('password', error);
+    //var result = owasp.test(this.password);
+    //if (result.errors.length) {
+    if (this.password.length < 6) {
+      //var error = result.errors.join(' ');
+      this.invalidate('password', 'Password must be at least 6 characters long');
     } else {
       var index = _.findIndex(this.roles, function(r) {
         return (r === 'team lead' || r === 'team lead pending');
