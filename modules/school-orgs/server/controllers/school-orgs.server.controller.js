@@ -279,21 +279,31 @@ exports.teamsBySchoolOrgs = function (req, res) {
  */
 exports.teamLeadsBySchoolOrg = function (req, res) {
   var schoolOrg = req.schoolOrg;
-  Team.find({ schoolOrg: schoolOrg }).distinct('teamLead').exec(function (err, teamLeadIds) {
+  // Team.find({ schoolOrg: schoolOrg }).distinct('teamLead').exec(function (err, teamLeadIds) {
+  //   if (err) {
+  //     return res.status(400).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   } else {
+  //     User.find({ _id: { $in: teamLeadIds } }).exec(function (teamErr, teamLeads) {
+  //       if (teamErr) {
+  //         return res.status(400).send({
+  //           message: errorHandler.getErrorMessage(teamErr)
+  //         });
+  //       } else {
+  //         res.json(teamLeads);
+  //       }
+  //     });
+  //   }
+  // });
+  User.find({ $and: [{ schoolOrg: schoolOrg }, { $or: [{ roles: 'team lead' },{ roles: 'team lead pending' }] }] })
+  .exec(function(err, teamLeads) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      User.find({ _id: { $in: teamLeadIds } }).exec(function (teamErr, teamLeads) {
-        if (teamErr) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(teamErr)
-          });
-        } else {
-          res.json(teamLeads);
-        }
-      });
+      res.json(teamLeads);
     }
   });
 };

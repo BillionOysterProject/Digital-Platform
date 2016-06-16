@@ -28,12 +28,18 @@
                   <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
                 </select>
               </div>
-              <div class="form-group col-sm-12" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
+              <div class="form-group col-sm-6" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
                 <label class="control-label required">Role</label>
                 <select class="form-control" required>
                   <option value="team lead">Team Lead</option>
                   <!-- <option>Team Member</option><!--TODO: Only show if EDITING current user (not creating new) --> -->
                   <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="form-group col-sm-6" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
+                <label class="control-label required">Team Lead Type</label>
+                <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="user.teamLeadType">
+                  <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
                 </select>
               </div>
               <!--TODO: Only show if Editing, and "Team Member" is selected --

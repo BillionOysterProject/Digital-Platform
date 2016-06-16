@@ -32,7 +32,7 @@
         </div>
       <div class="row">
         <div class="form-group" show-errors
-        ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
+        ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
           <label for="role" class="control-label required">Role</label>
           <select name="role" class="form-control" ng-model="vm.credentials.userrole" required
           ng-change="vm.roleFieldSelected(vm.credentials.userrole)">
@@ -40,9 +40,17 @@
             <option value="team member pending">Team Member</option>
           </select>
         </div>
+        <div class="form-group" show-errors ng-show="vm.teamLeadSelected"
+        ng-class="{'col-sm-6': !vm.teamLeadSelected, 'col-sm-4': vm.teamLeadSelected}">
+          <label for="teamLeadType" class="control-label" ng-class="{required: vm.teamLeadSelected}">Team Lead Type</label>
+          <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="vm.credentials.teamLeadType"
+            ng-required="vm.teamLeadSelected">
+            <option ng-repeat="type in vm.teamLeadType" value="{{type.value}}">{{type.label}}</option>
+          </select>
+        </div>
         <div class="form-group" show-errors
-        ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
-          <label for="schoolOrg" class="label-control required">Organization
+        ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
+          <label for="schoolOrg" class="control-label required">Organization
             <a href="#" ng-click="vm.openSchoolOrgForm()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
           </label>
           <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="vm.credentials.schoolOrg"
@@ -55,7 +63,7 @@
           <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
           <select class="form-control" name="teamLead" id="teamLead" ng-model="vm.credentials.teamLead"
             ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads"
-            ng-require="vm.schoolOrgSelected">
+            ng-required="vm.schoolOrgSelected">
           </select>
         </div>
       </div>

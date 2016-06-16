@@ -33,6 +33,7 @@
         <table class="table table-verticalalign table-responsive">
             <tr ng-repeat="org in vm.pagedItems">
                 <td><h4>{{org.name}}</h4><br />{{org.streetAddress}}, {{org.city}}, {{org.state}}<br/><small class="text-muted">Requested by {{org.creator.displayName}}</small></td>
+                <td>{{org.organizationType | organizationTypes }}</td>
                 <td class="col-xs-6"><small class="text-muted">{{org.description}}</small></td>
                 <td ng-show="org.pending"><i>pending</i></td>
                 <td ng-hide="org.pending">&nbsp;</td>

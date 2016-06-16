@@ -12,6 +12,10 @@ module.exports = function (app) {
     .get(stations.list)
     .post(stations.create);
 
+  // Upload station photo route
+  app.route('/api/restoration-stations/:stationId/upload-image').all(stationsPolicy.isAllowed)
+    .post(stations.uploadStationPhoto);
+
   // Single restoration station routes
   app.route('/api/restoration-stations/:stationId').all(stationsPolicy.isAllowed)
     .get(stations.read)

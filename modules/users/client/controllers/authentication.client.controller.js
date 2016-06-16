@@ -82,7 +82,16 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     vm.teamMemberSelected = false;
     vm.teamLeads = [];
     vm.schoolOrgSelected = false;
+    vm.teamLeadSelected = false;
     vm.newSchoolOrg = new SchoolOrganizationsService();
+
+    vm.teamLeadType = [
+      { label: 'Teacher', value: 'teacher' },
+      { label: 'Citizen Scientist', value: 'citizen scientist' },
+      { label: 'Professional Scientist', value: 'professional scientist' },
+      { label: 'Site Coordinator', value: 'site coordinator' },
+      { label: 'Other', value: 'other' }
+    ];
 
     vm.findOrganizations = function (newOrg) {
       SchoolOrganizationsService.query({
@@ -117,6 +126,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     vm.roleFieldSelected = function(role) {
       if (role === 'team member pending') {
         vm.findOrganizations();
+        vm.teamLeadSelected = false;
+        vm.credentials.teamLeadType = undefined;
+      } else if (role === 'team lead pending') {
+        vm.teamLeadSelected = true;
+        vm.schoolOrgSelected = false;
+        vm.credentials.teamLead = undefined;
       }
     };
 
