@@ -68,6 +68,9 @@ exports.update = function (req, res) {
 
   if (station) {
     station = _.extend(station, req.body);
+    if (!req.body.photo) {
+      delete station.photo;
+    }
 
     getTeam(req.body.team, function(team) {
       station.schoolOrg = team.schoolOrg;

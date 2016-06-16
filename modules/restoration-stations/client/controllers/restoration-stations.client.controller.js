@@ -23,16 +23,32 @@
       $timeout(function() {
         $scope.mapControls.resizeMap();
 
+        $scope.teamId = ($scope.station && $scope.station.team && $scope.station.team._id) ?
+          $scope.station.team._id : $scope.station.team;
+
         $scope.stationPhotoURL = ($scope.station && $scope.station.photo && $scope.station.photo.path) ?
           $scope.station.photo.path : '';
       });
     });
 
     $scope.save = function(isValid) {
+      $scope.disableCancel = true;
       console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.teamMemberForm');
         return false;
+      }
+
+      $scope.station.team = {
+        '_id': $scope.teamId
+      };
+
+      if ($scope.station.photo) {
+        if ($scope.stationPhotoURL) {
+          $scope.station.photo.path = $scope.stationPhotoURL;
+        } else {
+          $scope.station.photo = null;
+        }
       }
 
       if ($scope.station._id) {
@@ -48,6 +64,7 @@
         function uploadStationPhoto(stationId, imageSuccessCallback, imageErrorCallback) {
           if ($scope.stationPhotoUploader.queue.length > 0) {
             $scope.stationPhotoUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              $scope.stationPhotoUploader.removeFromQueue(fileItem);
               imageSuccessCallback();
             };
 
@@ -70,8 +87,10 @@
         };
 
         uploadStationPhoto(stationId, function() {
+          $scope.disableCancel = false;
           $scope.saveFunction();
         }, function(errorMessage) {
+          $scope.disableCancel = false;
           unsubmitStation(errorMessage);
         });
       }
