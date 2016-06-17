@@ -22,6 +22,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/download-file',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/incremental-save',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: ['*']
     }, {
@@ -57,6 +60,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/lessons/download-file',
       permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/incremental-save',
+      permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: '*'

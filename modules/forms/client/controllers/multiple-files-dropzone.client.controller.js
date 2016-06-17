@@ -94,7 +94,8 @@
       if (file.index) {
         $scope.uploader.removeFromQueue(file.index);
       }
-      $scope.files.splice(index,1);
+      var fileToDelete = $scope.files.splice(index,1);
+      console.log('fileToDelete', fileToDelete);
     };
   }
 })();
