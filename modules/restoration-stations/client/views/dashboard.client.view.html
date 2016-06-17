@@ -113,6 +113,7 @@
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
                                   <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
                                 </h3></td>
+                                <td><image ng-src="{{station.photo.path}}" class="img-thumbnail" ng-show="station.photo"></td>
                                 <td>{{station.name}}<br/><span class="small text-muted">{{station.latitude}}, {{station.longitude}}<br />
                                   {{station.bodyOfWater}}</span>
                                 </td>

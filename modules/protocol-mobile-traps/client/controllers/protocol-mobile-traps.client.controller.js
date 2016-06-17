@@ -289,7 +289,7 @@
       foundOrganismsToMobileOrganisms();
 
       if (mt.protocolMobileTrap._id && ((mt.form.mobileTrapForm.$touched && mt.form.mobileTrapForm.$dirty) ||
-        (mt.protocolMobileTrap.mobileOrganisms && mt.protocolMobileTrap.mobileOrganisms.length > 0))) {
+        (mt.protocolMobileTrap.mobileOrganisms))) {
         $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-mobile-traps/' + mt.protocolMobileTrap._id + '/incremental-save',
         mt.protocolMobileTrap)

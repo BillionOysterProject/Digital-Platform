@@ -19,9 +19,9 @@
       teamId: ''
     };
 
-    vm.canGeocode = true;
-    vm.canMoveMarker = true;
-    vm.showMarker = true;
+    vm.canGeocode = false;
+    vm.canMoveMarker = false;
+    vm.showMarker = false;
     vm.canClickMapToAddMarker = false;
 
     vm.mapControls = {};
@@ -83,12 +83,12 @@
 
     vm.findSchoolOrgRestorationStations = function(schoolOrgId) {
       RestorationStationsService.query({
-        schoolOrgId: schoolOrgId
+        //schoolOrgId: schoolOrgId
       }, function(data) {
-        console.log('findSchoolOrgRestorationStations called', data);
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
           var station = data[i];
+          var photoUrl = (station.photo && station.photo.path) ? station.photo.path : '';
 
           var stationMap = {
             lat: station.latitude,
@@ -102,7 +102,8 @@
               name: station.name,
               bodyOfWater: station.bodyOfWater,
               team: station.team.name,
-              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team="team"> </form-restoration-station-marker-popup>'
+              photoUrl: photoUrl,
+              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team="team" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
             }
           };
 

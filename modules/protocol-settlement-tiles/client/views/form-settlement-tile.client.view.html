@@ -24,6 +24,7 @@
                                   <td class="text-right"><h3>{{$index+1}}</h3></td>
                                   <td class="form-group" show-errors>
                                     <select class="form-control" ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}"
+                                    ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
                                     ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
                                     required>
                                     </select>

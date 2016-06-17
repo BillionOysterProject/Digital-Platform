@@ -138,6 +138,15 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      //Move Sediment/None to the top of the list
+      var snIndex = _.findIndex(sessileOrganisms, function(s) {
+        return s.commonName === 'None/Sediment';
+      });
+      if (snIndex > -1) {
+        var snObj = sessileOrganisms.splice(snIndex, 1);
+        sessileOrganisms = snObj.concat(sessileOrganisms);
+      }
+
       res.json(sessileOrganisms);
     }
   });

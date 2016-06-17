@@ -19,7 +19,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label>Team</label>
-                        <select name="team" class="form-control" ng-model="station.team" required>
+                        <select name="team" class="form-control" ng-model="teamId" required>
                           <option disabled selected value>
                           <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
                         </select>
@@ -53,12 +53,19 @@
                         <input type="text" class="form-control" placeholder="-76.612189" ng-model="station.longitude" required/>
                     </div>
                 </div>
+                <div class="row">
+                  <div class="form-group col-sm-12">
+                    <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
+                    <single-image-drop-zone uploader="stationPhotoUploader" image-url="stationPhotoURL"
+                    image-alt="Station Photograph"></single-image-drop-zone>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" ng-show="station._id" ng-click="remove()">Delete</button>
-          <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+          <button type="button" class="btn btn-default" ng-click="cancelFunction()" ng-disabled="disableCancel">Cancel</button>
           <button type="submit" class="btn btn-primary">{{station._id ? 'Update' : 'Register'}}</button>
         </div>
       </form>

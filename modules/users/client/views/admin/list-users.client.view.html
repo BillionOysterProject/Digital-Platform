@@ -57,6 +57,7 @@
             <tr ng-repeat="user in pagedItems">
                 <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
                 <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
+                <td>{{user.teamLeadType | teamLeadTypes}}</td>
                 <td>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</td>
                 <td>{{listRoles(user)}}</td>
                 <!-- <td>{{listTeams(user)}}</td> -->
