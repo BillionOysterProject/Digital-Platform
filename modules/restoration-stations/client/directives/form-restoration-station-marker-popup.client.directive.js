@@ -9,7 +9,8 @@
         scope: {
           name: '=',
           bodyOfWater: '=',
-          team: '='
+          team: '=',
+          photoUrl: '='
         },
         replace: true,
         link: function(scope, element, attrs) {

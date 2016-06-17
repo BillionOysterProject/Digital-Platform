@@ -134,6 +134,13 @@ module.exports = {
       limits: {
         fileSize: 20*1024*1024
       }
+    },
+    stationPhotoUpload: {
+      s3dest: 'uploads/restoration-stations/img/station/',
+      dest: './modules/restoration-stations/client/img/station/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
     }
   }
 };

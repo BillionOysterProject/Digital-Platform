@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test');
+  owasp = require('owasp-password-strength-test'),
+  _ = require('lodash');
 
 /**
  * A Validation function for local strategy properties
@@ -102,6 +103,10 @@ var UserSchema = new Schema({
     default: ['user'],
     required: 'Please provide at least one role'
   },
+  teamLeadType: {
+    type: String,
+    enum: ['teacher', 'citizen scientist', 'professional scientist', 'site coordinator', 'other']
+  },
   updated: {
     type: Date
   },
@@ -143,10 +148,18 @@ UserSchema.pre('save', function (next) {
  */
 UserSchema.pre('validate', function (next) {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
-    var result = owasp.test(this.password);
-    if (result.errors.length) {
-      var error = result.errors.join(' ');
-      this.invalidate('password', error);
+    //var result = owasp.test(this.password);
+    //if (result.errors.length) {
+    if (this.password.length < 6) {
+      //var error = result.errors.join(' ');
+      this.invalidate('password', 'Password must be at least 6 characters long');
+    } else {
+      var index = _.findIndex(this.roles, function(r) {
+        return (r === 'team lead' || r === 'team lead pending');
+      });
+      if (index > -1 && this.teamLeadType === '') {
+        this.invalidate('teamLeadType', 'Team Lead Type cannot be blank');
+      }
     }
   }
 

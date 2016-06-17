@@ -7,7 +7,13 @@ angular.module('users').factory('PasswordValidator', ['$window',
 
     return {
       getResult: function (password) {
-        var result = owaspPasswordStrengthTest.test(password);
+        //var result = owaspPasswordStrengthTest.test(password);
+        var result = {
+          errors: []
+        };
+        if (password.length < 6) {
+          result.errors.push('Password must be 6 characters');
+        }
         return result;
       },
       getPopoverMsg: function () {

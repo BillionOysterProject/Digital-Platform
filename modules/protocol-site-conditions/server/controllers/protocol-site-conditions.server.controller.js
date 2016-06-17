@@ -107,13 +107,6 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
     }
   }
-  if (siteCondition.tideConditions.currentSpeedMPH === undefined ||
-    siteCondition.tideConditions.currentSpeedMPH < 0) {
-    errorMessages.push('Current speed must be positive');
-  }
-  if (emptyString(siteCondition.tideConditions.currentDirection)) {
-    errorMessages.push('Current direction is required');
-  }
   if (emptyString(siteCondition.tideConditions.tidalCurrent)) {
     errorMessages.push('Tidal current is required');
   }

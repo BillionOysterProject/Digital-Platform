@@ -28,6 +28,12 @@
                 </div>
               </div>
               <div class="form-group">
+                <label for="type" class="control-label required">Organization Type</label>
+                <select class="form-control" name="type" id="type" ng-model="so.schoolOrg.organizationType" required>
+                  <option ng-repeat="type in so.organizationTypes" value="{{type.value}}">{{type.label}}</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="description" class="control-label required">Organization Description</label>
                 <textarea class="form-control" name="description" rows="5" ng-model="so.schoolOrg.description" required></textarea>
               </div>
