@@ -46,6 +46,7 @@ exports.create = function (req, res) {
   function(unitJSON) {
     var unit = new Unit(unitJSON);
     unit.user = req.user;
+    unit.status = 'published';
 
     unit.validate(function (err) {
       if (err) {
@@ -111,13 +112,16 @@ exports.incrementalSave = function(req, res) {
     unit = _.extend(unit, req.body);
     if (!unit.updated) unit.updated = [];
     unit.updated.push(Date.now());
+    unit.status = 'draft';
   } else {
     unit = new Unit(req.body);
     unit.user = req.user;
+    unit.status = 'draft';
   }
 
   unit.save(function(err) {
     if (err) {
+      console.log('save err', err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
@@ -131,7 +135,7 @@ exports.incrementalSave = function(req, res) {
       }, function(errorMessages) {
         res.json({
           unit: unit,
-          errors: _.uniq(errorMessages)
+          errors: errorMessages
         });
       });
     }
@@ -149,6 +153,7 @@ exports.update = function(req, res) {
       unit = _.extend(unit, unitJSON);
       if (!unit.updated) unit.updated = [];
       unit.updated.push(Date.now());
+      unit.status = 'published';
 
       unit.save(function(err) {
         if (err) {
@@ -192,7 +197,14 @@ exports.delete = function (req, res) {
  * List of Units
  */
 exports.list = function (req, res) {
-  Unit.find().sort('title').populate('user', 'displayName').exec(function (err, units) {
+  var query;
+
+  if (req.query.published) {
+    query = Unit.find({ status: 'published' });
+  } else {
+    query = Unit.find();
+  }
+  query.sort('title').populate('user', 'displayName').exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

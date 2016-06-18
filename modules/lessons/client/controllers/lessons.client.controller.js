@@ -5,13 +5,13 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', '$interval', 'lessonResolve', 'Authentication',
+  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
   'SubjectAreasService', 'LessonsService', 'lodash'];
 
-  function LessonsController($scope, $state, $http, $timeout, $interval, lesson, Authentication,
+  function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
@@ -179,7 +179,11 @@
       }
     };
 
-    vm.units = UnitsService.query();
+    UnitsService.query({
+      published: true
+    }, function(data) {
+      vm.units = data;
+    });
 
     if (vm.lesson.user && vm.lesson.user.team) {
       TeamsService.get({
@@ -234,7 +238,10 @@
         startSaving();
         $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
         .success(function(data, status, headers, config) {
-          if (!vm.lesson._id) vm.lesson._id = data.lesson._id;
+          if (!vm.lesson._id) {
+            vm.lesson._id = data.lesson._id;
+            $location.path('/lessons/' + vm.lesson._id + '/edit', false);
+          }
           if (data.errors) {
             vm.error = data.errors;
             vm.valid = false;

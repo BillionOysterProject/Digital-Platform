@@ -19,19 +19,16 @@ var UnitSchema = new Schema({
   },
   title: {
     type: String,
-    required: 'Title is required',
     default: '',
     trim: true
   },
   color: {
     type: String,
-    required: 'Color is required',
     default: '',
     trim: true
   },
   icon: {
     type: String,
-    required: 'Icon is required',
     default: '',
     trim: true
   },
@@ -39,13 +36,11 @@ var UnitSchema = new Schema({
     enduringUnderstandings: {
       fieldWork: {
         type: String,
-        required: 'Field work is required',
         default: '',
         trim: true
       },
       scienceContent: {
         type: String,
-        required: 'Science content is required',
         default: '',
         trim: true
       }
@@ -121,6 +116,12 @@ var UnitSchema = new Schema({
   },
   updated: {
     type: Array
+  },
+  status: {
+    type: String,
+    enum: ['draft', 'published'],
+    default: ['published'],
+    required: true
   }
 });
 

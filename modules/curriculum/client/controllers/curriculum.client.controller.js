@@ -60,6 +60,7 @@
       }];
 
       UnitsService.query({
+        published: true
       }, function(data) {
         vm.units = data;
 
