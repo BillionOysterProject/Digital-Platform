@@ -5,10 +5,10 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', 'unitResolve', 'Authentication',
+  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', '$location', 'unitResolve', 'Authentication',
   'UnitsService', 'UnitLessonsService'];
 
-  function UnitsController($scope, $state, $http, $interval, $timeout, unit, Authentication,
+  function UnitsController($scope, $state, $http, $interval, $timeout, $location, unit, Authentication,
     UnitsService, UnitLessonsService) {
     var vm = this;
 
@@ -41,9 +41,11 @@
       options: vm.researchProjects
     };
 
-    vm.lessons = UnitLessonsService.query({
-      unitId: vm.unit._id
-    });
+    if (vm.unit._id) {
+      vm.lessons = UnitLessonsService.query({
+        unitId: vm.unit._id
+      });
+    }
 
     // Incremental saving
     var save;
@@ -79,7 +81,10 @@
         startSaving();
         $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
         .success(function(data, status, headers, config) {
-          if (!vm.unit._id) vm.lesson._id = data.unit._id;
+          if (!vm.unit._id) {
+            vm.unit._id = data.unit._id;
+            $location.path('/units/' + vm.unit._id + '/edit', false);
+          }
           if (data.errors) {
             vm.error = data.errors;
             vm.valid = false;
