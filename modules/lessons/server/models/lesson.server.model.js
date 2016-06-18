@@ -14,27 +14,22 @@ var mongoose = require('mongoose'),
 var instructionPlans = {
   engage: {
     type: String,
-    required: false,
     trim: true
   },
   explore: {
     type: String,
-    required: false,
     trim: true
   },
   explain: {
     type: String,
-    required: false,
     trim: true
   },
   elaborate: {
     type: String,
-    required: false,
     trim: true
   },
   evaluate: {
     type: String,
-    required: false,
     trim: true
   }
 };
@@ -47,14 +42,12 @@ var LessonSchema = new Schema({
   title: {
     type: String,
     default: '',
-    trim: true,
-    required: 'Title cannot be blank'
+    trim: true
 
   },
   unit: {
     type: Schema.ObjectId,
-    ref: 'Unit',
-    require: 'Unit cannot be blank'
+    ref: 'Unit'
   },
   featuredImage: {
     originalname: String,
@@ -64,42 +57,30 @@ var LessonSchema = new Schema({
   },
   lessonOverview: {
     grade: {
-      type: String,
-      required: true
+      type: String
     },
     classPeriods: {
-      type: String,
-      required: true
+      type: String
     },
     setting: {
-      type: String,
-      required: true
+      type: String
     },
     subjectAreas: [{
       type: Schema.ObjectId,
-      ref: 'MetaSubjectArea',
-      required: true
-    }],
-    protocolConnections: [{
-      type: String,
-      required: true,
-      trim: true
+      ref: 'MetaSubjectArea'
     }],
     lessonSummary: {
       type: String,
-      required: true,
       trim: true
     }
   },
   lessonObjectives: {
     type: String,
-    required: true,
     trim: true
   },
   materialsResources: {
     supplies: {
       type: String,
-      required: true,
       trim: true
     },
     teacherTips: {
@@ -133,13 +114,11 @@ var LessonSchema = new Schema({
     }],
     vocabulary: [{
       type: Schema.ObjectId,
-      ref: 'Glossary',
-      required: false
+      ref: 'Glossary'
     }]
   },
   background: {
     type: String,
-    required: false,
     trim: true
   },
   instructionPlan: {
@@ -149,48 +128,39 @@ var LessonSchema = new Schema({
   standards: {
     cclsElaScienceTechnicalSubjects: [{
       type: Schema.ObjectId,
-      ref: 'MetaCclsElaScienceTechnicalSubject',
-      required: false
+      ref: 'MetaCclsElaScienceTechnicalSubject'
     }],
     cclsMathematics: [{
       type: Schema.ObjectId,
-      ref: 'MetaCclsMathematics',
-      required: false
+      ref: 'MetaCclsMathematics'
     }],
     ngssCrossCuttingConcepts: [{
       type: Schema.ObjectId,
-      ref: 'MetaNgssCrossCuttingConcept',
-      required: false
+      ref: 'MetaNgssCrossCuttingConcept'
     }],
     ngssDisciplinaryCoreIdeas: [{
       type: Schema.ObjectId,
-      ref: 'MetaNgssDisciplinaryCoreIdea',
-      required: false
+      ref: 'MetaNgssDisciplinaryCoreIdea'
     }],
     ngssScienceEngineeringPractices: [{
       type: Schema.ObjectId,
-      ref: 'MetaNgssScienceEngineeringPractice',
-      required: false
+      ref: 'MetaNgssScienceEngineeringPractice'
     }],
     nycsssUnits: [{
       type: Schema.ObjectId,
-      ref: 'MetaNycssUnit',
-      required: false
+      ref: 'MetaNycssUnit'
     }],
     nysssKeyIdeas: [{
       type: Schema.ObjectId,
-      ref: 'MetaNysssKeyIdea',
-      required: false
+      ref: 'MetaNysssKeyIdea'
     }],
     nysssMajorUnderstandings: [{
       type: Schema.ObjectId,
-      ref: 'MetaNysssMajorUnderstanding',
-      required: false
+      ref: 'MetaNysssMajorUnderstanding'
     }],
     nysssMst: [{
       type: Schema.ObjectId,
-      ref: 'MetaNysssMst',
-      required: false
+      ref: 'MetaNysssMst'
     }]
   },
   user: {
@@ -209,8 +179,8 @@ var LessonSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'published', 'returned'],
-    default: ['pending'],
+    enum: ['draft', 'pending', 'published', 'returned'],
+    default: ['draft'],
     required: true
   },
   returnedNotes: {
@@ -248,4 +218,5 @@ LessonSchema.statics.load = function(id, cb) {
   }).populate('user', 'name username displayName').exec(cb);
 };
 
+LessonSchema.set('versionKey', false); //TODO
 mongoose.model('Lesson', LessonSchema);

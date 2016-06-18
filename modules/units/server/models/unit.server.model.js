@@ -144,4 +144,5 @@ UnitSchema.statics.load = function(id, cb) {
   }).populate('user', 'name username displayName').exec(cb);
 };
 
+UnitSchema.set('versionKey', false); //TODO
 mongoose.model('Unit', UnitSchema);

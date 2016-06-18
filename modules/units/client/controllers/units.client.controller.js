@@ -5,15 +5,19 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', 'unitResolve', 'Authentication', 'UnitLessonsService'];
+  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', 'unitResolve', 'Authentication',
+  'UnitsService', 'UnitLessonsService'];
 
-  function UnitsController($scope, $state, unit, Authentication, UnitLessonsService) {
+  function UnitsController($scope, $state, $http, $interval, $timeout, unit, Authentication,
+    UnitsService, UnitLessonsService) {
     var vm = this;
 
     vm.unit = unit;
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
+    vm.saving = false;
+    vm.valid = false;
 
     vm.numberExpectations = [
       { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
@@ -41,6 +45,69 @@
       unitId: vm.unit._id
     });
 
+    // Incremental saving
+    var save;
+    var stopIncrementalSavingLoop = function() {
+      if (angular.isDefined(save)) {
+        $interval.cancel(save);
+        save = undefined;
+      }
+    };
+
+    var startIncrementalSavingLoop = function() {
+      if (angular.isDefined(save)) return;
+
+      save = $interval(function() {
+        vm.saveOnBlur();
+      }, 15000);
+    };
+
+    var startSaving = function() {
+      vm.saving = true;
+      stopIncrementalSavingLoop();
+    };
+
+    var stopSaving = function() {
+      vm.saving = false;
+      startIncrementalSavingLoop();
+    };
+
+    vm.saveOnBlur = function(force, callback) {
+      var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
+
+      if (!vm.unit._id || force || (vm.form.unitForm && !vm.form.unitForm.$pristine && vm.form.unitForm.$dirty)) {
+        startSaving();
+        $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
+        .success(function(data, status, headers, config) {
+          if (!vm.unit._id) vm.lesson._id = data.unit._id;
+          if (data.errors) {
+            vm.error = data.errors;
+            vm.valid = false;
+            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          } else if (data.successful) {
+            vm.error = null;
+            vm.valid = true;
+            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          }
+          stopSaving();
+          if (callback) callback();
+        })
+        .error(function(data, status, headers, config) {
+          vm.error = data.message;
+          vm.valid = false;
+          if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          stopSaving();
+          if (callback) callback();
+        });
+      } else {
+        startIncrementalSavingLoop();
+      }
+    };
+
+    $timeout(function() {
+      if (vm.form.unitForm) vm.saveOnBlur(true);
+    });
+
     // Remove existing Unit
     vm.remove = function() {
       vm.unit.$remove($state.go('units.list'));
@@ -48,6 +115,7 @@
 
     // Save Unit
     vm.save = function(isValid) {
+      startSaving();
       // vm.unit.stageOne.essentialQuestions = [];
       // angular.forEach(vm.essentialQuestions, function(question) {
       //   if (question && question !== '') {
@@ -83,6 +151,7 @@
     };
 
     vm.cancel = function() {
+      stopIncrementalSavingLoop();
       $state.go('units.view');
     };
 
@@ -116,5 +185,9 @@
     vm.closeUnitFeedback = function() {
       angular.element('#modal-unit-feedback').modal('hide');
     };
+
+    $scope.$on('$locationChangeStart', function(event) {
+      stopIncrementalSavingLoop();
+    });
   }
 })();
