@@ -16,6 +16,10 @@ module.exports = function (app) {
   app.route('/api/units/:unitId/lessons').all(unitsPolicy.isAllowed)
     .get(units.listLessons);
 
+  // Unit incremental save
+  app.route('/api/units/:unitId/incremental-save').all(unitsPolicy.isAllowed)
+    .post(units.incrementalSave);
+
   // Single unit routes
   app.route('/api/units/:unitId').all(unitsPolicy.isAllowed)
     .get(units.read)

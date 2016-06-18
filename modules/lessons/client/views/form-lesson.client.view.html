@@ -341,18 +341,19 @@
               </div>
             </div>
           </div>
-          <div class="alert alert-danger" ng-show="vm.form.lessonForm.$invalid">
+          <div class="alert alert-danger" ng-show="(vm.form.lessonForm.$dirty || vm.form.lessonForm.$submitted) &&
+          (vm.form.lessonForm.$invalid || !vm.valid) && (vm.form.lessonForm.$error || vm.error.length > 0)">
             <h4>Sorry, you can't submit just yet!</h4>
             <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
                 <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
             </ul>
-          </div>
-          <div ng-show="vm.error" class="alert alert-danger">
-              <p ng-bind="vm.error"></p>
+            <ul class="list-unstyled">
+              <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
+            </ul>
           </div>
           <div>
             <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-            <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid">
+            <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
               {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button>
             <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
             <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>

@@ -25,43 +25,43 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
   var errorMessages = [];
 
   if (!lesson.title) {
-    errorMessages.push('Lesson title cannot be blank');
+    errorMessages.push('Lesson title is required');
   }
   if (!lesson.unit) {
-    errorMessages.push('Unit cannot be blank');
+    errorMessages.push('Unit is required');
   }
 
   // Lesson Overview
   if (!lesson.lessonOverview || !lesson.lessonOverview.grade) {
-    errorMessages.push('Grade cannot be blank');
+    errorMessages.push('Grade is required');
   }
   if (!lesson.lessonOverview || !lesson.lessonOverview.classPeriods) {
-    errorMessages.push('Class periods cannot be blank');
+    errorMessages.push('Class periods is required');
   }
   if (!lesson.lessonOverview || !lesson.lessonOverview.setting) {
-    errorMessages.push('Setting cannot be blank');
+    errorMessages.push('Setting is required');
   }
   if (!lesson.lessonOverview || !lesson.lessonOverview.subjectAreas || lesson.lessonOverview.subjectAreas.length <= 0) {
-    errorMessages.push('Subject area(s) cannot be blank');
+    errorMessages.push('Subject area(s) is required');
   }
   if (!lesson.lessonOverview || !lesson.lessonOverview.lessonSummary) {
-    errorMessages.push('Lesson summary cannot be blank');
+    errorMessages.push('Lesson summary is required');
   }
 
   if (!lesson.lessonObjectives) {
-    errorMessages.push('Lesson objectives cannot be blank');
+    errorMessages.push('Lesson objectives is required');
   }
 
   // Material Resources
   if (!lesson.materialsResources || !lesson.materialsResources.supplies) {
-    errorMessages.push('Supplies cannot be blank');
+    errorMessages.push('Supplies is required');
   }
   if (!lesson.materialsResources || !lesson.materialsResources.vocabulary) {
-    errorMessages.push('Vocabulary cannot be blank');
+    errorMessages.push('Vocabulary is required');
   }
 
   if (!lesson.background) {
-    errorMessages.push('Background cannot be blank');
+    errorMessages.push('Background is required');
   }
 
   if ((!lesson.instructionPlan) ||
@@ -175,7 +175,7 @@ exports.incrementalSave = function(req, res) {
   if (lesson) {
     lesson = _.extend(lesson, req.body);
     lesson.returnedNotes = '';
-    lesson.status = 'pending';
+    lesson.status = (lesson.status === 'pending') ? 'pending' : 'draft';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
@@ -210,7 +210,7 @@ exports.incrementalSave = function(req, res) {
     lesson.materialsResources.handoutsFileInput = [];
     lesson.materialsResources.teacherResourcesFiles = [];
     lesson.materialsResources.stateTestQuestions = [];
-    lesson.status = 'pending';
+    lesson.status = 'draft';
   }
 
   lesson.save(function (err) {
@@ -240,56 +240,62 @@ exports.incrementalSave = function(req, res) {
  */
 exports.update = function(req, res) {
   var lesson = req.lesson;
+  validateLesson(req.body,
+  function(lessonJSON) {
+    if (lesson) {
+      lesson = _.extend(lesson, lessonJSON);
+      lesson.returnedNotes = '';
+      lesson.status = 'pending';
 
-  if (lesson) {
-    lesson = _.extend(lesson, req.body);
-    lesson.returnedNotes = '';
-    lesson.status = 'pending';
-
-    var existingHandouts = [];
-    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
-      var handout = lesson.materialsResources.handoutsFileInput[i];
-      if (handout.path) {
-        existingHandouts.push(handout);
+      var existingHandouts = [];
+      for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
+        var handout = lesson.materialsResources.handoutsFileInput[i];
+        if (handout.path) {
+          existingHandouts.push(handout);
+        }
       }
+      lesson.materialsResources.handoutsFileInput = existingHandouts;
+
+      var existingResources = [];
+      for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
+        var resource = lesson.materialsResources.teacherResourcesFiles[j];
+        if (resource.path) {
+          existingResources.push(resource);
+        }
+      }
+      lesson.materialsResources.teacherResourcesFiles = existingResources;
+
+      var existingQuestions = [];
+      for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+        var question = lesson.materialsResources.stateTestQuestions[k];
+        if (question.path) {
+          existingQuestions.push(question);
+        }
+      }
+      lesson.materialsResources.stateTestQuestions = existingQuestions;
+
+      if (!lesson.updated) lesson.updated = [];
+      lesson.updated.push(Date.now());
+
+      lesson.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(lesson);
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Cannot update the lesson'
+      });
     }
-    lesson.materialsResources.handoutsFileInput = existingHandouts;
-
-    var existingResources = [];
-    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
-      var resource = lesson.materialsResources.teacherResourcesFiles[j];
-      if (resource.path) {
-        existingResources.push(resource);
-      }
-    }
-    lesson.materialsResources.teacherResourcesFiles = existingResources;
-
-    var existingQuestions = [];
-    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
-      var question = lesson.materialsResources.stateTestQuestions[k];
-      if (question.path) {
-        existingQuestions.push(question);
-      }
-    }
-    lesson.materialsResources.stateTestQuestions = existingQuestions;
-
-    if (!lesson.updated) lesson.updated = [];
-    lesson.updated.push(Date.now());
-
-    lesson.save(function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(lesson);
-      }
-    });
-  } else {
+  }, function(errorMessages) {
     return res.status(400).send({
-      message: 'Cannot update the lesson'
+      message: errorMessages
     });
-  }
+  });
 };
 
 /**
@@ -880,7 +886,7 @@ exports.lessonByID = function(req, res, next, id) {
   query.exec(function(err, lesson) {
     if (err) {
       return next(err);
-    } else if (!lesson && id !== 'new-incremental-save') {
+    } else if (!lesson && id !== '000000000000000000000000') {
       return res.status(404).send({
         message: 'No lesson with that identifier has been found'
       });

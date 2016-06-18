@@ -179,8 +179,8 @@ var LessonSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'published', 'returned'],
-    default: ['pending'],
+    enum: ['draft', 'pending', 'published', 'returned'],
+    default: ['draft'],
     required: true
   },
   returnedNotes: {
@@ -218,4 +218,5 @@ LessonSchema.statics.load = function(id, cb) {
   }).populate('user', 'name username displayName').exec(cb);
 };
 
+LessonSchema.set('versionKey', false); //TODO
 mongoose.model('Lesson', LessonSchema);
