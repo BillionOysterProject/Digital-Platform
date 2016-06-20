@@ -4,6 +4,16 @@
       <fieldset>
         <div class="container-fluid">
           <div class="page-header">
+            <div class="pull-right">
+                <!-- Show saving when saving -->
+                <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                
+                <!-- Show status -->
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
+                <h6 class="navbar-text blue" ng-show="vm.lesson.status === 'pending'">Awaiting Approval</h6>
+                <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
+            </div>
             <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
           </div>
 
@@ -352,10 +362,14 @@
             </ul>
           </div>
           <div>
-            <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+            <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
+            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+            <!-- TODO: Wire up 
+            <button class="btn btn-default">Save draft</button>
+            -->
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
-              {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button>
-            <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+            
             <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
           </div>
         </div>

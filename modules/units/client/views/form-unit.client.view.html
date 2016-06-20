@@ -4,6 +4,14 @@
             <fieldset>
                 <div class="container-fluid">
                     <div class="page-header">
+                        <div class="pull-right">
+                            <!-- Show saving when saving -->
+                            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                            
+                            <!-- TODO: Show status -->
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'draft'">Draft</h6>
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'published'">Published</h6>
+                        </div>
                         <h1>{{vm.unit._id ? 'Edit unit' : 'Create new unit'}}</h1>
                     </div>
 
@@ -211,7 +219,11 @@
                           <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
                         </ul>
                     </div>
-                    <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+                    <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
+                    <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                    <!-- TODO: Wire up 
+                    <button class="btn btn-default">Save draft</button>
+                    -->
                     <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
                       {{vm.unit._id ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
                     <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>
