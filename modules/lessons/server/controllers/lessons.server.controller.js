@@ -479,9 +479,21 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     }
   }
 
-  var uploadRemote = new UploadRemote();
-  uploadRemote.deleteRemote(filesToDelete,
-  function() {
+  if (filesToDelete.length > 0) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      lesson.remove(function(err) {
+        if (err) {
+          errorCallback(errorHandler.getErrorMessage(err));
+        } else {
+          successCallback(lesson);
+        }
+      });
+    }, function(err) {
+      errorCallback(err);
+    });
+  } else {
     lesson.remove(function(err) {
       if (err) {
         errorCallback(errorHandler.getErrorMessage(err));
@@ -489,9 +501,7 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
         successCallback(lesson);
       }
     });
-  }, function(err) {
-    errorCallback(err);
-  });
+  }
 };
 
 exports.delete = function(req, res) {
