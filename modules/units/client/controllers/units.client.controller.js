@@ -18,6 +18,7 @@
     vm.form = {};
     vm.saving = false;
     vm.valid = false;
+    vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
 
     vm.numberExpectations = [
       { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
@@ -60,6 +61,7 @@
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
+        console.log('interval save');
         vm.saveOnBlur();
       }, 15000);
     };
@@ -70,7 +72,9 @@
     };
 
     var stopSaving = function() {
-      vm.saving = false;
+      $timeout(function() {
+        vm.saving = false;
+      }, 2000);
       startIncrementalSavingLoop();
     };
 
@@ -83,7 +87,7 @@
         .success(function(data, status, headers, config) {
           if (!vm.unit._id) {
             vm.unit._id = data.unit._id;
-            $location.path('/units/' + vm.unit._id + '/edit', false);
+            $location.path('/units/' + vm.unit._id + '/draft', false);
           }
           if (data.errors) {
             vm.error = data.errors;
@@ -109,8 +113,29 @@
       }
     };
 
+    vm.saveDraft = function() {
+      var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
+      $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
+      .success(function(data, status, headers, config) {
+        $state.go('units.list');
+      })
+      .error(function(data, status, headers, config) {
+        vm.error = data.message;
+        vm.valid = false;
+        if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+        stopSaving();
+      });
+    };
+
+    vm.saveAfterTitle = function() {
+      if (vm.unit.title && vm.unit.color && vm.unit.icon) {
+        vm.saveOnBlur(true);
+      }
+    };
+
     $timeout(function() {
-      if (vm.form.unitForm) vm.saveOnBlur(true);
+      console.log('reload so start up saving');
+      if (vm.form.unitForm && vm.unit._id && vm.unit.title && vm.unit.color && vm.unit.icon) vm.saveOnBlur(true);
     });
 
     // Remove existing Unit

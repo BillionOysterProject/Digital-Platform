@@ -37,6 +37,19 @@
           pageTitle : 'Units Create'
         }
       })
+      .state('units.draft', {
+        url: '/:unitId/draft',
+        templateUrl: 'modules/units/client/views/form-unit.client.view.html',
+        controller: 'UnitsController',
+        controllerAs: 'vm',
+        resolve: {
+          unitResolve: getUnit
+        },
+        data: {
+          roles: ['admin'],
+          pageTitle: 'Draft Unit {{ unitResolve.title }}'
+        }
+      })
       .state('units.edit', {
         url: '/:unitId/edit',
         templateUrl: 'modules/units/client/views/form-unit.client.view.html',
