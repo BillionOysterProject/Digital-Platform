@@ -218,7 +218,6 @@
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
-        console.log('interval save');
         vm.saveOnBlur();
       }, 15000);
     };
@@ -286,7 +285,6 @@
 
     $timeout(function() {
       setupValues();
-      console.log('reload so start up saving');
       if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title) vm.saveOnBlur(true);
     });
 

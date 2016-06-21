@@ -61,7 +61,6 @@
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
-        console.log('interval save');
         vm.saveOnBlur();
       }, 15000);
     };
@@ -134,7 +133,6 @@
     };
 
     $timeout(function() {
-      console.log('reload so start up saving');
       if (vm.form.unitForm && vm.unit._id && vm.unit.title && vm.unit.color && vm.unit.icon) vm.saveOnBlur(true);
     });
 
