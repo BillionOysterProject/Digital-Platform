@@ -4,8 +4,8 @@
             <div class="modal-header">
                 <button type="button" class="close" ng-click="cancelFunction(index)"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Substrate Shell {{substrate.substrateShellNumber}}</h4>
-                <hr ng-show="error || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)"/>
-                <div class="alert alert-danger" ng-show="error || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)">
+                <hr ng-show="(error && error.length > 0) || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)"/>
+                <div class="alert alert-danger" ng-show="(error && error.length > 0) || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)">
                     <h4>We're still missing some information.</h4>
                     <ul class="list-unstyled" ng-repeat="error in error">
                         <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="innerImg" class="control-label required">Inner side *</label>
-                                                <single-image-drop-zone uploader="innerSubstrateUploader" 
+                                                <single-image-drop-zone uploader="innerSubstrateUploader"
                                                 image-url="innerSubstrateUrl" image-alt="Inner side"
                                                 id="inner-substrate-image-dropzone"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
