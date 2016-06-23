@@ -652,9 +652,10 @@
       });
     };
 
-    vm.savingOff = function() {
+    vm.savingOff = function(callback) {
       $timeout(function() {
         vm.saving = false;
+        if (callback) callback();
       }, 1500);
     };
 
@@ -666,8 +667,9 @@
     });
 
     $scope.$on('savingStop', function() {
-      vm.savingOff();
-      startIncrementalSavingLoop();
+      vm.savingOff(function() {
+        startIncrementalSavingLoop();
+      });
     });
 
     $scope.$on('removeSubmittedProtocolTab', function(event, args) {
@@ -677,8 +679,9 @@
         protocol: args.values.protocol
       }];
       showTabChanged(changes);
-      vm.savingOff();
-      startIncrementalSavingLoop();
+      vm.savingOff(function() {
+        startIncrementalSavingLoop();
+      });
     });
 
     $scope.$on('$locationChangeStart', function(event) {
