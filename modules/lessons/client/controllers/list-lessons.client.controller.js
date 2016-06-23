@@ -82,7 +82,11 @@
       vm.findLessons();
     };
 
-    vm.units = UnitsService.query();
+    UnitsService.query({
+      published: true
+    }, function(data) {
+      vm.units = data;
+    });
 
     SubjectAreasService.query({
     }, function(data) {

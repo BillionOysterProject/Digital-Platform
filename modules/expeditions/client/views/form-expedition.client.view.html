@@ -33,7 +33,7 @@
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
                             ng-model="vm.expedition.monitoringStartDate" required/>
                             <div ng-show="vm.form.expeditionForm.startTime.$error.min">
-                                <p class="red">Start time must not be more than a week in the past.</p>
+                                <p class="red">Start time must not be more than a year in the past.</p>
                             </div>
                             <div ng-show="vm.form.expeditionForm.startTime.$error.max">
                                 <p class="red">Start time must not be more than a year in the future.</p>
@@ -47,7 +47,7 @@
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
                             ng-model="vm.expedition.monitoringEndDate" required/>
                             <div ng-show="vm.form.expeditionForm.endTime.$error.min">
-                                <p class="red">Stop time must not be more than a week in the past.</p>
+                                <p class="red">Stop time must not be more than a year in the past.</p>
                             </div>
                             <div ng-show="vm.form.expeditionForm.endTime.$error.max">
                                 <p class="red">Stop time must not be more than a year in the future.</p>

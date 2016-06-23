@@ -4,7 +4,17 @@
       <fieldset>
         <div class="container-fluid">
           <div class="page-header">
-            <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
+            <div class="pull-right">
+                <!-- Show saving when saving -->
+                <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+
+                <!-- Show status -->
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
+                <h6 class="navbar-text blue" ng-show="vm.lesson.status === 'pending'">Awaiting Approval</h6>
+                <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
+            </div>
+            <h1>{{vm.editing ? 'Edit lesson' : 'Create new lesson'}}</h1>
           </div>
 
           <!-- Lesson -->
@@ -14,7 +24,8 @@
                 <div class="col-md-8">
                   <div class="form-group" show-errors>
                     <label for="lessonTitle" class="control-label required">Lesson Title *</label>
-                    <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title" required/>
+                    <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title"
+                    ng-blur="vm.saveOnBlur(true)" required/>
                     <div ng-messages="vm.form.lessonForm.lessonTitle.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
                     </div>
@@ -30,7 +41,8 @@
                 <div class="col-md-4">
                   <div class="form-group" show-errors>
                     <label for="image" class="control-label">Featured Image</label>
-                    <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL" image-alt="Featured Image"></single-image-drop-zone>
+                    <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
+                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
                   </div>
                 </div>
               </div>
@@ -162,7 +174,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="vocabulary" class="control-label">Vocabulary</label>
+                    <label for="vocabulary" class="control-label">Vocabulary *</label>
                     <div class="input-group">
                       <div aa-select2="vm.vocabularySelectConfig" name="vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
                       class="form-control col-md-10"></div>
@@ -178,7 +190,8 @@
                   <!-- TODO: Give location for upload files to be stored in the lesson -->
                   <div class="form-group">
                     <label for="handouts" class="control-label">Handouts</label>
-                    <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"></multiple-file-drop-zone>
+                    <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"
+                    id="lesson-handout-files"></multiple-file-drop-zone>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -197,7 +210,7 @@
                       <tr ng-repeat="file in vm.resourceFiles">
                         <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                         <td></td>
-                        <td>
+                        <td id="lesson-teach-resource-files">
                           <a ng-click="vm.deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i>
                         </td>
                       </tr>
@@ -215,7 +228,8 @@
                   <div class="form-group">
                     <label for="stateTestQuestions" class="control-label">State Test Questions</label>
                     <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
-                    <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"></multiple-file-drop-zone>
+                    <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
+                    id="lesson-state-test-questions"></multiple-file-drop-zone>
                   </div>
                 </div>
               </div>
@@ -227,7 +241,7 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
+                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background *" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -338,19 +352,23 @@
               </div>
             </div>
           </div>
-          <div class="alert alert-danger" ng-show="vm.form.lessonForm.$invalid">
+          <div class="alert alert-danger" ng-show="(vm.form.lessonForm.$dirty || vm.form.lessonForm.$submitted) &&
+          (vm.form.lessonForm.$invalid || !vm.valid) && (vm.form.lessonForm.$error || vm.error.length > 0)">
             <h4>Sorry, you can't submit just yet!</h4>
             <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.lessonForm.$error track by $index">
                 <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
             </ul>
-          </div>
-          <div ng-show="vm.error" class="alert alert-danger">
-              <p ng-bind="vm.error"></p>
+            <ul class="list-unstyled">
+              <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
+            </ul>
           </div>
           <div>
-            <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-            <button class="btn btn-primary" type="submit">{{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button>
-            <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+            <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
+            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+            <button class="btn btn-default" ng-click="vm.saveDraft()">Save draft</button>
+            <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
+              {{vm.editing ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+
             <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
           </div>
         </div>

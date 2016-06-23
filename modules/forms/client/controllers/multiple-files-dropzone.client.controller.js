@@ -5,9 +5,9 @@
     .module('forms')
     .controller('FileDropzoneController', FileDropzoneController);
 
-  FileDropzoneController.$inject = ['$scope', '$timeout', '$window', 'FileUploader'];
+  FileDropzoneController.$inject = ['$scope', '$timeout', '$window', '$http', 'FileUploader'];
 
-  function FileDropzoneController($scope, $timeout, $window, FileUploader) {
+  function FileDropzoneController($scope, $timeout, $window, $http, FileUploader) {
     // // Set file uploader image filter
     // $scope.uploader.filters.push({
     //   name: 'imageFilter',
@@ -94,7 +94,16 @@
       if (file.index) {
         $scope.uploader.removeFromQueue(file.index);
       }
-      $scope.files.splice(index,1);
+      var filesToDelete = $scope.files.splice(index,1);
+      if (filesToDelete.length === 1) {
+        $http.post('/api/remote-files/delete-file', { path: filesToDelete[0].path })
+        .success(function(data, status, headers, config) {
+          console.log('data.message', data.message);
+        })
+        .error(function(data, status, headers, config) {
+          console.log('data.message', data.message);
+        });
+      }
     };
   }
 })();
