@@ -6,6 +6,11 @@
             ui-sref="lessons.edit({ lessonId: created._id })">
               <i class="glyphicon glyphicon-pencil"></i></a>
         </div>
+        <div class="panel-overlay" ng-show="created.status === 'draft'">
+            <a class="btn btn-sm btn-primary pull-right" ng-show="created.status === 'draft'"
+            ui-sref="lessons.draft({ lessonId: created._id })">
+              <i class="glyphicon glyphicon-pencil"></i></a>
+        </div>
         <div class="panel" ui-sref="lessons.view({ lessonId: created._id })">
             <div class="panel-heading" style="background: {{created.unit.color}}">
                 <span class="pull-right">{{created.lessonOverview.grade}}</span>

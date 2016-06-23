@@ -27,6 +27,7 @@
     vm.saving = false;
     vm.valid = (vm.lesson.status === 'published') ? true : false;
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
+    vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
 
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
@@ -245,6 +246,7 @@
             vm.lesson._id = data.lesson._id;
             $location.path('/lessons/' + vm.lesson._id + '/draft', false);
           }
+          vm.lesson.status = 'draft';
           if (data.errors) {
             vm.error = data.errors;
             vm.valid = false;
@@ -283,9 +285,35 @@
       });
     };
 
+    vm.initialSaveDraft = function() {
+      if (vm.lesson._id) {
+        $http.post('api/lessons/' + vm.lesson._id + '/incremental-save', vm.lesson)
+        .success(function(data, status, headers, config) {
+          if (data.errors) {
+            vm.error = data.errors;
+            vm.valid = false;
+            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+          } else if (data.successful) {
+            vm.error = null;
+            vm.valid = true;
+            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+          }
+          startIncrementalSavingLoop();
+        })
+        .error(function(data, status, headers, config) {
+          vm.error = data.message;
+          vm.valid = false;
+          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+          startIncrementalSavingLoop();
+        });
+      } else {
+        startIncrementalSavingLoop();
+      }
+    };
+
     $timeout(function() {
       setupValues();
-      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title) vm.saveOnBlur(true);
+      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title) vm.initialSaveDraft();
     });
 
     vm.featuredImageUploader = new FileUploader({
