@@ -37,6 +37,19 @@
           pageTitle: 'Lesson Create'
         }
       })
+      .state('lessons.draft', {
+        url: '/:lessonId/draft',
+        templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
+        controller: 'LessonsController',
+        controllerAs: 'vm',
+        resolve: {
+          lessonResolve: getLesson
+        },
+        data: {
+          roles: ['admin', 'team lead'],
+          pageTitle: 'Draft Lesson {{ lessonResolve.title }}'
+        }
+      })
       .state('lessons.edit', {
         url: '/:lessonId/edit',
         templateUrl: 'modules/lessons/client/views/form-lesson.client.view.html',
