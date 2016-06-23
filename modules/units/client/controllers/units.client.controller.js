@@ -19,6 +19,7 @@
     vm.saving = false;
     vm.valid = false;
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
+    vm.editLink = (vm.unit.status === 'draft') ? 'units.draft({ unitId: vm.unit._id })' : 'units.edit({ unitId: vm.unit._id })';
 
     vm.numberExpectations = [
       { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
@@ -88,6 +89,7 @@
             vm.unit._id = data.unit._id;
             $location.path('/units/' + vm.unit._id + '/draft', false);
           }
+          vm.unit.status = 'draft';
           if (data.errors) {
             vm.error = data.errors;
             vm.valid = false;
@@ -126,6 +128,32 @@
       });
     };
 
+    vm.initialSaveDraft = function() {
+      if (vm.unit._id) {
+        $http.post('api/units/' + vm.unit._id + '/incremental-save', vm.unit)
+        .success(function(data, status, headers, config) {
+          if (data.errors) {
+            vm.error = data.errors;
+            vm.valid = false;
+            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          } else if (data.successful) {
+            vm.error = null;
+            vm.valid = true;
+            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          }
+          startIncrementalSavingLoop();
+        })
+        .error(function(data, status, headers, config) {
+          vm.error = data.message;
+          vm.valid = false;
+          if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+          startIncrementalSavingLoop();
+        });
+      } else {
+        startIncrementalSavingLoop();
+      }
+    };
+
     vm.saveAfterTitle = function() {
       if (vm.unit.title && vm.unit.color && vm.unit.icon) {
         vm.saveOnBlur(true);
@@ -133,7 +161,7 @@
     };
 
     $timeout(function() {
-      if (vm.form.unitForm && vm.unit._id && vm.unit.title && vm.unit.color && vm.unit.icon) vm.saveOnBlur(true);
+      if (vm.form.unitForm && vm.unit._id && vm.unit.title) vm.initialSaveDraft();
     });
 
     // Remove existing Unit
