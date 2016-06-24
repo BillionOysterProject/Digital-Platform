@@ -185,16 +185,19 @@
     om.openSubstrateForm = function(index) {
       savingOn();
       $rootScope.$broadcast('stopIncrementalSavingLoop');
-      var content = angular.element('#modal-substrateshell'+index);
+      om.substrate = angular.copy(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index]);
+
       om.outerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.path : '';
       om.innerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.path : '';
-      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 0) {
+      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 0 ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === undefined) {
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell = 1;
       }
+
       $rootScope.$broadcast('stopIncrementalSavingLoop');
-      content.modal('show');
+      angular.element('#modal-substrateshell'+index).modal('show');
     };
 
     var saveSubstrateOuterImagesOnBlur = function(index, successCallback, errorCallback) {
@@ -203,7 +206,7 @@
           var uploader = om.outerUploaders[index];
           if (uploader.queue.length > 0) {
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
-              //uploader.removeFromQueue(fileItem);
+              uploader.removeFromQueue(fileItem);
               successCallback();
             };
 
@@ -234,7 +237,7 @@
           var uploader = om.innerUploaders[index];
           if (uploader.queue.length > 0) {
             uploader.onSuccessItem = function (fileItem, response, status, headers) {
-              //uploader.removeFromQueue(fileItem);
+              uploader.removeFromQueue(fileItem);
               successCallback();
             };
 
@@ -403,13 +406,14 @@
 
     om.cancelSubstrateForm = function(index) {
       angular.element('#modal-substrateshell'+index).modal('hide');
-      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 1 &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].minimumSizeOfLiveOysters &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].maximumSizeOfLiveOysters &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].averageSizeOfLiveOysters) {
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell = 0;
-      }
+      om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index] = angular.copy(om.substrate);
+
       om.substrate = {};
+      om.outerUploaders[index].clearQueue();
+      om.innerUploaders[index].clearQueue();
+      om.outerSubstrateURL = '';
+      om.innerSubstrateURL = '';
+
       savingOff();
       $rootScope.$broadcast('savingStop');
     };
