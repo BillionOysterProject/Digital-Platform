@@ -133,6 +133,7 @@
     for (var key in vm.tabs) {
       if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
         vm.tabs[key].isActive = true;
+        console.log('key', key);
         vm.activeTab = key;
         break;
       }
@@ -148,11 +149,11 @@
       }
     };
 
-    var save;
+    vm.save = undefined;
     var stopIncrementalSavingLoop = function() {
-      if(angular.isDefined(save)) {
-        $interval.cancel(save);
-        save = undefined;
+      if(angular.isDefined(vm.save)) {
+        $interval.cancel(vm.save);
+        vm.save = undefined;
       }
     };
 
@@ -187,9 +188,9 @@
     };
 
     var startIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) return;
+      if (angular.isDefined(vm.save)) return;
 
-      save = $interval(function() {
+      vm.save = $interval(function() {
         if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
           vm.saving = true;
           var saveCall = activeProtocolCall();
@@ -310,9 +311,11 @@
     vm.switchTabs = function(key) {
       vm.previousTab = vm.activeTab;
       var currentProtocol = activeProtocolCall();
+      console.log('currentProtocol', currentProtocol);
       $rootScope.$broadcast(currentProtocol);
       vm.activeTab = key;
       var nextProtocol = activeProtocolCall();
+      console.log('nextProtocol', nextProtocol);
       $rootScope.$broadcast(nextProtocol);
     };
 
