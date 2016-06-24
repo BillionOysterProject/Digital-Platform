@@ -16,7 +16,7 @@
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
-                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()" 
+                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()" ng-disabled="!vm.protocolsSuccessful()"
@@ -61,8 +61,8 @@
                 </nav>
             </div>
         </section>
-        <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li role="presentation" disable="vm.tabs.protocol1.isDisabled" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
+        <ul class="nav nav-tabs nav-justified" role="tablist" ng-cloak>
+            <li role="presentation" ng-disabled="vm.tabs.protocol1.isDisabled" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
             ng-show="vm.viewSiteCondition" ng-click="vm.switchTabs('protocol1')">
               <a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">
               <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol1.saveSuccessful === false"></i>
@@ -72,7 +72,7 @@
               <span class="hidden-xs">Protocol </span>1<span class="hidden-xs">: Site Conditions</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol2.isActive === true}"
-            ng-show="vm.viewOysterMeasurement" disable="vm.tabs.protocol2.isDisabled" ng-click="vm.switchTabs('protocol2')">
+            ng-show="vm.viewOysterMeasurement" ng-disabled="vm.tabs.protocol2.isDisabled" ng-click="vm.switchTabs('protocol2')">
               <a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol2.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol2.saveSuccessful === true"></i>
@@ -81,7 +81,7 @@
               <span class="hidden-xs">Protocol </span>2<span class="hidden-xs">: Oyster Measurements</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol3.isActive === true}"
-            ng-show="vm.viewMobileTrap" disable="vm.tabs.protocol3.isDisabled" ng-click="vm.switchTabs('protocol3')">
+            ng-show="vm.viewMobileTrap" ng-disabled="vm.tabs.protocol3.isDisabled" ng-click="vm.switchTabs('protocol3')">
               <a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab" ng-click="vm.refreshTiles()">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol3.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol3.saveSuccessful === true"></i>
@@ -90,7 +90,7 @@
               <span class="hidden-xs">Protocol </span>3<span class="hidden-xs">: Mobile Trap</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol4.isActive === true}"
-            ng-show="vm.viewSettlementTiles" disable="vm.tabs.protocol4.isDisabled" ng-click="vm.switchTabs('protocol4')">
+            ng-show="vm.viewSettlementTiles" ng-disabled="vm.tabs.protocol4.isDisabled" ng-click="vm.switchTabs('protocol4')">
               <a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol4.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol4.saveSuccessful === true"></i>
@@ -99,7 +99,7 @@
               <span class="hidden-xs">Protocol </span>4<span class="hidden-xs">: Settlement Tiles</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.tabs.protocol5.isActive === true}"
-            ng-show="vm.viewWaterQuality" disable="vm.tabs.protocol5.isDisabled" ng-click="vm.switchTabs('protocol5')">
+            ng-show="vm.viewWaterQuality" ng-disabled="vm.tabs.protocol5.isDisabled" ng-click="vm.switchTabs('protocol5')">
               <a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">
                 <i class="glyphicon glyphicon-exclamation-sign red" ng-show="vm.tabs.protocol5.saveSuccessful === false"></i>
                 <i class="glyphicon glyphicon-ok-sign green" ng-show="vm.tabs.protocol5.saveSuccessful === true"></i>
@@ -109,7 +109,7 @@
             </li>
         </ul>
     </section>
-    <div class="tab-content">
+    <div class="tab-content" ng-cloak>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
         id="protocol1" ng-show="vm.viewSiteCondition">
             <form-protocol-site-condition protocol-site-condition="vm.siteCondition"

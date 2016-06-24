@@ -423,6 +423,15 @@
       om.saveOnBlur();
     });
 
+    var checkAnyDone = function() {
+      for (var i = 0; i < om.substrateCount; i++) {
+        if (om.checkDone(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i])) {
+          return true;
+        }
+      }
+      return false;
+    };
+
     om.saveOnBlur = function(successCallback, errorCallback) {
       if (om.protocolOysterMeasurement._id && ((om.form.oysterMeasurementForm.$touched && om.form.oysterMeasurementForm.$dirty) ||
         om.form.oysterMeasurementForm.$valid || ((om.protocolOysterMeasurement.depthOfOysterCage !== undefined &&
@@ -432,8 +441,7 @@
         (om.cageConditionPhotoURL !== undefined && om.cageConditionPhotoURL !== null && om.cageConditionPhotoURL !== '') ||
         (om.protocolOysterMeasurement.measuringOysterGrowth !== undefined &&
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells !== undefined &&
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0 &&
-        om.checkDone(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[0]))))) {
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0 && checkAnyDone())))) {
         savingOn();
         $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',

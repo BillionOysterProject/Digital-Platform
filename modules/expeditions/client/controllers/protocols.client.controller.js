@@ -148,11 +148,11 @@
       }
     };
 
-    var save;
+    vm.save = undefined;
     var stopIncrementalSavingLoop = function() {
-      if(angular.isDefined(save)) {
-        $interval.cancel(save);
-        save = undefined;
+      if(angular.isDefined(vm.save)) {
+        $interval.cancel(vm.save);
+        vm.save = undefined;
       }
     };
 
@@ -167,7 +167,6 @@
           vm.tabs[changes[i].protocol].isDisabled = true;
           vm.tabs[changes[i].protocol].isActive = false;
           vm.tabs[changes[i].protocol].visible = false;
-          console.log('vm.tabs[protocol]', vm.tabs[changes[i].protocol]);
         }
         vm.disableProtocolChanges = descriptions;
 
@@ -180,16 +179,15 @@
         }
 
         if (vm.disableProtocolChanges && vm.disableProtocolChanges.length > 0) {
-          console.log('vm.disableProtocolChanges', vm.disableProtocolChanges);
           angular.element('#modal-remove-protocol-tab').modal('show');
         }
       }
     };
 
     var startIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) return;
+      if (angular.isDefined(vm.save)) return;
 
-      save = $interval(function() {
+      vm.save = $interval(function() {
         if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
           vm.saving = true;
           var saveCall = activeProtocolCall();
@@ -297,13 +295,11 @@
 
     //stopSaving
     $scope.$on('stopIncrementalSavingLoop', function() {
-      console.log('stopIncrementalSavingLoop');
       stopIncrementalSavingLoop();
     });
 
     //startSaving
     $scope.$on('startIncrementalSavingLoop', function() {
-      console.log('startIncrementalSavingLoop');
       startIncrementalSavingLoop();
     });
 
@@ -385,7 +381,6 @@
 
     var waitWhileSaving = function() {
       var wait = function() {
-        console.log('waiting to finish saving');
       };
 
       while(vm.saving === true) {
