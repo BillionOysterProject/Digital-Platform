@@ -133,7 +133,6 @@
     for (var key in vm.tabs) {
       if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
         vm.tabs[key].isActive = true;
-        console.log('key', key);
         vm.activeTab = key;
         break;
       }
@@ -168,7 +167,6 @@
           vm.tabs[changes[i].protocol].isDisabled = true;
           vm.tabs[changes[i].protocol].isActive = false;
           vm.tabs[changes[i].protocol].visible = false;
-          console.log('vm.tabs[protocol]', vm.tabs[changes[i].protocol]);
         }
         vm.disableProtocolChanges = descriptions;
 
@@ -181,7 +179,6 @@
         }
 
         if (vm.disableProtocolChanges && vm.disableProtocolChanges.length > 0) {
-          console.log('vm.disableProtocolChanges', vm.disableProtocolChanges);
           angular.element('#modal-remove-protocol-tab').modal('show');
         }
       }
@@ -298,24 +295,20 @@
 
     //stopSaving
     $scope.$on('stopIncrementalSavingLoop', function() {
-      console.log('stopIncrementalSavingLoop');
       stopIncrementalSavingLoop();
     });
 
     //startSaving
     $scope.$on('startIncrementalSavingLoop', function() {
-      console.log('startIncrementalSavingLoop');
       startIncrementalSavingLoop();
     });
 
     vm.switchTabs = function(key) {
       vm.previousTab = vm.activeTab;
       var currentProtocol = activeProtocolCall();
-      console.log('currentProtocol', currentProtocol);
       $rootScope.$broadcast(currentProtocol);
       vm.activeTab = key;
       var nextProtocol = activeProtocolCall();
-      console.log('nextProtocol', nextProtocol);
       $rootScope.$broadcast(nextProtocol);
     };
 
@@ -388,7 +381,6 @@
 
     var waitWhileSaving = function() {
       var wait = function() {
-        console.log('waiting to finish saving');
       };
 
       while(vm.saving === true) {
