@@ -12,12 +12,13 @@ angular.module('users').factory('PasswordValidator', ['$window',
           errors: []
         };
         if (password.length < 6) {
-          result.errors.push('Password must be 6 characters');
+          result.errors.push('Password must be 6 characters.');
         }
         return result;
       },
       getPopoverMsg: function () {
-        var popoverMsg = 'Please enter a passphrase or password with 10 or more characters, numbers, lowercase, uppercase, and special characters.';
+        //var popoverMsg = 'Please enter a passphrase or password with 10 or more characters, numbers, lowercase, uppercase, and special characters.';
+        var popoverMsg = 'Password must be 6 characters.';
         return popoverMsg;
       }
     };

@@ -117,13 +117,11 @@
         (st.tileStarted(st.protocolSettlementTiles.settlementTiles[0]) ||
         st.protocolSettlementTiles.settlementTiles[0].imageUrl))) || forceSave) {
         $rootScope.$broadcast('savingStart');
-        console.log('incremental-save');
         $http.post('/api/protocol-settlement-tiles/' + st.protocolSettlementTiles._id + '/incremental-save',
         st.protocolSettlementTiles)
         .success(function (data, status, headers, config) {
           if (data.errors && !forceSave) {
             st.error = data.errors;
-            console.log('st.error', st.error);
             if (st.form && st.form.settlementTilesForm) st.form.settlementTilesForm.$setSubmitted(true);
             $scope.protocolSettlementTiles = st.protocolSettlementTiles;
             readFromScope();
@@ -147,7 +145,6 @@
         })
         .error(function (data, status, header, config) {
           st.error = data.message;
-          console.log('st.error', st.error);
           if (st.form && st.form.settlementTilesForm && !forceSave) st.form.settlementTilesForm.$setSubmitted(true);
           if (!forceSave) $rootScope.$broadcast('incrementalSaveSettlementTilesError');
           $rootScope.$broadcast('savingStop');
@@ -256,7 +253,6 @@
         }
         st.protocolSettlementTiles.settlementTiles[index-1].done =
           tileDone(st.protocolSettlementTiles.settlementTiles[index-1]);
-        console.log('settlementTiles', st.protocolSettlementTiles);
         st.saveOnBlur(true, function() {
           $rootScope.$broadcast('startIncrementalSavingLoop');
         });
@@ -410,7 +406,6 @@
         ProtocolSettlementTilesService.get({
           settlementTileId: st.protocolSettlementTiles._id
         }, function(data) {
-          console.log('Authentication.user', Authentication.user);
           if (data.scribeMember.username !== Authentication.user.username && data.status === 'submitted') {
             $rootScope.$broadcast('removeSubmittedProtocolTab', {
               values: {

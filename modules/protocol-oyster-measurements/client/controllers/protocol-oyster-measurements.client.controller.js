@@ -14,6 +14,17 @@
 
     om.substrateCount = 10;
     om.liveShellCount = 45;
+    om.saving = false;
+
+    var savingOn = function() {
+      om.saving = true;
+    };
+
+    var savingOff = function() {
+      $timeout(function() {
+        om.saving = false;
+      }, 1500);
+    };
 
     om.checkDone = function(substrate) {
       if (substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.outerSidePhoto && substrate.outerSidePhoto.path &&
@@ -172,16 +183,21 @@
     };
 
     om.openSubstrateForm = function(index) {
+      savingOn();
       $rootScope.$broadcast('stopIncrementalSavingLoop');
-      var content = angular.element('#modal-substrateshell'+index);
+      om.substrate = angular.copy(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index]);
+
       om.outerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.path : '';
       om.innerSubstrateURL = (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto) ?
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.path : '';
-      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 0) {
+      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 0 ||
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === undefined) {
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell = 1;
       }
-      content.modal('show');
+
+      $rootScope.$broadcast('stopIncrementalSavingLoop');
+      angular.element('#modal-substrateshell'+index).modal('show');
     };
 
     var saveSubstrateOuterImagesOnBlur = function(index, successCallback, errorCallback) {
@@ -238,7 +254,7 @@
             successCallback();
           }
         } else {
-          successCallback();
+          errorCallback();
         }
       } else if (index && om.protocolOysterMeasurement._id && om.innerSubstrateURL !== '') {
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.path = '';
@@ -248,9 +264,11 @@
 
     om.saveSubstrateForm = function(substrate, index, isValid) {
       if (!isValid) {
+        savingOff();
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
         return false;
       } else {
+        savingOn();
         $rootScope.$broadcast('savingStart');
         angular.element('#modal-substrateshell'+index).modal('hide');
         substrate = om.findSubstrateStats(substrate);
@@ -296,26 +314,30 @@
                         $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
                         readFromScope();
                       }
+                      savingOff();
                       $rootScope.$broadcast('savingStop');
-                      $rootScope.$broadcast('startIncrementalSavingLoop');
+                      //$rootScope.$broadcast('startIncrementalSavingLoop');
                     });
-                  }, 1000);
+                  }, 0);
                 }, function() {
                   //angular.element('#modal-substrateshell'+index).modal('hide');
+                  savingOff();
                   $rootScope.$broadcast('savingStop');
-                  $rootScope.$broadcast('startIncrementalSavingLoop');
+                  //$rootScope.$broadcast('startIncrementalSavingLoop');
                 });
-              }, 2000);
+              }, 0);
             }, function() {
               //angular.element('#modal-substrateshell'+index).modal('hide');
+              savingOff();
               $rootScope.$broadcast('savingStop');
-              $rootScope.$broadcast('startIncrementalSavingLoop');
+              //$rootScope.$broadcast('startIncrementalSavingLoop');
             });
-          }, 1000);
+          }, 0);
         }, function() {
           //angular.element('#modal-substrateshell'+index).modal('hide');
+          savingOff();
           $rootScope.$broadcast('savingStop');
-          $rootScope.$broadcast('startIncrementalSavingLoop');
+          //$rootScope.$broadcast('startIncrementalSavingLoop');
         });
       }
     };
@@ -384,14 +406,16 @@
 
     om.cancelSubstrateForm = function(index) {
       angular.element('#modal-substrateshell'+index).modal('hide');
-      if (om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell === 1 &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].minimumSizeOfLiveOysters &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].maximumSizeOfLiveOysters &&
-      !om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].averageSizeOfLiveOysters) {
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index].totalNumberOfLiveOystersOnShell = 0;
-      }
+      om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[index] = angular.copy(om.substrate);
+
       om.substrate = {};
-      $rootScope.$broadcast('startIncrementalSavingLoop');
+      om.outerUploaders[index].clearQueue();
+      om.innerUploaders[index].clearQueue();
+      om.outerSubstrateURL = '';
+      om.innerSubstrateURL = '';
+
+      savingOff();
+      $rootScope.$broadcast('savingStop');
     };
 
     $scope.$on('saveValuesToScope', function() {
@@ -399,8 +423,18 @@
     });
 
     $scope.$on('incrementalSaveOysterMeasurement', function() {
+      savingOn();
       om.saveOnBlur();
     });
+
+    var checkAnyDone = function() {
+      for (var i = 0; i < om.substrateCount; i++) {
+        if (om.checkDone(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[i])) {
+          return true;
+        }
+      }
+      return false;
+    };
 
     om.saveOnBlur = function(successCallback, errorCallback) {
       if (om.protocolOysterMeasurement._id && ((om.form.oysterMeasurementForm.$touched && om.form.oysterMeasurementForm.$dirty) ||
@@ -411,8 +445,8 @@
         (om.cageConditionPhotoURL !== undefined && om.cageConditionPhotoURL !== null && om.cageConditionPhotoURL !== '') ||
         (om.protocolOysterMeasurement.measuringOysterGrowth !== undefined &&
         om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells !== undefined &&
-        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0 &&
-        om.checkDone(om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells[0]))))) {
+        om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells.length > 0 && checkAnyDone())))) {
+        savingOn();
         $rootScope.$broadcast('savingStart');
         $http.post('/api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/incremental-save',
         om.protocolOysterMeasurement)
@@ -438,6 +472,7 @@
             readFromScope();
             $rootScope.$broadcast('incrementalSaveOysterMeasurementSuccessful');
           }
+          savingOff();
           $rootScope.$broadcast('savingStop');
           if (successCallback) successCallback();
         })
@@ -445,10 +480,12 @@
           om.error = data.message;
           om.form.oysterMeasurementForm.$setSubmitted(true);
           $rootScope.$broadcast('incrementalSaveOysterMeasurementError');
+          savingOff();
           $rootScope.$broadcast('savingStop');
           if (errorCallback) errorCallback();
         });
       } else {
+        savingOff();
         $rootScope.$broadcast('savingStop');
         if (successCallback) successCallback();
       }
@@ -484,6 +521,7 @@
                 $scope.protocolOysterMeasurement = om.protocolOysterMeasurement;
                 readFromScope();
               }
+              savingOff();
               $rootScope.$broadcast('savingStop');
               spinner.stop();
             });
@@ -491,6 +529,7 @@
 
           om.cageConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
             om.error = response.message;
+            savingOff();
             $rootScope.$broadcast('savingStop');
             spinner.stop();
           };
@@ -498,6 +537,7 @@
           om.cageConditionUploader.onBeforeUploadItem = function(item) {
             item.url = 'api/protocol-oyster-measurements/' + om.protocolOysterMeasurement._id + '/upload-oyster-cage-condition';
           };
+          savingOn();
           $rootScope.$broadcast('savingStart');
           spinner = new Spinner({}).spin(document.getElementById('oyster-cage-condition-image-dropzone'));
           om.cageConditionUploader.uploadAll();
@@ -505,7 +545,6 @@
       } else if (om.protocolOysterMeasurement._id && om.cageConditionPhotoURL === '' &&
         om.protocolOysterMeasurement.conditionOfOysterCage &&
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
-        $rootScope.$broadcast('savingStart');
         om.protocolOysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = '';
         om.saveOnBlur();
       }
@@ -514,7 +553,7 @@
     $timeout(function() {
       if (om && om.protocolOysterMeasurement && om.protocolOysterMeasurement._id) {
         om.saveOnBlur();
-        $rootScope.$broadcast('startIncrementalSavingLoop');
+        //$rootScope.$broadcast('startIncrementalSavingLoop');
       }
     }, 500);
 
