@@ -175,7 +175,7 @@ exports.incrementalSave = function(req, res) {
   if (lesson) {
     lesson = _.extend(lesson, req.body);
     lesson.returnedNotes = '';
-    lesson.status = (lesson.status === 'pending') ? 'pending' : 'draft';
+    if (!req.body.initial) lesson.status = 'draft';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
