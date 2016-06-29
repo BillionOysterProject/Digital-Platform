@@ -27,9 +27,9 @@
     vm.saving = false;
     vm.valid = (vm.lesson.status === 'published') ? true : false;
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
-    vm.viewing = ($location.path().split(/[\s/]+/).pop() === 'edit' ||
-      $location.path().split(/[\s/]+/).pop() === 'draft' ||
-      $location.path().split(/[\s/]+/).pop() === 'create') ? false : true;
+    vm.viewing = ($location.path().split(/[\s/]+/).pop() !== 'edit' &&
+      $location.path().split(/[\s/]+/).pop() !== 'draft' &&
+      $location.path().split(/[\s/]+/).pop() !== 'create') ? true : false;
     vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
 
     vm.subjectAreasSelectConfig = {
