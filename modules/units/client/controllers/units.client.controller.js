@@ -130,7 +130,9 @@
 
     vm.initialSaveDraft = function() {
       if (vm.unit._id) {
-        $http.post('api/units/' + vm.unit._id + '/incremental-save', vm.unit)
+        var unit = angular.copy(vm.unit);
+        unit.initial = true;
+        $http.post('api/units/' + vm.unit._id + '/incremental-save', unit)
         .success(function(data, status, headers, config) {
           if (data.errors) {
             vm.error = data.errors;
@@ -161,7 +163,12 @@
     };
 
     $timeout(function() {
-      if (vm.form.unitForm && vm.unit._id && vm.unit.title) vm.initialSaveDraft();
+      if (vm.form.unitForm && vm.unit._id && vm.unit.title &&
+      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
+      $location.path().split(/[\s/]+/).pop() === 'draft' ||
+      $location.path().split(/[\s/]+/).pop() === 'create')) {
+        vm.initialSaveDraft();
+      }
     });
 
     // Remove existing Unit
@@ -171,7 +178,7 @@
 
     // Save Unit
     vm.save = function(isValid) {
-      startSaving();
+      stopIncrementalSavingLoop();
       // vm.unit.stageOne.essentialQuestions = [];
       // angular.forEach(vm.essentialQuestions, function(question) {
       //   if (question && question !== '') {
@@ -203,6 +210,7 @@
 
       function errorCallback(res) {
         vm.error = res.data.message;
+        startIncrementalSavingLoop();
       }
     };
 

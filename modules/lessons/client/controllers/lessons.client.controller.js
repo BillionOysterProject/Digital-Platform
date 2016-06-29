@@ -287,7 +287,9 @@
 
     vm.initialSaveDraft = function() {
       if (vm.lesson._id) {
-        $http.post('api/lessons/' + vm.lesson._id + '/incremental-save', vm.lesson)
+        var lesson = angular.copy(vm.lesson);
+        lesson.initial = true;
+        $http.post('api/lessons/' + vm.lesson._id + '/incremental-save', lesson)
         .success(function(data, status, headers, config) {
           if (data.errors) {
             vm.error = data.errors;
@@ -313,7 +315,12 @@
 
     $timeout(function() {
       setupValues();
-      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title) vm.initialSaveDraft();
+      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title &&
+      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
+      $location.path().split(/[\s/]+/).pop() === 'draft' ||
+      $location.path().split(/[\s/]+/).pop() === 'create')) {
+        vm.initialSaveDraft();
+      }
     });
 
     vm.featuredImageUploader = new FileUploader({
@@ -499,7 +506,7 @@
 
     // Save Lesson
     vm.save = function(isValid) {
-      startSaving();
+      stopIncrementalSavingLoop();
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
@@ -624,6 +631,7 @@
               _id: vm.lesson.unit
             };
             vm.error = errorMessage;
+            startIncrementalSavingLoop();
           };
 
           uploadFeaturedImage(lessonId, function() {
@@ -650,6 +658,7 @@
           console.log('error: ' + res.data.message);
           vm.error = res.data.message;
           vm.valid = false;
+          startIncrementalSavingLoop();
         }
         //angular.element('#modal-saved-lesson').modal('hide');
       }, 5000);
