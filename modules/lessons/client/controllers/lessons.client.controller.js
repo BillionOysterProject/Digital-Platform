@@ -286,6 +286,7 @@
     };
 
     vm.initialSaveDraft = function() {
+      console.log('initialSaveDraft');
       if (vm.lesson._id) {
         var lesson = angular.copy(vm.lesson);
         lesson.initial = true;
@@ -319,6 +320,7 @@
       ($location.path().split(/[\s/]+/).pop() === 'edit' ||
       $location.path().split(/[\s/]+/).pop() === 'draft' ||
       $location.path().split(/[\s/]+/).pop() === 'create')) {
+        console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
         vm.initialSaveDraft();
       }
     });
