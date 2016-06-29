@@ -365,7 +365,7 @@
     // Watch Featured Image
     $scope.$watch('vm.featuredImageURL', function(newValue, oldValue) {
       if (!vm.viewing) {
-        if (vm.lesson._id && vm.featuredImageURL !== '') {
+        if (vm.lesson._id && vm.featuredImageURL !== '' && oldValue !== undefined) {
           if (vm.featuredImageUploader.queue.length > 0) {
             var spinner;
             vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
