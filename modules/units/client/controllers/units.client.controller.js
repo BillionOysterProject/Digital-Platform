@@ -178,7 +178,7 @@
 
     // Save Unit
     vm.save = function(isValid) {
-      startSaving();
+      stopIncrementalSavingLoop();
       // vm.unit.stageOne.essentialQuestions = [];
       // angular.forEach(vm.essentialQuestions, function(question) {
       //   if (question && question !== '') {
@@ -210,6 +210,7 @@
 
       function errorCallback(res) {
         vm.error = res.data.message;
+        startIncrementalSavingLoop();
       }
     };
 
