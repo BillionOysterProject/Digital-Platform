@@ -392,7 +392,10 @@
             startSaving();
             vm.featuredImageUploader.uploadAll();
           }
-        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage && oldValue !== undefined) {
+        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage &&
+          oldValue !== undefined && oldValue !== null) {
+          console.log('oldValue !== undefined', (oldValue !== undefined));
+          console.log('oldValue !== null', (oldValue !== null));
           vm.lesson.featuredImage.path = '';
           console.log('featuredImage force save new:' + newValue + ' old: ' + oldValue);
           vm.saveOnBlur(true);
