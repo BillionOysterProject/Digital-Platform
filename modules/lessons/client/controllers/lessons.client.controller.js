@@ -506,7 +506,7 @@
 
     // Save Lesson
     vm.save = function(isValid) {
-      startSaving();
+      stopIncrementalSavingLoop();
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
@@ -631,6 +631,7 @@
               _id: vm.lesson.unit
             };
             vm.error = errorMessage;
+            startIncrementalSavingLoop();
           };
 
           uploadFeaturedImage(lessonId, function() {
@@ -657,6 +658,7 @@
           console.log('error: ' + res.data.message);
           vm.error = res.data.message;
           vm.valid = false;
+          startIncrementalSavingLoop();
         }
         //angular.element('#modal-saved-lesson').modal('hide');
       }, 5000);
