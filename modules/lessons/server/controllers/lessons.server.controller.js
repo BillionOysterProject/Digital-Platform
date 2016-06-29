@@ -284,7 +284,6 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          console.log('lesson', lesson);
           res.json(lesson);
         }
       });

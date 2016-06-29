@@ -209,6 +209,7 @@
     // Incremental Saving
     var save;
     var stopIncrementalSavingLoop = function() {
+      console.log('stopIncrementalSavingLoop');
       if (angular.isDefined(save)) {
         $interval.cancel(save);
         save = undefined;
@@ -216,9 +217,11 @@
     };
 
     var startIncrementalSavingLoop = function() {
+      console.log('startIncrementalSavingLoop');
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
+        console.log('incremental save');
         vm.saveOnBlur();
       }, 15000);
     };
@@ -236,9 +239,11 @@
     };
 
     vm.saveOnBlur = function(force, callback) {
+      console.log('saveOnBlur');
       var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
 
       if (!vm.lesson._id || force ||(vm.form.lessonForm && !vm.form.lessonForm.$pristine && vm.form.lessonForm.$dirty)) {
+        console.log('saving');
         startSaving();
         $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
         .success(function(data, status, headers, config) {

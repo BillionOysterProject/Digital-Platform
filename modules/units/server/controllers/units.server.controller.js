@@ -160,7 +160,6 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          console.log('unit', unit);
           res.json(unit);
         }
       });
