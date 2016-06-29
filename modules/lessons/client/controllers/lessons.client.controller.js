@@ -27,6 +27,9 @@
     vm.saving = false;
     vm.valid = (vm.lesson.status === 'published') ? true : false;
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
+    vm.viewing = ($location.path().split(/[\s/]+/).pop() === 'edit' ||
+      $location.path().split(/[\s/]+/).pop() === 'draft' ||
+      $location.path().split(/[\s/]+/).pop() === 'create') ? false : true;
     vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
 
     vm.subjectAreasSelectConfig = {
@@ -321,10 +324,7 @@
 
     $timeout(function() {
       setupValues();
-      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title &&
-      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
-      $location.path().split(/[\s/]+/).pop() === 'draft' ||
-      $location.path().split(/[\s/]+/).pop() === 'create')) {
+      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title && !vm.viewing) {
         console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
         vm.initialSaveDraft();
       }
@@ -364,48 +364,50 @@
 
     // Watch Featured Image
     $scope.$watch('vm.featuredImageURL', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.featuredImageURL !== '') {
-        if (vm.featuredImageUploader.queue.length > 0) {
-          var spinner;
-          vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            vm.featuredImageUploader.removeFromQueue(fileItem);
-            LessonsService.get({
-              lessonId: vm.lesson._id
-            }, function(data) {
-              vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+      if (!vm.viewing) {
+        if (vm.lesson._id && vm.featuredImageURL !== '') {
+          if (vm.featuredImageUploader.queue.length > 0) {
+            var spinner;
+            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              vm.featuredImageUploader.removeFromQueue(fileItem);
+              LessonsService.get({
+                lessonId: vm.lesson._id
+              }, function(data) {
+                vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+                spinner.stop();
+                stopSaving();
+              });
+            };
+
+            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+              vm.error = response.message;
               spinner.stop();
               stopSaving();
-            });
-          };
+            };
 
-          vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-            vm.error = response.message;
-            spinner.stop();
-            stopSaving();
-          };
-
-          vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/lessons/' + vm.lesson._id + '/upload-featured-image';
-          };
-          spinner = new Spinner({}).spin(document.getElementById('lesson-featured-image'));
-          startSaving();
-          vm.featuredImageUploader.uploadAll();
+            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + vm.lesson._id + '/upload-featured-image';
+            };
+            spinner = new Spinner({}).spin(document.getElementById('lesson-featured-image'));
+            startSaving();
+            vm.featuredImageUploader.uploadAll();
+          }
+        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage) {
+          vm.lesson.featuredImage.path = '';
+          vm.saveOnBlur(true);
         }
-      } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage) {
-        vm.lesson.featuredImage.path = '';
-        vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.handouts.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
         vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.handoutFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.handouts) {
+      if (vm.lesson._id && vm.handouts && !vm.viewing) {
         if (vm.handoutFilesUploader.queue.length > 0) {
           var spinner;
           vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
@@ -436,7 +438,7 @@
     });
 
     $scope.$watch('vm.resourceFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
         vm.saveOnBlur(true);
       }
@@ -474,14 +476,14 @@
     };
 
     $scope.$watch('vm.stateTestQuestionsFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
         vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.stateTestQuestionsFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.stateTestQuestionsFiles) {
+      if (vm.lesson._id && vm.stateTestQuestionsFiles && !vm.viewing) {
         if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
           var spinner;
           vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
