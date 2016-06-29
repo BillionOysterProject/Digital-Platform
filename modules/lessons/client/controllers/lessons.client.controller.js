@@ -365,7 +365,7 @@
     // Watch Featured Image
     $scope.$watch('vm.featuredImageURL', function(newValue, oldValue) {
       if (!vm.viewing) {
-        if (vm.lesson._id && vm.featuredImageURL !== '' && oldValue !== undefined) {
+        if (vm.lesson._id && vm.featuredImageURL !== '') {
           if (vm.featuredImageUploader.queue.length > 0) {
             var spinner;
             vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
@@ -392,7 +392,7 @@
             startSaving();
             vm.featuredImageUploader.uploadAll();
           }
-        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage) {
+        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage && oldValue !== undefined) {
           vm.lesson.featuredImage.path = '';
           console.log('featuredImage force save new:' + newValue + ' old: ' + oldValue);
           vm.saveOnBlur(true);
