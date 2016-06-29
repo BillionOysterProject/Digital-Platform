@@ -323,8 +323,8 @@
     };
 
     $timeout(function() {
-      setupValues();
       if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title && !vm.viewing) {
+        setupValues();
         console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
         vm.initialSaveDraft();
       }
@@ -394,6 +394,7 @@
           }
         } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage) {
           vm.lesson.featuredImage.path = '';
+          console.log('featuredImage force save new:' + newValue + ' old: ' + oldValue);
           vm.saveOnBlur(true);
         }
       }
@@ -402,6 +403,7 @@
     $scope.$watch('vm.handouts.length', function(newValue, oldValue) {
       if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+        console.log('handouts length changed');
         vm.saveOnBlur(true);
       }
     });
@@ -440,6 +442,7 @@
     $scope.$watch('vm.resourceFiles.length', function(newValue, oldValue) {
       if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+        console.log('resource file length changed');
         vm.saveOnBlur(true);
       }
     });
@@ -478,6 +481,7 @@
     $scope.$watch('vm.stateTestQuestionsFiles.length', function(newValue, oldValue) {
       if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+        console.log('state test questions length changed');
         vm.saveOnBlur(true);
       }
     });
