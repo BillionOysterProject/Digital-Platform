@@ -110,8 +110,6 @@ exports.incrementalSave = function(req, res) {
 
   if (unit) {
     unit = _.extend(unit, req.body);
-    if (!unit.updated) unit.updated = [];
-    unit.updated.push(Date.now());
     if (!req.body.initial) unit.status = 'draft';
   } else {
     unit = new Unit(req.body);
