@@ -87,7 +87,6 @@ body {
         position: absolute;
         top: 12px;
         left: 70px;
-        display: none;
     }
 
     .sidebar .open .dropdown-menu {
@@ -231,61 +230,61 @@ body {
         MOBILE LAYOUT FRAMEWORK
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-        
+
 @media (max-width: 768px) {
 
     body { margin-top: 0; }
     .navbar { margin-bottom: 0; }
     .content { padding-left: 15px; }
-    
+
     .sidebar, .sidebar:hover {
         width: 100%;
         height: auto;
         position: relative;
     }
-    
+
         .sidebar .navbar-footer { display: none; }
         .sidebar .navbar-brand { height: 65px; margin: 5px 0; }
         .sidebar .navbar-brand img, .sidebar:hover .navbar-brand img { width: 50px; }
         .sidebar .text, .sidebar .open .dropdown-menu { display: block; }
-        
-        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a, 
-        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a:hover, 
+
+        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a,
+        .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
         .sidebar.navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
             background: transparent;
             color: #fff;
         }
-    
+
     .navbar-default {
         top: auto;
         left: auto;
         right: auto;
         position: relative;
     }
-        
+
         .navbar-nav { margin-top: 0; margin-bottom: 0; }
         .navbar-nav > li > a { padding-left: 30px; padding-right: 30px; }
-        
+
         .navbar-default .navbar-nav .open .dropdown-menu > li > a {
             padding-left: 68px;
         }
-        
+
     .content-fixed { position: relative; width: 100%; padding-left: 15px; }
     .content-fixed + div { padding-top: 0; }
-    
+
         .content-fixed .navbar-text { float: left; margin-right: 10px; }
-    
+
     .nav-justified > li {
         display: table-cell;
         width: 1%;
     }
-    
+
         .nav-justified > li > a  {
             border-bottom: none !important;
             border-radius: 4px 4px 0 0 !important;
             margin-bottom: 0 !important;
         }
-    
+
     .page-header {
         margin-top: 0;
     }
@@ -431,35 +430,35 @@ a {
             opacity: 0.8;
             color: #fff;
         }
-        
-    .btn-default:active, 
-    .btn-primary:active, 
-    .btn-success:active, 
-    .btn-info:active, 
-    .btn-warning:active, 
-    .btn-danger:active, 
-    .btn-default.active, 
-    .btn-primary.active, 
-    .btn-success.active, 
-    .btn-info.active, 
-    .btn-warning.active, 
+
+    .btn-default:active,
+    .btn-primary:active,
+    .btn-success:active,
+    .btn-info:active,
+    .btn-warning:active,
+    .btn-danger:active,
+    .btn-default.active,
+    .btn-primary.active,
+    .btn-success.active,
+    .btn-info.active,
+    .btn-warning.active,
     .btn-danger.active {
         -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
     }
-            
-        .btn-default:active .hidden, 
+
+        .btn-default:active .hidden,
         .btn-primary:active .hidden,
-        .btn-success:active .hidden, 
+        .btn-success:active .hidden,
         .btn-info:active .hidden,
-        .btn-warning:active .hidden, 
-        .btn-danger:active .hidden, 
-        .btn-default.active .hidden, 
-        .btn-primary.active .hidden, 
-        .btn-success.active .hidden, 
+        .btn-warning:active .hidden,
+        .btn-danger:active .hidden,
+        .btn-default.active .hidden,
+        .btn-primary.active .hidden,
+        .btn-success.active .hidden,
         .btn-info.active .hidden,
-        .btn-warning.active .hidden, 
+        .btn-warning.active .hidden,
         .btn-danger.active .hidden {
             display: inline !important;
             font-weight: bold;
