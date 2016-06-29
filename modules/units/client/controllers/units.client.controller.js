@@ -203,6 +203,7 @@
       }
 
       function successCallback(res) {
+        stopIncrementalSavingLoop();
         $state.go('units.view', {
           unitId: res._id
         });

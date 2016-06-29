@@ -543,6 +543,7 @@
           function goToView(lessonId) {
             content.modal('hide');
             $timeout(function () {
+              stopIncrementalSavingLoop();
               $state.go('lessons.view', {
                 lessonId: lessonId
               });
