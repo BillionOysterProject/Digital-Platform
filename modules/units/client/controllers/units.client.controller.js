@@ -115,10 +115,14 @@
     };
 
     vm.saveDraft = function() {
+      stopIncrementalSavingLoop();
       var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
+      vm.unit.status = 'draft';
       $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
       .success(function(data, status, headers, config) {
-        $state.go('units.list');
+        $state.go('units.view', {
+          unitId: unitId
+        });
       })
       .error(function(data, status, headers, config) {
         vm.error = data.message;
