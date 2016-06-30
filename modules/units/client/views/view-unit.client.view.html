@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="pull-right">
-                    <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">Edit</a>
+                    <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">{{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
                     <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
                     <!-- TODO: Wire up download <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>-->
                 </div>

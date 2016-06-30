@@ -170,6 +170,7 @@ exports.read = function(req, res) {
  * Incrementally save a lesson
  */
 exports.incrementalSave = function(req, res) {
+  console.log('incrementalSave');
   var lesson = req.lesson;
 
   if (lesson) {

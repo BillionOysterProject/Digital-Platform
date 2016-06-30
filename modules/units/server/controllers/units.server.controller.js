@@ -106,6 +106,7 @@ exports.read = function (req, res) {
  * Incrementally save a unit
  */
 exports.incrementalSave = function(req, res) {
+  console.log('incrementalSave');
   var unit = req.unit;
 
   if (unit) {

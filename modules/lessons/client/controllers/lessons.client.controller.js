@@ -27,6 +27,9 @@
     vm.saving = false;
     vm.valid = (vm.lesson.status === 'published') ? true : false;
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
+    vm.viewing = ($location.path().split(/[\s/]+/).pop() !== 'edit' &&
+      $location.path().split(/[\s/]+/).pop() !== 'draft' &&
+      $location.path().split(/[\s/]+/).pop() !== 'create') ? true : false;
     vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
 
     vm.subjectAreasSelectConfig = {
@@ -209,6 +212,7 @@
     // Incremental Saving
     var save;
     var stopIncrementalSavingLoop = function() {
+      console.log('stopIncrementalSavingLoop');
       if (angular.isDefined(save)) {
         $interval.cancel(save);
         save = undefined;
@@ -216,9 +220,11 @@
     };
 
     var startIncrementalSavingLoop = function() {
+      console.log('startIncrementalSavingLoop');
       if (angular.isDefined(save)) return;
 
       save = $interval(function() {
+        console.log('incremental save');
         vm.saveOnBlur();
       }, 15000);
     };
@@ -236,9 +242,11 @@
     };
 
     vm.saveOnBlur = function(force, callback) {
+      console.log('saveOnBlur');
       var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
 
       if (!vm.lesson._id || force ||(vm.form.lessonForm && !vm.form.lessonForm.$pristine && vm.form.lessonForm.$dirty)) {
+        console.log('saving');
         startSaving();
         $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
         .success(function(data, status, headers, config) {
@@ -272,10 +280,14 @@
     };
 
     vm.saveDraft = function() {
+      stopIncrementalSavingLoop();
       var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
+      vm.lesson.status = 'draft';
       $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
       .success(function(data, status, headers, config) {
-        $state.go('lessons.list');
+        $state.go('lessons.view', {
+          lessonId: lessonId
+        });
       })
       .error(function(data, status, headers, config) {
         vm.error = data.message;
@@ -286,6 +298,7 @@
     };
 
     vm.initialSaveDraft = function() {
+      console.log('initialSaveDraft');
       if (vm.lesson._id) {
         var lesson = angular.copy(vm.lesson);
         lesson.initial = true;
@@ -314,11 +327,9 @@
     };
 
     $timeout(function() {
-      setupValues();
-      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title &&
-      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
-      $location.path().split(/[\s/]+/).pop() === 'draft' ||
-      $location.path().split(/[\s/]+/).pop() === 'create')) {
+      if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title && !vm.viewing) {
+        setupValues();
+        console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
         vm.initialSaveDraft();
       }
     });
@@ -357,48 +368,55 @@
 
     // Watch Featured Image
     $scope.$watch('vm.featuredImageURL', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.featuredImageURL !== '') {
-        if (vm.featuredImageUploader.queue.length > 0) {
-          var spinner;
-          vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            vm.featuredImageUploader.removeFromQueue(fileItem);
-            LessonsService.get({
-              lessonId: vm.lesson._id
-            }, function(data) {
-              vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+      if (!vm.viewing) {
+        if (vm.lesson._id && vm.featuredImageURL !== '') {
+          if (vm.featuredImageUploader.queue.length > 0) {
+            var spinner;
+            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              vm.featuredImageUploader.removeFromQueue(fileItem);
+              LessonsService.get({
+                lessonId: vm.lesson._id
+              }, function(data) {
+                vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+                spinner.stop();
+                stopSaving();
+              });
+            };
+
+            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+              vm.error = response.message;
               spinner.stop();
               stopSaving();
-            });
-          };
+            };
 
-          vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-            vm.error = response.message;
-            spinner.stop();
-            stopSaving();
-          };
-
-          vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/lessons/' + vm.lesson._id + '/upload-featured-image';
-          };
-          spinner = new Spinner({}).spin(document.getElementById('lesson-featured-image'));
-          startSaving();
-          vm.featuredImageUploader.uploadAll();
+            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/lessons/' + vm.lesson._id + '/upload-featured-image';
+            };
+            spinner = new Spinner({}).spin(document.getElementById('lesson-featured-image'));
+            startSaving();
+            vm.featuredImageUploader.uploadAll();
+          }
+        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage &&
+          oldValue !== undefined && oldValue !== null) {
+          console.log('oldValue !== undefined', (oldValue !== undefined));
+          console.log('oldValue !== null', (oldValue !== null));
+          vm.lesson.featuredImage.path = '';
+          console.log('featuredImage force save new:' + newValue + ' old: ' + oldValue);
+          vm.saveOnBlur(true);
         }
-      } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage) {
-        vm.lesson.featuredImage.path = '';
-        vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.handouts.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+        console.log('handouts length changed');
         vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.handoutFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.handouts) {
+      if (vm.lesson._id && vm.handouts && !vm.viewing) {
         if (vm.handoutFilesUploader.queue.length > 0) {
           var spinner;
           vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
@@ -429,8 +447,9 @@
     });
 
     $scope.$watch('vm.resourceFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+        console.log('resource file length changed');
         vm.saveOnBlur(true);
       }
     });
@@ -467,14 +486,15 @@
     };
 
     $scope.$watch('vm.stateTestQuestionsFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue) {
+      if (newValue < oldValue && !vm.viewing) {
         vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+        console.log('state test questions length changed');
         vm.saveOnBlur(true);
       }
     });
 
     $scope.$watch('vm.stateTestQuestionsFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.stateTestQuestionsFiles) {
+      if (vm.lesson._id && vm.stateTestQuestionsFiles && !vm.viewing) {
         if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
           var spinner;
           vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
@@ -543,6 +563,7 @@
           function goToView(lessonId) {
             content.modal('hide');
             $timeout(function () {
+              stopIncrementalSavingLoop();
               $state.go('lessons.view', {
                 lessonId: lessonId
               });
