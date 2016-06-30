@@ -106,13 +106,12 @@ exports.read = function (req, res) {
  * Incrementally save a unit
  */
 exports.incrementalSave = function(req, res) {
+  console.log('incrementalSave');
   var unit = req.unit;
 
   if (unit) {
     unit = _.extend(unit, req.body);
-    if (!unit.updated) unit.updated = [];
-    unit.updated.push(Date.now());
-    unit.status = 'draft';
+    if (!req.body.initial) unit.status = 'draft';
   } else {
     unit = new Unit(req.body);
     unit.user = req.user;

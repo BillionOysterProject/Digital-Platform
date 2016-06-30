@@ -115,10 +115,14 @@
     };
 
     vm.saveDraft = function() {
+      stopIncrementalSavingLoop();
       var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
+      vm.unit.status = 'draft';
       $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
       .success(function(data, status, headers, config) {
-        $state.go('units.list');
+        $state.go('units.view', {
+          unitId: unitId
+        });
       })
       .error(function(data, status, headers, config) {
         vm.error = data.message;
@@ -129,8 +133,11 @@
     };
 
     vm.initialSaveDraft = function() {
+      console.log('initialSaveDraft');
       if (vm.unit._id) {
-        $http.post('api/units/' + vm.unit._id + '/incremental-save', vm.unit)
+        var unit = angular.copy(vm.unit);
+        unit.initial = true;
+        $http.post('api/units/' + vm.unit._id + '/incremental-save', unit)
         .success(function(data, status, headers, config) {
           if (data.errors) {
             vm.error = data.errors;
@@ -161,7 +168,13 @@
     };
 
     $timeout(function() {
-      if (vm.form.unitForm && vm.unit._id && vm.unit.title) vm.initialSaveDraft();
+      if (vm.form.unitForm && vm.unit._id && vm.unit.title &&
+      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
+      $location.path().split(/[\s/]+/).pop() === 'draft' ||
+      $location.path().split(/[\s/]+/).pop() === 'create')) {
+        console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
+        vm.initialSaveDraft();
+      }
     });
 
     // Remove existing Unit
@@ -171,7 +184,7 @@
 
     // Save Unit
     vm.save = function(isValid) {
-      startSaving();
+      stopIncrementalSavingLoop();
       // vm.unit.stageOne.essentialQuestions = [];
       // angular.forEach(vm.essentialQuestions, function(question) {
       //   if (question && question !== '') {
@@ -196,6 +209,7 @@
       }
 
       function successCallback(res) {
+        stopIncrementalSavingLoop();
         $state.go('units.view', {
           unitId: res._id
         });
@@ -203,6 +217,7 @@
 
       function errorCallback(res) {
         vm.error = res.data.message;
+        startIncrementalSavingLoop();
       }
     };
 

@@ -170,12 +170,13 @@ exports.read = function(req, res) {
  * Incrementally save a lesson
  */
 exports.incrementalSave = function(req, res) {
+  console.log('incrementalSave');
   var lesson = req.lesson;
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
     lesson.returnedNotes = '';
-    lesson.status = (lesson.status === 'pending') ? 'pending' : 'draft';
+    if (!req.body.initial) lesson.status = 'draft';
 
     var existingHandouts = [];
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
