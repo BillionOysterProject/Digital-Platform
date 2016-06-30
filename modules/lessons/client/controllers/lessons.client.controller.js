@@ -280,10 +280,14 @@
     };
 
     vm.saveDraft = function() {
+      stopIncrementalSavingLoop();
       var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
+      vm.lesson.status = 'draft';
       $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
       .success(function(data, status, headers, config) {
-        $state.go('lessons.list');
+        $state.go('lessons.view', {
+          lessonId: lessonId
+        });
       })
       .error(function(data, status, headers, config) {
         vm.error = data.message;

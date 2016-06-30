@@ -224,7 +224,7 @@
                     </div>
                     <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
                     <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-                    <button class="btn btn-default" ng-click="vm.saveDraft()">Save draft</button>
+                    <a href="#" class="btn btn-default" type="button" ng-click="vm.saveDraft()">Save draft</a>
                     <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
                       {{vm.editing ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
                     <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>

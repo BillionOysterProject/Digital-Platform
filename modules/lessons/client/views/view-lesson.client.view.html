@@ -17,7 +17,7 @@
                 <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
                 <h6 ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'"
-                  ui-sref="{{vm.editLink}}">Edit</a>
+                  ui-sref="{{vm.editLink}}">{{vm.lesson.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
                 <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
                 <a class="btn btn-default" view-permissions="team lead" ng-click="vm.duplicateLesson()">Duplicate</a>
                 <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
