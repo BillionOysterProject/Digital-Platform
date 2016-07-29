@@ -155,73 +155,78 @@ exports.read = function (req, res) {
 /**
  * Update a expedition, assumes req.query.full was used
  */
-var updateSiteCondition = function(siteCondition, status, user, callback) {
-  if (siteCondition) {
-    siteCondition.status = status;
-    siteConditionHandler.updateInternal(siteCondition, siteCondition, user,
+var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, user, callback) {
+  if (siteConditionReq && siteConditionBody) {
+    siteConditionReq.status = status;
+    siteConditionBody.status = status;
+    siteConditionHandler.updateInternal(siteConditionReq, siteConditionBody, user,
       function(siteConditionSaved) {
         callback(siteConditionSaved);
       }, function(errorMessage) {
-        callback(siteCondition, errorMessage);
+        callback(siteConditionBody, errorMessage);
       });
   } else {
-    callback(siteCondition);
+    callback(siteConditionBody);
   }
 };
 
-var updateOysterMeasurement = function(oysterMeasurement, status, user, callback) {
-  if (oysterMeasurement) {
-    oysterMeasurement.status = status;
-    oysterMeasurementHandler.updateInternal(oysterMeasurement, oysterMeasurement, user,
+var updateOysterMeasurement = function(oysterMeasurementReq, oysterMeasurementBody, status, user, callback) {
+  if (oysterMeasurementReq && oysterMeasurementBody) {
+    oysterMeasurementReq.status = status;
+    oysterMeasurementBody.status = status;
+    oysterMeasurementHandler.updateInternal(oysterMeasurementReq, oysterMeasurementBody, user,
     function(oysterMeasurementSaved) {
       callback(oysterMeasurementSaved);
     }, function(errorMessage) {
-      callback(oysterMeasurement, errorMessage);
+      callback(oysterMeasurementBody, errorMessage);
     });
   } else {
-    callback(oysterMeasurement);
+    callback(oysterMeasurementBody);
   }
 };
 
-var updateMobileTrap = function(mobileTrap, status, user, callback) {
-  if (mobileTrap) {
-    mobileTrap.status = status;
-    mobileTrapHandler.updateInternal(mobileTrap, mobileTrap, user,
+var updateMobileTrap = function(mobileTrapReq, mobileTrapBody, status, user, callback) {
+  if (mobileTrapReq && mobileTrapBody) {
+    mobileTrapReq.status = status;
+    mobileTrapBody.status = status;
+    mobileTrapHandler.updateInternal(mobileTrapReq, mobileTrapBody, user,
     function(mobileTrapSaved) {
       callback(mobileTrapSaved);
     }, function(errorMessage) {
-      callback(mobileTrap, errorMessage);
+      callback(mobileTrapBody, errorMessage);
     });
   } else {
-    callback(mobileTrap);
+    callback(mobileTrapBody);
   }
 };
 
-var updateSettlementTiles = function(settlementTiles, status, user, callback) {
-  if (settlementTiles) {
-    settlementTiles.status = status;
-    settlementTilesHandler.updateInternal(settlementTiles, settlementTiles, user,
+var updateSettlementTiles = function(settlementTilesReq, settlementTilesBody, status, user, callback) {
+  if (settlementTilesReq && settlementTilesBody) {
+    settlementTilesReq.status = status;
+    settlementTilesBody.status = status;
+    settlementTilesHandler.updateInternal(settlementTilesReq, settlementTilesBody, user,
     function(settlementTilesSaved) {
       callback(settlementTilesSaved);
     }, function(errorMessage) {
-      callback(settlementTiles, errorMessage);
+      callback(settlementTilesBody, errorMessage);
     });
   } else {
-    callback(settlementTiles);
+    callback(settlementTilesBody);
   }
 };
 
-var updateWaterQuality = function(waterQuality, status, user, callback) {
-  if (waterQuality) {
-    waterQuality.status = status;
-    waterQualityHandler.updateInternal(waterQuality, waterQuality, user,
+var updateWaterQuality = function(waterQualityReq, waterQualityBody, status, user, callback) {
+  if (waterQualityReq && waterQualityBody) {
+    waterQualityReq.status = status;
+    waterQualityBody.status = status;
+    waterQualityHandler.updateInternal(waterQualityReq, waterQualityBody, user,
     function(waterQualitySaved) {
       callback(waterQualitySaved);
     }, function(errorMessage) {
-      callback(waterQuality, errorMessage);
+      callback(waterQualityBody, errorMessage);
     });
   } else {
-    callback(waterQuality);
+    callback(waterQualityBody);
   }
 };
 
@@ -231,31 +236,31 @@ var updateProtocols = function(expedition, siteCondition, oysterMeasurement, mob
   var allSuccessful = true;
   console.log('update protocols');
 
-  updateSiteCondition(siteCondition, status, user,
+  updateSiteCondition(expedition.protocols.siteCondition, siteCondition, status, user,
   function(siteConditionSaved, siteConditionErrorMessages) {
     if (siteConditionErrorMessages) {
       errorMessages.siteCondition = siteConditionErrorMessages;
       allSuccessful = false;
     }
-    updateOysterMeasurement(oysterMeasurement, status, user,
+    updateOysterMeasurement(expedition.protocols.oysterMeasurement, oysterMeasurement, status, user,
     function(oysterMeasurementSaved, oysterMeasurementErrorMessages) {
       if (oysterMeasurementErrorMessages) {
         errorMessages.oysterMeasurement = oysterMeasurementErrorMessages;
         allSuccessful = false;
       }
-      updateMobileTrap(mobileTrap, status, user,
+      updateMobileTrap(expedition.protocols.mobileTrap, mobileTrap, status, user,
       function(mobileTrapSaved, mobileTrapErrorMessages) {
         if (mobileTrapErrorMessages) {
           errorMessages.mobileTrap = mobileTrapErrorMessages;
           allSuccessful = false;
         }
-        updateSettlementTiles(settlementTiles, status, user,
+        updateSettlementTiles(expedition.protocols.settlementTiles, settlementTiles, status, user,
         function(settlementTilesSaved, settlementTilesErrorMessages) {
           if (settlementTilesErrorMessages) {
             errorMessages.settlementTiles = settlementTilesErrorMessages;
             allSuccessful = false;
           }
-          updateWaterQuality(waterQuality, status, user,
+          updateWaterQuality(expedition.protocols.waterQuality, waterQuality, status, user,
           function(waterQualitySaved, waterQualityErrorMessages) {
             if (waterQualityErrorMessages) {
               errorMessages.waterQuality = waterQualityErrorMessages;

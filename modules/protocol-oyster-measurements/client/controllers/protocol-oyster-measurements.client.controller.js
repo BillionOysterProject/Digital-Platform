@@ -359,15 +359,21 @@
               var updatedProtocol = ProtocolOysterMeasurementsService.get({
                 oysterMeasurementId: $scope.oysterMeasurement._id
               }, function(data) {
-                $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = data.conditionOfOysterCage.oysterCagePhoto;
-                $scope.cageConditionPhotoURL = ($scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
-                $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) ?
-                $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+                if (data.conditionOfOysterCage && data.conditionOfOysterCage.oysterCagePhoto) {
+                  $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = data.conditionOfOysterCage.oysterCagePhoto;
+                  $scope.cageConditionPhotoURL = ($scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) ?
+                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+                }
 
-                var substrateShells = data.measuringOysterGrowth.substrateShells;
-                for (var i = 0; i < substrateShells.length; i++) {
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto = substrateShells[i].outerSidePhoto;
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto = substrateShells[i].innerSidePhoto;
+                if (data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
+                  var substrateShells = data.measuringOysterGrowth.substrateShells;
+                  for (var i = 0; i < substrateShells.length; i++) {
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].outerSidePhoto =
+                      substrateShells[i].outerSidePhoto;
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].innerSidePhoto =
+                      substrateShells[i].innerSidePhoto;
+                  }
                 }
                 saveSuccessCallback();
               });

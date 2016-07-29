@@ -286,14 +286,17 @@
           var updatedProtocol = ProtocolMobileTrapsService.get({
             mobileTrapId: $scope.mobileTrap._id
           }, function(data) {
-            console.log('data', data);
-            var organisms = data.mobileOrganisms;
-            for (var i = 0; i < organisms.length; i++) {
-              $scope.mobileTrap.mobileOrganisms[i].sketchPhoto = organisms[i].sketchPhoto;
-            }
-            setupMobileOrganisms(function() {
+            if (data.mobileOrganisms) {
+              var organisms = data.mobileOrganisms;
+              for (var i = 0; i < organisms.length; i++) {
+                $scope.mobileTrap.mobileOrganisms[i].sketchPhoto = organisms[i].sketchPhoto;
+              }
+              setupMobileOrganisms(function() {
+                saveSuccessCallback();
+              });
+            } else {
               saveSuccessCallback();
-            });
+            }
           });
         }, function(errorMessage) {
           $scope.mobileTrapErrors = errorMessage;

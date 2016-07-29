@@ -171,15 +171,19 @@
             var updatedProtocol = ProtocolSiteConditionsService.get({
               siteConditionId: $scope.siteCondition._id
             }, function(data) {
-              $scope.siteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
-              $scope.waterConditionPhotoURL = ($scope.siteCondition.waterConditions.waterConditionPhoto &&
-                $scope.siteCondition.waterConditions.waterConditionPhoto.path) ?
-                $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+              if (data.waterConditions && data.waterConditions.waterConditionPhoto) {
+                $scope.siteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
+                $scope.waterConditionPhotoURL = ($scope.siteCondition.waterConditions.waterConditionPhoto &&
+                  $scope.siteCondition.waterConditions.waterConditionPhoto.path) ?
+                  $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+              }
 
-              $scope.siteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
-              $scope.landConditionPhotoURL = ($scope.siteCondition.landConditions.landConditionPhoto &&
-              $scope.siteCondition.landConditions.landConditionPhoto.path) ?
-              $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+              if (data.landConditions && data.landConditions.landConditionPhoto) {
+                $scope.siteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
+                $scope.landConditionPhotoURL = ($scope.siteCondition.landConditions.landConditionPhoto &&
+                  $scope.siteCondition.landConditions.landConditionPhoto.path) ?
+                  $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+              }
 
               callback();
             });

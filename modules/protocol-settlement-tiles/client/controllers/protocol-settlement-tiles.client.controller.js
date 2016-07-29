@@ -237,12 +237,14 @@
           var updatedProtocol = ProtocolSettlementTilesService.get({
             settlementTileId: $scope.settlementTiles._id
           }, function(data) {
-            var tiles = data.settlementTiles;
-            for (var i = 0; i < tiles.length; i++) {
-              $scope.settlementTiles.settlementTiles[i].tilePhoto = tiles[i].tilePhoto;
-              $scope.settlementTiles.settlementTiles[i].imageUrl = ($scope.settlementTiles.settlementTiles[i].tilePhoto &&
-              $scope.settlementTiles.settlementTiles[i].tilePhoto.path) ?
-              $scope.settlementTiles.settlementTiles[i].tilePhoto.path : '';
+            if (data.settlementTiles) {
+              var tiles = data.settlementTiles;
+              for (var i = 0; i < tiles.length; i++) {
+                $scope.settlementTiles.settlementTiles[i].tilePhoto = tiles[i].tilePhoto;
+                $scope.settlementTiles.settlementTiles[i].imageUrl = ($scope.settlementTiles.settlementTiles[i].tilePhoto &&
+                  $scope.settlementTiles.settlementTiles[i].tilePhoto.path) ?
+                  $scope.settlementTiles.settlementTiles[i].tilePhoto.path : '';
+              }
             }
             callback();
           });
