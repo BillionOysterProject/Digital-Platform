@@ -6,310 +6,224 @@
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
   ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
-  'lodash', 'Authentication', 'FileUploader', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
-  'WaterFlowService', 'ShorelineTypesService', 'TeamMembersService'];
+  'lodash', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
+  'WaterFlowService', 'ShorelineTypesService', 'ProtocolSiteConditionsService'];
 
   function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
-    lodash, Authentication, FileUploader, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
-    WaterFlowService, ShorelineTypesService, TeamMembersService) {
-    var sc = this;
+    lodash, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
+    WaterFlowService, ShorelineTypesService) {
 
-    var readFromScope = function() {
-      sc.protocolSiteCondition = new ProtocolSiteConditionsService($scope.protocolSiteCondition);
-      sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
-        sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
-        sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-      sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
-        sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
-        sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-      sc.protocolSiteCondition.collectionTime = moment(sc.protocolSiteCondition.collectionTime).startOf('minute').toDate();
-      if (sc.protocolSiteCondition.tideConditions === undefined) {
-        sc.protocolSiteCondition.tideConditions = {
-          closestHighTide: moment().startOf('minute').toDate(),
-          closestLowTide: moment().startOf('minute').toDate()
-        };
-      } else {
-        sc.protocolSiteCondition.tideConditions.closestHighTide = (sc.protocolSiteCondition.tideConditions.closestHighTide) ?
-          moment(sc.protocolSiteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
-        sc.protocolSiteCondition.tideConditions.closestLowTide = (sc.protocolSiteCondition.tideConditions.closestLowTide) ?
-          moment(sc.protocolSiteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
-      }
-      if (!sc.protocolSiteCondition.landConditions) {
-        sc.protocolSiteCondition.landConditions = {
-          shorelineSurfaceCoverEstPer: {
-            imperviousSurfacePer: 0,
-            perviousSurfacePer: 0,
-            vegetatedSurfacePer: 0
-          }
-        };
-      }
-
-      $scope.protocolSiteCondition = sc.protocolSiteCondition;
-    };
-
-    $scope.$on('readSiteConditionFromScope', function() {
-      readFromScope();
-    });
-
-    // Set up Protocol Site Condition
-    sc.protocolSiteCondition = {};
-    if ($stateParams.protocolSiteConditionId) {
-      ProtocolSiteConditionsService.get({
-        siteConditionId: $stateParams.protocolSiteConditionId
-      }, function(data) {
-        $scope.protocolSiteCondition = data;
-        readFromScope();
-      });
-    } else if ($scope.protocolSiteCondition) {
-      readFromScope();
+    // Set up initial values
+    $scope.siteCondition.collectionTime = moment($scope.siteCondition.collectionTime).startOf('minute').toDate();
+    $scope.waterConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.waterConditions &&
+      $scope.siteCondition.waterConditions.waterConditionPhoto) ?
+      $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+    $scope.landConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.landConditions &&
+      $scope.siteCondition.landConditions.landConditionPhoto) ?
+      $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+    if ($scope.siteCondition.tideConditions === undefined) {
+      $scope.siteCondition.tideConditions = {
+        closestHighTide: moment().startOf('minute').toDate(),
+        closestLowTide: moment().startOf('minute').toDate()
+      };
     } else {
-      $scope.protocolSiteCondition = new ProtocolSiteConditionsService();
-      readFromScope();
+      $scope.siteCondition.tideConditions.closestHighTide = ($scope.siteCondition.tideConditions.closestHighTide) ?
+        moment($scope.siteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
+      $scope.siteCondition.tideConditions.closestLowTide = ($scope.siteCondition.tideConditions.closestLowTide) ?
+        moment($scope.siteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
+    }
+    if (!$scope.siteCondition.landConditions) {
+      $scope.siteCondition.landConditions = {
+        shorelineSurfaceCoverEstPer: {
+          imperviousSurfacePer: 0,
+          perviousSurfacePer: 0,
+          vegetatedSurfacePer: 0
+        }
+      };
     }
 
-    sc.weatherConditions = WeatherConditionsService.query();
-    sc.waterColors = WaterColorsService.query();
-    sc.waterFlows = WaterFlowService.query();
-    sc.shorelineTypes = ShorelineTypesService.query();
+    // Get the values for the dropdowns
+    $scope.weatherConditions = WeatherConditionsService.query();
+    $scope.waterColors = WaterColorsService.query();
+    $scope.waterFlows = WaterFlowService.query();
+    $scope.shorelineTypes = ShorelineTypesService.query();
 
-    sc.authentication = Authentication;
-    sc.error = null;
-    sc.form = {};
-
-    sc.teamMemberSelectConfig = {
-      mode: 'tags-id',
-      id: '_id',
-      text: 'displayName',
-      textLookup: function(id) {
-        return TeamMembersService.get({ memberId: id }).$promise;
-      },
-      options: function(searchText) {
-        return TeamMembersService.query();
-      }
-    };
-
-    sc.dateTime = {
-      min: moment().subtract(1, 'year').toDate(),
-      max: moment().add(1, 'year').toDate()
-    };
-
-    sc.garbageExtent = [
+    $scope.garbageExtent = [
       { label: 'None', value: 'none' },
       { label: 'Sporadic', value: 'sporadic' },
       { label: 'Common', value: 'common' },
       { label: 'Extensive', value: 'extensive' }
     ];
 
-    sc.trueFalse = [
+    $scope.trueFalse = [
       { label: 'Yes', value: true },
       { label: 'No', value: false }
     ];
 
-    sc.waterConditionUploader = new FileUploader({
-      alias: 'newWaterConditionPicture',
-    });
+    $scope.openMap = function() {
+      if ($scope.siteCondition.waterConditions &&
+      $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes &&
+      $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true &&
+      $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location === undefined) {
+        $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location = {
+          latitude: $scope.siteCondition.latitude,
+          longitude: $scope.siteCondition.longitude
+        };
+      }
 
-    sc.landConditionUploader = new FileUploader({
-      alias: 'newLandConditionPicture',
-    });
+      if ($scope.siteCondition.waterConditions &&
+      $scope.siteCondition.waterConditions.unmarkedOutfallPipes &&
+      $scope.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true &&
+      $scope.siteCondition.waterConditions.unmarkedOutfallPipes.location === undefined) {
+        $scope.siteCondition.waterConditions.unmarkedOutfallPipes.location = {
+          latitude: $scope.siteCondition.latitude,
+          longitude: $scope.siteCondition.longitude
+        };
+      }
+    };
 
-    $scope.$on('saveValuesToScope', function() {
-      $scope.protocolSiteCondition = sc.protocolSiteCondition;
-    });
+    $scope.saveSiteCondition = function(saveSuccessCallback, saveErrorCallback) {
+      if (!$scope.form.siteConditionForm.$valid) {
+        $scope.$broadcast('show-errors-check-validity', '$scope.form.siteConditionForm');
+      }
 
-    $scope.$on('incrementalSaveSiteCondition', function() {
-      sc.saveOnBlur();
-    });
+      if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
+        if ($scope.siteCondition.waterConditions.waterConditionPhoto.path) {
+          $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
+        } else if (!$scope.siteCondition.waterConditions) {
+          $scope.siteCondition.waterConditions = {
+            waterConditionPhoto: {
+              path: $scope.waterConditionPhotoURL
+            }
+          };
+        } else {
+          $scope.siteCondition.waterConditions.waterConditionPhoto = {
+            path: $scope.waterConditionPhotoURL
+          };
+        }
+      }
+      if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
+        if ($scope.siteCondition.landConditions.landConditionPhoto.path) {
+          $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
+        } else if (!$scope.siteCondition.landConditions) {
+          $scope.siteCondition.landConditions = {
+            landConditionPhoto: {
+              path: $scope.landConditionPhotoURL
+            }
+          };
+        } else {
+          $scope.siteCondition.landConditions.landConditionPhoto = {
+            path: $scope.landConditionPhotoURL
+          };
+        }
+      }
 
-    sc.saveOnBlur = function() {
-      if (sc.protocolSiteCondition._id && ((sc.form.siteConditionForm.$touched && sc.form.siteConditionForm.$dirty) ||
-        sc.form.siteConditionForm.$valid || (sc.protocolSiteCondition.meteorologicalConditions &&
-          sc.protocolSiteCondition.meteorologicalConditions.weatherConditions))) {
-        console.log('incremental-save');
-        $rootScope.$broadcast('savingStart');
-        $http.post('/api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/incremental-save',
-        sc.protocolSiteCondition)
+      // Use incremental-save
+      var siteConditionId = $scope.siteCondition._id;
+
+      saveImages(function() {
+        save();
+      });
+
+      function saveImages(callback) {
+        function uploadWaterConditionPhoto(siteConditionId, waterPhotoSuccessCallback, waterPhotoErrorCallback) {
+          if ($scope.waterConditionUploader.queue.length > 0) {
+            $scope.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              $scope.waterConditionUploader.removeFromQueue(fileItem);
+              waterPhotoSuccessCallback();
+            };
+
+            $scope.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
+              waterPhotoErrorCallback(response.message);
+            };
+
+            $scope.waterConditionUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-water-condition';
+            };
+            $scope.waterConditionUploader.uploadAll();
+          } else {
+            waterPhotoSuccessCallback();
+          }
+        }
+
+        function uploadLandConditionPhoto(siteConditionId, landPhotoSuccessCallback, landPhotoErrorCallback) {
+          if ($scope.landConditionUploader.queue.length > 0) {
+            $scope.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              $scope.landConditionUploader.removeFromQueue(fileItem);
+              landPhotoSuccessCallback();
+            };
+
+            $scope.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
+              landPhotoErrorCallback(response.message);
+            };
+
+            $scope.landConditionUploader.onBeforeUploadItem = function(item) {
+              item.url = 'api/protocol-site-conditions/' + siteConditionId + '/upload-land-condition';
+            };
+            $scope.landConditionUploader.uploadAll();
+          } else {
+            landPhotoSuccessCallback();
+          }
+        }
+
+        uploadWaterConditionPhoto(siteConditionId, function() {
+          uploadLandConditionPhoto(siteConditionId, function() {
+            var updatedProtocol = ProtocolSiteConditionsService.get({
+              siteConditionId: $scope.siteCondition._id
+            }, function(data) {
+              $scope.siteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
+              $scope.waterConditionPhotoURL = ($scope.siteCondition.waterConditions.waterConditionPhoto &&
+                $scope.siteCondition.waterConditions.waterConditionPhoto.path) ?
+                $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+
+              $scope.siteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
+              $scope.landConditionPhotoURL = ($scope.siteCondition.landConditions.landConditionPhoto &&
+              $scope.siteCondition.landConditions.landConditionPhoto.path) ?
+              $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+
+              callback();
+            });
+          }, function(errorMessage) {
+            $scope.siteConditionErrors = errorMessage;
+            callback();
+          });
+        }, function(errorMessage) {
+          $scope.siteConditionErrors = errorMessage;
+          callback();
+        });
+      }
+
+      function save() {
+        $http.post('/api/protocol-site-conditions/' + siteConditionId + '/incremental-save',
+        $scope.siteCondition)
         .success(function (data, status, headers, config) {
           if (data.errors) {
-            sc.error = data.errors;
-            sc.form.siteConditionForm.$setSubmitted(true);
-            $scope.protocolSiteCondition = sc.protocolSiteCondition;
-            readFromScope();
-            $rootScope.$broadcast('incrementalSaveSiteConditionError');
-          } else if (data.scribe) {
-            $rootScope.$broadcast('removeSubmittedProtocolTab', {
-              values: {
-                scribeName: data.scribe,
-                protocolName: 'Site Conditions',
-                protocol: 'protocol1'
-              }
-            });
-            $scope.protocolSiteCondition = null;
-          } else if (data.successful) {
-            sc.error = null;
-            $scope.protocolSiteCondition = sc.protocolSiteCondition;
-            readFromScope();
-            $rootScope.$broadcast('incrementalSaveSiteConditionSuccessful');
+            $scope.form.siteConditionForm.$setSubmitted(true);
+            errorCallback(data.errors);
+          } else {
+            $scope.siteConditionErrors = null;
+            successCallback();
           }
-          $rootScope.$broadcast('savingStop');
         })
         .error(function (data, status, headers, config) {
-          sc.error = data.message;
-          sc.form.siteConditionForm.$setSubmitted(true);
-          $rootScope.$broadcast('incrementalSaveSiteConditionError');
-          $rootScope.$broadcast('savingStop');
+          $scope.form.siteConditionForm.$setSubmitted(true);
+          errorCallback(data.message);
         });
-      } else {
-        $rootScope.$broadcast('savingStop');
       }
-    };
 
-    $scope.$watch('sc.waterConditionPhotoURL', function(newValue, oldValue) {
-      if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL !== '') {
-        if (sc.waterConditionUploader.queue.length > 0) {
-          var spinner;
-          sc.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            sc.waterConditionUploader.removeFromQueue(fileItem);
-            ProtocolSiteConditionsService.get({
-              siteConditionId: sc.protocolSiteCondition._id
-            }, function(data) {
-              if (data && data.scribeMember && data.scribeMember.username !== Authentication.user.username &&
-                data.status === 'submitted') {
-                $rootScope.$broadcast('removeSubmittedProtocolTab', {
-                  values: {
-                    scribeName: data.scribeMember.displayName,
-                    protocolName: 'Site Conditions',
-                    protocol: 'protocol1'
-                  }
-                });
-                $scope.protocolSiteCondition = null;
-              } else {
-                if (!sc.protocolSiteCondition.waterConditions) {
-                  sc.protocolSiteCondition.waterConditions = {};
-                }
-                sc.protocolSiteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
-                sc.waterConditionPhotoURL = (sc.protocolSiteCondition.waterConditions &&
-                  sc.protocolSiteCondition.waterConditions.waterConditionPhoto) ?
-                  sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path : '';
-                $scope.protocolSiteCondition = sc.protocolSiteCondition;
-                readFromScope();
-              }
-              $rootScope.$broadcast('savingStop');
-              spinner.stop();
-            });
-          };
+      function successCallback() {
+        $scope.siteConditionErrors = null;
+        saveSuccessCallback();
+      }
 
-          sc.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
-            sc.error = response.message;
-            $rootScope.$broadcast('savingStop');
-            spinner.stop();
-          };
-
-          sc.waterConditionUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/upload-water-condition';
-          };
-          $rootScope.$broadcast('savingStart');
-          spinner = new Spinner({}).spin(document.getElementById('water-condition-image-dropzone'));
-          sc.waterConditionUploader.uploadAll();
+      function errorCallback(errorMessage) {
+        if ($scope.siteConditionErrors && $scope.siteConditionErrors !== '') {
+          $scope.siteConditionErrors += '\n' + errorMessage;
+        } else {
+          $scope.siteConditionErrors = errorMessage;
         }
-      } else if (sc.protocolSiteCondition._id && sc.waterConditionPhotoURL === '' &&
-        sc.protocolSiteCondition.waterConditions && sc.protocolSiteCondition.waterConditions.waterConditionPhoto) {
-        $rootScope.$broadcast('savingStart');
-        sc.protocolSiteCondition.waterConditions.waterConditionPhoto.path = '';
-        sc.saveOnBlur();
+        saveErrorCallback();
       }
-    });
-
-    $scope.$watch('sc.landConditionPhotoURL', function(newValue, oldValue) {
-      if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL !== '') {
-        if (sc.landConditionUploader.queue.length > 0) {
-          var spinner;
-          sc.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            sc.landConditionUploader.removeFromQueue(fileItem);
-            ProtocolSiteConditionsService.get({
-              siteConditionId: sc.protocolSiteCondition._id
-            }, function(data) {
-              if (data && data.scribeMember && data.scribeMember.username !== Authentication.user.username &&
-                data.status === 'submitted') {
-                $rootScope.$broadcast('removeSubmittedProtocolTab', {
-                  values: {
-                    scribeName: data.scribeMember.displayName,
-                    protocolName: 'Site Conditions',
-                    protocol: 'protocol1'
-                  }
-                });
-                $scope.protocolSiteCondition = null;
-              } else {
-                if (!sc.protocolSiteCondition.landConditions) {
-                  sc.protocolSiteCondition.landConditions = {};
-                }
-                sc.protocolSiteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
-                sc.landConditionPhotoURL = (sc.protocolSiteCondition.landConditions &&
-                  sc.protocolSiteCondition.landConditions.landConditionPhoto) ?
-                  sc.protocolSiteCondition.landConditions.landConditionPhoto.path : '';
-                $scope.protocolSiteCondition = sc.protocolSiteCondition;
-                readFromScope();
-              }
-              $rootScope.$broadcast('savingStop');
-              spinner.stop();
-            });
-          };
-
-          sc.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
-            sc.error = response.message;
-            $rootScope.$broadcast('savingStop');
-            spinner.stop();
-          };
-
-          sc.landConditionUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/protocol-site-conditions/' + sc.protocolSiteCondition._id + '/upload-land-condition';
-          };
-          $rootScope.$broadcast('savingStart');
-          spinner = new Spinner({}).spin(document.getElementById('land-condition-image-dropzone'));
-          sc.landConditionUploader.uploadAll();
-        }
-      } else if (sc.protocolSiteCondition._id && sc.landConditionPhotoURL === '' &&
-        sc.protocolSiteCondition.landConditions && sc.protocolSiteCondition.landConditions.landConditionPhoto) {
-        $rootScope.$broadcast('savingStart');
-        sc.protocolSiteCondition.landConditions.landConditionPhoto.path = '';
-        sc.saveOnBlur();
-      }
-    });
-
-    $timeout(function() {
-      if (sc && sc.protocolSiteCondition && sc.protocolSiteCondition._id) {
-        sc.saveOnBlur();
-        $rootScope.$broadcast('startIncrementalSavingLoop');
-      }
-    });
-
-    sc.openMap = function() {
-      if (sc.protocolSiteCondition.waterConditions &&
-      sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes &&
-      sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true &&
-      sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location === undefined) {
-        sc.protocolSiteCondition.waterConditions.markedCombinedSewerOverflowPipes.location = {
-          latitude: sc.protocolSiteCondition.latitude,
-          longitude: sc.protocolSiteCondition.longitude
-        };
-      }
-
-      if (sc.protocolSiteCondition.waterConditions &&
-      sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes &&
-      sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true &&
-      sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location === undefined) {
-        sc.protocolSiteCondition.waterConditions.unmarkedOutfallPipes.location = {
-          latitude: sc.protocolSiteCondition.latitude,
-          longitude: sc.protocolSiteCondition.longitude
-        };
-      }
-
-      $rootScope.$broadcast('stopIncrementalSavingLoop');
     };
-
-    sc.closeMap = function() {
-      $rootScope.$broadcast('startIncrementalSavingLoop');
-    };
-
   }
 })();

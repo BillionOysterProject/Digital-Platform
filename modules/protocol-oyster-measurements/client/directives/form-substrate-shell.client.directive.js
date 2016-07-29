@@ -38,7 +38,6 @@
           var validate = function() {
             $scope.error = [];
             var isValid = true;
-            console.log('scope.outerSubstrateUrl', $scope.outerSubstrateUrl);
             if ($scope.outerSubstrateUrl === undefined || $scope.outerSubstrateUrl === null || $scope.outerSubstrateUrl === '') {
               //scope.form.substrateForm.$setValidity('outerImg', false);
               $scope.error.push('Outer substrate image is required');
@@ -53,19 +52,14 @@
           };
 
           $scope.updateMeasurementFields = function() {
-            console.log('updateMeasurementFields');
-            console.log('$scope.substrate.totalNumberOfLiveOystersOnShell', $scope.substrate.totalNumberOfLiveOystersOnShell);
-            console.log('$scope.substrate.measurements.length', $scope.substrate.measurements.length);
             if ($scope.substrate.totalNumberOfLiveOystersOnShell > $scope.substrate.measurements.length) {
               for (var i = $scope.substrate.measurements.length; i < $scope.substrate.totalNumberOfLiveOystersOnShell; i++) {
                 $scope.substrate.measurements.push({
                   sizeOfLiveOysterMM: null
                 });
               }
-              console.log('add $scope.substrate.measurements', $scope.substrate.measurements);
             } else if ($scope.substrate.totalNumberOfLiveOystersOnShell < $scope.substrate.measurements.length) {
               $scope.substrate.measurements.splice($scope.substrate.totalNumberOfLiveOystersOnShell);
-              console.log('remove $scope.substrate.measurements', $scope.substrate.measurements);
             }
           };
 
@@ -75,6 +69,12 @@
               $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
               return false;
             }
+            $scope.substrate.outerSidePhoto = {
+              path: $scope.outerSubstrateUrl
+            };
+            $scope.substrate.innerSidePhoto = {
+              path: $scope.innerSubstrateUrl
+            };
             $scope.saveFunction($scope.substrate, $scope.index, isValid);
           };
 

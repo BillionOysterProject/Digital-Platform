@@ -22,12 +22,13 @@
           });
 
           scope.submitForm = function(organismDetails, isValid) {
-            console.log('submitting');
             if (scope.sketchPhotoUrl === undefined || scope.sketchPhotoUrl === null || scope.sketchPhotoUrl === '') {
               scope.form.organismDetailsForm.$setValidity('sketchPhoto', false);
               return false;
             }
-            console.log('calling save function');
+
+            organismDetails.imageUrl = scope.sketchPhotoUrl;
+
             scope.saveFunction(organismDetails, scope.organismId, true);
           };
         }

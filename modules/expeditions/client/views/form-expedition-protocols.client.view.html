@@ -9,6 +9,10 @@
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
                     <!--<h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.user.displayName}}</h6>-->
                     <div class="pull-right">
+                        <!-- If not published -->
+                        <button class="btn btn-success navbar-btn" ng-click="vm.saveDraft()"
+                        ng-show="vm.expedition.status !== 'published'">Save Draft</button>
+
                         <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()" ng-disabled="!vm.protocolsSuccessful()"
@@ -112,28 +116,23 @@
     <div class="tab-content" ng-cloak>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol1.isActive === true}"
         id="protocol1" ng-show="vm.viewSiteCondition">
-            <form-protocol-site-condition protocol-site-condition="vm.siteCondition"
-            error="vm.siteConditionErrors" ng-cloak></form-protocol-site-condition>
+            <form-protocol-site-condition ng-cloak></form-protocol-site-condition>
         </div>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol2.isActive === true}"
         id="protocol2" ng-show="vm.viewOysterMeasurement">
-            <form-protocol-oyster-measurement protocol-oyster-measurement="vm.oysterMeasurement"
-            error="vm.oysterMeasurmentErrors" ng-cloak></form-protocol-oyster-measurement>
+            <form-protocol-oyster-measurement ng-cloak></form-protocol-oyster-measurement>
         </div>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol3.isActive === true}"
         id="protocol3" ng-show="vm.viewMobileTrap">
-            <form-protocol-mobile-trap protocol-mobile-trap="vm.mobileTrap"
-            error="vm.mobileTrapErrors" ng-cloak></form-protocol-mobile-trap>
+            <form-protocol-mobile-trap ng-cloak></form-protocol-mobile-trap>
         </div>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol4.isActive === true}"
         id="protocol4" ng-show="vm.viewSettlementTiles">
-            <form-protocol-settlement-tiles protocol-settlement-tiles="vm.settlementTiles"
-            error="vm.settlementTilesErrors" ng-cloak></form-protocol-settlement-tiles>
+            <form-protocol-settlement-tiles ng-cloak></form-protocol-settlement-tiles>
         </div>
         <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.tabs.protocol5.isActive === true}"
         id="protocol5" ng-show="vm.viewWaterQuality">
-            <form-protocol-water-quality protocol-water-quality="vm.waterQuality"
-            error="vm.waterQualityErrors" ng-cloak></form-protocol-water-quality>
+            <form-protocol-water-quality ng-cloak></form-protocol-water-quality>
         </div>
     </div>
     <section class="content">
