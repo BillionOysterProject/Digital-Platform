@@ -15,7 +15,7 @@
 
                         <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
-                        <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()" ng-disabled="!vm.protocolsSuccessful()"
+                        <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
                         ng-show="vm.checkStatusIncomplete() && vm.isTeamMember">Submit</button>
 
                         <!--If submitted by team member (Status: Under Review) -->
@@ -23,13 +23,13 @@
                         <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
-                        <button class="btn btn-success navbar-btn" ng-click="vm.publish()" ng-disabled="!vm.protocolsSuccessful()"
+                        <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
                         ng-show="(vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) &&
                         (vm.isTeamLead || vm.isAdmin)">Publish</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
-                        <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()" ng-disabled="!vm.protocolsSuccessful()"
+                        <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
                         ng-show="vm.checkStatusReturned() && vm.isTeamMember">Submit</button>
 
                         <!-- If published by team lead (Status: Published) -->

@@ -286,5 +286,34 @@
         saveErrorCallback();
       }
     };
+
+    $scope.validateSettlementTile = function(validateSuccessCallback, validateErrorCallback) {
+      if ($scope.settlementTiles && $scope.settlementTiles._id) {
+        $http.post('/api/protocol-settlement-tiles/' + $scope.settlementTiles._id + '/validate',
+          $scope.settlementTiles)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.settlementTilesForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              successCallback();
+            }
+          })
+          .error(function (data, status, header, config) {
+            $scope.form.settlementTilesForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        $scope.settlementTilesErrors = null;
+        validateSuccessCallback();
+      }
+
+      function errorCallback(errorMessage) {
+        $scope.settlementTilesErrors = errorMessage;
+        validateErrorCallback();
+      }
+    };
   }
 })();

@@ -276,6 +276,21 @@ exports.read = function (req, res) {
   res.json(siteCondition);
 };
 
+exports.validate = function (req, res) {
+  var siteCondition = req.body;
+  validateSiteCondition(siteCondition, function(siteConditionJSON) {
+    res.json({
+      siteCondition: siteCondition,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      siteCondition: siteCondition,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var siteCondition = req.siteCondition;
 

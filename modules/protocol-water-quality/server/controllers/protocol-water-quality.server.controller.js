@@ -98,6 +98,22 @@ exports.read = function (req, res) {
   res.json(waterQuality);
 };
 
+exports.validate = function (req, res) {
+  var waterQuality = req.body;
+  validateWaterQuality(waterQuality,
+  function(waterQualityJSON) {
+    res.json({
+      waterQuality: waterQuality,
+      successful: true
+    });
+  }, function (errorMessages) {
+    res.json({
+      waterQuality: waterQuality,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var waterQuality = req.waterQuality;
 

@@ -88,7 +88,9 @@
       }
 
       if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition.waterConditions.waterConditionPhoto.path) {
+        if ($scope.siteCondition && $scope.siteCondition.waterConditions &&
+          $scope.siteCondition.waterConditions.waterConditionPhoto &&
+          $scope.siteCondition.waterConditions.waterConditionPhoto.path) {
           $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
         } else if (!$scope.siteCondition.waterConditions) {
           $scope.siteCondition.waterConditions = {
@@ -103,7 +105,9 @@
         }
       }
       if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition.landConditions.landConditionPhoto.path) {
+        if ($scope.siteCondition && $scope.siteCondition.landConditions &&
+          $scope.siteCondition.landConditions.landConditionPhoto &&
+          $scope.siteCondition.landConditions.landConditionPhoto.path) {
           $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
         } else if (!$scope.siteCondition.landConditions) {
           $scope.siteCondition.landConditions = {
@@ -227,6 +231,35 @@
           $scope.siteConditionErrors = errorMessage;
         }
         saveErrorCallback();
+      }
+    };
+
+    $scope.validateSiteCondition = function(validateSuccessCallback, validateErrorCallback) {
+      if ($scope.siteCondition && $scope.siteCondition._id) {
+        $http.post('/api/protocol-site-conditions/' + $scope.siteCondition._id + '/validate',
+        $scope.siteCondition)
+        .success(function (data, status, headers, config) {
+          if (data.errors) {
+            $scope.form.siteConditionForm.$setSubmitted(true);
+            errorCallback(data.errors);
+          } else {
+            successCallback();
+          }
+        })
+        .error(function (data, status, headers, config) {
+          $scope.form.siteConditionForm.$setSubmitted(true);
+          errorCallback(data.message);
+        });
+      }
+
+      function successCallback() {
+        $scope.siteConditionErrors = null;
+        validateSuccessCallback();
+      }
+
+      function errorCallback(errorMessage) {
+        $scope.siteConditionErrors = errorMessage;
+        validateErrorCallback();
       }
     };
   }

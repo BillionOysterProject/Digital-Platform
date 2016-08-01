@@ -250,5 +250,34 @@
         saveErrorCallback();
       }
     };
+
+    $scope.validateWaterQuality = function(validateSuccessCallback, validateErrorCallback) {
+      if ($scope.waterQuality && $scope.waterQuality._id) {
+        $http.post('/api/protocol-water-quality/' + $scope.waterQuality._id + '/incremental-save',
+          $scope.waterQuality)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.waterQualityForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              successCallback();
+            }
+          })
+          .error(function (data, status, headers, config) {
+            $scope.form.waterQualityForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        var waterQualityId = $scope.waterQuality._id;
+        validateSuccessCallback();
+      }
+
+      function errorCallback(errorMessage) {
+        $scope.waterQualityErrors = errorMessage;
+        validateErrorCallback();
+      }
+    };
   }
 })();

@@ -69,14 +69,13 @@
             organism: organismDetails.organism
           };
         }
-        console.log('organismDetails.sketchPhoto', organismDetails.sketchPhoto);
 
         $scope.foundOrganisms[organismId].count = organismDetails.count;
         $scope.foundOrganisms[organismId].sketchPhoto = organismDetails.sketchPhoto;
         $scope.foundOrganisms[organismId].imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
         $scope.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
-        if (callback) callback();
       }
+      if (callback) callback();
     };
 
     // Set up initial values
@@ -311,6 +310,35 @@
           $scope.mobileTrapErrors = errorMessage;
         }
         saveErrorCallback();
+      }
+    };
+
+    $scope.validateMobileTrap = function(validateSuccessCallback, validateErrorCallback) {
+      if ($scope.mobileTrap && $scope.mobileTrap._id) {
+        $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/validate',
+          $scope.mobileTrap)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.mobileTrapForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              successCallback();
+            }
+          })
+          .error(function (data, status, headers, config) {
+            $scope.form.mobileTrapForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        $scope.mobileTrapErrors = null;
+        validateSuccessCallback();
+      }
+
+      function errorCallback(errorMessage) {
+        $scope.mobileTrapErrors = errorMessage;
+        validateErrorCallback();
       }
     };
   }

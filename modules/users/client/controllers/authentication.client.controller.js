@@ -133,6 +133,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         vm.schoolOrgSelected = false;
         vm.credentials.teamLead = undefined;
       }
+      vm.findOrganizations();
     };
 
     vm.schoolOrgFieldSelected = function(schoolOrgId) {

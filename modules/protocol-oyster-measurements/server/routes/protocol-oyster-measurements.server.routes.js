@@ -25,6 +25,9 @@ module.exports = function (app) {
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.incrementalSave);
 
+  app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/validate').all(oysterMeasurementsPolicy.isAllowed)
+    .post(oysterMeasurements.validate);
+
   // Previous Protocol Oyster Measurements routes
   app.route('/api/protocol-oyster-measurements/:currentOysterMeasurementId/previous').all(oysterMeasurementsPolicy.isAllowed)
     .get(oysterMeasurements.read);

@@ -15,6 +15,9 @@ module.exports = function (app) {
   app.route('/api/protocol-water-quality/:waterQualityId/incremental-save').all(waterQualitiesPolicy.isAllowed)
     .post(waterQualities.incrementalSave);
 
+  app.route('/api/protocol-water-quality/:waterQualityId/validate').all(waterQualitiesPolicy.isAllowed)
+    .post(waterQualities.validate);
+
   // Single Protocol Water Quality routes
   app.route('/api/protocol-water-quality/:waterQualityId').all(waterQualitiesPolicy.isAllowed)
     .get(waterQualities.read)

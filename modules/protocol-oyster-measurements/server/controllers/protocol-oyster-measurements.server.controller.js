@@ -171,6 +171,22 @@ exports.read = function (req, res) {
   res.json(oysterMeasurement);
 };
 
+exports.validate = function (req, res) {
+  var oysterMeasurement = req.body;
+  validateOysterMeasurement(oysterMeasurement,
+  function(oysterMeasurementJSON) {
+    res.json({
+      oysterMeasurement: oysterMeasurement,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      oysterMeasurement: oysterMeasurement,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
 

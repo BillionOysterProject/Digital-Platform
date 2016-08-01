@@ -88,6 +88,22 @@ exports.read = function (req, res) {
   res.json(mobileTrap);
 };
 
+exports.validate = function (req, res) {
+  var mobileTrap = req.body;
+  validateMobileTrap(req.body,
+  function(mobileTrapJSON) {
+    res.json({
+      mobileTrap: mobileTrap,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      mobileTrap: mobileTrap,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var mobileTrap = req.mobileTrap;
 

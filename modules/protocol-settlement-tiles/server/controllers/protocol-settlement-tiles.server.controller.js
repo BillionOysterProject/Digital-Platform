@@ -176,6 +176,22 @@ var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback
   }
 };
 
+exports.validate = function (req, res) {
+  var settlementTiles = req.body;
+  validateSettlementTiles(settlementTiles,
+  function(settlementTilesJSON) {
+    res.json({
+      settlementTiles: settlementTiles,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      settlementTiles: settlementTiles,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 

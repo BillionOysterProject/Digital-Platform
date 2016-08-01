@@ -229,7 +229,9 @@
       }
 
       if ($scope.cageConditionPhotoURL !== '' && $scope.oysterMeasurement) {
-        if ($scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
+        if ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
+          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
           $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = $scope.cageConditionPhotoURL;
         } else if (!$scope.oysterMeasurement.conditionOfOysterCage) {
           $scope.oysterMeasurement.conditionOfOysterCage = {
@@ -398,6 +400,35 @@
           $scope.oysterMeasurementErrors = errorMessage;
         }
         saveErrorCallback();
+      }
+    };
+
+    $scope.validateOysterMeasurement = function(validateSuccessCallback, validateErrorCallback) {
+      if ($scope.oysterMeasurement && $scope.oysterMeasurement._id) {
+        $http.post('/api/protocol-oyster-measurements/' + $scope.oysterMeasurement._id + '/validate',
+          $scope.oysterMeasurement)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.oysterMeasurementForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              successCallback();
+            }
+          })
+          .error(function (data, status, headers, config) {
+            $scope.form.oysterMeasurementForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        $scope.oysterMeasurementErrors = null;
+        validateSuccessCallback();
+      }
+
+      function errorCallback(errorMessage) {
+        $scope.siteConditionErrors = errorMessage;
+        validateErrorCallback();
       }
     };
   }
