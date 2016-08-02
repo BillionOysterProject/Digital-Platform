@@ -8,11 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-protocol-oyster-measurement.client.view.html',
         controller: 'ProtocolOysterMeasurementsController',
-        controllerAs: 'om',
-        scope: {
-          protocolOysterMeasurement: '=',
-          error: '='
-        }
+        scope: false
       };
     });
 })();

@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-mobile-traps/:mobileTrapId/incremental-save',
       permissions: '*'
     }, {
+      resources: '/api/protocol-mobile-traps/:mobileTrapId/validate',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-mobile-traps/:mobileTrapId',
       permissions: '*'
     }, {

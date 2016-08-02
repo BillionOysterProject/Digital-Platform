@@ -23,6 +23,9 @@ module.exports = function (app) {
   app.route('/api/protocol-site-conditions/:siteConditionId/incremental-save').all(siteConditionsPolicy.isAllowed)
     .post(siteConditions.incrementalSave);
 
+  app.route('/api/protocol-site-conditions/:siteConditionId/validate').all(siteConditionsPolicy.isAllowed)
+    .post(siteConditions.validate);
+
   // Single Protocol Site Condition routes
   app.route('/api/protocol-site-conditions/:siteConditionId').all(siteConditionsPolicy.isAllowed)
     .get(siteConditions.read)

@@ -58,7 +58,7 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
   }
 
   if (!oysterMeasurement.measuringOysterGrowth || !oysterMeasurement.measuringOysterGrowth.substrateShells ||
-    oysterMeasurement.measuringOysterGrowth.substrateShells.length <= 0) {
+    oysterMeasurement.measuringOysterGrowth.substrateShells.length < 0) {
     errorMessages.push('Substrate shell measurements are required');
   } else {
     var oneSuccessfulSubstrateShell = false;
@@ -101,8 +101,8 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
         substrateShell.innerSidePhoto.path === undefined) {
           errorMessages.push('Inner side photo is required for Substrate Shell #' + shellNumber);
         }
-        if (substrateShell.totalNumberOfLiveOystersOnShell <= 0) {
-          errorMessages.push('The total number of live oysters on Substrate Shell #' + shellNumber + ' must be greater than 0');
+        if (substrateShell.totalNumberOfLiveOystersOnShell < 0) {
+          errorMessages.push('The total number of live oysters on Substrate Shell #' + shellNumber + ' must be a positive number');
         } else {
           if (!allOystersMeasured(substrateShell)) {
             errorMessages.push('The number of measurements must be equal to the total number of live oysters on Substrate Shell #' + shellNumber);
@@ -171,42 +171,50 @@ exports.read = function (req, res) {
   res.json(oysterMeasurement);
 };
 
+exports.validate = function (req, res) {
+  var oysterMeasurement = req.body;
+  validateOysterMeasurement(oysterMeasurement,
+  function(oysterMeasurementJSON) {
+    res.json({
+      oysterMeasurement: oysterMeasurement,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      oysterMeasurement: oysterMeasurement,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var oysterMeasurement = req.oysterMeasurement;
 
   if (oysterMeasurement) {
-    if (oysterMeasurement.status === 'incomplete' || oysterMeasurement.status === 'returned' ||
-    (checkRole('team lead', req.user) && oysterMeasurement.status === 'submitted')) {
-      oysterMeasurement = _.extend(oysterMeasurement, req.body);
-      oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      oysterMeasurement.scribeMember = req.user;
+    oysterMeasurement = _.extend(oysterMeasurement, req.body);
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    oysterMeasurement.scribeMember = req.user;
 
-      oysterMeasurement.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+    oysterMeasurement.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        validateOysterMeasurement(oysterMeasurement,
+        function(oysterMeasurementJSON) {
+          res.json({
+            oysterMeasurement: oysterMeasurement,
+            successful: true
           });
-        } else {
-          validateOysterMeasurement(oysterMeasurement,
-          function(oysterMeasurementJSON) {
-            res.json({
-              oysterMeasurement: oysterMeasurement,
-              successful: true
-            });
-          }, function(errorMessages) {
-            res.json({
-              oysterMeasurement: oysterMeasurement,
-              errors: errorMessages
-            });
+        }, function(errorMessages) {
+          res.json({
+            oysterMeasurement: oysterMeasurement,
+            errors: errorMessages
           });
-        }
-      });
-    } else {
-      res.json({
-        status: oysterMeasurement.status,
-        scribe: oysterMeasurement.scribeMember.displayName
-      });
-    }
+        });
+      }
+    });
   } else {
     return res.status(400).send({
       message: 'Protocol oyster measurement not found'

@@ -1,12 +1,12 @@
-<form name="wq.form.waterQualityForm" ng-submit="wq.save(wq.form.waterQualityForm.$valid)" novalidate ng-cloak>
+<form name="form.waterQualityForm" ng-submit="save(form.waterQualityForm.$valid)" novalidate ng-cloak>
     <section>
         <section class="content">
             <section class="container">
                 <h2>Protocol 5 <small>Water Quality</small></h2>
                 <hr />
-                <div class="alert alert-danger" ng-show="wq.error">
+                <div class="alert alert-danger" ng-show="waterQualityErrors">
                 <h4>We're still missing some information.</h4>
-                    <ul class="list-unstyled" ng-repeat="error in wq.error">
+                    <ul class="list-unstyled" ng-repeat="error in waterQualityErrors">
                         <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                     </ul>
                 </div>
@@ -15,32 +15,32 @@
                         <div class="form-group">
                             <label for="collectionTime">Date and time of data collection</label>
                             <input type="datetime-local" class="form-control" name="collectionTime"
-                            placeholder="yyyy-MM-ddTHH:mm:ss" min="{{wq.dateTime.min}}" max="{{wq.dateTime.max}}"
-                            ng-model="wq.protocolWaterQuality.collectionTime" />
-                            <div ng-show="wq.form.waterQualityForm.collectionTime.$error.min">
+                            placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
+                            ng-model="waterQuality.collectionTime" />
+                            <div ng-show="form.waterQualityForm.collectionTime.$error.min">
                                 <p class="red">Collection time must not be more than a year in the past.</p>
                             </div>
-                            <div ng-show="wq.form.waterQualityForm.collectionTime.$error.max">
+                            <div ng-show="form.waterQualityForm.collectionTime.$error.max">
                                 <p class="red">Collection time must not be more than a year in the future.</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-water-quality-map"
-                            ng-click="wq.openMap()">Mark location on map</a>
-                            <input class="form-control" type="text" value="{{wq.protocolWaterQuality.latitude}}, {{wq.protocolWaterQuality.longitude}}"
-                            data-toggle="modal" data-target="#modal-water-quality-map" ng-click="wq.openMap()"
-                            ng-show="wq.protocolWaterQuality.latitude && wq.protocolWaterQuality.longitude" readonly/>
+                            ng-click="openMap()">Mark location on map</a>
+                            <input class="form-control" type="text" value="{{waterQuality.latitude}}, {{waterQuality.longitude}}"
+                            data-toggle="modal" data-target="#modal-water-quality-map" ng-click="openMap()"
+                            ng-show="waterQuality.latitude && waterQuality.longitude" readonly/>
                         </div>
                         <div class="form-group">
                             <select-tags outer-column="" name="teamMembers"
-                            in-title="Names of team members" ng-model="wq.protocolWaterQuality.teamMembers"
-                            label-class="control-label" select-config="wq.teamMemberSelectConfig"></select-tags>
+                            in-title="Names of team members" ng-model="waterQuality.teamMembers"
+                            label-class="control-label" select-config="teamMemberSelectConfig"></select-tags>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
                             <label>Notes or other observations</label>
-                            <textarea class="form-control" rows="7" ng-model="wq.protocolWaterQuality.notes" ></textarea>
+                            <textarea class="form-control" rows="7" ng-model="waterQuality.notes" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
             </section>
         </section>
-        <section ng-repeat="sample in wq.protocolWaterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
+        <section ng-repeat="sample in waterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
             <section class="container">
                 <h3>Water Sample</h3>
                 <div class="row">
@@ -74,20 +74,20 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}"
-                                data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-click="wq.openMap()"
+                                data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-click="openMap()"
                                 ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
                                 <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly
                                 ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"
-                                ng-click="wq.openMap()"/>
+                                ng-click="openMap()"/>
                             </div>
                             <div class="col-sm-6">
                                 <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}"
-                                ng-click="wq.openMap()">Mark the location on a map</a>
+                                ng-click="openMap()">Mark the location on a map</a>
                             </div>
                             <div class="modal fade" id="modal-map-sample{{$index}}" tabindex="-1" role="dialog">
                                 <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
                                 can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
-                                longitude="sample.locationOfWaterSample.longitude" dismiss-function="wq.closeMap"></map-select>
+                                longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
                             </div>
                         </div>
                     </div>
@@ -100,11 +100,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.waterTemperature.method" ng-options="method.value as method.name for method in wq.waterTemperatureMethods" required></select>
+                                    <select class="form-control" ng-model="sample.waterTemperature.method" ng-options="method.value as method.name for method in waterTemperatureMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.waterTemperature.units" ng-options="method.value as method.name for method in wq.waterTemperatureUnits" required></select>
+                                    <select class="form-control" ng-model="sample.waterTemperature.units" ng-options="method.value as method.name for method in waterTemperatureUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -113,13 +113,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" ng-blur="wq.waterTemperatureAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" ng-blur="waterTemperatureAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" ng-blur="wq.waterTemperatureAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" ng-blur="waterTemperatureAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" ng-blur="wq.waterTemperatureAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" ng-blur="waterTemperatureAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average" required readonly/>
@@ -138,11 +138,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.name for method in wq.dissolvedOxygenMethods" required></select>
+                                    <select class="form-control" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.name for method in dissolvedOxygenMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.name for method in wq.dissolvedOxygenUnits" required></select>
+                                    <select class="form-control" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.name for method in dissolvedOxygenUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -151,13 +151,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" ng-blur="wq.dissolvedOxygenAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" ng-blur="dissolvedOxygenAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" ng-blur="wq.dissolvedOxygenAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" ng-blur="dissolvedOxygenAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" ng-blur="wq.dissolvedOxygenAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" ng-blur="dissolvedOxygenAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average" required readonly/>
@@ -176,11 +176,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.salinity.method" ng-options="method.value as method.name for method in wq.salinityMethods" required></select>
+                                    <select class="form-control" ng-model="sample.salinity.method" ng-options="method.value as method.name for method in salinityMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.salinity.units" ng-options="method.value as method.name for method in wq.salinityUnits" required></select>
+                                    <select class="form-control" ng-model="sample.salinity.units" ng-options="method.value as method.name for method in salinityUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -189,13 +189,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]" ng-blur="wq.salinityAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]" ng-blur="salinityAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]" ng-blur="wq.salinityAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]" ng-blur="salinityAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]" ng-blur="wq.salinityAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]" ng-blur="salinityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average" required readonly/>
@@ -214,11 +214,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.pH.method" ng-options="method.value as method.name for method in wq.pHMethods" required></select>
+                                    <select class="form-control" ng-model="sample.pH.method" ng-options="method.value as method.name for method in pHMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.pH.units" ng-options="method.value as method.name for method in wq.pHUnits" required></select>
+                                    <select class="form-control" ng-model="sample.pH.units" ng-options="method.value as method.name for method in pHUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -227,13 +227,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]" ng-blur="wq.pHAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]" ng-blur="pHAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]" ng-blur="wq.pHAverage(sample)" required/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]" ng-blur="pHAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]" ng-blur="wq.pHAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]" ng-blur="pHAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average" required readonly/>
@@ -252,11 +252,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.turbidity.method" ng-options="method.value as method.name for method in wq.turbidityMethods"></select>
+                                    <select class="form-control" ng-model="sample.turbidity.method" ng-options="method.value as method.name for method in turbidityMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.turbidity.units" ng-options="method.value as method.name for method in wq.turbidityUnits"></select>
+                                    <select class="form-control" ng-model="sample.turbidity.units" ng-options="method.value as method.name for method in turbidityUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -265,13 +265,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]" ng-blur="wq.turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]" ng-blur="wq.turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]" ng-blur="wq.turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average" readonly/>
@@ -290,11 +290,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.ammonia.method" ng-options="method.value as method.name for method in wq.ammoniaMethods"></select>
+                                    <select class="form-control" ng-model="sample.ammonia.method" ng-options="method.value as method.name for method in ammoniaMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.ammonia.units" ng-options="method.value as method.name for method in wq.ammoniaUnits"></select>
+                                    <select class="form-control" ng-model="sample.ammonia.units" ng-options="method.value as method.name for method in ammoniaUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -303,13 +303,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]" ng-blur="wq.ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]" ng-blur="wq.ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]" ng-blur="wq.ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average" readonly/>
@@ -328,11 +328,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.nitrates.method" ng-options="method.value as method.name for method in wq.nitratesMethods"></select>
+                                    <select class="form-control" ng-model="sample.nitrates.method" ng-options="method.value as method.name for method in nitratesMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.nitrates.units" ng-options="method.value as method.name for method in wq.nitratesUnits"></select>
+                                    <select class="form-control" ng-model="sample.nitrates.units" ng-options="method.value as method.name for method in nitratesUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -341,13 +341,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]" ng-blur="wq.nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]" ng-blur="wq.nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]" ng-blur="wq.nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average" readonly/>
@@ -383,13 +383,13 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]" ng-blur="wq.otherAverage(other)"/>
+                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]" ng-blur="wq.otherAverage(other)"/>
+                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]" ng-blur="wq.otherAverage(other)"/>
+                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
                                             <input type="number" class="form-control" placeholder="Average" ng-model="other.average" readonly/>
@@ -400,8 +400,8 @@
                         </div>
                     </div>
                 </div>
-                <a class="btn btn-default" ng-show="$last" ng-click="wq.addSampleForm()">Add a new sample</a>
-                <a class="btn btn-danger" ng-show="wq.protocolWaterQuality.samples.length > 1" ng-click="wq.removeSampleForm($index)">Remove sample</a>
+                <a class="btn btn-default" ng-show="$last" ng-click="addSampleForm()">Add a new sample</a>
+                <a class="btn btn-danger" ng-show="waterQuality.samples.length > 1" ng-click="removeSampleForm($index)">Remove sample</a>
             </section>
         </section>
     </section>
@@ -410,7 +410,7 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-water-quality-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-water-quality-map" latitude="wq.protocolWaterQuality.latitude"
-    longitude="wq.protocolWaterQuality.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="wq.closeMap"></map-select>
+    <map-select modal-id="modal-water-quality-map" latitude="waterQuality.latitude"
+    longitude="waterQuality.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 </div>

@@ -276,45 +276,52 @@ exports.read = function (req, res) {
   res.json(siteCondition);
 };
 
+exports.validate = function (req, res) {
+  var siteCondition = req.body;
+  validateSiteCondition(siteCondition, function(siteConditionJSON) {
+    res.json({
+      siteCondition: siteCondition,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      siteCondition: siteCondition,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var siteCondition = req.siteCondition;
 
   if (siteCondition) {
-    if (siteCondition.status === 'incomplete' || siteCondition.status === 'returned' ||
-    (checkRole('team lead', req.user) && siteCondition.status === 'submitted')) {
-      siteCondition = _.extend(siteCondition, req.body);
-      siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      siteCondition.tideConditions.closestHighTide =
-        moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      siteCondition.tideConditions.closestLowTide =
-        moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      siteCondition.scribeMember = req.user;
+    siteCondition = _.extend(siteCondition, req.body);
+    siteCondition.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    siteCondition.tideConditions.closestHighTide =
+      moment(req.body.tideConditions.closestHighTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    siteCondition.tideConditions.closestLowTide =
+      moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    siteCondition.scribeMember = req.user;
 
-      siteCondition.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+    siteCondition.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        validateSiteCondition(siteCondition, function(siteConditionJSON) {
+          res.json({
+            siteCondition: siteCondition,
+            successful: true
           });
-        } else {
-          validateSiteCondition(siteCondition, function(siteConditionJSON) {
-            res.json({
-              siteCondition: siteCondition,
-              successful: true
-            });
-          }, function(errorMessages) {
-            res.json({
-              siteCondition: siteCondition,
-              errors: errorMessages
-            });
+        }, function(errorMessages) {
+          res.json({
+            siteCondition: siteCondition,
+            errors: errorMessages
           });
-        }
-      });
-    } else {
-      res.json({
-        status: siteCondition.status,
-        scribe: siteCondition.scribeMember.displayName
-      });
-    }
+        });
+      }
+    });
   } else {
     return res.status(400).send({
       message: 'Protocol site condition not found'

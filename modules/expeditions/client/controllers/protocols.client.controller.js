@@ -6,35 +6,42 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'ExpeditionsService', 'ExpeditionActivitiesService'];
+  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, expedition, Authentication, TeamsService, ExpeditionsService, ExpeditionActivitiesService) {
+    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
+    ExpeditionActivitiesService, FileUploader) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
     vm.activeTab = 'protocol1';
-    vm.siteConditionErrors = '';
-    vm.oysterMeasurementErrors = '';
-    vm.mobileTrapErrors = '';
-    vm.settlementTilesErrors = '';
-    vm.waterQualityErrors = '';
+    $scope.siteConditionErrors = '';
+    $scope.oysterMeasurementErrors = '';
+    $scope.mobileTrapErrors = '';
+    $scope.settlementTilesErrors = '';
+    $scope.waterQualityErrors = '';
 
+    // Get Team Info to display in header
     TeamsService.get({
       teamId: vm.expedition.team._id
     }, function(data) {
       vm.team = data;
     });
 
+    // Get the formatted Expedition date
     vm.getExpeditionDate = function() {
       return moment(vm.expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
     };
 
+    // Get the formatted Expedition time range
     vm.getExpeditionTimeRange = function(expedition) {
       return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
         moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
     };
 
+    // Get the link to the Expedition, if the user is an Admin or Team Lead and the Expedition is Incomplete, Returned,
+    // or Unpublished take the user to the Edit Expedition page, otherwise just show them the Expedition protocols.
     vm.expeditionLink = function(expedition) {
       return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
         expedition.status === 'unpublished')) ?
@@ -42,6 +49,7 @@
       'expeditions.protocols({ expeditionId: expedition._id })';
     };
 
+    // Compare the passed in role to the user's roles
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
@@ -49,10 +57,12 @@
       return (teamLeadIndex > -1) ? true : false;
     };
 
+    // Determine the users roles
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
     vm.isAdmin = checkRole('admin');
 
+    // Check if the user is allows to write to the given protocol
     vm.checkWrite = function(teamList) {
       if (checkRole('team lead') || checkRole('admin')) {
         return true;
@@ -64,6 +74,7 @@
       }
     };
 
+    // Check to see if the protocol tab should be disabled
     vm.checkDisabled = function(protocol) {
       if (checkRole('team lead') || checkRole('admin')) {
         return false;
@@ -72,56 +83,62 @@
       }
     };
 
+    // Set up Site Condition protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
-      vm.siteCondition = vm.expedition.protocols.siteCondition;
+      $scope.siteCondition = vm.expedition.protocols.siteCondition;
       vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
       vm.disabledSiteCondition = false;
     } else {
-      vm.siteCondition = null;
+      $scope.siteCondition = null;
       vm.viewSiteCondition = false;
       vm.disabledSiteCondition = true;
     }
 
+    // Set up Oyster Measurement protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.oysterMeasurement)) {
-      vm.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+      $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
       vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
       vm.disabledOysterMeasurement = false;
     } else {
-      vm.oysterMeasurement = null;
+      $scope.oysterMeasurement = null;
       vm.viewOysterMeasurement = false;
       vm.disabledOysterMeasurement = true;
     }
 
+    // Set up Mobile Trap protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.mobileTrap)) {
-      vm.mobileTrap = vm.expedition.protocols.mobileTrap;
+      $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
       vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
       vm.disabledMobileTrap = false;
     } else {
-      vm.mobileTrap = null;
+      $scope.mobileTrap = null;
       vm.viewMobileTrap = false;
       vm.disabledMobileTrap = true;
     }
 
+    // Set up Settlement Tiles protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.settlementTiles)) {
-      vm.settlementTiles = vm.expedition.protocols.settlementTiles;
+      $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
       vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
       vm.disabledSettlementTiles = false;
     } else {
-      vm.settlementTiles = null;
+      $scope.settlementTiles = null;
       vm.viewSettlementTiles = false;
       vm.disabledSettlementTiles = true;
     }
 
+    // Set up Water Quality protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.waterQuality)) {
-      vm.waterQuality = vm.expedition.protocols.waterQuality;
+      $scope.waterQuality = vm.expedition.protocols.waterQuality;
       vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
       vm.disabledWaterQuality = false;
     } else {
-      vm.waterQuality = null;
+      $scope.waterQuality = null;
       vm.viewWaterQuality = false;
       vm.disabledWaterQuality = true;
     }
 
+    // Set up variables used by the tab element
     vm.tabs = {
       protocol1: { isActive: false, visible: vm.viewSiteCondition, error: '', isDisabled: vm.disabledSiteCondition },
       protocol2: { isActive: false, visible: vm.viewOysterMeasurement, error: '', isDisabled: vm.disabledOysterMeasurement },
@@ -130,6 +147,7 @@
       protocol5: { isActive: false, visible: vm.viewWaterQuality, error: '', isDisabled: vm.disabledWaterQuality }
     };
 
+    // Find the active tab, this is necessary for instances when the user can not view all of the tabs
     for (var key in vm.tabs) {
       if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
         vm.tabs[key].isActive = true;
@@ -138,210 +156,46 @@
       }
     }
 
-    var activeProtocolCall = function() {
-      switch(vm.activeTab) {
-        case 'protocol1': return 'incrementalSaveSiteCondition';
-        case 'protocol2': return 'incrementalSaveOysterMeasurement';
-        case 'protocol3': return 'incrementalSaveMobileTrap';
-        case 'protocol4': return 'incrementalSaveSettlementTiles';
-        case 'protocol5': return 'incrementalSaveWaterQuality';
-      }
-    };
-
-    vm.save = undefined;
-    var stopIncrementalSavingLoop = function() {
-      if(angular.isDefined(vm.save)) {
-        $interval.cancel(vm.save);
-        vm.save = undefined;
-      }
-    };
-
-    var showTabChanged = function(changes) {
-      if (vm.isTeamMember === true) {
-        var descriptions = [];
-        for (var i = 0; i < changes.length; i++) {
-          descriptions.push(
-            'A team member just submitted your shared ' + changes[i].protocolName +
-            '. This form has been sent to your team lead for review and is no longer editable.'
-          );
-          vm.tabs[changes[i].protocol].isDisabled = true;
-          vm.tabs[changes[i].protocol].isActive = false;
-          vm.tabs[changes[i].protocol].visible = false;
-        }
-        vm.disableProtocolChanges = descriptions;
-
-        for (var key in vm.tabs) {
-          if (vm.tabs[key].visible && !vm.tabs[key].isDisabled) {
-            vm.tabs[key].isActive = true;
-            vm.activeTab = key;
-            break;
-          }
-        }
-
-        if (vm.disableProtocolChanges && vm.disableProtocolChanges.length > 0) {
-          angular.element('#modal-remove-protocol-tab').modal('show');
-        }
-      }
-    };
-
-    var startIncrementalSavingLoop = function() {
-      if (angular.isDefined(vm.save)) return;
-
-      vm.save = $interval(function() {
-        if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
-          vm.saving = true;
-          var saveCall = activeProtocolCall();
-          console.log('saveCall', saveCall);
-          $rootScope.$broadcast(saveCall);
-
-          ExpeditionsService.get({
-            expeditionId: $stateParams.expeditionId,
-            full: true
-          }, function(data) {
-            var changes = [];
-            if (data && data.protocols && data.protocols.siteCondition &&
-              data.protocols.siteCondition.status === 'submitted' &&
-              vm.siteCondition && vm.siteCondition.status !== 'submitted' &&
-            vm.viewSiteCondition) {
-              if (vm.isTeamMember === true) {
-                changes.push({
-                  scribeName: data.protocols.siteCondition.scribeMember.displayName,
-                  protocolName: 'Site Conditions',
-                  protocol: 'protocol1'
-                });
-                vm.viewSiteCondition = false;
-              }
-              vm.siteCondition = data.protocols.siteCondition;
-              $rootScope.$broadcast('readSiteConditionFromScope');
-            }
-            if (data && data.protocols && data.protocols.oysterMeasurement &&
-              data.protocols.oysterMeasurement.status === 'submitted' &&
-              vm.oysterMeasurement && vm.oysterMeasurement.status !== 'submitted' &&
-            vm.viewOysterMeasurement) {
-              if (vm.isTeamMember === true) {
-                changes.push({
-                  scribeName: data.protocols.oysterMeasurement.scribeMember.displayName,
-                  protocolName: 'Oyster Measurements',
-                  protocol: 'protocol2'
-                });
-                vm.viewOysterMeasurement = false;
-              }
-              vm.oysterMeasurement = data.protocols.oysterMeasurement;
-              $rootScope.$broadcast('readOysterMeasurementFromScope');
-            }
-            if (data && data.protocols && data.protocols.mobileTrap &&
-              data.protocols.mobileTrap.status === 'submitted' &&
-              vm.mobileTrap && vm.mobileTrap.status !== 'submitted' &&
-            vm.viewMobileTrap) {
-              if (vm.isTeamMember === true) {
-                changes.push({
-                  scribeName: data.protocols.mobileTrap.scribeMember.displayName,
-                  protocolName: 'Mobile Trap',
-                  protocol: 'protocol3'
-                });
-                vm.viewMobileTrap = false;
-              }
-              vm.mobileTrap = data.protocols.mobileTrap;
-              $rootScope.$broadcast('readMobileTrapFromScope');
-            }
-            if (data && data.protocols && data.protocols.settlementTiles &&
-              data.protocols.settlementTiles.status === 'submitted' &&
-              vm.settlementTiles && vm.settlementTiles.status !== 'submitted' &&
-            vm.viewSettlementTiles) {
-              if (vm.isTeamMember === true) {
-                changes.push({
-                  scribeName: data.protocols.settlementTiles.scribeMember.displayName,
-                  protocolName: 'Settlement Tiles',
-                  protocol: 'protocol4'
-                });
-                vm.viewSettlementTiles = false;
-              }
-              vm.settlementTiles = data.protocols.settlementTiles;
-              $rootScope.$broadcast('readSettlementTilesFromScope');
-            }
-            if (data && data.protocols && data.protocols.waterQuality &&
-              data.protocols.waterQuality.status === 'submitted' &&
-              vm.waterQuality && vm.waterQuality.status !== 'submitted' &&
-            vm.viewWaterQuality) {
-              if (vm.isTeamMember === true) {
-                changes.push({
-                  scribeName: data.protocols.waterQuality.scribeMember.displayName,
-                  protocolName: 'Water Quality',
-                  protocol: 'protocol5'
-                });
-                vm.viewWaterQuality = false;
-              }
-              vm.waterQuality = data.protocols.waterQuality;
-              $rootScope.$broadcast('readWaterQualityFromScope');
-            }
-            if (vm.isTeamMember === true) {
-              if (data && data.protocols && data.protocols.siteCondition.status === 'submitted' &&
-              data.protocols.oysterMeasurement.status === 'submitted' && data.protocols.mobileTrap.status === 'submitted' &&
-              data.protocols.settlementTiles.status === 'submitted' && data.protocols.waterQuality.status === 'submitted') {
-                stopIncrementalSavingLoop();
-                $state.go('expeditions.view', {
-                  expeditionId: vm.expedition._id
-                });
-              } else {
-                showTabChanged(changes);
-              }
-            }
-          });
-        } else {
-          stopIncrementalSavingLoop();
-        }
-      }, 15000);
-    };
-
-    //stopSaving
-    $scope.$on('stopIncrementalSavingLoop', function() {
-      stopIncrementalSavingLoop();
-    });
-
-    //startSaving
-    $scope.$on('startIncrementalSavingLoop', function() {
-      startIncrementalSavingLoop();
-    });
-
+    // Called when the user switches between tabs
     vm.switchTabs = function(key) {
       vm.previousTab = vm.activeTab;
-      var currentProtocol = activeProtocolCall();
-      $rootScope.$broadcast(currentProtocol);
       vm.activeTab = key;
-      var nextProtocol = activeProtocolCall();
-      $rootScope.$broadcast(nextProtocol);
     };
 
+    // Check the status of the protocols visible to the user to see if at least one is incomplete
     vm.checkStatusIncomplete = function() {
       var protocolsIncomplete = true;
-      if (vm.viewSiteCondition && vm.siteCondition && vm.siteCondition.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement && vm.oysterMeasurement.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewMobileTrap && vm.mobileTrap && vm.mobileTrap.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles && vm.settlementTiles.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewWaterQuality && vm.waterQuality && vm.waterQuality.status !== 'incomplete') protocolsIncomplete = false;
+      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'incomplete') protocolsIncomplete = false;
+      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'incomplete') protocolsIncomplete = false;
+      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'incomplete') protocolsIncomplete = false;
+      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'incomplete') protocolsIncomplete = false;
+      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'incomplete') protocolsIncomplete = false;
       return vm.expedition.status === 'incomplete';// && protocolsIncomplete;
     };
 
+    // Check the status of the protocols visible to the user to see if they are all submitted
     vm.checkStatusPending = function() {
       var protocolsSubmitted = true;
-      if (vm.viewSiteCondition && vm.siteCondition && vm.siteCondition.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement && vm.oysterMeasurement.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewMobileTrap && vm.mobileTrap && vm.mobileTrap.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles && vm.settlementTiles.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewWaterQuality && vm.waterQuality && vm.waterQuality.status !== 'submitted') protocolsSubmitted = false;
+      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'submitted') protocolsSubmitted = false;
+      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'submitted') protocolsSubmitted = false;
+      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'submitted') protocolsSubmitted = false;
+      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'submitted') protocolsSubmitted = false;
+      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'submitted') protocolsSubmitted = false;
       return vm.expedition.status === 'pending';// || (protocolsSubmitted && vm.expedition.status !== 'published');
     };
 
+    // Check the status of the protocols visible to the user to see if they are all returned
     vm.checkStatusReturned = function() {
       var protocolsReturned = true;
-      if (vm.viewSiteCondition && vm.siteCondition && vm.siteCondition.status !== 'returned') protocolsReturned = false;
-      if (vm.viewOysterMeasurement && vm.oysterMeasurement && vm.oysterMeasurement.status !== 'returned') protocolsReturned = false;
-      if (vm.viewMobileTrap && vm.mobileTrap && vm.mobileTrap.status !== 'returned') protocolsReturned = false;
-      if (vm.viewSettlementTiles && vm.settlementTiles && vm.settlementTiles.status !== 'returned') protocolsReturned = false;
-      if (vm.viewWaterQuality && vm.waterQuality && vm.waterQuality.status !== 'returned') protocolsReturned = false;
+      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'returned') protocolsReturned = false;
+      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'returned') protocolsReturned = false;
+      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'returned') protocolsReturned = false;
+      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'returned') protocolsReturned = false;
+      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'returned') protocolsReturned = false;
       return vm.expedition.status === 'returned';// && protocolsReturned;
     };
 
+    // Checks to see if all of the visible protocols are valid
     vm.protocolsSuccessful = function() {
       if (vm.saving === true) {
         return false;
@@ -358,51 +212,189 @@
       }
     };
 
+    // Check to see if all of the tabs have loaded
     vm.protocolsLoaded = function() {
       if (vm.saving === true) {
+        console.log('protocols not loaded saving');
         return false;
       } else {
+        console.log('vm.tabs.protocol1.saveSuccessful', vm.tabs.protocol1.saveSuccessful);
         var successful = true;
 
-        if(vm.viewSiteCondition && vm.tabs.protocol1.saveSuccessful !== true &&
-          vm.tabs.protocol1.saveSuccessful !== false) successful = false;
-        if(vm.viewOysterMeasurement && vm.tabs.protocol2.saveSuccessful !== true &&
-          vm.tabs.protocol2.saveSuccessful !== false) successful = false;
-        if(vm.viewMobileTrap && vm.tabs.protocol3.saveSuccessful !== true &&
-          vm.tabs.protocol3.saveSuccessful !== false) successful = false;
-        if(vm.viewSettlementTiles && vm.tabs.protocol4.saveSuccessful !== true &&
-          vm.tabs.protocol4.saveSuccessful !== false) successful = false;
-        if(vm.viewWaterQuality && vm.tabs.protocol5.saveSuccessful !== true &&
-          vm.tabs.protocol5.saveSuccessful !== false) successful = false;
+        if(vm.viewSiteCondition && vm.tabs.protocol1.saveSuccessful === undefined) successful = false;
+        if(vm.viewOysterMeasurement && vm.tabs.protocol2.saveSuccessful === undefined) successful = false;
+        if(vm.viewMobileTrap && vm.tabs.protocol3.saveSuccessful === undefined) successful = false;
+        if(vm.viewSettlementTiles && vm.tabs.protocol4.saveSuccessful === undefined) successful = false;
+        if(vm.viewWaterQuality && vm.tabs.protocol5.saveSuccessful === undefined) successful = false;
 
         return successful;
       }
     };
 
-    var waitWhileSaving = function() {
-      var wait = function() {
+    vm.validateProtocols = function(callback) {
+      var finishedSaving = 0;
+      var allDone = function() {
+        finishedSaving++;
+        if (finishedSaving === 5) {
+          callback();
+        }
       };
 
-      while(vm.saving === true) {
-        $timeout(wait, 3000);
+      if(vm.viewSiteCondition && $scope.siteCondition) {
+        $scope.validateSiteCondition(function() {
+          vm.tabs.protocol1.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol1.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol1.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+        $scope.validateOysterMeasurement(function() {
+          vm.tabs.protocol2.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol2.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol2.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewMobileTrap && $scope.mobileTrap) {
+        $scope.validateMobileTrap(function() {
+          vm.tabs.protocol3.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol3.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol3.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewSettlementTiles && $scope.settlementTiles) {
+        $scope.validateSettlementTile(function() {
+          vm.tabs.protocol4.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol4.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol4.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewWaterQuality && $scope.waterQuality) {
+        $scope.validateWaterQuality(function() {
+          vm.tabs.protocol5.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol5.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol5.saveSuccessful = undefined;
+        allDone();
       }
     };
 
-    vm.submitTeamMember = function() {
-      $rootScope.$broadcast('saveValuesToScope');
-      waitWhileSaving();
-      vm.submitting = true;
-      vm.saving = false;
-      stopIncrementalSavingLoop();
+    vm.saveDraft = function() {
+      vm.saving = true;
 
-      $timeout(function() {
+      var finishedSaving = 0;
+      var allDone = function() {
+        finishedSaving++;
+        if (finishedSaving === 5) {
+          vm.saving = false;
+        }
+      };
+
+      if(vm.viewSiteCondition && $scope.siteCondition) {
+        $scope.saveSiteCondition(function() {
+          vm.tabs.protocol1.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol1.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol1.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+        $scope.saveOysterMeasurement(function() {
+          vm.tabs.protocol2.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol2.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol2.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewMobileTrap && $scope.mobileTrap) {
+        $scope.saveMobileTrap(function() {
+          vm.tabs.protocol3.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol3.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol3.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewSettlementTiles && $scope.settlementTiles) {
+        $scope.saveSettlementTile(function() {
+          vm.tabs.protocol4.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol4.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol4.saveSuccessful = undefined;
+        allDone();
+      }
+
+      if(vm.viewWaterQuality && $scope.waterQuality) {
+        $scope.saveWaterQuality(function() {
+          vm.tabs.protocol5.saveSuccessful = true;
+          allDone();
+        }, function() {
+          vm.tabs.protocol5.saveSuccessful = false;
+          allDone();
+        });
+      } else {
+        vm.tabs.protocol5.saveSuccessful = undefined;
+        allDone();
+      }
+    };
+
+    // Submit the protocols as a team member
+    vm.submitTeamMember = function() {
+      vm.submitting = true;
+
+      vm.validateProtocols(function() {
         if (vm.protocolsSuccessful()) {
           var protocols = {};
-          if(vm.viewSiteCondition && vm.siteCondition) protocols.siteCondition = vm.siteCondition;
-          if(vm.viewOysterMeasurement && vm.oysterMeasurement) protocols.oysterMeasurement = vm.oysterMeasurement;
-          if(vm.viewMobileTrap && vm.mobileTrap) protocols.mobileTrap = vm.mobileTrap;
-          if(vm.viewSettlementTiles && vm.settlementTiles) protocols.settlementTiles = vm.settlementTiles;
-          if(vm.viewWaterQuality && vm.waterQuality) protocols.waterQuality = vm.waterQuality;
+          if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
+          if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
+          if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
+          if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
+          if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
           console.log('protocols to submit', protocols);
 
@@ -411,11 +403,11 @@
           }).
           success(function(data, status, headers, config) {
             vm.expedition = data;
-            if(vm.viewSiteCondition) vm.siteCondition = vm.expedition.protocols.siteCondition;
-            if(vm.viewOysterMeasurement) vm.oysterMeasurement = vm.expedition.protocols.oysterMeasurment;
-            if(vm.viewMobileTrap) vm.mobileTrap = vm.expedition.protocols.mobileTrap;
-            if(vm.viewSettlementTiles) vm.settlementTiles = vm.expedition.protocols.settlementTiles;
-            if(vm.viewWaterQuality) vm.waterQuality = vm.expedition.protocols.waterQuality;
+            if(vm.viewSiteCondition) $scope.siteCondition = vm.expedition.protocols.siteCondition;
+            if(vm.viewOysterMeasurement) $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+            if(vm.viewMobileTrap) $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+            if(vm.viewSettlementTiles) $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+            if(vm.viewWaterQuality) $scope.waterQuality = vm.expedition.protocols.waterQuality;
             vm.submitting = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -425,47 +417,42 @@
             console.log('data', data);
             if (data && data.message) {
               vm.siteConditionErrors = data.message.siteCondition;
-              vm.oysterMeasurmentErrors = data.message.oysterMeasurment;
+              vm.oysterMeasurementErrors = data.message.oysterMeasurement;
               vm.mobileTrapErrors = data.message.mobileTrap;
               vm.settlementTilesErrors = data.message.settlementTiles;
               vm.waterQualityErrors = data.message.waterQuality;
             }
             vm.submitting = false;
-            startIncrementalSavingLoop();
           });
         } else {
           vm.submitting = false;
-          startIncrementalSavingLoop();
         }
-      }, 5000);
+      });
     };
 
+    // Publish the Expedition
     vm.publish = function() {
-      $rootScope.$broadcast('saveValuesToScope');
-      waitWhileSaving();
-      vm.saving = false;
       vm.publishing = true;
-      stopIncrementalSavingLoop();
 
-      $timeout(function() {
+      vm.validateProtocols(function() {
         if (vm.protocolsSuccessful()) {
           var protocols = {};
-          if(vm.viewSiteCondition && vm.siteCondition) protocols.siteCondition = vm.siteCondition;
-          if(vm.viewOysterMeasurement && vm.oysterMeasurement) protocols.oysterMeasurement = vm.oysterMeasurement;
-          if(vm.viewMobileTrap && vm.mobileTrap) protocols.mobileTrap = vm.mobileTrap;
-          if(vm.viewSettlementTiles && vm.settlementTiles) protocols.settlementTiles = vm.settlementTiles;
-          if(vm.viewWaterQuality && vm.waterQuality) protocols.waterQuality = vm.waterQuality;
+          if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
+          if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
+          if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
+          if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
+          if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
           $http.post('/api/expeditions/' + vm.expedition._id + '/publish', {
             protocols: protocols
           }).
           success(function(data, status, headers, config) {
             vm.expedition = data;
-            if(vm.viewSiteCondition) vm.siteCondition.status = 'published';
-            if(vm.viewOysterMeasurement) vm.oysterMeasurement.status = 'published';
-            if(vm.viewMobileTrap) vm.mobileTrap.status = 'published';
-            if(vm.viewSettlementTiles) vm.settlementTiles.status = 'published';
-            if(vm.viewWaterQuality) vm.waterQuality.status = 'published';
+            if(vm.viewSiteCondition) $scope.siteCondition.status = 'published';
+            if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'published';
+            if(vm.viewMobileTrap) $scope.mobileTrap.status = 'published';
+            if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'published';
+            if(vm.viewWaterQuality) $scope.waterQuality.status = 'published';
             vm.publishing = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -474,213 +461,181 @@
           error(function(data, status, headers, config) {
             if (data && data.message) {
               vm.siteConditionErrors = data.message.siteCondition;
-              vm.oysterMeasurmentErrors = data.message.oysterMeasurment;
+              vm.oysterMeasurementErrors = data.message.oysterMeasurement;
               vm.mobileTrapErrors = data.message.mobileTrap;
               vm.settlementTilesErrors = data.message.settlementTiles;
               vm.waterQualityErrors = data.message.waterQuality;
             }
 
-            startIncrementalSavingLoop();
             vm.publishing = false;
           });
         } else {
-          startIncrementalSavingLoop();
           vm.publishing = false;
         }
-      }, 5000);
+      });
     };
 
+    // Return the Expedition
     vm.return = function() {
-      $rootScope.$broadcast('saveValuesToScope');
-      waitWhileSaving();
-      vm.saving = false;
+      console.log('returning');
       vm.returning = true;
-      stopIncrementalSavingLoop();
 
-      $timeout(function() {
-        if (vm.protocolsLoaded()) {
-          var protocols = {};
-          if(vm.viewSiteCondition && vm.siteCondition) protocols.siteCondition = vm.siteCondition;
-          if(vm.viewOysterMeasurement && vm.oysterMeasurement) protocols.oysterMeasurement = vm.oysterMeasurement;
-          if(vm.viewMobileTrap && vm.mobileTrap) protocols.mobileTrap = vm.mobileTrap;
-          if(vm.viewSettlementTiles && vm.settlementTiles) protocols.settlementTiles = vm.settlementTiles;
-          if(vm.viewWaterQuality && vm.waterQuality) protocols.waterQuality = vm.waterQuality;
+      //if (vm.protocolsLoaded()) {
+      console.log('protocols loaded');
+      var protocols = {};
+      if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
+      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
+      if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
+      if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
+      if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
-          $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
-            protocols: protocols
-          }).
-          success(function(data, status, headers, config) {
-            vm.expedition = data;
-            vm.siteCondition = vm.expedition.protocols.siteCondition;
-            vm.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-            vm.mobileTrap = vm.expedition.protocols.mobileTrap;
-            vm.settlementTiles = vm.expedition.protocols.settlementTiles;
-            vm.waterQuality = vm.expedition.protocols.waterQuality;
+      $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
+        protocols: protocols
+      }).
+      success(function(data, status, headers, config) {
+        vm.expedition = data;
+        $scope.siteCondition = vm.expedition.protocols.siteCondition;
+        $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+        $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+        $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+        $scope.waterQuality = vm.expedition.protocols.waterQuality;
 
-            if(vm.viewSiteCondition) vm.siteCondition.status = 'returned';
-            if(vm.viewOysterMeasurement) vm.oysterMeasurement.status = 'returned';
-            if(vm.viewMobileTrap) vm.mobileTrap.status = 'returned';
-            if(vm.viewSettlementTiles) vm.settlementTiles.status = 'returned';
-            if(vm.viewWaterQuality) vm.waterQuality.status = 'returned';
-            vm.returning = false;
-            $state.go('expeditions.view', {
-              expeditionId: vm.expedition._id
-            });
-          }).
-          error(function(data, status, headers, config) {
-            if (data && data.message) {
-              vm.siteConditionErrors = data.message.siteCondition;
-              vm.oysterMeasurmentErrors = data.message.oysterMeasurment;
-              vm.mobileTrapErrors = data.message.mobileTrap;
-              vm.settlementTilesErrors = data.message.settlementTiles;
-              vm.waterQualityErrors = data.message.waterQuality;
-            }
-            startIncrementalSavingLoop();
-            vm.returning = false;
-          });
-        } else {
-          startIncrementalSavingLoop();
-          vm.returning = false;
-        }
-      }, 5000);
-    };
-
-    vm.unpublish = function() {
-      $rootScope.$broadcast('saveValuesToScope');
-      waitWhileSaving();
-      vm.saving = false;
-      vm.unpublishing = true;
-      stopIncrementalSavingLoop();
-
-      $timeout(function() {
-        var protocols = {};
-        if(vm.viewSiteCondition && vm.siteCondition) protocols.siteCondition = vm.siteCondition;
-        if(vm.viewOysterMeasurement && vm.oysterMeasurement) protocols.oysterMeasurement = vm.oysterMeasurement;
-        if(vm.viewMobileTrap && vm.mobileTrap) protocols.mobileTrap = vm.mobileTrap;
-        if(vm.viewSettlementTiles && vm.settlementTiles) protocols.settlementTiles = vm.settlementTiles;
-        if(vm.viewWaterQuality && vm.waterQuality) protocols.waterQuality = vm.waterQuality;
-
-        $http.post('/api/expeditions/' + vm.expedition._id + '/unpublish', {
-          protocols: protocols
-        }).
-        success(function(data, status, headers, config) {
-          console.log('unpublished');
-          vm.expedition = data;
-          if(vm.viewSiteCondition) vm.siteCondition.status = 'unpublished';
-          if(vm.viewOysterMeasurement) vm.oysterMeasurement.status = 'unpublished';
-          if(vm.viewMobileTrap) vm.mobileTrap.status = 'unpublished';
-          if(vm.viewSettlementTiles) vm.settlementTiles.status = 'unpublished';
-          if(vm.viewWaterQuality) vm.waterQuality.status = 'unpublished';
-          vm.unpublishing = false;
-          $state.go('expeditions.view', {
-            expeditionId: vm.expedition._id
-          });
-        }).
-        error(function(data, status, headers, config) {
-          console.log('error unpublishing');
-          if (data && data.message) {
-            vm.siteConditionErrors = data.message.siteCondition;
-            vm.oysterMeasurmentErrors = data.message.oysterMeasurment;
-            vm.mobileTrapErrors = data.message.mobileTrap;
-            vm.settlementTilesErrors = data.message.settlementTiles;
-            vm.waterQualityErrors = data.message.waterQuality;
-          }
-          startIncrementalSavingLoop();
-          vm.unpublishing = false;
+        if(vm.viewSiteCondition) $scope.siteCondition.status = 'returned';
+        if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'returned';
+        if(vm.viewMobileTrap) $scope.mobileTrap.status = 'returned';
+        if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'returned';
+        if(vm.viewWaterQuality) $scope.waterQuality.status = 'returned';
+        vm.returning = false;
+        $state.go('expeditions.view', {
+          expeditionId: vm.expedition._id
         });
-      }, 5000);
+      }).
+      error(function(data, status, headers, config) {
+        if (data && data.message) {
+          vm.siteConditionErrors = data.message.siteCondition;
+          vm.oysterMeasurementErrors = data.message.oysterMeasurement;
+          vm.mobileTrapErrors = data.message.mobileTrap;
+          vm.settlementTilesErrors = data.message.settlementTiles;
+          vm.waterQualityErrors = data.message.waterQuality;
+        }
+        vm.returning = false;
+      });
+      // } else {
+      //   vm.returning = false;
+      // }
     };
 
-    $scope.$on('incrementalSaveSiteConditionSuccessful', function() {
-      vm.tabs.protocol1.saveSuccessful = true;
-      vm.savingOff();
-    });
+    // Unpublish the Expedition
+    vm.unpublish = function() {
+      vm.unpublishing = true;
 
-    $scope.$on('incrementalSaveOysterMeasurementSuccessful', function() {
-      vm.tabs.protocol2.saveSuccessful = true;
-      vm.savingOff();
-    });
+      var protocols = {};
+      if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
+      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
+      if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
+      if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
+      if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
-    $scope.$on('incrementalSaveMobileTrapSuccessful', function() {
-      vm.tabs.protocol3.saveSuccessful = true;
-      vm.savingOff();
-    });
+      $http.post('/api/expeditions/' + vm.expedition._id + '/unpublish', {
+        protocols: protocols
+      }).
+      success(function(data, status, headers, config) {
+        console.log('unpublished');
+        vm.expedition = data;
+        if(vm.viewSiteCondition) $scope.siteCondition.status = 'unpublished';
+        if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'unpublished';
+        if(vm.viewMobileTrap) $scope.mobileTrap.status = 'unpublished';
+        if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'unpublished';
+        if(vm.viewWaterQuality) $scope.waterQuality.status = 'unpublished';
+        vm.unpublishing = false;
+        $state.go('expeditions.view', {
+          expeditionId: vm.expedition._id
+        });
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error unpublishing');
+        if (data && data.message) {
+          vm.siteConditionErrors = data.message.siteCondition;
+          vm.oysterMeasurementErrors = data.message.oysterMeasurement;
+          vm.mobileTrapErrors = data.message.mobileTrap;
+          vm.settlementTilesErrors = data.message.settlementTiles;
+          vm.waterQualityErrors = data.message.waterQuality;
+        }
+        vm.unpublishing = false;
+      });
+    };
 
-    $scope.$on('incrementalSaveSettlementTilesSuccessful', function() {
-      vm.tabs.protocol4.saveSuccessful = true;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveWaterQualitySuccessful', function() {
-      vm.tabs.protocol5.saveSuccessful = true;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveSiteConditionError', function() {
-      vm.tabs.protocol1.saveSuccessful = false;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveOysterMeasurementError', function() {
-      vm.tabs.protocol2.saveSuccessful = false;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveMobileTrapError', function() {
-      vm.tabs.protocol3.saveSuccessful = false;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveSettlementTilesError', function() {
-      vm.tabs.protocol4.saveSuccessful = false;
-      vm.savingOff();
-    });
-
-    $scope.$on('incrementalSaveWaterQualityError', function() {
-      vm.tabs.protocol5.saveSuccessful = false;
-      vm.savingOff();
-    });
-
+    // Refresh the tiles in Mobile Trap
     vm.refreshTiles = function() {
       $timeout(function() {
         $rootScope.$broadcast('iso-method', { name:null, params:null });
       });
     };
 
-    vm.savingOff = function(callback) {
-      $timeout(function() {
-        vm.saving = false;
-        if (callback) callback();
-      }, 1500);
+    //============================
+    // Set up values for Protocols
+    //============================
+    $scope.authentication = Authentication;
+    $scope.form = {};
+
+    // Team member select set up
+    $scope.teamMemberSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'displayName',
+      textLookup: function(id) {
+        return TeamMembersService.get({ memberId: id }).$promise;
+      },
+      options: function(searchText) {
+        return TeamMembersService.query();
+      }
     };
 
-    $scope.$on('savingStart', function() {
-      if (vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) {
-        vm.saving = true;
-        stopIncrementalSavingLoop();
-      }
+    // Date time for the meta data
+    $scope.dateTime = {
+      min: moment().subtract(1, 'year').toDate(),
+      max: moment().add(1, 'year').toDate()
+    };
+
+    // Set up values for each protocol
+    // Site Condition
+    $scope.waterConditionUploader = new FileUploader({
+      alias: 'newWaterConditionPicture',
     });
 
-    $scope.$on('savingStop', function() {
-      vm.savingOff(function() {
-        startIncrementalSavingLoop();
-      });
+    $scope.landConditionUploader = new FileUploader({
+      alias: 'newLandConditionPicture',
     });
 
-    $scope.$on('removeSubmittedProtocolTab', function(event, args) {
-      var changes = [{
-        scribeName: args.values.scribeName,
-        protocolName: args.values.protocolName,
-        protocol: args.values.protocol
-      }];
-      showTabChanged(changes);
-      vm.savingOff(function() {
-        startIncrementalSavingLoop();
-      });
+    // Oyster Measurement
+    // Set up substrate shells
+    $scope.substrateCount = 10;
+    $scope.liveShellCount = 45;
+    $scope.cageConditionUploader = new FileUploader({
+      alias: 'newOysterCageConditionPicture'
     });
 
-    $scope.$on('$locationChangeStart', function(event) {
-      stopIncrementalSavingLoop();
-    });
+    $scope.outerUploaders = [];
+    $scope.innerUploaders = [];
+
+    for (var k = 0; k < $scope.substrateCount; k++) {
+      $scope.outerUploaders.push(new FileUploader({ alias: 'newOuterSubstratePicture' }));
+      $scope.innerUploaders.push(new FileUploader({ alias: 'newInnerSubstratePicture' }));
+    }
+
+    // Mobile Traps
+
+    // Settlement Tiles
+    // Set up tiles and grids
+    $scope.tileCount = 4;
+    $scope.gridCount = 25;
+    $scope.settlementTilePhotoUploaders = [];
+
+    for (var j = 0; j < $scope.tileCount; j++) {
+      $scope.settlementTilePhotoUploaders.push(new FileUploader({ alias: 'newSettlementTilePicture' }));
+    }
+
+    // Water Quality
+
   }
 })();

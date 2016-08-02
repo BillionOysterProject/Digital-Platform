@@ -4,13 +4,17 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-test',
+    uri: 'mongodb://localhost/bop-test',
     options: {
       user: '',
       pass: ''
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
+  },
+  s3: {
+    region: 'us-west-1',
+    bucket: 'digital-platform-dev-files',
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
@@ -23,7 +27,7 @@ module.exports = {
         directoryPath: process.cwd(),
         fileName: 'access.log',
         rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
-          active: false, // activate to use rotating logs 
+          active: false, // activate to use rotating logs
           fileName: 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
           frequency: 'daily',
           verbose: false
@@ -31,7 +35,6 @@ module.exports = {
       }
     }
   },
-  port: process.env.PORT || 3001,
   app: {
     title: defaultEnvConfig.app.title + ' - Test Environment'
   },
@@ -68,26 +71,56 @@ module.exports = {
   },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',
+    admin: process.env.MAILER_ADMIN || 'Billion Oyster Project <bop@fearless.tech>',
     options: {
       service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
       auth: {
         user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
         pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+      },
+      ses: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'YOUR_AMAZON_KEY',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'YOUR_AMAZON_SECRET_KEY'
       }
     }
   },
   seedDB: {
-    seed: process.env.MONGO_SEED === 'true' ? true : false,
+    //seed: process.env.MONGO_SEED === 'true' ? true : false,
+    seed: true,
     options: {
       logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
-      seedUser: {
-        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
+      seedOrganization: {
+        name: 'Org1',
+        organizationType: 'school',
+        description: 'Test Organization',
+        streetAddress: '123 Main St',
+        city: 'Anytown',
+        state: 'NY',
+        latitude: 39.765,
+        longitude: -76.234,
+        pending: false
+      },
+      seedTeam: {
+        name: 'Test Team'
+      },
+      seedUserLeader: {
+        username: 'teacher',
         provider: 'local',
-        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
-        firstName: 'User',
+        email: 'teacher@localhost.com',
+        firstName: 'Teacher',
         lastName: 'Local',
-        displayName: 'User Local',
-        roles: ['user']
+        displayName: 'Teacher Local',
+        teamLeadType: 'teacher',
+        roles: ['user', 'team lead']
+      },
+      seedUserMember: {
+        username: 'student',
+        provider: 'local',
+        email: 'student@localhost.com',
+        firstName: 'Student',
+        lastName: 'Local',
+        displayName: 'Student Local',
+        roles: ['user', 'team member']
       },
       seedAdmin: {
         username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',

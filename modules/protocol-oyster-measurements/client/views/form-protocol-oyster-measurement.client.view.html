@@ -1,11 +1,11 @@
-<form name="om.form.oysterMeasurementForm" ng-submit="om.save(om.form.oysterMeasurementForm.$valid)" novalidate ng-cloak>
+<form name="form.oysterMeasurementForm" ng-submit="save(form.oysterMeasurementForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
             <h2>Protocol 2 <small>Oyster Measurements</small></h2>
             <hr />
-            <div class="alert alert-danger" ng-show="om.error" ng-cloak>
+            <div class="alert alert-danger" ng-show="oysterMeasurementErrors" ng-cloak>
                 <h4>We're still missing some information.</h4>
-                <ul class="list-unstyled" ng-repeat="error in om.error">
+                <ul class="list-unstyled" ng-repeat="error in oysterMeasurementErrors">
                     <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                 </ul>
             </div>
@@ -14,33 +14,33 @@
                     <div class="form-group">
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
-                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{om.dateTime.min}}" max="{{om.dateTime.max}}"
-                        ng-model="om.protocolOysterMeasurement.collectionTime" />
-                        <div ng-show="om.form.oysterMeasurementForm.collectionTime.$error.min">
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
+                        ng-model="oysterMeasurement.collectionTime" />
+                        <div ng-show="form.oysterMeasurementForm.collectionTime.$error.min">
                             <p class="red">Collection time must not be more than a year in the past.</p>
                         </div>
-                        <div ng-show="om.form.oysterMeasurementForm.collectionTime.$error.max">
+                        <div ng-show="form.oysterMeasurementForm.collectionTime.$error.max">
                             <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-oyster-measurement-map"
-                        ng-click="om.openMap()">Mark location on map</a>
-                        <input class="form-control" type="text" value="{{om.protocolOysterMeasurement.latitude}}, {{om.protocolOysterMeasurement.longitude}}"
-                        data-toggle="modal" data-target="#modal-oyster-measurement-map" ng-click="om.openMap()"
-                        ng-show="om.protocolOysterMeasurement.latitude && om.protocolOysterMeasurement.longitude"
+                        ng-click="openMap()">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{oysterMeasurement.latitude}}, {{oysterMeasurement.longitude}}"
+                        data-toggle="modal" data-target="#modal-oyster-measurement-map" ng-click="openMap()"
+                        ng-show="oysterMeasurement.latitude && oysterMeasurement.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
-                        in-title="Names of team members" ng-model="om.protocolOysterMeasurement.teamMembers"
-                        label-class="control-label" select-config="om.teamMemberSelectConfig" ></select-tags>
+                        in-title="Names of team members" ng-model="oysterMeasurement.teamMembers"
+                        label-class="control-label" select-config="teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="om.protocolOysterMeasurement.notes" ></textarea>
+                        <textarea class="form-control" rows="7" ng-model="oysterMeasurement.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
                         <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
-                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="om.protocolOysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="om.saveOnBlur()" required/>
+                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
@@ -62,19 +62,19 @@
                     <h6>Condition of oyster cage</h6>
                     <div class="form-group">
                         <label>Take a photograph of the oyster cage *</label>
-                        <single-image-drop-zone uploader="om.cageConditionUploader" image-url="om.cageConditionPhotoURL"
+                        <single-image-drop-zone uploader="cageConditionUploader" image-url="cageConditionPhotoURL"
                         image-alt="Oyster Cage Condition" id="oyster-cage-condition-image-dropzone"></single-image-drop-zone>
-                        <div ng-show="om.form.oysterMeasurementForm.$invalid && om.form.oysterMeasurementForm.$submitted && !om.cageConditionPhotoURL">
+                        <div ng-show="form.oysterMeasurementForm.$invalid && form.oysterMeasurementForm.$submitted && !cageConditionPhotoURL">
                             <p class="red">Oyster cage condition image is required.</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
-                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in om.bioaccumulations" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation" required></select>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
-                        <textarea class="form-control" ng-model="om.protocolOysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+                        <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
                     </div>
                 </div>
             </div>
@@ -94,15 +94,15 @@
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
-                <tr ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
-                ng-class="{red: om.form.oysterMeasurementForm.$submitted && !om.substratesValid &&
+                <tr ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
+                ng-class="{red: form.oysterMeasurementForm.$submitted && !substratesValid &&
                   (substrate.totalNumberOfLiveOystersOnShell === 0 || substrate.totalNumberOfLiveOystersOnShell === undefined)}">
                     <td>
-                        <h4><i class="glyphicon glyphicon-ok-sign green" ng-show="om.checkDone(substrate)"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4>
+                        <h4><i class="glyphicon glyphicon-ok-sign green" ng-show="checkDone(substrate)"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4>
                     </td>
                     <td>
-                        <a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="om.openSubstrateForm($index)" ng-disabled="om.saving">Edit measurements</a>
-                        <span class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters || substrate.averageSizeOfLiveOysters || substrate.totalNumberOfLiveOystersOnShell">
+                        <a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="openSubstrateForm($index)" ng-disabled="saving">Edit measurements</a>
+                        <span class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters >= 0 || substrate.maximumSizeOfLiveOysters >= 0 || substrate.averageSizeOfLiveOysters >= 0 || substrate.totalNumberOfLiveOystersOnShell">
                             Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>,
                             Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>,
                             Average size <b>{{substrate.averageSizeOfLiveOysters | number:2}}</b>,
@@ -115,40 +115,40 @@
     </section>
     <section class="content shaded">
         <section class="container">
-            <p class="lead blue" ng-show="om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters || om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters ||
-            om.protocolOysterMeasurement.averageSizeOfAllLiveOysters || om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+            <p class="lead blue" ng-show="oysterMeasurement.minimumSizeOfAllLiveOysters || oysterMeasurement.maximumSizeOfAllLiveOysters ||
+            oysterMeasurement.averageSizeOfAllLiveOysters || oysterMeasurement.totalNumberOfAllLiveOysters">
             Great work! Of the total population, the
-                minimum shell size is <b>{{om.protocolOysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
-                maximum size is <b>{{om.protocolOysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
-                average size is <b>{{om.protocolOysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
-                total oysters alive is <b>{{om.protocolOysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
-              <p ng-show="om.previous &&
-              om.previous.totalNumberOfAllLiveOysters === om.protocolOysterMeasurement.totalNumberOfAllLiveOysters">
+                minimum shell size is <b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
+                maximum size is <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
+                average size is <b>{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
+                total oysters alive is <b>{{oysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
+              <p ng-show="previous &&
+              previous.totalNumberOfAllLiveOysters === oysterMeasurement.totalNumberOfAllLiveOysters">
               Compared to your last expedition, your oyster population has stayed the same.</p>
-            <p ng-show="om.previous">
+            <p ng-show="previous">
               Since your last expedition, your oyster population has experienced a mortality rate of
-              <b>{{om.previous.mortality}}%</b> </span>
-              and a growth rate of <b>{{om.previous.growth}}%</b>. </span>
+              <b>{{previous.mortality}}%</b> </span>
+              and a growth rate of <b>{{previous.growth}}%</b>. </span>
               The minimum shell size has
-              <span ng-show="om.previous.min >= 0">increased <b>{{om.previous.min}}%</b>, </span>
-              <span ng-show="om.previous.min < 0">decreased <b>{{om.previous.min}}%</b>, </span>
+              <span ng-show="previous.min >= 0">increased <b>{{previous.min}}%</b>, </span>
+              <span ng-show="previous.min < 0">decreased <b>{{previous.min}}%</b>, </span>
               and the maximum shell size has
-              <span ng-show="om.previous.max >= 0">increased <b>{{om.previous.max}}%</b>.</span>
-              <span ng-show="om.previous.max < 0">decreased <b>{{om.previous.max}}%</b>.</span>
+              <span ng-show="previous.max >= 0">increased <b>{{previous.max}}%</b>.</span>
+              <span ng-show="previous.max < 0">decreased <b>{{previous.max}}%</b>.</span>
             </p>
         </section>
     </section>
 </form>
 
 <!-- MODALS -->
-<form-substrate-shell ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells"
-substrate="substrate" max-live-oysters="om.liveShellCount" outer-substrate-uploader="om.outerUploaders[$index]"
-inner-substrate-uploader="om.innerUploaders[$index]" outer-substrate-url="om.outerSubstrateURL"
-inner-substrate-url="om.innerSubstrateURL" save-function="om.saveSubstrateForm" cancel-function="om.cancelSubstrateForm"
+<form-substrate-shell ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
+substrate="substrate" max-live-oysters="liveShellCount" outer-substrate-uploader="outerUploaders[$index]"
+inner-substrate-uploader="innerUploaders[$index]" outer-substrate-url="outerSubstrateURL"
+inner-substrate-url="innerSubstrateURL" save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm"
 index="{{$index}}"></form-substrate-shell>
 
 <div class="modal fade" id="modal-oyster-measurement-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-oyster-measurement-map" latitude="om.protocolOysterMeasurement.latitude"
-    longitude="om.protocolOysterMeasurement.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="om.closeMap"></map-select>
+    <map-select modal-id="modal-oyster-measurement-map" latitude="oysterMeasurement.latitude"
+    longitude="oysterMeasurement.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 </div>

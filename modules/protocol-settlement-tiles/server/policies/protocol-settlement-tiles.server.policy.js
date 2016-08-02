@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-settlement-tiles/:settlementTileId/incremental-save',
       permissions: '*'
     }, {
+      resources: '/api/protocol-settlement-tiles/:settlementTileId/validate',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-settlement-tiles/:settlementTileId',
       permissions: '*'
     }, {

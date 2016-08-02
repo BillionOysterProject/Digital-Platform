@@ -27,6 +27,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save',
       permissions: '*'
     }, {
+      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/validate',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-oyster-measurements/:currentOysterMeasurementId/previous',
       permissions: '*'
     }, {

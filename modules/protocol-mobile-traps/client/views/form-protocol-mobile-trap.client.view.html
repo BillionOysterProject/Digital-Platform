@@ -1,11 +1,11 @@
-<form name="mt.form.mobileTrapForm" ng-submit="mt.save(mt.form.mobileTrapForm.$valid)" novalidate ng-cloak>
+<form name="form.mobileTrapForm" ng-submit="save(form.mobileTrapForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
             <hr />
-            <div class="alert alert-danger" ng-show="mt.error">
+            <div class="alert alert-danger" ng-show="mobileTrapErrors">
                 <h4>We're still missing some information.</h4>
-                <ul class="list-unstyled" ng-repeat="error in mt.error">
+                <ul class="list-unstyled" ng-repeat="error in mobileTrapErrors">
                     <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                 </ul>
             </div>
@@ -14,33 +14,33 @@
                     <div class="form-group">
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
-                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{mt.dateTime.min}}" max="{{mt.dateTime.max}}"
-                        ng-model="mt.protocolMobileTrap.collectionTime" />
-                        <div ng-show="mt.form.mobileTrapForm.collectionTime.$error.min">
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
+                        ng-model="mobileTrap.collectionTime" />
+                        <div ng-show="form.mobileTrapForm.collectionTime.$error.min">
                             <p class="red">Collection time must not be more than a year in the past.</p>
                         </div>
-                        <div ng-show="mt.form.mobileTrapForm.collectionTime.$error.max">
+                        <div ng-show="form.mobileTrapForm.collectionTime.$error.max">
                             <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-mobile-trap-map"
-                        ng-click="mt.openMap()">Mark location on map</a>
-                        <input class="form-control" type="text" value="{{mt.protocolMobileTrap.latitude}}, {{mt.protocolMobileTrap.longitude}}"
-                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-click="mt.openMap()"
-                        ng-show="mt.protocolMobileTrap.latitude && mt.protocolMobileTrap.longitude"
+                        ng-click="openMap()">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{mobileTrap.latitude}}, {{mobileTrap.longitude}}"
+                        data-toggle="modal" data-target="#modal-mobile-trap-map" ng-click="openMap()"
+                        ng-show="mobileTrap.latitude && mobileTrap.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
-                        in-title="Names of team members" ng-model="mt.protocolMobileTrap.teamMembers"
-                        label-class="control-label" select-config="mt.teamMemberSelectConfig" ></select-tags>
+                        in-title="Names of team members" ng-model="mobileTrap.teamMembers"
+                        label-class="control-label" select-config="teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="mt.protocolMobileTrap.notes" ></textarea>
+                        <textarea class="form-control" rows="7" ng-model="mobileTrap.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -63,30 +63,30 @@
         <section class="container">
             <nav class="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#" ng-click="mt.clearFilters()">Show All</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter('fish')">Fish</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter('crustaceans')">Crustaceans</a></li>
-                    <li><a href="#" ng-click="mt.clickFilter('worms')">Worms</a></li>
+                    <li class="active"><a href="#" ng-click="clearFilters()">Show All</a></li>
+                    <li><a href="#" ng-click="clickFilter('fish')">Fish</a></li>
+                    <li><a href="#" ng-click="clickFilter('crustaceans')">Crustaceans</a></li>
+                    <li><a href="#" ng-click="clickFilter('worms')">Worms</a></li>
                 </ul>
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mt.mobileOrganisms track by organism._id">
+                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id">
                     <div class="thumbnail">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]" ng-click="mt.removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left" ng-show="mt.foundOrganisms[organism._id]">&nbsp;{{mt.foundOrganisms[organism._id].count}}&nbsp;</b>
-                                <b class="pull-left" ng-show="!mt.foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default" ng-click="mt.addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
+                                <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
+                                <b class="pull-left" ng-show="foundOrganisms[organism._id]">&nbsp;{{foundOrganisms[organism._id].count}}&nbsp;</b>
+                                <b class="pull-left" ng-show="!foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
+                                <button type="button" class="btn btn-default" ng-click="addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
                         <p class="text-center">
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
-                        <a href="#" class="btn btn-default btn-block" ng-click="mt.openOrganismDetails(organism)" ng-disabled="mt.foundOrganisms[organism._id].count <= 0 || !mt.foundOrganisms[organism._id]">Add notes or an image *</a>
+                        <a href="#" class="btn btn-default btn-block" ng-click="openOrganismDetails(organism)" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]">Add notes or an image *</a>
                         <!-- TODO: when notes/photo is added, show this instead
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or an image *</a>-->
                     </div>
@@ -98,12 +98,13 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-mobile-trap-map" latitude="mt.protocolMobileTrap.latitude"
-    longitude="mt.protocolMobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="mt.closeMap"></map-select>
+    <map-select modal-id="modal-mobile-trap-map" latitude="mobileTrap.latitude"
+    longitude="mobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 </div>
 
-<form-organism-details ng-repeat="organismDetails in mt.foundOrganisms" organism-details="organismDetails"
+<form-organism-details ng-repeat="organismDetails in foundOrganisms" organism-details="organismDetails"
 sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl"
-save-function="mt.saveOrganismDetails" cancel-function="mt.cancelOrganismDetails"
-organism-id="{{organismDetails.organism._id}}"></form-organism-details>
+save-function="saveOrganismDetails" cancel-function="cancelOrganismDetails"
+organism-id="{{organismDetails.organism._id}}">
+</form-organism-details>
