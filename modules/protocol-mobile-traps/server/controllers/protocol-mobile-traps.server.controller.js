@@ -155,7 +155,6 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successC
 
         mobileTrap.save(function (err) {
           if (err) {
-            console.log('mobile trap save err', err);
             errorCallback(errorHandler.getErrorMessage(err));
           } else {
             successCallback(mobileTrap);

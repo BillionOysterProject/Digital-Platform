@@ -82,23 +82,25 @@
 
     // Get the average of the results
     var average = function(result0, result1, result2) {
-      var average = 0;
+      var sum = 0;
       var divBy = 0;
       if (result0) {
-        average += result0;
+        sum += result0;
         divBy += 1;
       }
       if (result1) {
-        average += result1;
+        sum += result1;
         divBy += 1;
       }
       if (result2) {
-        average += result2;
+        sum += result2;
         divBy += 1;
       }
 
-      if (average && divBy) {
-        return (average / divBy);
+      if (sum && divBy > 0) {
+        var avg = (sum / divBy);
+        var rounded = avg.toFixed(2);
+        return Number(rounded);
       } else {
         return 0;
       }

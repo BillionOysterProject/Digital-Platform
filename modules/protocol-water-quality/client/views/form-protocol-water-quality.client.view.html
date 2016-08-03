@@ -58,14 +58,14 @@
                 </div>
             </section>
         </section>
-        <section ng-repeat="sample in waterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
-            <section class="container">
+        <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
+            <div class="container">
                 <h3>Water Sample</h3>
                 <div class="row">
                     <div class="form-group col-md-6">
                         <h6>Water Quality Parameters</h6>
-                        <label>Depth of Water Sample (m)</label>
-                        <input type="number" class="form-control" ng-model="sample.depthOfWaterSampleM" />
+                        <label for="depthOfWaterSample">Depth of Water Sample (m)</label>
+                        <input type="number" class="form-control" name="depthOfWaterSample" ng-model="sample.depthOfWaterSampleM" />
                         <span class="help-block">Type 0 if at surface</span>
                     </div>
                     <div class="form-group col-md-6">
@@ -99,12 +99,12 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.waterTemperature.method" ng-options="method.value as method.name for method in waterTemperatureMethods" required></select>
+                                    <label for="waterTemperatureMethod">Method (tool or test name)</label>
+                                    <select class="form-control" name="waterTemperatureMethod" ng-model="sample.waterTemperature.method" ng-options="method.value as method.name for method in waterTemperatureMethods" required></select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Units</label>
-                                    <select class="form-control" ng-model="sample.waterTemperature.units" ng-options="method.value as method.name for method in waterTemperatureUnits" required></select>
+                                    <label for="waterTemperatureUnits">Units</label>
+                                    <select class="form-control" name="waterTemperatureUnits" ng-model="sample.waterTemperature.units" ng-options="method.value as method.name for method in waterTemperatureUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -113,16 +113,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" ng-blur="waterTemperatureAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="waterTemperatureResult1" placeholder="Result 1" ng-model="sample.waterTemperature.results[0]" ng-blur="waterTemperatureAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" ng-blur="waterTemperatureAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="waterTemperatureResult2" placeholder="Result 2" ng-model="sample.waterTemperature.results[1]" ng-blur="waterTemperatureAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" ng-blur="waterTemperatureAverage(sample)"/>
+                                            <input type="number" class="form-control" name="waterTemperatureResult3" placeholder="Result 3" ng-model="sample.waterTemperature.results[2]" ng-blur="waterTemperatureAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.waterTemperature.average" required readonly/>
+                                            <input type="number" class="form-control" name="waterTemperatureAverage" placeholder="Average" ng-model="sample.waterTemperature.average" required readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -138,11 +138,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.name for method in dissolvedOxygenMethods" required></select>
+                                    <select class="form-control" name="dissolvedOxygenMethod" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.name for method in dissolvedOxygenMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.name for method in dissolvedOxygenUnits" required></select>
+                                    <select class="form-control" name="dissolvedOxygenUnits" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.name for method in dissolvedOxygenUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -151,16 +151,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" ng-blur="dissolvedOxygenAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="dissolvedOxygenResult1" placeholder="Result 1" ng-model="sample.dissolvedOxygen.results[0]" ng-blur="dissolvedOxygenAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" ng-blur="dissolvedOxygenAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="dissolvedOxygenResult2" placeholder="Result 2" ng-model="sample.dissolvedOxygen.results[1]" ng-blur="dissolvedOxygenAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" ng-blur="dissolvedOxygenAverage(sample)"/>
+                                            <input type="number" class="form-control" name="dissolvedOxygenResult3" placeholder="Result 3" ng-model="sample.dissolvedOxygen.results[2]" ng-blur="dissolvedOxygenAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.dissolvedOxygen.average" required readonly/>
+                                            <input type="number" class="form-control" name="dissolvedOxygenAverage" placeholder="Average" ng-model="sample.dissolvedOxygen.average" required readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -176,11 +176,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.salinity.method" ng-options="method.value as method.name for method in salinityMethods" required></select>
+                                    <select class="form-control" name="salinityMethod" ng-model="sample.salinity.method" ng-options="method.value as method.name for method in salinityMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.salinity.units" ng-options="method.value as method.name for method in salinityUnits" required></select>
+                                    <select class="form-control" name="salinityUnits" ng-model="sample.salinity.units" ng-options="method.value as method.name for method in salinityUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -189,16 +189,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.salinity.results[0]" ng-blur="salinityAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="salinityResult1" placeholder="Result 1" ng-model="sample.salinity.results[0]" ng-blur="salinityAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.salinity.results[1]" ng-blur="salinityAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="salinityResult2" placeholder="Result 2" ng-model="sample.salinity.results[1]" ng-blur="salinityAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.salinity.results[2]" ng-blur="salinityAverage(sample)"/>
+                                            <input type="number" class="form-control" name="salinityResult3" placeholder="Result 3" ng-model="sample.salinity.results[2]" ng-blur="salinityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.salinity.average" required readonly/>
+                                            <input type="number" class="form-control" name="salinityAverage" placeholder="Average" ng-model="sample.salinity.average" required readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -214,11 +214,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.pH.method" ng-options="method.value as method.name for method in pHMethods" required></select>
+                                    <select class="form-control" name="pHmethod" ng-model="sample.pH.method" ng-options="method.value as method.name for method in pHMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.pH.units" ng-options="method.value as method.name for method in pHUnits" required></select>
+                                    <select class="form-control" name="pHunits" ng-model="sample.pH.units" ng-options="method.value as method.name for method in pHUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -227,16 +227,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.pH.results[0]" ng-blur="pHAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="pHresult1" placeholder="Result 1" ng-model="sample.pH.results[0]" ng-blur="pHAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.pH.results[1]" ng-blur="pHAverage(sample)" required/>
+                                            <input type="number" class="form-control" name="pHresult2" placeholder="Result 2" ng-model="sample.pH.results[1]" ng-blur="pHAverage(sample)" required/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.pH.results[2]" ng-blur="pHAverage(sample)"/>
+                                            <input type="number" class="form-control" name="pHresult3" placeholder="Result 3" ng-model="sample.pH.results[2]" ng-blur="pHAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.pH.average" required readonly/>
+                                            <input type="number" class="form-control" name="pHaverage" placeholder="Average" ng-model="sample.pH.average" required readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -252,11 +252,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.turbidity.method" ng-options="method.value as method.name for method in turbidityMethods"></select>
+                                    <select class="form-control" name="turbidityMethod" ng-model="sample.turbidity.method" ng-options="method.value as method.name for method in turbidityMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.turbidity.units" ng-options="method.value as method.name for method in turbidityUnits"></select>
+                                    <select class="form-control" name="turbidityUnits" ng-model="sample.turbidity.units" ng-options="method.value as method.name for method in turbidityUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -265,16 +265,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.turbidity.results[0]" ng-blur="turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" name="turbidityResult1" placeholder="Result 1" ng-model="sample.turbidity.results[0]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.turbidity.results[1]" ng-blur="turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" name="turbidityResult2" placeholder="Result 2" ng-model="sample.turbidity.results[1]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.turbidity.results[2]" ng-blur="turbidityAverage(sample)"/>
+                                            <input type="number" class="form-control" name="turbidityResult3" placeholder="Result 3" ng-model="sample.turbidity.results[2]" ng-blur="turbidityAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.turbidity.average" readonly/>
+                                            <input type="number" class="form-control" name="turbidityAverage" placeholder="Average" ng-model="sample.turbidity.average" readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -290,11 +290,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.ammonia.method" ng-options="method.value as method.name for method in ammoniaMethods"></select>
+                                    <select class="form-control" name="ammoniaMethod" ng-model="sample.ammonia.method" ng-options="method.value as method.name for method in ammoniaMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.ammonia.units" ng-options="method.value as method.name for method in ammoniaUnits"></select>
+                                    <select class="form-control" name="ammoniaUnits" ng-model="sample.ammonia.units" ng-options="method.value as method.name for method in ammoniaUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -303,16 +303,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.ammonia.results[0]" ng-blur="ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" name="ammoniaResult1" placeholder="Result 1" ng-model="sample.ammonia.results[0]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.ammonia.results[1]" ng-blur="ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" name="ammoniaResult2" placeholder="Result 2" ng-model="sample.ammonia.results[1]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.ammonia.results[2]" ng-blur="ammoniaAverage(sample)"/>
+                                            <input type="number" class="form-control" name="ammoniaResult3" placeholder="Result 3" ng-model="sample.ammonia.results[2]" ng-blur="ammoniaAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.ammonia.average" readonly/>
+                                            <input type="number" class="form-control" name="ammoniaAverage" placeholder="Average" ng-model="sample.ammonia.average" readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -328,11 +328,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" ng-model="sample.nitrates.method" ng-options="method.value as method.name for method in nitratesMethods"></select>
+                                    <select class="form-control" name="nitratesMethod" ng-model="sample.nitrates.method" ng-options="method.value as method.name for method in nitratesMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" ng-model="sample.nitrates.units" ng-options="method.value as method.name for method in nitratesUnits"></select>
+                                    <select class="form-control" name="nitratesUnits" ng-model="sample.nitrates.units" ng-options="method.value as method.name for method in nitratesUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -341,16 +341,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="sample.nitrates.results[0]" ng-blur="nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" name="nitratesResult1" placeholder="Result 1" ng-model="sample.nitrates.results[0]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="sample.nitrates.results[1]" ng-blur="nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" name="nitratesResult2" placeholder="Result 2" ng-model="sample.nitrates.results[1]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="sample.nitrates.results[2]" ng-blur="nitratesAverage(sample)"/>
+                                            <input type="number" class="form-control" name="nitratesResult3" placeholder="Result 3" ng-model="sample.nitrates.results[2]" ng-blur="nitratesAverage(sample)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="sample.nitrates.average" readonly/>
+                                            <input type="number" class="form-control" name="nitratesAverage" placeholder="Average" ng-model="sample.nitrates.average" readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -364,17 +364,17 @@
                         <h4>Other</h4>
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" placeholder="Other" ng-model="other.label"/>
+                            <input type="text" class="form-control" name="otherLabel" placeholder="Other" ng-model="other.label"/>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <input type="text" class="form-control" placeholder="Method" ng-model="other.method"/>
+                                    <input type="text" class="form-control" name="otherMethod" placeholder="Method" ng-model="other.method"/>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <input type="text" class="form-control" placeholder="Units" ng-model="other.units"/>
+                                    <input type="text" class="form-control" name="otherUnits" placeholder="Units" ng-model="other.units"/>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -383,16 +383,16 @@
                                     <span class="help-block">Take 2 or 3 measurements for each parameter. If there is significant different between the first two results, take a third measurement to reconcile the difference.</span>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 1" ng-model="other.results[0]" ng-blur="otherAverage(other)"/>
+                                            <input type="number" class="form-control" name="otherResult1" placeholder="Result 1" ng-model="other.results[0]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 2" ng-model="other.results[1]" ng-blur="otherAverage(other)"/>
+                                            <input type="number" class="form-control" name="otherResult2" placeholder="Result 2" ng-model="other.results[1]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Result 3" ng-model="other.results[2]" ng-blur="otherAverage(other)"/>
+                                            <input type="number" class="form-control" name="otherResult3" placeholder="Result 3" ng-model="other.results[2]" ng-blur="otherAverage(other)"/>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" placeholder="Average" ng-model="other.average" readonly/>
+                                            <input type="number" class="form-control" name="otherAverage" placeholder="Average" ng-model="other.average" readonly/>
                                         </div>
                                     </div>
                                 </div>
@@ -402,8 +402,8 @@
                 </div>
                 <a class="btn btn-default" ng-show="$last" ng-click="addSampleForm()">Add a new sample</a>
                 <a class="btn btn-danger" ng-show="waterQuality.samples.length > 1" ng-click="removeSampleForm($index)">Remove sample</a>
-            </section>
-        </section>
+            </div>
+        </div>
     </section>
 </form>
 
