@@ -77,8 +77,123 @@ describe('Expedition E2E Tests', function() {
     }
   };
 
-  var protocol2 = {
-
+  var oysterMeasurement1 = {
+    depthOfOysterCage: {
+      submergedDepthofCageM: 5
+    },
+    conditionOfOysterCage: {
+      notesOnDamageToCage: 'Test description of damage'
+    },
+    measuringOysterGrowth: {
+      substrateShells: [{
+        source: 'sourceA',
+        totalNumberOfLiveOystersOnShell: 0,
+        notes: 'Test notes 1',
+        measurements: [{
+        }]
+      }, {
+        source: 'sourceB',
+        totalNumberOfLiveOystersOnShell: 1,
+        notes: 'Test notes 2',
+        measurements: [{
+          sizeOfLiveOysterMM: 11.1
+        }]
+      }, {
+        source: 'sourceC',
+        totalNumberOfLiveOystersOnShell: 2,
+        notes: 'Test notes 3',
+        measurements: [{
+          sizeOfLiveOysterMM: 23.1
+        }, {
+          sizeOfLiveOysterMM: 21.0
+        }]
+      }, {
+        source: 'sourceD',
+        totalNumberOfLiveOystersOnShell: 3,
+        notes: 'Test notes 3',
+        measurements: [{
+          sizeOfLiveOysterMM: 32.1
+        }, {
+          sizeOfLiveOysterMM: 33.1
+        }, {
+          sizeOfLiveOysterMM: 38.2
+        }]
+      }, {
+        source: 'sourceE',
+        totalNumberOfLiveOystersOnShell: 4,
+        notes: 'Test notes 4',
+        measurements: [{
+          sizeOfLiveOysterMM: 43.1
+        }, {
+          sizeOfLiveOysterMM: 40.1
+        }, {
+          sizeOfLiveOysterMM: 47.3
+        }, {
+          sizeOfLiveOysterMM: 44.2
+        }]
+      }, {
+        source: 'sourceF',
+        totalNumberOfLiveOystersOnShell: 5,
+        notes: 'Test notes 5',
+        measurements: [{
+          sizeOfLiveOysterMM: 53.2
+        }, {
+          sizeOfLiveOysterMM: 52.1
+        }, {
+          sizeOfLiveOysterMM: 55.2
+        }, {
+          sizeOfLiveOysterMM: 58.4
+        }, {
+          sizeOfLiveOysterMM: 57.2
+        }]
+      }, {
+        source: 'sourceG',
+        totalNumberOfLiveOystersOnShell: 4,
+        notes: 'Test notes 6',
+        measurements: [{
+          sizeOfLiveOysterMM: 65.2
+        }, {
+          sizeOfLiveOysterMM: 66.3
+        }, {
+          sizeOfLiveOysterMM: 62.1
+        }, {
+          sizeOfLiveOysterMM: 67.4
+        }]
+      }, {
+        source: 'sourceH',
+        totalNumberOfLiveOystersOnShell: 3,
+        notes: 'Test notes 7',
+        measurements: [{
+          sizeOfLiveOysterMM: 77.3
+        }, {
+          sizeOfLiveOysterMM: 74.2
+        }, {
+          sizeOfLiveOysterMM: 72.1
+        }]
+      }, {
+        source: 'sourceI',
+        totalNumberOfLiveOystersOnShell: 2,
+        notes: 'Test notes 8',
+        measurements: [{
+          sizeOfLiveOysterMM: 88.3
+        }, {
+          sizeOfLiveOysterMM: 84.3
+        }]
+      }, {
+        source: 'sourceJ',
+        totalNumberOfLiveOystersOnShell: 1,
+        notes: 'Test notes 9',
+        measurements: [{
+          sizeOfLiveOysterMM: 93.2
+        }]
+      }, {
+        source: 'sourceK',
+        totalNumberOfLiveOystersOnShell: 0,
+        notes: 'Test notes 2',
+        measurements: [{
+        }]
+      }]
+    }
   };
 
   var mobileTrap1 = {
@@ -170,6 +285,7 @@ describe('Expedition E2E Tests', function() {
   var defaultMapCoordinates = function(target) {
     element(by.css('a[data-target="#'+target+'"]')).click();
     element(by.id('saveMapSelectModal-'+target)).click();
+    browser.sleep(500);
   };
 
   var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
@@ -200,7 +316,6 @@ describe('Expedition E2E Tests', function() {
   var fillOutWaterQualitySample = function(sample, index, measurements) {
     sample.element(by.model('sample.depthOfWaterSampleM')).sendKeys(measurements.depthOfWaterSampleM);
     defaultMapCoordinates('modal-map-sample'+index);
-    browser.sleep(500);
     // Water Temperature
     sample.element(by.name('waterTemperatureMethod')).all(by.tagName('option')).get(2).click();
     sample.element(by.name('waterTemperatureUnits')).all(by.tagName('option')).get(2).click();
@@ -387,7 +502,6 @@ describe('Expedition E2E Tests', function() {
       element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent')).all(by.tagName('option')).get(1).click();
       element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent')).all(by.tagName('option')).get(1).click();
       defaultMapCoordinates('modal-map-marked');
-      browser.sleep(500);
       element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent')).all(by.tagName('option')).get(1).click();
       element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough')).all(by.tagName('option')).get(3).click();
       //defaultMapCoordinates('modal-map-unmarked');
@@ -523,9 +637,13 @@ describe('Expedition E2E Tests', function() {
     });
 
     it ('should allow team member 1 to fill out protocol 1', function() {
-      element(by.partialLinkText('Site Conditions')).click();
+      element(by.partialLinkText('Oyster Measurements')).click();
       browser.sleep(1000);
       // Fill in values
+      element(by.model('oysterMeasurement.depthOfOysterCage.submergedDepthofCageM')).sendKeys(oysterMeasurement1.depthOfOysterCage.submergedDepthofCageM);
+      uploadImage('oyster-cage-condition-image-dropzone');
+      element(by.model('oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage')).all(by.tagName('option')).get(3).click();
+      element(by.model('oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage')).sendKeys(oysterMeasurement1.conditionOfOysterCage.notesOnDamageToCage);
     });
   });
 });
