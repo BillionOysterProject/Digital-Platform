@@ -1,4 +1,4 @@
-<form name="form.mobileTrapForm" ng-submit="save(form.mobileTrapForm.$valid)" novalidate ng-cloak>
+<form name="form.mobileTrapForm" id="form.mobileTrapForm" ng-submit="save(form.mobileTrapForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
             <h2>Protocol 3 <small>Mobile Trap</small></h2>
@@ -79,7 +79,7 @@
                                 <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
                                 <b class="pull-left" ng-show="foundOrganisms[organism._id]">&nbsp;{{foundOrganisms[organism._id].count}}&nbsp;</b>
                                 <b class="pull-left" ng-show="!foundOrganisms[organism._id]">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default" ng-click="addOrganism(organism)"><i class="glyphicon glyphicon-plus"></i></button>
+                                <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
                         <p class="text-center">
