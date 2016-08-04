@@ -14,7 +14,7 @@ module.exports = {
   },
   s3: {
     region: 'us-west-1',
-    bucket: 'digital-platform-dev-files',
+    bucket: 'digital-platform-test-files',
   },
   log: {
     // logging with Morgan - https://github.com/expressjs/morgan
@@ -103,6 +103,19 @@ module.exports = {
       seedTeam: {
         name: 'Test Team'
       },
+      seedStation: {
+        name: 'Test Station',
+        latitude: 39.765,
+        longitude: -76.234,
+        bodyOfWater: 'Test Body of Water',
+        status: 'Active',
+        photo: {
+          originalname: 'water.jpg',
+          mimetype: 'image/jpeg',
+          filename:'31c11c686cf6373172e6d95fdaf6aeb9',
+          path: 'http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/restoration-stations/img/station/31c11c686cf6373172e6d95fdaf6aeb9.jpg'
+        }
+      },
       seedUserLeader: {
         username: 'teacher',
         provider: 'local',
@@ -113,13 +126,22 @@ module.exports = {
         teamLeadType: 'teacher',
         roles: ['user', 'team lead']
       },
-      seedUserMember: {
-        username: 'student',
+      seedUserMember1: {
+        username: 'student1',
         provider: 'local',
-        email: 'student@localhost.com',
-        firstName: 'Student',
+        email: 'student1@localhost.com',
+        firstName: 'Student1',
         lastName: 'Local',
-        displayName: 'Student Local',
+        displayName: 'Student1 Local',
+        roles: ['user', 'team member']
+      },
+      seedUserMember2: {
+        username: 'student2',
+        provider: 'local',
+        email: 'student2@localhost.com',
+        firstName: 'Student2',
+        lastName: 'Local',
+        displayName: 'Student2 Local',
         roles: ['user', 'team member']
       },
       seedAdmin: {

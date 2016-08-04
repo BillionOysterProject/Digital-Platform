@@ -65,7 +65,7 @@
         <section class="container">
             <div class="form-group">
                 <label>Assign members to protocols *</label>
-                <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()">Auto Assign</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()" id="autoassign">Auto Assign</button>
                 <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
             </div>
             <div class="row">
@@ -159,7 +159,7 @@
     <section class="content shaded">
         <section class="container">
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
+                <button type="submit" class="btn btn-primary" id="launchexpedition">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
                 <button type="button" class="btn btn-danger pull-right" ng-show="vm.expedition._id" ng-click="vm.openDeleteExpedition()">Delete</button>
             </div>
         </section>

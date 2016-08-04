@@ -76,10 +76,6 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
     for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
       var substrateShell = oysterMeasurement.measuringOysterGrowth.substrateShells[j];
 
-      console.log('substrateShell.outerSidePhoto', substrateShell.outerSidePhoto);
-      console.log('substrateShell.innerSidePhoto', substrateShell.innerSidePhoto);
-      console.log('substrateShell.totalNumberOfLiveOystersOnShell', substrateShell.totalNumberOfLiveOystersOnShell);
-
       if (substrateShell.outerSidePhoto && substrateShell.outerSidePhoto.path !== undefined &&
         substrateShell.outerSidePhoto.path !== '' && substrateShell.innerSidePhoto &&
         substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&

@@ -21,6 +21,7 @@
     "inject",
     "by",
     "browser",
+    "protractor",
     "element",
     "Spinner",
     "L",

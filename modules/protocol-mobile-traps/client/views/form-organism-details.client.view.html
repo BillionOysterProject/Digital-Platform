@@ -29,7 +29,7 @@
                             <div class="form-group">
                                 <label>Add a sketch or photograph *</label>
                                 <single-image-drop-zone uploader="sketchPhotoUploader" image-url="sketchPhotoUrl"
-                                image-alt="Sketch or Photo"></single-image-drop-zone>
+                                image-alt="Sketch or Photo" id="mobileTrapSketchPhoto-{{organismId}}"></single-image-drop-zone>
                                 <div ng-show="form.organismDetailsForm.$invalid && form.organismDetailsForm.$submitted &&
                                 !sketchPhotoUrl">
                                     <p class="red">Sketch or photograph is required.</p>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" ng-click="cancelFunction(organismId)">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" id="mobileOrganismDetails-{{organismId}}">Save</button>
                 </div>
             </form>
         </div>
