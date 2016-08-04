@@ -13,8 +13,9 @@
 
     // Check to see if substrate is complete
     $scope.checkDone = function(substrate) {
-      if (substrate.totalNumberOfLiveOystersOnShell >= 0 && substrate.minimumSizeOfLiveOysters >= 0 &&
-      substrate.maximumSizeOfLiveOysters >= 0 && substrate.averageSizeOfLiveOysters >= 0 &&
+      if ((substrate.totalNumberOfLiveOystersOnShell === 0 ||
+        substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.minimumSizeOfLiveOysters > 0 &&
+      substrate.maximumSizeOfLiveOysters > 0 && substrate.averageSizeOfLiveOysters > 0) &&
       substrate.outerSidePhoto && substrate.outerSidePhoto.path &&
       substrate.innerSidePhoto && substrate.innerSidePhoto.path) {
         return true;
@@ -109,6 +110,7 @@
     };
 
     $scope.saveSubstrateForm = function(substrate, index, isValid) {
+      console.log('save substrate', index);
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
         return false;
@@ -123,7 +125,7 @@
           $scope.innerSubstrateURL = '';
 
           $scope.findOverallStats();
-        });
+        }, 500);
       }
     };
 
@@ -199,7 +201,7 @@
         $scope.innerUploaders[index].clearQueue();
         $scope.outerSubstrateURL = '';
         $scope.innerSubstrateURL = '';
-      });
+      }, 500);
     };
 
     // Check to see if any of the substrate shells are done

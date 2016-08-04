@@ -27,8 +27,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
-                                <li role="presentation"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
+                                <li role="presentation" class="active" id="substrate-details"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
+                                <li role="presentation" id="substrate-measurements"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="substrateshell-meta{{index}}">
@@ -41,7 +41,7 @@
                                                 <label for="outerImg" class="control-label required">Outer side *</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader"
                                                 image-url="outerSubstrateUrl" image-alt="Outer side"
-                                                id="outer-substrate-image-dropzone"></single-image-drop-zone>
+                                                id="outer-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
                                                     <p class="red">Outer side image is required.</p>
                                                 </div>
@@ -50,7 +50,7 @@
                                                 <label for="innerImg" class="control-label required">Inner side *</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader"
                                                 image-url="innerSubstrateUrl" image-alt="Inner side"
-                                                id="inner-substrate-image-dropzone"></single-image-drop-zone>
+                                                id="inner-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
                                                     <p class="red">Inner side image is required.</p>
                                                 </div>

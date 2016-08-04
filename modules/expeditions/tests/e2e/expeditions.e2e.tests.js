@@ -32,227 +32,6 @@ describe('Expedition E2E Tests', function() {
     name: 'Test Expedition 1 - Auto Assign'
   };
 
-  var siteCondition1 = {
-    meteorologicalConditions: {
-      airTemperatureC: 23,
-      windSpeedMPH: 4,
-      humidityPer: 23
-    },
-    tideConditions: {
-      closestHighTide: new Date(),
-      closestLowTide: new Date(),
-      currentSpeedMPH: 3,
-    },
-    waterConditions: {
-      garbage: {
-        other: {
-          description: 'wood'
-        }
-      },
-      markedCombinedSewerOverflowPipes: {
-        location: {
-          latitude: 39.765,
-          longitude: -76.234,
-        }
-      },
-      unmarkedOutfallPipes: {
-        location: {
-          latitude: 39.765,
-          longitude: -76.234,
-        },
-        approximateDiameterCM: 3
-      }
-    },
-    landConditions: {
-      garbage: {
-        other: {
-          description: 'wood'
-        }
-      },
-      shorelineSurfaceCoverEstPer: {
-        imperviousSurfacePer: 33,
-        perviousSurfacePer: 33,
-        vegetatedSurfacePer: 34
-      }
-    }
-  };
-
-  var oysterMeasurement1 = {
-    depthOfOysterCage: {
-      submergedDepthofCageM: 5
-    },
-    conditionOfOysterCage: {
-      notesOnDamageToCage: 'Test description of damage'
-    },
-    measuringOysterGrowth: {
-      substrateShells: [{
-        source: 'sourceA',
-        totalNumberOfLiveOystersOnShell: 0,
-        notes: 'Test notes 1',
-        measurements: [{
-        }]
-      }, {
-        source: 'sourceB',
-        totalNumberOfLiveOystersOnShell: 1,
-        notes: 'Test notes 2',
-        measurements: [{
-          sizeOfLiveOysterMM: 11.1
-        }]
-      }, {
-        source: 'sourceC',
-        totalNumberOfLiveOystersOnShell: 2,
-        notes: 'Test notes 3',
-        measurements: [{
-          sizeOfLiveOysterMM: 23.1
-        }, {
-          sizeOfLiveOysterMM: 21.0
-        }]
-      }, {
-        source: 'sourceD',
-        totalNumberOfLiveOystersOnShell: 3,
-        notes: 'Test notes 3',
-        measurements: [{
-          sizeOfLiveOysterMM: 32.1
-        }, {
-          sizeOfLiveOysterMM: 33.1
-        }, {
-          sizeOfLiveOysterMM: 38.2
-        }]
-      }, {
-        source: 'sourceE',
-        totalNumberOfLiveOystersOnShell: 4,
-        notes: 'Test notes 4',
-        measurements: [{
-          sizeOfLiveOysterMM: 43.1
-        }, {
-          sizeOfLiveOysterMM: 40.1
-        }, {
-          sizeOfLiveOysterMM: 47.3
-        }, {
-          sizeOfLiveOysterMM: 44.2
-        }]
-      }, {
-        source: 'sourceF',
-        totalNumberOfLiveOystersOnShell: 5,
-        notes: 'Test notes 5',
-        measurements: [{
-          sizeOfLiveOysterMM: 53.2
-        }, {
-          sizeOfLiveOysterMM: 52.1
-        }, {
-          sizeOfLiveOysterMM: 55.2
-        }, {
-          sizeOfLiveOysterMM: 58.4
-        }, {
-          sizeOfLiveOysterMM: 57.2
-        }]
-      }, {
-        source: 'sourceG',
-        totalNumberOfLiveOystersOnShell: 4,
-        notes: 'Test notes 6',
-        measurements: [{
-          sizeOfLiveOysterMM: 65.2
-        }, {
-          sizeOfLiveOysterMM: 66.3
-        }, {
-          sizeOfLiveOysterMM: 62.1
-        }, {
-          sizeOfLiveOysterMM: 67.4
-        }]
-      }, {
-        source: 'sourceH',
-        totalNumberOfLiveOystersOnShell: 3,
-        notes: 'Test notes 7',
-        measurements: [{
-          sizeOfLiveOysterMM: 77.3
-        }, {
-          sizeOfLiveOysterMM: 74.2
-        }, {
-          sizeOfLiveOysterMM: 72.1
-        }]
-      }, {
-        source: 'sourceI',
-        totalNumberOfLiveOystersOnShell: 2,
-        notes: 'Test notes 8',
-        measurements: [{
-          sizeOfLiveOysterMM: 88.3
-        }, {
-          sizeOfLiveOysterMM: 84.3
-        }]
-      }, {
-        source: 'sourceJ',
-        totalNumberOfLiveOystersOnShell: 1,
-        notes: 'Test notes 9',
-        measurements: [{
-          sizeOfLiveOysterMM: 93.2
-        }]
-      }, {
-        source: 'sourceK',
-        totalNumberOfLiveOystersOnShell: 0,
-        notes: 'Test notes 2',
-        measurements: [{
-        }]
-      }]
-    }
-  };
-
-  var mobileTrap1 = {
-    organismDetails: {
-      notes: 'Test organism details'
-    }
-  };
-
-  var mobileTrap2 = {
-    organismDetails: {
-      notes: 'Test organism details2'
-    }
-  };
-
-  var protocol4 = {
-
-  };
-
-  var waterQuality1 = {
-    depthOfWaterSampleM: 5,
-    waterTemperature: {
-      results: [11.2, 13.2, 12.7],
-      average: '12.37'
-    },
-    dissolvedOxygen: {
-      results: [23.8, 21.0, 25.3],
-      average: '23.37'
-    },
-    salinity: {
-      results: [36.1, 33.6, 30.6],
-      average: '33.43'
-    },
-    pH: {
-      results: [44.0, 41.3, 42.7],
-      average: '42.67'
-    },
-    turbidity: {
-      results: [55.3, 51.1, 53.8],
-      average: '53.4'
-    },
-    ammonia: {
-      results: [61.4, 63.3, 67.5],
-      average: '64.07'
-    },
-    nitrates: {
-      results: [73.0, 72.6, 73.8],
-      average: '73.13'
-    },
-    others: [{
-      other1: {
-        label: 'other1',
-        method: 'method1',
-        units: 'unit1',
-        results: [88.5, 86.7, 84.9],
-        average: '86.7'
-      }
-    }]
-  };
-
   var signout = function () {
     // Make sure user is signed out first
     browser.get('http://localhost:8081/authentication/signout');
@@ -288,114 +67,9 @@ describe('Expedition E2E Tests', function() {
     browser.sleep(500);
   };
 
-  var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
-    var addButton = mobileOrganism.element(by.css('[ng-click="addOrganism(organism)"]'));
-    addButton.getAttribute('organism-id').then(function(value) {
-      // Get the id for the mobileOrganism
-      var organismId = value;
-
-      // Click the button to open the mobile organism details modal
-      addButton.click();
-      mobileOrganism.element(by.css('[ng-click="openOrganismDetails(organism)"]')).click();
-
-      // Wait until the modal is open
-      var modal = element(by.id('modal-organism-details-'+organismId));
-      browser.wait(EC.visibilityOf(modal), 5000);
-
-      // Add an image to the mobile organism details
-      uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
-      // Add a description
-      modal.element(by.model('organismDetails.notes')).sendKeys(details.organismDetails.notes);
-      // Save the mobile organism details
-      modal.element(by.buttonText('Save')).click();
-      // Wait until the modal is closed and return
-      browser.wait(EC.invisibilityOf(modal), 5000);
-    });
-  };
-
-  var fillOutWaterQualitySample = function(sample, index, measurements) {
-    sample.element(by.model('sample.depthOfWaterSampleM')).sendKeys(measurements.depthOfWaterSampleM);
-    defaultMapCoordinates('modal-map-sample'+index);
-    // Water Temperature
-    sample.element(by.name('waterTemperatureMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('waterTemperatureUnits')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('waterTemperatureResult1')).sendKeys(measurements.waterTemperature.results[0]);
-    sample.element(by.name('waterTemperatureResult2')).sendKeys(measurements.waterTemperature.results[1]);
-    sample.element(by.name('waterTemperatureResult3')).sendKeys(measurements.waterTemperature.results[2]);
-    sample.element(by.name('waterTemperatureAverage')).sendKeys();
-    sample.element(by.name('waterTemperatureAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.waterTemperature.average);
-    });
-    // Dissolved Oxygen
-    sample.element(by.name('dissolvedOxygenMethod')).all(by.tagName('option')).get(3).click();
-    sample.element(by.name('dissolvedOxygenUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('dissolvedOxygenResult1')).sendKeys(measurements.dissolvedOxygen.results[0]);
-    sample.element(by.name('dissolvedOxygenResult2')).sendKeys(measurements.dissolvedOxygen.results[1]);
-    sample.element(by.name('dissolvedOxygenResult3')).sendKeys(measurements.dissolvedOxygen.results[2]);
-    sample.element(by.name('dissolvedOxygenAverage')).sendKeys();
-    sample.element(by.name('dissolvedOxygenAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.dissolvedOxygen.average);
-    });
-    // Salinity
-    sample.element(by.name('salinityMethod')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('salinityUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('salinityResult1')).sendKeys(measurements.salinity.results[0]);
-    sample.element(by.name('salinityResult2')).sendKeys(measurements.salinity.results[1]);
-    sample.element(by.name('salinityResult3')).sendKeys(measurements.salinity.results[2]);
-    sample.element(by.name('salinityAverage')).sendKeys();
-    sample.element(by.name('salinityAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.salinity.average);
-    });
-    // pH
-    sample.element(by.name('pHmethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('pHunits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('pHresult1')).sendKeys(measurements.pH.results[0]);
-    sample.element(by.name('pHresult2')).sendKeys(measurements.pH.results[1]);
-    sample.element(by.name('pHresult3')).sendKeys(measurements.pH.results[2]);
-    sample.element(by.name('pHaverage')).sendKeys();
-    sample.element(by.name('pHaverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.pH.average);
-    });
-    // Turbidity
-    sample.element(by.name('turbidityMethod')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('turbidityUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('turbidityResult1')).sendKeys(measurements.turbidity.results[0]);
-    sample.element(by.name('turbidityResult2')).sendKeys(measurements.turbidity.results[1]);
-    sample.element(by.name('turbidityResult3')).sendKeys(measurements.turbidity.results[2]);
-    sample.element(by.name('turbidityAverage')).sendKeys();
-    sample.element(by.name('turbidityAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.turbidity.average);
-    });
-    // Ammonia
-    sample.element(by.name('ammoniaMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('ammoniaUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('ammoniaResult1')).sendKeys(waterQuality1.ammonia.results[0]);
-    sample.element(by.name('ammoniaResult2')).sendKeys(waterQuality1.ammonia.results[1]);
-    sample.element(by.name('ammoniaResult3')).sendKeys(waterQuality1.ammonia.results[2]);
-    sample.element(by.name('ammoniaAverage')).sendKeys();
-    // Nitrates
-    sample.element(by.name('nitratesMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('nitratesUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('nitratesResult1')).sendKeys(measurements.nitrates.results[0]);
-    sample.element(by.name('nitratesResult2')).sendKeys(measurements.nitrates.results[1]);
-    sample.element(by.name('nitratesResult3')).sendKeys(measurements.nitrates.results[2]);
-    sample.element(by.name('nitratesAverage')).sendKeys();
-    sample.element(by.name('nitratesAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.nitrates.average);
-    });
-    // Other
-    //var other = sample.element(by.repeater('other in sample.others')).get(0);
-    sample.element(by.name('otherLabel')).sendKeys(measurements.others[0].other1.label);
-    sample.element(by.name('otherMethod')).sendKeys(measurements.others[0].other1.method);
-    sample.element(by.name('otherUnits')).sendKeys(measurements.others[0].other1.units);
-    sample.element(by.name('otherResult1')).sendKeys(measurements.others[0].other1.results[0]);
-    sample.element(by.name('otherResult2')).sendKeys(measurements.others[0].other1.results[1]);
-    sample.element(by.name('otherResult3')).sendKeys(measurements.others[0].other1.results[2]);
-    sample.element(by.name('otherAverage')).sendKeys();
-    sample.element(by.name('otherAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.others[0].other1.average);
-    });
-  };
+//############################################################################//
+//  TEAM LEAD - CREATE EXPEDITION
+//############################################################################//
 
   describe('Create Expedition', function() {
     it('should create an expedition using auto-assign', function() {
@@ -434,7 +108,11 @@ describe('Expedition E2E Tests', function() {
     });
   });
 
-  describe('Team member 1 view Expedition', function () {
+//############################################################################//
+//  TEAM MEMBER 1 - VIEW EXPEDITION
+//############################################################################//
+
+  xdescribe('Team member 1 view Expedition', function () {
     it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
       // Sign in as team member 1
       signinAs(member1);
@@ -468,6 +146,55 @@ describe('Expedition E2E Tests', function() {
       // Water Quality tab should be visible
       expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 1 - SITE CONDITION
+//############################################################################//
+
+    var siteCondition1 = {
+      meteorologicalConditions: {
+        airTemperatureC: 23,
+        windSpeedMPH: 4,
+        humidityPer: 23
+      },
+      tideConditions: {
+        closestHighTide: new Date(),
+        closestLowTide: new Date(),
+        currentSpeedMPH: 3,
+      },
+      waterConditions: {
+        garbage: {
+          other: {
+            description: 'wood'
+          }
+        },
+        markedCombinedSewerOverflowPipes: {
+          location: {
+            latitude: 39.765,
+            longitude: -76.234,
+          }
+        },
+        unmarkedOutfallPipes: {
+          location: {
+            latitude: 39.765,
+            longitude: -76.234,
+          },
+          approximateDiameterCM: 3
+        }
+      },
+      landConditions: {
+        garbage: {
+          other: {
+            description: 'wood'
+          }
+        },
+        shorelineSurfaceCoverEstPer: {
+          imperviousSurfacePer: 33,
+          perviousSurfacePer: 33,
+          vegetatedSurfacePer: 34
+        }
+      }
+    };
 
     it ('should allow team member 1 to fill out protocol 1', function() {
       element(by.partialLinkText('Site Conditions')).click();
@@ -512,9 +239,9 @@ describe('Expedition E2E Tests', function() {
       uploadImage('land-condition-image-dropzone');
       element(by.model('siteCondition.landConditions.shoreLineType')).all(by.tagName('option')).get(3).click();
       element(by.model('siteCondition.landConditions.garbage.garbagePresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
       element(by.model('siteCondition.landConditions.garbage.hardPlastic')).all(by.tagName('option')).get(4).click();
       element(by.model('siteCondition.landConditions.garbage.softPlastic')).all(by.tagName('option')).get(1).click();
       element(by.model('siteCondition.landConditions.garbage.metal')).all(by.tagName('option')).get(2).click();
@@ -532,6 +259,47 @@ describe('Expedition E2E Tests', function() {
       expect(protocol1Tab.isPresent()).toBe(true);
       expect(protocol1Tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 1 - MOBILE TRAP
+//############################################################################//
+
+    var mobileTrap1 = {
+      organismDetails: {
+        notes: 'Test organism details'
+      }
+    };
+
+    var mobileTrap2 = {
+      organismDetails: {
+        notes: 'Test organism details2'
+      }
+    };
+
+    var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
+      var addButton = mobileOrganism.element(by.css('[ng-click="addOrganism(organism)"]'));
+      addButton.getAttribute('organism-id').then(function(value) {
+        // Get the id for the mobileOrganism
+        var organismId = value;
+
+        // Click the button to open the mobile organism details modal
+        addButton.click();
+        mobileOrganism.element(by.css('[ng-click="openOrganismDetails(organism)"]')).click();
+
+        // Wait until the modal is open
+        var modal = element(by.id('modal-organism-details-'+organismId));
+        browser.wait(EC.visibilityOf(modal), 5000);
+
+        // Add an image to the mobile organism details
+        uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
+        // Add a description
+        modal.element(by.model('organismDetails.notes')).sendKeys(details.organismDetails.notes);
+        // Save the mobile organism details
+        modal.element(by.buttonText('Save')).click();
+        // Wait until the modal is closed and return
+        browser.wait(EC.invisibilityOf(modal), 5000);
+      });
+    };
 
     it ('should allow team member 1 to fill out protocol 3', function() {
       // Click on the Mobile Trap tab
@@ -556,6 +324,135 @@ describe('Expedition E2E Tests', function() {
       //expect(element(by.id('protocol1tab')).element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
 
+//############################################################################//
+//  TEAM MEMBER 1 - WATER QUALITY
+//############################################################################//
+
+    var waterQuality1 = {
+      depthOfWaterSampleM: 5,
+      waterTemperature: {
+        results: [11.2, 13.2, 12.7],
+        average: '12.37'
+      },
+      dissolvedOxygen: {
+        results: [23.8, 21.0, 25.3],
+        average: '23.37'
+      },
+      salinity: {
+        results: [36.1, 33.6, 30.6],
+        average: '33.43'
+      },
+      pH: {
+        results: [44.0, 41.3, 42.7],
+        average: '42.67'
+      },
+      turbidity: {
+        results: [55.3, 51.1, 53.8],
+        average: '53.4'
+      },
+      ammonia: {
+        results: [61.4, 63.3, 67.5],
+        average: '64.07'
+      },
+      nitrates: {
+        results: [73.0, 72.6, 73.8],
+        average: '73.13'
+      },
+      others: [{
+        other1: {
+          label: 'other1',
+          method: 'method1',
+          units: 'unit1',
+          results: [88.5, 86.7, 84.9],
+          average: '86.7'
+        }
+      }]
+    };
+
+    var fillOutWaterQualitySample = function(sample, index, measurements) {
+      sample.element(by.model('sample.depthOfWaterSampleM')).sendKeys(measurements.depthOfWaterSampleM);
+      defaultMapCoordinates('modal-map-sample'+index);
+      // Water Temperature
+      sample.element(by.name('waterTemperatureMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('waterTemperatureUnits')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('waterTemperatureResult1')).sendKeys(measurements.waterTemperature.results[0]);
+      sample.element(by.name('waterTemperatureResult2')).sendKeys(measurements.waterTemperature.results[1]);
+      sample.element(by.name('waterTemperatureResult3')).sendKeys(measurements.waterTemperature.results[2]);
+      sample.element(by.name('waterTemperatureAverage')).sendKeys();
+      sample.element(by.name('waterTemperatureAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.waterTemperature.average);
+      });
+      // Dissolved Oxygen
+      sample.element(by.name('dissolvedOxygenMethod')).all(by.tagName('option')).get(3).click();
+      sample.element(by.name('dissolvedOxygenUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('dissolvedOxygenResult1')).sendKeys(measurements.dissolvedOxygen.results[0]);
+      sample.element(by.name('dissolvedOxygenResult2')).sendKeys(measurements.dissolvedOxygen.results[1]);
+      sample.element(by.name('dissolvedOxygenResult3')).sendKeys(measurements.dissolvedOxygen.results[2]);
+      sample.element(by.name('dissolvedOxygenAverage')).sendKeys();
+      sample.element(by.name('dissolvedOxygenAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.dissolvedOxygen.average);
+      });
+      // Salinity
+      sample.element(by.name('salinityMethod')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('salinityUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('salinityResult1')).sendKeys(measurements.salinity.results[0]);
+      sample.element(by.name('salinityResult2')).sendKeys(measurements.salinity.results[1]);
+      sample.element(by.name('salinityResult3')).sendKeys(measurements.salinity.results[2]);
+      sample.element(by.name('salinityAverage')).sendKeys();
+      sample.element(by.name('salinityAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.salinity.average);
+      });
+      // pH
+      sample.element(by.name('pHmethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('pHunits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('pHresult1')).sendKeys(measurements.pH.results[0]);
+      sample.element(by.name('pHresult2')).sendKeys(measurements.pH.results[1]);
+      sample.element(by.name('pHresult3')).sendKeys(measurements.pH.results[2]);
+      sample.element(by.name('pHaverage')).sendKeys();
+      sample.element(by.name('pHaverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.pH.average);
+      });
+      // Turbidity
+      sample.element(by.name('turbidityMethod')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('turbidityUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('turbidityResult1')).sendKeys(measurements.turbidity.results[0]);
+      sample.element(by.name('turbidityResult2')).sendKeys(measurements.turbidity.results[1]);
+      sample.element(by.name('turbidityResult3')).sendKeys(measurements.turbidity.results[2]);
+      sample.element(by.name('turbidityAverage')).sendKeys();
+      sample.element(by.name('turbidityAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.turbidity.average);
+      });
+      // Ammonia
+      sample.element(by.name('ammoniaMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('ammoniaUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('ammoniaResult1')).sendKeys(waterQuality1.ammonia.results[0]);
+      sample.element(by.name('ammoniaResult2')).sendKeys(waterQuality1.ammonia.results[1]);
+      sample.element(by.name('ammoniaResult3')).sendKeys(waterQuality1.ammonia.results[2]);
+      sample.element(by.name('ammoniaAverage')).sendKeys();
+      // Nitrates
+      sample.element(by.name('nitratesMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('nitratesUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('nitratesResult1')).sendKeys(measurements.nitrates.results[0]);
+      sample.element(by.name('nitratesResult2')).sendKeys(measurements.nitrates.results[1]);
+      sample.element(by.name('nitratesResult3')).sendKeys(measurements.nitrates.results[2]);
+      sample.element(by.name('nitratesAverage')).sendKeys();
+      sample.element(by.name('nitratesAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.nitrates.average);
+      });
+      // Other
+      //var other = sample.element(by.repeater('other in sample.others')).get(0);
+      sample.element(by.name('otherLabel')).sendKeys(measurements.others[0].other1.label);
+      sample.element(by.name('otherMethod')).sendKeys(measurements.others[0].other1.method);
+      sample.element(by.name('otherUnits')).sendKeys(measurements.others[0].other1.units);
+      sample.element(by.name('otherResult1')).sendKeys(measurements.others[0].other1.results[0]);
+      sample.element(by.name('otherResult2')).sendKeys(measurements.others[0].other1.results[1]);
+      sample.element(by.name('otherResult3')).sendKeys(measurements.others[0].other1.results[2]);
+      sample.element(by.name('otherAverage')).sendKeys();
+      sample.element(by.name('otherAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.others[0].other1.average);
+      });
+    };
+
     it ('should allow team member 1 to fill out protocol 5', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol5tab')).click();
@@ -577,6 +474,10 @@ describe('Expedition E2E Tests', function() {
       //expect(element(by.id('protocol1tab')).element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
       //expect(element(by.id('protocol3tab')).element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 1 - SUBMIT PROTOCOLS 1, 3, & 5
+//############################################################################//
 
     it ('should allow team member 1 to submit protocols 1, 3, & 5', function() {
       // Submit
@@ -602,6 +503,10 @@ describe('Expedition E2E Tests', function() {
 
     });
   });
+
+//############################################################################//
+//  TEAM MEMBER 2 - VIEW EXPEDITION
+//############################################################################//
 
   describe('Team member 2 view Expedition', function () {
     it ('should allow team member 2 to click protocols 2 & 4', function () {
@@ -636,14 +541,149 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
     });
 
-    it ('should allow team member 1 to fill out protocol 1', function() {
+//############################################################################//
+//  TEAM MEMBER 2 - OYSTER MEASUREMENT
+//############################################################################//
+
+    var oysterMeasurement1 = {
+      depthOfOysterCage: {
+        submergedDepthofCageM: 5
+      },
+      conditionOfOysterCage: {
+        notesOnDamageToCage: 'Test description of damage'
+      },
+      measuringOysterGrowth: {
+        substrateShells: [{
+          source: 'sourceA',
+          totalNumberOfLiveOystersOnShell: 0,
+          notes: 'Test notes 1',
+          measurements: [{
+          }]
+        }, {
+          source: 'sourceB',
+          totalNumberOfLiveOystersOnShell: 1,
+          notes: 'Test notes 2',
+          measurements: [11.1]
+        }, {
+          source: 'sourceC',
+          totalNumberOfLiveOystersOnShell: 2,
+          notes: 'Test notes 3',
+          measurements: [23.1, 21.0]
+        }, {
+          source: 'sourceD',
+          totalNumberOfLiveOystersOnShell: 3,
+          notes: 'Test notes 3',
+          measurements: [32.1, 33.1, 38.2]
+        }, {
+          source: 'sourceE',
+          totalNumberOfLiveOystersOnShell: 4,
+          notes: 'Test notes 4',
+          measurements: [43.1, 40.1, 47.3, 44.2]
+        }, {
+          source: 'sourceF',
+          totalNumberOfLiveOystersOnShell: 5,
+          notes: 'Test notes 5',
+          measurements: [53.2, 52.1, 55.2, 58.4, 57.2]
+        }, {
+          source: 'sourceG',
+          totalNumberOfLiveOystersOnShell: 4,
+          notes: 'Test notes 6',
+          measurements: [65.2, 66.3, 62.1, 67.4]
+        }, {
+          source: 'sourceH',
+          totalNumberOfLiveOystersOnShell: 3,
+          notes: 'Test notes 7',
+          measurements: [77.3, 74.2, 72.1]
+        }, {
+          source: 'sourceI',
+          totalNumberOfLiveOystersOnShell: 2,
+          notes: 'Test notes 8',
+          measurements: [88.3, 84.3]
+        }, {
+          source: 'sourceJ',
+          totalNumberOfLiveOystersOnShell: 1,
+          notes: 'Test notes 9',
+          measurements: [93.2]
+        }, {
+          source: 'sourceK',
+          totalNumberOfLiveOystersOnShell: 0,
+          notes: 'Test notes 2',
+          measurements: []
+        }]
+      }
+    };
+
+    var fillOutOysterMeasurements = function(index) {
+      element(by.id('edit-measurements-'+index)).click();
+      // Wait until the modal is open
+      var modal = element(by.id('modal-substrateshell'+index));
+      browser.wait(EC.visibilityOf(modal), 10000);
+
+      // Add an image to the substrate shell
+      uploadImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
+      uploadImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
+
+      var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+
+      modal.element(by.model('substrate.source')).sendKeys(measurementsDetails.source);
+      modal.element(by.model('substrate.totalNumberOfLiveOystersOnShell')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersOnShell);
+      modal.element(by.model('substrate.notes')).sendKeys(measurementsDetails.notes);
+
+      if (measurementsDetails.totalNumberOfLiveOystersOnShell > 0 &&
+        measurementsDetails.totalNumberOfLiveOystersOnShell === measurementsDetails.measurements.length) {
+        modal.element(by.id('substrate-measurements')).click();
+
+        //browser.wait(EC.visibilityOf(element(by.id('substrateshell-measurements'+index))), 5000);
+        for (var i = 0; i < measurementsDetails.measurements.length; i++) {
+          modal.element(by.id('measure'+i)).sendKeys(measurementsDetails.measurements[i]);
+        }
+      }
+
+      // Save the substrate shell
+      modal.element(by.buttonText('Save')).click();
+      //browser.wait(EC.invisibilityOf(modal), 5000);
+    };
+
+    it ('should allow team member 2 to fill out protocol 2', function() {
       element(by.partialLinkText('Oyster Measurements')).click();
       browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
       // Fill in values
       element(by.model('oysterMeasurement.depthOfOysterCage.submergedDepthofCageM')).sendKeys(oysterMeasurement1.depthOfOysterCage.submergedDepthofCageM);
       uploadImage('oyster-cage-condition-image-dropzone');
       element(by.model('oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage')).all(by.tagName('option')).get(3).click();
       element(by.model('oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage')).sendKeys(oysterMeasurement1.conditionOfOysterCage.notesOnDamageToCage);
+
+      browser.wait(EC.visibilityOf(element(by.repeater('substrate in oysterMeasurement.measuringOysterGrowth.substrateShells'))), 5000);
+
+      fillOutOysterMeasurements(0);
+      fillOutOysterMeasurements(1);
+      fillOutOysterMeasurements(2);
+      fillOutOysterMeasurements(3);
+      fillOutOysterMeasurements(4);
+      fillOutOysterMeasurements(5);
+      fillOutOysterMeasurements(6);
+      fillOutOysterMeasurements(7);
+      fillOutOysterMeasurements(8);
+      fillOutOysterMeasurements(9);
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol2tab = element(by.id('protocol2tab'));
+      expect(protocol2tab.isPresent()).toBe(true);
+      expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 2 - SETTLEMENT TILES
+//############################################################################//
+
+//############################################################################//
+//  TEAM MEMBER 2 - SUBMIT PROTOCOLS 2 & 4
+//############################################################################//
+
   });
 });

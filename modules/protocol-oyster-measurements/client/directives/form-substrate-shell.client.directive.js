@@ -3,7 +3,7 @@
 
   angular
     .module('protocol-oyster-measurements')
-    .directive('formSubstrateShell', function(moment) {
+    .directive('formSubstrateShell', function(moment, $parse) {
       return {
         restrict: 'AE',
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-substrate-shell.client.view.html',
@@ -32,6 +32,11 @@
 
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
+          });
+
+          element.bind('hide.bs.modal', function () {
+            if (!scope.$$phase && !scope.$root.$$phase)
+              scope.$apply();
           });
         },
         controller: ['$scope', function ($scope) {
