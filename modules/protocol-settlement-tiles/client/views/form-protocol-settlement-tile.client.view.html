@@ -79,7 +79,7 @@
                         remove-function="removeImage" id="settlement-tile-image-dropzone-{{$index}}"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
-                      <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}"
+                      <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}" id="edit-settlementtile-{{$index}}"
                       ng-click="openSettlementTileForm($index+1)">{{tileStarted(tile)? 'Edit': 'Add' }} Organism ID Entries *</a>
                       <form-settlement-tile grids="grids" sessile-organisms="sessileOrganisms"
                       save-function="saveSettlementTileForm" cancel-function="cancelSettlementTileForm"

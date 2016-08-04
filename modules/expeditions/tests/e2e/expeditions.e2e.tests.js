@@ -112,7 +112,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 1 - VIEW EXPEDITION
 //############################################################################//
 
-  xdescribe('Team member 1 view Expedition', function () {
+  describe('Team member 1 view Expedition', function () {
     it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
       // Sign in as team member 1
       signinAs(member1);
@@ -483,7 +483,7 @@ describe('Expedition E2E Tests', function() {
       // Submit
       element(by.buttonText('Submit')).click();
 
-      // Assert that only protocols 1, 3, & 5 are clickable
+      // Assert that no protocols are clickable
       expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
@@ -681,9 +681,100 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 2 - SETTLEMENT TILES
 //############################################################################//
 
+    var settlementTiles1 = {
+      settlementTile1: {
+        description: 'Test description 1',
+        organisms: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+      },
+      settlementTile2: {
+        description: 'Test description 2',
+        organisms: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
+        notes: 'Notes 1'
+      },
+      settlementTile3: {
+        description: 'Test description 3',
+        organisms: [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1],
+        notes: 'Notes 2'
+      },
+      settlementTile4: {
+        description: 'Test description 4',
+        organisms: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1,2],
+        notes: 'Notes 3'
+      }
+    };
+
+    var fillOutSettlementTile = function(tile, index, details) {
+      tile.element(by.model('tile.description')).sendKeys(details.description);
+      uploadImage('settlement-tile-image-dropzone-'+index);
+
+      element(by.id('edit-settlementtile-'+index)).click();
+      // Wait until the modal is open
+      var modal = element(by.id('modal-settlementtile'+(index+1)));
+      browser.wait(EC.visibilityOf(modal), 10000);
+
+      for (var i = 0; i < details.organisms.length; i++) {
+        modal.element(by.id('organism'+i)).all(by.tagName('option')).get(details.organisms[i]).click();
+        if (details.organisms[i] === 26) {
+          modal.element(by.id('notes'+i)).sendKeys(details.notes);
+        }
+      }
+
+      // Save the substrate shell
+      modal.element(by.buttonText('Save')).click();
+      browser.wait(EC.invisibilityOf(modal), 5000);
+    };
+
+    it ('should allow team member 2 to fill out protocol 4', function() {
+      element(by.partialLinkText('Settlement Tiles')).click();
+      browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.repeater('tile in settlementTiles.settlementTiles'))), 5000);
+
+      var tiles = element.all(by.repeater('tile in settlementTiles.settlementTiles'));
+      var tile1 = tiles.get(0);
+      fillOutSettlementTile(tile1, 0, settlementTiles1.settlementTile1);
+      var tile2 = tiles.get(1);
+      fillOutSettlementTile(tile2, 1, settlementTiles1.settlementTile2);
+      var tile3 = tiles.get(2);
+      fillOutSettlementTile(tile3, 2, settlementTiles1.settlementTile3);
+      var tile4 = tiles.get(3);
+      fillOutSettlementTile(tile4, 3, settlementTiles1.settlementTile4);
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol4tab = element(by.id('protocol4tab'));
+      expect(protocol4tab.isPresent()).toBe(true);
+      expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+    });
+
 //############################################################################//
 //  TEAM MEMBER 2 - SUBMIT PROTOCOLS 2 & 4
 //############################################################################//
 
+    it ('should allow team member 2 to submit protocols 2 & 4', function() {
+      // Submit
+      element(by.buttonText('Submit')).click();
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+
+    });
   });
 });
