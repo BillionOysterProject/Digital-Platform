@@ -32,227 +32,6 @@ describe('Expedition E2E Tests', function() {
     name: 'Test Expedition 1 - Auto Assign'
   };
 
-  var siteCondition1 = {
-    meteorologicalConditions: {
-      airTemperatureC: 23,
-      windSpeedMPH: 4,
-      humidityPer: 23
-    },
-    tideConditions: {
-      closestHighTide: new Date(),
-      closestLowTide: new Date(),
-      currentSpeedMPH: 3,
-    },
-    waterConditions: {
-      garbage: {
-        other: {
-          description: 'wood'
-        }
-      },
-      markedCombinedSewerOverflowPipes: {
-        location: {
-          latitude: 39.765,
-          longitude: -76.234,
-        }
-      },
-      unmarkedOutfallPipes: {
-        location: {
-          latitude: 39.765,
-          longitude: -76.234,
-        },
-        approximateDiameterCM: 3
-      }
-    },
-    landConditions: {
-      garbage: {
-        other: {
-          description: 'wood'
-        }
-      },
-      shorelineSurfaceCoverEstPer: {
-        imperviousSurfacePer: 33,
-        perviousSurfacePer: 33,
-        vegetatedSurfacePer: 34
-      }
-    }
-  };
-
-  var oysterMeasurement1 = {
-    depthOfOysterCage: {
-      submergedDepthofCageM: 5
-    },
-    conditionOfOysterCage: {
-      notesOnDamageToCage: 'Test description of damage'
-    },
-    measuringOysterGrowth: {
-      substrateShells: [{
-        source: 'sourceA',
-        totalNumberOfLiveOystersOnShell: 0,
-        notes: 'Test notes 1',
-        measurements: [{
-        }]
-      }, {
-        source: 'sourceB',
-        totalNumberOfLiveOystersOnShell: 1,
-        notes: 'Test notes 2',
-        measurements: [{
-          sizeOfLiveOysterMM: 11.1
-        }]
-      }, {
-        source: 'sourceC',
-        totalNumberOfLiveOystersOnShell: 2,
-        notes: 'Test notes 3',
-        measurements: [{
-          sizeOfLiveOysterMM: 23.1
-        }, {
-          sizeOfLiveOysterMM: 21.0
-        }]
-      }, {
-        source: 'sourceD',
-        totalNumberOfLiveOystersOnShell: 3,
-        notes: 'Test notes 3',
-        measurements: [{
-          sizeOfLiveOysterMM: 32.1
-        }, {
-          sizeOfLiveOysterMM: 33.1
-        }, {
-          sizeOfLiveOysterMM: 38.2
-        }]
-      }, {
-        source: 'sourceE',
-        totalNumberOfLiveOystersOnShell: 4,
-        notes: 'Test notes 4',
-        measurements: [{
-          sizeOfLiveOysterMM: 43.1
-        }, {
-          sizeOfLiveOysterMM: 40.1
-        }, {
-          sizeOfLiveOysterMM: 47.3
-        }, {
-          sizeOfLiveOysterMM: 44.2
-        }]
-      }, {
-        source: 'sourceF',
-        totalNumberOfLiveOystersOnShell: 5,
-        notes: 'Test notes 5',
-        measurements: [{
-          sizeOfLiveOysterMM: 53.2
-        }, {
-          sizeOfLiveOysterMM: 52.1
-        }, {
-          sizeOfLiveOysterMM: 55.2
-        }, {
-          sizeOfLiveOysterMM: 58.4
-        }, {
-          sizeOfLiveOysterMM: 57.2
-        }]
-      }, {
-        source: 'sourceG',
-        totalNumberOfLiveOystersOnShell: 4,
-        notes: 'Test notes 6',
-        measurements: [{
-          sizeOfLiveOysterMM: 65.2
-        }, {
-          sizeOfLiveOysterMM: 66.3
-        }, {
-          sizeOfLiveOysterMM: 62.1
-        }, {
-          sizeOfLiveOysterMM: 67.4
-        }]
-      }, {
-        source: 'sourceH',
-        totalNumberOfLiveOystersOnShell: 3,
-        notes: 'Test notes 7',
-        measurements: [{
-          sizeOfLiveOysterMM: 77.3
-        }, {
-          sizeOfLiveOysterMM: 74.2
-        }, {
-          sizeOfLiveOysterMM: 72.1
-        }]
-      }, {
-        source: 'sourceI',
-        totalNumberOfLiveOystersOnShell: 2,
-        notes: 'Test notes 8',
-        measurements: [{
-          sizeOfLiveOysterMM: 88.3
-        }, {
-          sizeOfLiveOysterMM: 84.3
-        }]
-      }, {
-        source: 'sourceJ',
-        totalNumberOfLiveOystersOnShell: 1,
-        notes: 'Test notes 9',
-        measurements: [{
-          sizeOfLiveOysterMM: 93.2
-        }]
-      }, {
-        source: 'sourceK',
-        totalNumberOfLiveOystersOnShell: 0,
-        notes: 'Test notes 2',
-        measurements: [{
-        }]
-      }]
-    }
-  };
-
-  var mobileTrap1 = {
-    organismDetails: {
-      notes: 'Test organism details'
-    }
-  };
-
-  var mobileTrap2 = {
-    organismDetails: {
-      notes: 'Test organism details2'
-    }
-  };
-
-  var protocol4 = {
-
-  };
-
-  var waterQuality1 = {
-    depthOfWaterSampleM: 5,
-    waterTemperature: {
-      results: [11.2, 13.2, 12.7],
-      average: '12.37'
-    },
-    dissolvedOxygen: {
-      results: [23.8, 21.0, 25.3],
-      average: '23.37'
-    },
-    salinity: {
-      results: [36.1, 33.6, 30.6],
-      average: '33.43'
-    },
-    pH: {
-      results: [44.0, 41.3, 42.7],
-      average: '42.67'
-    },
-    turbidity: {
-      results: [55.3, 51.1, 53.8],
-      average: '53.4'
-    },
-    ammonia: {
-      results: [61.4, 63.3, 67.5],
-      average: '64.07'
-    },
-    nitrates: {
-      results: [73.0, 72.6, 73.8],
-      average: '73.13'
-    },
-    others: [{
-      other1: {
-        label: 'other1',
-        method: 'method1',
-        units: 'unit1',
-        results: [88.5, 86.7, 84.9],
-        average: '86.7'
-      }
-    }]
-  };
-
   var signout = function () {
     // Make sure user is signed out first
     browser.get('http://localhost:8081/authentication/signout');
@@ -286,116 +65,12 @@ describe('Expedition E2E Tests', function() {
     element(by.css('a[data-target="#'+target+'"]')).click();
     element(by.id('saveMapSelectModal-'+target)).click();
     browser.sleep(500);
+    browser.wait(EC.invisibilityOf(element(by.id('saveMapSelectModal-'+target))), 5000);
   };
 
-  var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
-    var addButton = mobileOrganism.element(by.css('[ng-click="addOrganism(organism)"]'));
-    addButton.getAttribute('organism-id').then(function(value) {
-      // Get the id for the mobileOrganism
-      var organismId = value;
-
-      // Click the button to open the mobile organism details modal
-      addButton.click();
-      mobileOrganism.element(by.css('[ng-click="openOrganismDetails(organism)"]')).click();
-
-      // Wait until the modal is open
-      var modal = element(by.id('modal-organism-details-'+organismId));
-      browser.wait(EC.visibilityOf(modal), 5000);
-
-      // Add an image to the mobile organism details
-      uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
-      // Add a description
-      modal.element(by.model('organismDetails.notes')).sendKeys(details.organismDetails.notes);
-      // Save the mobile organism details
-      modal.element(by.buttonText('Save')).click();
-      // Wait until the modal is closed and return
-      browser.wait(EC.invisibilityOf(modal), 5000);
-    });
-  };
-
-  var fillOutWaterQualitySample = function(sample, index, measurements) {
-    sample.element(by.model('sample.depthOfWaterSampleM')).sendKeys(measurements.depthOfWaterSampleM);
-    defaultMapCoordinates('modal-map-sample'+index);
-    // Water Temperature
-    sample.element(by.name('waterTemperatureMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('waterTemperatureUnits')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('waterTemperatureResult1')).sendKeys(measurements.waterTemperature.results[0]);
-    sample.element(by.name('waterTemperatureResult2')).sendKeys(measurements.waterTemperature.results[1]);
-    sample.element(by.name('waterTemperatureResult3')).sendKeys(measurements.waterTemperature.results[2]);
-    sample.element(by.name('waterTemperatureAverage')).sendKeys();
-    sample.element(by.name('waterTemperatureAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.waterTemperature.average);
-    });
-    // Dissolved Oxygen
-    sample.element(by.name('dissolvedOxygenMethod')).all(by.tagName('option')).get(3).click();
-    sample.element(by.name('dissolvedOxygenUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('dissolvedOxygenResult1')).sendKeys(measurements.dissolvedOxygen.results[0]);
-    sample.element(by.name('dissolvedOxygenResult2')).sendKeys(measurements.dissolvedOxygen.results[1]);
-    sample.element(by.name('dissolvedOxygenResult3')).sendKeys(measurements.dissolvedOxygen.results[2]);
-    sample.element(by.name('dissolvedOxygenAverage')).sendKeys();
-    sample.element(by.name('dissolvedOxygenAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.dissolvedOxygen.average);
-    });
-    // Salinity
-    sample.element(by.name('salinityMethod')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('salinityUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('salinityResult1')).sendKeys(measurements.salinity.results[0]);
-    sample.element(by.name('salinityResult2')).sendKeys(measurements.salinity.results[1]);
-    sample.element(by.name('salinityResult3')).sendKeys(measurements.salinity.results[2]);
-    sample.element(by.name('salinityAverage')).sendKeys();
-    sample.element(by.name('salinityAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.salinity.average);
-    });
-    // pH
-    sample.element(by.name('pHmethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('pHunits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('pHresult1')).sendKeys(measurements.pH.results[0]);
-    sample.element(by.name('pHresult2')).sendKeys(measurements.pH.results[1]);
-    sample.element(by.name('pHresult3')).sendKeys(measurements.pH.results[2]);
-    sample.element(by.name('pHaverage')).sendKeys();
-    sample.element(by.name('pHaverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.pH.average);
-    });
-    // Turbidity
-    sample.element(by.name('turbidityMethod')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('turbidityUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('turbidityResult1')).sendKeys(measurements.turbidity.results[0]);
-    sample.element(by.name('turbidityResult2')).sendKeys(measurements.turbidity.results[1]);
-    sample.element(by.name('turbidityResult3')).sendKeys(measurements.turbidity.results[2]);
-    sample.element(by.name('turbidityAverage')).sendKeys();
-    sample.element(by.name('turbidityAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.turbidity.average);
-    });
-    // Ammonia
-    sample.element(by.name('ammoniaMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('ammoniaUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('ammoniaResult1')).sendKeys(waterQuality1.ammonia.results[0]);
-    sample.element(by.name('ammoniaResult2')).sendKeys(waterQuality1.ammonia.results[1]);
-    sample.element(by.name('ammoniaResult3')).sendKeys(waterQuality1.ammonia.results[2]);
-    sample.element(by.name('ammoniaAverage')).sendKeys();
-    // Nitrates
-    sample.element(by.name('nitratesMethod')).all(by.tagName('option')).get(2).click();
-    sample.element(by.name('nitratesUnits')).all(by.tagName('option')).get(1).click();
-    sample.element(by.name('nitratesResult1')).sendKeys(measurements.nitrates.results[0]);
-    sample.element(by.name('nitratesResult2')).sendKeys(measurements.nitrates.results[1]);
-    sample.element(by.name('nitratesResult3')).sendKeys(measurements.nitrates.results[2]);
-    sample.element(by.name('nitratesAverage')).sendKeys();
-    sample.element(by.name('nitratesAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.nitrates.average);
-    });
-    // Other
-    //var other = sample.element(by.repeater('other in sample.others')).get(0);
-    sample.element(by.name('otherLabel')).sendKeys(measurements.others[0].other1.label);
-    sample.element(by.name('otherMethod')).sendKeys(measurements.others[0].other1.method);
-    sample.element(by.name('otherUnits')).sendKeys(measurements.others[0].other1.units);
-    sample.element(by.name('otherResult1')).sendKeys(measurements.others[0].other1.results[0]);
-    sample.element(by.name('otherResult2')).sendKeys(measurements.others[0].other1.results[1]);
-    sample.element(by.name('otherResult3')).sendKeys(measurements.others[0].other1.results[2]);
-    sample.element(by.name('otherAverage')).sendKeys();
-    sample.element(by.name('otherAverage')).getAttribute('value').then(function(value) {
-      expect(value).toEqual(measurements.others[0].other1.average);
-    });
-  };
+//############################################################################//
+//  TEAM LEAD - CREATE EXPEDITION
+//############################################################################//
 
   describe('Create Expedition', function() {
     it('should create an expedition using auto-assign', function() {
@@ -434,6 +109,10 @@ describe('Expedition E2E Tests', function() {
     });
   });
 
+//############################################################################//
+//  TEAM MEMBER 1 - VIEW EXPEDITION
+//############################################################################//
+
   describe('Team member 1 view Expedition', function () {
     it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
       // Sign in as team member 1
@@ -468,6 +147,55 @@ describe('Expedition E2E Tests', function() {
       // Water Quality tab should be visible
       expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 1 - SITE CONDITION
+//############################################################################//
+
+    var siteCondition1 = {
+      meteorologicalConditions: {
+        airTemperatureC: 23,
+        windSpeedMPH: 4,
+        humidityPer: 23
+      },
+      tideConditions: {
+        closestHighTide: new Date(),
+        closestLowTide: new Date(),
+        currentSpeedMPH: 3,
+      },
+      waterConditions: {
+        garbage: {
+          other: {
+            description: 'wood'
+          }
+        },
+        markedCombinedSewerOverflowPipes: {
+          location: {
+            latitude: 39.765,
+            longitude: -76.234,
+          }
+        },
+        unmarkedOutfallPipes: {
+          location: {
+            latitude: 39.765,
+            longitude: -76.234,
+          },
+          approximateDiameterCM: 3
+        }
+      },
+      landConditions: {
+        garbage: {
+          other: {
+            description: 'wood'
+          }
+        },
+        shorelineSurfaceCoverEstPer: {
+          imperviousSurfacePer: 33,
+          perviousSurfacePer: 33,
+          vegetatedSurfacePer: 34
+        }
+      }
+    };
 
     it ('should allow team member 1 to fill out protocol 1', function() {
       element(by.partialLinkText('Site Conditions')).click();
@@ -512,9 +240,9 @@ describe('Expedition E2E Tests', function() {
       uploadImage('land-condition-image-dropzone');
       element(by.model('siteCondition.landConditions.shoreLineType')).all(by.tagName('option')).get(3).click();
       element(by.model('siteCondition.landConditions.garbage.garbagePresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
-      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
+      element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
       element(by.model('siteCondition.landConditions.garbage.hardPlastic')).all(by.tagName('option')).get(4).click();
       element(by.model('siteCondition.landConditions.garbage.softPlastic')).all(by.tagName('option')).get(1).click();
       element(by.model('siteCondition.landConditions.garbage.metal')).all(by.tagName('option')).get(2).click();
@@ -532,6 +260,47 @@ describe('Expedition E2E Tests', function() {
       expect(protocol1Tab.isPresent()).toBe(true);
       expect(protocol1Tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
+
+//############################################################################//
+//  TEAM MEMBER 1 - MOBILE TRAP
+//############################################################################//
+
+    var mobileTrap1 = {
+      organismDetails: {
+        notes: 'Test organism details'
+      }
+    };
+
+    var mobileTrap2 = {
+      organismDetails: {
+        notes: 'Test organism details2'
+      }
+    };
+
+    var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
+      var addButton = mobileOrganism.element(by.css('[ng-click="addOrganism(organism)"]'));
+      addButton.getAttribute('organism-id').then(function(value) {
+        // Get the id for the mobileOrganism
+        var organismId = value;
+
+        // Click the button to open the mobile organism details modal
+        addButton.click();
+        mobileOrganism.element(by.css('[ng-click="openOrganismDetails(organism)"]')).click();
+
+        // Wait until the modal is open
+        var modal = element(by.id('modal-organism-details-'+organismId));
+        browser.wait(EC.visibilityOf(modal), 5000);
+
+        // Add an image to the mobile organism details
+        uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
+        // Add a description
+        modal.element(by.model('organismDetails.notes')).sendKeys(details.organismDetails.notes);
+        // Save the mobile organism details
+        modal.element(by.buttonText('Save')).click();
+        // Wait until the modal is closed and return
+        browser.wait(EC.invisibilityOf(modal), 5000);
+      });
+    };
 
     it ('should allow team member 1 to fill out protocol 3', function() {
       // Click on the Mobile Trap tab
@@ -556,6 +325,135 @@ describe('Expedition E2E Tests', function() {
       //expect(element(by.id('protocol1tab')).element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
 
+//############################################################################//
+//  TEAM MEMBER 1 - WATER QUALITY
+//############################################################################//
+
+    var waterQuality1 = {
+      depthOfWaterSampleM: 5,
+      waterTemperature: {
+        results: [11.2, 13.2, 12.7],
+        average: '12.37'
+      },
+      dissolvedOxygen: {
+        results: [23.8, 21.0, 25.3],
+        average: '23.37'
+      },
+      salinity: {
+        results: [36.1, 33.6, 30.6],
+        average: '33.43'
+      },
+      pH: {
+        results: [44.0, 41.3, 42.7],
+        average: '42.67'
+      },
+      turbidity: {
+        results: [55.3, 51.1, 53.8],
+        average: '53.4'
+      },
+      ammonia: {
+        results: [61.4, 63.3, 67.5],
+        average: '64.07'
+      },
+      nitrates: {
+        results: [73.0, 72.6, 73.8],
+        average: '73.13'
+      },
+      others: [{
+        other1: {
+          label: 'other1',
+          method: 'method1',
+          units: 'unit1',
+          results: [88.5, 86.7, 84.9],
+          average: '86.7'
+        }
+      }]
+    };
+
+    var fillOutWaterQualitySample = function(sample, index, measurements) {
+      sample.element(by.model('sample.depthOfWaterSampleM')).sendKeys(measurements.depthOfWaterSampleM);
+      defaultMapCoordinates('modal-map-sample'+index);
+      // Water Temperature
+      sample.element(by.name('waterTemperatureMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('waterTemperatureUnits')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('waterTemperatureResult1')).sendKeys(measurements.waterTemperature.results[0]);
+      sample.element(by.name('waterTemperatureResult2')).sendKeys(measurements.waterTemperature.results[1]);
+      sample.element(by.name('waterTemperatureResult3')).sendKeys(measurements.waterTemperature.results[2]);
+      sample.element(by.name('waterTemperatureAverage')).sendKeys();
+      sample.element(by.name('waterTemperatureAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.waterTemperature.average);
+      });
+      // Dissolved Oxygen
+      sample.element(by.name('dissolvedOxygenMethod')).all(by.tagName('option')).get(3).click();
+      sample.element(by.name('dissolvedOxygenUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('dissolvedOxygenResult1')).sendKeys(measurements.dissolvedOxygen.results[0]);
+      sample.element(by.name('dissolvedOxygenResult2')).sendKeys(measurements.dissolvedOxygen.results[1]);
+      sample.element(by.name('dissolvedOxygenResult3')).sendKeys(measurements.dissolvedOxygen.results[2]);
+      sample.element(by.name('dissolvedOxygenAverage')).sendKeys();
+      sample.element(by.name('dissolvedOxygenAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.dissolvedOxygen.average);
+      });
+      // Salinity
+      sample.element(by.name('salinityMethod')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('salinityUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('salinityResult1')).sendKeys(measurements.salinity.results[0]);
+      sample.element(by.name('salinityResult2')).sendKeys(measurements.salinity.results[1]);
+      sample.element(by.name('salinityResult3')).sendKeys(measurements.salinity.results[2]);
+      sample.element(by.name('salinityAverage')).sendKeys();
+      sample.element(by.name('salinityAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.salinity.average);
+      });
+      // pH
+      sample.element(by.name('pHmethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('pHunits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('pHresult1')).sendKeys(measurements.pH.results[0]);
+      sample.element(by.name('pHresult2')).sendKeys(measurements.pH.results[1]);
+      sample.element(by.name('pHresult3')).sendKeys(measurements.pH.results[2]);
+      sample.element(by.name('pHaverage')).sendKeys();
+      sample.element(by.name('pHaverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.pH.average);
+      });
+      // Turbidity
+      sample.element(by.name('turbidityMethod')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('turbidityUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('turbidityResult1')).sendKeys(measurements.turbidity.results[0]);
+      sample.element(by.name('turbidityResult2')).sendKeys(measurements.turbidity.results[1]);
+      sample.element(by.name('turbidityResult3')).sendKeys(measurements.turbidity.results[2]);
+      sample.element(by.name('turbidityAverage')).sendKeys();
+      sample.element(by.name('turbidityAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.turbidity.average);
+      });
+      // Ammonia
+      sample.element(by.name('ammoniaMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('ammoniaUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('ammoniaResult1')).sendKeys(waterQuality1.ammonia.results[0]);
+      sample.element(by.name('ammoniaResult2')).sendKeys(waterQuality1.ammonia.results[1]);
+      sample.element(by.name('ammoniaResult3')).sendKeys(waterQuality1.ammonia.results[2]);
+      sample.element(by.name('ammoniaAverage')).sendKeys();
+      // Nitrates
+      sample.element(by.name('nitratesMethod')).all(by.tagName('option')).get(2).click();
+      sample.element(by.name('nitratesUnits')).all(by.tagName('option')).get(1).click();
+      sample.element(by.name('nitratesResult1')).sendKeys(measurements.nitrates.results[0]);
+      sample.element(by.name('nitratesResult2')).sendKeys(measurements.nitrates.results[1]);
+      sample.element(by.name('nitratesResult3')).sendKeys(measurements.nitrates.results[2]);
+      sample.element(by.name('nitratesAverage')).sendKeys();
+      sample.element(by.name('nitratesAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.nitrates.average);
+      });
+      // Other
+      //var other = sample.element(by.repeater('other in sample.others')).get(0);
+      sample.element(by.name('otherLabel')).sendKeys(measurements.others[0].other1.label);
+      sample.element(by.name('otherMethod')).sendKeys(measurements.others[0].other1.method);
+      sample.element(by.name('otherUnits')).sendKeys(measurements.others[0].other1.units);
+      sample.element(by.name('otherResult1')).sendKeys(measurements.others[0].other1.results[0]);
+      sample.element(by.name('otherResult2')).sendKeys(measurements.others[0].other1.results[1]);
+      sample.element(by.name('otherResult3')).sendKeys(measurements.others[0].other1.results[2]);
+      sample.element(by.name('otherAverage')).sendKeys();
+      sample.element(by.name('otherAverage')).getAttribute('value').then(function(value) {
+        expect(value).toEqual(measurements.others[0].other1.average);
+      });
+    };
+
     it ('should allow team member 1 to fill out protocol 5', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol5tab')).click();
@@ -578,11 +476,15 @@ describe('Expedition E2E Tests', function() {
       //expect(element(by.id('protocol3tab')).element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
     });
 
+//############################################################################//
+//  TEAM MEMBER 1 - SUBMIT PROTOCOLS 1, 3, & 5
+//############################################################################//
+
     it ('should allow team member 1 to submit protocols 1, 3, & 5', function() {
       // Submit
       element(by.buttonText('Submit')).click();
 
-      // Assert that only protocols 1, 3, & 5 are clickable
+      // Assert that no protocols are clickable
       expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
@@ -599,9 +501,12 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
-
     });
   });
+
+//############################################################################//
+//  TEAM MEMBER 2 - VIEW EXPEDITION
+//############################################################################//
 
   describe('Team member 2 view Expedition', function () {
     it ('should allow team member 2 to click protocols 2 & 4', function () {
@@ -636,14 +541,495 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
     });
 
-    it ('should allow team member 1 to fill out protocol 1', function() {
+//############################################################################//
+//  TEAM MEMBER 2 - OYSTER MEASUREMENT
+//############################################################################//
+
+    var oysterMeasurement1 = {
+      depthOfOysterCage: {
+        submergedDepthofCageM: 5
+      },
+      conditionOfOysterCage: {
+        notesOnDamageToCage: 'Test description of damage'
+      },
+      measuringOysterGrowth: {
+        substrateShells: [{
+          source: 'sourceA',
+          totalNumberOfLiveOystersOnShell: 0,
+          notes: 'Test notes 1',
+          measurements: [{
+          }]
+        }, {
+          source: 'sourceB',
+          totalNumberOfLiveOystersOnShell: 1,
+          notes: 'Test notes 2',
+          measurements: [11.1]
+        }, {
+          source: 'sourceC',
+          totalNumberOfLiveOystersOnShell: 2,
+          notes: 'Test notes 3',
+          measurements: [23.1, 21.0]
+        }, {
+          source: 'sourceD',
+          totalNumberOfLiveOystersOnShell: 3,
+          notes: 'Test notes 3',
+          measurements: [32.1, 33.1, 38.2]
+        }, {
+          source: 'sourceE',
+          totalNumberOfLiveOystersOnShell: 4,
+          notes: 'Test notes 4',
+          measurements: [43.1, 40.1, 47.3, 44.2]
+        }, {
+          source: 'sourceF',
+          totalNumberOfLiveOystersOnShell: 5,
+          notes: 'Test notes 5',
+          measurements: [53.2, 52.1, 55.2, 58.4, 57.2]
+        }, {
+          source: 'sourceG',
+          totalNumberOfLiveOystersOnShell: 4,
+          notes: 'Test notes 6',
+          measurements: [65.2, 66.3, 62.1, 67.4]
+        }, {
+          source: 'sourceH',
+          totalNumberOfLiveOystersOnShell: 3,
+          notes: 'Test notes 7',
+          measurements: [77.3, 74.2, 72.1]
+        }, {
+          source: 'sourceI',
+          totalNumberOfLiveOystersOnShell: 2,
+          notes: 'Test notes 8',
+          measurements: [88.3, 84.3]
+        }, {
+          source: 'sourceJ',
+          totalNumberOfLiveOystersOnShell: 1,
+          notes: 'Test notes 9',
+          measurements: [93.2]
+        }, {
+          source: 'sourceK',
+          totalNumberOfLiveOystersOnShell: 0,
+          notes: 'Test notes 2',
+          measurements: []
+        }]
+      }
+    };
+
+    var fillOutOysterMeasurements = function(index) {
+      element(by.id('edit-measurements-'+index)).click();
+      // Wait until the modal is open
+      var modal = element(by.id('modal-substrateshell'+index));
+      browser.wait(EC.visibilityOf(modal), 10000);
+
+      // Add an image to the substrate shell
+      uploadImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
+      uploadImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
+
+      var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+
+      modal.element(by.model('substrate.source')).sendKeys(measurementsDetails.source);
+      modal.element(by.model('substrate.totalNumberOfLiveOystersOnShell')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersOnShell);
+      modal.element(by.model('substrate.notes')).sendKeys(measurementsDetails.notes);
+
+      if (measurementsDetails.totalNumberOfLiveOystersOnShell > 0 &&
+        measurementsDetails.totalNumberOfLiveOystersOnShell === measurementsDetails.measurements.length) {
+        modal.element(by.id('substrate-measurements')).click();
+
+        //browser.wait(EC.visibilityOf(element(by.id('substrateshell-measurements'+index))), 5000);
+        for (var i = 0; i < measurementsDetails.measurements.length; i++) {
+          modal.element(by.id('measure'+i)).sendKeys(measurementsDetails.measurements[i]);
+        }
+      }
+
+      // Save the substrate shell
+      modal.element(by.buttonText('Save')).click();
+      //browser.wait(EC.invisibilityOf(modal), 5000);
+    };
+
+    it ('should allow team member 2 to fill out protocol 2', function() {
       element(by.partialLinkText('Oyster Measurements')).click();
       browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
       // Fill in values
       element(by.model('oysterMeasurement.depthOfOysterCage.submergedDepthofCageM')).sendKeys(oysterMeasurement1.depthOfOysterCage.submergedDepthofCageM);
       uploadImage('oyster-cage-condition-image-dropzone');
       element(by.model('oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage')).all(by.tagName('option')).get(3).click();
       element(by.model('oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage')).sendKeys(oysterMeasurement1.conditionOfOysterCage.notesOnDamageToCage);
+
+      browser.wait(EC.visibilityOf(element(by.repeater('substrate in oysterMeasurement.measuringOysterGrowth.substrateShells'))), 5000);
+
+      fillOutOysterMeasurements(0);
+      fillOutOysterMeasurements(1);
+      fillOutOysterMeasurements(2);
+      fillOutOysterMeasurements(3);
+      fillOutOysterMeasurements(4);
+      fillOutOysterMeasurements(5);
+      fillOutOysterMeasurements(6);
+      fillOutOysterMeasurements(7);
+      fillOutOysterMeasurements(8);
+      fillOutOysterMeasurements(9);
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol2tab = element(by.id('protocol2tab'));
+      expect(protocol2tab.isPresent()).toBe(true);
+      expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+    });
+
+//############################################################################//
+//  TEAM MEMBER 2 - SETTLEMENT TILES
+//############################################################################//
+
+    var settlementTiles1 = {
+      settlementTile1: {
+        description: 'Test description 1',
+        organisms: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+      },
+      settlementTile2: {
+        description: 'Test description 2',
+        organisms: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
+        notes: 'Notes 1'
+      },
+      settlementTile3: {
+        description: 'Test description 3',
+        organisms: [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1],
+        notes: 'Notes 2'
+      },
+      settlementTile4: {
+        description: 'Test description 4',
+        organisms: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1,2],
+        notes: 'Notes 3'
+      }
+    };
+
+    var fillOutSettlementTile = function(tile, index, details) {
+      tile.element(by.model('tile.description')).sendKeys(details.description);
+      uploadImage('settlement-tile-image-dropzone-'+index);
+
+      element(by.id('edit-settlementtile-'+index)).click();
+      // Wait until the modal is open
+      var modal = element(by.id('modal-settlementtile'+(index+1)));
+      browser.wait(EC.visibilityOf(modal), 10000);
+
+      for (var i = 0; i < details.organisms.length; i++) {
+        modal.element(by.id('organism'+i)).all(by.tagName('option')).get(details.organisms[i]).click();
+        if (details.organisms[i] === 26) {
+          modal.element(by.id('notes'+i)).sendKeys(details.notes);
+        }
+      }
+
+      // Save the substrate shell
+      modal.element(by.buttonText('Save')).click();
+      browser.wait(EC.invisibilityOf(modal), 5000);
+    };
+
+    it ('should allow team member 2 to fill out protocol 4', function() {
+      element(by.partialLinkText('Settlement Tiles')).click();
+      browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.repeater('tile in settlementTiles.settlementTiles'))), 5000);
+
+      var tiles = element.all(by.repeater('tile in settlementTiles.settlementTiles'));
+      var tile1 = tiles.get(0);
+      fillOutSettlementTile(tile1, 0, settlementTiles1.settlementTile1);
+      var tile2 = tiles.get(1);
+      fillOutSettlementTile(tile2, 1, settlementTiles1.settlementTile2);
+      var tile3 = tiles.get(2);
+      fillOutSettlementTile(tile3, 2, settlementTiles1.settlementTile3);
+      var tile4 = tiles.get(3);
+      fillOutSettlementTile(tile4, 3, settlementTiles1.settlementTile4);
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol4tab = element(by.id('protocol4tab'));
+      expect(protocol4tab.isPresent()).toBe(true);
+      expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+    });
+
+//############################################################################//
+//  TEAM MEMBER 2 - SUBMIT PROTOCOLS 2 & 4
+//############################################################################//
+
+    it ('should allow team member 2 to submit protocols 2 & 4', function() {
+      // Submit
+      element(by.buttonText('Submit')).click();
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - RETURN EXPEDITION
+//############################################################################//
+
+  describe('Return Expedition', function() {
+    it('should allow a team lead to return the protocols to the team members', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that all protocols are clickable
+      var firstLink = element(by.id('protocol1Link')).isDisplayed();
+      expect(firstLink).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      firstLink.click();
+    });
+
+    it ('should allow team lead to view all protocols', function() {
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team lead to return the expedition', function() {
+      // Submit
+      element(by.buttonText('Return')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      // Assert that all protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team member 1 to click on protocols 1, 3, & 5', function() {
+      // Sign in as team member 1
+      signinAs(member1);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that only protocols 1, 3, & 5 are clickable
+      var firstLink = element(by.id('protocol1Link')).isDisplayed();
+      expect(firstLink).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      firstLink.click();
+    });
+
+    it ('should allow team member 1 to view protocols 1, 3, & 5', function() {
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team member 1 to resubmit protocols 1, 3, & 5', function() {
+      // Submit
+      element(by.id('submit-exp-returned')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team member 2 to click on protocols 2 & 4', function() {
+      // Sign in as team member 2
+      signinAs(member2);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that only protocols 2 & 4 are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      var firstLink = element(by.id('protocol2Link')).isDisplayed();
+      expect(firstLink.isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+      firstLink.click();
+    });
+
+    it ('should allow team member 2 to view protocols 2 & 4', function() {
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team member 2 to resubmit protocols 2 & 4', function() {
+      // Submit
+      element(by.id('submit-exp-returned')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - PUBLISH EXPEDITION
+//############################################################################//
+
+  describe('Publish Expedition', function() {
+    it('should allow a team lead to publish the protocols', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+      // Click to view the protocols in the expedition
+      element(by.id('protocol1Link')).isDisplayed().click();
+    });
+
+    it ('should allow team lead to publish the expedition', function() {
+      // Submit
+      element(by.buttonText('Publish')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - PUBLISH EXPEDITION
+//############################################################################//
+
+  describe('Unpublish Expedition', function() {
+    it('should allow a team lead to unpublish the protocols', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+      // Click to view the protocols in the expedition
+      element(by.id('protocol1Link')).isDisplayed().click();
+    });
+
+    it ('should allow team lead to unpublish the expedition', function() {
+      // Submit
+      element(by.buttonText('Unpublish')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
     });
   });
 });

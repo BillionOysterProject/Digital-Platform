@@ -101,7 +101,7 @@
                         <h4><i class="glyphicon glyphicon-ok-sign green" ng-show="checkDone(substrate)"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4>
                     </td>
                     <td>
-                        <a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="openSubstrateForm($index)" ng-disabled="saving">Edit measurements</a>
+                        <a class="btn btn-default pull-right" data-target="#modal-substrateshell{{$index}}" ng-click="openSubstrateForm($index)" ng-disabled="saving" id="edit-measurements-{{$index}}">Edit measurements</a>
                         <span class="text-muted" ng-show="substrate.minimumSizeOfLiveOysters >= 0 || substrate.maximumSizeOfLiveOysters >= 0 || substrate.averageSizeOfLiveOysters >= 0 || substrate.totalNumberOfLiveOystersOnShell">
                             Minimum size <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b>,
                             Maximum size <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b>,
