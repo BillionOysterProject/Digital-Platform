@@ -359,27 +359,19 @@ exports.uploadSettlementTilePicture = function (req, res) {
   upload.fileFilter = settlementTileUploadFileFilter;
 
   if (settlementTiles) {
-    if (settlementTiles.status === 'incomplete' || settlementTiles.status === 'returned' ||
-      (checkRole('team lead', req.user) && settlementTiles.status === 'submitted')) {
-      if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
-        var uploadRemote = new UploadRemote();
-        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
-        function (fileInfo) {
-          settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
+    if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
+      function (fileInfo) {
+        settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
 
-          uploadFileSuccess(settlementTiles, res);
-        }, function(errorMessage) {
-          uploadFileError(settlementTiles, errorMessage, res);
-        });
-      } else {
-        return res.status(400).send({
-          message: 'Substrate for settlement tiles does not exist'
-        });
-      }
+        uploadFileSuccess(settlementTiles, res);
+      }, function(errorMessage) {
+        uploadFileError(settlementTiles, errorMessage, res);
+      });
     } else {
-      res.json({
-        status: settlementTiles.status,
-        scribe: settlementTiles.scribeMember.displayName
+      return res.status(400).send({
+        message: 'Substrate for settlement tiles does not exist'
       });
     }
   } else {

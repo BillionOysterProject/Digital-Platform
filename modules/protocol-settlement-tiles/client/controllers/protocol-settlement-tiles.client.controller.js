@@ -90,6 +90,12 @@
           grid25: { notes: '' }
         });
       }
+      $http.post('/api/protocol-settlement-tiles/' + $scope.settlementTiles._id + '/incremental-save',
+        $scope.settlementTiles)
+        .success(function (data, status, headers, config) {
+        })
+        .error(function (data, status, header, config) {
+        });
     };
 
     // Set up initial values
@@ -167,9 +173,15 @@
       for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
         var tile = $scope.settlementTiles.settlementTiles[i];
 
-        tile.tilePhoto = {
-          path: tile.imageUrl
-        };
+        if (tile.imageUrl !== '' && tile) {
+          if (tile.tilePhoto && tile.tilePhoto.path) {
+            tile.tilePhoto.path = tile.imageUrl;
+          } else {
+            tile.tilePhoto = {
+              path: tile.imageUrl
+            };
+          }
+        }
 
         if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
           errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
@@ -240,14 +252,17 @@
             if (data.settlementTiles) {
               var tiles = data.settlementTiles;
               for (var i = 0; i < tiles.length; i++) {
-                $scope.settlementTiles.settlementTiles[i].tilePhoto = tiles[i].tilePhoto;
-                $scope.settlementTiles.settlementTiles[i].imageUrl = ($scope.settlementTiles.settlementTiles[i].tilePhoto &&
-                  $scope.settlementTiles.settlementTiles[i].tilePhoto.path) ?
-                  $scope.settlementTiles.settlementTiles[i].tilePhoto.path : '';
+                if (tiles[i].tilePhoto) {
+                  $scope.settlementTiles.settlementTiles[i].tilePhoto = tiles[i].tilePhoto;
+                  $scope.settlementTiles.settlementTiles[i].imageUrl = ($scope.settlementTiles.settlementTiles[i].tilePhoto &&
+                    $scope.settlementTiles.settlementTiles[i].tilePhoto.path) ?
+                    $scope.settlementTiles.settlementTiles[i].tilePhoto.path : '';
+                }
               }
             }
             callback();
           });
+          updatedProtocol();
         }, function(errorMessage) {
           $scope.settlementTilesErrors = errorMessage;
           callback();
