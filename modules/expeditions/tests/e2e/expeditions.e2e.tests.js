@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path'),
+  moment = require('moment'),
   EC = protractor.ExpectedConditions;
 
 describe('Expedition E2E Tests', function() {
@@ -156,26 +157,72 @@ describe('Expedition E2E Tests', function() {
       meteorologicalConditions: {
         airTemperatureC: 23,
         windSpeedMPH: 4,
-        humidityPer: 23
+        humidityPer: 23,
+        weatherConditions: 3,
+        weatherConditionsText: 'Cloudy',
+        windDirection: 4,
+        windDirectionText: 'South West'
+      },
+      recentRainfall: {
+        rainedIn7Days: 1,
+        rainedIn7DaysText: 'Yes',
+        rainedIn72Hours: 1,
+        rainedIn72HoursText: 'Yes',
+        rainedIn24Hours: 1,
+        rainedIn24HoursText: 'Yes'
       },
       tideConditions: {
-        closestHighTide: new Date(),
-        closestLowTide: new Date(),
         currentSpeedMPH: 3,
+        currentDirection: 3,
+        currentDirectionText: 'East',
+        tidalCurrent: 2,
+        tidalCurrentText: 'Slack water'
       },
       waterConditions: {
+        waterColor: 4,
+        waterColorText: 'Dark Green',
+        oilSheen: 1,
+        oilSheenText: 'Yes',
         garbage: {
+          garbagePresent: 1,
+          garbagePresentText: 'Yes',
+          hardPlastic: 1,
+          hardPlasticText: 'None',
+          softPlastic: 2,
+          softPlasticText: 'Sporadic',
+          metal: 3,
+          metalText: 'Common',
+          paper: 4,
+          paperText: 'Extensive',
+          glass: 1,
+          glassText: 'None',
+          organic: 2,
+          organicText: 'Sporadic',
           other: {
-            description: 'wood'
+            description: 'wood',
+            extent: 3,
+            extentText: 'Common'
           }
         },
         markedCombinedSewerOverflowPipes: {
+          markedCSOPresent: 1,
+          markedCSOPresentText: 'Yes',
+          flowThroughPresent: 1,
+          flowThroughPresentText: 'Yes',
+          howMuchFlowThrough: 3,
+          howMuchFlowThroughText: 'Steady Stream',
           location: {
             latitude: 39.765,
             longitude: -76.234,
           }
         },
         unmarkedOutfallPipes: {
+          unmarkedPipePresent: 1,
+          unmarkedPipePresentText: 'Yes',
+          flowThroughPresent: 1,
+          flowThroughPresentText: 'Yes',
+          howMuchFlowThrough: 1,
+          howMuchFlowThroughText: 'Trickle',
           location: {
             latitude: 39.765,
             longitude: -76.234,
@@ -184,9 +231,27 @@ describe('Expedition E2E Tests', function() {
         }
       },
       landConditions: {
+        shoreLineType: 3,
+        shoreLineTypeText: 'Floating Dock',
         garbage: {
+          garbagePresent: 1,
+          garbagePresentText: 'Yes',
+          hardPlastic: 4,
+          hardPlasticText: 'Extensive',
+          softPlastic: 1,
+          softPlasticText: 'None',
+          metal: 2,
+          metalText: 'Sporadic',
+          paper: 3,
+          paperText: 'Common',
+          glass: 4,
+          glassText: 'Extensive',
+          organic: 1,
+          organicText: 'None',
           other: {
-            description: 'wood'
+            description: 'wood',
+            extent: 2,
+            extentText: 'Sporadic'
           }
         },
         shorelineSurfaceCoverEstPer: {
@@ -197,68 +262,123 @@ describe('Expedition E2E Tests', function() {
       }
     };
 
+    var assertSiteCondition = function() {
+      // Meteorological Conditions
+      expect(element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).$('option:checked').getText()).toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText);
+      expect(element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).getAttribute('value')).toEqual(siteCondition1.meteorologicalConditions.airTemperatureC.toString());
+      expect(element(by.model('siteCondition.meteorologicalConditions.windSpeedMPH')).getAttribute('value')).toEqual(siteCondition1.meteorologicalConditions.windSpeedMPH.toString());
+      expect(element(by.model('siteCondition.meteorologicalConditions.windDirection')).$('option:checked').getText()).toEqual(siteCondition1.meteorologicalConditions.windDirectionText);
+      expect(element(by.model('siteCondition.meteorologicalConditions.humidityPer')).getAttribute('value')).toEqual(siteCondition1.meteorologicalConditions.humidityPer.toString());
+      expect(element(by.model('siteCondition.recentRainfall.rainedIn7Days')).$('option:checked').getText()).toEqual(siteCondition1.recentRainfall.rainedIn7DaysText);
+      expect(element(by.model('siteCondition.recentRainfall.rainedIn72Hours')).$('option:checked').getText()).toEqual(siteCondition1.recentRainfall.rainedIn72HoursText);
+      expect(element(by.model('siteCondition.recentRainfall.rainedIn24Hours')).$('option:checked').getText()).toEqual(siteCondition1.recentRainfall.rainedIn24HoursText);
+      // Tide Conditions
+      expect(element(by.model('siteCondition.tideConditions.currentSpeedMPH')).getAttribute('value')).toEqual(siteCondition1.tideConditions.currentSpeedMPH.toString());
+      expect(element(by.model('siteCondition.tideConditions.currentDirection')).$('option:checked').getText()).toEqual(siteCondition1.tideConditions.currentDirectionText);
+      expect(element(by.model('siteCondition.tideConditions.tidalCurrent')).$('option:checked').getText()).toEqual(siteCondition1.tideConditions.tidalCurrentText);
+      // Water Conditions
+      //uploadImage('water-condition-image-dropzone'); // Water Condition Image Upload
+      expect(element(by.model('siteCondition.waterConditions.waterColor')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.waterColorText);
+      expect(element(by.model('siteCondition.waterConditions.oilSheen')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.oilSheenText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.garbagePresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.garbagePresentText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.hardPlastic')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.hardPlasticText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.softPlastic')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.softPlasticText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.metal')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.metalText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.paper')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.paperText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.glass')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.glassText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.organic')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.organicText);
+      expect(element(by.model('siteCondition.waterConditions.garbage.other.description')).getAttribute('value')).toEqual(siteCondition1.waterConditions.garbage.other.description);
+      expect(element(by.model('siteCondition.waterConditions.garbage.other.extent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.other.extentText);
+      expect(element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresentText);
+      expect(element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.unmarkedOutfallPipes.unmarkedPipePresentText);
+      //defaultMapCoordinates('modal-map-marked');
+      expect(element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresentText);
+      expect(element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThroughText);
+      //defaultMapCoordinates('modal-map-unmarked');
+      expect(element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM')).getAttribute('value')).toEqual(siteCondition1.waterConditions.unmarkedOutfallPipes.approximateDiameterCM.toString());
+      expect(element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.unmarkedOutfallPipes.flowThroughPresentText);
+      expect(element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.unmarkedOutfallPipes.howMuchFlowThroughText);
+      // Land Conditions
+      //uploadImage('land-condition-image-dropzone');
+      expect(element(by.model('siteCondition.landConditions.shoreLineType')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.shoreLineTypeText);
+      expect(element(by.model('siteCondition.landConditions.garbage.garbagePresent')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.garbagePresentText);
+      expect(element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).getAttribute('value')).toEqual(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer.toString());
+      expect(element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).getAttribute('value')).toEqual(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer.toString());
+      expect(element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).getAttribute('value')).toEqual(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer.toString());
+      expect(element(by.model('siteCondition.landConditions.garbage.hardPlastic')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.hardPlasticText);
+      expect(element(by.model('siteCondition.landConditions.garbage.softPlastic')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.softPlasticText);
+      expect(element(by.model('siteCondition.landConditions.garbage.metal')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.metalText);
+      expect(element(by.model('siteCondition.landConditions.garbage.paper')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.paperText);
+      expect(element(by.model('siteCondition.landConditions.garbage.glass')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.glassText);
+      expect(element(by.model('siteCondition.landConditions.garbage.organic')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.organicText);
+      expect(element(by.model('siteCondition.landConditions.garbage.other.description')).getAttribute('value')).toEqual(siteCondition1.landConditions.garbage.other.description);
+      expect(element(by.model('siteCondition.landConditions.garbage.other.extent')).$('option:checked').getText()).toEqual(siteCondition1.landConditions.garbage.other.extentText);
+    };
+
     it ('should allow team member 1 to fill out protocol 1', function() {
       element(by.partialLinkText('Site Conditions')).click();
       browser.sleep(1000);
       // Fill in values
       // Meteorological Conditions
-      element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).all(by.tagName('option')).get(3).click();
+      element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).all(by.tagName('option')).get(siteCondition1.meteorologicalConditions.weatherConditions).click();
       element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).sendKeys(siteCondition1.meteorologicalConditions.airTemperatureC);
       element(by.model('siteCondition.meteorologicalConditions.windSpeedMPH')).sendKeys(siteCondition1.meteorologicalConditions.windSpeedMPH);
-      element(by.model('siteCondition.meteorologicalConditions.windDirection')).all(by.tagName('option')).get(4).click();
+      element(by.model('siteCondition.meteorologicalConditions.windDirection')).all(by.tagName('option')).get(siteCondition1.meteorologicalConditions.windDirection).click();
       element(by.model('siteCondition.meteorologicalConditions.humidityPer')).sendKeys(siteCondition1.meteorologicalConditions.humidityPer);
-      element(by.model('siteCondition.recentRainfall.rainedIn7Days')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.recentRainfall.rainedIn72Hours')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.recentRainfall.rainedIn24Hours')).all(by.tagName('option')).get(1).click();
+      element(by.model('siteCondition.recentRainfall.rainedIn7Days')).all(by.tagName('option')).get(siteCondition1.recentRainfall.rainedIn7Days).click();
+      element(by.model('siteCondition.recentRainfall.rainedIn72Hours')).all(by.tagName('option')).get(siteCondition1.recentRainfall.rainedIn72Hours).click();
+      element(by.model('siteCondition.recentRainfall.rainedIn24Hours')).all(by.tagName('option')).get(siteCondition1.recentRainfall.rainedIn24Hours).click();
       // Tide Conditions
       element(by.model('siteCondition.tideConditions.currentSpeedMPH')).sendKeys(siteCondition1.tideConditions.currentSpeedMPH);
-      element(by.model('siteCondition.tideConditions.currentDirection')).all(by.tagName('option')).get(3).click();
-      element(by.model('siteCondition.tideConditions.tidalCurrent')).all(by.tagName('option')).get(2).click();
+      element(by.model('siteCondition.tideConditions.currentDirection')).all(by.tagName('option')).get(siteCondition1.tideConditions.currentDirection).click();
+      element(by.model('siteCondition.tideConditions.tidalCurrent')).all(by.tagName('option')).get(siteCondition1.tideConditions.tidalCurrent).click();
       // Water Conditions
       uploadImage('water-condition-image-dropzone'); // Water Condition Image Upload
-      element(by.model('siteCondition.waterConditions.waterColor')).all(by.tagName('option')).get(4).click();
-      element(by.model('siteCondition.waterConditions.oilSheen')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.garbage.garbagePresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.garbage.hardPlastic')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.garbage.softPlastic')).all(by.tagName('option')).get(2).click();
-      element(by.model('siteCondition.waterConditions.garbage.metal')).all(by.tagName('option')).get(3).click();
-      element(by.model('siteCondition.waterConditions.garbage.paper')).all(by.tagName('option')).get(4).click();
-      element(by.model('siteCondition.waterConditions.garbage.glass')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.garbage.organic')).all(by.tagName('option')).get(2).click();
+      element(by.model('siteCondition.waterConditions.waterColor')).all(by.tagName('option')).get(siteCondition1.waterConditions.waterColor).click();
+      element(by.model('siteCondition.waterConditions.oilSheen')).all(by.tagName('option')).get(siteCondition1.waterConditions.oilSheen).click();
+      element(by.model('siteCondition.waterConditions.garbage.garbagePresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.garbagePresent).click();
+      element(by.model('siteCondition.waterConditions.garbage.hardPlastic')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.hardPlastic).click();
+      element(by.model('siteCondition.waterConditions.garbage.softPlastic')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.softPlastic).click();
+      element(by.model('siteCondition.waterConditions.garbage.metal')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.metal).click();
+      element(by.model('siteCondition.waterConditions.garbage.paper')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.paper).click();
+      element(by.model('siteCondition.waterConditions.garbage.glass')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.glass).click();
+      element(by.model('siteCondition.waterConditions.garbage.organic')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.organic).click();
       element(by.model('siteCondition.waterConditions.garbage.other.description')).sendKeys(siteCondition1.waterConditions.garbage.other.description);
-      element(by.model('siteCondition.waterConditions.garbage.other.extent')).all(by.tagName('option')).get(3).click();
-      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent')).all(by.tagName('option')).get(1).click();
+      element(by.model('siteCondition.waterConditions.garbage.other.extent')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.other.extent).click();
+      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent).click();
+      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent).click();
       defaultMapCoordinates('modal-map-marked');
-      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough')).all(by.tagName('option')).get(3).click();
+      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent).click();
+      element(by.model('siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough')).all(by.tagName('option')).get(siteCondition1.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough).click();
       //defaultMapCoordinates('modal-map-unmarked');
       element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM')).sendKeys(siteCondition1.waterConditions.unmarkedOutfallPipes.approximateDiameterCM);
-      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough')).all(by.tagName('option')).get(1).click();
+      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.unmarkedOutfallPipes.flowThroughPresent).click();
+      element(by.model('siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough')).all(by.tagName('option')).get(siteCondition1.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough).click();
       // Land Conditions
       uploadImage('land-condition-image-dropzone');
-      element(by.model('siteCondition.landConditions.shoreLineType')).all(by.tagName('option')).get(3).click();
-      element(by.model('siteCondition.landConditions.garbage.garbagePresent')).all(by.tagName('option')).get(1).click();
+      element(by.model('siteCondition.landConditions.shoreLineType')).all(by.tagName('option')).get(siteCondition1.landConditions.shoreLineType).click();
+      element(by.model('siteCondition.landConditions.garbage.garbagePresent')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.garbagePresent).click();
       element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
       element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
       element(by.model('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).clear().sendKeys(siteCondition1.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
-      element(by.model('siteCondition.landConditions.garbage.hardPlastic')).all(by.tagName('option')).get(4).click();
-      element(by.model('siteCondition.landConditions.garbage.softPlastic')).all(by.tagName('option')).get(1).click();
-      element(by.model('siteCondition.landConditions.garbage.metal')).all(by.tagName('option')).get(2).click();
-      element(by.model('siteCondition.landConditions.garbage.paper')).all(by.tagName('option')).get(3).click();
-      element(by.model('siteCondition.landConditions.garbage.glass')).all(by.tagName('option')).get(4).click();
-      element(by.model('siteCondition.landConditions.garbage.organic')).all(by.tagName('option')).get(1).click();
+      element(by.model('siteCondition.landConditions.garbage.hardPlastic')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.hardPlastic).click();
+      element(by.model('siteCondition.landConditions.garbage.softPlastic')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.softPlastic).click();
+      element(by.model('siteCondition.landConditions.garbage.metal')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.metal).click();
+      element(by.model('siteCondition.landConditions.garbage.paper')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.paper).click();
+      element(by.model('siteCondition.landConditions.garbage.glass')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.glass).click();
+      element(by.model('siteCondition.landConditions.garbage.organic')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.organic).click();
       element(by.model('siteCondition.landConditions.garbage.other.description')).sendKeys(siteCondition1.landConditions.garbage.other.description);
-      element(by.model('siteCondition.landConditions.garbage.other.extent')).all(by.tagName('option')).get(2).click();
+      element(by.model('siteCondition.landConditions.garbage.other.extent')).all(by.tagName('option')).get(siteCondition1.landConditions.garbage.other.extent).click();
 
       // Save draft
       element(by.buttonText('Save Draft')).click();
       // Wait until saving is done
-      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 2000);
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
       var protocol1Tab = element(by.id('protocol1tab'));
       expect(protocol1Tab.isPresent()).toBe(true);
       expect(protocol1Tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+
+      assertSiteCondition();
     });
 
 //############################################################################//
@@ -302,7 +422,7 @@ describe('Expedition E2E Tests', function() {
       });
     };
 
-    it ('should allow team member 1 to fill out protocol 3', function() {
+    xit ('should allow team member 1 to fill out protocol 3', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol3tab')).click();
       browser.sleep(1000);
@@ -454,7 +574,7 @@ describe('Expedition E2E Tests', function() {
       });
     };
 
-    it ('should allow team member 1 to fill out protocol 5', function() {
+    xit ('should allow team member 1 to fill out protocol 5', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol5tab')).click();
       browser.sleep(1000);
@@ -480,7 +600,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 1 - SUBMIT PROTOCOLS 1, 3, & 5
 //############################################################################//
 
-    it ('should allow team member 1 to submit protocols 1, 3, & 5', function() {
+    xit ('should allow team member 1 to submit protocols 1, 3, & 5', function() {
       // Submit
       element(by.buttonText('Submit')).click();
 
@@ -508,7 +628,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 2 - VIEW EXPEDITION
 //############################################################################//
 
-  describe('Team member 2 view Expedition', function () {
+  xdescribe('Team member 2 view Expedition', function () {
     it ('should allow team member 2 to click protocols 2 & 4', function () {
       // Sign in as team member 2
       signinAs(member2);
@@ -781,7 +901,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - RETURN EXPEDITION
 //############################################################################//
 
-  describe('Return Expedition', function() {
+  xdescribe('Return Expedition', function() {
     it('should allow a team lead to return the protocols to the team members', function() {
       // Sign in as team lead
       signinAs(leader);
@@ -965,7 +1085,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - PUBLISH EXPEDITION
 //############################################################################//
 
-  describe('Publish Expedition', function() {
+  xdescribe('Publish Expedition', function() {
     it('should allow a team lead to publish the protocols', function() {
       // Sign in as team lead
       signinAs(leader);
@@ -1001,7 +1121,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - PUBLISH EXPEDITION
 //############################################################################//
 
-  describe('Unpublish Expedition', function() {
+  xdescribe('Unpublish Expedition', function() {
     it('should allow a team lead to unpublish the protocols', function() {
       // Sign in as team lead
       signinAs(leader);
