@@ -262,7 +262,6 @@
             }
             callback();
           });
-          updatedProtocol();
         }, function(errorMessage) {
           $scope.settlementTilesErrors = errorMessage;
           callback();

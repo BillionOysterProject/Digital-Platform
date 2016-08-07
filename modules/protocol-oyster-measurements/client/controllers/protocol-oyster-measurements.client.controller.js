@@ -110,7 +110,6 @@
     };
 
     $scope.saveSubstrateForm = function(substrate, index, isValid) {
-      console.log('save substrate', index);
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
         return false;
