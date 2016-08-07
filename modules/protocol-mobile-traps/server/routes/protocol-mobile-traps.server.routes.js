@@ -18,6 +18,9 @@ module.exports = function (app) {
   app.route('/api/protocol-mobile-traps/:mobileTrapId/incremental-save').all(mobileTrapsPolicy.isAllowed)
     .post(mobileTraps.incrementalSave);
 
+  app.route('/api/protocol-mobile-traps/:mobileTrapId/validate').all(mobileTrapsPolicy.isAllowed)
+    .post(mobileTraps.validate);
+
   // Single Protocol Mobile Traps routes
   app.route('/api/protocol-mobile-traps/:mobileTrapId').all(mobileTrapsPolicy.isAllowed)
     .get(mobileTraps.read)

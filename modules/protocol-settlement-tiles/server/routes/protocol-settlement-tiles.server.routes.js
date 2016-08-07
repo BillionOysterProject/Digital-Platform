@@ -18,6 +18,9 @@ module.exports = function (app) {
   app.route('/api/protocol-settlement-tiles/:settlementTileId/incremental-save').all(settlementTilesPolicy.isAllowed)
     .post(settlementTiles.incrementalSave);
 
+  app.route('/api/protocol-settlement-tiles/:settlementTileId/validate').all(settlementTilesPolicy.isAllowed)
+    .post(settlementTiles.validate);
+
   // Single Protocol Oyster Measurements routes
   app.route('/api/protocol-settlement-tiles/:settlementTileId').all(settlementTilesPolicy.isAllowed)
     .get(settlementTiles.read)

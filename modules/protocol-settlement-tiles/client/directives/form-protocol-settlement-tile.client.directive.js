@@ -8,11 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/protocol-settlement-tiles/client/views/form-protocol-settlement-tile.client.view.html',
         controller: 'ProtocolSettlementTilesController',
-        controllerAs: 'st',
-        scope: {
-          protocolSettlementTiles: '=',
-          error: '='
-        }
+        scope: false
       };
     });
 })();

@@ -176,53 +176,57 @@ var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback
   }
 };
 
+exports.validate = function (req, res) {
+  var settlementTiles = req.body;
+  validateSettlementTiles(settlementTiles,
+  function(settlementTilesJSON) {
+    res.json({
+      settlementTiles: settlementTiles,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      settlementTiles: settlementTiles,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var settlementTiles = req.settlementTiles;
 
   if (settlementTiles) {
-    if (settlementTiles.status === 'incomplete' || settlementTiles.status === 'returned' ||
-      (checkRole('team lead', req.user) && settlementTiles.status === 'submitted')) {
-      //req.body.settlementTiles = convertOrganisms(req.body.settlementTiles);
-      settlementTiles = _.extend(settlementTiles, req.body);
-      settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      settlementTiles.scribeMember = req.user;
+    settlementTiles = _.extend(settlementTiles, req.body);
+    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    settlementTiles.scribeMember = req.user;
 
-      console.log('settlementTiles', settlementTiles);
-
-      removeFiles(req.settlementTiles, settlementTiles,
-      function() {
-        settlementTiles.save(function (err) {
-          if (err) {
-            console.log('settlementTile save error', err);
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
+    removeFiles(req.settlementTiles, settlementTiles,
+    function() {
+      settlementTiles.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          validateSettlementTiles(settlementTiles,
+          function(settlementTilesJSON) {
+            res.json({
+              settlementTiles: settlementTiles,
+              successful: true
             });
-          } else {
-            validateSettlementTiles(settlementTiles,
-            function(settlementTilesJSON) {
-              res.json({
-                settlementTiles: settlementTiles,
-                successful: true
-              });
-            }, function(errorMessages) {
-              res.json({
-                settlementTiles: settlementTiles,
-                errors: errorMessages
-              });
+          }, function(errorMessages) {
+            res.json({
+              settlementTiles: settlementTiles,
+              errors: errorMessages
             });
-          }
-        });
-      }, function(err) {
-        return res.status(400).send({
-          message: err
-        });
+          });
+        }
       });
-    } else {
-      res.json({
-        status: settlementTiles.status,
-        scribe: settlementTiles.scribeMember.displayName
+    }, function(err) {
+      return res.status(400).send({
+        message: err
       });
-    }
+    });
   } else {
     return res.status(400).send({
       message: 'Protocol settlement tiles not found'
@@ -355,27 +359,19 @@ exports.uploadSettlementTilePicture = function (req, res) {
   upload.fileFilter = settlementTileUploadFileFilter;
 
   if (settlementTiles) {
-    if (settlementTiles.status === 'incomplete' || settlementTiles.status === 'returned' ||
-      (checkRole('team lead', req.user) && settlementTiles.status === 'submitted')) {
-      if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
-        var uploadRemote = new UploadRemote();
-        uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
-        function (fileInfo) {
-          settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
+    if (settlementTileIndex && settlementTiles.settlementTiles[settlementTileIndex]) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.settlementTilesUpload,
+      function (fileInfo) {
+        settlementTiles.settlementTiles[settlementTileIndex].tilePhoto = fileInfo;
 
-          uploadFileSuccess(settlementTiles, res);
-        }, function(errorMessage) {
-          uploadFileError(settlementTiles, errorMessage, res);
-        });
-      } else {
-        return res.status(400).send({
-          message: 'Substrate for settlement tiles does not exist'
-        });
-      }
+        uploadFileSuccess(settlementTiles, res);
+      }, function(errorMessage) {
+        uploadFileError(settlementTiles, errorMessage, res);
+      });
     } else {
-      res.json({
-        status: settlementTiles.status,
-        scribe: settlementTiles.scribeMember.displayName
+      return res.status(400).send({
+        message: 'Substrate for settlement tiles does not exist'
       });
     }
   } else {

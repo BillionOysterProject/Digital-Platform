@@ -8,11 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/protocol-site-conditions/client/views/form-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
-        controllerAs: 'sc',
-        scope: {
-          protocolSiteCondition: '=',
-          error: '='
-        }
+        scope: false
       };
     });
 })();

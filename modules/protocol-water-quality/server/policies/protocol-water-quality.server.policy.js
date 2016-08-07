@@ -18,6 +18,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-water-quality/:waterQualityId/incremental-save',
       permissions: '*'
     }, {
+      resources: '/api/protocol-water-quality/:waterQualityId/validate',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-water-quality/:waterQualityId',
       permissions: '*'
     }, {

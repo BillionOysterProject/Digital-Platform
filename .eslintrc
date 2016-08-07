@@ -29,6 +29,7 @@
     element: true,
     by: true,
     browser: true,
+    protractor: true,
     inject: true,
     register: true,
     sinon: true,
