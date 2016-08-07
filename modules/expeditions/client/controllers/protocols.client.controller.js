@@ -332,9 +332,11 @@
 
       if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
         $scope.saveOysterMeasurement(function() {
+          console.log('returned successful');
           vm.tabs.protocol2.saveSuccessful = true;
           allDone();
         }, function() {
+          console.log('returned failure');
           vm.tabs.protocol2.saveSuccessful = false;
           allDone();
         });
