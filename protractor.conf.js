@@ -2,7 +2,15 @@
 
 // Protractor configuration
 var config = {
-  specs: ['modules/*/tests/e2e/*.js']
+  seleniumAddress: 'http://localhost:4444/wd/hub',
+  specs: ['modules/*/tests/e2e/*.js'],
+  jasmineNodeOpts: {
+    onComplete: null,
+    isVerbose: true,
+    showColors: true,
+    includeStackTrace: true,
+    defaultTimeoutInterval: 360000
+  }
 };
 
 if (process.env.TRAVIS) {

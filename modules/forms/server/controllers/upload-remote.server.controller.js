@@ -36,7 +36,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
   if (req && res && localUploader && uploadConfig) {
     localUploader(req, res, function(localUploadError) {
       if (localUploadError) {
-        console.log('localUploadError', localUploadError.code);
+        //console.log('localUploadError', localUploadError.code);
         errorCallback(localUploadError.code);
       } else {
         if (req.file) {
@@ -45,7 +45,7 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
           var pathExt = path.extname(file.originalname);
           var s3Filename = vm.remoteUrl + uploadConfig.s3dest + file.filename + pathExt;
 
-          console.log('key', uploadConfig.s3dest + file.filename + pathExt);
+          //console.log('key', uploadConfig.s3dest + file.filename + pathExt);
           var params = {
             localFile: localFileName,
             s3Params: {
@@ -61,21 +61,20 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
 
           // Listen for stage changes on the call
           s3Uploader.on('error', function(err) {
-            console.error('unable to upload:', err.stack);
+            //console.error('unable to upload:', err.stack);
             errorCallback(err.stack);
           })
           .on('progress', function() {
-            console.log('progress', s3Uploader.progressMd5Amount,
-            s3Uploader.progressAmount, s3Uploader.progressTotal);
+            //console.log('progress', s3Uploader.progressMd5Amount, s3Uploader.progressAmount, s3Uploader.progressTotal);
           })
           .on('fileOpened', function() {
-            console.log('File Opened');
+            //console.log('File Opened');
           })
           .on('end', function() {
-            console.log('done uploading');
+            //console.log('done uploading');
           })
           .on('fileClosed', function() {
-            console.log('File Closed');
+            //console.log('File Closed');
             var fileInfo = {
               path: s3Filename,
               originalname: file.originalname,
@@ -118,25 +117,24 @@ UploadRemote.prototype.deleteRemote = function(filePaths, successCallback, error
       s3Params.Delete.Objects.push({ Key: key });
     }
 
-    console.log('params', s3Params);
+    //console.log('params', s3Params);
 
     // Delete files in s3
     var s3Deleter = vm.client.deleteObjects(s3Params);
 
     // Listen for stage changes on the call
     s3Deleter.on('error', function(err) {
-      console.error('unable to upload:', err.stack);
+      //console.error('unable to upload:', err.stack);
       errorCallback(err.stack);
     })
     .on('progress', function() {
-      console.log('progress', s3Deleter.progressMd5Amount,
-        s3Deleter.progressAmount, s3Deleter.progressTotal);
+      //console.log('progress', s3Deleter.progressMd5Amount, s3Deleter.progressAmount, s3Deleter.progressTotal);
     })
     .on('data', function() {
-      console.log('data');
+      //console.log('data');
     })
     .on('end', function() {
-      console.log('done deleting');
+      //console.log('done deleting');
       successCallback();
     });
   } else {

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" ng-click="cancelFunction(index)"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" ng-click="cancelFunction(index)" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Substrate Shell {{substrate.substrateShellNumber}}</h4>
                 <hr ng-show="(error && error.length > 0) || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)"/>
                 <div class="alert alert-danger" ng-show="(error && error.length > 0) || (form.substrateForm.$invalid && form.substrateForm.$submitted && form.substrateForm.$error)">
@@ -27,8 +27,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
-                                <li role="presentation"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
+                                <li role="presentation" class="active" id="substrate-details"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
+                                <li role="presentation" id="substrate-measurements"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="substrateshell-meta{{index}}">
@@ -41,7 +41,7 @@
                                                 <label for="outerImg" class="control-label required">Outer side *</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader"
                                                 image-url="outerSubstrateUrl" image-alt="Outer side"
-                                                id="outer-substrate-image-dropzone"></single-image-drop-zone>
+                                                id="outer-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
                                                     <p class="red">Outer side image is required.</p>
                                                 </div>
@@ -50,7 +50,7 @@
                                                 <label for="innerImg" class="control-label required">Inner side *</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader"
                                                 image-url="innerSubstrateUrl" image-alt="Inner side"
-                                                id="inner-substrate-image-dropzone"></single-image-drop-zone>
+                                                id="inner-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
                                                 <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
                                                     <p class="red">Inner side image is required.</p>
                                                 </div>
@@ -75,7 +75,7 @@
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
                                                 <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
-                                                id="total" min="1" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
+                                                id="total" min="0" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="notes" class="control-label">Notes</label>

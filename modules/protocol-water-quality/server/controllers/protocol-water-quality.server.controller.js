@@ -29,7 +29,6 @@ var checkRole = function(role, user) {
 var validateWaterQuality = function(waterQuality, successCallback, errorCallback) {
   var errorMessages = [];
 
-  console.log('waterQuality.samples', waterQuality.samples);
   if (!waterQuality.samples || waterQuality.samples.length <= 0) {
     errorMessages.push('At least one sample is required');
   } else {
@@ -98,44 +97,50 @@ exports.read = function (req, res) {
   res.json(waterQuality);
 };
 
+exports.validate = function (req, res) {
+  var waterQuality = req.body;
+  validateWaterQuality(waterQuality,
+  function(waterQualityJSON) {
+    res.json({
+      waterQuality: waterQuality,
+      successful: true
+    });
+  }, function (errorMessages) {
+    res.json({
+      waterQuality: waterQuality,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var waterQuality = req.waterQuality;
 
   if (waterQuality) {
-    if (waterQuality.status === 'incomplete' || waterQuality.status === 'returned' ||
-      (checkRole('team lead', req.user) && waterQuality.status === 'submitted')) {
-      waterQuality = _.extend(waterQuality, req.body);
-      waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      waterQuality.scribeMember = req.user;
+    waterQuality = _.extend(waterQuality, req.body);
+    waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    waterQuality.scribeMember = req.user;
 
-      console.log('waterQuality', waterQuality);
-      waterQuality.save(function (err) {
-        if (err) {
-          console.log('water quality save error', err);
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+    waterQuality.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        validateWaterQuality(waterQuality,
+        function(waterQualityJSON) {
+          res.json({
+            waterQuality: waterQuality,
+            successful: true
           });
-        } else {
-          validateWaterQuality(waterQuality,
-          function(waterQualityJSON) {
-            res.json({
-              waterQuality: waterQuality,
-              successful: true
-            });
-          }, function (errorMessages) {
-            res.json({
-              waterQuality: waterQuality,
-              errors: errorMessages
-            });
+        }, function (errorMessages) {
+          res.json({
+            waterQuality: waterQuality,
+            errors: errorMessages
           });
-        }
-      });
-    } else {
-      res.json({
-        status: waterQuality.status,
-        scribe: waterQuality.scribeMember.displayName
-      });
-    }
+        });
+      }
+    });
   } else {
     return res.status(400).send({
       message: 'Protocol water quality not found'

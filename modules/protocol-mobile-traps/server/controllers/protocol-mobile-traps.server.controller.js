@@ -88,42 +88,50 @@ exports.read = function (req, res) {
   res.json(mobileTrap);
 };
 
+exports.validate = function (req, res) {
+  var mobileTrap = req.body;
+  validateMobileTrap(req.body,
+  function(mobileTrapJSON) {
+    res.json({
+      mobileTrap: mobileTrap,
+      successful: true
+    });
+  }, function(errorMessages) {
+    res.json({
+      mobileTrap: mobileTrap,
+      errors: errorMessages
+    });
+  });
+};
+
 exports.incrementalSave = function (req, res) {
   var mobileTrap = req.mobileTrap;
 
   if (mobileTrap) {
-    if (mobileTrap.status === 'incomplete' || mobileTrap.status === 'returned' ||
-    (checkRole('team lead', req.user) && mobileTrap.status === 'submitted')) {
-      mobileTrap = _.extend(mobileTrap, req.body);
-      mobileTrap.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
-      mobileTrap.scribeMember = req.user;
+    mobileTrap = _.extend(mobileTrap, req.body);
+    mobileTrap.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
+    mobileTrap.scribeMember = req.user;
 
-      mobileTrap.save(function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+    mobileTrap.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        validateMobileTrap(req.body,
+        function(mobileTrapJSON) {
+          res.json({
+            mobileTrap: mobileTrap,
+            successful: true
           });
-        } else {
-          validateMobileTrap(req.body,
-          function(mobileTrapJSON) {
-            res.json({
-              mobileTrap: mobileTrap,
-              successful: true
-            });
-          }, function(errorMessages) {
-            res.json({
-              mobileTrap: mobileTrap,
-              errors: errorMessages
-            });
+        }, function(errorMessages) {
+          res.json({
+            mobileTrap: mobileTrap,
+            errors: errorMessages
           });
-        }
-      });
-    } else {
-      res.json({
-        status: mobileTrap.status,
-        scribe: mobileTrap.scribeMember.displayName
-      });
-    }
+        });
+      }
+    });
   } else {
     return res.status(400).send({
       message: 'Protocol mobile trap not found'
@@ -147,7 +155,6 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successC
 
         mobileTrap.save(function (err) {
           if (err) {
-            console.log('mobile trap save err', err);
             errorCallback(errorHandler.getErrorMessage(err));
           } else {
             successCallback(mobileTrap);

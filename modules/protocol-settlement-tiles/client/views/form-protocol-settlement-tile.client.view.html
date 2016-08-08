@@ -1,12 +1,12 @@
-<form name="st.form.settlementTilesForm" ng-submit="st.save(st.form.settlementTilesForm.$valid)" novalidate ng-cloak>
+<form name="form.settlementTilesForm" ng-submit="save(form.settlementTilesForm.$valid)" novalidate ng-cloak>
   <section>
     <section class="content">
         <section class="container">
             <h2>Protocol 4 <small>Settlement Tiles</small></h2>
             <hr />
-            <div class="alert alert-danger" ng-show="st.error">
+            <div class="alert alert-danger" ng-show="settlementTilesErrors">
                 <h4>We're still missing some information.</h4>
-                <ul class="list-unstyled" ng-repeat="error in st.error">
+                <ul class="list-unstyled" ng-repeat="error in settlementTilesErrors">
                     <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                 </ul>
             </div>
@@ -15,33 +15,33 @@
                     <div class="form-group">
                         <label for="collectionTime">Date and time of data collection</label>
                         <input type="datetime-local" class="form-control" name="collectionTime"
-                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{st.dateTime.min}}" max="{{st.dateTime.max}}"
-                        ng-model="st.protocolSettlementTiles.collectionTime" />
-                        <div ng-show="st.form.settlementTilesForm.collectionTime.$error.min">
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
+                        ng-model="settlementTiles.collectionTime" />
+                        <div ng-show="form.settlementTilesForm.collectionTime.$error.min">
                             <p class="red">Collection time must not be more than a year in the past.</p>
                         </div>
-                        <div ng-show="st.form.settlementTilesForm.collectionTime.$error.max">
+                        <div ng-show="form.settlementTilesForm.collectionTime.$error.max">
                             <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile-map"
-                        ng-click="st.openMap()">Mark location on map</a>
-                        <input class="form-control" type="text" value="{{st.protocolSettlementTiles.latitude}}, {{st.protocolSettlementTiles.longitude}}"
-                        data-toggle="modal" data-target="#modal-settlement-tile-map" ng-click="st.openMap()"
-                        ng-show="st.protocolSettlementTiles.latitude && st.protocolSettlementTiles.longitude"
+                        ng-click="openMap()">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{settlementTiles.latitude}}, {{settlementTiles.longitude}}"
+                        data-toggle="modal" data-target="#modal-settlement-tile-map" ng-click="openMap()"
+                        ng-show="settlementTiles.latitude && settlementTiles.longitude"
                          readonly/>
                     </div>
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
-                        in-title="Names of team members" ng-model="st.protocolSettlementTiles.teamMembers"
-                        label-class="control-label" select-config="st.teamMemberSelectConfig" ></select-tags>
+                        in-title="Names of team members" ng-model="settlementTiles.teamMembers"
+                        label-class="control-label" select-config="teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
-                        <textarea class="form-control" rows="7" ng-model="st.protocolSettlementTiles.notes" ></textarea>
+                        <textarea class="form-control" rows="7" ng-model="settlementTiles.notes" ></textarea>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
     <section class="content shaded">
         <section class="container">
             <div class="row">
-                <div class="col-md-3 col-sm-6" ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
+                <div class="col-md-3 col-sm-6" ng-repeat="tile in settlementTiles.settlementTiles">
                     <h4 class="row col-md-12">
                       <i class="glyphicon glyphicon-ok-sign green" ng-show="tile.done"></i>
                       Settlement Tile {{$index+1}}
@@ -74,15 +74,15 @@
                     </div>
                     <div class="form-group">
                         <label>Tile photograph *</label>
-                        <single-image-drop-zone uploader="st.settlementTilePhotoUploaders[$index]"
+                        <single-image-drop-zone uploader="settlementTilePhotoUploaders[$index]"
                         image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"
-                        remove-function="st.removeImage" id="settlement-tile-image-dropzone-{{$index}}"></single-image-drop-zone>
+                        remove-function="removeImage" id="settlement-tile-image-dropzone-{{$index}}"></single-image-drop-zone>
                     </div>
                     <div class="form-group">
-                      <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}"
-                      ng-click="st.openSettlementTileForm($index+1)">{{st.tileStarted(tile)? 'Edit': 'Add' }} Organism ID Entries *</a>
-                      <form-settlement-tile grids="st.grids" sessile-organisms="st.sessileOrganisms"
-                      save-function="st.saveSettlementTileForm" cancel-function="st.cancelSettlementTileForm"
+                      <a class="btn btn-default btn-block" data-target="#modal-settlementtile{{$index+1}}" id="edit-settlementtile-{{$index}}"
+                      ng-click="openSettlementTileForm($index+1)">{{tileStarted(tile)? 'Edit': 'Add' }} Organism ID Entries *</a>
+                      <form-settlement-tile grids="grids" sessile-organisms="sessileOrganisms"
+                      save-function="saveSettlementTileForm" cancel-function="cancelSettlementTileForm"
                       index="{{$index+1}}"></form-settlement-tile>
                     </div>
                 </div>
@@ -99,9 +99,9 @@
 
 <!-- MODALS -->
 <div class="modal fade" id="modal-settlement-tile-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-settlement-tile-map" latitude="st.protocolSettlementTiles.latitude"
-    longitude="st.protocolSettlementTiles.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="st.closeMap"></map-select>
+    <map-select modal-id="modal-settlement-tile-map" latitude="settlementTiles.latitude"
+    longitude="settlementTiles.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 </div>
 
-<!-- <form-settlement-tile ng-repeat="tile in st.protocolSettlementTiles.settlementTiles" settlement-tile="tile" save-function="" cancel-function="" index="{{$index}}"></form-settlement-tile> -->
+<!-- <form-settlement-tile ng-repeat="tile in settlementTiles.settlementTiles" settlement-tile="tile" save-function="" cancel-function="" index="{{$index}}"></form-settlement-tile> -->
