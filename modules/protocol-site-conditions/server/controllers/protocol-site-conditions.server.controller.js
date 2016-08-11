@@ -30,16 +30,6 @@ var checkRole = function(role, user) {
 };
 
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
-  if (!siteCondition.recentRainfall) {
-    siteCondition.recentRainfall = {
-      rainedIn24Hours: false,
-      rainedIn72Hours: false,
-      rainedIn7Days: false
-    };
-  }
-  if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
-  if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
-  if (!siteCondition.recentRainfall.rainedIn7Days) siteCondition.recentRainfall.rainedIn7Days = false;
   if (!siteCondition.landConditions.garbage) {
     siteCondition.landConditions.garbage = {
       garbagePresent: false
@@ -89,23 +79,45 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     }
   }
 
-  if (!siteCondition.tideConditions) {
-    errorMessages.push('Tide conditions are required');
-  }
-  if (emptyString(siteCondition.tideConditions.closestHighTide)) {
-    errorMessages.push('Closest high tide is required');
+  if (!siteCondition.recentRainfall) {
+    errorMessages.push('Recent rainfall is required');
   } else {
-    if (!moment(siteCondition.tideConditions.closestHighTide).isValid()) {
-      errorMessages.push('Tide Conditions - Closest High Tide is not valid');
+    if (!siteCondition.recentRainfall.rainedIn7Days) {
+      errorMessages.push('An answer for "Has it rained in the past 7 days?" is required');
+    } else if (siteCondition.recentRainfall.rainedIn7Days === true &&
+      !siteCondition.recentRainfall.rainedIn72Hours) {
+      errorMessages.push('An answer for "Has it rained in the past 72 hours?" is required');
+    } else if (siteCondition.recentRainfall.rainedIn72Hours === true &&
+      !siteCondition.recentRainfall.rainedIn24Hours) {
+      errorMessages.push('An answer for "Has it rained in the past 24 hours?" is required');
     }
   }
 
+  if (!siteCondition.tideConditions) {
+    errorMessages.push('Tide conditions are required');
+  }
+  if (emptyString(siteCondition.tideConditions.referencePoint)) {
+    errorMessages.push('Reference point is required');
+  }
+  if (emptyString(siteCondition.tideConditions.closestHighTide)) {
+    errorMessages.push('Closest high tide time is required');
+  } else {
+    if (!moment(siteCondition.tideConditions.closestHighTide).isValid()) {
+      errorMessages.push('Tide Conditions - Closest High Tide Time is not valid');
+    }
+  }
   if (emptyString(siteCondition.tideConditions.closestLowTide)) {
-    errorMessages.push('Closest low tide is required');
+    errorMessages.push('Closest low tide time is required');
   } else {
     if (!moment(siteCondition.tideConditions.closestLowTide).isValid()) {
-      errorMessages.push('Tide Conditions - Closest Low Tide is not valid');
+      errorMessages.push('Tide Conditions - Closest Low Tide Time is not valid');
     }
+  }
+  if (!siteCondition.tideConditions.closestHighTideHeight) {
+    errorMessages.push('Closest high tide height is required');
+  }
+  if (!siteCondition.tideConditions.closestLowTideHeight) {
+    errorMessages.push('Closest low tide height is required');
   }
   if (emptyString(siteCondition.tideConditions.tidalCurrent)) {
     errorMessages.push('Tidal current is required');
@@ -116,6 +128,9 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   }
   if (!siteCondition.waterConditions.waterConditionPhoto) {
     errorMessages.push('Water condition photo is required');
+  }
+  if (!siteCondition.waterConditions.surfaceCurrentSpeedMPS) {
+    errorMessages.push('Surface Current Speed is required');
   }
   if (emptyString(siteCondition.waterConditions.waterColor)) {
     errorMessages.push('Water color is required');

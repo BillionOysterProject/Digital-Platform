@@ -109,16 +109,18 @@
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="blue">7</span> days?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn7Days" ></select>
+                        <label class="required">Has it rained in the past <span class="blue">7</span> days? *</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn7Days" required></select>
                     </div>
                     <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn7Days === true">
-                        <label>Has it rained in the past <span class="blue">72</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn72Hours" ></select>
+                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn7Days === true}">Has it rained in the past <span class="blue">72</span> hours? *</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn72Hours"
+                        ng-required="siteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
                     <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label>Has it rained in the past <span class="blue">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn24Hours" ></select>
+                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn72Hours === true}">Has it rained in the past <span class="blue">24</span> hours? *</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.recentRainfall.rainedIn24Hours"
+                        ng-required="siteCondition.recentRainfall.rainedIn72Hours"></select>
                     </div>
                 </div>
             </div>
@@ -131,13 +133,13 @@
                     <h6>Tide Conditions</h6>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="closestHighTide" class="required">Closest High Tide *</label>
+                            <label for="closestHighTide" class="required">Closest high tide time *</label>
                             <input class="form-control" type="datetime-local" name="closestHighTide"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
                             ng-model="siteCondition.tideConditions.closestHighTide" required/>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="closestLowTide" class="required">Closest Low Tide *</label>
+                            <label for="closestLowTide" class="required">Closest low tide time *</label>
                             <input class="form-control" type="datetime-local" name="closestLowTide"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
                             ng-model="siteCondition.tideConditions.closestLowTide" required/>
@@ -145,31 +147,32 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="currentSpeed">Current Speed</label>
-                            <input class="form-control" type="number" name="currentSpeed"
-                            ng-model="siteCondition.tideConditions.currentSpeedMPH"/>
+                            <label for="closestHighTideHeight" class="required">Closest high tide height (ft) *</label>
+                            <input class="form-control" type="number" name="closestHighTideHeight"
+                            ng-model="siteCondition.tideConditions.closestHighTideHeight" required/>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="currentDirection">Current Direction</label>
-                            <select class="form-control" name="currentDirection"
-                            ng-model="siteCondition.tideConditions.currentDirection">
-                                <option disabled selected></option>
-                                <option value="north">North</option>
-                                <option value="south">South</option>
-                                <option value="east">East</option>
-                                <option value="west">West</option>
-                            </select>
+                            <label for="closestLowTideHeight" class="required">Closest low tide height (ft) *</label>
+                            <input class="form-control" type="number" name="closestLowTideHeight"
+                            ng-model="siteCondition.tideConditions.closestLowTideHeight" required/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="tidalCurrent" class="required">Tidal Current *</label>
-                        <select class="form-control" name="tidalCurrent"
-                        ng-model="siteCondition.tideConditions.tidalCurrent" required>
-                            <option disabled selected></option>
-                            <option value="flood-current">Flood current (incoming tide)</option>
-                            <option value="slack-water">Slack water</option>
-                            <option value="ebb-current">Ebb current (outgoing tide)</option>
-                        </select>
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                          <label for="referencePoint" class="required">Reference point *</label>
+                          <input class="form-control" type="text" name="referencePoint"
+                          ng-model="siteCondition.tideConditions.referencePoint" required/>
+                      </div>
+                      <div class="form-group col-sm-6">
+                          <label for="tidalCurrent" class="required">Tidal current *</label>
+                          <select class="form-control" name="tidalCurrent"
+                          ng-model="siteCondition.tideConditions.tidalCurrent" required>
+                              <option disabled selected></option>
+                              <option value="flood-current">Flood current (incoming tide)</option>
+                              <option value="slack-water">Slack water</option>
+                              <option value="ebb-current">Ebb current (outgoing tide)</option>
+                          </select>
+                      </div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -192,6 +195,11 @@
                         !waterConditionPhotoURL">
                             <p class="red">Water condition image is required.</p>
                         </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="surfaceCurrentSpeedMPS" class="required">Surface current speed (meters/second) *</label>
+                      <input class="form-control" type="number" name="surfaceCurrentSpeedMPS"
+                      ng-model="siteCondition.waterConditions.surfaceCurrentSpeedMPS" required/>
                     </div>
                 </div>
                 <div class="col-md-4">

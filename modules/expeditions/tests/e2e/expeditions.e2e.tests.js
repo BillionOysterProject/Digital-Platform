@@ -106,13 +106,14 @@ describe('Expedition E2E Tests', function() {
       rainedIn24HoursText: 'Yes'
     },
     tideConditions: {
-      currentSpeedMPH: 3,
-      currentDirection: 3,
-      currentDirectionText: 'East',
+      closestHighTideHeight: 6,
+      closestLowTideHeight: 3,
+      referencePoint: 'Test reference point',
       tidalCurrent: 2,
       tidalCurrentText: 'Slack water'
     },
     waterConditions: {
+      surfaceCurrentSpeedMPS: 4,
       waterColor: 4,
       waterColorText: 'Dark Green',
       oilSheen: 1,
@@ -207,11 +208,13 @@ describe('Expedition E2E Tests', function() {
     expect(element(by.model('siteCondition.recentRainfall.rainedIn72Hours')).$('option:checked').getText()).toEqual(siteCondition1.recentRainfall.rainedIn72HoursText);
     expect(element(by.model('siteCondition.recentRainfall.rainedIn24Hours')).$('option:checked').getText()).toEqual(siteCondition1.recentRainfall.rainedIn24HoursText);
     // Tide Conditions
-    expect(element(by.model('siteCondition.tideConditions.currentSpeedMPH')).getAttribute('value')).toEqual(siteCondition1.tideConditions.currentSpeedMPH.toString());
-    expect(element(by.model('siteCondition.tideConditions.currentDirection')).$('option:checked').getText()).toEqual(siteCondition1.tideConditions.currentDirectionText);
+    expect(element(by.model('siteCondition.tideConditions.closestHighTideHeight')).getAttribute('value')).toEqual(siteCondition1.tideConditions.closestHighTideHeight.toString());
+    expect(element(by.model('siteCondition.tideConditions.closestLowTideHeight')).getAttribute('value')).toEqual(siteCondition1.tideConditions.closestLowTideHeight.toString());
+    expect(element(by.model('siteCondition.tideConditions.referencePoint')).getAttribute('value')).toEqual(siteCondition1.tideConditions.referencePoint.toString());
     expect(element(by.model('siteCondition.tideConditions.tidalCurrent')).$('option:checked').getText()).toEqual(siteCondition1.tideConditions.tidalCurrentText);
     // Water Conditions
     assertImage('water-condition-image-dropzone');
+    expect(element(by.model('siteCondition.waterConditions.surfaceCurrentSpeedMPS')).getAttribute('value')).toEqual(siteCondition1.waterConditions.surfaceCurrentSpeedMPS.toString());
     expect(element(by.model('siteCondition.waterConditions.waterColor')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.waterColorText);
     expect(element(by.model('siteCondition.waterConditions.oilSheen')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.oilSheenText);
     expect(element(by.model('siteCondition.waterConditions.garbage.garbagePresent')).$('option:checked').getText()).toEqual(siteCondition1.waterConditions.garbage.garbagePresentText);
@@ -821,11 +824,13 @@ describe('Expedition E2E Tests', function() {
       element(by.model('siteCondition.recentRainfall.rainedIn72Hours')).all(by.tagName('option')).get(siteCondition1.recentRainfall.rainedIn72Hours).click();
       element(by.model('siteCondition.recentRainfall.rainedIn24Hours')).all(by.tagName('option')).get(siteCondition1.recentRainfall.rainedIn24Hours).click();
       // Tide Conditions
-      element(by.model('siteCondition.tideConditions.currentSpeedMPH')).sendKeys(siteCondition1.tideConditions.currentSpeedMPH);
-      element(by.model('siteCondition.tideConditions.currentDirection')).all(by.tagName('option')).get(siteCondition1.tideConditions.currentDirection).click();
+      element(by.model('siteCondition.tideConditions.closestHighTideHeight')).sendKeys(siteCondition1.tideConditions.closestHighTideHeight);
+      element(by.model('siteCondition.tideConditions.closestLowTideHeight')).sendKeys(siteCondition1.tideConditions.closestLowTideHeight);
+      element(by.model('siteCondition.tideConditions.referencePoint')).sendKeys(siteCondition1.tideConditions.referencePoint);
       element(by.model('siteCondition.tideConditions.tidalCurrent')).all(by.tagName('option')).get(siteCondition1.tideConditions.tidalCurrent).click();
       // Water Conditions
       uploadImage('water-condition-image-dropzone'); // Water Condition Image Upload
+      element(by.model('siteCondition.waterConditions.surfaceCurrentSpeedMPS')).sendKeys(siteCondition1.waterConditions.surfaceCurrentSpeedMPS);
       element(by.model('siteCondition.waterConditions.waterColor')).all(by.tagName('option')).get(siteCondition1.waterConditions.waterColor).click();
       element(by.model('siteCondition.waterConditions.oilSheen')).all(by.tagName('option')).get(siteCondition1.waterConditions.oilSheen).click();
       element(by.model('siteCondition.waterConditions.garbage.garbagePresent')).all(by.tagName('option')).get(siteCondition1.waterConditions.garbage.garbagePresent).click();
