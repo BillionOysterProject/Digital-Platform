@@ -58,17 +58,20 @@ var ProtocolSiteConditionSchema = new Schema({
     }
   },
   tideConditions: {
+    referencePoint: {
+      type: String
+    },
     closestHighTide: {
       type: Date
     },
     closestLowTide: {
       type: Date
     },
-    currentSpeedMPH: {
+    closestHighTideHeight: {
       type: Number
     },
-    currentDirection: {
-      type: String
+    closestLowTideHeight: {
+      type: Number
     },
     tidalCurrent: {
       type: String
@@ -80,6 +83,9 @@ var ProtocolSiteConditionSchema = new Schema({
       mimetype: String,
       filename: String,
       path: String
+    },
+    surfaceCurrentSpeedMPS: {
+      type: Number
     },
     waterColor: {
       type: String
