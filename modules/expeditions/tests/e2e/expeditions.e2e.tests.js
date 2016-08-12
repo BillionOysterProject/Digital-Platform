@@ -522,7 +522,7 @@ describe('Expedition E2E Tests', function() {
       method: 3,
       methodText: 'Winkler',
       units: 1,
-      unitsText: 'mg/L (PPM)',
+      unitsText: 'mg/L (ppm)',
       results: [23.8, 21.0, 25.3],
       average: '23.37'
     },
@@ -546,7 +546,7 @@ describe('Expedition E2E Tests', function() {
       method: 1,
       methodText: 'Turbidity tube',
       units: 1,
-      unitsText: 'CM',
+      unitsText: 'cm',
       results: [55.3, 51.1, 53.8],
       average: '53.4'
     },
@@ -554,7 +554,7 @@ describe('Expedition E2E Tests', function() {
       method: 2,
       methodText: 'Photometer',
       units: 1,
-      unitsText: 'PPM',
+      unitsText: 'ppm',
       results: [61.4, 63.3, 67.5],
       average: '64.07'
     },
@@ -562,7 +562,7 @@ describe('Expedition E2E Tests', function() {
       method: 2,
       methodText: 'Photometer',
       units: 1,
-      unitsText: 'PPM',
+      unitsText: 'ppm',
       results: [73.0, 72.6, 73.8],
       average: '73.13'
     },
@@ -615,7 +615,7 @@ describe('Expedition E2E Tests', function() {
       method: 1,
       methodText: 'Turbidity tube',
       units: 1,
-      unitsText: 'CM',
+      unitsText: 'cm',
       results: [50.9, 52.4, 53.1],
       average: '52.13'
     },
@@ -623,7 +623,7 @@ describe('Expedition E2E Tests', function() {
       method: 1,
       methodText: 'Test strips',
       units: 1,
-      unitsText: 'PPM',
+      unitsText: 'ppm',
       results: [60.3, 64.1, 63.4],
       average: '62.6'
     },
@@ -631,7 +631,7 @@ describe('Expedition E2E Tests', function() {
       method: 1,
       methodText: 'Test strips',
       units: 1,
-      unitsText: 'PPM',
+      unitsText: 'ppm',
       results: [77.1, 74.4, 70.3],
       average: '73.93'
     },
