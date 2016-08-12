@@ -94,7 +94,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 1 - VIEW EXPEDITION
 //############################################################################//
 
-  xdescribe('Team member 1 fill out Expedition', function () {
+  describe('Team member 1 fill out Expedition', function () {
     it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
       // Sign in as team member 1
       signinAs(member1);
