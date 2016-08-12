@@ -16,17 +16,21 @@ var path = require('path'),
   assertSubstrateMeasurements = CommonOysterMeasurements.assertSubstrateMeasurements,
   assertOysterMeasurements = CommonOysterMeasurements.assertOysterMeasurements,
   fillOutOysterMeasurements = CommonOysterMeasurements.fillOutOysterMeasurements,
+  fillOutAllOysterMeasurements = CommonOysterMeasurements.fillOutAllOysterMeasurements,
   CommonMobileTraps = require('../../../protocol-mobile-traps/tests/e2e/common-mobile-traps.e2e.tests'),
   assertMobileOrganismDetails = CommonMobileTraps.assertMobileOrganismDetails,
   assertMobileTrap = CommonMobileTraps.assertMobileTrap,
   fillOutMobileOrganismDetails = CommonMobileTraps.fillOutMobileOrganismDetails,
+  fillOutMobileTraps = CommonMobileTraps.fillOutMobileTraps,
   CommonSettlementTiles = require('../../../protocol-settlement-tiles/tests/e2e/common-settlement-tiles.e2e.tests'),
   assertSettlementTile = CommonSettlementTiles.assertSettlementTile,
   assertSettlementTiles = CommonSettlementTiles.assertSettlementTiles,
   fillOutSettlementTile = CommonSettlementTiles.fillOutSettlementTile,
+  fillOutSettlementTiles = CommonSettlementTiles.fillOutSettlementTiles,
   CommonWaterQuality = require('../../../protocol-water-quality/tests/e2e/common-water-quality.e2e.tests'),
   assertWaterQuality = CommonWaterQuality.assertWaterQuality,
   fillOutWaterQualitySample = CommonWaterQuality.fillOutWaterQualitySample,
+  fillOutWaterQuality = CommonWaterQuality.fillOutWaterQuality,
   EC = protractor.ExpectedConditions;
 
 describe('Expedition E2E Tests', function() {
@@ -90,7 +94,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 1 - VIEW EXPEDITION
 //############################################################################//
 
-  describe('Team member 1 fill out Expedition', function () {
+  xdescribe('Team member 1 fill out Expedition', function () {
     it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
       // Sign in as team member 1
       signinAs(member1);
@@ -160,12 +164,7 @@ describe('Expedition E2E Tests', function() {
       browser.sleep(2500);
       browser.wait(EC.visibilityOf(element(by.repeater('organism in mobileOrganisms track by organism._id'))), 5000);
 
-      // Fill in values, if you change these values, change the assert too
-      var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
-      var organism1 = mobileOrganisms.get(0);
-      var organism2 = mobileOrganisms.get(1);
-      fillOutMobileOrganismDetails(organism1, mobileTrap1);
-      fillOutMobileOrganismDetails(organism2, mobileTrap2);
+      fillOutMobileTraps();
 
       // Save draft
       element(by.buttonText('Save Draft')).click();
@@ -191,15 +190,7 @@ describe('Expedition E2E Tests', function() {
       browser.sleep(1000);
       browser.wait(EC.visibilityOf(element(by.repeater('sample in waterQuality.samples'))), 5000);
 
-      // Fill in values
-      var samples = element.all(by.repeater('sample in waterQuality.samples'));
-      var sample1 = samples.get(0);
-      fillOutWaterQualitySample(sample1, 0, waterQuality1);
-
-      element(by.css('a[ng-click="addSampleForm()"]')).click();
-      samples = element.all(by.repeater('sample in waterQuality.samples'));
-      var sample2 = samples.get(1);
-      fillOutWaterQualitySample(sample2, 1, waterQuality2);
+      fillOutWaterQuality();
 
       // Save draft
       element(by.buttonText('Save Draft')).click();
@@ -289,24 +280,8 @@ describe('Expedition E2E Tests', function() {
       browser.sleep(1000);
 
       browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
-      // Fill in values
-      element(by.model('oysterMeasurement.depthOfOysterCage.submergedDepthofCageM')).sendKeys(oysterMeasurement1.depthOfOysterCage.submergedDepthofCageM);
-      uploadImage('oyster-cage-condition-image-dropzone');
-      element(by.model('oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage')).all(by.tagName('option')).get(oysterMeasurement1.conditionOfOysterCage.bioaccumulationOnCage).click();
-      element(by.model('oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage')).sendKeys(oysterMeasurement1.conditionOfOysterCage.notesOnDamageToCage);
 
-      browser.wait(EC.visibilityOf(element(by.repeater('substrate in oysterMeasurement.measuringOysterGrowth.substrateShells'))), 5000);
-
-      fillOutOysterMeasurements(0);
-      fillOutOysterMeasurements(1);
-      fillOutOysterMeasurements(2);
-      fillOutOysterMeasurements(3);
-      fillOutOysterMeasurements(4);
-      fillOutOysterMeasurements(5);
-      fillOutOysterMeasurements(6);
-      fillOutOysterMeasurements(7);
-      fillOutOysterMeasurements(8);
-      fillOutOysterMeasurements(9);
+      fillOutAllOysterMeasurements();
 
       // Save draft
       element(by.buttonText('Save Draft')).click();
@@ -330,15 +305,7 @@ describe('Expedition E2E Tests', function() {
 
       browser.wait(EC.visibilityOf(element(by.repeater('tile in settlementTiles.settlementTiles'))), 5000);
 
-      var tiles = element.all(by.repeater('tile in settlementTiles.settlementTiles'));
-      var tile1 = tiles.get(0);
-      fillOutSettlementTile(tile1, 0, settlementTiles1.settlementTile1);
-      var tile2 = tiles.get(1);
-      fillOutSettlementTile(tile2, 1, settlementTiles1.settlementTile2);
-      var tile3 = tiles.get(2);
-      fillOutSettlementTile(tile3, 2, settlementTiles1.settlementTile3);
-      var tile4 = tiles.get(3);
-      fillOutSettlementTile(tile4, 3, settlementTiles1.settlementTile4);
+      fillOutSettlementTiles();
 
       // Save draft
       element(by.buttonText('Save Draft')).click();
@@ -629,7 +596,7 @@ describe('Expedition E2E Tests', function() {
   });
 
 //############################################################################//
-//  TEAM LEAD - PUBLISH EXPEDITION
+//  TEAM LEAD - UNPUBLISH EXPEDITION
 //############################################################################//
 
   describe('Unpublish Expedition', function() {
@@ -661,6 +628,42 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - RE-PUBLISH EXPEDITION
+//############################################################################//
+
+  describe('Re-publish Expedition', function() {
+    it('should allow a team lead to re-publish the protocols', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+      // Click to view the protocols in the expedition
+      element(by.id('protocol1Link')).isDisplayed().click();
+    });
+
+    it ('should allow team lead to publish the expedition', function() {
+      // Submit
+      element(by.buttonText('Publish')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
     });
   });
 });

@@ -82,13 +82,14 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.recentRainfall) {
     errorMessages.push('Recent rainfall is required');
   } else {
-    if (!siteCondition.recentRainfall.rainedIn7Days) {
+    console.log('siteCondition.recentRainfall.rainedIn7Days', siteCondition.recentRainfall.rainedIn7Days);
+    if (siteCondition.recentRainfall.rainedIn7Days !== true && siteCondition.recentRainfall.rainedIn7Days !== false) {
       errorMessages.push('An answer for "Has it rained in the past 7 days?" is required');
     } else if (siteCondition.recentRainfall.rainedIn7Days === true &&
-      !siteCondition.recentRainfall.rainedIn72Hours) {
+      siteCondition.recentRainfall.rainedIn72Hours !== true && siteCondition.recentRainfall.rainedIn72Hours !== false) {
       errorMessages.push('An answer for "Has it rained in the past 72 hours?" is required');
     } else if (siteCondition.recentRainfall.rainedIn72Hours === true &&
-      !siteCondition.recentRainfall.rainedIn24Hours) {
+      siteCondition.recentRainfall.rainedIn24Hours !== true && siteCondition.recentRainfall.rainedIn24Hours !== false) {
       errorMessages.push('An answer for "Has it rained in the past 24 hours?" is required');
     }
   }
