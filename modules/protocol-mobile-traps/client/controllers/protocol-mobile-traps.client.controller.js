@@ -40,8 +40,8 @@
         $rootScope.$broadcast('iso-method', { name:null, params:null });
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
+          if (callback) callback();
         });
-        if (callback) callback();
       });
     };
 
