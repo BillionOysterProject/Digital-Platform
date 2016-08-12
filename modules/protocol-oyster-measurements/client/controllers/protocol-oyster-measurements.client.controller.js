@@ -25,7 +25,7 @@
     };
 
     // Set up substrate shells
-    var setupSubstrateShells = function() {
+    var setupSubstrateShells = function(callback) {
       var measurements = [];
       measurements.push({
         sizeOfLiveOysterMM: null
@@ -47,23 +47,15 @@
       for (var i = 1; i <= totalToAdd; i++) {
         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
           substrateShellNumber: i,
+          totalNumberOfLiveOystersAtBaseline: 0,
           totalNumberOfLiveOystersOnShell: 0,
+          totalMassOfScrubbedSubstrateShellOystersTagG: 0,
           measurements: angular.copy(measurements),
           done: false
         });
       }
+      if (callback) callback();
     };
-
-    // Set up initial values
-    $scope.oysterMeasurement.collectionTime = moment($scope.oysterMeasurement.collectionTime).startOf('minute').toDate();
-    $scope.cageConditionPhotoURL = ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
-      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
-      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
-    if (!$scope.oysterMeasurement.measuringOysterGrowth ||
-      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
-      $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
-      setupSubstrateShells();
-    }
 
     var findPreviousValues = function() {
       if ($scope.oysterMeasurement._id) {
@@ -84,13 +76,51 @@
               max: max
             };
           }
+          if (data && data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
+            for (var i = 0; i < data.measuringOysterGrowth.substrateShells.length; i++) {
+              var prevShell = data.measuringOysterGrowth.substrateShells[i];
+              if (prevShell && prevShell.setDate && prevShell.source && prevShell.totalNumberOfLiveOystersAtBaseline) {
+                var shell = $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i];
+                if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
+                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
+                    substrateShellNumber: i,
+                    setDate: prevShell.setDate,
+                    source: prevShell.source,
+                    sourceOther: prevShell.sourceOther,
+                    totalNumberOfLiveOystersAtBaseline: prevShell.totalNumberOfLiveOystersAtBaseline,
+                    totalNumberOfLiveOystersOnShell: 0,
+                    totalMassOfScrubbedSubstrateShellOystersTagG: 0,
+                    measurements: [],
+                    done: false
+                  });
+                } else if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
+                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate = prevShell.setDate;
+                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source = prevShell.source;
+                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource = prevShell.otherSource;
+                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline =
+                    prevShell.totalNumberOfLiveOystersAtBaseline;
+                }
+              }
+            }
+          }
         })
         .error(function (data, status, headers, config) {
           console.log('Could not find previous');
         });
       }
     };
-    findPreviousValues();
+
+
+    // Set up initial values
+    $scope.oysterMeasurement.collectionTime = moment($scope.oysterMeasurement.collectionTime).startOf('minute').toDate();
+    $scope.cageConditionPhotoURL = ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
+      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+    if (!$scope.oysterMeasurement.measuringOysterGrowth ||
+      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
+      $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
+      setupSubstrateShells(findPreviousValues());
+    }
 
     // Get the values for the dropdowns
     $scope.bioaccumulations = BioaccumulationService.query();
