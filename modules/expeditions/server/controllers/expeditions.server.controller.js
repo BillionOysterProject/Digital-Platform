@@ -155,11 +155,11 @@ exports.read = function (req, res) {
 /**
  * Update a expedition, assumes req.query.full was used
  */
-var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, user, callback) {
+var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, user, validate, callback) {
   if (siteConditionReq && siteConditionBody) {
     siteConditionReq.status = status;
     siteConditionBody.status = status;
-    siteConditionHandler.updateInternal(siteConditionReq, siteConditionBody, user,
+    siteConditionHandler.updateInternal(siteConditionReq, siteConditionBody, user, validate,
       function(siteConditionSaved) {
         callback(siteConditionSaved);
       }, function(errorMessage) {
@@ -170,11 +170,11 @@ var updateSiteCondition = function(siteConditionReq, siteConditionBody, status, 
   }
 };
 
-var updateOysterMeasurement = function(oysterMeasurementReq, oysterMeasurementBody, status, user, callback) {
+var updateOysterMeasurement = function(oysterMeasurementReq, oysterMeasurementBody, status, user, validate, callback) {
   if (oysterMeasurementReq && oysterMeasurementBody) {
     oysterMeasurementReq.status = status;
     oysterMeasurementBody.status = status;
-    oysterMeasurementHandler.updateInternal(oysterMeasurementReq, oysterMeasurementBody, user,
+    oysterMeasurementHandler.updateInternal(oysterMeasurementReq, oysterMeasurementBody, user, validate,
     function(oysterMeasurementSaved) {
       callback(oysterMeasurementSaved);
     }, function(errorMessage) {
@@ -185,11 +185,11 @@ var updateOysterMeasurement = function(oysterMeasurementReq, oysterMeasurementBo
   }
 };
 
-var updateMobileTrap = function(mobileTrapReq, mobileTrapBody, status, user, callback) {
+var updateMobileTrap = function(mobileTrapReq, mobileTrapBody, status, user, validate, callback) {
   if (mobileTrapReq && mobileTrapBody) {
     mobileTrapReq.status = status;
     mobileTrapBody.status = status;
-    mobileTrapHandler.updateInternal(mobileTrapReq, mobileTrapBody, user,
+    mobileTrapHandler.updateInternal(mobileTrapReq, mobileTrapBody, user, validate,
     function(mobileTrapSaved) {
       callback(mobileTrapSaved);
     }, function(errorMessage) {
@@ -200,11 +200,11 @@ var updateMobileTrap = function(mobileTrapReq, mobileTrapBody, status, user, cal
   }
 };
 
-var updateSettlementTiles = function(settlementTilesReq, settlementTilesBody, status, user, callback) {
+var updateSettlementTiles = function(settlementTilesReq, settlementTilesBody, status, user, validate, callback) {
   if (settlementTilesReq && settlementTilesBody) {
     settlementTilesReq.status = status;
     settlementTilesBody.status = status;
-    settlementTilesHandler.updateInternal(settlementTilesReq, settlementTilesBody, user,
+    settlementTilesHandler.updateInternal(settlementTilesReq, settlementTilesBody, user, validate,
     function(settlementTilesSaved) {
       callback(settlementTilesSaved);
     }, function(errorMessage) {
@@ -215,11 +215,11 @@ var updateSettlementTiles = function(settlementTilesReq, settlementTilesBody, st
   }
 };
 
-var updateWaterQuality = function(waterQualityReq, waterQualityBody, status, user, callback) {
+var updateWaterQuality = function(waterQualityReq, waterQualityBody, status, user, validate, callback) {
   if (waterQualityReq && waterQualityBody) {
     waterQualityReq.status = status;
     waterQualityBody.status = status;
-    waterQualityHandler.updateInternal(waterQualityReq, waterQualityBody, user,
+    waterQualityHandler.updateInternal(waterQualityReq, waterQualityBody, user, validate,
     function(waterQualitySaved) {
       callback(waterQualitySaved);
     }, function(errorMessage) {
@@ -231,36 +231,35 @@ var updateWaterQuality = function(waterQualityReq, waterQualityBody, status, use
 };
 
 var updateProtocols = function(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles, waterQuality,
-  status, user, callback) {
+  status, user, validate, callback) {
   var errorMessages = {};
   var allSuccessful = true;
-  console.log('update protocols');
 
-  updateSiteCondition(expedition.protocols.siteCondition, siteCondition, status, user,
+  updateSiteCondition(expedition.protocols.siteCondition, siteCondition, status, user, validate,
   function(siteConditionSaved, siteConditionErrorMessages) {
     if (siteConditionErrorMessages) {
       errorMessages.siteCondition = siteConditionErrorMessages;
       allSuccessful = false;
     }
-    updateOysterMeasurement(expedition.protocols.oysterMeasurement, oysterMeasurement, status, user,
+    updateOysterMeasurement(expedition.protocols.oysterMeasurement, oysterMeasurement, status, user, validate,
     function(oysterMeasurementSaved, oysterMeasurementErrorMessages) {
       if (oysterMeasurementErrorMessages) {
         errorMessages.oysterMeasurement = oysterMeasurementErrorMessages;
         allSuccessful = false;
       }
-      updateMobileTrap(expedition.protocols.mobileTrap, mobileTrap, status, user,
+      updateMobileTrap(expedition.protocols.mobileTrap, mobileTrap, status, user, validate,
       function(mobileTrapSaved, mobileTrapErrorMessages) {
         if (mobileTrapErrorMessages) {
           errorMessages.mobileTrap = mobileTrapErrorMessages;
           allSuccessful = false;
         }
-        updateSettlementTiles(expedition.protocols.settlementTiles, settlementTiles, status, user,
+        updateSettlementTiles(expedition.protocols.settlementTiles, settlementTiles, status, user, validate,
         function(settlementTilesSaved, settlementTilesErrorMessages) {
           if (settlementTilesErrorMessages) {
             errorMessages.settlementTiles = settlementTilesErrorMessages;
             allSuccessful = false;
           }
-          updateWaterQuality(expedition.protocols.waterQuality, waterQuality, status, user,
+          updateWaterQuality(expedition.protocols.waterQuality, waterQuality, status, user, validate,
           function(waterQualitySaved, waterQualityErrorMessages) {
             if (waterQualityErrorMessages) {
               errorMessages.waterQuality = waterQualityErrorMessages;
@@ -347,7 +346,7 @@ exports.submit = function (req, res) {
 
   if (expedition) {
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
-      waterQuality, 'submitted', req.user,
+      waterQuality, 'submitted', req.user, true,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurementSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
       if (!siteConditionSaved) siteConditionSaved = expedition.protocols.siteCondition;
@@ -357,7 +356,6 @@ exports.submit = function (req, res) {
       if (!waterQualitySaved) waterQualitySaved = expedition.protocols.waterQuality;
 
       if (errorMessages) {
-        console.log('error saving protocols', errorMessages);
         return res.status(400).send({
           message: errorMessages
         });
@@ -371,7 +369,6 @@ exports.submit = function (req, res) {
 
         expedition.save(function(err) {
           if (err) {
-            console.log('expedition save err', err);
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
@@ -392,7 +389,6 @@ exports.submit = function (req, res) {
                   function(info) {
                     res.json(expedition);
                   }, function(errorMessage) {
-                    console.log('email error', errorMessage);
                     return res.status(400).send({
                       message: errorMessage
                     });
@@ -411,7 +407,6 @@ exports.submit = function (req, res) {
       }
     });
   } else {
-    console.log('expedition not found');
     return res.status(400).send({
       message: 'Expedition not found'
     });
@@ -431,7 +426,7 @@ exports.publish = function (req, res) {
 
   if (expedition) {
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
-      waterQuality,'published', req.user,
+      waterQuality,'published', req.user, true,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurementSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
 
@@ -465,7 +460,6 @@ exports.publish = function (req, res) {
  * Unpublish an expedition
  */
 exports.unpublish = function (req, res) {
-  console.log('unpublish');
   var expedition = req.expedition;
   var siteCondition = req.body.protocols.siteCondition;
   var oysterMeasurement = req.body.protocols.oysterMeasurement;
@@ -474,13 +468,11 @@ exports.unpublish = function (req, res) {
   var waterQuality = req.body.protocols.waterQuality;
 
   if (expedition) {
-    console.log('expedition found');
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
-      waterQuality, 'submitted', req.user,
+      waterQuality, 'submitted', req.user, false,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurementSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
 
-      console.log('updated to submitted');
       if (errorMessages) {
         return res.status(400).send({
           message: errorMessages
@@ -500,7 +492,6 @@ exports.unpublish = function (req, res) {
       }
     });
   } else {
-    console.log('expedition not found');
     return res.status(400).send({
       message: 'Expedition not found'
     });
@@ -520,7 +511,7 @@ exports.return = function (req, res) {
 
   if (expedition) {
     updateProtocols(expedition, siteCondition, oysterMeasurement, mobileTrap, settlementTiles,
-      waterQuality, 'returned', req.user,
+      waterQuality, 'returned', req.user, false,
     function(allSuccessful, errorMessages, siteConditionSaved, oysterMeasurementSaved,
       mobileTrapSaved, settlementTilesSaved, waterQualitySaved) {
 
@@ -614,7 +605,6 @@ exports.list = function (req, res) {
   }
 
   if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
-    console.log('only getting published');
     and.push({ 'status': 'published' });
   }
 

@@ -135,7 +135,8 @@ exports.list = function (req, res) {
   }
 
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName profileImageURL').populate('schoolOrg').exec(function (err, teams) {
+  .populate('teamLead', 'displayName firstName lastName username email profileImageURL')
+  .populate('schoolOrg').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -654,7 +655,7 @@ exports.deleteMember = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        Team.find({ 'teamMembers': member }).exec(function(err, teams) {
+        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLead': member }] }).exec(function(err, teams) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
