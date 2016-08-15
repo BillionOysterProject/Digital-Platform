@@ -42,6 +42,16 @@
             scope.form.tileForm.$setPristine(true);
             // scope.form.tileForm.$valid = true;
             // scope.form.tileForm.$invalid = false;
+
+            if (scope.grids) {
+              console.log('set up grids', scope.grid);
+              var mod = scope.grids.length / 5;
+              var gridRow1 = scope.grids.splice(0, mod);
+              var gridRow2 = scope.grids.splice(mod, mod*2);
+              var gridRow3 = scope.grids.splice(mod*2, mod*3);
+              var gridRow4 = scope.grids.splice(mod*3, mod*4);
+              var gridRow5 = scope.grids.splice(mod*4, scope.grids.length);
+            }
           });
         }
       };

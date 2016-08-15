@@ -63,14 +63,18 @@
     vm.isAdmin = checkRole('admin');
 
     // Check if the user is allows to write to the given protocol
-    vm.checkWrite = function(teamList) {
-      if (checkRole('team lead') || checkRole('admin')) {
+    vm.checkWrite = function(teamList, protocol) {
+      if (checkRole('admin') && !checkRole('team lead') && !checkRole('team member')) {
         return true;
       } else {
-        var teamListIndex = lodash.findIndex(teamList, function(m) {
-          return m.username === vm.user.username;
-        });
-        return (teamListIndex > -1) ? true : false;
+        if (checkRole('team lead') && (protocol.status !== 'incomplete' && protocol.status !== 'returned')) {
+          return true;
+        } else {
+          var teamListIndex = lodash.findIndex(teamList, function(m) {
+            return m.username === vm.user.username;
+          });
+          return (teamListIndex > -1) ? true : false;
+        }
       }
     };
 
@@ -86,7 +90,7 @@
     // Set up Site Condition protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
       $scope.siteCondition = vm.expedition.protocols.siteCondition;
-      vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition);
+      vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition, $scope.siteCondition);
       vm.disabledSiteCondition = false;
     } else {
       $scope.siteCondition = null;
@@ -97,7 +101,7 @@
     // Set up Oyster Measurement protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.oysterMeasurement)) {
       $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-      vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement);
+      vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, $scope.oysterMeasurement);
       vm.disabledOysterMeasurement = false;
     } else {
       $scope.oysterMeasurement = null;
@@ -108,7 +112,7 @@
     // Set up Mobile Trap protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.mobileTrap)) {
       $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-      vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap);
+      vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap, $scope.mobileTrap);
       vm.disabledMobileTrap = false;
     } else {
       $scope.mobileTrap = null;
@@ -119,7 +123,7 @@
     // Set up Settlement Tiles protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.settlementTiles)) {
       $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-      vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles);
+      vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles, $scope.settlementTiles);
       vm.disabledSettlementTiles = false;
     } else {
       $scope.settlementTiles = null;
@@ -130,7 +134,7 @@
     // Set up Water Quality protocol variables
     if (!vm.checkDisabled(vm.expedition.protocols.waterQuality)) {
       $scope.waterQuality = vm.expedition.protocols.waterQuality;
-      vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality);
+      vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality, $scope.waterQuality);
       vm.disabledWaterQuality = false;
     } else {
       $scope.waterQuality = null;
@@ -332,11 +336,9 @@
 
       if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
         $scope.saveOysterMeasurement(function() {
-          console.log('returned successful');
           vm.tabs.protocol2.saveSuccessful = true;
           allDone();
         }, function() {
-          console.log('returned failure');
           vm.tabs.protocol2.saveSuccessful = false;
           allDone();
         });
@@ -479,11 +481,8 @@
 
     // Return the Expedition
     vm.return = function() {
-      console.log('returning');
       vm.returning = true;
 
-      //if (vm.protocolsLoaded()) {
-      console.log('protocols loaded');
       var protocols = {};
       if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
       if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
@@ -522,9 +521,6 @@
         }
         vm.returning = false;
       });
-      // } else {
-      //   vm.returning = false;
-      // }
     };
 
     // Unpublish the Expedition

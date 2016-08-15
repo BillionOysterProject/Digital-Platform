@@ -347,9 +347,8 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol site condition
  */
-exports.updateInternal = function(siteConditionReq, siteConditionBody, user, successCallback, errorCallback) {
-  validateSiteCondition(siteConditionBody,
-  function(siteConditionJSON) {
+exports.updateInternal = function(siteConditionReq, siteConditionBody, user, validate, successCallback, errorCallback) {
+  var save = function(siteConditionJSON) {
     var siteCondition = siteConditionReq;
 
     if (siteCondition) {
@@ -372,15 +371,24 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, suc
     } else {
       errorCallback('Protocol site condition not found');
     }
-  }, function(errorMessages) {
-    errorCallback(errorMessages);
-  });
+  };
+
+  if (validate) {
+    validateSiteCondition(siteConditionBody,
+    function(siteConditionJSON) {
+      save(siteConditionJSON);
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+  } else {
+    save(siteConditionBody);
+  }
 };
 
 exports.update = function (req, res) {
   var siteConditionBody = req.body;
   siteConditionBody.status = 'submitted';
-  exports.updateInternal(req.siteCondition, siteConditionBody, req.user,
+  exports.updateInternal(req.siteCondition, siteConditionBody, req.user, true,
   function(siteCondition) {
     res.json(siteCondition);
   }, function(errorMessage) {
