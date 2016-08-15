@@ -655,7 +655,7 @@ exports.deleteMember = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        Team.find({ 'teamMembers': member }).exec(function(err, teams) {
+        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLead': member }] }).exec(function(err, teams) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)

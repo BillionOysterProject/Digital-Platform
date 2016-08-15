@@ -58,24 +58,44 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
-                                                <div class="form-group col-sm-6">
-                                                    <label for="shellNumber" class="control-label required">Substrate Shell #</label>
+                                                <div class="form-group col-sm-4">
+                                                    <label for="shellNumber" class="control-label required">Substrate shell #</label>
                                                     <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
                                                 </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="source" class="control-label required">Source *</label>
-                                                    <input type="text" class="form-control" ng-model="substrate.source" name="source" id="source" required/>
+                                                <div class="form-group col-sm-8">
+                                                    <label for="setDate" class="control-label required">Set date *</label>
+                                                    <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
+                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="setDate" class="control-label required">Set date *</label>
-                                                <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
-                                                name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
+                                            <div class="row">
+                                              <div class="form-group" ng-class="{'col-sm-6': substrate.source === 'Other',
+                                              'col-sm-12': !substrate.source || substrate.source !== 'Other'}">
+                                                  <label for="source" class="control-label required">Source *</label>
+                                                  <select class="form-control" ng-options="source.value as source.label for source in sources"
+                                                  ng-model="substrate.source" name="source" id="source" required></select>
+                                              </div>
+                                              <div class="form-group col-sm-6" ng-show="substrate.source === 'Other'">
+                                                <label for="source-other" class="control-label required">Other source *</label>
+                                                <input type="text" class="form-control" ng-model="substrate.otherSource" name="source-other" id="source-other"
+                                                ng-required="substrate.source === 'Other'"/>
+                                              </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
+                                                <label for="totalAtBaseline" class="control-label required">Total number of live oysters on shell at baseline *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersAtBaseline"
+                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" required/>
+                                            </div>
+                                            <hr />
+                                            <div class="form-group">
+                                                <label for="total" class="control-label required">Total number of live oysters on shell at time of monitoring *</label>
                                                 <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
                                                 id="total" min="0" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="mass" class="control-label required">Total mass of scrubbed substrate shell + oysters + tag (grams) *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG"
+                                                name="mass" id="mass" min="0" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="notes" class="control-label">Notes</label>
