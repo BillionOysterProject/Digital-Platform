@@ -71,6 +71,7 @@
         }, function(data) {
           vm.members = data;
           vm.memberLists.members = angular.copy(data);
+          vm.memberLists.members.push(angular.copy(vm.team.teamLead));
           vm.member = null;
         });
       }

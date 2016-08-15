@@ -221,37 +221,45 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol oyster measurement
  */
-exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, successCallback, errorCallback) {
-  validateOysterMeasurement(oysterMeasurementBody,
-    function(oysterMeasurementJSON) {
-      var oysterMeasurement = oysterMeasurmentReq;
+exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, validate, successCallback, errorCallback) {
+  var save = function(oysterMeasurementJSON) {
+    var oysterMeasurement = oysterMeasurmentReq;
 
-      if (oysterMeasurement) {
-        oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-        oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
-        oysterMeasurement.scribeMember = user;
-        oysterMeasurement.submitted = new Date();
+    if (oysterMeasurement) {
+      oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
+      oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
+      oysterMeasurement.scribeMember = user;
+      oysterMeasurement.submitted = new Date();
 
-        oysterMeasurement.save(function (err) {
-          if (err) {
-            errorCallback(errorHandler.getErrorMessage(err));
-          } else {
-            successCallback(oysterMeasurement);
-          }
-        });
-      } else {
-        errorCallback('Protocol oyster measurement not found');
-      }
-    }, function(errorMessages) {
-      errorCallback(errorMessages);
-    });
+      oysterMeasurement.save(function (err) {
+        if (err) {
+          errorCallback(errorHandler.getErrorMessage(err));
+        } else {
+          successCallback(oysterMeasurement);
+        }
+      });
+    } else {
+      errorCallback('Protocol oyster measurement not found');
+    }
+  };
+
+  if (validate) {
+    validateOysterMeasurement(oysterMeasurementBody,
+      function(oysterMeasurementJSON) {
+        save(oysterMeasurementJSON);
+      }, function(errorMessages) {
+        errorCallback(errorMessages);
+      });
+  } else {
+    save(oysterMeasurementBody);
+  }
 };
 
 exports.update = function (req, res) {
   var oysterMeasurementBody = req.body;
   oysterMeasurementBody.status = 'submitted';
 
-  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user,
+  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user, true,
   function(oysterMeasurement) {
     res.json(oysterMeasurement);
   }, function(errorMessage) {

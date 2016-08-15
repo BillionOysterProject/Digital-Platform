@@ -151,9 +151,8 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol water quality
  */
-exports.updateInternal = function(waterQualityReq, waterQualityBody, user, successCallback, errorCallback) {
-  validateWaterQuality(waterQualityBody,
-  function(waterQualityJSON) {
+exports.updateInternal = function(waterQualityReq, waterQualityBody, user, validate, successCallback, errorCallback) {
+  var save = function(waterQualityJSON) {
     var waterQuality = waterQualityReq;
 
     if (waterQuality) {
@@ -172,16 +171,25 @@ exports.updateInternal = function(waterQualityReq, waterQualityBody, user, succe
     } else {
       errorCallback('Protocol water quality not found');
     }
-  }, function(errorMessages) {
-    errorCallback(errorMessages);
-  });
+  };
+
+  if (validate) {
+    validateWaterQuality(waterQualityBody,
+    function(waterQualityJSON) {
+      save(waterQualityJSON);
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+  } else {
+    save(waterQualityBody);
+  }
 };
 
 exports.update = function (req, res) {
   var waterQualityBody = req.body;
   waterQualityBody.status = 'submitted';
 
-  exports.updateInternal(req.waterQuality, waterQualityBody, req.user,
+  exports.updateInternal(req.waterQuality, waterQualityBody, req.user, true,
   function(waterQuality) {
     res.json(waterQuality);
   }, function(errorMessage) {

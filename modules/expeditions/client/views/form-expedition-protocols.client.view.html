@@ -16,7 +16,7 @@
                         <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusIncomplete() && vm.isTeamMember" id="submit-exp-incomplete">Submit</button>
+                        ng-show="vm.checkStatusIncomplete() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-incomplete">Submit</button>
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
@@ -24,13 +24,13 @@
                         ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
-                        ng-show="(vm.checkStatusIncomplete() || vm.checkStatusPending() || vm.checkStatusReturned()) &&
-                        (vm.isTeamLead || vm.isAdmin)">Publish</button>
+                        ng-show="(vm.checkStatusPending() || vm.checkStatusReturned()) &&
+                        (vm.isTeamLead || vm.isAdmin)">Publish</button><!-- vm.checkStatusIncomplete() || -->
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusReturned() && vm.isTeamMember" id="submit-exp-returned">Submit</button>
+                        ng-show="vm.checkStatusReturned() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-returned">Submit</button>
 
                         <!-- If published by team lead (Status: Published) -->
                         <!-- Show if team lead: -->

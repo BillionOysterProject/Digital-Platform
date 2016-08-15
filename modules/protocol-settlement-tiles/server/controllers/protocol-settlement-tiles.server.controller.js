@@ -237,9 +237,8 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol settlement tiles
  */
-exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, successCallback, errorCallback) {
-  validateSettlementTiles(settlementTilesBody,
-  function(settlementTilesJSON) {
+exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, validate, successCallback, errorCallback) {
+  var save = function(settlementTilesJSON) {
     var settlementTiles = settlementTilesReq;
 
     if (settlementTiles) {
@@ -264,15 +263,24 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
     } else {
       errorCallback('Protocol settlement tiles not found');
     }
-  }, function(errorMessages) {
-    errorCallback(errorMessages);
-  });
+  };
+
+  if (validate) {
+    validateSettlementTiles(settlementTilesBody,
+    function(settlementTilesJSON) {
+      save(settlementTilesJSON);
+    }, function(errorMessages) {
+      errorCallback(errorMessages);
+    });
+  } else {
+    save(settlementTilesBody);
+  }
 };
 
 exports.update = function (req, res) {
   var settlementTilesBody = req.body;
   settlementTilesBody.status = 'submitted';
-  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user,
+  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
   function(settlementTiles) {
     res.json(settlementTiles);
   }, function(errorMessage) {

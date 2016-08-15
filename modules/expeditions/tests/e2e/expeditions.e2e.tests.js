@@ -76,7 +76,7 @@ describe('Expedition E2E Tests', function() {
       expect(lastStationOption.getText()).toEqual(station.name);
       element(by.cssContainingText('option', station.name)).click();
       // Test team members present
-      expect(element.all(by.repeater('item in vm.memberLists.members')).count()).toEqual(2);
+      expect(element.all(by.repeater('item in vm.memberLists.members')).count()).toEqual(3);
       // Click Auto Assign
       element(by.id('autoassign')).click();
       expect(element.all(by.repeater('item in vm.expedition.teamLists.siteCondition')).count()).toEqual(1);
@@ -95,7 +95,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 
   describe('Team member 1 fill out Expedition', function () {
-    it ('should allow team member 1 to click protocols 1, 3, & 5', function () {
+    it ('should allow team member 1 to click protocols 1 & 4', function () {
       // Sign in as team member 1
       signinAs(member1);
       // Assert that it went to the correct opening page
@@ -111,22 +111,20 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
       firstLink.click();
     });
 
-    it ('should allow team member 1 to view protocols 1, 3, & 5', function() {
+    it ('should allow team member 1 to view protocols 1 & 4', function() {
       // Site Condition tab should be visible
       expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
-      // Mobile Trap tab should be visible
-      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
-      // Water Quality tab should be visible
-      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
     });
 
 //############################################################################//
@@ -154,10 +152,104 @@ describe('Expedition E2E Tests', function() {
     });
 
 //############################################################################//
-//  TEAM MEMBER 1 - MOBILE TRAP
+//  TEAM MEMBER 1 - SETTLEMENT TILES
 //############################################################################//
 
-    it ('should allow team member 1 to fill out protocol 3', function() {
+    it ('should allow team member 2 to fill out protocol 4', function() {
+      element(by.partialLinkText('Settlement Tiles')).click();
+      browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.repeater('tile in settlementTiles.settlementTiles'))), 5000);
+
+      fillOutSettlementTiles();
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol4tab = element(by.id('protocol4tab'));
+      expect(protocol4tab.isPresent()).toBe(true);
+      expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+
+      assertSettlementTiles();
+      browser.sleep(500);
+    });
+
+
+//############################################################################//
+//  TEAM MEMBER 1 - SUBMIT PROTOCOLS 1 & 4
+//############################################################################//
+
+    it ('should allow team member 1 to submit protocols 1 & 4', function() {
+      // Submit
+      element(by.buttonText('Submit')).click();
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - VIEW EXPEDITION
+//############################################################################//
+
+  describe('Team lead fill out Expedition', function () {
+    it ('should allow team lead to click protocol 1, 3, & 4', function () {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that only protocols 2 & 4 are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      var firstLink = element(by.id('protocol3Link')).isDisplayed();
+      expect(firstLink.isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+      firstLink.click();
+    });
+
+    it ('should allow team lead to view protocols 1, 3, & 4', function() {
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+    });
+
+//############################################################################//
+//  TEAM LEAD - MOBILE TRAP
+//############################################################################//
+
+    it ('should allow team lead to fill out protocol 3', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol3tab')).click();
       browser.waitForAngular();
@@ -177,6 +269,95 @@ describe('Expedition E2E Tests', function() {
 
       // Asserts
       assertMobileTrap();
+      browser.sleep(500);
+    });
+
+//############################################################################//
+//  TEAM LEAD - SUBMIT PROTOCOLS 3
+//############################################################################//
+
+    it ('should allow team lead to submit protocols 1, 3, & 4', function() {
+      // Submit
+      element(by.buttonText('Submit')).click();
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+    });
+  });
+
+//############################################################################//
+//  TEAM MEMBER 2 - VIEW EXPEDITION
+//############################################################################//
+
+  describe('Team member 2 fill out Expedition', function () {
+    it ('should allow team member 2 to click protocols 2 & 5', function () {
+      // Sign in as team member 2
+      signinAs(member2);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that only protocols 2 & 4 are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      var firstLink = element(by.id('protocol2Link')).isDisplayed();
+      expect(firstLink.isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      firstLink.click();
+    });
+
+    it ('should allow team member 2 to view protocols 2 & 5', function() {
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+    });
+
+//############################################################################//
+//  TEAM MEMBER 2 - OYSTER MEASUREMENT
+//############################################################################//
+
+    it ('should allow team member 2 to fill out protocol 2', function() {
+      element(by.partialLinkText('Oyster Measurements')).click();
+      browser.sleep(1000);
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
+
+      fillOutAllOysterMeasurements();
+
+      // Save draft
+      element(by.buttonText('Save Draft')).click();
+      // Wait until saving is done
+      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+      var protocol2tab = element(by.id('protocol2tab'));
+      expect(protocol2tab.isPresent()).toBe(true);
+      expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
+
+      assertOysterMeasurements();
       browser.sleep(500);
     });
 
@@ -207,124 +388,10 @@ describe('Expedition E2E Tests', function() {
     });
 
 //############################################################################//
-//  TEAM MEMBER 1 - SUBMIT PROTOCOLS 1, 3, & 5
+//  TEAM MEMBER 2 - SUBMIT PROTOCOLS 2 & 5
 //############################################################################//
 
-    it ('should allow team member 1 to submit protocols 1, 3, & 5', function() {
-      // Submit
-      element(by.buttonText('Submit')).click();
-
-      // Assert that no protocols are clickable
-      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
-
-      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
-    });
-  });
-
-//############################################################################//
-//  TEAM MEMBER 2 - VIEW EXPEDITION
-//############################################################################//
-
-  describe('Team member 2 fill out Expedition', function () {
-    it ('should allow team member 2 to click protocols 2 & 4', function () {
-      // Sign in as team member 2
-      signinAs(member2);
-      // Assert that it went to the correct opening page
-      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
-      // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
-      // Click on that expedition
-      expeditions.get(0).click();
-      // Assert that only protocols 2 & 4 are clickable
-      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
-      var firstLink = element(by.id('protocol2Link')).isDisplayed();
-      expect(firstLink.isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
-      firstLink.click();
-    });
-
-    it ('should allow team member 2 to view protocols 2 & 4', function() {
-      // Oyster Measurements tab should be visible
-      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
-      // Settlement Tiles tab should be visible
-      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
-    });
-
-//############################################################################//
-//  TEAM MEMBER 2 - OYSTER MEASUREMENT
-//############################################################################//
-
-    it ('should allow team member 2 to fill out protocol 2', function() {
-      element(by.partialLinkText('Oyster Measurements')).click();
-      browser.sleep(1000);
-
-      browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
-
-      fillOutAllOysterMeasurements();
-
-      // Save draft
-      element(by.buttonText('Save Draft')).click();
-      // Wait until saving is done
-      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
-      var protocol2tab = element(by.id('protocol2tab'));
-      expect(protocol2tab.isPresent()).toBe(true);
-      expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
-
-      assertOysterMeasurements();
-      browser.sleep(500);
-    });
-
-//############################################################################//
-//  TEAM MEMBER 2 - SETTLEMENT TILES
-//############################################################################//
-
-    it ('should allow team member 2 to fill out protocol 4', function() {
-      element(by.partialLinkText('Settlement Tiles')).click();
-      browser.sleep(1000);
-
-      browser.wait(EC.visibilityOf(element(by.repeater('tile in settlementTiles.settlementTiles'))), 5000);
-
-      fillOutSettlementTiles();
-
-      // Save draft
-      element(by.buttonText('Save Draft')).click();
-      // Wait until saving is done
-      browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
-      var protocol4tab = element(by.id('protocol4tab'));
-      expect(protocol4tab.isPresent()).toBe(true);
-      expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
-
-      assertSettlementTiles();
-      browser.sleep(500);
-    });
-
-
-//############################################################################//
-//  TEAM MEMBER 2 - SUBMIT PROTOCOLS 2 & 4
-//############################################################################//
-
-    it ('should allow team member 2 to submit protocols 2 & 4', function() {
+    it ('should allow team member 2 to submit protocols 2 & 5', function() {
       // Submit
       browser.executeScript('window.scrollTo(0,0);').then(function () {
         element(by.buttonText('Submit')).click();
@@ -426,25 +493,29 @@ describe('Expedition E2E Tests', function() {
       browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
 
       // Assert that all protocols are clickable
-      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
 
-      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-danger', 'Returned')).isDisplayed()).toBe(true);
     });
 
-    it ('should allow team member 1 to click on protocols 1, 3, & 5', function() {
+//############################################################################//
+//  TEAM MEMBER 2 - RESUBMIT EXPEDITION
+//############################################################################//
+
+    it ('should allow team member 1 to click on protocols 1 & 4', function() {
       // Sign in as team member 1
       signinAs(member1);
       // Assert that it went to the correct opening page
@@ -460,25 +531,23 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
       firstLink.click();
     });
 
-    it ('should allow team member 1 to view protocols 1, 3, & 5', function() {
+    it ('should allow team member 1 to view protocols 1 & 4', function() {
       // Site Condition tab should be visible
       expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
-      // Mobile Trap tab should be visible
-      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
-      // Water Quality tab should be visible
-      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
     });
 
-    it ('should allow team member 1 to resubmit protocols 1, 3, & 5', function() {
+    it ('should allow team member 1 to resubmit protocols 1 & 4', function() {
       // Submit
       element(by.id('submit-exp-returned')).click();
       browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
@@ -497,12 +566,81 @@ describe('Expedition E2E Tests', function() {
 
       expect(element(by.id('protocol1View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
       expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
     });
 
-    it ('should allow team member 2 to click on protocols 2 & 4', function() {
+//############################################################################//
+//  TEAM LEAD - RESUBMIT EXPEDITION
+//############################################################################//
+
+    it ('should allow team lead to click on protocols 1, 3, & 4', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+      // Assert that only protocols 2 & 4 are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      var firstLink = element(by.id('protocol3Link')).isDisplayed();
+      expect(firstLink.isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+      firstLink.click();
+    });
+
+    it ('should allow team lead to view protocols 1, 3, & 4', function() {
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+    });
+
+    it ('should allow team lead to resubmit protocols 1, 3, & 4', function() {
+      // Submit
+      element(by.id('submit-exp-returned')).click();
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+
+      // Assert that no protocols are clickable
+      expect(element(by.id('protocol1Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol1View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol2View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol3View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+
+      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol2View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(false);
+    });
+
+
+//############################################################################//
+//  TEAM MEMBER 2 - RESUBMIT EXPEDITION
+//############################################################################//
+
+    it ('should allow team member 2 to click on protocols 2 & 5', function() {
       // Sign in as team member 2
       signinAs(member2);
       // Assert that it went to the correct opening page
@@ -520,21 +658,21 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.id('protocol2View')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol3Link')).isDisplayed()).toBe(false);
       expect(element(by.id('protocol3View')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4View')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(false);
-      expect(element(by.id('protocol5View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol4Link')).isDisplayed()).toBe(false);
+      expect(element(by.id('protocol4View')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5Link')).isDisplayed()).toBe(true);
+      expect(element(by.id('protocol5View')).isDisplayed()).toBe(false);
       firstLink.click();
     });
 
-    it ('should allow team member 2 to view protocols 2 & 4', function() {
+    it ('should allow team member 2 to view protocols 2 & 5', function() {
       // Oyster Measurements tab should be visible
       expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
-      // Settlement Tiles tab should be visible
-      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
 
-    it ('should allow team member 2 to resubmit protocols 2 & 4', function() {
+    it ('should allow team member 2 to resubmit protocols 2 & 5', function() {
       // Submit
       element(by.id('submit-exp-returned')).click();
       browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
