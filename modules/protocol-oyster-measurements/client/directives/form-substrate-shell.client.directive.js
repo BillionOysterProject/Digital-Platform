@@ -20,18 +20,14 @@
         },
         replace: true,
         link: function (scope, element, attrs) {
-          scope.dateTime = {
-            min: moment().subtract(50, 'years').toDate(),
-            max: moment().toDate()
-          };
-          if (!scope.substrate.setDate) {
-            scope.substrate.setDate = moment().startOf('minute').toDate();
-          } else {
-            scope.substrate.setDate = moment(scope.substrate.setDate).startOf('minute').toDate();
-          }
-
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
+
+            if (!scope.substrate.setDate) {
+              scope.substrate.setDate = moment().startOf('minute').toDate();
+            } else {
+              scope.substrate.setDate = moment(scope.substrate.setDate).startOf('minute').toDate();
+            }
           });
 
           element.bind('hide.bs.modal', function () {
@@ -40,6 +36,21 @@
           });
         },
         controller: ['$scope', function ($scope) {
+          $scope.dateTime = {
+            min: moment().subtract(50, 'years').toDate(),
+            max: moment().endOf('day').toDate()
+          };
+
+          $scope.sources = [
+            { label: 'Muscongus Bay, Maine', value: 'Muscongus Bay, Maine' },
+            { label: 'Fishers Island, New York', value: 'Fishers Island, New York' },
+            { label: 'Soundview, New York', value: 'Soundview, New York' },
+            { label: 'Bronx River, New York', value: 'Bronx River, New York' },
+            { label: 'Tappan Zee, New York', value: 'Tappan Zee, New York' },
+            { label: 'Hudson River, New York', value: 'Hudson River, New York' },
+            { label: 'Other', value: 'Other' },
+          ];
+
           var validate = function() {
             $scope.error = [];
             var isValid = true;

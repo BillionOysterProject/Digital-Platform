@@ -142,36 +142,44 @@ exports.incrementalSave = function (req, res) {
 /**
  * Update a protocol mobile trap
  */
-exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, successCallback, errorCallback) {
-  validateMobileTrap(mobileTrapBody,
-    function(mobileTrapJSON) {
-      var mobileTrap = mobileTrapReq;
+exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, validate, successCallback, errorCallback) {
+  var save = function(mobileTrapJSON) {
+    var mobileTrap = mobileTrapReq;
 
-      if (mobileTrap) {
-        mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
-        mobileTrap.collectionTime = moment(mobileTrapBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-        mobileTrap.scribeMember = user;
-        mobileTrap.submitted = new Date();
+    if (mobileTrap) {
+      mobileTrap = _.extend(mobileTrap, mobileTrapJSON);
+      mobileTrap.collectionTime = moment(mobileTrapBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      mobileTrap.scribeMember = user;
+      mobileTrap.submitted = new Date();
 
-        mobileTrap.save(function (err) {
-          if (err) {
-            errorCallback(errorHandler.getErrorMessage(err));
-          } else {
-            successCallback(mobileTrap);
-          }
-        });
-      } else {
-        errorCallback('Protocol mobile trap not found');
-      }
-    }, function(errorMessages) {
-      errorCallback(errorMessages);
-    });
+      mobileTrap.save(function (err) {
+        if (err) {
+          errorCallback(errorHandler.getErrorMessage(err));
+        } else {
+          successCallback(mobileTrap);
+        }
+      });
+    } else {
+      errorCallback('Protocol mobile trap not found');
+    }
+  };
+
+  if (validate) {
+    validateMobileTrap(mobileTrapBody,
+      function(mobileTrapJSON) {
+        save(mobileTrapJSON);
+      }, function(errorMessages) {
+        errorCallback(errorMessages);
+      });
+  } else {
+    save(mobileTrapBody);
+  }
 };
 
 exports.update = function (req, res) {
   var mobileTrapBody = req.body;
   mobileTrapBody.status = 'submitted';
-  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user,
+  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user, true,
   function(mobileTrap) {
     res.json(mobileTrap);
   }, function(errorMessage) {

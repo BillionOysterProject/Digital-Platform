@@ -56,7 +56,7 @@
     ];
 
     $scope.dissolvedOxygenUnits = [
-      { name: 'mg/L (PPM)', value: 'mgl' },
+      { name: 'mg/L (ppm)', value: 'mgl' },
       { name: '% saturation', value: 'saturation' }
     ];
 
@@ -69,15 +69,15 @@
     ];
 
     $scope.turbidityUnits = [
-      { name: 'CM', value: 'cm' }
+      { name: 'cm', value: 'cm' }
     ];
 
     $scope.ammoniaUnits = [
-      { name: 'PPM', value: 'ppm' }
+      { name: 'ppm', value: 'ppm' }
     ];
 
     $scope.nitratesUnits = [
-      { name: 'PPM', value: 'ppm' }
+      { name: 'ppm', value: 'ppm' }
     ];
 
     // Get the average of the results

@@ -82,7 +82,8 @@ var ExpeditionSchema = new Schema({
   },
   created: {
     type: Date,
-    required: true
+    required: true,
+    default: Date.now
   },
   updated: {
     type: Date
