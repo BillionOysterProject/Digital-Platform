@@ -199,6 +199,56 @@
       return vm.expedition.status === 'returned';// && protocolsReturned;
     };
 
+    vm.checkAllSubmitted = function(status) {
+      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === 'submitted' &&
+          vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status === 'submitted' &&
+          vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status === 'submitted' &&
+          vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status === 'submitted' &&
+          vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status === 'submitted') {
+        return true;
+      } else {
+        var submitted = 0;
+        var published = 0;
+        if (vm.viewSiteCondition && $scope.siteCondition) {
+          if ($scope.siteCondition.status === 'submitted') submitted++;
+          if ($scope.siteCondition.status === 'published') published++;
+        }
+        if (vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+          if ($scope.oysterMeasurement.status === 'submitted') submitted++;
+          if ($scope.oysterMeasurement.status === 'published') published++;
+        }
+        if (vm.viewMobileTrap && $scope.mobileTrap) {
+          if ($scope.mobileTrap.status === 'submitted') submitted++;
+          if ($scope.mobileTrap.status === 'published') published++;
+        }
+        if (vm.viewSettlementTiles && $scope.settlementTiles) {
+          if ($scope.settlementTiles.status === 'submitted') submitted++;
+          if ($scope.settlementTiles.status === 'published') published++;
+        }
+        if (vm.viewWaterQuality && $scope.waterQuality) {
+          if ($scope.waterQuality.status === 'submitted') submitted++;
+          if ($scope.waterQuality.status === 'published') published++;
+        }
+        if (submitted > 0 && submitted + published === 5) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    };
+
+    vm.checkAllStatus = function(status) {
+      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === status &&
+          vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status === status &&
+          vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status === status &&
+          vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status === status &&
+          vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status === status) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     // Checks to see if all of the visible protocols are valid
     vm.protocolsSuccessful = function() {
       if (vm.saving === true) {

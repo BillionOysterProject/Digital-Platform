@@ -21,11 +21,10 @@
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
-                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Return</button>
+                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
-                        ng-show="(vm.checkStatusPending() || vm.checkStatusReturned()) &&
-                        (vm.isTeamLead || vm.isAdmin)">Publish</button><!-- vm.checkStatusIncomplete() || -->
+                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Publish</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
@@ -36,7 +35,7 @@
                         <!-- Show if team lead: -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.unpublish()"
-                        ng-show="vm.expedition.status === 'published' && (vm.isTeamLead || vm.isAdmin)">Unpublish</button>
+                        ng-show="vm.checkAllStatus('published') && (vm.isTeamLead || vm.isAdmin)">Unpublish</button>
 
                         <!-- Show saving when saving -->
                         <h6 class="navbar-text green" id="saving-exp-spinner" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
@@ -60,7 +59,7 @@
                         <h6 class="navbar-text" ng-show="vm.checkStatusReturned()">Returned</h6>
 
                         <!-- If published by team lead -->
-                        <h6 class="navbar-text" ng-show="vm.expedition.status === 'published'">Published</h6>
+                        <h6 class="navbar-text" ng-show="vm.checkAllStatus('published')">Published</h6>
                     </div>
                 </nav>
             </div>
