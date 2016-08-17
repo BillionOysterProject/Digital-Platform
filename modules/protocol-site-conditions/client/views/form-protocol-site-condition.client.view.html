@@ -85,17 +85,8 @@
                         <div class="form-group col-sm-6">
                             <label for="windDirection" class="required">Wind direction *</label>
                             <select class="form-control" name="windDirection"
-                            ng-model="siteCondition.meteorologicalConditions.windDirection" required>
-                                <option disabled selected></option>
-                                <option value="north">North</option>
-                                <option value="northwest">North West</option>
-                                <option value="west">West</option>
-                                <option value="southwest">South West</option>
-                                <option value="south">South</option>
-                                <option value="southeast">South East</option>
-                                <option value="east">East</option>
-                                <option value="northeast">North East</option>
-                            </select>
+                            ng-options="direction.value as direction.label for direction in windDirection"
+                            ng-model="siteCondition.meteorologicalConditions.windDirection" required></select>
                             <span class="help-block">Method: Compass</span>
                         </div>
                     </div>

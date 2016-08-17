@@ -22,11 +22,39 @@
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
 
+    // Compare the passed in role to the user's roles
+    var checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
+
+    var checkTeamLead = function() {
+      return (checkRole('team lead') && vm.user.username === vm.team.teamLead.username) ? true : false;
+    };
+
+    var checkTeamMember = function() {
+      if (checkRole('team member')) {
+        var teamMemberIndex = lodash.findIndex(vm.team.teamMembers, function(m) {
+          return m.username === vm.user.username;
+        });
+        return (teamMemberIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
+    };
+
     // Get Team Info to display in header
     TeamsService.get({
       teamId: vm.expedition.team._id
     }, function(data) {
       vm.team = data;
+
+      // Determine the users roles
+      vm.isTeamLead = checkTeamLead();
+      vm.isTeamMember = checkTeamMember();
+      vm.isAdmin = checkRole('admin');
     });
 
     // Get the formatted Expedition date
@@ -40,6 +68,21 @@
         moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
     };
 
+    // Get the formatted date
+    vm.getDate = function(date) {
+      return moment(date).format('MMMM D, YYYY');
+    };
+
+    // Get the formatted date
+    vm.getShortDate = function(date) {
+      return moment(date).format('M/D/YY');
+    };
+
+    // Get the formatted time
+    vm.getTime = function(date) {
+      return moment(date).format('HH:mm a');
+    };
+
     // Get the link to the Expedition, if the user is an Admin or Team Lead and the Expedition is Incomplete, Returned,
     // or Unpublished take the user to the Edit Expedition page, otherwise just show them the Expedition protocols.
     vm.expeditionLink = function(expedition) {
@@ -48,19 +91,6 @@
       'expeditions.edit({ expeditionId: expedition._id })' :
       'expeditions.protocols({ expeditionId: expedition._id })';
     };
-
-    // Compare the passed in role to the user's roles
-    var checkRole = function(role) {
-      var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
-        return o === role;
-      });
-      return (teamLeadIndex > -1) ? true : false;
-    };
-
-    // Determine the users roles
-    vm.isTeamLead = checkRole('team lead');
-    vm.isTeamMember = checkRole('team member');
-    vm.isAdmin = checkRole('admin');
 
     // Check if the user is allows to write to the given protocol
     vm.checkWrite = function(teamList, protocol) {
@@ -87,59 +117,106 @@
       }
     };
 
-    // Set up Site Condition protocol variables
-    if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
+    var populateTeamMembers = function(list, callback) {
+      var getTeamMember = function(index, done) {
+        if (index < list.length) {
+          TeamMembersService.get({
+            memberId: list[index]
+          }, function(data) {
+            list[index] = data;
+            getTeamMember(index+1, done);
+          });
+        } else {
+          done();
+        }
+      };
+      getTeamMember(0, function() {
+        if (callback) callback();
+      });
+    };
+
+    if (vm.expedition.status === 'published' &&
+    vm.expedition.protocols.siteCondition.status === 'published' &&
+    vm.expedition.protocols.oysterMeasurement.status === 'published' &&
+    vm.expedition.protocols.mobileTrap.status === 'published' &&
+    vm.expedition.protocols.settlementTiles.status === 'published' &&
+    vm.expedition.protocols.waterQuality.status === 'published') {
       $scope.siteCondition = vm.expedition.protocols.siteCondition;
-      vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition, $scope.siteCondition);
+      vm.viewSiteCondition = true;
       vm.disabledSiteCondition = false;
-    } else {
-      $scope.siteCondition = null;
-      vm.viewSiteCondition = false;
-      vm.disabledSiteCondition = true;
-    }
-
-    // Set up Oyster Measurement protocol variables
-    if (!vm.checkDisabled(vm.expedition.protocols.oysterMeasurement)) {
       $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-      vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, $scope.oysterMeasurement);
+      vm.viewOysterMeasurement = true;
       vm.disabledOysterMeasurement = false;
-    } else {
-      $scope.oysterMeasurement = null;
-      vm.viewOysterMeasurement = false;
-      vm.disabledOysterMeasurement = true;
-    }
-
-    // Set up Mobile Trap protocol variables
-    if (!vm.checkDisabled(vm.expedition.protocols.mobileTrap)) {
       $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-      vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap, $scope.mobileTrap);
+      vm.viewMobileTrap = true;
       vm.disabledMobileTrap = false;
-    } else {
-      $scope.mobileTrap = null;
-      vm.viewMobileTrap = false;
-      vm.disabledMobileTrap = true;
-    }
-
-    // Set up Settlement Tiles protocol variables
-    if (!vm.checkDisabled(vm.expedition.protocols.settlementTiles)) {
       $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-      vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles, $scope.settlementTiles);
+      vm.viewSettlementTiles = true;
       vm.disabledSettlementTiles = false;
-    } else {
-      $scope.settlementTiles = null;
-      vm.viewSettlementTiles = false;
-      vm.disabledSettlementTiles = true;
-    }
-
-    // Set up Water Quality protocol variables
-    if (!vm.checkDisabled(vm.expedition.protocols.waterQuality)) {
       $scope.waterQuality = vm.expedition.protocols.waterQuality;
-      vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality, $scope.waterQuality);
+      vm.viewWaterQuality = true;
       vm.disabledWaterQuality = false;
+
+      populateTeamMembers($scope.siteCondition.teamMembers);
+      populateTeamMembers($scope.oysterMeasurement.teamMembers);
+      populateTeamMembers($scope.mobileTrap.teamMembers);
+      populateTeamMembers($scope.settlementTiles.teamMembers);
+      populateTeamMembers($scope.waterQuality.teamMembers);
     } else {
-      $scope.waterQuality = null;
-      vm.viewWaterQuality = false;
-      vm.disabledWaterQuality = true;
+      // Set up Site Condition protocol variables
+      if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
+        $scope.siteCondition = vm.expedition.protocols.siteCondition;
+        vm.viewSiteCondition = vm.checkWrite(vm.expedition.teamLists.siteCondition, $scope.siteCondition);
+        vm.disabledSiteCondition = false;
+      } else {
+        $scope.siteCondition = null;
+        vm.viewSiteCondition = false;
+        vm.disabledSiteCondition = true;
+      }
+
+      // Set up Oyster Measurement protocol variables
+      if (!vm.checkDisabled(vm.expedition.protocols.oysterMeasurement)) {
+        $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+        vm.viewOysterMeasurement = vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, $scope.oysterMeasurement);
+        vm.disabledOysterMeasurement = false;
+      } else {
+        $scope.oysterMeasurement = null;
+        vm.viewOysterMeasurement = false;
+        vm.disabledOysterMeasurement = true;
+      }
+
+      // Set up Mobile Trap protocol variables
+      if (!vm.checkDisabled(vm.expedition.protocols.mobileTrap)) {
+        $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+        vm.viewMobileTrap = vm.checkWrite(vm.expedition.teamLists.mobileTrap, $scope.mobileTrap);
+        vm.disabledMobileTrap = false;
+      } else {
+        $scope.mobileTrap = null;
+        vm.viewMobileTrap = false;
+        vm.disabledMobileTrap = true;
+      }
+
+      // Set up Settlement Tiles protocol variables
+      if (!vm.checkDisabled(vm.expedition.protocols.settlementTiles)) {
+        $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+        vm.viewSettlementTiles = vm.checkWrite(vm.expedition.teamLists.settlementTiles, $scope.settlementTiles);
+        vm.disabledSettlementTiles = false;
+      } else {
+        $scope.settlementTiles = null;
+        vm.viewSettlementTiles = false;
+        vm.disabledSettlementTiles = true;
+      }
+
+      // Set up Water Quality protocol variables
+      if (!vm.checkDisabled(vm.expedition.protocols.waterQuality)) {
+        $scope.waterQuality = vm.expedition.protocols.waterQuality;
+        vm.viewWaterQuality = vm.checkWrite(vm.expedition.teamLists.waterQuality, $scope.waterQuality);
+        vm.disabledWaterQuality = false;
+      } else {
+        $scope.waterQuality = null;
+        vm.viewWaterQuality = false;
+        vm.disabledWaterQuality = true;
+      }
     }
 
     // Set up variables used by the tab element
