@@ -1,53 +1,150 @@
 <div class="jumbotron text-center">
   <section class="content">
-    <section class="container">
-      <h2>Expeditions</h2>
-      <a class="btn btn-primary" ui-sref="expeditions.create" ng-show="vm.isTeamLead && vm.teams && vm.teams.length > 0">Create an expedition</a>
+    <section class="container-fluid">
+        <h2>Expeditions</h2>
     </section>
   </section>
 </div>
+<!-- TIFFANY: Make this page viewable to everybody to see published expeditions. Tabs/etc should be hidden if they wouldn't typically have access to the "My Expeditions" page-->
 <section class="content">
-  <section class="container">
-    <table class="table table-hover" ng-show="vm.expeditions && vm.expeditions.length > 0">
-      <thead>
-        <tr>
-          <th>Expedition</th>
-          <th ng-show="vm.isTeamMember">Assignment</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
-            <td>
-                <h4>{{expedition.name}}</h4><br/>
-                <p class="text-muted">{{expedition.team.name}}</p>
-            </td>
-            <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
-            <td>
-                <!--<span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>-->
-                <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
-                <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
-                <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
-            </td>
-            <td>
-                <b>{{vm.getExpeditionDate(expedition)}}</b><br/>
-                {{vm.getExpeditionTimeRange(expedition)}}
-            </td>
-            <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
-        No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
-    </div>
-    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
-        You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
-    </div>
-    <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamMember">
-        No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
+  <section class="container-fluid">
+    <div>
+      <a class="btn btn-default pull-right" ui-sref="expeditions.create" ng-show="vm.isTeamLead && vm.teams && vm.teams.length > 0"><i class="glyphicon glyphicon-plus"></i> Create an expedition</a>
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#myexpeditions" aria-controls="grid" role="tab" data-toggle="tab">My Expeditions</a></li>
+        <li role="presentation"><a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
+      </ul>
+      <div class="tab-content">
+        <br />
+        
+        <!-- MY EXPEDITIONS -->
+        <div role="tabpanel" class="tab-pane active" id="myexpeditions">
+            <!-- TIFFANY: Move each tab-pane view to it's own page if you want -->
+            <table class="table table-hover" ng-show="vm.expeditions && vm.expeditions.length > 0">
+              <thead>
+                <tr>
+                  <th>Expedition</th>
+                  <th ng-show="vm.isTeamMember">Assignment</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                    <td>
+                        <h4>{{expedition.name}}</h4><br/>
+                        <p class="text-muted">{{expedition.team.name}}</p>
+                    </td>
+                    <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
+                    <td>
+                        <!--<span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>-->
+                        <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
+                        <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
+                        <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
+                        <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
+                    </td>
+                    <td>
+                        <b>{{vm.getExpeditionDate(expedition)}}</b><br/>
+                        {{vm.getExpeditionTimeRange(expedition)}}
+                    </td>
+                    <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
+                No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+            </div>
+            <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
+                You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+            </div>
+            <div class="alert" ng-show="vm.expeditions && vm.expeditions.length === 0 && vm.isTeamMember">
+                No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
+            </div>
+        </div>
+        
+    
+        <!-- PUBLISHED EXPEDITIONS -->
+        <div role="tabpanel" class="tab-pane" id="pubexpeditions">
+            <nav class="navbar row">
+                <!-- TIFFANY: Wire up search -->
+                <div class="navbar-form navbar-left">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </span>
+                        <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()" placeholder="Search">
+                    </div>
+                </div>
+                <!-- TIFFANY: Wire up filters
+                    - default order of expeditions should be newest-oldest by date of expedition 
+                    - text in dropdown-toggle should be replaced by whatever text was selected from the dropdown (should be implemented in Lessons filters as well)
+                -->
+                <ul class="nav navbar-nav">
+                    <li><a ok-sel="*">Show All</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Location <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a>All</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a>ORS 1</a></li>
+                          <li><a>ORS 2</a></li>
+                          <li><a>...</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Organization <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a>All</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a>Org 1</a></li>
+                          <li><a>Org 2</a></li>
+                          <li><a>...</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Date <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a>Forever</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a>Past 30 days</a></li>
+                          <li><a>Past 3 months</a></li>
+                          <li><a>Past year</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="row" isotope-container="isotope-container">
+                <!-- TIFFANY: Repeat for each published expedition -->
+                <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                    <div class="panel" data-category="transition">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <i class="fa fa-map-marker"></i> Baltimore Harbor
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <small>Org Name</small>
+                            <h4>Expedition Name</h4>
+                            <p>Team Name, led by Team Lead Name</p>
+                            <p class="text-muted">Notes notes notes notes notes notes notes notes notes.</p>
+                        </div>
+                        <div class="panel-footer">
+                            Sept 23, 2016, 9:00am-2:00pm
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+      </div>
     </div>
   </section>
 </section>
