@@ -36,11 +36,11 @@
                     <span ng-show="siteCondition.recentRainfall.rainedIn7Days === true &&
                       siteCondition.recentRainfall.rainedIn72Hours === true &&
                       siteCondition.recentRainfall.rainedIn24Hours === true">Rain<br/>
-                      <small>in the past 24 hours</small></span>
+                      <small>in the past 24hrs</small></span>
                     <span ng-show="siteCondition.recentRainfall.rainedIn7Days === true &&
                       siteCondition.recentRainfall.rainedIn72Hours === true &&
                       siteCondition.recentRainfall.rainedIn24Hours === false">Rain<br/>
-                      <small>in the past 72 hours</small></span>
+                      <small>in the past 72hrs</small></span>
                     <span ng-show="siteCondition.recentRainfall.rainedIn7Days === true &&
                       siteCondition.recentRainfall.rainedIn72Hours === false &&
                       siteCondition.recentRainfall.rainedIn24Hours === false">Rain<br/>
@@ -143,7 +143,7 @@
                     <b>Unmarked or other outfall pipes present:</b><br/>
                     Location at {{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}},
                     {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}<br/>
-                    {{getWaterFlows(siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent)}}<br/>
+                    {{getWaterFlows(siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough)}}<br/>
                     <b>{{siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM}}cm</b> approximate diameter
                 </p>
             </div>

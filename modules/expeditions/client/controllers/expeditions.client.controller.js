@@ -199,6 +199,13 @@
 
     vm.autoAssign = function() {
       var keys = [];
+      vm.expedition.teamLists = {
+        siteCondition: [],
+        oysterMeasurement: [],
+        mobileTrap: [],
+        settlementTiles: [],
+        waterQuality: [],
+      };
       angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });
