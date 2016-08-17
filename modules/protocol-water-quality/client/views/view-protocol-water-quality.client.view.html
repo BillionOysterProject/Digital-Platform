@@ -1,97 +1,159 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <h2>View Protocol</h2>
-      <div ng-repeat="sample in wq.protocolWaterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
-        <h3>Sample #{{$index+1}}</h3>
-        <h4>Depth of Water Sample (m)</h4>
-        {{sample.depthOfWaterSampleM}}
-
-        <h4>Location where Water Sample was taken</h4>
-        {{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}
-
-        <table class="table table-responsive table-condensed">
-          <tr>
-              <th></th>
-              <th>Method (tool or test name)</th>
-              <th colspan="3" class="text-center">Results (include units)</th>
-              <th>Average</th>
-              <th>Units</th>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Water Temperature</h4></td>
-              <td>{{sample.waterTemperature.method | testToolMethods}}</td>
-              <td ng-bind="sample.waterTemperature.results[0]"></td>
-              <td ng-bind="sample.waterTemperature.results[1]"></td>
-              <td ng-bind="sample.waterTemperature.results[2]"></td>
-              <td ng-bind="sample.waterTemperature.average"></td>
-              <td>{{sample.waterTemperature.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Dissolved Oxygen</h4></td>
-              <td>{{sample.dissolvedOxygen.method | testToolMethods}}</td>
-              <td ng-bind="sample.dissolvedOxygen.results[0]"></td>
-              <td ng-bind="sample.dissolvedOxygen.results[1]"></td>
-              <td ng-bind="sample.dissolvedOxygen.results[2]"></td>
-              <td ng-bind="sample.dissolvedOxygen.average"></td>
-              <td>{{sample.dissolvedOxygen.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Salinity</h4></td>
-              <td>{{sample.salinity.method | testToolMethods}}</td>
-              <td ng-bind="sample.salinity.results[0]"></td>
-              <td ng-bind="sample.salinity.results[1]"></td>
-              <td ng-bind="sample.salinity.results[2]"></td>
-              <td ng-bind="sample.salinity.average"></td>
-              <td>{{sample.salinity.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>pH</h4></td>
-              <td>{{sample.pH.method | testToolMethods}}</td>
-              <td ng-bind="sample.pH.results[0]"></td>
-              <td ng-bind="sample.pH.results[1]"></td>
-              <td ng-bind="sample.pH.results[2]"></td>
-              <td ng-bind="sample.pH.average"></td>
-              <td>{{sample.pH.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Turbidity</h4></td>
-              <td>{{sample.turbidity.method | testToolMethods}}</td>
-              <td ng-bind="sample.turbidity.results[0]"></td>
-              <td ng-bind="sample.turbidity.results[1]"></td>
-              <td ng-bind="sample.turbidity.results[2]"></td>
-              <td ng-bind="sample.turbidity.average"></td>
-              <td>{{sample.turbidity.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Ammonia</h4></td>
-              <td>{{sample.ammonia.method | testToolMethods}}</td>
-              <td ng-bind="sample.ammonia.results[0]"></td>
-              <td ng-bind="sample.ammonia.results[1]"></td>
-              <td ng-bind="sample.ammonia.results[2]"></td>
-              <td ng-bind="sample.ammonia.average"></td>
-              <td>{{sample.ammonia.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Nitrates</h4></td>
-              <td>{{sample.nitrates.method | testToolMethods}}</td>
-              <td ng-bind="sample.nitrates.results[0]"></td>
-              <td ng-bind="sample.nitrates.results[1]"></td>
-              <td ng-bind="sample.nitrates.results[2]"></td>
-              <td ng-bind="sample.nitrates.average"></td>
-              <td>{{sample.nitrates.units | testUnits}}</td>
-          </tr>
-          <tr ng-repeat="other in sample.others">
-              <td ng-bind="other.label"></td>
-              <td ng-bind="other.method"></td>
-              <td ng-bind="other.results[0]"></td>
-              <td ng-bind="other.results[1]"></td>
-              <td ng-bind="other.results[2]"></td>
-              <td ng-bind="other.average"></td>
-              <td ng-bind="other.units"></td>
-          </tr>
-        </table>
-      </div>
-    </section>
-  </section>
+<div class="row">
+    <div class="col-sm-3">
+        <h3 class="blue">
+            <i class="fa fa-clock-o pull-left"></i>
+            11:39am<br/><small>September 15, 2016</small>
+        </h3>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>40.60873982383701,<br/>-73.51020812988281</small>
+        </h4>
+    </div>
+    <div class="col-sm-3">
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Joe Smith</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Sally Martin</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Bob Johnson</h5>
+    </div>
+    <div class="col-sm-6">
+        <p><b>Notes:</b> Bacon ipsum dolor amet ball tip rump tri-tip sausage, fatback leberkas pancetta tenderloin tongue pork loin pork. Jerky meatball sausage tongue, bresaola frankfurter pork chop porchetta capicola biltong chuck cow strip steak. Doner sirloin shankle shoulder bresaola.</p>
+    </div>
 </div>
+<hr/>
+<h3>Water Sample 1</h3>
+<div class="row">
+    <div class="col-sm-3">
+        <h4 class="blue">2 meters deep</h4>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>40.60873982383701,<br/>-73.51020812988281</small>
+        </h4>
+        <h4 class="blue">
+            85.6&#8457; <!-- show &#8451; instead if Celcius-->
+            <small>via digital thermometer</small>
+        </h4>
+    </div>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-3">
+                <h6>Dissolved Oxygen</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/dissolved-oxygen.svg" />
+                    5.23 mg/L<br/><small>via colormetric ampules</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Salinity</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/salinity.svg" />
+                    5.23 PPT<br/><small>via hydrometer</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>pH</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/pH.svg" />
+                    5.23 cm<br/><small>via test strips</small>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <h6>Turbidity</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />
+                    5.23 cm<br/><small>via turbidity tube</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Ammonia</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />
+                    5.23 ppm<br/><small>via test strips</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Nitrates</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />
+                    5.23 ppm<br/><small>via photometer</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Other</h6>
+                <h4 class="green">
+                    5.23 units<br/><small>via method</small>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+<hr/>
+<h3>Water Sample 2</h3>
+<div class="row">
+    <div class="col-sm-3">
+        <h4 class="blue">2 meters deep</h4>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>40.60873982383701,<br/>-73.51020812988281</small>
+        </h4>
+        <h4 class="blue">
+            85.6&#8457; <!-- show &#8451; instead if Celcius-->
+            <small>via digital thermometer</small>
+        </h4>
+    </div>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-3">
+                <h6>Dissolved Oxygen</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/dissolved-oxygen.svg" />
+                    5.23 mg/L<br/><small>via colormetric ampules</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Salinity</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/salinity.svg" />
+                    5.23 PPT<br/><small>via hydrometer</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>pH</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/pH.svg" />
+                    5.23 cm<br/><small>via test strips</small>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <h6>Turbidity</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />
+                    5.23 cm<br/><small>via turbidity tube</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Ammonia</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />
+                    5.23 ppm<br/><small>via test strips</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Nitrates</h6>
+                <h4 class="green">
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />
+                    5.23 ppm<br/><small>via photometer</small>
+                </h4>
+            </div>
+            <div class="col-sm-3">
+                <h6>Other</h6>
+                <h4 class="green">
+                    5.23 units<br/><small>via method</small>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- REPEAT WATER SAMPLES AS NEEDED -->

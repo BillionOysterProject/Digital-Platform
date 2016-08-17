@@ -1,18 +1,150 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <p>View Protocol</p>
-      <h3>Cage Condition</h3>
-      <img ng-src="{{om.cageConditionPhotoURL}}" alt="Cage Condition" class="img-thumbnail" ng-show="om.cageConditionPhotoURL">
-
-      <h3>Substrates</h3>
-      <div ng-repeat="substrate in om.protocolOysterMeasurement.measuringOysterGrowth.substrateShells">
-        <h4>Substrate Shell #{{substrate.substrateShellNumber}}</h4>
-        <h5>Outer Shell</h5>
-        <img ng-src="{{substrate.outerSidePhoto.path}}" alt="Outer Side" class="img-thumbnail" ng-show="substrate.outerSidePhoto">
-        <h5>Inner Shell</h5>
-        <img ng-src="{{substrate.innerSidePhoto.path}}" alt="Inner Side" class="img-thumbnail" ng-show="substrate.innerSidePhoto.path">
-      </div>
-    </section>
-  </section>
+<div class="row">
+    <div class="col-sm-3">
+        <h3 class="blue">
+            <i class="fa fa-clock-o pull-left"></i>
+            11:39am<br/><small>September 15, 2016</small>
+        </h3>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>40.60873982383701,<br/>-73.51020812988281</small>
+        </h4>
+    </div>
+    <div class="col-sm-3">
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Joe Smith</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Sally Martin</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Bob Johnson</h5>
+    </div>
+    <div class="col-sm-6">
+        <p><b>Notes:</b> Bacon ipsum dolor amet ball tip rump tri-tip sausage, fatback leberkas pancetta tenderloin tongue pork loin pork. Jerky meatball sausage tongue, bresaola frankfurter pork chop porchetta capicola biltong chuck cow strip steak. Doner sirloin shankle shoulder bresaola.</p>
+    </div>
 </div>
+<hr/>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-sm-6">
+                <h6>Oyster Cage</h6>
+                <img class="img-rounded img-responsive" src="http://www.oyster-mesh.com/img/oyster-cage-spat.jpg"/>
+            </div>
+            <div class="col-sm-6">
+                <h3 class="blue">
+                    <img width="30" src="modules/core/client/img/icons/cage-depth.svg" />
+                    5 meters</br><small>Submerged depth</small>
+                </h3>
+                <p>
+                    <img width="30" src="modules/core/client/img/icons/cage-bioaccumulation.svg" />
+                    <b>Light bioaccumulation:</b> Macroalgae or minimal animals present that do not encroach on mesh openings
+                </p>
+                <p><b>Damage:</b> Description</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h6>Total population</h6>
+        <h3><img width="30" src="modules/core/client/img/icons/oyster-alive.svg" /> 24 <small>Total oysters alive</small></h3>
+        <h4 class="blue">1.00 <small>Min shell size</small></h4>
+        <h4 class="blue">86.00 <small>Max shell size</small></h4>
+        <h4 class="blue">53.52 <small>Average shell size</small></h4>
+    </div>
+</div>
+<hr/>
+<h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" /> Substrate Shell 1</h3>
+<div class="row">
+    <div class="col-sm-4">
+        <h6>Outer side</h6>
+        <img class="img-rounded img-responsive" src="http://wamu.org/sites/wamu.org/files/styles/headline_landscape/public/images/attach/10.03.11news-flickr-oysters-edit_3.jpg?itok=2O8dYEym"/>
+    </div>
+    <div class="col-sm-4">
+        <h6>Inner side</h6>
+        <img class="img-rounded img-responsive" src="http://wamu.org/sites/wamu.org/files/styles/headline_landscape/public/images/attach/10.03.11news-flickr-oysters-edit_3.jpg?itok=2O8dYEym"/>
+    </div>
+    <div class="col-sm-4">
+        <p>
+            Set at <b>Aug 15, 2016, 2:35pm</b><br/>
+            Source: <b>Fishers Island, New York</b>
+        </p>
+        <div class="row">
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                    5 <small>live oysters on shell at baseline</small>
+                </h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                    12 <small>live oysters on shell at time of monitoring</small>
+                </h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    52 grams <small>scrubbed substrate shell + oysters + tag</small>
+                </h4>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-4">
+                <h4 class="blue">1.00<br/><small>Min size</small></h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">86.00<br/><small>Max size</small></h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">53.52<br/><small>Average size</small></h4>
+            </div>
+        </div>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum.</p>
+    </div>
+</div>
+<hr/>
+<h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" /> Substrate Shell 2</h3>
+<div class="row">
+    <div class="col-sm-4">
+        <h6>Outer side</h6>
+        <img class="img-rounded img-responsive" src="http://wamu.org/sites/wamu.org/files/styles/headline_landscape/public/images/attach/10.03.11news-flickr-oysters-edit_3.jpg?itok=2O8dYEym"/>
+    </div>
+    <div class="col-sm-4">
+        <h6>Inner side</h6>
+        <img class="img-rounded img-responsive" src="http://wamu.org/sites/wamu.org/files/styles/headline_landscape/public/images/attach/10.03.11news-flickr-oysters-edit_3.jpg?itok=2O8dYEym"/>
+    </div>
+    <div class="col-sm-4">
+        <p>
+            Set at <b>Aug 15, 2016, 2:35pm</b><br/>
+            Source: <b>Fishers Island, New York</b>
+        </p>
+        <div class="row">
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                    5 <small>live oysters on shell at baseline</small>
+                </h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                    12 <small>live oysters on shell at time of monitoring</small>
+                </h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">
+                    52 grams <small>scrubbed substrate shell + oysters + tag</small>
+                </h4>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-4">
+                <h4 class="blue">1.00<br/><small>Min size</small></h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">86.00<br/><small>Max size</small></h4>
+            </div>
+            <div class="col-sm-4">
+                <h4 class="blue">53.52<br/><small>Average size</small></h4>
+            </div>
+        </div>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum.</p>
+    </div>
+</div>
+<!--REPEAT FOR EACH SUBSTRATE SHELL-->

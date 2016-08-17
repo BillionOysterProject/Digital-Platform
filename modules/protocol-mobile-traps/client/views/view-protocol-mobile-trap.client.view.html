@@ -1,16 +1,43 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <p>View Protocol</p>
-
-      <h3>Mobile Organisms</h3>
-      <div ng-repeat="organismDetails in mt.protocolMobileTrap.mobileOrganisms">
-        <h4>{{organismDetails.organism.commonName}}</h4>
-        <h6>{{organismDetails.organism.latinName}}</h6>
-        <img ng-src="{{organismDetails.sketchPhoto.path}}" alt="Sketch or Photo" class="img-thumbnail" ng-show="organismDetails.sketchPhoto">
-        <p>Count: {{organismDetails.count}}</p>
-        <p>Notes: {{organismDetails.notesQuestions}}</p>
-      </div>
-    </section>
-  </section>
+<div class="row">
+    <div class="col-sm-3">
+        <h3 class="blue">
+            <i class="fa fa-clock-o pull-left"></i>
+            11:39am<br/><small>September 15, 2016</small>
+        </h3>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>40.60873982383701,<br/>-73.51020812988281</small>
+        </h4>
+    </div>
+    <div class="col-sm-3">
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Joe Smith</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Sally Martin</h5>
+        <h5><img class="header-profile-image" src="modules/users/client/img/profile/avatar-gray.png"> Bob Johnson</h5>
+    </div>
+    <div class="col-sm-6">
+        <p><b>Notes:</b> Bacon ipsum dolor amet ball tip rump tri-tip sausage, fatback leberkas pancetta tenderloin tongue pork loin pork. Jerky meatball sausage tongue, bresaola frankfurter pork chop porchetta capicola biltong chuck cow strip steak. Doner sirloin shankle shoulder bresaola.</p>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3">
+        <h3>2 <small>Black-fingered mud crab</small></h3>
+        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
+    </div>
+    <div class="col-sm-3">
+        <h3>2 <small>Black-fingered mud crab</small></h3>
+        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
+    </div>
+    <div class="col-sm-3">
+        <h3>2 <small>Black-fingered mud crab</small></h3>
+        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
+    </div>
+    <div class="col-sm-3">
+        <h3>2 <small>Black-fingered mud crab</small></h3>
+        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
+        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
+    </div>
 </div>

@@ -33,7 +33,7 @@
           expeditionResolve: newExpedition
         },
         data: {
-          roles: ['admin', 'team member', 'team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle : 'Expeditions Create'
         }
       })
@@ -56,7 +56,7 @@
           expeditionResolve: getExpedition
         },
         data: {
-          roles: ['admin', 'team member', 'team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Edit Expedition {{ expeditionResolve.title }}'
         }
       })
