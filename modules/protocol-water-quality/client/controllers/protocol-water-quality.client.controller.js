@@ -50,6 +50,55 @@
       { name: 'Photometer', value: 'photometer' }
     ];
 
+    $scope.getWaterTemperatureMethod = function(value) {
+      var index = lodash.findIndex($scope.waterTemperatureMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.waterTemperatureMethods[index].name : '';
+    };
+
+    $scope.getDissolvedOxygenMethod = function(value) {
+      var index = lodash.findIndex($scope.dissolvedOxygenMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.dissolvedOxygenMethods[index].name : '';
+    };
+
+    $scope.getSalinityMethod = function(value) {
+      var index = lodash.findIndex($scope.salinityMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.salinityMethods[index].name : '';
+    };
+
+    $scope.getPHMethod = function(value) {
+      var index = lodash.findIndex($scope.pHMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.pHMethods[index].name : '';
+    };
+
+    $scope.getTurbidityMethod = function(value) {
+      var index = lodash.findIndex($scope.turbidityMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.turbidityMethods[index].name : '';
+    };
+
+    $scope.getAmmoniaMethod = function(value) {
+      var index = lodash.findIndex($scope.ammoniaMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.ammoniaMethods[index].name : '';
+    };
+
+    $scope.getNitratesMethod = function(value) {
+      var index = lodash.findIndex($scope.nitratesMethods, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.nitratesMethods[index].name : '';
+    };
+
     $scope.waterTemperatureUnits = [
       { name: 'F', value: 'f' },
       { name: 'C', value: 'c' }
@@ -79,6 +128,48 @@
     $scope.nitratesUnits = [
       { name: 'ppm', value: 'ppm' }
     ];
+
+    $scope.getDissolvedOxygenUnit = function(value) {
+      var index = lodash.findIndex($scope.dissolvedOxygenUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.dissolvedOxygenUnits[index].name : '';
+    };
+
+    $scope.getSalinityUnit = function(value) {
+      var index = lodash.findIndex($scope.salinityUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.salinityUnits[index].name : '';
+    };
+
+    $scope.getPHUnits = function(value) {
+      var index = lodash.findIndex($scope.pHUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.pHUnits[index].name : '';
+    };
+
+    $scope.getTurbidityUnit = function(value) {
+      var index = lodash.findIndex($scope.turbidityUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.turbidityUnits[index].name : '';
+    };
+
+    $scope.getAmmoniaUnit = function(value) {
+      var index = lodash.findIndex($scope.ammoniaUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.ammoniaUnits[index].name : '';
+    };
+
+    $scope.getNitratesUnit = function(value) {
+      var index = lodash.findIndex($scope.nitratesUnits, function(c) {
+        return c.value === value;
+      });
+      return (index > -1) ? $scope.nitratesUnits[index].name : '';
+    };
 
     // Get the average of the results
     var average = function(result0, result1, result2) {
