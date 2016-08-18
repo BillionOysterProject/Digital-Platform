@@ -7,6 +7,7 @@
       return {
         restrict: 'AE',
         templateUrl: 'modules/protocol-mobile-traps/client/views/view-protocol-mobile-trap.client.view.html',
+        controller: 'ProtocolMobileTrapsController',
         scope: false
       };
     });

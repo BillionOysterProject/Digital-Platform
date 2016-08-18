@@ -416,7 +416,8 @@ exports.settlementTilesByID = function (req, res, next, id) {
 
   ProtocolSettlementTile.findById(id).populate('scribeMember', 'displayName username')
   //.populate('settlementTiles.grid1')
-  .populate('teamLead', 'displayName username').exec(function (err, settlementTiles) {
+  .populate('teamLead', 'displayName username')
+  .exec(function (err, settlementTiles) {
     if (err) {
       return next(err);
     } else if (!settlementTiles) {

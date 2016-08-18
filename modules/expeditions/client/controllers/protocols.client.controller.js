@@ -80,7 +80,12 @@
 
     // Get the formatted time
     vm.getTime = function(date) {
-      return moment(date).format('HH:mm a');
+      return moment(date).format('h:mma');
+    };
+
+    // Get the formatted date and time
+    vm.getDateTime = function(date) {
+      return moment(date).format('MMM D, YYYY, h:mma');
     };
 
     // Get the link to the Expedition, if the user is an Admin or Team Lead and the Expedition is Incomplete, Returned,

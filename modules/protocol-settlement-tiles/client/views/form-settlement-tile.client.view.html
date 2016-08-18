@@ -8,97 +8,84 @@
             <form name="form.tileForm" ng-submit="save(form.tileForm.$valid)" novalidate>
               <div class="modal-body">
                   <div class="row">
-                      <div class="col-sm-3">
+                      <div class="col-sm-12">
                           <h6>Sessile organisms observed</h6>
                           <!-- <p class="lead red">Overlay the photograph of the tile with the sample grid.</p> -->
                           <p>Identify the dominant species within each of the 25 grid points. All 25 are required. Record the dominant species in the datasheet.</p>
                       </div>
-                      <div class="col-sm-9">
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
                           <table class="table table-condensed table-responsive">
                               <tr>
-                                  <th></th>
-                                  <th>Name *</th>
-                                  <th>Notes or Questions</th>
-                              </tr>
-                              <tr ng-repeat="grid in grids">
-                                <!-- <td ng-switch-when="0">
-                                  <h3>{{$index+1}}</h3><br/>
-                                  <label for="organism{{$index}}">Name *</label>
-                                  <select class="form-control" ng-model="grids[$index].organismId" name="organism{{$index}}" id="organism{{$index}}"
-                                  ng-init="grids[$index].organismId = grids[$index].organismId || sessileOrganisms[0]._id"
-                                  ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                  required>
-                                  </select>
-                                  <label>Notes or Questions</label>
-                                  <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index}}"
-                                  ng-model="grids[$index].notes"/>
-                                </td>
-                                <td ng-switch-when="0">
-                                  <span ng-show="grids[$index+1]">
-                                    <h3>{{$index+2}}</h3><br/>
-                                    <label for="organism{{$index+1}}">Name *</label>
-                                    <select class="form-control" ng-model="grids[$index+1].organismId" name="organism{{$index+1}}" id="organism{{$index+1}}"
-                                    ng-init="grids[$index+1].organismId = grids[$index+1].organismId || sessileOrganisms[0]._id"
-                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                    required>
-                                    </select>
-                                    <label>Notes or Questions</label>
-                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+1}}"
-                                    ng-model="grids[$index+1].notes"/>
-                                  </span>
-                                </td>
-                                <td ng-switch-when="0">
-                                  <span ng-show="grids[$index+2]">
-                                    <h3>{{$index+3}}</h3><br/>
-                                    <label for="organism{{$index+2}}">Name *</label>
-                                    <select class="form-control" ng-model="grids[$index+2].organismId" name="organism{{$index+2}}" id="organism{{$index+2}}"
-                                    ng-init="grids[$index+2].organismId = grids[$index+2].organismId || sessileOrganisms[0]._id"
-                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                    required>
-                                    </select>
-                                    <label>Notes or Questions</label>
-                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+2}}"
-                                    ng-model="grids[$index+2].notes"/>
-                                  </span>
-                                </td>
-                                <td ng-switch-when="0">
-                                  <span ng-show="grids[$index+3]">
-                                    <h3>{{$index+4}}</h3><br/>
-                                    <label for="organism{{$index+3}}">Name *</label>
-                                    <select class="form-control" ng-model="grids[$index+3].organismId" name="organism{{$index+3}}" id="organism{{$index+3}}"
-                                    ng-init="grids[$index+3].organismId = grids[$index+3].organismId || sessileOrganisms[0]._id"
-                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                    required>
-                                    </select>
-                                    <label>Notes or Questions</label>
-                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+3}}"
-                                    ng-model="grids[$index+3].notes"/>
-                                  </span>
-                                </td>
-                                <td ng-switch-when="0">
-                                  <span ng-show="grids[$index+4]">
-                                    <h3>{{$index+5}}</h3><br/>
-                                    <label for="organism{{$index+4}}">Name *</label>
-                                    <select class="form-control" ng-model="grids[$index+4].organismId" name="organism{{$index+4}}" id="organism{{$index+4}}"
-                                    ng-init="grids[$index+4].organismId = grids[$index+4].organismId || sessileOrganisms[0]._id"
-                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
-                                    required>
-                                    </select>
-                                    <label>Notes or Questions</label>
-                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+4}}"
-                                    ng-model="grids[$index+4].notes"/>
-                                  </span>
-                                </td> -->
-
-                                  <td class="text-right"><h3>{{$index+1}}</h3></td>
-                                  <td class="form-group" show-errors>
+                                  <td ng-repeat="grid in grids.slice(0,5)">
+                                    <span class="text-right"><h3>{{$index+1}}</h3></span><br/>
+                                    <label class="required" for="organism{{$index}}">Name *</label>
                                     <select class="form-control" ng-model="grid.organismId" name="organism{{$index}}" id="organism{{$index}}"
                                     ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
                                     ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
                                     required>
                                     </select>
+                                    <label>Notes or Questions</label>
+                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index}}"
+                                    ng-model="grid.notes"/>
                                   </td>
-                                  <td><input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index}}" ng-model="grid.notes"/></td>
+                              </tr>
+                              <tr>
+                                  <td ng-repeat="grid in grids.slice(5,10)">
+                                    <span class="text-right"><h3>{{$index+(1+5)}}</h3></span><br/>
+                                    <label class="required" for="organism{{$index+5}}">Name *</label>
+                                    <select class="form-control" ng-model="grid.organismId" name="organism{{$index+5}}" id="organism{{$index+5}}"
+                                    ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
+                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
+                                    required>
+                                    </select>
+                                    <label>Notes or Questions</label>
+                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+5}}"
+                                    ng-model="grid.notes"/>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td ng-repeat="grid in grids.slice(10,15)">
+                                    <span class="text-right"><h3>{{$index+(1+10)}}</h3></span><br/>
+                                    <label class="required" for="organism{{$index+10}}">Name *</label>
+                                    <select class="form-control" ng-model="grid.organismId" name="organism{{$index+10}}" id="organism{{$index+10}}"
+                                    ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
+                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
+                                    required>
+                                    </select>
+                                    <label>Notes or Questions</label>
+                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+10}}"
+                                    ng-model="grid.notes"/>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td ng-repeat="grid in grids.slice(15,20)">
+                                    <span class="text-right"><h3>{{$index+(1+15)}}</h3></span><br/>
+                                    <label class="required" for="organism{{$index+15}}">Name *</label>
+                                    <select class="form-control" ng-model="grid.organismId" name="organism{{$index+15}}" id="organism{{$index+15}}"
+                                    ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
+                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
+                                    required>
+                                    </select>
+                                    <label>Notes or Questions</label>
+                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+15}}"
+                                    ng-model="grid.notes"/>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td ng-repeat="grid in grids.slice(20,25)">
+                                    <span class="text-right"><h3>{{$index+(1+20)}}</h3></span><br/>
+                                    <label class="required" for="organism{{$index+20}}">Name *</label>
+                                    <select class="form-control" ng-model="grid.organismId" name="organism{{$index+20}}" id="organism{{$index+20}}"
+                                    ng-init="grid.organismId = grid.organismId || sessileOrganisms[0]._id"
+                                    ng-options="organism._id as organism.commonName for organism in sessileOrganisms"
+                                    required>
+                                    </select>
+                                    <label>Notes or Questions</label>
+                                    <input class="form-control" type="text" placeholder="Notes or Questions" id="notes{{$index+20}}"
+                                    ng-model="grid.notes"/>
+                                  </td>
                               </tr>
                           </table>
                       </div>
