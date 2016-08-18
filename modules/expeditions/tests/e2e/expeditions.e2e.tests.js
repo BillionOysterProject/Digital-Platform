@@ -100,6 +100,8 @@ describe('Expedition E2E Tests', function() {
       signinAs(member1);
       // Assert that it went to the correct opening page
       expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
       var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
       expect(expeditions.count()).toEqual(1);
@@ -310,6 +312,8 @@ describe('Expedition E2E Tests', function() {
       signinAs(member2);
       // Assert that it went to the correct opening page
       expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
       var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
       expect(expeditions.count()).toEqual(1);
@@ -520,6 +524,8 @@ describe('Expedition E2E Tests', function() {
       signinAs(member1);
       // Assert that it went to the correct opening page
       expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
       var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
       expect(expeditions.count()).toEqual(1);
@@ -645,6 +651,8 @@ describe('Expedition E2E Tests', function() {
       signinAs(member2);
       // Assert that it went to the correct opening page
       expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
       var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
       expect(expeditions.count()).toEqual(1);
@@ -723,13 +731,18 @@ describe('Expedition E2E Tests', function() {
     it ('should allow team lead to publish the expedition', function() {
       // Submit
       element(by.buttonText('Publish')).click();
-      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.green', 'Published'))), 5000);
 
-      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
   });
 
@@ -751,14 +764,11 @@ describe('Expedition E2E Tests', function() {
       // Click on that expedition
       expeditions.get(0).click();
 
-      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
-      // Click to view the protocols in the expedition
-      element(by.id('protocol1Link')).isDisplayed().click();
-    });
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.green', 'Published'))), 5000);
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.btn-danger', 'Unpublish'))), 5000);
+      // Unpublish the expedition
+      element(by.cssContainingText('.btn-danger', 'Unpublish')).click();
 
-    it ('should allow team lead to unpublish the expedition', function() {
-      // Submit
-      element(by.buttonText('Unpublish')).click();
       browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
 
       expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Submitted')).isDisplayed()).toBe(true);
@@ -795,13 +805,18 @@ describe('Expedition E2E Tests', function() {
     it ('should allow team lead to publish the expedition', function() {
       // Submit
       element(by.buttonText('Publish')).click();
-      browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.green', 'Published'))), 5000);
 
-      expect(element(by.id('protocol1Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol2Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol3Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol4Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
-      expect(element(by.id('protocol5Link')).element(by.cssContainingText('.label-success', 'Published')).isDisplayed()).toBe(true);
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
   });
 });
