@@ -5,9 +5,11 @@
     .module('expeditions')
     .controller('ExpeditionsListController', ExpeditionsListController);
 
-  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService'];
+  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
+  'SchoolOrganizationsService', 'RestorationStationsService', '$timeout', '$rootScope', '$scope'];
 
-  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService) {
+  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
+    SchoolOrganizationsService, RestorationStationsService, $timeout, $rootScope, $scope) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -31,18 +33,106 @@
       byMember = true;
     }
 
+    vm.filter = {
+      station: '',
+      stationName: '',
+      organization: '',
+      organizationName: '',
+      dateRange: '',
+      dateRangeName: ''
+    };
+
     ExpeditionsService.query({
       byOwner: byOwner,
       byMember: byMember,
     }, function(data) {
-      vm.expeditions = data;
+      vm.myExpeditions = data;
     });
+
+    vm.findPublishedExpeditions = function() {
+      ExpeditionsService.query({
+        published: true,
+        sort: 'startDate',
+        station: vm.filter.station,
+        organization: vm.filter.organization,
+        dateRange: vm.filter.dateRange
+      }, function(data) {
+        vm.published = data;
+        vm.error = null;
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        });
+      }, function(error) {
+        vm.error = error.data.message;
+      });
+    };
+    vm.findPublishedExpeditions();
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    });
+
+    vm.switchTabs = function() {
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    };
+
+    vm.showAllPublishedExpeditions = function() {
+      vm.filter = {
+        station: '',
+        stationName: '',
+        organization: '',
+        organizationName: '',
+        dateRange: '',
+        dateRangeName: ''
+      };
+      vm.findPublishedExpeditions();
+    };
 
     TeamsService.query({
       byOwner: true
     }, function(data) {
       vm.teams = data;
     });
+
+    SchoolOrganizationsService.query({
+      sort: 'name'
+    }, function(data) {
+      vm.organizations = data;
+    });
+
+    vm.organizationSelected = function(org) {
+      vm.filter.organization = (org) ? org._id : '';
+      vm.filter.organizationName = (org) ? org.name : '';
+      vm.findPublishedExpeditions();
+    };
+
+    vm.getOrganizationName = function(id) {
+      var index = lodash.findIndex(vm.organizations, function(o) {
+        return o._id === id;
+      });
+      return (index > -1) ? vm.organizations[index].name : '';
+    };
+
+    RestorationStationsService.query({
+    }, function(data) {
+      vm.stations = data;
+    });
+
+    vm.stationSelected = function(station) {
+      vm.filter.station = (station) ? station._id : '';
+      vm.filter.stationName = (station) ? station.name : '';
+      vm.findPublishedExpeditions();
+    };
+
+    vm.dateRangeSelected = function(range, name) {
+      vm.filter.dateRange = (range) ? range : '';
+      vm.filter.dateRangeName = (name) ? name : '';
+      vm.findPublishedExpeditions();
+    };
 
     vm.expeditionLink = function(expedition) {
       return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
@@ -60,8 +150,8 @@
     };
 
     vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
+      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma')+'-'+
+        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma');
     };
 
     vm.checkWrite = function(teamList) {

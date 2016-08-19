@@ -12,6 +12,7 @@ var path = require('path'),
   CommonSiteConditions = require('../../../protocol-site-conditions/tests/e2e/common-site-conditions.e2e.tests'),
   assertSiteCondition = CommonSiteConditions.assertSiteCondition,
   fillOutSiteConditions = CommonSiteConditions.fillOutSiteConditions,
+  assertSiteConditionView = CommonSiteConditions.assertSiteConditionView,
   CommonOysterMeasurements = require('../../../protocol-oyster-measurements/tests/e2e/common-oyster-measurements.e2e.tests'),
   assertSubstrateMeasurements = CommonOysterMeasurements.assertSubstrateMeasurements,
   assertOysterMeasurements = CommonOysterMeasurements.assertOysterMeasurements,
@@ -817,6 +818,47 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
       // Water Quality tab should be visible
       expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+    });
+  });
+
+//############################################################################//
+//  TEAM LEAD - RE-PUBLISH EXPEDITION
+//############################################################################//
+
+  describe('View Expedition', function() {
+    it('should allow a team lead to view expedition', function() {
+      // Sign in as team lead
+      signinAs(leader);
+      // Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      // Go to expeditions
+      browser.get('http://localhost:8081/expeditions');
+      // TODO: switch to published tab when working
+
+      // Assert that there is only one expedition
+      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
+      expect(expeditions.count()).toEqual(1);
+      // Click on that expedition
+      expeditions.get(0).click();
+
+      browser.wait(EC.visibilityOf(element(by.cssContainingText('.green', 'Published'))), 5000);
+
+      // Site Condition tab should be visible
+      expect(element(by.partialLinkText('Site Conditions')).isDisplayed()).toBe(true);
+      // Oyster Measurements tab should be visible
+      expect(element(by.partialLinkText('Oyster Measurements')).isDisplayed()).toBe(true);
+      // Mobile Trap tab should be visible
+      expect(element(by.partialLinkText('Mobile Trap')).isDisplayed()).toBe(true);
+      // Settlement Tiles tab should be visible
+      expect(element(by.partialLinkText('Settlement Tiles')).isDisplayed()).toBe(true);
+      // Water Quality tab should be visible
+      expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
+    });
+
+    it('should show protocol 1', function() {
+      element(by.partialLinkText('Site Conditions')).click();
+
+      assertSiteConditionView();
     });
   });
 });

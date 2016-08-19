@@ -88,11 +88,15 @@ var fillOutMobileTraps = function() {
   fillOutMobileOrganismDetails(organism2, mobileTrap2);
 };
 
+var assertMobileTrapView = function() {
+};
+
 module.exports = {
   mobileTrap1: mobileTrap1,
   mobileTrap2: mobileTrap2,
   assertMobileOrganismDetails: assertMobileOrganismDetails,
   assertMobileTrap: assertMobileTrap,
   fillOutMobileOrganismDetails: fillOutMobileOrganismDetails,
-  fillOutMobileTraps: fillOutMobileTraps
+  fillOutMobileTraps: fillOutMobileTraps,
+  assertMobileTrapView: assertMobileTrapView
 };

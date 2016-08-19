@@ -218,10 +218,14 @@ var fillOutAllOysterMeasurements = function() {
   fillOutOysterMeasurements(9);
 };
 
+var assertOysterMeasurementsView = function() {
+};
+
 module.exports = {
   oysterMeasurement1: oysterMeasurement1,
   assertSubstrateMeasurements: assertSubstrateMeasurements,
   assertOysterMeasurements: assertOysterMeasurements,
   fillOutOysterMeasurements: fillOutOysterMeasurements,
-  fillOutAllOysterMeasurements: fillOutAllOysterMeasurements
+  fillOutAllOysterMeasurements: fillOutAllOysterMeasurements,
+  assertOysterMeasurementsView: assertOysterMeasurementsView
 };

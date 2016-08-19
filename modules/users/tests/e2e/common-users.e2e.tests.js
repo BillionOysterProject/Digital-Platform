@@ -23,15 +23,18 @@ var signinAs = function(user) {
 module.exports = {
   leader: {
     username: 'teacher',
-    password: 'P@$$w0rd!!'
+    password: 'P@$$w0rd!!',
+    displayName: 'Teacher Local'
   },
   member1: {
     username: 'student1',
-    password: 'P@$$w0rd!!'
+    password: 'P@$$w0rd!!',
+    displayName: 'Student1 Local'
   },
   member2: {
     username: 'student2',
-    password: 'P@$$w0rd!!'
+    password: 'P@$$w0rd!!',
+    displayName: 'Student2 Local'
   },
   team: { name: 'Test Team' },
   station: { name: 'Test Station' },

@@ -123,10 +123,14 @@ var fillOutSettlementTiles = function() {
   fillOutSettlementTile(tile4, 3, settlementTiles1.settlementTile4);
 };
 
+var assertSettlementTilesView = function() {
+};
+
 module.exports = {
   settlementTiles1: settlementTiles1,
   assertSettlementTile: assertSettlementTile,
   assertSettlementTiles: assertSettlementTiles,
   fillOutSettlementTile: fillOutSettlementTile,
-  fillOutSettlementTiles: fillOutSettlementTiles
+  fillOutSettlementTiles: fillOutSettlementTiles,
+  assertSettlementTilesView: assertSettlementTilesView
 };

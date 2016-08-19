@@ -20,7 +20,7 @@
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'team member', 'team lead', 'partner'],
+          //roles: ['admin', 'team member', 'team lead', 'partner'],
           pageTitle: 'Expeditions List'
         }
       })
@@ -82,7 +82,7 @@
           expeditionResolve: getFullExpedition
         },
         data:{
-          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user'],
+          //roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user'],
           pageTitle: 'Expedition {{ expeditionResolve.title }}'
         }
       });
