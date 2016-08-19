@@ -585,81 +585,148 @@ exports.delete = function (req, res) {
  * List of Expeditions
  */
 exports.list = function (req, res) {
-  var query;
-  var and = [];
+  function search (teams) {
+    var query;
+    var and = [];
 
-  if (req.query.teamId) {
-    and.push({ 'team': req.query.teamId });
-  }
-  if (req.query.byOwner) {
-    and.push({ 'teamLead': req.user });
-  }
-  if (req.query.byMember) {
-    var or = [];
-    or.push({ 'teamLists.siteCondition': req.user });
-    or.push({ 'teamLists.oysterMeasurement': req.user });
-    or.push({ 'teamLists.mobileTrap': req.user });
-    or.push({ 'teamLists.settlementTiles': req.user });
-    or.push({ 'teamLists.waterQuality': req.user });
-    and.push({ $or: or });
-  }
-
-  if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
-    and.push({ 'status': 'published' });
-  }
-
-  if (and.length === 1) {
-    query = Expedition.find(and[0]);
-  } else if (and.length > 0) {
-    query = Expedition.find({ $and : and });
-  } else {
-    query = Expedition.find();
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'startDate') {
-      query.sort('-monitoringStartDate');
-    } else if (req.query.sort === 'endDate') {
-      query.sort('-monitoringEndDate');
-    } else if (req.query.sort === 'name') {
-      query.sort('name');
-    } else if (req.query.sort === 'status') {
-      query.sort('status');
+    // My Expedition Search
+    if (req.query.teamId) {
+      and.push({ 'team': req.query.teamId });
     }
-  } else {
-    query.sort('-created');
-  }
-
-  if (req.query.limit) {
-    if (req.query.page) {
-      query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+    if (req.query.byOwner) {
+      and.push({ 'teamLead': req.user });
     }
-  } else {
-    query.limit(req.query.limit);
-  }
 
-  query.populate('team', 'name')
-  .populate('teamLead', 'displayName username profileImageURL')
-  .populate('station', 'name')
-  .populate('teamLists.siteCondition', 'displayName username profileImageURL')
-  .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
-  .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
-  .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
-  .populate('teamLists.waterQuality', 'displayName username profileImageURL')
-  .populate('protocols.siteCondition', 'status')
-  .populate('protocols.oysterMeasurement', 'status')
-  .populate('protocols.mobileTrap', 'status')
-  .populate('protocols.settlementTiles', 'status')
-  .populate('protocols.waterQuality', 'status')
-  .exec(function (err, expeditions) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+    var memberOr = [];
+    if (req.query.byMember) {
+      memberOr.push({ 'teamLists.siteCondition': req.user });
+      memberOr.push({ 'teamLists.oysterMeasurement': req.user });
+      memberOr.push({ 'teamLists.mobileTrap': req.user });
+      memberOr.push({ 'teamLists.settlementTiles': req.user });
+      memberOr.push({ 'teamLists.waterQuality': req.user });
+      and.push({ $or: memberOr });
+    }
+
+    // Published Search
+    if (req.query.published) {
+      and.push({ 'status': 'published' });
+    }
+
+    var searchOr = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      //add keyword searches
+    }
+
+    if (req.query.station) {
+      and.push({ 'station' : req.query.station });
+    }
+
+    if (teams) {
+      and.push({ 'team': { '$in': teams } });
+    }
+
+    var startDate;
+    var endDate = moment().endOf('day').toDate();
+    if (req.query.dateRange) {
+      if (req.query.dateRange === '30days') {
+        startDate = moment(endDate).subtract(30, 'days').toDate();
+      } else if (req.query.dateRange === '3months') {
+        startDate = moment(endDate).subtract(3, 'months').toDate();
+      } else if (req.query.dateRange === '1year') {
+        startDate = moment(endDate).subtract(1, 'year').toDate();
+      }
+
+      if (startDate) {
+        and.push({ $and: [{ 'monitoringStartDate': { '$gte': startDate } }, { 'monitoringStartDate': { '$lte': endDate } },
+        { 'monitoringEndDate': { '$gte': startDate } }, { 'monitoringEndDate': { '$lte': endDate } }] });
+      }
+    }
+
+    // if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
+    //   and.push({ 'status': 'published' });
+    // }
+
+    if (and.length === 1) {
+      query = Expedition.find(and[0]);
+    } else if (and.length > 0) {
+      query = Expedition.find({ $and : and });
     } else {
-      res.json(expeditions);
+      query = Expedition.find();
     }
-  });
+
+    if (req.query.sort) {
+      if (req.query.sort === 'startDate') {
+        query.sort('-monitoringStartDate');
+      } else if (req.query.sort === 'endDate') {
+        query.sort('-monitoringEndDate');
+      } else if (req.query.sort === 'name') {
+        query.sort('name');
+      } else if (req.query.sort === 'status') {
+        query.sort('status');
+      }
+    } else {
+      query.sort('-created');
+    }
+
+    if (req.query.limit) {
+      if (req.query.page) {
+        query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+      }
+    } else {
+      query.limit(req.query.limit);
+    }
+
+    query.populate('team', 'name schoolOrg')
+    .populate('teamLead', 'displayName username profileImageURL')
+    .populate('station', 'name')
+    .populate('teamLists.siteCondition', 'displayName username profileImageURL')
+    .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
+    .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
+    .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
+    .populate('teamLists.waterQuality', 'displayName username profileImageURL')
+    .populate('protocols.siteCondition', 'status')
+    .populate('protocols.oysterMeasurement', 'status')
+    .populate('protocols.mobileTrap', 'status')
+    .populate('protocols.settlementTiles', 'status')
+    .populate('protocols.waterQuality', 'status')
+    .exec(function (err, expeditions) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(expeditions);
+      }
+    });
+  }
+
+  if (req.query.organization) {
+    Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (teams && teams.length > 0) {
+        var teamIds = [];
+        for (var i = 0; i < teams.length; i++) {
+          teamIds.push(teams[i]._id);
+        }
+        search(teamIds);
+      } else {
+        search();
+      }
+    });
+  } else {
+    search();
+  }
 };
 
 /**

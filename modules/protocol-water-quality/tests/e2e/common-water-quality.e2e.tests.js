@@ -317,11 +317,15 @@ var fillOutWaterQuality = function() {
   fillOutWaterQualitySample(sample2, 1, waterQuality2);
 };
 
+var assertWaterQualityView = function() {
+};
+
 module.exports = {
   waterQuality1: waterQuality1,
   waterQuality2: waterQuality2,
   assertWaterQualitySample: assertWaterQualitySample,
   assertWaterQuality: assertWaterQuality,
   fillOutWaterQualitySample: fillOutWaterQualitySample,
-  fillOutWaterQuality: fillOutWaterQuality
+  fillOutWaterQuality: fillOutWaterQuality,
+  assertWaterQualityView: assertWaterQualityView
 };

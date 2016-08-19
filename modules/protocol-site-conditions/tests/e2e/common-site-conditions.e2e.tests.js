@@ -4,9 +4,14 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
   uploadImage = CommonExpedition.uploadImage,
   assertImage = CommonExpedition.assertImage,
   defaultMapCoordinates = CommonExpedition.defaultMapCoordinates,
-  assertMapCoordinates = CommonExpedition.assertMapCoordinates;
+  assertMapCoordinates = CommonExpedition.assertMapCoordinates,
+  CommonUser = require('../../../users/tests/e2e/common-users.e2e.tests'),
+  leader = CommonUser.leader,
+  member1 = CommonUser.member1,
+  member2 = CommonUser.member2;
 
 var siteCondition1 = {
+  notes: 'This is a test',
   meteorologicalConditions: {
     airTemperatureC: 23,
     windSpeedMPH: 4,
@@ -117,6 +122,7 @@ var siteCondition1 = {
 };
 
 var assertSiteCondition = function() {
+  expect(element(by.model('siteCondition.notes')).getAttribute('value')).toEqual(siteCondition1.notes);
   // Meteorological Conditions
   expect(element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).$('option:checked').getText()).toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText);
   expect(element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).getAttribute('value')).toEqual(siteCondition1.meteorologicalConditions.airTemperatureC.toString());
@@ -172,6 +178,7 @@ var assertSiteCondition = function() {
 };
 
 var fillOutSiteConditions = function(siteCondition) {
+  element(by.model('siteCondition.notes')).sendKeys(siteCondition1.notes);
   // Meteorological Conditions
   element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).all(by.tagName('option')).get(siteCondition.meteorologicalConditions.weatherConditions).click();
   element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).sendKeys(siteCondition.meteorologicalConditions.airTemperatureC);
@@ -226,8 +233,29 @@ var fillOutSiteConditions = function(siteCondition) {
   element(by.model('siteCondition.landConditions.garbage.other.extent')).all(by.tagName('option')).get(siteCondition.landConditions.garbage.other.extent).click();
 };
 
+var assertSiteConditionView = function() {
+  //Meta data
+  var members = element.all(by.repeater('member in siteCondition.teamMembers'));
+  expect(members.count()).toEqual(1);
+  var member = members.get(0);
+  expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(member1.displayName);
+  expect(element(by.binding('siteCondition.notes')).isPresent()).toBe(true);
+  expect(element(by.binding('siteCondition.notes')).getText()).toEqual('Notes: ' + siteCondition1.notes);
+  //Meteorological conditions
+  expect(element(by.binding('siteCondition.meteorologicalConditions.airTemperatureC')).getText())
+    .toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText + ' ' +
+    siteCondition1.meteorologicalConditions.airTemperatureC + '℃\n' +
+    siteCondition1.meteorologicalConditions.humidityPer + '% humidity');
+  //expect(element(by.cssContainingText('.pull-left', 'Rain in the past 24hrs')).isPresent).toBe(true);
+  expect(element(by.binding('siteCondition.meteorologicalConditions.windSpeedMPH')).getText())
+    .toEqual(siteCondition1.meteorologicalConditions.windSpeedMPH + 'mph\n' +
+    siteCondition1.meteorologicalConditions.windDirectionText + ' wind');
+};
+
 module.exports = {
   siteCondition1: siteCondition1,
   assertSiteCondition: assertSiteCondition,
-  fillOutSiteConditions: fillOutSiteConditions
+  fillOutSiteConditions: fillOutSiteConditions,
+  assertSiteConditionView: assertSiteConditionView
 };
