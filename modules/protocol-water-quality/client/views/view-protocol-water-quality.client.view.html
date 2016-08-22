@@ -13,7 +13,7 @@
     <div class="col-sm-3" ng-repeat="member in waterQuality.teamMembers">
         <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" ng-show="waterQuality.notes">
         <p><b>Notes:</b> {{waterQuality.notes}}</p>
     </div>
 </div>
@@ -61,37 +61,28 @@
               </div>
           </div>
           <div class="row">
-              <div class="col-sm-3">
+              <div class="col-sm-3" ng-show="sample.turbidity.average">
                   <h6>Turbidity</h6>
-                  <h4 class="green" ng-show="sample.turbidity.average">
+                  <h4 class="green">
                       <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />
                       {{sample.turbidity.average | number:2}} {{getTurbidityUnit(sample.turbidity.units)}}<br/>
                       <small>via {{getTurbidityMethod(sample.turbidity.method) | lowercase}}</small>
                   </h4>
-                  <h4 class="green" ng-hide="sample.turbidity.average">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />N/A
-                  </h4>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3" ng-show="sample.ammonia.average">
                   <h6>Ammonia</h6>
-                  <h4 class="green" ng-show="sample.ammonia.average">
+                  <h4 class="green">
                       <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />
                       {{sample.ammonia.average | number:2}} {{getAmmoniaUnit(sample.ammonia.units)}}<br/>
                       <small>via {{getAmmoniaMethod(sample.ammonia.method) | lowercase}}</small>
                   </h4>
-                  <h4 class="green" ng-hide="sample.ammonia.average">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />N/A
-                  </h4>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-3" ng-show="sample.nitrates.average">
                   <h6>Nitrates</h6>
-                  <h4 class="green" ng-show="sample.nitrates.average">
+                  <h4 class="green">
                       <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />
                       {{sample.nitrates.average | number:2}} {{getNitratesUnit(sample.nitrates.units)}}<br/>
                       <small>via {{getNitratesMethod(sample.nitrates.method) | lowercase}}</small>
-                  </h4>
-                  <h4 class="green" ng-hide="sample.nitrates.average">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />N/A
                   </h4>
               </div>
               <div class="col-sm-3" ng-show="sample.others[0].average">

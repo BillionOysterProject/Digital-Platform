@@ -13,7 +13,7 @@
     <div class="col-sm-3" ng-repeat="member in mobileTrap.teamMembers">
         <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" ng-show="mobileTrap.notes">
         <p><b>Notes:</b> {{mobileTrap.notes}}</p>
     </div>
 </div>
@@ -23,22 +23,7 @@
         <div ng-show="{{organism.count > 0}}">
           <h3>{{organism.count}} <small>{{organism.organism.commonName}}</small></h3>
           <img class="img-rounded img-responsive" ng-src="{{organism.sketchPhoto.path}}"/>
-          <p><b>Notes:</b> {{organism.notes}}</p>
+          <p ng-show="organism.notes"><b>Notes:</b> {{organism.notes}}</p>
         </div>
     </div>
-    <!-- <div class="col-sm-3">
-        <h3>2 <small>Black-fingered mud crab</small></h3>
-        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
-        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
-    </div>
-    <div class="col-sm-3">
-        <h3>2 <small>Black-fingered mud crab</small></h3>
-        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
-        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
-    </div>
-    <div class="col-sm-3">
-        <h3>2 <small>Black-fingered mud crab</small></h3>
-        <img class="img-rounded img-responsive" src="http://www.chesapeakebay.net/images/field_guide/black-fingered-mud-crab-page-image.jpg"/>
-        <p><b>Notes:</b> Lorem ipsum lorem ipsum lorem ipsum</p>
-    </div> -->
 </div>

@@ -57,54 +57,57 @@
 </div>
 <hr/>
 <div ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells">
-  <h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" />
-    Substrate Shell {{substrate.substrateShellNumber}}</h3>
-  <div class="row">
-      <div class="col-sm-4">
-          <h6>Outer side</h6>
-          <img class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
-      </div>
-      <div class="col-sm-4">
-          <h6>Inner side</h6>
-          <img class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
-      </div>
-      <div class="col-sm-4">
-          <p>
-              Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
-              Source: <b>{{substrate.source}}</b>
-          </p>
-          <div class="row">
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
-                      {{substrate.totalNumberOfLiveOystersAtBaseline}} <small>live oysters on shell at baseline</small>
-                  </h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
-                      {{substrate.totalNumberOfLiveOystersOnShell}} <small>live oysters on shell at time of monitoring</small>
-                  </h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      {{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}} grams <small>scrubbed substrate shell + oysters + tag</small>
-                  </h4>
-              </div>
-          </div>
-          <hr/>
-          <div class="row">
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.minimumSizeOfLiveOysters | number:2}}<br/><small>Min size</small></h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.maximumSizeOfLiveOysters | number:2}}<br/><small>Max size</small></h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}<br/><small>Average size</small></h4>
-              </div>
-          </div>
-          <p><b>Notes:</b> {{substrate.notes}}</p>
+  <div ng-show="substrate.outerSidePhoto.path && substrate.innerSidePhoto.path">
+    <h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" />
+      Substrate Shell {{substrate.substrateShellNumber}}</h3>
+    <div class="row">
+        <div class="col-sm-4">
+            <h6>Outer side</h6>
+            <img class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
+        </div>
+        <div class="col-sm-4">
+            <h6>Inner side</h6>
+            <img class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
+        </div>
+        <div class="col-sm-4">
+            <p>
+                Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
+                Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
+                <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
+            </p>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4 class="blue">
+                        <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                        {{substrate.totalNumberOfLiveOystersAtBaseline}} <small>live oysters on shell at baseline</small>
+                    </h4>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="blue">
+                        <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
+                        {{substrate.totalNumberOfLiveOystersOnShell}} <small>live oysters on shell at time of monitoring</small>
+                    </h4>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="blue">
+                        {{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}} grams <small>scrubbed substrate shell + oysters + tag</small>
+                    </h4>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4 class="blue">{{substrate.minimumSizeOfLiveOysters | number:2}}<br/><small>Min size</small></h4>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="blue">{{substrate.maximumSizeOfLiveOysters | number:2}}<br/><small>Max size</small></h4>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}<br/><small>Average size</small></h4>
+                </div>
+            </div>
+            <p ng-show="substrate.notes"><b>Notes:</b> {{substrate.notes}}</p>
+        </div>
       </div>
   </div>
   <hr ng-hide="$last"/>
