@@ -633,6 +633,14 @@ exports.list = function (req, res) {
       and.push({ 'team': { '$in': teams } });
     }
 
+    if (req.query.team) {
+      and.push({ 'team': req.query.team });
+    }
+
+    if (req.query.teamLead) {
+      and.push({ 'teamLead': req.query.teamLead });
+    }
+
     var startDate;
     var endDate = moment().endOf('day').toDate();
     if (req.query.dateRange) {
@@ -708,7 +716,7 @@ exports.list = function (req, res) {
     });
   }
 
-  if (req.query.organization) {
+  if (req.query.organization && !req.query.team) {
     Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
       if (err) {
         return res.status(400).send({

@@ -6,10 +6,10 @@
     .controller('ExpeditionsListController', ExpeditionsListController);
 
   ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
-  'SchoolOrganizationsService', 'RestorationStationsService', '$timeout', '$rootScope', '$scope'];
+  'SchoolOrganizationsService', 'RestorationStationsService', 'Admin', '$timeout', '$rootScope', '$scope'];
 
   function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
-    SchoolOrganizationsService, RestorationStationsService, $timeout, $rootScope, $scope) {
+    SchoolOrganizationsService, RestorationStationsService, Admin, $timeout, $rootScope, $scope) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -35,9 +35,17 @@
 
     vm.filter = {
       station: '',
+      stationObj: '',
       stationName: '',
       organization: '',
+      organizationObj: '',
       organizationName: '',
+      team: '',
+      teamObj: '',
+      teamName: '',
+      teamLead: '',
+      teamLeadObj: '',
+      teamLeadName: '',
       dateRange: '',
       dateRangeName: ''
     };
@@ -55,6 +63,8 @@
         sort: 'startDate',
         station: vm.filter.station,
         organization: vm.filter.organization,
+        team: vm.filter.team,
+        teamLead: vm.filter.teamLead,
         dateRange: vm.filter.dateRange
       }, function(data) {
         vm.published = data;
@@ -83,9 +93,17 @@
     vm.showAllPublishedExpeditions = function() {
       vm.filter = {
         station: '',
+        stationObj: '',
         stationName: '',
         organization: '',
+        organizationObj: '',
         organizationName: '',
+        team: '',
+        teamObj: '',
+        teamName: '',
+        teamLead: '',
+        teamLeadObj: '',
+        teamLeadName: '',
         dateRange: '',
         dateRangeName: ''
       };
@@ -98,15 +116,31 @@
       vm.teams = data;
     });
 
+    vm.findTeams = function() {
+      TeamsService.query({
+        organization: vm.filter.organization
+      }, function(data) {
+        vm.allTeams = data;
+      });
+    };
+    vm.findTeams();
+
+    vm.teamSelected = function() {
+      vm.filter.team = (vm.filter.teamObj) ? vm.filter.teamObj._id : '';
+      vm.filter.teamName = (vm.filter.teamObj) ? vm.filter.teamObj.name : '';
+      vm.findPublishedExpeditions();
+    };
+
     SchoolOrganizationsService.query({
       sort: 'name'
     }, function(data) {
       vm.organizations = data;
     });
 
-    vm.organizationSelected = function(org) {
-      vm.filter.organization = (org) ? org._id : '';
-      vm.filter.organizationName = (org) ? org.name : '';
+    vm.organizationSelected = function() {
+      vm.filter.organization = (vm.filter.organizationObj) ? vm.filter.organizationObj._id : '';
+      vm.filter.organizationName = (vm.filter.organizationObj) ? vm.filter.organizationObj.name : '';
+      vm.findTeams();
       vm.findPublishedExpeditions();
     };
 
@@ -122,9 +156,23 @@
       vm.stations = data;
     });
 
-    vm.stationSelected = function(station) {
-      vm.filter.station = (station) ? station._id : '';
-      vm.filter.stationName = (station) ? station.name : '';
+    vm.stationSelected = function() {
+      vm.filter.station = (vm.filter.stationObj) ? vm.filter.stationObj._id : '';
+      vm.filter.stationName = (vm.filter.stationObj) ? vm.filter.stationObj.name : '';
+      vm.findPublishedExpeditions();
+    };
+
+    Admin.query({
+      roles: 'team lead'
+    }, function(data) {
+      vm.teamLeads = data;
+    });
+
+    vm.teamLeadSelected = function() {
+      console.log('selected');
+      vm.filter.teamLead = (vm.filter.teamLeadObj) ? vm.filter.teamLeadObj._id : '';
+      vm.filter.teamLeadName = (vm.filter.teamLeadObj) ? vm.filter.teamLeadObj.displayName : '';
+
       vm.findPublishedExpeditions();
     };
 
