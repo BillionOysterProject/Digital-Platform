@@ -642,17 +642,12 @@ exports.list = function (req, res) {
     }
 
     var startDate;
-    var endDate = moment().endOf('day').toDate();
-    if (req.query.dateRange) {
-      if (req.query.dateRange === '30days') {
-        startDate = moment(endDate).subtract(30, 'days').toDate();
-      } else if (req.query.dateRange === '3months') {
-        startDate = moment(endDate).subtract(3, 'months').toDate();
-      } else if (req.query.dateRange === '1year') {
-        startDate = moment(endDate).subtract(1, 'year').toDate();
-      }
+    var endDate;
+    if (req.query.startDate && req.query.endDate) {
+      startDate = moment(req.query.startDate).toDate();
+      endDate = moment(req.query.endDate).toDate();
 
-      if (startDate) {
+      if (startDate && endDate) {
         and.push({ $and: [{ 'monitoringStartDate': { '$gte': startDate } }, { 'monitoringStartDate': { '$lte': endDate } },
         { 'monitoringEndDate': { '$gte': startDate } }, { 'monitoringEndDate': { '$lte': endDate } }] });
       }

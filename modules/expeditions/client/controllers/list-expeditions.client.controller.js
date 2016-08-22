@@ -13,6 +13,27 @@
     var vm = this;
     vm.user = Authentication.user;
 
+    vm.opened = {
+      startDate: false,
+      endDate: false
+    };
+    vm.maxDate = new Date();
+    vm.format = 'MM/dd/yyyy';
+    vm.shortFormat = 'MM/yyyy';
+    vm.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1,
+      showWeeks: false
+    };
+
+    vm.openStartDate = function($event) {
+      vm.opened.startDate = true;
+    };
+
+    vm.openEndDate = function($event) {
+      vm.opened.endDate = true;
+    };
+
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
@@ -46,8 +67,8 @@
       teamLead: '',
       teamLeadObj: '',
       teamLeadName: '',
-      dateRange: '',
-      dateRangeName: ''
+      startDate: '',
+      endDate: ''
     };
 
     ExpeditionsService.query({
@@ -65,7 +86,8 @@
         organization: vm.filter.organization,
         team: vm.filter.team,
         teamLead: vm.filter.teamLead,
-        dateRange: vm.filter.dateRange
+        startDate: vm.filter.startDate,
+        endDate: vm.filter.endDate
       }, function(data) {
         vm.published = data;
         vm.error = null;
@@ -104,8 +126,8 @@
         teamLead: '',
         teamLeadObj: '',
         teamLeadName: '',
-        dateRange: '',
-        dateRangeName: ''
+        startDate: '',
+        endDate: ''
       };
       vm.findPublishedExpeditions();
     };
@@ -120,26 +142,34 @@
       TeamsService.query({
         organization: vm.filter.organization
       }, function(data) {
-        vm.allTeams = data;
+        vm.allTeams = [{
+          name: 'All'
+        }];
+        vm.allTeams = vm.allTeams.concat(data);
+        vm.filter.teamObj = vm.allTeams[0];
       });
     };
     vm.findTeams();
 
     vm.teamSelected = function() {
-      vm.filter.team = (vm.filter.teamObj) ? vm.filter.teamObj._id : '';
-      vm.filter.teamName = (vm.filter.teamObj) ? vm.filter.teamObj.name : '';
+      vm.filter.team = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj._id : '';
+      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj.name : '';
       vm.findPublishedExpeditions();
     };
 
     SchoolOrganizationsService.query({
       sort: 'name'
     }, function(data) {
-      vm.organizations = data;
+      vm.organizations = [{
+        name: 'All'
+      }];
+      vm.organizations = vm.organizations.concat(data);
+      vm.filter.organizationObj = vm.organizations[0];
     });
 
     vm.organizationSelected = function() {
-      vm.filter.organization = (vm.filter.organizationObj) ? vm.filter.organizationObj._id : '';
-      vm.filter.organizationName = (vm.filter.organizationObj) ? vm.filter.organizationObj.name : '';
+      vm.filter.organization = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj._id : '';
+      vm.filter.organizationName = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj.name : '';
       vm.findTeams();
       vm.findPublishedExpeditions();
     };
@@ -153,33 +183,47 @@
 
     RestorationStationsService.query({
     }, function(data) {
-      vm.stations = data;
+      vm.stations = [{
+        name: 'All'
+      }];
+      vm.stations = vm.stations.concat(data);
+      vm.filter.stationObj = vm.stations[0];
     });
 
     vm.stationSelected = function() {
-      vm.filter.station = (vm.filter.stationObj) ? vm.filter.stationObj._id : '';
-      vm.filter.stationName = (vm.filter.stationObj) ? vm.filter.stationObj.name : '';
+      vm.filter.station = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj._id : '';
+      vm.filter.stationName = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj.name : '';
       vm.findPublishedExpeditions();
     };
 
     Admin.query({
       roles: 'team lead'
     }, function(data) {
-      vm.teamLeads = data;
+      vm.teamLeads = [{
+        displayName: 'All'
+      }];
+      vm.teamLeads = vm.teamLeads.concat(data);
+      vm.filter.teamLeadObj = vm.teamLeads[0];
     });
 
     vm.teamLeadSelected = function() {
       console.log('selected');
-      vm.filter.teamLead = (vm.filter.teamLeadObj) ? vm.filter.teamLeadObj._id : '';
-      vm.filter.teamLeadName = (vm.filter.teamLeadObj) ? vm.filter.teamLeadObj.displayName : '';
+      vm.filter.teamLead = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj._id : '';
+      vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj.displayName : '';
 
       vm.findPublishedExpeditions();
     };
 
-    vm.dateRangeSelected = function(range, name) {
-      vm.filter.dateRange = (range) ? range : '';
-      vm.filter.dateRangeName = (name) ? name : '';
-      vm.findPublishedExpeditions();
+    // vm.dateRangeSelected = function(range, name) {
+    //   vm.filter.dateRange = (range) ? range : '';
+    //   vm.filter.dateRangeName = (name) ? name : '';
+    //   vm.findPublishedExpeditions();
+    // };
+
+    vm.dateSelected = function() {
+      if (vm.filter.startDate && vm.filter.endDate) {
+        vm.findPublishedExpeditions();
+      }
     };
 
     vm.expeditionLink = function(expedition) {

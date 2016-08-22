@@ -116,25 +116,33 @@
                     typeahead-on-select="vm.teamLeadSelected()">
                   </div>
                 </div>
+                <div class="navbar-form navbar-left">
+                  <div class="col-md-6">
+                    <label for="startDate">Start Date</label>
+                    <p class="input-group">
+                      <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                      ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
+                      max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                      ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                  </div>
 
-                <!-- TIFFANY: Wire up filters
-                    - default order of expeditions should be newest-oldest by date of expedition
-                    - text in dropdown-toggle should be replaced by whatever text was selected from the dropdown (should be implemented in Lessons filters as well)
-                -->
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            Date{{vm.filter.dateRangeName ? ': ' + vm.filter.dateRangeName : ''}} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                          <li><a ng-click="vm.dateRangeSelected()">Forever</a></li>
-                          <li role="separator" class="divider"></li>
-                          <li><a ng-click="vm.dateRangeSelected('30days', 'Past 30 days')">Past 30 days</a></li>
-                          <li><a ng-click="vm.dateRangeSelected('3months', 'Past 3 months')">Past 3 months</a></li>
-                          <li><a ng-click="vm.dateRangeSelected('1year', 'Past year')">Past year</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                  <div class="col-md-6">
+                    <label for="endDate">End Date</label>
+                    <p class="input-group">
+                      <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                      ng-model="vm.filter.endDate" is-open="vm.opened.endDate" name="endDate"
+                      max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                      ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                  </div>
+                </div>
             </nav>
 
             <div class="row" isotope-container="isotope-container">
