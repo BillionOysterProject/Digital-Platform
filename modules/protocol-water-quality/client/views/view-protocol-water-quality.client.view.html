@@ -7,7 +7,7 @@
         </h3>
         <h4 class="blue">
             <i class="fa fa-map-marker pull-left"></i>
-            <small>{{waterQuality.latitude}},<br/>{{waterQuality.longitude}}</small>
+            <small>{{waterQuality.latitude}}, {{waterQuality.longitude}}</small>
         </h4>
     </div>
     <div class="col-sm-3" ng-repeat="member in waterQuality.teamMembers">
@@ -25,7 +25,7 @@
           <h4 class="blue">{{sample.depthOfWaterSampleM}} meters deep</h4>
           <h4 class="blue">
               <i class="fa fa-map-marker pull-left"></i>
-              <small>{{sample.locationOfWaterSample.latitude}},<br/>{{sample.locationOfWaterSample.longitude}}</small>
+              <small>{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}</small>
           </h4>
           <h4 class="blue">
               <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
