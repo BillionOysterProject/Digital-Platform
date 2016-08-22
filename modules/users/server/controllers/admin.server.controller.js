@@ -241,6 +241,58 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of Team Leads
+ */
+exports.listTeamLeads = function (req, res) {
+  var query;
+  var and = [{ 'roles': 'team lead' }];
+
+  if (req.query.organizationId) {
+    and.push({ 'schoolOrg': req.query.organizationId });
+  }
+
+  if (and.length === 1) {
+    query = User.find(and[0], '-salt -password');
+  } else if (and.length > 0) {
+    query = User.find({ $and: and }, '-salt -password');
+  } else {
+    query = User.find({}, '-salt -password');
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'firstName') {
+      query.sort({ 'firstName': 1 });
+    } else if (req.query.sort === 'lastName') {
+      query.sort({ 'lastName': 1 });
+    }
+  } else {
+    query.sort('-create');
+  }
+
+  if (req.query.limit) {
+    var limit = Number(req.query.limit);
+    if (req.query.page) {
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    } else {
+      query.limit(limit);
+    }
+  }
+
+  query.populate('user', 'displayName email profileImageURL')
+  .populate('schoolOrg', 'name pending').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(users);
+    }
+  });
+};
+
+
+/**
  * User middleware
  */
 exports.userByID = function (req, res, next, id) {

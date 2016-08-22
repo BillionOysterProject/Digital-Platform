@@ -101,7 +101,7 @@
                 <h6>Water Conditions</h6>
                 <img class="img-rounded img-responsive" ng-src="{{waterConditionPhotoURL}}"/>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" ng-show="siteCondition.waterConditions.surfaceCurrentSpeedMPS">
                 <h3 class="blue">{{siteCondition.waterConditions.surfaceCurrentSpeedMPS}} meters/sec</br>
                   <small>Surface current speed</small></h3>
                 <p>

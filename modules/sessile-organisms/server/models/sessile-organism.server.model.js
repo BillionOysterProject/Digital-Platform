@@ -51,6 +51,9 @@ var SessileOrganismSchema = new Schema({
   migration: {
     type: String,
     require: true
+  },
+  image: {
+    path: String
   }
 });
 mongoose.model('SessileOrganism', SessileOrganismSchema);

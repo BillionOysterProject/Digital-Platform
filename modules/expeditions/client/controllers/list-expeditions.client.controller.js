@@ -6,10 +6,10 @@
     .controller('ExpeditionsListController', ExpeditionsListController);
 
   ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
-  'SchoolOrganizationsService', 'RestorationStationsService', 'Admin', '$timeout', '$rootScope', '$scope'];
+  'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope'];
 
   function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
-    SchoolOrganizationsService, RestorationStationsService, Admin, $timeout, $rootScope, $scope) {
+    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -196,8 +196,9 @@
       vm.findPublishedExpeditions();
     };
 
-    Admin.query({
-      roles: 'team lead'
+    TeamLeads.query({
+      roles: 'team lead',
+      organization: vm.filter.organization
     }, function(data) {
       vm.teamLeads = [{
         displayName: 'All'

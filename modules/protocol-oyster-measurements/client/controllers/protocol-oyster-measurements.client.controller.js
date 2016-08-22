@@ -73,7 +73,9 @@
               mortality: mortality,
               growth: growth,
               min: min,
-              max: max
+              max: max,
+              avgSize: data.averageSizeOfAllLiveOysters,
+              total: data.totalNumberOfAllLiveOysters
             };
           }
           if (data && data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
@@ -120,6 +122,8 @@
       !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
       $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
       setupSubstrateShells(findPreviousValues());
+    } else {
+      findPreviousValues();
     }
 
     // Get the values for the dropdowns
