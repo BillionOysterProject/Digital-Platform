@@ -31,7 +31,7 @@
                     {{oysterMeasurement.depthOfOysterCage.submergedDepthofCageM}} meters</br><small>Submerged depth</small>
                 </h3>
                 <p>
-                    <img width="30" src="modules/core/client/img/icons/cage-bioaccumulation.svg" />
+                    <img class="pull-left" width="30" src="modules/core/client/img/icons/cage-bioaccumulation.svg" />
                     <span ng-show="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'heavy'">
                       <b>Heavy bioaccumulation:</b> Encrusting macroalgae/animals reducing mesh opening by over 50%</span>
                     <span ng-show="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'medium'">
@@ -48,10 +48,26 @@
     <div class="col-md-6">
         <h6>Total population</h6>
         <h3><img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
-          {{oysterMeasurement.totalNumberOfAllLiveOysters | number}} <small>Total oysters alive</small></h3>
-        <h4 class="blue">{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}} <small>Min shell size</small></h4>
-        <h4 class="blue">{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}} <small>Max shell size</small></h4>
-        <h4 class="blue">{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} <small>Average shell size</small></h4>
+          {{oysterMeasurement.totalNumberOfAllLiveOysters | number}} <small>total oysters alive</small></h3>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-8"><!-- TIFFANY: Wire up historic data -->
+                <h3 class="green"><!-- class="red" if avg size is down from prev expedition -->
+                    <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
+                    <i class="fa fa-arrow-up"></i><!-- <i class="fa fa-arrow-down"></i> if avg size is down from prev expedition -->
+                     {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}
+                     <small>average size<br/>
+                         <b class="green">up<!-- class="red" and "down" if avg size is down from prev expedition --> __%</b> 
+                         from previous expedition
+                     </small>
+                </h3>
+                
+          </div>
+          <div class="col-sm-4 text-muted">
+              <br/><p><b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b> min size<br/>
+              <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b> max size</p>
+          </div>
+        </div>
     </div>
 </div>
 <hr/>
@@ -70,40 +86,34 @@
       <div class="col-sm-4">
           <p>
               Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
-              Source: <b>{{substrate.source}}</b>
+              Source: <b>{{substrate.source}}</b><br/>
+              Notes: {{substrate.notes}}</p>
           </p>
-          <div class="row">
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
-                      {{substrate.totalNumberOfLiveOystersAtBaseline}} <small>live oysters on shell at baseline</small>
-                  </h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      <img width="30" src="modules/core/client/img/icons/oyster-alive.svg" />
-                      {{substrate.totalNumberOfLiveOystersOnShell}} <small>live oysters on shell at time of monitoring</small>
-                  </h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">
-                      {{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}} grams <small>scrubbed substrate shell + oysters + tag</small>
-                  </h4>
-              </div>
-          </div>
+          <!-- TIFFANY: Wire up different colors/icons if count is down or up from baseline -->          
+          <h3 class="red"><!-- class="green" if oyster count is up from baseline -->
+              <i class="fa fa-arrow-down"></i>
+              <!--<i class="fa fa-arrow-up"></i> if oyster count is up from baseline -->
+              {{substrate.totalNumberOfLiveOystersOnShell}} 
+              <small>live oysters on shell<br/>
+                  <span class="red"><!-- class="green" if oyster count is up from baseline -->
+                  down<!--"up" if oyster count is up from baseline --> from 
+                  <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline
+              </small>
+          </h3>
+          <hr/>
+          <h4 class="text-muted"><b>{{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}}</b> total mass <small>(shell + oysters + tag)</small></h4>
           <hr/>
           <div class="row">
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.minimumSizeOfLiveOysters | number:2}}<br/><small>Min size</small></h4>
+              <div class="col-sm-6 text-right">
+                  <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
+                  <p><b class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}</b>
+                  <br/>average size</p>
               </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.maximumSizeOfLiveOysters | number:2}}<br/><small>Max size</small></h4>
-              </div>
-              <div class="col-sm-4">
-                  <h4 class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}<br/><small>Average size</small></h4>
+              <div class="col-sm-6 text-muted">
+                  <p><b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b> min size<br/>
+                  <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b> max size</p>
               </div>
           </div>
-          <p><b>Notes:</b> {{substrate.notes}}</p>
       </div>
   </div>
   <hr ng-hide="$last"/>
