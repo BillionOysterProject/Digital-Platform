@@ -109,6 +109,9 @@ exports.list = function (req, res) {
   if (req.query.teamId) {
     and.push({ '_id': req.query.teamId });
   }
+  if (req.query.organization) {
+    and.push({ 'schoolOrg': req.query.organization });
+  }
 
   if (and.length === 1) {
     query = Team.find(and[0]);

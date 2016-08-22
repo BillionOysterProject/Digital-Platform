@@ -633,18 +633,21 @@ exports.list = function (req, res) {
       and.push({ 'team': { '$in': teams } });
     }
 
-    var startDate;
-    var endDate = moment().endOf('day').toDate();
-    if (req.query.dateRange) {
-      if (req.query.dateRange === '30days') {
-        startDate = moment(endDate).subtract(30, 'days').toDate();
-      } else if (req.query.dateRange === '3months') {
-        startDate = moment(endDate).subtract(3, 'months').toDate();
-      } else if (req.query.dateRange === '1year') {
-        startDate = moment(endDate).subtract(1, 'year').toDate();
-      }
+    if (req.query.team) {
+      and.push({ 'team': req.query.team });
+    }
 
-      if (startDate) {
+    if (req.query.teamLead) {
+      and.push({ 'teamLead': req.query.teamLead });
+    }
+
+    var startDate;
+    var endDate;
+    if (req.query.startDate && req.query.endDate) {
+      startDate = moment(req.query.startDate).toDate();
+      endDate = moment(req.query.endDate).toDate();
+
+      if (startDate && endDate) {
         and.push({ $and: [{ 'monitoringStartDate': { '$gte': startDate } }, { 'monitoringStartDate': { '$lte': endDate } },
         { 'monitoringEndDate': { '$gte': startDate } }, { 'monitoringEndDate': { '$lte': endDate } }] });
       }
@@ -708,7 +711,7 @@ exports.list = function (req, res) {
     });
   }
 
-  if (req.query.organization) {
+  if (req.query.organization && !req.query.team) {
     Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
       if (err) {
         return res.status(400).send({

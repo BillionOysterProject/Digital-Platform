@@ -13,7 +13,7 @@
     <div class="col-sm-3" ng-repeat="member in siteCondition.teamMembers">
         <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" ng-show="siteCondition.notes">
         <p><b>Notes:</b> {{siteCondition.notes}}</p>
     </div>
 </div>
@@ -101,18 +101,22 @@
                 <h6>Water Conditions</h6>
                 <img class="img-rounded img-responsive" ng-src="{{waterConditionPhotoURL}}"/>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" ng-show="siteCondition.waterConditions.surfaceCurrentSpeedMPS">
                 <h3 class="blue">{{siteCondition.waterConditions.surfaceCurrentSpeedMPS}} meters/sec</br>
                   <small>Surface current speed</small></h3>
                 <p>
                     <b>{{getWaterColors(siteCondition.waterConditions.waterColor)}}</b> water color<br/>
-                    <span ng-show="siteCondition.waterConditions.oilSheen === false"><b>No</b> oil sheen<br/></span>
+                    <span ng-show="siteCondition.waterConditions.oilSheen === false ||
+                      !siteCondition.waterConditions.oilSheen"><b>No</b> oil sheen<br/></span>
                     <span ng-show="siteCondition.waterConditions.oilSheen === true"><b>Oil sheen present</b><br/></span>
-                    <span ng-show="siteCondition.waterConditions.garbage.garbagePresent === false">
+                    <span ng-show="siteCondition.waterConditions.garbage.garbagePresent === false ||
+                      !siteCondition.waterConditions.garbage.garbagePresent">
                       <b>No</b> garbage present<br/></span>
-                    <span ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === false">
+                    <span ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === false ||
+                      !siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent">
                       <b>No</b> CSO pipes<br/></span>
-                    <span ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === false">
+                    <span ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === false ||
+                      !siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent">
                       <b>No</b> unmarked or other outfall pipes</span>
                 </p>
                 <p ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
@@ -164,7 +168,8 @@
                   <small>Vegetated surface (grass, shrubs, trees)</small></h3>
                 <p>
                     <b>{{getShorelineTypes(siteCondition.landConditions.shoreLineType)}}</b> shoreline<br/>
-                    <span ng-show="siteCondition.landConditions.garbage.garbagePresent === false"><b>No</b> garbage present</span>
+                    <span ng-show="siteCondition.landConditions.garbage.garbagePresent === false ||
+                      !siteCondition.landConditions.garbage.garbagePresent"><b>No</b> garbage present</span>
                 </p>
                 <p ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                     <b>Garbage present:</b><br/>

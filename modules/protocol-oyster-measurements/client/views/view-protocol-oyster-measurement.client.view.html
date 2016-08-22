@@ -13,7 +13,7 @@
     <div class="col-sm-3" ng-repeat="member in oysterMeasurement.teamMembers">
         <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" ng-show="oysterMeasurement.notes">
         <p><b>Notes:</b> {{oysterMeasurement.notes}}</p>
     </div>
 </div>
@@ -41,7 +41,8 @@
                     <span ng-show="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'none'">
                       <b>None/clean bioaccumulation:</b> No macroalgae or animals present</span>
                 </p>
-                <p><b>Damage:</b> {{oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}</p>
+                <p ng-show="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage">
+                  <b>Damage:</b> {{oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}</p>
             </div>
         </div>
     </div>
@@ -51,18 +52,24 @@
           {{oysterMeasurement.totalNumberOfAllLiveOysters | number}} <small>total oysters alive</small></h3>
         <hr/>
         <div class="row">
-            <div class="col-sm-8"><!-- TIFFANY: Wire up historic data -->
-                <h3 class="green"><!-- class="red" if avg size is down from prev expedition -->
+            <div class="col-sm-8" ng-show="previous">
+                <h3 ng-class="{green: previous.growth <= 0, red: previous.growth > 0}">
                     <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
-                    <i class="fa fa-arrow-up"></i><!-- <i class="fa fa-arrow-down"></i> if avg size is down from prev expedition -->
+                    <i class="fa" ng-class="{ 'fa-arrow-up': previous.growth <= 0, 'fa fa-arrow-down': previous.growth > 0 }"></i>
                      {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}
                      <small>average size<br/>
-                         <b class="green">up<!-- class="red" and "down" if avg size is down from prev expedition --> __%</b> 
+                         <b class="green" ng-show="previous.growth <= 0">up {{(previous.growth*-1)}}%</b>
+                         <b class="red" ng-show="previous.growth > 0">down {{previous.growth}}%</b>
                          from previous expedition
                      </small>
                 </h3>
-                
-          </div>
+              </div>
+              <div class="col-sm-8" ng-hide="previous">
+                  <h3 class="green">
+                      <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
+                      {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} <small>average size</small>
+                  </h3>
+            </div>
           <div class="col-sm-4 text-muted">
               <br/><p><b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b> min size<br/>
               <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b> max size</p>
@@ -72,48 +79,61 @@
 </div>
 <hr/>
 <div ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells">
-  <h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" />
-    Substrate Shell {{substrate.substrateShellNumber}}</h3>
-  <div class="row">
-      <div class="col-sm-4">
-          <h6>Outer side</h6>
-          <img class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
-      </div>
-      <div class="col-sm-4">
-          <h6>Inner side</h6>
-          <img class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
-      </div>
-      <div class="col-sm-4">
-          <p>
-              Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
-              Source: <b>{{substrate.source}}</b><br/>
-              Notes: {{substrate.notes}}</p>
-          </p>
-          <!-- TIFFANY: Wire up different colors/icons if count is down or up from baseline -->          
-          <h3 class="red"><!-- class="green" if oyster count is up from baseline -->
-              <i class="fa fa-arrow-down"></i>
-              <!--<i class="fa fa-arrow-up"></i> if oyster count is up from baseline -->
-              {{substrate.totalNumberOfLiveOystersOnShell}} 
-              <small>live oysters on shell<br/>
-                  <span class="red"><!-- class="green" if oyster count is up from baseline -->
-                  down<!--"up" if oyster count is up from baseline --> from 
-                  <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline
-              </small>
-          </h3>
-          <hr/>
-          <h4 class="text-muted"><b>{{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}}</b> total mass <small>(shell + oysters + tag)</small></h4>
-          <hr/>
-          <div class="row">
-              <div class="col-sm-6 text-right">
-                  <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
-                  <p><b class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}</b>
-                  <br/>average size</p>
-              </div>
-              <div class="col-sm-6 text-muted">
-                  <p><b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b> min size<br/>
-                  <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b> max size</p>
-              </div>
+  <div ng-show="substrate.outerSidePhoto.path && substrate.innerSidePhoto.path">
+    <h3><img width="30" src="modules/core/client/img/icons/substrate-shell.svg" />
+      Substrate Shell {{substrate.substrateShellNumber}}</h3>
+    <div class="row">
+        <div class="col-sm-4">
+            <h6>Outer side</h6>
+            <img class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
+        </div>
+        <div class="col-sm-4">
+            <h6>Inner side</h6>
+            <img class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
+        </div>
+        <div class="col-sm-4">
+            <p>
+                Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
+                Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
+                <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
+                <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>
+            </p>
+            <h3 ng-show="substrate.totalNumberOfLiveOystersAtBaseline"
+              ng-class="{red: substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell,
+              green: substrate.totalNumberOfLiveOystersOnShell >= substrate.totalNumberOfLiveOystersAtBaseline}">
+                <i class="fa fa-arrow-down" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell"></i>
+                <i class="fa fa-arrow-up" ng-show="substrate.totalNumberOfLiveOystersOnShell >= substrate.totalNumberOfLiveOystersAtBaseline"></i>
+                {{substrate.totalNumberOfLiveOystersOnShell}}
+                <small>live oysters on shell<br/>
+                    <span class="red" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell">
+                      down from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+                    <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell >= substrate.totalNumberOfLiveOystersAtBaseline">
+                      up from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+                </small>
+            </h3>
+            <h3 ng-hide="substrate.totalNumberOfLiveOystersAtBaseline"
+              class="green">
+                {{substrate.totalNumberOfLiveOystersOnShell}}
+                <small>live oysters on shell</small>
+            </h3>
+            <hr/>
+            <h4 class="text-muted" ng-show="substrate.totalMassOfScrubbedSubstrateShellOystersTagG">
+              <b>{{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}}</b> total mass
+              <small>(shell + oysters + tag)</small></h4>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-6 text-right">
+                    <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
+                    <p><b class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}</b>
+                    <br/>average size</p>
+                </div>
+                <div class="col-sm-6 text-muted">
+                    <p><b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b> min size<br/>
+                    <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b> max size</p>
+                </div>
+            </div>
           </div>
+        </div>
       </div>
   </div>
   <hr ng-hide="$last"/>
