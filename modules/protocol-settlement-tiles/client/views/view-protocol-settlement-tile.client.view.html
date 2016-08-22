@@ -7,7 +7,7 @@
         </h3>
         <h4 class="blue">
             <i class="fa fa-map-marker pull-left"></i>
-            <small>{{settlementTiles.latitude}},<br/>{{settlementTiles.longitude}}</small>
+            <small>{{settlementTiles.latitude}}, {{settlementTiles.longitude}}</small>
         </h4>
     </div>
     <div class="col-sm-3" ng-repeat="member in settlementTiles.teamMembers">
@@ -27,28 +27,40 @@
       </div>
       <div class="col-sm-9">
           <h6>Sessile Organisms Observed</h6>
-          <div class="row" ng-repeat="n in [0, 1, 2, 3, 4] track by $index">
-              <div class="col-sm-2">
-                  <p><b>{{1+($index*5)}}:</b> {{getSessileOrganismName(tile['grid'+(1+($index*5))].organism)}}<br/>
-                    <em>{{tile['grid'+1+($index*5)].notes}}</em></p>
-              </div>
-              <div class="col-sm-2">
-                  <p><b>{{2+($index*5)}}:</b> {{getSessileOrganismName(tile['grid'+(2+($index*5))].organism)}}<br/>
-                    <em>{{tile['grid'+2+($index*5)].notes}}</em></p>
-              </div>
-              <div class="col-sm-2">
-                  <p><b>{{3+($index*5)}}:</b> {{getSessileOrganismName(tile['grid'+(3+($index*5))].organism)}}<br/>
-                    <em>{{tile['grid'+3+($index*5)].notes}}</em></p>
-              </div>
-              <div class="col-sm-2">
-                  <p><b>{{4+($index*5)}}:</b> {{getSessileOrganismName(tile['grid'+(4+($index*5))].organism)}}<br/>
-                    <em>{{tile['grid'+4+($index*5)].notes}}</em></p>
-              </div>
-              <div class="col-sm-2">
-                  <p><b>{{5+($index*5)}}:</b> {{getSessileOrganismName(tile['grid'+(5+($index*5))].organism)}}<br/>
-                    <em>{{tile['grid'+5+($index*5)].notes}}</em></p>
-              </div>
-          </div>
+          <table class="table table-bordered">
+              <tr ng-repeat="n in [0, 1, 2, 3, 4] track by $index">
+                  <td>
+                      <h4>{{1+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(1+($index*5))].organism)}}<br/>
+                          <em>{{tile['grid'+1+($index*5)].notes}}</em>
+                      </p>
+                  </td>
+                  <td>
+                      <h4>{{2+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(2+($index*5))].organism)}}<br/>
+                          <em>{{tile['grid'+2+($index*5)].notes}}</em>
+                      </p>
+                  </td>
+                  <td>
+                      <h4>{{3+($index*5)}}</h4> 
+                      <p>{{getSessileOrganismName(tile['grid'+(3+($index*5))].organism)}}<br/>
+                          <em>{{tile['grid'+3+($index*5)].notes}}</em>
+                      </p>
+                  </td>
+                  <td>
+                      <h4>{{4+($index*5)}}</h4> 
+                      <p>{{getSessileOrganismName(tile['grid'+(4+($index*5))].organism)}}<br/>
+                          <em>{{tile['grid'+4+($index*5)].notes}}</em>
+                      </p>
+                  </td>
+                  <td>
+                      <h4>{{5+($index*5)}}</h4> 
+                      <p>{{getSessileOrganismName(tile['grid'+(5+($index*5))].organism)}}<br/>
+                          <em>{{tile['grid'+5+($index*5)].notes}}</em>
+                      </p>
+                  </td>
+              </tr>
+          </table>
       </div>
   </div>
   <hr ng-hide="$last"/>
