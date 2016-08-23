@@ -6,12 +6,13 @@
     .controller('ExpeditionsListController', ExpeditionsListController);
 
   ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
-  'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope'];
+  'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope', '$stateParams'];
 
   function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
-    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope) {
+    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope, $stateParams) {
     var vm = this;
     vm.user = Authentication.user;
+    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'myexpeditions';
 
     vm.opened = {
       startDate: false,

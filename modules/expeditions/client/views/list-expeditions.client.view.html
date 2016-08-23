@@ -11,21 +11,23 @@
         <div class="pull-right">
             <!-- TIFFANY: Wire up download modal -->
             <a class="btn btn-default" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a>
-            
+
             <a class="btn btn-default" ui-sref="expeditions.create" ng-show="(vm.isTeamLead || vm.isAdmin) &&
             vm.teams && vm.teams.length > 0"><i class="glyphicon glyphicon-plus"></i> Create an expedition</a>
         </div>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active" view-permissions="admin,team lead,team member,partner" ng-click="vm.switchTabs()">
+            <li role="presentation" view-permissions="admin,team lead,team member,partner"
+              ng-class="{active: vm.activeTab === 'myexpeditions'}" ng-click="vm.switchTabs()">
                 <a href="#myexpeditions" aria-controls="grid" role="tab" data-toggle="tab">My Expeditions</a></li>
-            <li role="presentation" ng-click="vm.switchTabs()">
+            <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
                 <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
         </ul>
         <div class="tab-content">
         <br />
 
             <!-- MY EXPEDITIONS -->
-            <div role="tabpanel" class="tab-pane active" id="myexpeditions" view-permissions="admin,team lead,team member,partner">
+            <div role="tabpanel" class="tab-pane" id="myexpeditions" ng-class="{active: vm.activeTab === 'myexpeditions'}"
+              view-permissions="admin,team lead,team member,partner">
                 <table class="table table-hover" ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
                   <thead>
                     <tr>
@@ -70,7 +72,7 @@
 
 
             <!-- PUBLISHED EXPEDITIONS -->
-            <div role="tabpanel" class="tab-pane" id="pubexpeditions">
+            <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
                 <nav class="navbar row">
                     <div class="navbar-form navbar-left">
                         <div class="input-group">

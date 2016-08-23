@@ -16,6 +16,11 @@
       })
       .state('expeditions.list', {
         url: '',
+        params: {
+          active: {
+            value: 'myexpeditions'
+          }
+        },
         templateUrl: 'modules/expeditions/client/views/list-expeditions.client.view.html',
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
