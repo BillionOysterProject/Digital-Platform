@@ -73,8 +73,10 @@
 
             <!-- PUBLISHED EXPEDITIONS -->
             <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
-                <nav class="navbar row">
-                    <div class="navbar-form navbar-left">
+                <div class="row">
+                    <div class="col-md-6">
+                        <br/>
+                        <a class="btn btn-link pull-left" ng-click="vm.showAllPublishedExpeditions()">Reset filters</a>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -82,75 +84,74 @@
                             <input type="text" class="form-control" ng-model="vm.filter.searchString"
                             ng-change="vm.searchChange()" placeholder="Search">
                         </div>
+                        <br/>
                     </div>
-                    <ul class="nav navbar-nav">
-                      <li><a ok-sel="*" ng-click="vm.showAllPublishedExpeditions()">Show All</a></li>
-                    </ul>
-                    <div class="navbar-form navbar-left">
-                      <div class="input-group">
-                        <label for="">Location</label>
-                        <input type="text" ng-model="vm.filter.stationObj" placeholder="Location"
-                        uib-typeahead="station as station.name for station in vm.stations | filter:{name:$viewValue}"
-                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                        typeahead-on-select="vm.stationSelected()">
-                      </div>
-                    </div>
-                    <div class="navbar-form navbar-left">
-                      <div class="input-group">
-                        <label for="">Organization</label>
-                        <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
-                        uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
-                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                        typeahead-on-select="vm.organizationSelected()">
-                      </div>
-                    </div>
-                    <div class="navbar-form navbar-left">
-                      <div class="input-group">
-                        <label for="">Team</label>
-                        <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
-                        uib-typeahead="team as team.name for team in vm.allTeams | filter:{name:$viewValue}"
-                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                        typeahead-on-select="vm.teamSelected()">
-                      </div>
-                    </div>
-                    <div class="navbar-form navbar-left">
-                      <div class="input-group">
-                        <label for="">Team Lead</label>
-                        <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
-                        uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
-                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                        typeahead-on-select="vm.teamLeadSelected()">
-                      </div>
-                    </div>
-                    <div class="navbar-form navbar-left">
-                      <div class="col-md-6">
-                        <label for="startDate">Start Date</label>
-                        <p class="input-group">
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label class="control-label" for="startDate">Start Date</label>
+                        <div class="input-group">
                           <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
                           ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
                           max-date="vm.maxDate" datepicker-options="vm.dateOptions"
                           ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
                           </span>
-                        </p>
-                      </div>
+                        </div>
+                    </div>
 
-                      <div class="col-md-6">
-                        <label for="endDate">End Date</label>
-                        <p class="input-group">
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label class="control-label" for="endDate">End Date</label>
+                        <div class="input-group">
                           <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
                           ng-model="vm.filter.endDate" is-open="vm.opened.endDate" name="endDate"
                           max-date="vm.maxDate" datepicker-options="vm.dateOptions"
                           ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
                           <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
                           </span>
-                        </p>
-                      </div>
+                        </div>
                     </div>
-                </nav>
+                </div>
 
+                <div class="row">
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Location</label>
+                        <input type="text" ng-model="vm.filter.stationObj" placeholder="Location"
+                        uib-typeahead="station as station.name for station in vm.stations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.stationSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Organization</label>
+                        <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+                        uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.organizationSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Team</label>
+                        <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
+                        uib-typeahead="team as team.name for team in vm.allTeams | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Team Lead</label>
+                        <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+                        uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamLeadSelected()">
+                    </div>
+                </div>
+                <hr/>
                 <div class="row" isotope-container="isotope-container">
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
                       ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
@@ -172,7 +173,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
