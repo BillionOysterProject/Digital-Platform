@@ -69,11 +69,13 @@ exports.list = function (req, res) {
     }
 
     if (req.query.limit) {
+      var limit = Number(req.query.limit);
       if (req.query.page) {
-        query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+        var page = Number(req.query.page);
+        query.skip(limit*(page-1)).limit(limit);
+      } else {
+        query.limit(limit);
       }
-    } else {
-      query.limit(req.query.limit);
     }
 
     query.populate('user', 'displayName email profileImageURL')
