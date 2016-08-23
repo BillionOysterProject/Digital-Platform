@@ -11,21 +11,23 @@
         <div class="pull-right">
             <!-- TIFFANY: Wire up download modal -->
             <a class="btn btn-default" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a>
-            
+
             <a class="btn btn-default" ui-sref="expeditions.create" ng-show="(vm.isTeamLead || vm.isAdmin) &&
             vm.teams && vm.teams.length > 0"><i class="glyphicon glyphicon-plus"></i> Create an expedition</a>
         </div>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active" view-permissions="admin,team lead,team member,partner" ng-click="vm.switchTabs()">
+            <li role="presentation" view-permissions="admin,team lead,team member,partner"
+              ng-class="{active: vm.activeTab === 'myexpeditions'}" ng-click="vm.switchTabs()">
                 <a href="#myexpeditions" aria-controls="grid" role="tab" data-toggle="tab">My Expeditions</a></li>
-            <li role="presentation" ng-click="vm.switchTabs()">
+            <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
                 <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
         </ul>
         <div class="tab-content">
         <br />
 
             <!-- MY EXPEDITIONS -->
-            <div role="tabpanel" class="tab-pane active" id="myexpeditions" view-permissions="admin,team lead,team member,partner">
+            <div role="tabpanel" class="tab-pane" id="myexpeditions" ng-class="{active: vm.activeTab === 'myexpeditions'}"
+              view-permissions="admin,team lead,team member,partner">
                 <table class="table table-hover" ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
                   <thead>
                     <tr>
@@ -70,11 +72,11 @@
 
 
             <!-- PUBLISHED EXPEDITIONS -->
-            <div role="tabpanel" class="tab-pane" id="pubexpeditions">
+            <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
                 <div class="row">
                     <div class="col-md-6">
                         <br/>
-                        <a class="btn btn-link pull-right" ng-click="vm.showAllPublishedExpeditions()">Reset filters</a>
+                        <a class="btn btn-link pull-left" ng-click="vm.showAllPublishedExpeditions()">Reset filters</a>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -84,7 +86,7 @@
                         </div>
                         <br/>
                     </div>
-                    
+
                     <div class="form-group col-md-3 col-sm-6">
                         <label class="control-label" for="startDate">Start Date</label>
                         <div class="input-group">
@@ -115,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="form-group col-md-3 col-sm-6">
                         <label for="">Location</label>
@@ -124,7 +126,7 @@
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         typeahead-on-select="vm.stationSelected()">
                     </div>
-                      
+
                     <div class="form-group col-md-3 col-sm-6">
                         <label for="">Organization</label>
                         <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
@@ -132,7 +134,7 @@
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         typeahead-on-select="vm.organizationSelected()">
                     </div>
-                    
+
                     <div class="form-group col-md-3 col-sm-6">
                         <label for="">Team</label>
                         <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
@@ -140,7 +142,7 @@
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         typeahead-on-select="vm.teamSelected()">
                     </div>
-                    
+
                     <div class="form-group col-md-3 col-sm-6">
                         <label for="">Team Lead</label>
                         <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
