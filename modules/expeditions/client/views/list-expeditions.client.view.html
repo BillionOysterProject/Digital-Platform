@@ -8,168 +8,344 @@
 <section class="content">
   <section class="container-fluid">
     <div>
-      <a class="btn btn-default pull-right" ui-sref="expeditions.create" ng-show="(vm.isTeamLead || vm.isAdmin) &&
-        vm.teams && vm.teams.length > 0"><i class="glyphicon glyphicon-plus"></i> Create an expedition</a>
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active" view-permissions="admin,team lead,team member,partner" ng-click="vm.switchTabs()">
-          <a href="#myexpeditions" aria-controls="grid" role="tab" data-toggle="tab">My Expeditions</a></li>
-        <li role="presentation" ng-click="vm.switchTabs()">
-          <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
-      </ul>
-      <div class="tab-content">
+        <div class="pull-right">
+            <!-- TIFFANY: Wire up download modal -->
+            <a class="btn btn-default" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a>
+            
+            <a class="btn btn-default" ui-sref="expeditions.create" ng-show="(vm.isTeamLead || vm.isAdmin) &&
+            vm.teams && vm.teams.length > 0"><i class="glyphicon glyphicon-plus"></i> Create an expedition</a>
+        </div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active" view-permissions="admin,team lead,team member,partner" ng-click="vm.switchTabs()">
+                <a href="#myexpeditions" aria-controls="grid" role="tab" data-toggle="tab">My Expeditions</a></li>
+            <li role="presentation" ng-click="vm.switchTabs()">
+                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
+        </ul>
+        <div class="tab-content">
         <br />
 
-        <!-- MY EXPEDITIONS -->
-        <div role="tabpanel" class="tab-pane active" id="myexpeditions" view-permissions="admin,team lead,team member,partner">
-            <table class="table table-hover" ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
-              <thead>
-                <tr>
-                  <th>Expedition</th>
-                  <th ng-show="vm.isTeamMember">Assignment</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Location</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="expedition in vm.myExpeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
-                    <td>
-                        <h4>{{expedition.name}}</h4><br/>
-                        <p class="text-muted">{{expedition.team.name}}</p>
-                    </td>
-                    <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
-                    <td>
-                        <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                        <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
-                        <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
-                        <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
-                    </td>
-                    <td>
-                        <b>{{vm.getExpeditionDate(expedition)}}</b><br/>
-                        {{vm.getExpeditionTimeRange(expedition)}}
-                    </td>
-                    <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
-                No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+            <!-- MY EXPEDITIONS -->
+            <div role="tabpanel" class="tab-pane active" id="myexpeditions" view-permissions="admin,team lead,team member,partner">
+                <table class="table table-hover" ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
+                  <thead>
+                    <tr>
+                      <th>Expedition</th>
+                      <th ng-show="vm.isTeamMember">Assignment</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="expedition in vm.myExpeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                        <td>
+                            <h4>{{expedition.name}}</h4><br/>
+                            <p class="text-muted">{{expedition.team.name}}</p>
+                        </td>
+                        <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
+                        <td>
+                            <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
+                            <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
+                            <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
+                            <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
+                        </td>
+                        <td>
+                            <b>{{vm.getExpeditionDate(expedition)}}</b><br/>
+                            {{vm.getExpeditionTimeRange(expedition)}}
+                        </td>
+                        <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
+                    No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
+                </div>
+                <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
+                    You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                </div>
+                <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.isTeamMember">
+                    No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
+                </div>
             </div>
-            <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
-                You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
-            </div>
-            <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.isTeamMember">
-                No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.
-            </div>
-        </div>
 
 
-        <!-- PUBLISHED EXPEDITIONS -->
-        <div role="tabpanel" class="tab-pane" id="pubexpeditions">
-            <nav class="navbar row">
-                <!-- TIFFANY: Wire up search -->
-                <div class="navbar-form navbar-left">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        </span>
-                        <input type="text" class="form-control" ng-model="vm.filter.searchString"
-                        ng-change="vm.searchChange()" placeholder="Search">
-                    </div>
-                </div>
-                <ul class="nav navbar-nav">
-                  <li><a ok-sel="*" ng-click="vm.showAllPublishedExpeditions()">Show All</a></li>
-                </ul>
-                <div class="navbar-form navbar-left">
-                  <div class="input-group">
-                    <label for="">Location</label>
-                    <input type="text" ng-model="vm.filter.stationObj" placeholder="Location"
-                    uib-typeahead="station as station.name for station in vm.stations | filter:{name:$viewValue}"
-                    class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                    typeahead-on-select="vm.stationSelected()">
-                  </div>
-                </div>
-                <div class="navbar-form navbar-left">
-                  <div class="input-group">
-                    <label for="">Organization</label>
-                    <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
-                    uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
-                    class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                    typeahead-on-select="vm.organizationSelected()">
-                  </div>
-                </div>
-                <div class="navbar-form navbar-left">
-                  <div class="input-group">
-                    <label for="">Team</label>
-                    <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
-                    uib-typeahead="team as team.name for team in vm.allTeams | filter:{name:$viewValue}"
-                    class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                    typeahead-on-select="vm.teamSelected()">
-                  </div>
-                </div>
-                <div class="navbar-form navbar-left">
-                  <div class="input-group">
-                    <label for="">Team Lead</label>
-                    <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
-                    uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
-                    class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                    typeahead-on-select="vm.teamLeadSelected()">
-                  </div>
-                </div>
-                <div class="navbar-form navbar-left">
-                  <div class="col-md-6">
-                    <label for="startDate">Start Date</label>
-                    <p class="input-group">
-                      <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
-                      ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
-                      max-date="vm.maxDate" datepicker-options="vm.dateOptions"
-                      ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                      </span>
-                    </p>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="endDate">End Date</label>
-                    <p class="input-group">
-                      <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
-                      ng-model="vm.filter.endDate" is-open="vm.opened.endDate" name="endDate"
-                      max-date="vm.maxDate" datepicker-options="vm.dateOptions"
-                      ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                      </span>
-                    </p>
-                  </div>
-                </div>
-            </nav>
-
-            <div class="row" isotope-container="isotope-container">
-                <!-- TIFFANY: Repeat for each published expedition -->
-                <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
-                  ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
-                    <div class="panel" data-category="transition">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <i class="fa fa-map-marker"></i> {{expedition.station.name}}
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
-                            <h4>{{expedition.name}}</h4>
-                            <p>{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</p>
-                            <p class="text-muted">{{expedition.notes}}</p>
-                        </div>
-                        <div class="panel-footer">
-                            {{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}
+            <!-- PUBLISHED EXPEDITIONS -->
+            <div role="tabpanel" class="tab-pane" id="pubexpeditions">
+                <nav class="navbar row">
+                    <div class="navbar-form navbar-left">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </span>
+                            <input type="text" class="form-control" ng-model="vm.filter.searchString"
+                            ng-change="vm.searchChange()" placeholder="Search">
                         </div>
                     </div>
-                </div>
-            </div>
+                    <ul class="nav navbar-nav">
+                      <li><a ok-sel="*" ng-click="vm.showAllPublishedExpeditions()">Show All</a></li>
+                    </ul>
+                    <div class="navbar-form navbar-left">
+                      <div class="input-group">
+                        <label for="">Location</label>
+                        <input type="text" ng-model="vm.filter.stationObj" placeholder="Location"
+                        uib-typeahead="station as station.name for station in vm.stations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.stationSelected()">
+                      </div>
+                    </div>
+                    <div class="navbar-form navbar-left">
+                      <div class="input-group">
+                        <label for="">Organization</label>
+                        <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+                        uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.organizationSelected()">
+                      </div>
+                    </div>
+                    <div class="navbar-form navbar-left">
+                      <div class="input-group">
+                        <label for="">Team</label>
+                        <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
+                        uib-typeahead="team as team.name for team in vm.allTeams | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamSelected()">
+                      </div>
+                    </div>
+                    <div class="navbar-form navbar-left">
+                      <div class="input-group">
+                        <label for="">Team Lead</label>
+                        <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+                        uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamLeadSelected()">
+                      </div>
+                    </div>
+                    <div class="navbar-form navbar-left">
+                      <div class="col-md-6">
+                        <label for="startDate">Start Date</label>
+                        <p class="input-group">
+                          <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                          ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
+                          max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                          ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+                      </div>
 
+                      <div class="col-md-6">
+                        <label for="endDate">End Date</label>
+                        <p class="input-group">
+                          <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                          ng-model="vm.filter.endDate" is-open="vm.opened.endDate" name="endDate"
+                          max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                          ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                </nav>
+
+                <div class="row" isotope-container="isotope-container">
+                    <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+                      ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                        <div class="panel" data-category="transition">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-map-marker"></i> {{expedition.station.name}}
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                <h4>{{expedition.name}}</h4>
+                                <p>{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</p>
+                                <p class="text-muted">{{expedition.notes}}</p>
+                            </div>
+                            <div class="panel-footer">
+                                {{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
     </div>
   </section>
 </section>
+
+<!-- TIFFANY: Wire up modal -->
+<div class="modal fade" id="modal-download-expedition-data" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Download <span class="red">expedition data</span></h4>
+            </div>
+            <div class="modal-body">
+                <p>Select expeditions to include in the download. You can make your selection as broad or as narrow as you'd like.</p>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">by Organization</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">by Team</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">by ORS</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">by date range</label>
+                        <div class="col-sm-9">
+                            <p class="input-group">
+                                <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                                ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
+                                max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                                ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </p>
+                            <p class="input-group">
+                                <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                                ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
+                                max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                                ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+                <p>This selection currently includes <b class="red">24</b> expeditions.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelFunction()">Close</button>
+                <a class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modal-download-expedition-data-2">Next</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TIFFANY: Wire up modal - if easier, put them in the same modal and just have the next/back buttons replace content -->
+<div class="modal fade" id="modal-download-expedition-data-2" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Download <span class="red">expedition data</span></h4>
+            </div>
+            <div class="modal-body">
+                <p>Within your selection of <b class="red">24</b> expeditions, choose the protocols and parameters to include in the download.</p>
+                <div class="row">
+                    <div class="col-sm-6">
+                    <!-- TIFFANY: Wire up checkboxes. Selecting a Protocol checkbox should automatically check all the checkboxes in the blockquote underneath. However, you can select a blockquote checkbox without selecting the entire Protocol checkbox -->
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> <b>Protocol 1: Site Conditions</b></label>
+                            </div>
+                            <blockquote>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Meteorological Conditions</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Tide Conditions</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Water Conditions</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Land Conditions</label>
+                                </div>
+                            </blockquote>
+                            <div class="checkbox">
+                                <label><input type="checkbox"> <b>Protocol 2: Oyster Measurements</b></label>
+                            </div>
+                            <blockquote>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Cage depth/condition</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Substrate shell description and counts</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Oyster measurements</label>
+                                </div>
+                            </blockquote>
+                            <div class="checkbox">
+                                <label><input type="checkbox"> <b>Protocol 3: Mobile Trap</b></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> <b>Protocol 4: Settlement Tiles</b></label>
+                            </div>
+                            <blockquote>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Settlement tile description</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Sessile organisms observed</label>
+                                </div>
+                            </blockquote>
+                            <div class="checkbox">
+                                <label><input type="checkbox"> <b>Protocol 5: Water Quality</b></label>
+                            </div>
+                            <blockquote>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Depth</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Temperature</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Dissolved Oxygen</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Salinity</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> pH</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Turbidity</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Ammonia</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Nitrates</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Other</label>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#modal-download-expedition-data">Back</a>
+                <a class="btn btn-primary" target="_blank">Download</a>
+            </div>
+        </div>
+    </div>
+</div>
