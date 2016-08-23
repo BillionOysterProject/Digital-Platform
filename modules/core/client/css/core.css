@@ -348,7 +348,6 @@ a {
 
 .btn {
     border: none;
-    background: #444;
     color: #fff;
     text-shadow: none;
 }
@@ -429,6 +428,14 @@ a {
             filter: alpha(opacity=80);
             opacity: 0.8;
             color: #fff;
+        }
+
+    .btn-link {
+        color: #426ca9;
+    }
+    
+        .btn-link:hover, .btn-link:focus, .btn-link:active {
+            color: #ea6158;
         }
 
     .btn-default:active,
