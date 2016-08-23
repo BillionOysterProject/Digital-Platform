@@ -23,14 +23,17 @@
   <div class="row">
       <div class="col-sm-3">
           <h4 class="blue">{{sample.depthOfWaterSampleM}} meters deep</h4>
-          <h4 class="blue">
-              <i class="fa fa-map-marker pull-left"></i>
-              <small>{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}</small>
-          </h4>
-          <h4 class="blue">
+          <h4>
+              <img class="pull-left" width="20" src="modules/core/client/img/icons/temperature.svg" />
               <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
               <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average}}&#8451;</span>
               <small>via {{getWaterTemperatureMethod(sample.waterTemperature.method) | lowercase}}</small>
+          </h4>
+          <h4>
+              <small>
+                  <i class="fa fa-map-marker"></i>
+                  {{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}
+              </small>
           </h4>
       </div>
       <div class="col-sm-9">
@@ -86,7 +89,7 @@
                   </h4>
               </div>
               <div class="col-sm-3" ng-show="sample.others[0].average">
-                  <h6>Other - {{sample.others[0].label}}</h6>
+                  <h6>{{sample.others[0].label}}</h6>
                   <h4 class="green">
                       {{sample.others[0].average | number:2}} {{sample.others[0].units}}<br/>
                       <small>via {{sample.others[0].method | lowercase}}</small>
