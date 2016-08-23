@@ -52,23 +52,21 @@
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
-                            <!--TIFFANY: I just copied this from "My Expeditions" -- wire up to show published expeditions (latest 3?)-->
-                            <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                            <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                                 <td>
                                     {{expedition.name}}<br/>
                                     <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
-                                    <span class="text-muted">Team Name, led by Team Lead Name</span><br/>
-                                    <small>Org Name</small>
+                                    <span class="text-muted">{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</span><br/>
+                                    <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <!-- TIFFANY: link to Public Expeditions tab of Expeditions list page -->
-                        <a class="btn btn-default">See all</a>
+                        <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
                     </div>
                 </div>
                 <div class="row">
@@ -89,10 +87,10 @@
                     <div class="col-lg-4">
                         <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                             <div class="panel-heading">
-                                <h4>Activity <span class="badge badge-success pull-right">{{vm.activities.length}}</span></h4>
+                                <h4>Activity <span class="badge badge-success pull-right">{{vm.activitiesCount}}</span></h4>
                             </div>
                             <div class="panel-body">
-                                <div class="alert alert-success">{{vm.activities.length}} members updated their protocols</div>
+                                <div class="alert alert-success">{{vm.activitiesCount}} members updated their protocols</div>
                                 <div class="row" ng-repeat="activity in vm.activities">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">

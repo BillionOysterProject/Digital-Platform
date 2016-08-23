@@ -68,7 +68,8 @@
       teamLeadObj: '',
       teamLeadName: '',
       startDate: '',
-      endDate: ''
+      endDate: '',
+      searchString: ''
     };
 
     ExpeditionsService.query({
@@ -87,7 +88,8 @@
         team: vm.filter.team,
         teamLead: vm.filter.teamLead,
         startDate: vm.filter.startDate,
-        endDate: vm.filter.endDate
+        endDate: vm.filter.endDate,
+        searchString: vm.filter.searchString
       }, function(data) {
         vm.published = data;
         vm.error = null;
@@ -127,7 +129,8 @@
         teamLeadObj: '',
         teamLeadName: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        searchString: ''
       };
       vm.findPublishedExpeditions();
     };
@@ -215,14 +218,14 @@
       vm.findPublishedExpeditions();
     };
 
-    // vm.dateRangeSelected = function(range, name) {
-    //   vm.filter.dateRange = (range) ? range : '';
-    //   vm.filter.dateRangeName = (name) ? name : '';
-    //   vm.findPublishedExpeditions();
-    // };
-
     vm.dateSelected = function() {
       if (vm.filter.startDate && vm.filter.endDate) {
+        vm.findPublishedExpeditions();
+      }
+    };
+
+    vm.searchChange = function() {
+      if (vm.filter.searchString.length >= 3 || vm.filter.searchString.length === 0) {
         vm.findPublishedExpeditions();
       }
     };

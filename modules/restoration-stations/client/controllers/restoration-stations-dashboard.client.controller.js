@@ -7,11 +7,11 @@
 
   RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService', 'TeamRequestsService'];
+  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService'];
 
   function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
     TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
-    ExpeditionActivitiesService, TeamRequestsService) {
+    ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -38,6 +38,19 @@
     vm.isTeamLeadPending = checkRole('team lead pending');
     vm.isTeamMemberPending = checkRole('team member pending') || checkRole('partner');
     vm.isAdmin = checkRole('admin');
+
+    SchoolOrganizationsService.query({
+      sort: 'name'
+    }, function(data) {
+      vm.organizations = data;
+    });
+
+    vm.getOrganizationName = function(id) {
+      var index = lodash.findIndex(vm.organizations, function(o) {
+        return o._id === id;
+      });
+      return (index > -1) ? vm.organizations[index].name : '';
+    };
 
     vm.findTeams = function() {
       var byOwner, byMember;
@@ -138,11 +151,25 @@
         vm.expeditions = data;
       });
 
+      ExpeditionsService.query({
+        published: true,
+        sort: 'startDate',
+        limit: 5
+      }, function(data) {
+        vm.published = data;
+      });
+
       ExpeditionActivitiesService.query({
         teamId: vm.filter.teamId,
         limit: 5
       }, function(data) {
         vm.activities = data;
+      });
+
+      ExpeditionActivitiesService.query({
+        teamId: vm.filter.teamId,
+      }, function(data) {
+        vm.activitiesCount = data.length;
       });
     };
 

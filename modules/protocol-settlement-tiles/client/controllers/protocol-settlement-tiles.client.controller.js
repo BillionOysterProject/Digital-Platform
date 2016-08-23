@@ -129,7 +129,7 @@
       var index = lodash.findIndex($scope.sessileOrganisms, function(o) {
         return o._id === value;
       });
-      return (index > -1) ? $scope.sessileOrganisms[index].image.path : '';
+      return (index > -1 && $scope.sessileOrganisms[index].image) ? $scope.sessileOrganisms[index].image.path : '';
     };
 
     $scope.openSettlementTileForm = function(index) {
