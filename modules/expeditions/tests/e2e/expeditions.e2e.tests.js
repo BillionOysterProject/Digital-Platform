@@ -41,7 +41,8 @@ describe('Expedition E2E Tests', function() {
   var member2 = CommonUser.member2;
   var team = CommonUser.team;
   var station = CommonUser.station;
-  var expedition1 = CommonUser.expedition1;
+
+  var expedition1 = CommonExpedition.expedition1;
   var siteCondition1 = CommonSiteConditions.siteCondition1;
   var oysterMeasurement1 = CommonOysterMeasurements.oysterMeasurement1;
   var mobileTrap1 = CommonMobileTraps.mobileTrap1;
@@ -49,6 +50,10 @@ describe('Expedition E2E Tests', function() {
   var settlementTiles1 = CommonSettlementTiles.settlementTiles1;
   var waterQuality1 = CommonWaterQuality.waterQuality1;
   var waterQuality2 = CommonWaterQuality.waterQuality2;
+
+  var expedition2 = CommonExpedition.expedition2;
+
+  var expedition3 = CommonExpedition.expedition3;
 
 //############################################################################//
 //  TEAM LEAD - CREATE EXPEDITION
@@ -103,9 +108,10 @@ describe('Expedition E2E Tests', function() {
       expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
+
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(2);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 1, 3, & 5 are clickable
@@ -220,8 +226,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 2 & 4 are clickable
@@ -316,8 +322,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(2);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 2 & 4 are clickable
@@ -435,8 +441,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that all protocols are clickable
@@ -528,8 +534,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(2);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 1, 3, & 5 are clickable
@@ -590,8 +596,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 2 & 4 are clickable
@@ -655,8 +661,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(2);
       // Click on that expedition
       expeditions.get(0).click();
       // Assert that only protocols 2 & 4 are clickable
@@ -719,8 +725,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
 
@@ -760,8 +766,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
 
@@ -793,8 +799,8 @@ describe('Expedition E2E Tests', function() {
       // Go to expeditions
       browser.get('http://localhost:8081/expeditions');
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.myExpeditions'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
 
@@ -822,22 +828,21 @@ describe('Expedition E2E Tests', function() {
   });
 
 //############################################################################//
-//  TEAM LEAD - RE-PUBLISH EXPEDITION
+//  TEAM MEMBER - VIEW EXPEDITION
 //############################################################################//
 
   describe('View Expedition', function() {
-    it('should allow a team lead to view expedition', function() {
-      // Sign in as team lead
-      signinAs(leader);
+    it('should allow a team member to view expedition', function() {
+      // Sign in as team member
+      signinAs(member1);
       // Assert that it went to the correct opening page
-      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
-      // Go to expeditions
-      browser.get('http://localhost:8081/expeditions');
-      // TODO: switch to published tab when working
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      // Go to public expeditions
+      element(by.id('pubexpeditions')).click();
 
       // Assert that there is only one expedition
-      var expeditions = element.all(by.repeater('expedition in vm.expeditions'));
-      expect(expeditions.count()).toEqual(1);
+      var expeditions = element.all(by.repeater('expedition in vm.published'));
+      expect(expeditions.count()).toEqual(3);
       // Click on that expedition
       expeditions.get(0).click();
 

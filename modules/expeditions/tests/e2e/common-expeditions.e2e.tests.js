@@ -4,6 +4,9 @@ var path = require('path'),
   EC = protractor.ExpectedConditions;
 
 module.exports = {
+  expedition1: { name: 'Test Expedition 1 - Auto Assign' },
+  expedition2: { name: 'Test Expedition 2 - Fully Filled Out', notes: 'Test special instructions' },
+  expedition3: { name: 'Test Expedition 3 - Only Required Filled Out' },
 
   uploadImage: function(id) {
     var fileToUpload = '../../../../scripts/test-images/logo.png';

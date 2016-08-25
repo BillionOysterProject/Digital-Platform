@@ -38,7 +38,6 @@ module.exports = {
   },
   team: { name: 'Test Team' },
   station: { name: 'Test Station' },
-  expedition1: { name: 'Test Expedition 1 - Auto Assign' },
 
   signout: signout,
   signinAs: signinAs
