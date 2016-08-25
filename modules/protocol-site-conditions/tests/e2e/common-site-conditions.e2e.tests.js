@@ -121,6 +121,117 @@ var siteCondition1 = {
   }
 };
 
+var siteCondition2 = {
+  notes: 'This is a test for site condition',
+  meteorologicalConditions: {
+    airTemperatureC: 20,
+    windSpeedMPH: 3,
+    humidityPer: 19,
+    weatherConditions: 4,
+    weatherConditionsText: 'Rain',
+    windDirection: 5,
+    windDirectionText: 'South'
+  },
+  recentRainfall: {
+    rainedIn7Days: 1,
+    rainedIn7DaysText: 'Yes',
+    rainedIn72Hours: 1,
+    rainedIn72HoursText: 'Yes',
+    rainedIn24Hours: 1,
+    rainedIn24HoursText: 'Yes'
+  },
+  tideConditions: {
+    closestHighTideHeight: 10,
+    closestLowTideHeight: 2,
+    referencePoint: 'Test reference point 2',
+    tidalCurrent: 3,
+    tidalCurrentText: 'Ebb current (outgoing tide)'
+  },
+  waterConditions: {
+    surfaceCurrentSpeedMPS: 5,
+    waterColor: 1,
+    waterColorText: 'Light Blue',
+    oilSheen: 1,
+    oilSheenText: 'Yes',
+    garbage: {
+      garbagePresent: 1,
+      garbagePresentText: 'Yes',
+      hardPlastic: 2,
+      hardPlasticText: 'Sporadic',
+      softPlastic: 2,
+      softPlasticText: 'Sporadic',
+      metal: 3,
+      metalText: 'Common',
+      paper: 3,
+      paperText: 'Common',
+      glass: 1,
+      glassText: 'None',
+      organic: 1,
+      organicText: 'None',
+      other: {
+        description: 'goop',
+        extent: 4,
+        extentText: 'Extensive'
+      }
+    },
+    markedCombinedSewerOverflowPipes: {
+      markedCSOPresent: 1,
+      markedCSOPresentText: 'Yes',
+      flowThroughPresent: 1,
+      flowThroughPresentText: 'Yes',
+      howMuchFlowThrough: 1,
+      howMuchFlowThroughText: 'Trickle',
+      location: {
+        latitude: 39.765,
+        longitude: -76.234,
+      }
+    },
+    unmarkedOutfallPipes: {
+      unmarkedPipePresent: 1,
+      unmarkedPipePresentText: 'Yes',
+      flowThroughPresent: 1,
+      flowThroughPresentText: 'Yes',
+      howMuchFlowThrough: 2,
+      howMuchFlowThroughText: 'Light Stream',
+      location: {
+        latitude: 39.765,
+        longitude: -76.234,
+      },
+      approximateDiameterCM: 10
+    }
+  },
+  landConditions: {
+    shoreLineType: 2,
+    shoreLineTypeText: 'Fixed Pier',
+    garbage: {
+      garbagePresent: 1,
+      garbagePresentText: 'Yes',
+      hardPlastic: 4,
+      hardPlasticText: 'Extensive',
+      softPlastic: 4,
+      softPlasticText: 'Extensive',
+      metal: 2,
+      metalText: 'Sporadic',
+      paper: 2,
+      paperText: 'Sporadic',
+      glass: 1,
+      glassText: 'None',
+      organic: 1,
+      organicText: 'None',
+      other: {
+        description: 'ooze',
+        extent: 3,
+        extentText: 'Common'
+      }
+    },
+    shorelineSurfaceCoverEstPer: {
+      imperviousSurfacePer: 30,
+      perviousSurfacePer: 40,
+      vegetatedSurfacePer: 30
+    }
+  }
+};
+
 var assertSiteCondition = function() {
   expect(element(by.model('siteCondition.notes')).getAttribute('value')).toEqual(siteCondition1.notes);
   // Meteorological Conditions
@@ -255,6 +366,7 @@ var assertSiteConditionView = function() {
 
 module.exports = {
   siteCondition1: siteCondition1,
+  siteCondition2: siteCondition2,
   assertSiteCondition: assertSiteCondition,
   fillOutSiteConditions: fillOutSiteConditions,
   assertSiteConditionView: assertSiteConditionView

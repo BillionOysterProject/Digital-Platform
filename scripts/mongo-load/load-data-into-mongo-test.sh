@@ -20,3 +20,8 @@ mongoimport -d bop-test -c metanycssunits --type json --file scripts/mongo-load/
 mongoimport -d bop-test -c metanyssskeyideas --type json --file scripts/mongo-load/standards/metaNysssKeyIdeas.json
 mongoimport -d bop-test -c metanysssmajorunderstandings --type json --file scripts/mongo-load/standards/metaNysssMajorUnderstandings.json
 mongoimport -d bop-test -c metanysssmsts --type json --file scripts/mongo-load/standards/metaNysssMsts.json
+
+mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-data-tests/bop-users.json
+mongoimport -d bop-test -c schoolorgs --type json --file scripts/mongo-load/sample-data-tests/bop-school-orgs.json
+mongoimport -d bop-test -c teams --type json --file scripts/mongo-load/sample-data-tests/bop-teams.json
+mongoimport -d bop-test -c restorationstations --type json --file scripts/mongo-load/sample-data-tests/bop-restoration-stations.json

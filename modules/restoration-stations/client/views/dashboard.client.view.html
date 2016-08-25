@@ -66,9 +66,9 @@
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-default" ui-sref="expeditions.list({ active: 'pubexpeditions' })">See all</a>
+                        <a class="btn btn-default" ui-sref="expeditions.list({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
                         <!-- TIFFANY: Wire up download modal (currently living on Expeditions list page) -->
-                        <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a>
+                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a> -->
                     </div>
                 </div>
                 <div class="row">
@@ -182,7 +182,7 @@
                     </div>
                     <div class="panel-footer">
                         <!-- TIFFANY: change link to My Expeditions tab of Expeditions list page -->
-                        <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
+                        <a class="btn btn-default" ui-sref="expeditions.list" id="myexpeditions">See all</a>
                         <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isAdmin">Create an expedition</a>
                     </div>
                 </div>
