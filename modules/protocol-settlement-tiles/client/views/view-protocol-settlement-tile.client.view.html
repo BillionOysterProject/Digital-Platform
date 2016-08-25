@@ -1,40 +1,72 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <p>View Protocol</p>
-
-      <div ng-repeat="tile in st.protocolSettlementTiles.settlementTiles">
-        <h3>Settlement Tile {{$index+1}}</h3>
-        <img ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto.path">{{tile.tilePhoto.path}}
-        <p>{{tile.description}}</p>
-        <ul>
-          <li>{{tile.grid1.organism}}</li>
-          <li>{{tile.grid2.organism}}</li>
-          <li>{{tile.grid3.organism}}</li>
-          <li>{{tile.grid4.organism}}</li>
-          <li>{{tile.grid5.organism}}</li>
-          <li>{{tile.grid6.organism}}</li>
-          <li>{{tile.grid7.organism}}</li>
-          <li>{{tile.grid8.organism}}</li>
-          <li>{{tile.grid9.organism}}</li>
-          <li>{{tile.grid10.organism}}</li>
-          <li>{{tile.grid11.organism}}</li>
-          <li>{{tile.grid12.organism}}</li>
-          <li>{{tile.grid13.organism}}</li>
-          <li>{{tile.grid14.organism}}</li>
-          <li>{{tile.grid15.organism}}</li>
-          <li>{{tile.grid16.organism}}</li>
-          <li>{{tile.grid17.organism}}</li>
-          <li>{{tile.grid18.organism}}</li>
-          <li>{{tile.grid19.organism}}</li>
-          <li>{{tile.grid20.organism}}</li>
-          <li>{{tile.grid21.organism}}</li>
-          <li>{{tile.grid22.organism}}</li>
-          <li>{{tile.grid23.organism}}</li>
-          <li>{{tile.grid24.organism}}</li>
-          <li>{{tile.grid25.organism}}</li>
-        </ul>
+<div class="row">
+    <div class="col-sm-3">
+        <h3 class="blue">
+            <i class="fa fa-clock-o pull-left"></i>
+            {{vm.getTime(settlementTiles.collectionTime)}}<br/>
+            <small>{{vm.getDate(settlementTiles.collectionTime)}}</small>
+        </h3>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>{{settlementTiles.latitude}}, {{settlementTiles.longitude}}</small>
+        </h4>
+    </div>
+    <div class="col-sm-3" ng-repeat="member in settlementTiles.teamMembers">
+        <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
+    </div>
+    <div class="col-sm-6" ng-show="settlementTiles.notes">
+        <p><b>Notes:</b> {{settlementTiles.notes}}</p>
+    </div>
+</div>
+<hr/>
+<div ng-repeat="tile in settlementTiles.settlementTiles">
+  <div class="row" ng-show="tile.imageUrl">
+      <div class="col-sm-3">
+          <h3>Settlement Tile {{$index+1}}</h3>
+          <img class="img-rounded img-responsive" ng-src="{{tile.imageUrl}}"/>
+          <p ng-show="tile.description"><b>Description:</b> {{tile.description}}</p>
       </div>
-    </section>
-  </section>
+      <div class="col-sm-9">
+          <h6>Sessile Organisms Observed</h6>
+          <table class="table table-bordered"><!--TIFFANY: Wire up images for each organism type -->
+              <tr ng-repeat="n in [0, 1, 2, 3, 4] track by $index">
+                  <td>
+                      <h4 class="text-muted">{{1+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(1+($index*5))].organism)}}</p>
+                      <img class="img-rounded img-responsive"
+                        ng-src="{{getSessileOrganismImage(tile['grid'+(1+($index*5))].organism)}}"/>
+                      <em>{{tile['grid'+1+($index*5)].notes}}</em>
+                  </td>
+                  <td>
+                      <h4 class="text-muted">{{2+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(2+($index*5))].organism)}}</p>
+                      <img class="img-rounded img-responsive"
+                        ng-src="{{getSessileOrganismImage(tile['grid'+(2+($index*5))].organism)}}"/>
+                      <em>{{tile['grid'+2+($index*5)].notes}}</em>
+                  </td>
+                  <td>
+                      <h4 class="text-muted">{{3+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(3+($index*5))].organism)}}</p>
+                      <img class="img-rounded img-responsive"
+                        ng-src="{{getSessileOrganismImage(tile['grid'+(3+($index*5))].organism)}}"/>
+                      <em>{{tile['grid'+3+($index*5)].notes}}</em>
+                  </td>
+                  <td>
+                      <h4 class="text-muted">{{4+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(4+($index*5))].organism)}}</p>
+                      <img class="img-rounded img-responsive"
+                        ng-src="{{getSessileOrganismImage(tile['grid'+(4+($index*5))].organism)}}"/>
+                      <em>{{tile['grid'+4+($index*5)].notes}}</em>
+                  </td>
+                  <td>
+                      <h4 class="text-muted">{{5+($index*5)}}</h4>
+                      <p>{{getSessileOrganismName(tile['grid'+(5+($index*5))].organism)}}</p>
+                      <img class="img-rounded img-responsive"
+                        ng-src="{{getSessileOrganismImage(tile['grid'+(5+($index*5))].organism)}}"/>
+                      <em>{{tile['grid'+5+($index*5)].notes}}</em>
+                  </td>
+              </tr>
+          </table>
+      </div>
+  </div>
+  <hr ng-hide="$last || !tile.imageUrl"/>
 </div>

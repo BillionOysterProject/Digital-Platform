@@ -7,12 +7,14 @@ var path = require('path'),
   mongoose = require('mongoose'),
   config = require(path.resolve('./config/config')),
   Expedition = mongoose.model('Expedition'),
-  ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
-  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
+  ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
   ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   ExpeditionActivity = mongoose.model('ExpeditionActivity'),
+  MobileOrganism = mongoose.model('MobileOrganism'),
+  SessileOrganism = mongoose.model('SessileOrganism'),
   Team = mongoose.model('Team'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -585,81 +587,497 @@ exports.delete = function (req, res) {
  * List of Expeditions
  */
 exports.list = function (req, res) {
-  var query;
-  var and = [];
+  function search (teams, siteConditionIds, oysterMeasurementIds,
+    mobileTrapIds, settlementTileIds, waterQualityIds) {
+    var query;
+    var and = [];
 
-  if (req.query.teamId) {
-    and.push({ 'team': req.query.teamId });
+    // My Expedition Search
+    if (req.query.teamId) {
+      and.push({ 'team': req.query.teamId });
+    }
+    if (req.query.byOwner) {
+      and.push({ 'teamLead': req.user });
+    }
+
+    var memberOr = [];
+    if (req.query.byMember) {
+      memberOr.push({ 'teamLists.siteCondition': req.user });
+      memberOr.push({ 'teamLists.oysterMeasurement': req.user });
+      memberOr.push({ 'teamLists.mobileTrap': req.user });
+      memberOr.push({ 'teamLists.settlementTiles': req.user });
+      memberOr.push({ 'teamLists.waterQuality': req.user });
+      and.push({ $or: memberOr });
+    }
+
+    // Published Search
+    if (req.query.published) {
+      and.push({ 'status': 'published' });
+    }
+
+    var searchOr = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      searchOr.push({ 'name': searchRe });
+      searchOr.push({ 'notes': searchRe });
+
+      if (siteConditionIds) {
+        searchOr.push({ 'protocols.siteCondition': { '$in': siteConditionIds } });
+      }
+      if (oysterMeasurementIds) {
+        searchOr.push({ 'protocols.oysterMeasurement': { '$in': oysterMeasurementIds } });
+      }
+      if (mobileTrapIds) {
+        searchOr.push({ 'protocols.mobileTrap': { '$in': mobileTrapIds } });
+      }
+      if (settlementTileIds) {
+        searchOr.push({ 'protocols.settlementTiles': { '$in': settlementTileIds } });
+      }
+      if (waterQualityIds) {
+        searchOr.push({ 'protocols.waterQuality': { '$in': waterQualityIds } });
+      }
+
+      and.push({ $or: searchOr });
+    }
+
+    if (req.query.station) {
+      and.push({ 'station' : req.query.station });
+    }
+
+    if (teams) {
+      and.push({ 'team': { '$in': teams } });
+    }
+
+    if (req.query.team) {
+      and.push({ 'team': req.query.team });
+    }
+
+    if (req.query.teamLead) {
+      and.push({ 'teamLead': req.query.teamLead });
+    }
+
+    var startDate;
+    var endDate;
+    if (req.query.startDate && req.query.endDate) {
+      startDate = moment(req.query.startDate).toDate();
+      endDate = moment(req.query.endDate).toDate();
+
+      if (startDate && endDate) {
+        and.push({ $and: [{ 'monitoringStartDate': { '$gte': startDate } }, { 'monitoringStartDate': { '$lte': endDate } },
+        { 'monitoringEndDate': { '$gte': startDate } }, { 'monitoringEndDate': { '$lte': endDate } }] });
+      }
+    }
+
+    // if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
+    //   and.push({ 'status': 'published' });
+    // }
+
+    if (and.length === 1) {
+      query = Expedition.find(and[0]);
+    } else if (and.length > 0) {
+      query = Expedition.find({ $and : and });
+    } else {
+      query = Expedition.find();
+    }
+
+    if (req.query.sort) {
+      if (req.query.sort === 'startDate') {
+        query.sort('-monitoringStartDate');
+      } else if (req.query.sort === 'endDate') {
+        query.sort('-monitoringEndDate');
+      } else if (req.query.sort === 'name') {
+        query.sort('name');
+      } else if (req.query.sort === 'status') {
+        query.sort('status');
+      }
+    } else {
+      query.sort('-created');
+    }
+
+    if (req.query.limit) {
+      var limit = Number(req.query.limit);
+      if (req.query.page) {
+        var page = Number(req.query.page);
+        query.skip(limit*(page-1)).limit(limit);
+      } else {
+        query.limit(limit);
+      }
+    }
+
+    query.populate('team', 'name schoolOrg')
+    .populate('team.schoolOrg', 'name')
+    .populate('teamLead', 'displayName username profileImageURL')
+    .populate('station', 'name')
+    .populate('teamLists.siteCondition', 'displayName username profileImageURL')
+    .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
+    .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
+    .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
+    .populate('teamLists.waterQuality', 'displayName username profileImageURL')
+    .populate('protocols.siteCondition', 'status')
+    .populate('protocols.oysterMeasurement', 'status')
+    .populate('protocols.mobileTrap', 'status')
+    .populate('protocols.settlementTiles', 'status')
+    .populate('protocols.waterQuality', 'status')
+    .exec(function (err, expeditions) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(expeditions);
+      }
+    });
   }
-  if (req.query.byOwner) {
-    and.push({ 'teamLead': req.user });
-  }
-  if (req.query.byMember) {
+
+  var findTeamIds = function(callback) {
+    Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (teams && teams.length > 0) {
+        var teamIds = [];
+        for (var i = 0; i < teams.length; i++) {
+          teamIds.push(teams[i]._id);
+        }
+        callback(teamIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+  var searchSiteConditions = function(callback) {
     var or = [];
-    or.push({ 'teamLists.siteCondition': req.user });
-    or.push({ 'teamLists.oysterMeasurement': req.user });
-    or.push({ 'teamLists.mobileTrap': req.user });
-    or.push({ 'teamLists.settlementTiles': req.user });
-    or.push({ 'teamLists.waterQuality': req.user });
-    and.push({ $or: or });
-  }
-
-  if (checkRole('team lead pending') || checkRole('team member pending') || checkRole('partner')) {
-    and.push({ 'status': 'published' });
-  }
-
-  if (and.length === 1) {
-    query = Expedition.find(and[0]);
-  } else if (and.length > 0) {
-    query = Expedition.find({ $and : and });
-  } else {
-    query = Expedition.find();
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'startDate') {
-      query.sort('-monitoringStartDate');
-    } else if (req.query.sort === 'endDate') {
-      query.sort('-monitoringEndDate');
-    } else if (req.query.sort === 'name') {
-      query.sort('name');
-    } else if (req.query.sort === 'status') {
-      query.sort('status');
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      or.push({ 'notes': searchRe });
+      or.push({ 'tideConditions.referencePoint': searchRe });
     }
-  } else {
-    query.sort('-created');
-  }
 
-  if (req.query.limit) {
-    if (req.query.page) {
-      query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+    ProtocolSiteCondition.find({ $or: or }).exec(function(err, protocols) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (protocols && protocols.length > 0) {
+        var protocolIds = [];
+        for (var i = 0; i < protocols.length; i++) {
+          protocolIds.push(protocols[i]._id);
+        }
+        callback(protocolIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+  var searchOysterMeasurement = function(callback) {
+    var or = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      or.push({ 'notes': searchRe });
+      or.push({ 'conditionOfOysterCage.notesOnDamageToCage': searchRe });
+      or.push({ 'measuringOysterGrowth.substrateShells.notes': searchRe });
     }
-  } else {
-    query.limit(req.query.limit);
-  }
 
-  query.populate('team', 'name')
-  .populate('teamLead', 'displayName username profileImageURL')
-  .populate('station', 'name')
-  .populate('teamLists.siteCondition', 'displayName username profileImageURL')
-  .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
-  .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
-  .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
-  .populate('teamLists.waterQuality', 'displayName username profileImageURL')
-  .populate('protocols.siteCondition', 'status')
-  .populate('protocols.oysterMeasurement', 'status')
-  .populate('protocols.mobileTrap', 'status')
-  .populate('protocols.settlementTiles', 'status')
-  .populate('protocols.waterQuality', 'status')
-  .exec(function (err, expeditions) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+    ProtocolOysterMeasurement.find({ $or: or }).exec(function(err, protocols) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (protocols && protocols.length > 0) {
+        var protocolIds = [];
+        for (var i = 0; i < protocols.length; i++) {
+          protocolIds.push(protocols[i]._id);
+        }
+        callback(protocolIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+  var searchMobileOrganisms = function(callback) {
+    var or = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      or.push({ 'commonName': searchRe });
+      or.push({ 'latinName': searchRe });
+    }
+
+    MobileOrganism.find({ $or: or }).exec(function(err, organisms) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (organisms && organisms.length > 0) {
+        var organismIds = [];
+        for (var i = 0; i < organisms.length; i++) {
+          organismIds.push(organisms[i]._id);
+        }
+        callback(organismIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+  var searchMobileTrap = function(callback) {
+    searchMobileOrganisms(function(organismIds) {
+      var or = [];
+      var searchRe;
+      if (req.query.searchString) {
+        try {
+          searchRe = new RegExp(req.query.searchString, 'i');
+        } catch(e) {
+          return res.status(400).send({
+            message: 'Search string is invalid'
+          });
+        }
+        or.push({ 'notes': searchRe });
+        or.push({ 'mobileOrganisms.notesQuestions': searchRe });
+
+        if (organismIds) {
+          or.push({ 'mobileOrganisms.organism': { '$in': organismIds } });
+        }
+      }
+
+      ProtocolMobileTrap.find({ $or: or }).exec(function(err, protocols) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else if (protocols && protocols.length > 0) {
+          var protocolIds = [];
+          for (var i = 0; i < protocols.length; i++) {
+            protocolIds.push(protocols[i]._id);
+          }
+          callback(protocolIds);
+        } else {
+          callback();
+        }
+      });
+    });
+  };
+
+  var searchSessileOrganisms = function(callback) {
+    var or = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      or.push({ 'commonName': searchRe });
+      or.push({ 'latinName': searchRe });
+    }
+
+    SessileOrganism.find({ $or: or }).exec(function(err, organisms) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (organisms && organisms.length > 0) {
+        var organismIds = [];
+        for (var i = 0; i < organisms.length; i++) {
+          organismIds.push(organisms[i]._id);
+        }
+        callback(organismIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+  var searchSettlementTiles = function(callback) {
+    searchSessileOrganisms(function(organismIds) {
+      var or = [];
+      var searchRe;
+      if (req.query.searchString) {
+        try {
+          searchRe = new RegExp(req.query.searchString, 'i');
+        } catch(e) {
+          return res.status(400).send({
+            message: 'Search string is invalid'
+          });
+        }
+        or.push({ 'notes': searchRe });
+        or.push({ 'settlementTiles.description': searchRe });
+        or.push({ 'settlementTiles.grid1.notes': searchRe });
+        or.push({ 'settlementTiles.grid2.notes': searchRe });
+        or.push({ 'settlementTiles.grid3.notes': searchRe });
+        or.push({ 'settlementTiles.grid4.notes': searchRe });
+        or.push({ 'settlementTiles.grid5.notes': searchRe });
+        or.push({ 'settlementTiles.grid6.notes': searchRe });
+        or.push({ 'settlementTiles.grid7.notes': searchRe });
+        or.push({ 'settlementTiles.grid8.notes': searchRe });
+        or.push({ 'settlementTiles.grid9.notes': searchRe });
+        or.push({ 'settlementTiles.grid10.notes': searchRe });
+        or.push({ 'settlementTiles.grid11.notes': searchRe });
+        or.push({ 'settlementTiles.grid12.notes': searchRe });
+        or.push({ 'settlementTiles.grid13.notes': searchRe });
+        or.push({ 'settlementTiles.grid14.notes': searchRe });
+        or.push({ 'settlementTiles.grid15.notes': searchRe });
+        or.push({ 'settlementTiles.grid16.notes': searchRe });
+        or.push({ 'settlementTiles.grid17.notes': searchRe });
+        or.push({ 'settlementTiles.grid18.notes': searchRe });
+        or.push({ 'settlementTiles.grid19.notes': searchRe });
+        or.push({ 'settlementTiles.grid20.notes': searchRe });
+        or.push({ 'settlementTiles.grid21.notes': searchRe });
+        or.push({ 'settlementTiles.grid22.notes': searchRe });
+        or.push({ 'settlementTiles.grid23.notes': searchRe });
+        or.push({ 'settlementTiles.grid24.notes': searchRe });
+        or.push({ 'settlementTiles.grid25.notes': searchRe });
+
+        if (organismIds) {
+          or.push({ 'settlementTiles.grid1.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid2.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid3.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid4.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid5.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid6.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid7.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid8.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid9.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid10.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid11.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid12.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid13.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid14.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid15.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid16.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid17.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid18.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid19.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid20.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid21.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid22.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid23.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid24.organism': { '$in': organismIds } });
+          or.push({ 'settlementTiles.grid25.organism': { '$in': organismIds } });
+        }
+      }
+
+      ProtocolSettlementTile.find({ $or: or }).exec(function(err, protocols) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else if (protocols && protocols.length > 0) {
+          var protocolIds = [];
+          for (var i = 0; i < protocols.length; i++) {
+            protocolIds.push(protocols[i]._id);
+          }
+          callback(protocolIds);
+        } else {
+          callback();
+        }
+      });
+    });
+  };
+
+  var searchWaterQuality = function(callback) {
+    var or = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+      or.push({ 'notes': searchRe });
+      or.push({ 'samples.others.label': searchRe });
+    }
+
+    ProtocolWaterQuality.find({ $or: or }).exec(function(err, protocols) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else if (protocols && protocols.length > 0) {
+        var protocolIds = [];
+        for (var i = 0; i < protocols.length; i++) {
+          protocolIds.push(protocols[i]._id);
+        }
+        callback(protocolIds);
+      } else {
+        callback();
+      }
+    });
+  };
+
+
+  if (req.query.organization && !req.query.team) {
+    findTeamIds(function(teamIds) {
+      if (req.query.searchString) {
+        searchSiteConditions(function(siteConditionIds) {
+          searchOysterMeasurement(function(oysterMeasurementIds) {
+            searchMobileTrap(function(mobileTrapIds) {
+              searchSettlementTiles(function(settlementTileIds) {
+                searchWaterQuality(function(waterQualityIds) {
+                  search(teamIds, siteConditionIds, oysterMeasurementIds,
+                    mobileTrapIds, settlementTileIds, waterQualityIds);
+                });
+              });
+            });
+          });
+        });
+      } else {
+        search(teamIds);
+      }
+    });
+  } else {
+    if (req.query.searchString) {
+      searchSiteConditions(function(siteConditionIds) {
+        searchOysterMeasurement(function(oysterMeasurementIds) {
+          searchMobileTrap(function(mobileTrapIds) {
+            searchSettlementTiles(function(settlementTileIds) {
+              searchWaterQuality(function(waterQualityIds) {
+                search(null, siteConditionIds, oysterMeasurementIds,
+                   mobileTrapIds, settlementTileIds, waterQualityIds);
+              });
+            });
+          });
+        });
       });
     } else {
-      res.json(expeditions);
+      search();
     }
-  });
+  }
 };
 
 /**

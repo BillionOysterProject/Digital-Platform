@@ -16,11 +16,16 @@
       })
       .state('expeditions.list', {
         url: '',
+        params: {
+          active: {
+            value: 'myexpeditions'
+          }
+        },
         templateUrl: 'modules/expeditions/client/views/list-expeditions.client.view.html',
         controller: 'ExpeditionsListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'team member', 'team lead', 'partner'],
+          roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user'],
           pageTitle: 'Expeditions List'
         }
       })
@@ -33,7 +38,7 @@
           expeditionResolve: newExpedition
         },
         data: {
-          roles: ['admin', 'team member', 'team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle : 'Expeditions Create'
         }
       })
@@ -56,7 +61,7 @@
           expeditionResolve: getExpedition
         },
         data: {
-          roles: ['admin', 'team member', 'team lead'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Edit Expedition {{ expeditionResolve.title }}'
         }
       })

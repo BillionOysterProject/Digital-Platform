@@ -4,9 +4,14 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
   uploadImage = CommonExpedition.uploadImage,
   assertImage = CommonExpedition.assertImage,
   defaultMapCoordinates = CommonExpedition.defaultMapCoordinates,
-  assertMapCoordinates = CommonExpedition.assertMapCoordinates;
+  assertMapCoordinates = CommonExpedition.assertMapCoordinates,
+  CommonUser = require('../../../users/tests/e2e/common-users.e2e.tests'),
+  leader = CommonUser.leader,
+  member1 = CommonUser.member1,
+  member2 = CommonUser.member2;
 
 var siteCondition1 = {
+  notes: 'This is a test',
   meteorologicalConditions: {
     airTemperatureC: 23,
     windSpeedMPH: 4,
@@ -116,7 +121,119 @@ var siteCondition1 = {
   }
 };
 
+var siteCondition2 = {
+  notes: 'This is a test for site condition',
+  meteorologicalConditions: {
+    airTemperatureC: 20,
+    windSpeedMPH: 3,
+    humidityPer: 19,
+    weatherConditions: 4,
+    weatherConditionsText: 'Rain',
+    windDirection: 5,
+    windDirectionText: 'South'
+  },
+  recentRainfall: {
+    rainedIn7Days: 1,
+    rainedIn7DaysText: 'Yes',
+    rainedIn72Hours: 1,
+    rainedIn72HoursText: 'Yes',
+    rainedIn24Hours: 1,
+    rainedIn24HoursText: 'Yes'
+  },
+  tideConditions: {
+    closestHighTideHeight: 10,
+    closestLowTideHeight: 2,
+    referencePoint: 'Test reference point 2',
+    tidalCurrent: 3,
+    tidalCurrentText: 'Ebb current (outgoing tide)'
+  },
+  waterConditions: {
+    surfaceCurrentSpeedMPS: 5,
+    waterColor: 1,
+    waterColorText: 'Light Blue',
+    oilSheen: 1,
+    oilSheenText: 'Yes',
+    garbage: {
+      garbagePresent: 1,
+      garbagePresentText: 'Yes',
+      hardPlastic: 2,
+      hardPlasticText: 'Sporadic',
+      softPlastic: 2,
+      softPlasticText: 'Sporadic',
+      metal: 3,
+      metalText: 'Common',
+      paper: 3,
+      paperText: 'Common',
+      glass: 1,
+      glassText: 'None',
+      organic: 1,
+      organicText: 'None',
+      other: {
+        description: 'goop',
+        extent: 4,
+        extentText: 'Extensive'
+      }
+    },
+    markedCombinedSewerOverflowPipes: {
+      markedCSOPresent: 1,
+      markedCSOPresentText: 'Yes',
+      flowThroughPresent: 1,
+      flowThroughPresentText: 'Yes',
+      howMuchFlowThrough: 1,
+      howMuchFlowThroughText: 'Trickle',
+      location: {
+        latitude: 39.765,
+        longitude: -76.234,
+      }
+    },
+    unmarkedOutfallPipes: {
+      unmarkedPipePresent: 1,
+      unmarkedPipePresentText: 'Yes',
+      flowThroughPresent: 1,
+      flowThroughPresentText: 'Yes',
+      howMuchFlowThrough: 2,
+      howMuchFlowThroughText: 'Light Stream',
+      location: {
+        latitude: 39.765,
+        longitude: -76.234,
+      },
+      approximateDiameterCM: 10
+    }
+  },
+  landConditions: {
+    shoreLineType: 2,
+    shoreLineTypeText: 'Fixed Pier',
+    garbage: {
+      garbagePresent: 1,
+      garbagePresentText: 'Yes',
+      hardPlastic: 4,
+      hardPlasticText: 'Extensive',
+      softPlastic: 4,
+      softPlasticText: 'Extensive',
+      metal: 2,
+      metalText: 'Sporadic',
+      paper: 2,
+      paperText: 'Sporadic',
+      glass: 1,
+      glassText: 'None',
+      organic: 1,
+      organicText: 'None',
+      other: {
+        description: 'ooze',
+        extent: 3,
+        extentText: 'Common'
+      }
+    },
+    shorelineSurfaceCoverEstPer: {
+      imperviousSurfacePer: 30,
+      perviousSurfacePer: 40,
+      vegetatedSurfacePer: 30
+    }
+  }
+};
+
 var assertSiteCondition = function() {
+  expect(element(by.model('siteCondition.notes')).getAttribute('value')).toEqual(siteCondition1.notes);
   // Meteorological Conditions
   expect(element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).$('option:checked').getText()).toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText);
   expect(element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).getAttribute('value')).toEqual(siteCondition1.meteorologicalConditions.airTemperatureC.toString());
@@ -172,6 +289,7 @@ var assertSiteCondition = function() {
 };
 
 var fillOutSiteConditions = function(siteCondition) {
+  element(by.model('siteCondition.notes')).sendKeys(siteCondition1.notes);
   // Meteorological Conditions
   element(by.model('siteCondition.meteorologicalConditions.weatherConditions')).all(by.tagName('option')).get(siteCondition.meteorologicalConditions.weatherConditions).click();
   element(by.model('siteCondition.meteorologicalConditions.airTemperatureC')).sendKeys(siteCondition.meteorologicalConditions.airTemperatureC);
@@ -226,8 +344,30 @@ var fillOutSiteConditions = function(siteCondition) {
   element(by.model('siteCondition.landConditions.garbage.other.extent')).all(by.tagName('option')).get(siteCondition.landConditions.garbage.other.extent).click();
 };
 
+var assertSiteConditionView = function() {
+  //Meta data
+  var members = element.all(by.repeater('member in siteCondition.teamMembers'));
+  expect(members.count()).toEqual(1);
+  var member = members.get(0);
+  expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(member1.displayName);
+  expect(element(by.binding('siteCondition.notes')).isPresent()).toBe(true);
+  expect(element(by.binding('siteCondition.notes')).getText()).toEqual('Notes: ' + siteCondition1.notes);
+  //Meteorological conditions
+  expect(element(by.binding('siteCondition.meteorologicalConditions.airTemperatureC')).getText())
+    .toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText + ' ' +
+    siteCondition1.meteorologicalConditions.airTemperatureC + '℃\n' +
+    siteCondition1.meteorologicalConditions.humidityPer + '% humidity');
+  //expect(element(by.cssContainingText('.pull-left', 'Rain in the past 24hrs')).isPresent).toBe(true);
+  expect(element(by.binding('siteCondition.meteorologicalConditions.windSpeedMPH')).getText())
+    .toEqual(siteCondition1.meteorologicalConditions.windSpeedMPH + 'mph\n' +
+    siteCondition1.meteorologicalConditions.windDirectionText + ' wind');
+};
+
 module.exports = {
   siteCondition1: siteCondition1,
+  siteCondition2: siteCondition2,
   assertSiteCondition: assertSiteCondition,
-  fillOutSiteConditions: fillOutSiteConditions
+  fillOutSiteConditions: fillOutSiteConditions,
+  assertSiteConditionView: assertSiteConditionView
 };

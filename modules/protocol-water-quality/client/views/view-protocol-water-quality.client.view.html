@@ -1,97 +1,102 @@
-<div class="shaded">
-  <section class="content">
-    <section class="container">
-      <h2>View Protocol</h2>
-      <div ng-repeat="sample in wq.protocolWaterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
-        <h3>Sample #{{$index+1}}</h3>
-        <h4>Depth of Water Sample (m)</h4>
-        {{sample.depthOfWaterSampleM}}
-
-        <h4>Location where Water Sample was taken</h4>
-        {{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}
-
-        <table class="table table-responsive table-condensed">
-          <tr>
-              <th></th>
-              <th>Method (tool or test name)</th>
-              <th colspan="3" class="text-center">Results (include units)</th>
-              <th>Average</th>
-              <th>Units</th>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Water Temperature</h4></td>
-              <td>{{sample.waterTemperature.method | testToolMethods}}</td>
-              <td ng-bind="sample.waterTemperature.results[0]"></td>
-              <td ng-bind="sample.waterTemperature.results[1]"></td>
-              <td ng-bind="sample.waterTemperature.results[2]"></td>
-              <td ng-bind="sample.waterTemperature.average"></td>
-              <td>{{sample.waterTemperature.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Dissolved Oxygen</h4></td>
-              <td>{{sample.dissolvedOxygen.method | testToolMethods}}</td>
-              <td ng-bind="sample.dissolvedOxygen.results[0]"></td>
-              <td ng-bind="sample.dissolvedOxygen.results[1]"></td>
-              <td ng-bind="sample.dissolvedOxygen.results[2]"></td>
-              <td ng-bind="sample.dissolvedOxygen.average"></td>
-              <td>{{sample.dissolvedOxygen.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Salinity</h4></td>
-              <td>{{sample.salinity.method | testToolMethods}}</td>
-              <td ng-bind="sample.salinity.results[0]"></td>
-              <td ng-bind="sample.salinity.results[1]"></td>
-              <td ng-bind="sample.salinity.results[2]"></td>
-              <td ng-bind="sample.salinity.average"></td>
-              <td>{{sample.salinity.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>pH</h4></td>
-              <td>{{sample.pH.method | testToolMethods}}</td>
-              <td ng-bind="sample.pH.results[0]"></td>
-              <td ng-bind="sample.pH.results[1]"></td>
-              <td ng-bind="sample.pH.results[2]"></td>
-              <td ng-bind="sample.pH.average"></td>
-              <td>{{sample.pH.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Turbidity</h4></td>
-              <td>{{sample.turbidity.method | testToolMethods}}</td>
-              <td ng-bind="sample.turbidity.results[0]"></td>
-              <td ng-bind="sample.turbidity.results[1]"></td>
-              <td ng-bind="sample.turbidity.results[2]"></td>
-              <td ng-bind="sample.turbidity.average"></td>
-              <td>{{sample.turbidity.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Ammonia</h4></td>
-              <td>{{sample.ammonia.method | testToolMethods}}</td>
-              <td ng-bind="sample.ammonia.results[0]"></td>
-              <td ng-bind="sample.ammonia.results[1]"></td>
-              <td ng-bind="sample.ammonia.results[2]"></td>
-              <td ng-bind="sample.ammonia.average"></td>
-              <td>{{sample.ammonia.units | testUnits}}</td>
-          </tr>
-          <tr>
-              <td class="text-right"><h4>Nitrates</h4></td>
-              <td>{{sample.nitrates.method | testToolMethods}}</td>
-              <td ng-bind="sample.nitrates.results[0]"></td>
-              <td ng-bind="sample.nitrates.results[1]"></td>
-              <td ng-bind="sample.nitrates.results[2]"></td>
-              <td ng-bind="sample.nitrates.average"></td>
-              <td>{{sample.nitrates.units | testUnits}}</td>
-          </tr>
-          <tr ng-repeat="other in sample.others">
-              <td ng-bind="other.label"></td>
-              <td ng-bind="other.method"></td>
-              <td ng-bind="other.results[0]"></td>
-              <td ng-bind="other.results[1]"></td>
-              <td ng-bind="other.results[2]"></td>
-              <td ng-bind="other.average"></td>
-              <td ng-bind="other.units"></td>
-          </tr>
-        </table>
+<div class="row">
+    <div class="col-sm-3">
+        <h3 class="blue">
+            <i class="fa fa-clock-o pull-left"></i>
+            {{vm.getTime(waterQuality.collectionTime)}}<br/>
+            <small>{{vm.getDate(waterQuality.collectionTime)}}</small>
+        </h3>
+        <h4 class="blue">
+            <i class="fa fa-map-marker pull-left"></i>
+            <small>{{waterQuality.latitude}}, {{waterQuality.longitude}}</small>
+        </h4>
+    </div>
+    <div class="col-sm-3" ng-repeat="member in waterQuality.teamMembers">
+        <h5><img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}</h5>
+    </div>
+    <div class="col-sm-6" ng-show="waterQuality.notes">
+        <p><b>Notes:</b> {{waterQuality.notes}}</p>
+    </div>
+</div>
+<hr/>
+<div ng-repeat="sample in waterQuality.samples">
+  <h3>Water Sample {{$index+1}}</h3>
+  <div class="row">
+      <div class="col-sm-3">
+          <h4 class="blue">{{sample.depthOfWaterSampleM}} meters deep</h4>
+          <h4>
+              <img class="pull-left" width="20" src="modules/core/client/img/icons/temperature.svg" />
+              <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
+              <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average}}&#8451;</span>
+              <small>via {{getWaterTemperatureMethod(sample.waterTemperature.method) | lowercase}}</small>
+          </h4>
+          <h4>
+              <small>
+                  <i class="fa fa-map-marker"></i>
+                  {{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}
+              </small>
+          </h4>
       </div>
-    </section>
-  </section>
+      <div class="col-sm-9">
+          <div class="row">
+              <div class="col-sm-3">
+                  <h6>Dissolved Oxygen</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/dissolved-oxygen.svg" />
+                      {{sample.dissolvedOxygen.average | number:2}} {{getDissolvedOxygenUnit(sample.dissolvedOxygen.units)}}<br/>
+                      <small>via {{getDissolvedOxygenMethod(sample.dissolvedOxygen.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3">
+                  <h6>Salinity</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/salinity.svg" />
+                      {{sample.salinity.average | number:2}} {{getSalinityUnit(sample.salinity.units)}}<br/>
+                      <small>via {{getSalinityMethod(sample.salinity.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3">
+                  <h6>pH</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/pH.svg" />
+                      {{sample.pH.average | number:2}} {{getPHUnits(sample.pH.units)}}<br/>
+                      <small>via {{getPHMethod(sample.pH.method) | lowercase}}</small>
+                  </h4>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-3" ng-show="sample.turbidity.average">
+                  <h6>Turbidity</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />
+                      {{sample.turbidity.average | number:2}} {{getTurbidityUnit(sample.turbidity.units)}}<br/>
+                      <small>via {{getTurbidityMethod(sample.turbidity.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3" ng-show="sample.ammonia.average">
+                  <h6>Ammonia</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />
+                      {{sample.ammonia.average | number:2}} {{getAmmoniaUnit(sample.ammonia.units)}}<br/>
+                      <small>via {{getAmmoniaMethod(sample.ammonia.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3" ng-show="sample.nitrates.average">
+                  <h6>Nitrates</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />
+                      {{sample.nitrates.average | number:2}} {{getNitratesUnit(sample.nitrates.units)}}<br/>
+                      <small>via {{getNitratesMethod(sample.nitrates.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3" ng-show="sample.others[0].average">
+                  <h6>{{sample.others[0].label}}</h6>
+                  <h4 class="green">
+                      {{sample.others[0].average | number:2}} {{sample.others[0].units}}<br/>
+                      <small>via {{sample.others[0].method | lowercase}}</small>
+                  </h4>
+              </div>
+          </div>
+      </div>
+  </div>
+  <hr ng-hide="$last"/>
 </div>

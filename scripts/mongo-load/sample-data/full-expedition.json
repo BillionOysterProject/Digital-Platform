@@ -1,0 +1,1703 @@
+db.schoolorgs.insertOne({
+    "_id" : ObjectId("56fae89a599072d449db1ead"),
+    "name" : "Forkner High School",
+    "description" : "This is an example. This is an update. This is another update.",
+    "streetAddress" : "123 Main St.",
+    "city" : "Baltimore",
+    "state" : "MD",
+    "pending" : false,
+    "creator" : ObjectId("56f5f050c481dddf037d13ed"),
+    "created" : ISODate("2016-04-22T20:34:22.679Z")
+});
+db.users.insertOne({
+    "_id" : ObjectId("56f5f050c481dddf037d13ed"),
+    "salt" : "w9m+xiHzjHNNya9DTenXVw==",
+    "displayName" : "Teacher Person",
+    "provider" : "local",
+    "username" : "teacher",
+    "pending" : false,
+    "created" : ISODate("2016-03-26T02:13:36.000Z"),
+    "roles" : [
+        "team lead",
+        "admin",
+        "user"
+    ],
+    "socialProfiles" : {
+        "website" : "",
+        "facebook" : "",
+        "twitter" : ""
+    },
+    "profileImageURL" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/users/img/profile/c0cdc72e2a678bba22de36e09a3d4300.jpeg",
+    "password" : "v6lldEFsg4cA14St6CY1tKb4vFb0rOdCzUMu4NWeSuExRH8YgEI7RhOVYYTfNG4FbEUb36Nasx5IBk4RcY3S6A==",
+    "email" : "tforkner@fearless.tech",
+    "lastName" : "Person",
+    "firstName" : "Teacher",
+    "schoolOrg" : ObjectId("56fae89a599072d449db1ead"),
+    "__v" : 0,
+    "updated" : ISODate("2016-04-28T18:55:06.567Z"),
+    "teamLeadType" : "other"
+});
+db.users.insertOne({
+    "_id" : ObjectId("56facbff901dc7b21ea26156"),
+    "username" : "jdoe",
+    "displayName" : "John Doe",
+    "provider" : "local",
+    "pending" : false,
+    "created" : ISODate("2016-03-29T18:39:59.076Z"),
+    "roles" : [
+        "team member",
+        "user"
+    ],
+    "socialProfiles" : {
+        "website" : "",
+        "facebook" : "",
+        "twitter" : ""
+    },
+    "profileImageURL" : "modules/users/client/img/profile/default.png",
+    "password" : "",
+    "email" : "jdoe@email.com",
+    "lastName" : "Doe",
+    "firstName" : "John",
+    "salt" : "2FV+Br94++obNamEFQnY0g==",
+    "password" : "gowR6O+JPlpoxi6v0ODaihjrTGoODq2grn48iR9jxF4xNVqV+pysi71ZVr/ADT6KG2VzA/O7Ef8T5MSC0PWj2g==",
+    "__v" : 0
+});
+db.users.insertOne({
+    "_id" : ObjectId("56facbff901dc7b21ea26158"),
+    "username" : "jsmith",
+    "displayName" : "Jane Smith",
+    "provider" : "local",
+    "pending" : false,
+    "created" : ISODate("2016-03-29T18:39:59.115Z"),
+    "roles" : [
+        "team member",
+        "user"
+    ],
+    "socialProfiles" : {
+        "website" : "",
+        "facebook" : "",
+        "twitter" : ""
+    },
+    "profileImageURL" : "modules/users/client/img/profile/default.png",
+    "password" : "",
+    "email" : "jsmith@email.com",
+    "lastName" : "Smith",
+    "firstName" : "Jane",
+    "salt" : "2FV+Br94++obNamEFQnY0g==",
+    "password" : "gowR6O+JPlpoxi6v0ODaihjrTGoODq2grn48iR9jxF4xNVqV+pysi71ZVr/ADT6KG2VzA/O7Ef8T5MSC0PWj2g==",
+    "__v" : 0,
+    "resetPasswordExpires" : ISODate("2016-04-21T17:41:30.305Z"),
+    "resetPasswordToken" : "70391b64c9e520e450e0a1e84d45c531aea31d15"
+});
+db.teams.insertOne({
+    "_id" : ObjectId("56facbff901dc7b21ea26157"),
+    "teamLead" : ObjectId("56f5f050c481dddf037d13ed"),
+    "name" : "CSV Team",
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26156"),
+        ObjectId("56facbff901dc7b21ea26158")
+    ],
+    "created" : ISODate("2016-03-29T18:39:59.083Z"),
+    "__v" : 40,
+    "schoolOrg" : ObjectId("56fae89a599072d449db1ead")
+});
+db.expeditions.insertOne({
+    "_id" : ObjectId("5711a6eb80aac360f491f75c"),
+    "monitoringStartDate" : ISODate("2016-04-10T14:00:00.000Z"),
+    "monitoringEndDate" : ISODate("2016-04-10T22:00:00.000Z"),
+    "station" : ObjectId("570c031803a52dc28ed19007"),
+    "name" : "Expedition 0",
+    "notes" : "Something",
+    "team" : ObjectId("56facbff901dc7b21ea26157"),
+    "teamLead" : ObjectId("56f5f050c481dddf037d13ed"),
+    "status" : "published",
+    "teamLists" : {
+        "waterQuality" : [
+            ObjectId("56fd73e99b4fe36c536a5f52")
+        ],
+        "settlementTiles" : [
+            ObjectId("5711a65603a52dc28ed1900a")
+        ],
+        "mobileTrap" : [
+            ObjectId("56fe92ad336b0da46330ba9c")
+        ],
+        "oysterMeasurement" : [
+            ObjectId("56fe928a336b0da46330b8cf")
+        ],
+        "siteCondition" : [
+            ObjectId("56fd839f5e5ee81b56c1d263")
+        ]
+    },
+    "protocols" : {
+        "siteCondition" : ObjectId("570e65d9583feb654264a7ce"),
+        "oysterMeasurement" : ObjectId("56fd93a7d15195ec587841eb"),
+        "mobileTrap" : ObjectId("570e65d9583feb654264a7d0"),
+        "settlementTiles" : ObjectId("570fd68003a52dc28ed19009"),
+        "waterQuality" : ObjectId("570e65d9583feb654264a7d1")
+    },
+    "__v" : 0,
+    "updated" : ISODate("2016-04-13T16:59:26.137Z"),
+    "created" : ISODate("2016-08-15T19:28:08.046Z"),
+    "published" : ISODate("2016-08-18T15:52:01.596Z")
+});
+db.protocolsiteconditions.insertOne({
+    "_id" : ObjectId("570e65d9583feb654264a7ce"),
+    "status" : "published",
+    "landConditions" : {
+        "shoreLineType" : "floating-dock",
+        "garbage" : {
+            "garbagePresent" : true,
+            "hardPlastic" : "sporadic",
+            "softPlastic" : "common",
+            "metal" : "extensive",
+            "paper" : "none",
+            "glass" : "sporadic",
+            "organic" : "common",
+            "other" : {
+                "description" : "Blah",
+                "extent" : "extensive"
+            }
+        },
+        "shorelineSurfaceCoverEstPer" : {
+            "imperviousSurfacePer" : 33,
+            "perviousSurfacePer" : 33,
+            "vegetatedSurfacePer" : 34
+        },
+        "landConditionPhoto" : {
+            "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/site-conditions/img/land-conditions/f21a0f4dda8230ff28b8e6a25d49ebbd.jpg"
+        }
+    },
+    "waterConditions" : {
+        "waterColor" : "lightGreen",
+        "oilSheen" : true,
+        "surfaceCurrentSpeedMPS" : 4,
+        "unmarkedOutfallPipes" : {
+            "unmarkedPipePresent" : true,
+            "approximateDiameterCM" : 5,
+            "flowThroughPresent" : true,
+            "howMuchFlowThrough" : "lightStream",
+            "location" : {
+                "latitude" : 40.704039,
+                "longitude" : -74.0035392
+            }
+        },
+        "markedCombinedSewerOverflowPipes" : {
+            "markedCSOPresent" : true,
+            "flowThroughPresent" : true,
+            "howMuchFlowThrough" : "trickle",
+            "location" : {
+                "latitude" : 40.704039,
+                "longitude" : -74.0035392
+            }
+        },
+        "garbage" : {
+            "garbagePresent" : true,
+            "hardPlastic" : "none",
+            "softPlastic" : "sporadic",
+            "metal" : "common",
+            "paper" : "extensive",
+            "glass" : "none",
+            "organic" : "sporadic",
+            "other" : {
+                "description" : "Blah",
+                "extent" : "common"
+            }
+        },
+        "waterConditionPhoto" : {
+            "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/site-conditions/img/water-conditions/572f13fbe39745f394d00d5bccdb0399.jpg"
+        }
+    },
+    "tideConditions" : {
+        "closestLowTide" : ISODate("2016-08-15T19:22:00.000Z"),
+        "closestHighTide" : ISODate("2016-08-15T19:22:00.000Z"),
+        "tidalCurrent" : "ebb-current",
+        "closestHighTideHeight" : 5,
+        "closestLowTideHeight" : 2,
+        "referencePoint" : "fdfasd"
+    },
+    "recentRainfall" : {
+        "rainedIn24Hours" : false,
+        "rainedIn72Hours" : true,
+        "rainedIn7Days" : true
+    },
+    "meteorologicalConditions" : {
+        "weatherConditions" : "partly-cloudy",
+        "airTemperatureC" : 23,
+        "windSpeedMPH" : 3,
+        "windDirection" : "west",
+        "humidityPer" : 34
+    },
+    "__v" : 1,
+    "collectionTime" : ISODate("2016-08-15T19:22:00.000Z"),
+    "latitude" : 40.704039,
+    "longitude" : -74.0035392,
+    "notes" : "This is a test",
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26156")
+    ],
+    "scribeMember" : ObjectId("56f5f050c481dddf037d13ed"),
+    "submitted" : ISODate("2016-08-18T15:52:01.458Z")
+});
+db.protocoloystermeasurements.insertOne({
+    "_id" : ObjectId("56fd93a7d15195ec587841eb"),
+    "minimumSizeOfAllLiveOysters" : 16.4,
+    "maximumSizeOfAllLiveOysters" : 25,
+    "averageSizeOfAllLiveOysters" : 21.9204,
+    "totalNumberOfAllLiveOysters" : 25,
+    "measuringOysterGrowth" : {
+        "substrateShells" : [
+            {
+                "substrateShellNumber" : 1,
+                "totalNumberOfLiveOystersOnShell" : 1,
+                "source" : "Muscongus Bay, Maine",
+                "totalNumberOfLiveOystersAtBaseline" : 11,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 10,
+                "notes" : "sdfafasd",
+                "minimumSizeOfLiveOysters" : 22.21,
+                "maximumSizeOfLiveOysters" : 22.21,
+                "averageSizeOfLiveOysters" : 22.21,
+                "_id" : ObjectId("56fd93a7d15195ec5878438a"),
+                "setDate" : ISODate("2016-08-18T15:52:00.000Z"),
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 22.21,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b7")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b6")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b5")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b4")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b3")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b2")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b1")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843b0")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843af")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843ae")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843ad")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843ac")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843ab")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843aa")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a9")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a8")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a7")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a6")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a5")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a4")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a3")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a2")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a1")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587843a0")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439f")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439e")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439d")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439c")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439b")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878439a")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784399")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784398")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784397")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784396")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784395")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784394")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784393")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784392")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784391")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784390")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878438f")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878438e")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878438d")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878438c")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878438b")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesb2139bf5f4d42bb76d14970ff0677262.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "b2139bf5f4d42bb76d14970ff0677262"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/9efc5970098f0f8f16812905ca2dc090.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "9efc5970098f0f8f16812905ca2dc090"
+                }
+            },
+            {
+                "substrateShellNumber" : 2,
+                "setDate" : ISODate("2016-08-18T15:45:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec5878435c"),
+                "totalNumberOfLiveOystersOnShell" : 2,
+                "source" : "Muscongus Bay, Maine",
+                "totalNumberOfLiveOystersAtBaseline" : 12,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 20,
+                "notes" : "afdasdf",
+                "minimumSizeOfLiveOysters" : 22.5,
+                "maximumSizeOfLiveOysters" : 23.1,
+                "averageSizeOfLiveOysters" : 22.8,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 22.5,
+                        "_id" : ObjectId("56fd93a7d15195ec58784389")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 23.1,
+                        "_id" : ObjectId("56fd93a7d15195ec58784388")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substrates9c162f087c81d00ed1fde77317981a0b.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "9c162f087c81d00ed1fde77317981a0b"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/81263a42cb39b9943e4551a6f1f3d34a.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "81263a42cb39b9943e4551a6f1f3d34a"
+                }
+            },
+            {
+                "substrateShellNumber" : 3,
+                "setDate" : ISODate("2016-08-18T15:46:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec5878432e"),
+                "totalNumberOfLiveOystersOnShell" : 3,
+                "source" : "Muscongus Bay, Maine",
+                "totalNumberOfLiveOystersAtBaseline" : 13,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 30,
+                "notes" : "sasdfasdf",
+                "minimumSizeOfLiveOysters" : 20.4,
+                "maximumSizeOfLiveOysters" : 24.1,
+                "averageSizeOfLiveOysters" : 22.3,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 24.1,
+                        "_id" : ObjectId("56fd93a7d15195ec5878435b")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 20.4,
+                        "_id" : ObjectId("56fd93a7d15195ec5878435a")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 22.4,
+                        "_id" : ObjectId("56fd93a7d15195ec58784359")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesaa7bfbd831b2726fe415a694b7f3cc54.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "aa7bfbd831b2726fe415a694b7f3cc54"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/831c67ccc9bf09da650aed3d5b7f6055.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "831c67ccc9bf09da650aed3d5b7f6055"
+                }
+            },
+            {
+                "substrateShellNumber" : 4,
+                "setDate" : ISODate("2016-08-18T15:46:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec58784300"),
+                "totalNumberOfLiveOystersOnShell" : 4,
+                "source" : "Muscongus Bay, Maine",
+                "totalNumberOfLiveOystersAtBaseline" : 14,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 40,
+                "notes" : "asfadfas",
+                "minimumSizeOfLiveOysters" : 20.8,
+                "maximumSizeOfLiveOysters" : 22.4,
+                "averageSizeOfLiveOysters" : 21.625,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 21.9,
+                        "_id" : ObjectId("56fd93a7d15195ec5878432d")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 22.4,
+                        "_id" : ObjectId("56fd93a7d15195ec5878432c")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 20.8,
+                        "_id" : ObjectId("56fd93a7d15195ec5878432b")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 21.4,
+                        "_id" : ObjectId("56fd93a7d15195ec5878432a")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesb01523d25d1b17c0cbd71969e2a116a7.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "b01523d25d1b17c0cbd71969e2a116a7"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/689008159a81ae7c0c702542b76475be.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "689008159a81ae7c0c702542b76475be"
+                }
+            },
+            {
+                "substrateShellNumber" : 5,
+                "setDate" : ISODate("2016-08-18T15:47:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec587842d2"),
+                "totalNumberOfLiveOystersOnShell" : 5,
+                "source" : "Muscongus Bay, Maine",
+                "totalNumberOfLiveOystersAtBaseline" : 15,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 50,
+                "notes" : "asfasdfa",
+                "minimumSizeOfLiveOysters" : 20.1,
+                "maximumSizeOfLiveOysters" : 23.5,
+                "averageSizeOfLiveOysters" : 21.72,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 21.7,
+                        "_id" : ObjectId("56fd93a7d15195ec587842ff")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 22.4,
+                        "_id" : ObjectId("56fd93a7d15195ec587842fe")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 20.1,
+                        "_id" : ObjectId("56fd93a7d15195ec587842fd")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 23.5,
+                        "_id" : ObjectId("56fd93a7d15195ec587842fc")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 20.9,
+                        "_id" : ObjectId("56fd93a7d15195ec587842fb")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesb942d6b37bbd796618456652cf01bb5e.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "b942d6b37bbd796618456652cf01bb5e"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/956e91cdbcfb70dc26e28d7cd157f0cd.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "956e91cdbcfb70dc26e28d7cd157f0cd"
+                }
+            },
+            {
+                "substrateShellNumber" : 6,
+                "setDate" : ISODate("2016-08-18T15:49:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec587842a4"),
+                "totalNumberOfLiveOystersOnShell" : 4,
+                "source" : "Fishers Island, New York",
+                "totalNumberOfLiveOystersAtBaseline" : 16,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 40,
+                "notes" : "afafda",
+                "minimumSizeOfLiveOysters" : 20.3,
+                "maximumSizeOfLiveOysters" : 25,
+                "averageSizeOfLiveOysters" : 22.625,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 20.3,
+                        "_id" : ObjectId("56fd93a7d15195ec587842d1")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 22.1,
+                        "_id" : ObjectId("56fd93a7d15195ec587842d0")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 25,
+                        "_id" : ObjectId("56fd93a7d15195ec587842cf")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 23.1,
+                        "_id" : ObjectId("56fd93a7d15195ec587842ce")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substrates87bf9029c4362cdf4d1a5884f20d4a88.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "87bf9029c4362cdf4d1a5884f20d4a88"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/9aba31ae71787f6e54ca5f636ff8eec8.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "9aba31ae71787f6e54ca5f636ff8eec8"
+                }
+            },
+            {
+                "substrateShellNumber" : 7,
+                "setDate" : ISODate("2016-08-18T15:49:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec58784276"),
+                "totalNumberOfLiveOystersOnShell" : 3,
+                "source" : "Fishers Island, New York",
+                "totalNumberOfLiveOystersAtBaseline" : 17,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 30,
+                "notes" : "adfasdf",
+                "minimumSizeOfLiveOysters" : 20.9,
+                "maximumSizeOfLiveOysters" : 23.1,
+                "averageSizeOfLiveOysters" : 22.0333333333333,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 20.9,
+                        "_id" : ObjectId("56fd93a7d15195ec587842a3")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 22.1,
+                        "_id" : ObjectId("56fd93a7d15195ec587842a2")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 23.1,
+                        "_id" : ObjectId("56fd93a7d15195ec587842a1")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesd0e68208422bc6d44fbc3f2bd2b8c7e7.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "d0e68208422bc6d44fbc3f2bd2b8c7e7"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/237f20391cc2f4c045d0985754f253f0.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "237f20391cc2f4c045d0985754f253f0"
+                }
+            },
+            {
+                "substrateShellNumber" : 8,
+                "setDate" : ISODate("2016-08-18T15:50:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec58784248"),
+                "totalNumberOfLiveOystersOnShell" : 2,
+                "source" : "Fishers Island, New York",
+                "totalNumberOfLiveOystersAtBaseline" : 18,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 20,
+                "notes" : "asfdsf",
+                "minimumSizeOfLiveOysters" : 22.1,
+                "maximumSizeOfLiveOysters" : 23.1,
+                "averageSizeOfLiveOysters" : 22.6,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 22.1,
+                        "_id" : ObjectId("56fd93a7d15195ec58784275")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : 23.1,
+                        "_id" : ObjectId("56fd93a7d15195ec58784274")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substrates7d9c683d1691dc589f82a5e706343e5b.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "7d9c683d1691dc589f82a5e706343e5b"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/c78c75eb363696970997be19c4dae61e.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "c78c75eb363696970997be19c4dae61e"
+                }
+            },
+            {
+                "substrateShellNumber" : 9,
+                "setDate" : ISODate("2016-08-18T15:51:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec5878421a"),
+                "totalNumberOfLiveOystersOnShell" : 1,
+                "source" : "Fishers Island, New York",
+                "totalNumberOfLiveOystersAtBaseline" : 19,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 10,
+                "notes" : "asdfsdfa",
+                "minimumSizeOfLiveOysters" : 16.4,
+                "maximumSizeOfLiveOysters" : 16.4,
+                "averageSizeOfLiveOysters" : 16.4,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : 16.4,
+                        "_id" : ObjectId("56fd93a7d15195ec58784247")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substratesccf4cdeda76ba93c32b63864473e6600.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "ccf4cdeda76ba93c32b63864473e6600"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/6dd91e681092c98442cf06848614fbfc.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "6dd91e681092c98442cf06848614fbfc"
+                }
+            },
+            {
+                "substrateShellNumber" : 10,
+                "setDate" : ISODate("2016-08-18T15:51:00.000Z"),
+                "_id" : ObjectId("56fd93a7d15195ec587841ec"),
+                "totalNumberOfLiveOystersOnShell" : 0,
+                "source" : "Fishers Island, New York",
+                "totalNumberOfLiveOystersAtBaseline" : 20,
+                "totalMassOfScrubbedSubstrateShellOystersTagG" : 0,
+                "notes" : "afasdfas",
+                "minimumSizeOfLiveOysters" : 0,
+                "maximumSizeOfLiveOysters" : 0,
+                "averageSizeOfLiveOysters" : 0,
+                "measurements" : [
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784219")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784218")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784217")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784216")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784215")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784214")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784213")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784212")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784211")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784210")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420f")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420e")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420d")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420c")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420b")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec5878420a")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784209")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784208")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784207")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784206")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784205")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784204")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784203")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784202")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784201")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec58784200")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841ff")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841fe")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841fd")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841fc")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841fb")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841fa")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f9")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f8")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f7")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f6")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f5")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f4")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f3")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f2")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f1")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841f0")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841ef")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841ee")
+                    },
+                    {
+                        "sizeOfLiveOysterMM" : null,
+                        "_id" : ObjectId("56fd93a7d15195ec587841ed")
+                    }
+                ],
+                "innerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/inner-substrates9681b828b504a42ea67d2e6234767dab.jpeg",
+                    "originalname" : "oysters.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "9681b828b504a42ea67d2e6234767dab"
+                },
+                "outerSidePhoto" : {
+                    "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/outer-substrates/671070b2022b141acad1a86c523a1d4f.jpeg",
+                    "originalname" : "oyster.jpeg",
+                    "mimetype" : "image/jpeg",
+                    "filename" : "671070b2022b141acad1a86c523a1d4f"
+                }
+            }
+        ]
+    },
+    "conditionOfOysterCage" : {
+        "bioaccumulationOnCage" : "medium",
+        "notesOnDamageToCage" : "adfasd",
+        "oysterCagePhoto" : {
+            "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/oyster-measurements/img/oyster-cage-condition/5ae022c0dbde6806c677e9bc5d76c6eb.jpeg",
+            "originalname" : "oyster-cage.jpeg",
+            "mimetype" : "image/jpeg",
+            "filename" : "5ae022c0dbde6806c677e9bc5d76c6eb"
+        }
+    },
+    "depthOfOysterCage" : {
+        "submergedDepthofCageM" : 3
+    },
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26158")
+    ],
+    "__v" : 1,
+    "collectionTime" : ISODate("2016-08-15T19:22:00.000Z"),
+    "latitude" : 40.704039,
+    "longitude" : -74.0035392,
+    "scribeMember" : ObjectId("56f5f050c481dddf037d13ed"),
+    "notes" : "This is a test",
+    "status" : "published",
+    "submitted" : ISODate("2016-08-18T15:52:01.494Z")
+});
+db.protocolmobiletraps.insertOne({
+    "_id" : ObjectId("570e65d9583feb654264a7d0"),
+    "mobileOrganisms" : [
+        {
+            "organism" : ObjectId("56f02688c9211c1ab6f2e0c0"),
+            "notesQuestions" : "dasdfasdfas",
+            "_id" : ObjectId("57b5d9a14d2097334dc55256"),
+            "sketchPhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/mobile-traps/img/sketchPhotos/52b64155dac229449746f9ad6290789d.jpeg",
+                "originalname" : "oyster.jpeg",
+                "mimetype" : "image/jpeg",
+                "filename" : "52b64155dac229449746f9ad6290789d"
+            },
+            "count" : 2
+        },
+        {
+            "organism" : ObjectId("56f02688c9211c1ab6f2e0b5"),
+            "notesQuestions" : "This is another test",
+            "_id" : ObjectId("57b5d9a14d2097334dc55255"),
+            "sketchPhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/mobile-traps/img/sketchPhotos/089fba69172a2c1ef7734542cbba05e6.jpeg"
+            },
+            "count" : 3
+        },
+        {
+            "organism" : ObjectId("56f02688c9211c1ab6f2e0ae"),
+            "notesQuestions" : "Picture of a shore",
+            "_id" : ObjectId("57b5d9a14d2097334dc55254"),
+            "sketchPhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/mobile-traps/img/sketchPhotos/511926e453cfaa6a11199ba11de6fd98.jpg"
+            },
+            "count" : 1
+        }
+    ],
+    "status" : "published",
+    "__v" : 37,
+    "collectionTime" : ISODate("2016-04-15T14:00:00.000Z"),
+    "latitude" : 40.704039,
+    "longitude" : -74.0035392,
+    "notes" : "This is a test",
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26156")
+    ],
+    "scribeMember" : ObjectId("56f5f050c481dddf037d13ed"),
+    "submitted" : ISODate("2016-08-18T15:52:01.540Z")
+});
+db.protocolsettlementtiles.insertOne({
+    "_id" : ObjectId("570fd68003a52dc28ed19009"),
+    "__v" : 9,
+    "settlementTiles" : [
+        {
+            "_id" : ObjectId("57100ceb6f144b9a5bf402cc"),
+            "description" : "tile 1",
+            "grid25" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ae"),
+                "notes" : "Bob"
+            },
+            "grid24" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid23" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid22" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde17229f"),
+                "notes" : ""
+            },
+            "grid21" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a2"),
+                "notes" : ""
+            },
+            "grid20" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9"),
+                "notes" : ""
+            },
+            "grid19" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9"),
+                "notes" : ""
+            },
+            "grid18" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ae"),
+                "notes" : ""
+            },
+            "grid17" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid16" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid15" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722aa"),
+                "notes" : ""
+            },
+            "grid14" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid13" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a0"),
+                "notes" : ""
+            },
+            "grid12" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde17229f"),
+                "notes" : ""
+            },
+            "grid11" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9"),
+                "notes" : ""
+            },
+            "grid10" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid9" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a6"),
+                "notes" : ""
+            },
+            "grid8" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ae"),
+                "notes" : ""
+            },
+            "grid7" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde17229f"),
+                "notes" : ""
+            },
+            "grid6" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722aa"),
+                "notes" : ""
+            },
+            "grid5" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722aa"),
+                "notes" : ""
+            },
+            "grid4" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac"),
+                "notes" : ""
+            },
+            "grid3" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ab"),
+                "notes" : ""
+            },
+            "grid2" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a0"),
+                "notes" : ""
+            },
+            "grid1" : {
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ab"),
+                "notes" : ""
+            },
+            "tilePhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/settlement-tiles/img/tilePhoto/9d333e8fec7021e8ded9d4de1750b127.jpg",
+                "originalname" : "water.jpg",
+                "mimetype" : "image/jpeg",
+                "filename" : "9d333e8fec7021e8ded9d4de1750b127"
+            }
+        },
+        {
+            "_id" : ObjectId("57100ceb6f144b9a5bf402cb"),
+            "description" : "tile 2",
+            "grid25" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b4")
+            },
+            "grid24" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b5")
+            },
+            "grid23" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a2")
+            },
+            "grid22" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a4")
+            },
+            "grid21" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid20" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b5")
+            },
+            "grid19" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b3")
+            },
+            "grid18" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229d")
+            },
+            "grid17" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid16" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229f")
+            },
+            "grid15" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9")
+            },
+            "grid14" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b3")
+            },
+            "grid13" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a3")
+            },
+            "grid12" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229f")
+            },
+            "grid11" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b4")
+            },
+            "grid10" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b5")
+            },
+            "grid9" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b5")
+            },
+            "grid8" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid7" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid6" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ac")
+            },
+            "grid5" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid4" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ad")
+            },
+            "grid3" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid2" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid1" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ad")
+            },
+            "tilePhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/settlement-tiles/img/tilePhoto/b5d36036e080286b6d6614e30442d6ae.jpg",
+                "originalname" : "shore.jpg",
+                "mimetype" : "image/jpeg",
+                "filename" : "b5d36036e080286b6d6614e30442d6ae"
+            }
+        },
+        {
+            "_id" : ObjectId("57100ceb6f144b9a5bf402ca"),
+            "description" : "tile 3",
+            "grid25" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid24" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid23" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a4")
+            },
+            "grid22" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid21" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ad")
+            },
+            "grid20" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid19" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722af")
+            },
+            "grid18" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a2")
+            },
+            "grid17" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722af")
+            },
+            "grid16" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid15" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a8")
+            },
+            "grid14" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a2")
+            },
+            "grid13" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid12" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid11" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a2")
+            },
+            "grid10" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722af")
+            },
+            "grid9" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ad")
+            },
+            "grid8" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229d")
+            },
+            "grid7" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229d")
+            },
+            "grid6" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a3")
+            },
+            "grid5" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a3")
+            },
+            "grid4" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid3" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid2" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid1" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722ad")
+            },
+            "tilePhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/settlement-tiles/img/tilePhoto/5cf6cdeffd249446576dd967e94948eb.jpeg",
+                "originalname" : "oyster-cage.jpeg",
+                "mimetype" : "image/jpeg",
+                "filename" : "5cf6cdeffd249446576dd967e94948eb"
+            }
+        },
+        {
+            "_id" : ObjectId("57100ceb6f144b9a5bf402c9"),
+            "description" : "tile 4",
+            "grid25" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid24" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid23" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid22" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a8")
+            },
+            "grid21" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid20" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid19" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid18" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid17" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid16" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722af")
+            },
+            "grid15" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b3")
+            },
+            "grid14" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a7")
+            },
+            "grid13" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9")
+            },
+            "grid12" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b4")
+            },
+            "grid11" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b3")
+            },
+            "grid10" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b4")
+            },
+            "grid9" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid8" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde17229e")
+            },
+            "grid7" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a9")
+            },
+            "grid6" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid5" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid4" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a5")
+            },
+            "grid3" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b5")
+            },
+            "grid2" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722a1")
+            },
+            "grid1" : {
+                "notes" : "",
+                "organism" : ObjectId("570fa1d75b1e0eddde1722b4")
+            },
+            "tilePhoto" : {
+                "path" : "http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/protocols/settlement-tiles/img/tilePhoto/4df3e435e5b320edfb7072c126efc609.jpg",
+                "originalname" : "db9b3d5950a91897f7cf2e0947c1358b.jpg",
+                "mimetype" : "image/jpeg",
+                "filename" : "4df3e435e5b320edfb7072c126efc609"
+            }
+        }
+    ],
+    "collectionTime" : ISODate("2016-04-13T14:00:00.000Z"),
+    "latitude" : 40.704039,
+    "longitude" : -74.0035392,
+    "notes" : "This is a test",
+    "status" : "published",
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26158")
+    ],
+    "scribeMember" : ObjectId("56f5f050c481dddf037d13ed"),
+    "submitted" : ISODate("2016-08-18T15:52:01.554Z")
+});
+db.protocolwaterqualities.insertOne({
+    "_id" : ObjectId("570e65d9583feb654264a7d1"),
+    "samples" : [
+        {
+            "_id" : ObjectId("57150e5d867509e376512870"),
+            "depthOfWaterSampleM" : 3,
+            "others" : [
+                {
+                    "_id" : ObjectId("57150e5d867509e376512871"),
+                    "average" : 88.17,
+                    "label" : "other1",
+                    "method" : "method1",
+                    "units" : "unit1",
+                    "results" : [
+                        88.8,
+                        88.3,
+                        87.4
+                    ]
+                }
+            ],
+            "nitrates" : {
+                "method" : "testStrips",
+                "average" : 77.7,
+                "units" : "ppm",
+                "results" : [
+                    77.7,
+                    77.7,
+                    null
+                ]
+            },
+            "ammonia" : {
+                "method" : "testStrips",
+                "average" : 66.6,
+                "units" : "ppm",
+                "results" : [
+                    66.6,
+                    66.6,
+                    66.6
+                ]
+            },
+            "turbidity" : {
+                "method" : "turbidityTube",
+                "average" : 55.5,
+                "units" : "cm",
+                "results" : [
+                    55.5,
+                    55.5,
+                    55.5
+                ]
+            },
+            "pH" : {
+                "method" : "sensorRO",
+                "average" : 44.4,
+                "units" : "pHlogscale",
+                "results" : [
+                    44.4,
+                    44.4,
+                    44.4
+                ]
+            },
+            "salinity" : {
+                "method" : "refractometer",
+                "average" : 33.3,
+                "units" : "ppt",
+                "results" : [
+                    33.3,
+                    33.3,
+                    33.3
+                ]
+            },
+            "dissolvedOxygen" : {
+                "method" : "sensor",
+                "average" : 22.2,
+                "units" : "mgl",
+                "results" : [
+                    22.2,
+                    22.2,
+                    22.2
+                ]
+            },
+            "waterTemperature" : {
+                "method" : "sensor",
+                "average" : 11.1,
+                "units" : "f",
+                "results" : [
+                    11.1,
+                    11.1,
+                    null
+                ]
+            },
+            "locationOfWaterSample" : {
+                "latitude" : 40.704039,
+                "longitude" : -74.0035392
+            }
+        },
+        {
+            "depthOfWaterSampleM" : 6,
+            "_id" : ObjectId("57b4ceb74d2097334dc5524a"),
+            "others" : [
+                {
+                    "label" : "other2",
+                    "method" : "method2",
+                    "units" : "unit2",
+                    "average" : 88.33,
+                    "_id" : ObjectId("57b4ceb74d2097334dc5524b"),
+                    "results" : [
+                        88.8,
+                        88,
+                        88.2
+                    ]
+                }
+            ],
+            "nitrates" : {
+                "method" : "testStrips",
+                "units" : "ppm",
+                "average" : 77.57,
+                "results" : [
+                    77.7,
+                    77.9,
+                    77.1
+                ]
+            },
+            "ammonia" : {
+                "method" : "testStrips",
+                "units" : "ppm",
+                "average" : 66.47,
+                "results" : [
+                    66.6,
+                    66.8,
+                    66
+                ]
+            },
+            "turbidity" : {
+                "method" : "turbidityTube",
+                "units" : "cm",
+                "average" : 55.7,
+                "results" : [
+                    55.5,
+                    55.7,
+                    55.9
+                ]
+            },
+            "pH" : {
+                "method" : "testStrips",
+                "units" : "pHlogscale",
+                "average" : 44.6,
+                "results" : [
+                    44.4,
+                    44.6,
+                    44.8
+                ]
+            },
+            "salinity" : {
+                "method" : "hydrometer",
+                "units" : "ppt",
+                "average" : 33.5,
+                "results" : [
+                    33.3,
+                    33.5,
+                    33.7
+                ]
+            },
+            "dissolvedOxygen" : {
+                "method" : "colormetricvAmpules",
+                "units" : "mgl",
+                "average" : 22.4,
+                "results" : [
+                    22.2,
+                    22.4,
+                    22.6
+                ]
+            },
+            "waterTemperature" : {
+                "method" : "digitalThermometer",
+                "units" : "f",
+                "average" : 11.3,
+                "results" : [
+                    11.1,
+                    11.3,
+                    11.5
+                ]
+            },
+            "locationOfWaterSample" : {
+                "latitude" : 40.704039,
+                "longitude" : -74.0035392
+            }
+        }
+    ],
+    "status" : "published",
+    "__v" : 58,
+    "collectionTime" : ISODate("2016-08-15T19:22:00.000Z"),
+    "latitude" : 40.704039,
+    "longitude" : -74.0035392,
+    "scribeMember" : ObjectId("56f5f050c481dddf037d13ed"),
+    "teamMembers" : [
+        ObjectId("56facbff901dc7b21ea26156")
+    ],
+    "notes" : "This is a test",
+    "submitted" : ISODate("2016-08-18T15:52:01.588Z")
+});

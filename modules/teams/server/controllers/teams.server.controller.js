@@ -109,6 +109,9 @@ exports.list = function (req, res) {
   if (req.query.teamId) {
     and.push({ '_id': req.query.teamId });
   }
+  if (req.query.organization) {
+    and.push({ 'schoolOrg': req.query.organization });
+  }
 
   if (and.length === 1) {
     query = Team.find(and[0]);
@@ -127,11 +130,13 @@ exports.list = function (req, res) {
   }
 
   if (req.query.limit) {
+    var limit = Number(req.query.limit);
     if (req.query.page) {
-      query.skip(req.query.limit*(req.query.page-1)).limit(req.query.limit);
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    } else {
+      query.limit(limit);
     }
-  } else {
-    query.limit(req.query.limit);
   }
 
   query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
@@ -246,7 +251,7 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).populate('teamLead', 'displayName email profileImageURL')
+  Team.findById(id).populate('teamLead', 'displayName firstName lastName username email profileImageURL')
   .populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
   .populate('schoolOrg', 'name')
   .exec(function (err, team) {

@@ -19,6 +19,9 @@
         method: 'GET',
         params: {
           teamId: '@teamId',
+          station: '@station',
+          organization: '@organization',
+          dateRange: '@dateRange',
           sort: '@sort',
           limit: '@limit',
           page: '@page'

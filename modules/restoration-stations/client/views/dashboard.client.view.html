@@ -46,6 +46,31 @@
                       show-marker="vm.showMarker" can-click-map-to-add-marker="vm.canClickMapToAddMarker" add-points="vm.mapPoints"></leaflet-map>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Published Expeditions</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                                <td>
+                                    {{expedition.name}}<br/>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
+                                </td>
+                                <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
+                                <td>
+                                    <span class="text-muted">{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</span><br/>
+                                    <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-default" ui-sref="expeditions.list({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
+                        <!-- TIFFANY: Wire up download modal (currently living on Expeditions list page) -->
+                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a> -->
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-lg-4" ng-show="vm.isTeamLead && vm.team">
                         <div class="panel panel-default">
@@ -54,7 +79,6 @@
                             </div>
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
-                                <!-- TODO: Wire up alerts -->
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
                             </div>
                             <div class="panel-footer">
@@ -65,11 +89,10 @@
                     <div class="col-lg-4">
                         <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                             <div class="panel-heading">
-                                <h4>Activity <span class="badge badge-success pull-right">{{vm.activities.length}}</span></h4>
+                                <h4>Activity <span class="badge badge-success pull-right">{{vm.activitiesCount}}</span></h4>
                             </div>
                             <div class="panel-body">
-                                <!-- TODO: Only show if there are activities for that team -->
-                                <div class="alert alert-success">{{vm.activities.length}} members updated their protocols</div>
+                                <div class="alert alert-success">{{vm.activitiesCount}} members updated their protocols</div>
                                 <div class="row" ng-repeat="activity in vm.activities">
                                     <div class="col-sm-2 col-xs-4">
                                         <img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">
@@ -81,9 +104,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--<div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="expeditions.submitted">View submissions</a>
-                            </div>-->
                         </div>
                     </div>
                     <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': (vm.team), 'col-lg-12': (!vm.team) }">
@@ -123,7 +143,6 @@
                                 </td>
                               </tr>
                         </table>
-                        <!-- TODO: Wire up alerts -->
                         <div class="alert" ng-show="vm.stations.length === 0">
                             No ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()">register one</a>?
                         </div>
@@ -153,7 +172,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <!-- TODO: Wire up alerts -->
                         <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isAdmin)">
                             No expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
                         </div>
@@ -163,7 +181,8 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-default" ui-sref="expeditions.list">See all</a>
+                        <!-- TIFFANY: change link to My Expeditions tab of Expeditions list page -->
+                        <a class="btn btn-default" ui-sref="expeditions.list" id="myexpeditions">See all</a>
                         <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isAdmin">Create an expedition</a>
                     </div>
                 </div>
