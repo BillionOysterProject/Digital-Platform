@@ -142,6 +142,102 @@ var waterQuality2 = {
   }]
 };
 
+var waterQuality3 = {
+  depthOfWaterSampleM: 5,
+  waterTemperature: {
+    method: 1,
+    methodText: 'Digital thermometer',
+    units: 2,
+    unitsText: 'C',
+    results: [17.5, 13.9, 12.8],
+    average: '14.73'
+  },
+  dissolvedOxygen: {
+    method: 2,
+    methodText: 'Sensor',
+    units: 1,
+    unitsText: 'mg/L (ppm)',
+    results: [23.8, 21.9, 22.4],
+    average: '22.7'
+  },
+  salinity: {
+    method: 1,
+    methodText: 'Hydrometer',
+    units: 1,
+    unitsText: 'PPT',
+    results: [33.5, 31.9, 30.9],
+    average: '32.1'
+  },
+  pH: {
+    method: 2,
+    methodText: 'Sensor (read only)',
+    units: 1,
+    unitsText: 'pH (logscale)',
+    results: [44.4, 40.9, 42.1],
+    average: '42.47'
+  },
+  turbidity: {
+    method: 1,
+    methodText: 'Turbidity tube',
+    units: 1,
+    unitsText: 'cm',
+    results: [56.1, 52.8, 54.7],
+    average: '54.53'
+  },
+  ammonia: {
+    method: 2,
+    methodText: 'Photometer',
+    units: 1,
+    unitsText: 'ppm',
+    results: [65.2, 61.4, 62.8],
+    average: '63.13'
+  },
+  nitrates: {
+    method: 2,
+    methodText: 'Photometer',
+    units: 1,
+    unitsText: 'ppm',
+    results: [72.3, 71.9, 74.5],
+    average: '72.9'
+  }
+};
+
+var waterQuality4 = {
+  depthOfWaterSampleM: 7,
+  waterTemperature: {
+    method: 2,
+    methodText: 'Analog thermometer',
+    units: 1,
+    unitsText: 'F',
+    results: [12.8, 11.9, 14.4],
+    average: '13.03'
+  },
+  dissolvedOxygen: {
+    method: 3,
+    methodText: 'Winkler',
+    units: 2,
+    unitsText: '% saturation',
+    results: [24.8, 21.9, 25.5],
+    average: '24.07'
+  },
+  salinity: {
+    method: 3,
+    methodText: 'Sensor',
+    units: 1,
+    unitsText: 'PPT',
+    results: [32.8, 35.6, 31.9],
+    average: '33.43'
+  },
+  pH: {
+    method: 3,
+    methodText: 'Sensor',
+    units: 1,
+    unitsText: 'pH (logscale)',
+    results: [43.9, 41.8, 45.6],
+    average: '43.77'
+  }
+};
+
 var assertWaterQualitySample = function(sample, index, measurements) {
   expect(sample.element(by.model('sample.depthOfWaterSampleM')).getAttribute('value')).toEqual(measurements.depthOfWaterSampleM.toString());
   assertMapCoordinates('modal-map-sample'+index);
@@ -323,6 +419,8 @@ var assertWaterQualityView = function() {
 module.exports = {
   waterQuality1: waterQuality1,
   waterQuality2: waterQuality2,
+  waterQuality3: waterQuality3,
+  waterQuality4: waterQuality4,
   assertWaterQualitySample: assertWaterQualitySample,
   assertWaterQuality: assertWaterQuality,
   fillOutWaterQualitySample: fillOutWaterQualitySample,

@@ -10,12 +10,44 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
 var mobileTrap1 = {
   organismDetails: {
     notes: 'Test organism details'
+  },
+  count: 1,
+  organism: {
+    commonName: 'Other',
+    latinName: 'Unlisted organism'
   }
 };
 
 var mobileTrap2 = {
   organismDetails: {
     notes: 'Test organism details2'
+  },
+  count: 1,
+  organism: {
+    commonName: 'Black-fingered mud crab',
+    latinName: 'Panopeus herbstii'
+  }
+};
+
+var mobileTrap3 = {
+  organismDetails: {
+    notes: 'Test organism details3'
+  },
+  count: 2,
+  organism: {
+    commonName: 'Blackfish, Tautog',
+    latinName: 'Tautoga onitis'
+  }
+};
+
+var mobileTrap4 = {
+  organismDetails: {
+    notes: 'Test organism details4'
+  },
+  count: 1,
+  organism: {
+    commonName: 'Blue crab',
+    latinName: 'Callinectes sapidus'
   }
 };
 
@@ -94,6 +126,8 @@ var assertMobileTrapView = function() {
 module.exports = {
   mobileTrap1: mobileTrap1,
   mobileTrap2: mobileTrap2,
+  mobileTrap3: mobileTrap3,
+  mobileTrap4: mobileTrap4,
   assertMobileOrganismDetails: assertMobileOrganismDetails,
   assertMobileTrap: assertMobileTrap,
   fillOutMobileOrganismDetails: fillOutMobileOrganismDetails,

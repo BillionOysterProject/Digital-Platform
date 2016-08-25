@@ -8,7 +8,8 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
   CommonUser = require('../../../users/tests/e2e/common-users.e2e.tests'),
   leader = CommonUser.leader,
   member1 = CommonUser.member1,
-  member2 = CommonUser.member2;
+  member2 = CommonUser.member2,
+  moment = require('moment');
 
 var siteCondition1 = {
   notes: 'This is a test',
@@ -232,6 +233,82 @@ var siteCondition2 = {
   }
 };
 
+var siteCondition3 = {
+  notes: 'This is a test for site condition 2',
+  meteorologicalConditions: {
+    airTemperatureC: 18,
+    windSpeedMPH: 1,
+    humidityPer: 12,
+    weatherConditions: 5,
+    weatherConditionsText: 'Fog',
+    windDirection: 7,
+    windDirectionText: 'East'
+  },
+  recentRainfall: {
+    rainedIn7Days: 2,
+    rainedIn7DaysText: 'No'
+  },
+  tideConditions: {
+    closestHighTideHeight: 7,
+    closestLowTideHeight: 1,
+    referencePoint: 'Test reference point 3',
+    tidalCurrent: 1,
+    tidalCurrentText: 'Flood current (incoming tide)'
+  },
+  waterConditions: {
+    surfaceCurrentSpeedMPS: 4,
+    waterColor: 5,
+    waterColorText: 'Light Brown',
+    oilSheen: 2,
+    oilSheenText: 'No',
+    garbage: {
+      garbagePresent: 2,
+      garbagePresentText: 'No'
+    },
+    markedCombinedSewerOverflowPipes: {
+      markedCSOPresent: 2,
+      markedCSOPresentText: 'No'
+    },
+    unmarkedOutfallPipes: {
+      unmarkedPipePresent: 2,
+      unmarkedPipePresentText: 'No',
+    }
+  },
+  landConditions: {
+    shoreLineType: 1,
+    shoreLineTypeText: 'Bulkhead/Wall',
+    garbage: {
+      garbagePresent: 2,
+      garbagePresentText: 'No',
+    },
+    shorelineSurfaceCoverEstPer: {
+      imperviousSurfacePer: 35,
+      perviousSurfacePer: 30,
+      vegetatedSurfacePer: 35
+    }
+  }
+};
+
+// Get the formatted date
+var getDate = function(date) {
+  return moment(date).format('MMMM D, YYYY');
+};
+
+// Get the formatted date
+var getShortDate = function(date) {
+  return moment(date).format('M/D/YY');
+};
+
+// Get the formatted time
+var getTime = function(date) {
+  return moment(date).format('h:mma');
+};
+
+// Get the formatted date and time
+var getDateTime = function(date) {
+  return moment(date).format('MMM D, YYYY, h:mma');
+};
+
 var assertSiteCondition = function() {
   expect(element(by.model('siteCondition.notes')).getAttribute('value')).toEqual(siteCondition1.notes);
   // Meteorological Conditions
@@ -344,29 +421,63 @@ var fillOutSiteConditions = function(siteCondition) {
   element(by.model('siteCondition.landConditions.garbage.other.extent')).all(by.tagName('option')).get(siteCondition.landConditions.garbage.other.extent).click();
 };
 
-var assertSiteConditionView = function() {
+var assertSiteConditionView = function(values, teamMember) {
   //Meta data
   var members = element.all(by.repeater('member in siteCondition.teamMembers'));
   expect(members.count()).toEqual(1);
   var member = members.get(0);
   expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
-  expect(member.element(by.binding('member.displayName')).getText()).toEqual(member1.displayName);
-  expect(element(by.binding('siteCondition.notes')).isPresent()).toBe(true);
-  expect(element(by.binding('siteCondition.notes')).getText()).toEqual('Notes: ' + siteCondition1.notes);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(teamMember.displayName);
+  if (values.notes) {
+    expect(element(by.binding('siteCondition.notes')).isPresent()).toBe(true);
+    expect(element(by.binding('siteCondition.notes')).getText()).toEqual('Notes: ' + values.notes);
+  }
   //Meteorological conditions
   expect(element(by.binding('siteCondition.meteorologicalConditions.airTemperatureC')).getText())
-    .toEqual(siteCondition1.meteorologicalConditions.weatherConditionsText + ' ' +
-    siteCondition1.meteorologicalConditions.airTemperatureC + '℃\n' +
-    siteCondition1.meteorologicalConditions.humidityPer + '% humidity');
-  //expect(element(by.cssContainingText('.pull-left', 'Rain in the past 24hrs')).isPresent).toBe(true);
+    .toEqual(values.meteorologicalConditions.weatherConditionsText + ' ' +
+    values.meteorologicalConditions.airTemperatureC + '℃\n' +
+    values.meteorologicalConditions.humidityPer + '% humidity');
+  if (values.recentRainfall.rainedIn24Hours === true) {
+    expect(element(by.cssContainingText('.green', 'Rain in the past 24hrs')).isPresent()).toBe(true);
+  } else if (values.recentRainfall.rainedIn72Hours === true) {
+    expect(element(by.cssContainingText('.green', 'Rain in the past 72hrs')).isPresent()).toBe(true);
+  } else if (values.recentRainfall.rainedIn7Days === true) {
+    expect(element(by.cssContainingText('.green', 'Rain in the past 7 days')).isPresent()).toBe(true);
+  } else {
+    expect(element(by.cssContainingText('.green', 'No rain in the past 7 days')).isPresent()).toBe(true);
+  }
   expect(element(by.binding('siteCondition.meteorologicalConditions.windSpeedMPH')).getText())
-    .toEqual(siteCondition1.meteorologicalConditions.windSpeedMPH + 'mph\n' +
-    siteCondition1.meteorologicalConditions.windDirectionText + ' wind');
+    .toEqual(values.meteorologicalConditions.windSpeedMPH + 'mph\n' +
+    values.meteorologicalConditions.windDirectionText + ' wind');
+  //Tide Conditions
+  expect(element(by.binding('siteCondition.tideConditions.closestHighTideHeight')).getText())
+    .toEqual(values.tideConditions.closestHighTideHeight + 'ft, ' +
+    getTime(values.tideConditions.closestHighTide) + ' \nClosest high tide on ' +
+    getShortDate(values.tideConditions.closestHighTide));
+  expect(element(by.binding('siteCondition.tideConditions.closestLowTideHeight')).getText())
+    .toEqual(values.tideConditions.closestLowTideHeight + 'ft, ' +
+    getTime(values.tideConditions.closestLowTide) + ' \nClosest low tide on ' +
+    getShortDate(values.tideConditions.closestLowTide));
+  if (values.tideConditions.tidalCurrent === 'flood-current') {
+    expect(element(by.cssContainingText('.green', 'Flood current (incoming tide)')).isPresent()).toBe(true);
+  } else if (values.tideConditions.tidalCurrent === 'slack-water') {
+    expect(element(by.cssContainingText('.green', 'Slack water')).isPresent()).toBe(true);
+  } else if (values.tideConditions.tidalCurrent === 'ebb-current') {
+    expect(element(by.cssContainingText('.green', 'Ebb current (outgoing tide)')).isPresent()).toBe(true);
+  }
+  //Water Conditions
+  expect(element(by.binding('waterConditionPhotoURL')).isPresent()).toBe(true);
+  expect(element(by.binding('siteCondition.waterConditions.surfaceCurrentSpeedMPS')).isPresent())
+    .toEqual(values.waterConditions.surfaceCurrentSpeedMPS + ' meters/sec\nSurface current speed');
+  expect(element(by.binding('siteCondition.waterConditions.waterColor')).getText())
+    .toEqual(values.waterConditions.waterColor + ' water color');
+
 };
 
 module.exports = {
   siteCondition1: siteCondition1,
   siteCondition2: siteCondition2,
+  siteCondition3: siteCondition3,
   assertSiteCondition: assertSiteCondition,
   fillOutSiteConditions: fillOutSiteConditions,
   assertSiteConditionView: assertSiteConditionView
