@@ -25,3 +25,10 @@ mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-da
 mongoimport -d bop-test -c schoolorgs --type json --file scripts/mongo-load/sample-data-tests/bop-school-orgs.json
 mongoimport -d bop-test -c teams --type json --file scripts/mongo-load/sample-data-tests/bop-teams.json
 mongoimport -d bop-test -c restorationstations --type json --file scripts/mongo-load/sample-data-tests/bop-restoration-stations.json
+
+mongoimport -d bop-test -c expeditions --type json --file scripts/mongo-load/sample-data-tests/expeditions.json
+mongoimport -d bop-test -c protocolsiteconditions --type json --file scripts/mongo-load/sample-data-tests/protocol-site-conditions.json
+mongoimport -d bop-test -c protocoloystermeasurements --type json --file scripts/mongo-load/sample-data-tests/protocol-oyster-measurements.json
+mongoimport -d bop-test -c protocolmobiletraps --type json --file scripts/mongo-load/sample-data-tests/protocol-mobile-traps.json
+mongoimport -d bop-test -c protocolsettlementtiles --type json --file scripts/mongo-load/sample-data-tests/protocol-settlement-tiles.json
+mongoimport -d bop-test -c protocolwaterqualities --type json --file scripts/mongo-load/sample-data-tests/protocol-water-qualities.json

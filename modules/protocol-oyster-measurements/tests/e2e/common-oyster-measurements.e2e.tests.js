@@ -144,7 +144,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 13,
       totalMassOfScrubbedSubstrateShellOystersTagG: 130,
       notes: 'Test notes 4a',
-      measurements: [32.1,33.1,38.2,32.2,33.2,34.5,30.1,32.4,34.7,31.5,30.9,32.8,36.4]
+      measurements: [32.1,33.1,38.2,32.2,33.2,34.5,30.1,32.4,34.7,31.5,
+        30.9,32.8,36.4]
     }, {
       source: 5,
       sourceText: 'Tappan Zee, New York',
@@ -152,7 +153,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 14,
       totalMassOfScrubbedSubstrateShellOystersTagG: 140,
       notes: 'Test notes 5a',
-      measurements: [43.1,40.1,47.3,44.2,44.3,42.1,45.4,43.2,45.7,44.1,43.2,42.3,45.3,41.0]
+      measurements: [43.1,40.1,47.3,44.2,44.3,42.1,45.4,43.2,45.7,44.1,
+        43.2,42.3,45.3,41.0]
     }, {
       source: 6,
       sourceText: 'Hudson River, New York',
@@ -160,7 +162,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 15,
       totalMassOfScrubbedSubstrateShellOystersTagG: 150,
       notes: 'Test notes 6a',
-      measurements: [53.2,52.1,55.2,58.4,57.2,55.3,52.3,55.8,53.2,54.7,56.4,50.8,51.3,53.4,52.3]
+      measurements: [53.2,52.1,55.2,58.4,57.2,55.3,52.3,55.8,53.2,54.7,
+        56.4,50.8,51.3,53.4,52.3]
     }, {
       source: 7,
       sourceText: 'Other',
@@ -169,7 +172,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 16,
       totalMassOfScrubbedSubstrateShellOystersTagG: 160,
       notes: 'Test notes 7a',
-      measurements: [65.2,66.3,62.1,67.4,62.1,66.4,65.3,60.4,62.4,63.3,67.3,63.3,65.6,62.0,63.1,63.3]
+      measurements: [65.2,66.3,62.1,67.4,62.1,66.4,65.3,60.4,62.4,63.3,
+        67.3,63.3,65.6,62.0,63.1,63.3]
     }, {
       source: 1,
       sourceText: 'Muscongus Bay, Maine',
@@ -177,7 +181,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 17,
       totalMassOfScrubbedSubstrateShellOystersTagG: 170,
       notes: 'Test notes 8a',
-      measurements: [77.3,74.2,72.1,77.4,73.1,72.2,73.4,76.4,73.5,70.8,71.9,72.3,73.5,74.4,72.7,75.5,72.9]
+      measurements: [77.3,74.2,72.1,77.4,73.1,72.2,73.4,76.4,73.5,70.8,
+        71.9,72.3,73.5,74.4,72.7,75.5,72.9]
     }, {
       source: 2,
       sourceText: 'Fishers Island, New York',
@@ -185,7 +190,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 18,
       totalMassOfScrubbedSubstrateShellOystersTagG: 180,
       notes: 'Test notes 9a',
-      measurements: [88.3,84.3,80.1,83.2,80.9,84.3,81.1,85.5,86.3,82.8,83.3,85.7,82.6,81.4,85.8,83.7,84.2,83.2]
+      measurements: [88.3,84.3,80.1,83.2,80.9,84.3,81.1,85.5,86.3,82.8,83.3,
+        85.7,82.6,81.4,85.8,83.7,84.2,83.2]
     }, {
       source: 3,
       sourceText: 'Soundview, New York',
@@ -193,7 +199,8 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 19,
       totalMassOfScrubbedSubstrateShellOystersTagG: 190,
       notes: 'Test notes 10a',
-      measurements: [93.2,90.9,93.3,94.4,91.8,94.7,95.7,91.1,93.5,94.5,95.7,93.4,92.2,93.6,90.0,92.5,96.1,93.7,92.6]
+      measurements: [93.2,90.9,93.3,94.4,91.8,94.7,95.7,91.1,93.5,94.5,95.7,
+        93.4,92.2,93.6,90.0,92.5,96.1,93.7,92.6]
     }]
   }
 };
@@ -357,9 +364,12 @@ var fillOutOysterMeasurements = function(index) {
 
   var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
 
-  modal.element(by.model('substrate.source')).all(by.tagName('option')).get(measurementsDetails.source).click();
-  if (measurementsDetails.otherSource) modal.element(by.model('substrate.otherSource')).sendKeys(measurementsDetails.otherSource);
-  modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
+  //modal.element(by.model('substrate.source')).all(by.tagName('option')).get(measurementsDetails.source).click();
+  //if (measurementsDetails.otherSource) modal.element(by.model('substrate.otherSource')).sendKeys(measurementsDetails.otherSource);
+  //modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
+  expect(modal.element(by.model('substrate.source')).$('option:checked').getText()).toEqual(measurementsDetails.sourceText);
+  if (measurementsDetails.otherSource) expect(modal.element(by.model('substrate.otherSource')).getAttribute('value')).toEqual(measurementsDetails.otherSource);
+  expect(modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(measurementsDetails.totalNumberOfLiveOystersAtBaseline.toString());
   modal.element(by.model('substrate.totalNumberOfLiveOystersOnShell')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersOnShell);
   modal.element(by.model('substrate.totalMassOfScrubbedSubstrateShellOystersTagG')).clear().sendKeys(measurementsDetails.totalMassOfScrubbedSubstrateShellOystersTagG);
   modal.element(by.model('substrate.notes')).sendKeys(measurementsDetails.notes);
