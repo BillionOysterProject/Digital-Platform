@@ -52,8 +52,18 @@ describe('Expedition E2E Tests', function() {
   var waterQuality2 = CommonWaterQuality.waterQuality2;
 
   var expedition2 = CommonExpedition.expedition2;
+  var siteCondition2 = CommonSiteConditions.siteCondition2;
+  var oysterMeasurement2 = CommonOysterMeasurements.oysterMeasurement2;
+  var mobileTrap3 = CommonMobileTraps.mobileTrap3;
+  var settlementTiles2 = CommonSettlementTiles.settlementTiles2;
+  var waterQuality3 = CommonWaterQuality.waterQuality3;
 
   var expedition3 = CommonExpedition.expedition3;
+  var siteCondition3 = CommonSiteConditions.siteCondition3;
+  var oysterMeasurement3 = CommonOysterMeasurements.oysterMeasurement3;
+  var mobileTrap4 = CommonMobileTraps.mobileTrap4;
+  var settlementTiles3 = CommonSettlementTiles.settlementTiles3;
+  var waterQuality4 = CommonWaterQuality.waterQuality4;
 
 //############################################################################//
 //  TEAM LEAD - CREATE EXPEDITION
@@ -77,7 +87,7 @@ describe('Expedition E2E Tests', function() {
       element(by.cssContainingText('option', team.name)).click();
       // Set a station
       var allStationOptions = element.all(by.options('station._id as station.name for station in vm.stations'));
-      expect(allStationOptions.count()).toEqual(2);
+      expect(allStationOptions.count()).toEqual(3);
       var lastStationOption = allStationOptions.last();
       expect(lastStationOption.getText()).toEqual(station.name);
       element(by.cssContainingText('option', station.name)).click();
@@ -376,7 +386,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM MEMBER 1 - WATER QUALITY
 //############################################################################//
 
-    it ('should allow team member 1 to fill out protocol 5', function() {
+    it ('should allow team member 2 to fill out protocol 5', function() {
       // Click on the Mobile Trap tab
       element(by.id('protocol5tab')).click();
       browser.sleep(1000);
@@ -860,10 +870,10 @@ describe('Expedition E2E Tests', function() {
       expect(element(by.partialLinkText('Water Quality')).isDisplayed()).toBe(true);
     });
 
-    it('should show protocol 1', function() {
+    xit('should show protocol 1', function() {
       element(by.partialLinkText('Site Conditions')).click();
 
-      assertSiteConditionView();
+      assertSiteConditionView(siteCondition1, member1);
     });
   });
 });

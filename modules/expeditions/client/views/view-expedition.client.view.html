@@ -41,7 +41,7 @@
 </section>
 
 <section class="content" ng-show="((vm.isTeamLead || vm.isTeamMember || vm.isAdmin) &&
-  vm.expedition.status !== 'published' && !vm.checkAllStatus('published'))">
+  !vm.checkAllStatus('published'))">
     <section class="container">
         <h3 class="gray">Protocols</h3>
         <table class="table" ng-class="{'table-hover' : (vm.isTeamLead || vm.isAdmin ||

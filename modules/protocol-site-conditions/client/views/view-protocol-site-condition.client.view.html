@@ -39,15 +39,21 @@
                       <small>in the past 24hrs</small></span>
                     <span ng-show="siteCondition.recentRainfall.rainedIn7Days === true &&
                       siteCondition.recentRainfall.rainedIn72Hours === true &&
-                      siteCondition.recentRainfall.rainedIn24Hours === false">Rain<br/>
+                      (siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !siteCondition.recentRainfall.rainedIn24Hours)">Rain<br/>
                       <small>in the past 72hrs</small></span>
                     <span ng-show="siteCondition.recentRainfall.rainedIn7Days === true &&
-                      siteCondition.recentRainfall.rainedIn72Hours === false &&
-                      siteCondition.recentRainfall.rainedIn24Hours === false">Rain<br/>
+                      (siteCondition.recentRainfall.rainedIn72Hours === false ||
+                      !siteCondition.recentRainfall.rainedIn72Hours) &&
+                      (siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !siteCondition.recentRainfall.rainedIn24Hours)">Rain<br/>
                       <small>in the past 7 days</small></span>
-                    <span ng-show="siteCondition.recentRainfall.rainedIn7Days === false &&
-                      siteCondition.recentRainfall.rainedIn72Hours === false &&
-                      siteCondition.recentRainfall.rainedIn24Hours === false">No rain<br/>
+                    <span ng-show="(siteCondition.recentRainfall.rainedIn7Days === false ||
+                      !siteCondition.recentRainfall.rainedIn7Days) &&
+                      (siteCondition.recentRainfall.rainedIn72Hours === false ||
+                      !siteCondition.recentRainfall.rainedIn72Hours) &&
+                      (siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !siteCondition.recentRainfall.rainedIn24Hours)">No rain<br/>
                       <small>in the past 7 days</small></span>
                 </h4>
             </div>

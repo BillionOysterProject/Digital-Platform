@@ -9,9 +9,9 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
 
 var settlementTiles1 = {
   settlementTile1: {
-    description: 'Test description 1',
-    organisms: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
-    organismsText: ['Blue mussel','Boring sponges','Bushy brown bryozoan','Chain tunicate',
+    description: 'Test description 1a',
+    organisms: [2,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+    organismsText: ['Boring sponges','Boring sponges','Bushy brown bryozoan','Chain tunicate',
       'Conopeum bryozoans','Eastern mudsnail','Frilled anemone','Golden star tunicate, star ascidian',
       'Hard tube worms','Hydroids','Ivory barnacle','Lacy bryozoan','Mud tube worm',
       'Northern red anemone','Northern rock barnacle','Orange bryozoan','Orange sheath tunicate',
@@ -19,7 +19,7 @@ var settlementTiles1 = {
       'Slipper snails','Tube-building polychaete']
   },
   settlementTile2: {
-    description: 'Test description 2',
+    description: 'Test description 1b',
     organisms: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
     organismsText: ['Boring sponges','Bushy brown bryozoan','Chain tunicate','Conopeum bryozoans',
       'Eastern mudsnail','Frilled anemone','Golden star tunicate, star ascidian','Hard tube worms',
@@ -30,26 +30,85 @@ var settlementTiles1 = {
     notes: 'Notes 1'
   },
   settlementTile3: {
-    description: 'Test description 3',
-    organisms: [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1],
+    description: 'Test description 1c',
+    organisms: [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,2],
     organismsText: ['Bushy brown bryozoan','Chain tunicate','Conopeum bryozoans','Eastern mudsnail',
       'Frilled anemone','Golden star tunicate, star ascidian','Hard tube worms','Hydroids',
       'Ivory barnacle','Lacy bryozoan','Mud tube worm','Northern red anemone','Northern rock barnacle',
       'Orange bryozoan','Orange sheath tunicate','Oyster drill','Red beard sponge','Ribbed mussel',
       'Sea grapes','Sea squirt','Sea vase','Slipper snails','Tube-building polychaete',
-      'Other (mark in notes)','Blue mussel'],
+      'Other (mark in notes)','Boring sponges'],
     notes: 'Notes 2'
   },
   settlementTile4: {
-    description: 'Test description 4',
-    organisms: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,1,2],
+    description: 'Test description 1d',
+    organisms: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,2,2],
     organismsText: ['Chain tunicate','Conopeum bryozoans','Eastern mudsnail','Frilled anemone',
       'Golden star tunicate, star ascidian','Hard tube worms','Hydroids','Ivory barnacle',
       'Lacy bryozoan','Mud tube worm','Northern red anemone','Northern rock barnacle',
       'Orange bryozoan','Orange sheath tunicate','Oyster drill','Red beard sponge','Ribbed mussel',
       'Sea grapes','Sea squirt','Sea vase','Slipper snails','Tube-building polychaete',
-      'Other (mark in notes)','Blue mussel','Boring sponges'],
+      'Other (mark in notes)','Boring sponges','Boring sponges'],
     notes: 'Notes 3'
+  }
+};
+
+var settlementTiles2 = {
+  settlementTile1: {
+    description: 'Test description 2a',
+    organisms: [2,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+    organismsText: ['Boring sponges','Boring sponges','Bushy brown bryozoan','Chain tunicate',
+      'Conopeum bryozoans','Eastern mudsnail','Frilled anemone','Golden star tunicate, star ascidian',
+      'Hard tube worms','Hydroids','Ivory barnacle','Lacy bryozoan','Mud tube worm',
+      'Northern red anemone','Northern rock barnacle','Orange bryozoan','Orange sheath tunicate',
+      'Oyster drill','Red beard sponge','Ribbed mussel','Sea grapes','Sea squirt','Sea vase',
+      'Slipper snails','Tube-building polychaete']
+  },
+  settlementTile2: {
+    description: 'Test description 2b',
+    organisms: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
+    organismsText: ['Boring sponges','Bushy brown bryozoan','Chain tunicate','Conopeum bryozoans',
+      'Eastern mudsnail','Frilled anemone','Golden star tunicate, star ascidian','Hard tube worms',
+      'Hydroids','Ivory barnacle','Lacy bryozoan','Mud tube worm','Northern red anemone',
+      'Northern rock barnacle','Orange bryozoan','Orange sheath tunicate','Oyster drill',
+      'Red beard sponge','Ribbed mussel','Sea grapes','Sea squirt','Sea vase','Slipper snails',
+      'Tube-building polychaete','Other (mark in notes)'],
+    notes: 'Notes 1'
+  },
+  settlementTile3: {
+    description: 'Test description 2c',
+    organisms: [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,2],
+    organismsText: ['Bushy brown bryozoan','Chain tunicate','Conopeum bryozoans','Eastern mudsnail',
+      'Frilled anemone','Golden star tunicate, star ascidian','Hard tube worms','Hydroids',
+      'Ivory barnacle','Lacy bryozoan','Mud tube worm','Northern red anemone','Northern rock barnacle',
+      'Orange bryozoan','Orange sheath tunicate','Oyster drill','Red beard sponge','Ribbed mussel',
+      'Sea grapes','Sea squirt','Sea vase','Slipper snails','Tube-building polychaete',
+      'Other (mark in notes)','Boring sponges'],
+    notes: 'Notes 2'
+  },
+  settlementTile4: {
+    description: 'Test description 2d',
+    organisms: [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,2,2],
+    organismsText: ['Chain tunicate','Conopeum bryozoans','Eastern mudsnail','Frilled anemone',
+      'Golden star tunicate, star ascidian','Hard tube worms','Hydroids','Ivory barnacle',
+      'Lacy bryozoan','Mud tube worm','Northern red anemone','Northern rock barnacle',
+      'Orange bryozoan','Orange sheath tunicate','Oyster drill','Red beard sponge','Ribbed mussel',
+      'Sea grapes','Sea squirt','Sea vase','Slipper snails','Tube-building polychaete',
+      'Other (mark in notes)','Boring sponges','Boring sponges'],
+    notes: 'Notes 3'
+  }
+};
+
+var settlementTiles3 = {
+  settlementTile1: {
+    description: 'Test description 3a',
+    organisms: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    organismsText: ['Blue mussel','Blue mussel','Blue mussel','Blue mussel',
+      'Blue mussel','Blue mussel','Blue mussel','Blue mussel','Blue mussel',
+      'Blue mussel','Blue mussel','Blue mussel','Blue mussel','Blue mussel',
+      'Blue mussel','Blue mussel','Blue mussel','Blue mussel','Blue mussel',
+      'Blue mussel','Blue mussel','Blue mussel','Blue mussel','Blue mussel',
+      'Blue mussel']
   }
 };
 
@@ -128,6 +187,8 @@ var assertSettlementTilesView = function() {
 
 module.exports = {
   settlementTiles1: settlementTiles1,
+  settlementTiles2: settlementTiles2,
+  settlementTiles3: settlementTiles3,
   assertSettlementTile: assertSettlementTile,
   assertSettlementTiles: assertSettlementTiles,
   fillOutSettlementTile: fillOutSettlementTile,
