@@ -148,7 +148,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('View Expedition Tests', function() {
+  describe('View Expedition Tests', function() {
     describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
@@ -219,7 +219,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - CREATE EXPEDITION
 //############################################################################//
 
-  describe('Full Expedition Creation Tests', function() {
+  xdescribe('Full Expedition Creation Tests', function() {
     describe('Create Expedition', function() {
       it('should create an expedition using auto-assign', function() {
         //Sign in as team leader

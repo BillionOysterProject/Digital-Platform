@@ -190,6 +190,12 @@ exports.incrementalSave = function (req, res) {
     oysterMeasurement = _.extend(oysterMeasurement, req.body);
     oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
+    for (var i = 0; i < req.body.measuringOysterGrowth.substrateShells.length; i++) {
+      if (req.body.measuringOysterGrowth.substrateShells[i].setDate) {
+        oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
+          moment(req.body.measuringOysterGrowth.substrateShells[i].setDate, 'YYYY-MM-DD').startOf('day').toDate();
+      }
+    }
 
     oysterMeasurement.save(function (err) {
       if (err) {

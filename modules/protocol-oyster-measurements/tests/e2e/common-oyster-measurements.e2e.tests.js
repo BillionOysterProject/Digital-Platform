@@ -524,10 +524,11 @@ var assertSubstrateMeasurementView = function(index, values) {
       'total number of live oysters at baseline not provided');
   }
   if (substrate.totalMassOfScrubbedSubstrateShellOystersTagG) {
+    expect(element(by.id('totalMassOfOysters'+index)).getText())
+      .toEqual(substrate.totalMassOfScrubbedSubstrateShellOystersTagG + ' total mass (shell + oysters + tag)');
+  } else {
     expect(element(by.id('noMassOfOysters'+index)).getText())
       .toEqual('total mass not provided (shell + oysters + tag)');
-  } else {
-
   }
   expect(element(by.id('averageSizeOfLiveOysters'+index)).getText())
     .toEqual(substrate.averageSizeOfLiveOysters + '\naverage size');

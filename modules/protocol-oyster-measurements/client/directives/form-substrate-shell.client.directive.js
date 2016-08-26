@@ -22,12 +22,14 @@
         link: function (scope, element, attrs) {
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
+            console.log('substrate', scope.substrate);
+            console.log('setDate', scope.substrate.setDate);
 
-            if (!scope.substrate.setDate) {
-              scope.substrate.setDate = moment().startOf('minute').toDate();
-            } else {
-              scope.substrate.setDate = moment(scope.substrate.setDate).startOf('minute').toDate();
-            }
+            // if (!scope.substrate.setDate) {
+            //   scope.substrate.setDate = moment().startOf('minute').toDate();
+            // } else {
+            //   scope.substrate.setDate = moment(scope.substrate.setDate).startOf('minute').toDate();
+            // }
           });
 
           element.bind('hide.bs.modal', function () {
@@ -91,6 +93,7 @@
             $scope.substrate.innerSidePhoto = {
               path: $scope.innerSubstrateUrl
             };
+            // $scope.substrate.setDate = moment($scope.substrate.setDate).startOf('day').toDate();
             $scope.saveFunction($scope.substrate, $scope.index, isValid);
           };
 
