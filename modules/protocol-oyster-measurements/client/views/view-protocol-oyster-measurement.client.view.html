@@ -92,7 +92,7 @@
       </div>
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">
-          Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
+          Set at <b>{{vm.getDate(substrate.setDate)}}</b><br/>
           Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
           <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
           <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>

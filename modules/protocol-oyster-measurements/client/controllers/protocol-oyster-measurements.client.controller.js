@@ -86,7 +86,7 @@
                 if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
                   $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
                     substrateShellNumber: i,
-                    setDate: prevShell.setDate,
+                    setDate: moment(prevShell.setDate).startOf('day').toDate(),
                     source: prevShell.source,
                     sourceOther: prevShell.sourceOther,
                     totalNumberOfLiveOystersAtBaseline: prevShell.totalNumberOfLiveOystersAtBaseline,
@@ -96,11 +96,21 @@
                     done: false
                   });
                 } else if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate = prevShell.setDate;
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source = prevShell.source;
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource = prevShell.otherSource;
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline =
-                    prevShell.totalNumberOfLiveOystersAtBaseline;
+                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate && prevShell.setDate) {
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
+                      moment(prevShell.setDate).startOf('day').toDate();
+                  }
+                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source && prevShell.source) {
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source = prevShell.source;
+                  }
+                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource && prevShell.otherSource) {
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource = prevShell.otherSource;
+                  }
+                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline &&
+                    prevShell.totalNumberOfLiveOystersAtBaseline) {
+                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline =
+                      prevShell.totalNumberOfLiveOystersAtBaseline;
+                  }
                 }
               }
             }
@@ -119,10 +129,23 @@
       $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
       $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
     if (!$scope.oysterMeasurement.measuringOysterGrowth ||
-      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
-      $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
+      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells) {
+      setupSubstrateShells(findPreviousValues());
+    } else if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
+      for (var j = 0; j < $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
+        if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate) {
+          $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate =
+            moment($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate).startOf('day').toDate();
+        }
+      }
       setupSubstrateShells(findPreviousValues());
     } else {
+      for (var k = 0; k < $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length; k++) {
+        if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate) {
+          $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate =
+            moment($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate).startOf('day').toDate();
+        }
+      }
       findPreviousValues();
     }
 

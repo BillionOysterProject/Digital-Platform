@@ -148,7 +148,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('View Expedition Tests', function() {
+  describe('View Expedition Tests', function() {
     describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member

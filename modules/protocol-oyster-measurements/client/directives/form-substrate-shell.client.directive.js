@@ -22,12 +22,6 @@
         link: function (scope, element, attrs) {
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
-
-            if (!scope.substrate.setDate) {
-              scope.substrate.setDate = moment().startOf('minute').toDate();
-            } else {
-              scope.substrate.setDate = moment(scope.substrate.setDate).startOf('minute').toDate();
-            }
           });
 
           element.bind('hide.bs.modal', function () {

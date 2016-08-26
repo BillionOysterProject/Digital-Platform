@@ -28,7 +28,7 @@
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="active" id="substrate-photos"><a href="#substrateshell-photos{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Photos</a></li>
-                                <li role="presentation" id="substrate-details"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Baseline</a></li>
+                                <li role="presentation" id="substrate-meta"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Baseline</a></li>
                                 <li role="presentation" id="substrate-measurements"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
                             </ul>
                             <div class="tab-content">
@@ -82,7 +82,7 @@
                                                 </div>
                                                 <div class="form-group col-sm-8">
                                                     <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
+                                                    <input type="date" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-dd"
                                                     name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
