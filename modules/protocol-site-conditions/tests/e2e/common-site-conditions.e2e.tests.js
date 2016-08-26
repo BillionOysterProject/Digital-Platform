@@ -123,7 +123,6 @@ var siteCondition1 = {
 };
 
 var siteCondition2 = {
-  notes: 'This is a test for site condition',
   meteorologicalConditions: {
     airTemperatureC: 20,
     windSpeedMPH: 3,
@@ -142,7 +141,9 @@ var siteCondition2 = {
     rainedIn24HoursText: 'Yes'
   },
   tideConditions: {
+    closestHighTide: '2016-08-23T17:34:00.000Z',
     closestHighTideHeight: 10,
+    closestLowTide: '2016-08-23T17:34:00.000Z',
     closestLowTideHeight: 2,
     referencePoint: 'Test reference point 2',
     tidalCurrent: 3,
@@ -234,7 +235,6 @@ var siteCondition2 = {
 };
 
 var siteCondition3 = {
-  notes: 'This is a test for site condition 2',
   meteorologicalConditions: {
     airTemperatureC: 18,
     windSpeedMPH: 1,
@@ -290,23 +290,23 @@ var siteCondition3 = {
 };
 
 // Get the formatted date
-var getDate = function(date) {
-  return moment(date).format('MMMM D, YYYY');
+var getDate = function(string) {
+  return moment(string).format('MMMM D, YYYY');
 };
 
 // Get the formatted date
-var getShortDate = function(date) {
-  return moment(date).format('M/D/YY');
+var getShortDate = function(string) {
+  return moment(string).format('M/D/YY');
 };
 
 // Get the formatted time
-var getTime = function(date) {
-  return moment(date).format('h:mma');
+var getTime = function(string) {
+  return moment(string).format('h:mma');
 };
 
 // Get the formatted date and time
-var getDateTime = function(date) {
-  return moment(date).format('MMM D, YYYY, h:mma');
+var getDateTime = function(string) {
+  return moment(string).format('MMM D, YYYY, h:mma');
 };
 
 var assertSiteCondition = function() {
@@ -437,14 +437,14 @@ var assertSiteConditionView = function(values, teamMember) {
     .toEqual(values.meteorologicalConditions.weatherConditionsText + ' ' +
     values.meteorologicalConditions.airTemperatureC + '℃\n' +
     values.meteorologicalConditions.humidityPer + '% humidity');
-  if (values.recentRainfall.rainedIn24Hours === true) {
-    expect(element(by.cssContainingText('.green', 'Rain in the past 24hrs')).isPresent()).toBe(true);
-  } else if (values.recentRainfall.rainedIn72Hours === true) {
-    expect(element(by.cssContainingText('.green', 'Rain in the past 72hrs')).isPresent()).toBe(true);
-  } else if (values.recentRainfall.rainedIn7Days === true) {
-    expect(element(by.cssContainingText('.green', 'Rain in the past 7 days')).isPresent()).toBe(true);
+  if (values.recentRainfall.rainedIn24Hours === 1) {
+    expect(element(by.id('rainedIn24Hours')).isPresent()).toBe(true);
+  } else if (values.recentRainfall.rainedIn72Hours === 1) {
+    expect(element(by.id('rainedIn72Hours')).isPresent()).toBe(true);
+  } else if (values.recentRainfall.rainedIn7Days === 1) {
+    expect(element(by.id('rainedIn7Days')).isPresent()).toBe(true);
   } else {
-    expect(element(by.cssContainingText('.green', 'No rain in the past 7 days')).isPresent()).toBe(true);
+    expect(element(by.id('noRain')).isPresent()).toBe(true);
   }
   expect(element(by.binding('siteCondition.meteorologicalConditions.windSpeedMPH')).getText())
     .toEqual(values.meteorologicalConditions.windSpeedMPH + 'mph\n' +
@@ -452,11 +452,11 @@ var assertSiteConditionView = function(values, teamMember) {
   //Tide Conditions
   expect(element(by.binding('siteCondition.tideConditions.closestHighTideHeight')).getText())
     .toEqual(values.tideConditions.closestHighTideHeight + 'ft, ' +
-    getTime(values.tideConditions.closestHighTide) + ' \nClosest high tide on ' +
+    getTime(values.tideConditions.closestHighTide) + '\nClosest high tide on ' +
     getShortDate(values.tideConditions.closestHighTide));
   expect(element(by.binding('siteCondition.tideConditions.closestLowTideHeight')).getText())
     .toEqual(values.tideConditions.closestLowTideHeight + 'ft, ' +
-    getTime(values.tideConditions.closestLowTide) + ' \nClosest low tide on ' +
+    getTime(values.tideConditions.closestLowTide) + '\nClosest low tide on ' +
     getShortDate(values.tideConditions.closestLowTide));
   if (values.tideConditions.tidalCurrent === 'flood-current') {
     expect(element(by.cssContainingText('.green', 'Flood current (incoming tide)')).isPresent()).toBe(true);
@@ -466,12 +466,124 @@ var assertSiteConditionView = function(values, teamMember) {
     expect(element(by.cssContainingText('.green', 'Ebb current (outgoing tide)')).isPresent()).toBe(true);
   }
   //Water Conditions
-  expect(element(by.binding('waterConditionPhotoURL')).isPresent()).toBe(true);
-  expect(element(by.binding('siteCondition.waterConditions.surfaceCurrentSpeedMPS')).isPresent())
+  element(by.id('waterConditionPhoto')).getAttribute('src')
+  .then(function(text){
+    if (text !== null) {
+      expect(text).not.toEqual('');
+      expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+    }
+  });
+  expect(element(by.binding('siteCondition.waterConditions.surfaceCurrentSpeedMPS')).getText())
     .toEqual(values.waterConditions.surfaceCurrentSpeedMPS + ' meters/sec\nSurface current speed');
   expect(element(by.binding('siteCondition.waterConditions.waterColor')).getText())
-    .toEqual(values.waterConditions.waterColor + ' water color');
-
+    .toEqual(values.waterConditions.waterColorText);
+  if (values.waterConditions.oilSheen === 1) {
+    expect(element(by.id('oilSheen')).isPresent()).toBe(true);
+  } else {
+    expect(element(by.id('noOilSheen')).isPresent()).toBe(true);
+  }
+  if (values.waterConditions.garbage.garbagePresent === 1) {
+    if (values.waterConditions.garbage.hardPlasticText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.hardPlastic')).getText())
+        .toEqual(values.waterConditions.garbage.hardPlasticText + ' amount of hard plastic');
+    }
+    if (values.waterConditions.garbage.softPlasticText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.softPlastic')).getText())
+        .toEqual(values.waterConditions.garbage.softPlasticText + ' amount of soft plastic');
+    }
+    if (values.waterConditions.garbage.metalText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.metal')).getText())
+        .toEqual(values.waterConditions.garbage.metalText + ' amount of metal');
+    }
+    if (values.waterConditions.garbage.paperText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.paper')).getText())
+        .toEqual(values.waterConditions.garbage.paperText + ' amount of paper');
+    }
+    if (values.waterConditions.garbage.glassText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.glass')).getText())
+        .toEqual(values.waterConditions.garbage.glassText + ' amount of glass');
+    }
+    if (values.waterConditions.garbage.organicText !== 'None') {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.organic')).getText())
+        .toEqual(values.waterConditions.garbage.organicText + ' amount of organic');
+    }
+    if (values.waterConditions.garbage.other.extent) {
+      expect(element(by.binding('siteCondition.waterConditions.garbage.other.extent')).getText())
+        .toEqual(values.waterConditions.garbage.other.extentText + ' amount of ' +
+        values.waterConditions.garbage.other.description);
+    }
+  } else {
+    expect(element(by.id('noGarbagePresentWater')).isPresent()).toBe(true);
+  }
+  if (values.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === 1) {
+    expect(element(by.id('markedCSO')).getText())
+      .toEqual('CSO pipes present:\n' +
+      'Location at ' + values.waterConditions.markedCombinedSewerOverflowPipes.location.latitude + ', ' +
+      values.waterConditions.markedCombinedSewerOverflowPipes.location.longitude + '\n' +
+      values.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThroughText);
+  } else {
+    expect(element(by.id('noMarkedCSO')).isPresent()).toBe(true);
+  }
+  if(values.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === 1) {
+    expect(element(by.id('unmarkedPipe')).getText())
+      .toEqual('Unmarked or other outfall pipes present:\n' +
+      'Location at ' + values.waterConditions.unmarkedOutfallPipes.location.latitude + ', ' +
+      values.waterConditions.unmarkedOutfallPipes.location.longitude + '\n' +
+      values.waterConditions.unmarkedOutfallPipes.howMuchFlowThroughText + '\n' +
+      values.waterConditions.unmarkedOutfallPipes.approximateDiameterCM + 'cm approximate diameter');
+  } else {
+    expect(element(by.id('noUnmarkedPipe')).isPresent()).toBe(true);
+  }
+  //Land Conditions
+  element(by.id('landConditionPhoto')).getAttribute('src')
+  .then(function(text){
+    if (text !== null) {
+      expect(text).not.toEqual('');
+      expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+    }
+  });
+  expect(element(by.binding('siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer')).getText())
+    .toEqual(values.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + '% ' +
+    'Impervious Surface (concrete/asphalt paths, roads, buildings etc)');
+  expect(element(by.binding('siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer')).getText())
+    .toEqual(values.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + '% ' +
+    'Pervious Surface (dirt, gravel etc)');
+  expect(element(by.binding('siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer')).getText())
+    .toEqual(values.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer + '% ' +
+    'Vegetated surface (grass, shrubs, trees)');
+  if (values.landConditions.garbage.garbagePresent === 1) {
+    if (values.landConditions.garbage.hardPlasticText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.hardPlastic')).getText())
+        .toEqual(values.landConditions.garbage.hardPlasticText + ' amount of hard plastic');
+    }
+    if (values.landConditions.garbage.softPlasticText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.softPlastic')).getText())
+        .toEqual(values.landConditions.garbage.softPlasticText + ' amount of soft plastic');
+    }
+    if (values.landConditions.garbage.metalText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.metal')).getText())
+        .toEqual(values.landConditions.garbage.metalText + ' amount of metal');
+    }
+    if (values.landConditions.garbage.paperText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.paper')).getText())
+        .toEqual(values.landConditions.garbage.paperText + ' amount of paper');
+    }
+    if (values.landConditions.garbage.glassText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.glass')).getText())
+        .toEqual(values.landConditions.garbage.glassText + ' amount of glass');
+    }
+    if (values.landConditions.garbage.organicText !== 'None') {
+      expect(element(by.binding('siteCondition.landConditions.garbage.organic')).getText())
+        .toEqual(values.landConditions.garbage.organicText + ' amount of organic');
+    }
+    if (values.landConditions.garbage.other.extent) {
+      expect(element(by.binding('siteCondition.landConditions.garbage.other.extent')).getText())
+        .toEqual(values.landConditions.garbage.other.extentText + ' amount of ' +
+        values.landConditions.garbage.other.description);
+    }
+  } else {
+    expect(element(by.id('noGarbagePresentLand')).isPresent()).toBe(true);
+  }
 };
 
 module.exports = {
