@@ -57,6 +57,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
+                                            <h6>Baseline data</h6>
                                             <div class="row">
                                                 <div class="form-group col-sm-4">
                                                     <label for="shellNumber" class="control-label required">Substrate shell #</label>
@@ -87,15 +88,11 @@
                                                 name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" required/>
                                             </div>
                                             <hr />
+                                            <h6>New data</h6>
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total number of live oysters on shell at time of monitoring *</label>
                                                 <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
                                                 id="total" min="0" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="mass" class="control-label required">Total mass of scrubbed substrate shell + oysters + tag (grams) *</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG"
-                                                name="mass" id="mass" min="0" required/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="notes" class="control-label">Notes</label>
@@ -106,6 +103,10 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="substrateshell-measurements{{index}}">
                                     <br />
+                                    <div class="form-group">
+                                        <label for="mass" class="control-label required">Total mass of scrubbed substrate shell + oysters + tag (grams) *</label>
+                                        <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG" name="mass" id="mass" min="0" required/>
+                                    </div>
                                     <p class="lead blue">Measure and record the size (in mm) of each live oyster below.</p>
                                     <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell in the Description tab</p>
                                     <div class="row">
