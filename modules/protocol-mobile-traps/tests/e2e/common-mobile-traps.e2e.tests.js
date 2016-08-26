@@ -5,6 +5,7 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
   assertImage = CommonExpedition.assertImage,
   defaultMapCoordinates = CommonExpedition.defaultMapCoordinates,
   assertMapCoordinates = CommonExpedition.assertMapCoordinates,
+  moment = require('moment'),
   EC = protractor.ExpectedConditions;
 
 var mobileTrap1 = {
@@ -50,6 +51,27 @@ var mobileTrap4 = {
     latinName: 'Callinectes sapidus'
   }
 };
+
+// Get the formatted date
+var getDate = function(string) {
+  return moment(string).format('MMMM D, YYYY');
+};
+
+// Get the formatted date
+var getShortDate = function(string) {
+  return moment(string).format('M/D/YY');
+};
+
+// Get the formatted time
+var getTime = function(string) {
+  return moment(string).format('h:mma');
+};
+
+// Get the formatted date and time
+var getDateTime = function(string) {
+  return moment(string).format('MMM D, YYYY, h:mma');
+};
+
 
 var assertMobileOrganismDetails = function(mobileOrganism, details) {
   var emptyCount = mobileOrganism.element(by.id('empty-mobile-organism-count'));
@@ -120,7 +142,35 @@ var fillOutMobileTraps = function() {
   fillOutMobileOrganismDetails(organism2, mobileTrap2);
 };
 
-var assertMobileTrapView = function() {
+var assertMobileOrganismDetailView = function(index, values) {
+  var organismDetails = values.mobileTrap[index];
+  expect(element(by.id('mobileOrganismCount'+index)).getText())
+    .toEqual(organismDetails.count + ' ' + organismDetails.organism.commonName);
+  element(by.id('organismSketchPhoto'+index)).getAttribute('src')
+    .then(function(text){
+      if (text !== null) {
+        expect(text).not.toEqual('');
+        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+      }
+    });
+  expect(element(by.id('mobileOrganismNotes'+index)).getText())
+    .toEqual('Notes: ' + organismDetails.organismDetails.notes);
+};
+
+var assertMobileTrapView = function(values, teamMember) {
+  //Meta data
+  var members = element.all(by.repeater('member in mobileTrap.teamMembers'));
+  expect(members.count()).toEqual(1);
+  var member = members.get(0);
+  expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(teamMember.displayName);
+  if (values.notes) {
+    expect(element(by.binding('mobileTrap.notes')).isPresent()).toBe(true);
+    expect(element(by.binding('mobileTrap.notes')).getText()).toEqual('Notes: ' + values.notes);
+  }
+  for (var i = 0; i < values.mobileTrap.length; i++) {
+    assertMobileOrganismDetailView(i, values);
+  }
 };
 
 module.exports = {

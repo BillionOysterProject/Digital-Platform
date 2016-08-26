@@ -21,9 +21,9 @@
 <div class="row">
     <div class="col-sm-3" ng-repeat="organism in foundOrganisms">
         <div ng-show="{{organism.count > 0}}">
-          <h3>{{organism.count}} <small>{{organism.organism.commonName}}</small></h3>
-          <img class="img-rounded img-responsive" ng-src="{{organism.sketchPhoto.path}}"/>
-          <p ng-show="organism.notes"><b>Notes:</b> {{organism.notes}}</p>
+          <h3 id="mobileOrganismCount{{$index}}">{{organism.count}} <small>{{organism.organism.commonName}}</small></h3>
+          <img id="organismSketchPhoto{{$index}}" class="img-rounded img-responsive" ng-src="{{organism.sketchPhoto.path}}"/>
+          <p id="mobileOrganismNotes{{$index}}" ng-show="organism.notes"><b>Notes:</b> {{organism.notes}}</p>
         </div>
     </div>
 </div>

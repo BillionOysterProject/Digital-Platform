@@ -20,7 +20,7 @@
 <hr/>
 <div ng-repeat="sample in waterQuality.samples">
   <h3>Water Sample {{$index+1}}</h3>
-  <div class="row">
+  <div id="waterQualitySample{{$index}}" class="row">
       <div class="col-sm-3">
           <h4 class="blue">{{sample.depthOfWaterSampleM}} meters deep</h4>
           <h4>
