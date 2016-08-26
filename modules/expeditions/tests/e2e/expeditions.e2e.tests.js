@@ -125,7 +125,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - CREATE EXPEDITION
 //############################################################################//
 
-  xdescribe('Full Expedition Creation Tests', function() {
+  describe('Full Expedition Creation Tests', function() {
     describe('Create Expedition', function() {
       it('should create an expedition using auto-assign', function() {
         //Sign in as team leader
