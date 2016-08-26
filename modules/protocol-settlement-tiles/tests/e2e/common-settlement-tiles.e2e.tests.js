@@ -182,7 +182,66 @@ var fillOutSettlementTiles = function() {
   fillOutSettlementTile(tile4, 3, settlementTiles1.settlementTile4);
 };
 
-var assertSettlementTilesView = function() {
+var assertSettlementTileView = function(index, tile) {
+  element(by.id('settlementTileImage'+index)).getAttribute('src')
+    .then(function(text){
+      if (text !== null) {
+        expect(text).not.toEqual('');
+        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+      }
+    });
+  if (tile.description) {
+    expect(element(by.id('settlementTileDescription'+index)).getText())
+      .toEqual('Description: ' + tile.description);
+  }
+
+  var checkTileImage = function(tileGrid) {
+    tileGrid.element(by.css('img[class="img-rounded img-responsive"]')).getAttribute('src')
+    .then(function(text){
+      if (text !== null) {
+        expect(text).not.toEqual('');
+        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+      }
+    });
+  };
+
+  for (var i = 1; i <= tile.organisms.length; i++) {
+    var expectedString = '' + i + ' ' + tile.organismsText[i-1];
+    if (tile.organismsText[i-1] === 'Other (mark in notes)') {
+      expectedString = '' + i;
+      expect(element(by.id('settlementTile'+index+'Grid'+i)).getText())
+        .toEqual(expectedString);
+    } else {
+      var tileGrid = element(by.id('settlementTile'+index+'Grid'+i));
+      expect(tileGrid.getText()).toEqual(expectedString);
+      checkTileImage(tileGrid);
+    }
+  }
+};
+
+var assertSettlementTilesView = function(values, teamMember) {
+  //Meta data
+  var members = element.all(by.repeater('member in settlementTiles.teamMembers'));
+  expect(members.count()).toEqual(1);
+  var member = members.get(0);
+  expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(teamMember.displayName);
+  if (values.notes) {
+    expect(element(by.binding('settlementTiles.notes')).isPresent()).toBe(true);
+    expect(element(by.binding('settlementTiles.notes')).getText()).toEqual('Notes: ' + values.notes);
+  }
+  if (values.settlementTile1) {
+    assertSettlementTileView(0, values.settlementTile1);
+  }
+  if (values.settlementTile2) {
+    assertSettlementTileView(1, values.settlementTile2);
+  }
+  if (values.settlementTile3) {
+    assertSettlementTileView(2, values.settlementTile3);
+  }
+  if (values.settlementTile4) {
+    assertSettlementTileView(3, values.settlementTile4);
+  }
 };
 
 module.exports = {

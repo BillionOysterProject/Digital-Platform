@@ -24,15 +24,18 @@ var path = require('path'),
   assertMobileTrap = CommonMobileTraps.assertMobileTrap,
   fillOutMobileOrganismDetails = CommonMobileTraps.fillOutMobileOrganismDetails,
   fillOutMobileTraps = CommonMobileTraps.fillOutMobileTraps,
+  assertMobileTrapView = CommonMobileTraps.assertMobileTrapView,
   CommonSettlementTiles = require('../../../protocol-settlement-tiles/tests/e2e/common-settlement-tiles.e2e.tests'),
   assertSettlementTile = CommonSettlementTiles.assertSettlementTile,
   assertSettlementTiles = CommonSettlementTiles.assertSettlementTiles,
   fillOutSettlementTile = CommonSettlementTiles.fillOutSettlementTile,
   fillOutSettlementTiles = CommonSettlementTiles.fillOutSettlementTiles,
+  assertSettlementTilesView = CommonSettlementTiles.assertSettlementTilesView,
   CommonWaterQuality = require('../../../protocol-water-quality/tests/e2e/common-water-quality.e2e.tests'),
   assertWaterQuality = CommonWaterQuality.assertWaterQuality,
   fillOutWaterQualitySample = CommonWaterQuality.fillOutWaterQualitySample,
   fillOutWaterQuality = CommonWaterQuality.fillOutWaterQuality,
+  assertWaterQualityView = CommonWaterQuality.assertWaterQualityView,
   EC = protractor.ExpectedConditions;
 
 describe('Expedition E2E Tests', function() {
@@ -41,7 +44,9 @@ describe('Expedition E2E Tests', function() {
   var member1 = CommonUser.member1;
   var member2 = CommonUser.member2;
   var team = CommonUser.team;
+  var organization = CommonUser.organization;
   var station = CommonUser.station;
+  var station2 = CommonUser.station2;
 
   var expedition1 = CommonExpedition.expedition1;
   var siteCondition1 = CommonSiteConditions.siteCondition1;
@@ -69,15 +74,82 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('List/Search Expeditions Tests', function() {
+  describe('List/Search Expeditions Tests', function() {
+    describe('Search Expeditions', function() {
+      var startDate = element(by.model('vm.filter.startDate'));
+      var endDate = element(by.model('vm.filter.endDate'));
+      var searchField = element(by.model('vm.filter.searchString'));
+      var stationFilter = element(by.model('vm.filter.stationObj'));
+      var orgFilter = element(by.model('vm.filter.organizationObj'));
+      var teamFilter = element(by.model('vm.filter.teamObj'));
+      var teamLeadFilter = element(by.model('vm.filter.teamLeadObj'));
 
+      it('should allow a team member to view expedition', function() {
+        // Sign in as team member
+        signinAs(member1);
+        // Assert that it went to the correct opening page
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        // Go to public expeditions
+        element(by.id('pubexpeditions')).click();
+        browser.sleep(500);
+
+        // Assert that there is only one expedition
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+      });
+
+      it('should allow a team member to filter by location', function() {
+        stationFilter.clear().sendKeys(station2.name).click();
+
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(1);
+
+        stationFilter.clear().sendKeys('All').click();
+      });
+
+      it('should allow a team member to filter by organization', function() {
+        orgFilter.clear().sendKeys(organization.name).click();
+
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+
+        orgFilter.clear().sendKeys('All').click();
+      });
+
+      it('should allow a team member to filter by team', function() {
+        teamFilter.clear().sendKeys(team.name).click();
+
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+
+        teamFilter.clear().sendKeys('All').click();
+      });
+
+      it('should allow a team member to filter by team lead', function() {
+        teamLeadFilter.clear().sendKeys(leader.name).click();
+
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+
+        teamLeadFilter.clear().sendKeys('All').click();
+      });
+
+      it('should allow a team member to search for blue mussel', function() {
+        searchField.clear().sendKeys('blue mussel').click();
+
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(1);
+
+        searchField.clear().click();
+      });
+    });
   });
 
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  describe('View Expedition Tests', function() {
-    describe('View Expedition', function() {
+  xdescribe('View Expedition Tests', function() {
+    describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
         signinAs(member2);
@@ -117,6 +189,28 @@ describe('Expedition E2E Tests', function() {
         element(by.partialLinkText('Oyster Measurements')).click();
 
         assertOysterMeasurementsView(oysterMeasurement2, member1);
+      });
+
+      it('should show protocol 3', function() {
+        element(by.partialLinkText('Mobile Trap')).click();
+
+        assertMobileTrapView({
+          mobileTrap: [mobileTrap3]
+        }, member1);
+      });
+
+      it('should show protocol 4', function() {
+        element(by.partialLinkText('Settlement Tiles')).click();
+
+        assertSettlementTilesView(settlementTiles2, member1);
+      });
+
+      it('should show protocol 5', function() {
+        element(by.partialLinkText('Water Quality')).click();
+
+        assertWaterQualityView({
+          samples: [waterQuality3]
+        }, member1);
       });
     });
   });
