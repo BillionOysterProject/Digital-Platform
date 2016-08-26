@@ -66,6 +66,17 @@ body {
     box-shadow: none;
 }
 
+    .navbar-default a.icon {
+        font-size: 20px;
+        padding: 0 5px;
+        line-height: 50px;
+        color: #ccc !important;
+    }
+
+        .navbar-default a.icon:hover {
+            color: #ea6158 !important;
+        }
+
 .sidebar {
     width: 80px;
     height: 100%;

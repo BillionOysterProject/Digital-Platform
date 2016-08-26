@@ -47,6 +47,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+                <li ui-sref-active="active">
+                  <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                </li>
                 <li class="dropdown" uib-dropdown>
                     <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
                         <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
@@ -63,11 +66,6 @@
                         <li><a href="/api/auth/signout" target="_self">Signout</a></li>
                     </ul>
                 </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li ui-sref-active="active">
-                  <a href="#" ng-click="openFeedback()"><i class="fa fa-question-circle" aria-hidden="true"></i> Support</a>
-              </li>
             </ul>
         </nav>
     </div>
