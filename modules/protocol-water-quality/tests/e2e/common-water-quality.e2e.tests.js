@@ -413,7 +413,70 @@ var fillOutWaterQuality = function() {
   fillOutWaterQualitySample(sample2, 1, waterQuality2);
 };
 
-var assertWaterQualityView = function() {
+var assertWaterSampleView = function(index, values) {
+  var sample = values.samples[index];
+  var sampleElement = element(by.id('waterQualitySample'+index));
+
+  expect(sample.element(by.binding('sample.depthOfWaterSampleM')).getText())
+    .toEqual(sample.depthOfWaterSampleM + ' meters deep');
+  if (sample.waterTemperature.unitsText === 'C') {
+    expect(sample.element(by.binding('sample.waterTemperature.average')).getText())
+      .toEqual(sample.waterTemperature.average + '℃');
+  } else if (sample.waterTemperature.unitsText === 'F') {
+    expect(sample.element(by.binding('sample.waterTemperature.average')).getText())
+      .toEqual(sample.waterTemperature.average + '℉');
+  }
+  expect(sample.element(by.binding('sample.waterTemperature.method')).getText())
+    .toEqual('via ' + sample.waterTemperature.methodText.toLowerCase());
+
+  expect(sample.element(by.binding('sample.dissolvedOxygen.average')).getText())
+    .toEqual(sample.dissolvedOxygen.average + ' ' + sample.dissolvedOxygen.unitsText + '\n' +
+    'via ' + sample.dissolvedOxygen.methodText.toLowerCase());
+
+  expect(sample.element(by.binding('sample.salinity.average')).getText())
+    .toEqual(sample.salinity.average + ' ' + sample.salinity.unitsText + '\n' +
+    'via ' + sample.salinity.methodText.toLowerCase());
+
+  expect(sample.element(by.binding('sample.pH.average')).getText())
+    .toEqual(sample.pH.average + ' ' + sample.pH.unitsText + '\n' +
+    'via ' + sample.pH.methodText.toLowerCase());
+
+  if (sample.turbidity.average) {
+    expect(sample.element(by.binding('sample.turbidity.average')).getText())
+      .toEqual(sample.turbidity.average + ' ' + sample.turbidity.unitsText + '\n' +
+      'via ' + sample.turbidity.methodText.toLowerCase());
+  }
+
+  if (sample.ammonia.average) {
+    expect(sample.element(by.binding('sample.ammonia.average')).getText())
+      .toEqual(sample.ammonia.average + ' ' + sample.ammonia.unitsText + '\n' +
+      'via ' + sample.ammonia.methodText.toLowerCase());
+  }
+
+  if (sample.nitrates.average) {
+    expect(sample.element(by.binding('sample.nitrates.average')).getText())
+      .toEqual(sample.nitrates.average + ' ' + sample.nitrates.unitsText + '\n' +
+      'via ' + sample.nitrates.methodText.toLowerCase());
+  }
+
+  if (sample.others[0].average) {
+    expect(sample.element(by.binding('sample.others[0].average')).getText())
+      .toEqual(sample.others[0].average + ' ' + sample.others[0].unitsText + '\n' +
+      'via ' + sample.others[0].methodText.toLowerCase());
+  }
+};
+
+var assertWaterQualityView = function(values, teamMember) {
+  //Meta data
+  var members = element.all(by.repeater('member in waterQuality.teamMembers'));
+  expect(members.count()).toEqual(1);
+  var member = members.get(0);
+  expect(member.element(by.binding('member.displayName')).isPresent()).toBe(true);
+  expect(member.element(by.binding('member.displayName')).getText()).toEqual(teamMember.displayName);
+  if (values.notes) {
+    expect(element(by.binding('waterQuality.notes')).isPresent()).toBe(true);
+    expect(element(by.binding('waterQuality.notes')).getText()).toEqual('Notes: ' + values.notes);
+  }
 };
 
 module.exports = {

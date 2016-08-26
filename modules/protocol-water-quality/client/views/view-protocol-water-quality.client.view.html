@@ -20,15 +20,9 @@
 <hr/>
 <div ng-repeat="sample in waterQuality.samples">
   <h3>Water Sample {{$index+1}}</h3>
-  <div class="row">
+  <div id="waterQualitySample{{$index}}" class="row">
       <div class="col-sm-3">
           <h4 class="blue">{{sample.depthOfWaterSampleM}} meters deep</h4>
-          <h4>
-              <img class="pull-left" width="20" src="modules/core/client/img/icons/temperature.svg" />
-              <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
-              <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average}}&#8451;</span>
-              <small>via {{getWaterTemperatureMethod(sample.waterTemperature.method) | lowercase}}</small>
-          </h4>
           <h4>
               <small>
                   <i class="fa fa-map-marker"></i>
@@ -39,9 +33,18 @@
       <div class="col-sm-9">
           <div class="row">
               <div class="col-sm-3">
+                  <h6>Temperature</h6>
+                  <h4 class="green">
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/temperature.svg" />
+                      <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
+                      <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average}}&#8451;</span><br/>
+                      <small>via {{getWaterTemperatureMethod(sample.waterTemperature.method) | lowercase}}</small>
+                  </h4>
+              </div>
+              <div class="col-sm-3">
                   <h6>Dissolved Oxygen</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/dissolved-oxygen.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/dissolved-oxygen.svg" />
                       {{sample.dissolvedOxygen.average | number:2}} {{getDissolvedOxygenUnit(sample.dissolvedOxygen.units)}}<br/>
                       <small>via {{getDissolvedOxygenMethod(sample.dissolvedOxygen.method) | lowercase}}</small>
                   </h4>
@@ -49,7 +52,7 @@
               <div class="col-sm-3">
                   <h6>Salinity</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/salinity.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/salinity.svg" />
                       {{sample.salinity.average | number:2}} {{getSalinityUnit(sample.salinity.units)}}<br/>
                       <small>via {{getSalinityMethod(sample.salinity.method) | lowercase}}</small>
                   </h4>
@@ -57,7 +60,7 @@
               <div class="col-sm-3">
                   <h6>pH</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/pH.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/pH.svg" />
                       {{sample.pH.average | number:2}} {{getPHUnits(sample.pH.units)}}<br/>
                       <small>via {{getPHMethod(sample.pH.method) | lowercase}}</small>
                   </h4>
@@ -67,7 +70,7 @@
               <div class="col-sm-3" ng-show="sample.turbidity.average">
                   <h6>Turbidity</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/turbidity.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/turbidity.svg" />
                       {{sample.turbidity.average | number:2}} {{getTurbidityUnit(sample.turbidity.units)}}<br/>
                       <small>via {{getTurbidityMethod(sample.turbidity.method) | lowercase}}</small>
                   </h4>
@@ -75,7 +78,7 @@
               <div class="col-sm-3" ng-show="sample.ammonia.average">
                   <h6>Ammonia</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/ammonia.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/ammonia.svg" />
                       {{sample.ammonia.average | number:2}} {{getAmmoniaUnit(sample.ammonia.units)}}<br/>
                       <small>via {{getAmmoniaMethod(sample.ammonia.method) | lowercase}}</small>
                   </h4>
@@ -83,7 +86,7 @@
               <div class="col-sm-3" ng-show="sample.nitrates.average">
                   <h6>Nitrates</h6>
                   <h4 class="green">
-                      <img class="pull-left" width="30" src="modules/core/client/img/icons/nitrates.svg" />
+                      <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/nitrates.svg" />
                       {{sample.nitrates.average | number:2}} {{getNitratesUnit(sample.nitrates.units)}}<br/>
                       <small>via {{getNitratesMethod(sample.nitrates.method) | lowercase}}</small>
                   </h4>

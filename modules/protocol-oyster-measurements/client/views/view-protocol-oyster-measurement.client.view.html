@@ -92,7 +92,7 @@
       </div>
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">
-          Set at <b>{{vm.getDateTime(substrate.setDate)}}</b><br/>
+          Set at <b>{{vm.getDate(substrate.setDate)}}</b><br/>
           Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
           <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
           <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>
@@ -114,12 +114,17 @@
         </h3>
         <h3 id="totalLiveOystersNoBaseline{{$index}}" ng-hide="substrate.totalNumberOfLiveOystersAtBaseline" class="green">
           {{substrate.totalNumberOfLiveOystersOnShell}}
-          <small>live oysters on shell</small>
+          <small>live oysters on shell<br/>
+            total number of live oysters at baseline not provided
+          </small>
         </h3>
         <hr/>
         <h4 class="text-muted" id="totalMassOfOysters{{$index}}" ng-show="substrate.totalMassOfScrubbedSubstrateShellOystersTagG">
           <b>{{substrate.totalMassOfScrubbedSubstrateShellOystersTagG | number:2}}</b> total mass
           <small>(shell + oysters + tag)</small></h4>
+        <h4 class="text-muted" id="noMassOfOysters{{$index}}" ng-hide="substrate.totalMassOfScrubbedSubstrateShellOystersTagG">
+          total mass not provided <small>(shell + oysters + tag)</small>
+          </h4>
         <hr/>
         <div class="row">
           <div class="col-sm-6 text-right">

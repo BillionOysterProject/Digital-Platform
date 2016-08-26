@@ -37,7 +37,9 @@ module.exports = {
     displayName: 'Student2 Local'
   },
   team: { name: 'Test Team' },
+  organization: { name: 'Org1' },
   station: { name: 'Test Station' },
+  station2: { name: 'Other Station' },
 
   signout: signout,
   signinAs: signinAs
