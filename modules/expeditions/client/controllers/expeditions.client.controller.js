@@ -71,6 +71,7 @@
         }, function(data) {
           vm.members = data;
           vm.memberLists.members = angular.copy(data);
+          vm.memberLists.members.push(angular.copy(vm.team.teamLead));
           vm.member = null;
         });
       }
@@ -198,6 +199,13 @@
 
     vm.autoAssign = function() {
       var keys = [];
+      vm.expedition.teamLists = {
+        siteCondition: [],
+        oysterMeasurement: [],
+        mobileTrap: [],
+        settlementTiles: [],
+        waterQuality: [],
+      };
       angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });

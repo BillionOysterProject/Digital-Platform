@@ -5,11 +5,35 @@
     .module('expeditions')
     .controller('ExpeditionsListController', ExpeditionsListController);
 
-  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService'];
+  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
+  'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope', '$stateParams'];
 
-  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService) {
+  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
+    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope, $stateParams) {
     var vm = this;
     vm.user = Authentication.user;
+    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'myexpeditions';
+
+    vm.opened = {
+      startDate: false,
+      endDate: false
+    };
+    vm.maxDate = new Date();
+    vm.format = 'MM/dd/yyyy';
+    vm.shortFormat = 'MM/yyyy';
+    vm.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1,
+      showWeeks: false
+    };
+
+    vm.openStartDate = function($event) {
+      vm.opened.startDate = true;
+    };
+
+    vm.openEndDate = function($event) {
+      vm.opened.endDate = true;
+    };
 
     var checkRole = function(role) {
       var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -31,18 +55,181 @@
       byMember = true;
     }
 
+    vm.filter = {
+      station: '',
+      stationObj: '',
+      stationName: '',
+      organization: '',
+      organizationObj: '',
+      organizationName: '',
+      team: '',
+      teamObj: '',
+      teamName: '',
+      teamLead: '',
+      teamLeadObj: '',
+      teamLeadName: '',
+      startDate: '',
+      endDate: '',
+      searchString: ''
+    };
+
     ExpeditionsService.query({
       byOwner: byOwner,
       byMember: byMember,
     }, function(data) {
-      vm.expeditions = data;
+      vm.myExpeditions = data;
     });
+
+    vm.findPublishedExpeditions = function() {
+      ExpeditionsService.query({
+        published: true,
+        sort: 'startDate',
+        station: vm.filter.station,
+        organization: vm.filter.organization,
+        team: vm.filter.team,
+        teamLead: vm.filter.teamLead,
+        startDate: vm.filter.startDate,
+        endDate: vm.filter.endDate,
+        searchString: vm.filter.searchString
+      }, function(data) {
+        vm.published = data;
+        vm.error = null;
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        });
+      }, function(error) {
+        vm.error = error.data.message;
+      });
+    };
+    vm.findPublishedExpeditions();
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    });
+
+    vm.switchTabs = function() {
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      });
+    };
+
+    vm.showAllPublishedExpeditions = function() {
+      vm.filter = {
+        station: '',
+        stationObj: '',
+        stationName: '',
+        organization: '',
+        organizationObj: '',
+        organizationName: '',
+        team: '',
+        teamObj: '',
+        teamName: '',
+        teamLead: '',
+        teamLeadObj: '',
+        teamLeadName: '',
+        startDate: '',
+        endDate: '',
+        searchString: ''
+      };
+      vm.findPublishedExpeditions();
+    };
 
     TeamsService.query({
       byOwner: true
     }, function(data) {
       vm.teams = data;
     });
+
+    vm.findTeams = function() {
+      TeamsService.query({
+        organization: vm.filter.organization
+      }, function(data) {
+        vm.allTeams = [{
+          name: 'All'
+        }];
+        vm.allTeams = vm.allTeams.concat(data);
+        vm.filter.teamObj = vm.allTeams[0];
+      });
+    };
+    vm.findTeams();
+
+    vm.teamSelected = function() {
+      vm.filter.team = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj._id : '';
+      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj.name : '';
+      vm.findPublishedExpeditions();
+    };
+
+    SchoolOrganizationsService.query({
+      sort: 'name'
+    }, function(data) {
+      vm.organizations = [{
+        name: 'All'
+      }];
+      vm.organizations = vm.organizations.concat(data);
+      vm.filter.organizationObj = vm.organizations[0];
+    });
+
+    vm.organizationSelected = function() {
+      vm.filter.organization = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj._id : '';
+      vm.filter.organizationName = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj.name : '';
+      vm.findTeams();
+      vm.findPublishedExpeditions();
+    };
+
+    vm.getOrganizationName = function(id) {
+      var index = lodash.findIndex(vm.organizations, function(o) {
+        return o._id === id;
+      });
+      return (index > -1) ? vm.organizations[index].name : '';
+    };
+
+    RestorationStationsService.query({
+    }, function(data) {
+      vm.stations = [{
+        name: 'All'
+      }];
+      vm.stations = vm.stations.concat(data);
+      vm.filter.stationObj = vm.stations[0];
+    });
+
+    vm.stationSelected = function() {
+      vm.filter.station = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj._id : '';
+      vm.filter.stationName = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj.name : '';
+      vm.findPublishedExpeditions();
+    };
+
+    TeamLeads.query({
+      roles: 'team lead',
+      organization: vm.filter.organization
+    }, function(data) {
+      vm.teamLeads = [{
+        displayName: 'All'
+      }];
+      vm.teamLeads = vm.teamLeads.concat(data);
+      vm.filter.teamLeadObj = vm.teamLeads[0];
+    });
+
+    vm.teamLeadSelected = function() {
+      console.log('selected');
+      vm.filter.teamLead = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj._id : '';
+      vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj.displayName : '';
+
+      vm.findPublishedExpeditions();
+    };
+
+    vm.dateSelected = function() {
+      if (vm.filter.startDate && vm.filter.endDate) {
+        vm.findPublishedExpeditions();
+      }
+    };
+
+    vm.searchChange = function() {
+      if (vm.filter.searchString.length >= 3 || vm.filter.searchString.length === 0) {
+        vm.findPublishedExpeditions();
+      }
+    };
 
     vm.expeditionLink = function(expedition) {
       return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
@@ -60,8 +247,8 @@
     };
 
     vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
+      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma')+'-'+
+        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma');
     };
 
     vm.checkWrite = function(teamList) {

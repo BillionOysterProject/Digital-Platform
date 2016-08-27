@@ -118,6 +118,20 @@
       });
     });
 
+    $scope.getSessileOrganismName = function(value) {
+      var index = lodash.findIndex($scope.sessileOrganisms, function(o) {
+        return o._id === value;
+      });
+      return (index > -1) ? $scope.sessileOrganisms[index].commonName : '';
+    };
+
+    $scope.getSessileOrganismImage = function(value) {
+      var index = lodash.findIndex($scope.sessileOrganisms, function(o) {
+        return o._id === value;
+      });
+      return (index > -1 && $scope.sessileOrganisms[index].image) ? $scope.sessileOrganisms[index].image.path : '';
+    };
+
     $scope.openSettlementTileForm = function(index) {
       $scope.grids = [];
       var tile = $scope.settlementTiles.settlementTiles[index-1];

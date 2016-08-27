@@ -53,7 +53,10 @@ var ProtocolOysterMeasurementSchema = new Schema({
       substrateShellNumber: Number,
       setDate: Date,
       source: String,
+      otherSource: String,
+      totalNumberOfLiveOystersAtBaseline: Number,
       totalNumberOfLiveOystersOnShell: Number,
+      totalMassOfScrubbedSubstrateShellOystersTagG: Number,
       notes: String,
       outerSidePhoto: {
         originalname: String,

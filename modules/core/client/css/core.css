@@ -66,6 +66,17 @@ body {
     box-shadow: none;
 }
 
+    .navbar-default a.icon {
+        font-size: 20px;
+        padding: 0 5px;
+        line-height: 50px;
+        color: #ccc !important;
+    }
+
+        .navbar-default a.icon:hover {
+            color: #ea6158 !important;
+        }
+
 .sidebar {
     width: 80px;
     height: 100%;
@@ -348,7 +359,6 @@ a {
 
 .btn {
     border: none;
-    background: #444;
     color: #fff;
     text-shadow: none;
 }
@@ -429,6 +439,14 @@ a {
             filter: alpha(opacity=80);
             opacity: 0.8;
             color: #fff;
+        }
+
+    .btn-link {
+        color: #426ca9;
+    }
+    
+        .btn-link:hover, .btn-link:focus, .btn-link:active {
+            color: #ea6158;
         }
 
     .btn-default:active,

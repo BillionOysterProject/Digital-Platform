@@ -3,7 +3,7 @@
         <div class="modal-content" ng-hide="sent">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Support</h4>
+                <h4 class="modal-title">Need help? Send us a message</h4>
                 <p>Thanks for helping us improve! All feedback is appreciated.</p>
             </div>
             <form name="form.siteFeedbackForm" ng-submit="send(form.siteFeedbackForm.$valid)" novalidate>
@@ -11,7 +11,7 @@
                   <div class="row">
                       <div class="col-sm-12">
                           <div class="form-group">
-                              <label class="control-label">Type</label>
+                              <label class="control-label">Message type</label>
                               <select class="form-control" ng-model="type">
                                   <option value="general">General feedback</option>
                                   <option value="help">Help needed</option>

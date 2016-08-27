@@ -143,6 +143,13 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      var moIndex = _.findIndex(mobileOrganisms, function(m) {
+        return m.commonName === 'Other';
+      });
+      if (moIndex > -1) {
+        var other = mobileOrganisms.splice(moIndex, 1);
+        mobileOrganisms = other.concat(mobileOrganisms);
+      }
       res.json(mobileOrganisms);
     }
   });

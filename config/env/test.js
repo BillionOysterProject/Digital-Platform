@@ -85,64 +85,17 @@ module.exports = {
     }
   },
   seedDB: {
-    //seed: process.env.MONGO_SEED === 'true' ? true : false,
-    seed: true,
+    seed: process.env.MONGO_SEED === 'true' ? true : false,
     options: {
       logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
-      seedOrganization: {
-        name: 'Org1',
-        organizationType: 'school',
-        description: 'Test Organization',
-        streetAddress: '123 Main St',
-        city: 'Anytown',
-        state: 'NY',
-        latitude: 39.765,
-        longitude: -76.234,
-        pending: false
-      },
-      seedTeam: {
-        name: 'Test Team'
-      },
-      seedStation: {
-        name: 'Test Station',
-        latitude: 39.765,
-        longitude: -76.234,
-        bodyOfWater: 'Test Body of Water',
-        status: 'Active',
-        photo: {
-          originalname: 'water.jpg',
-          mimetype: 'image/jpeg',
-          filename:'31c11c686cf6373172e6d95fdaf6aeb9',
-          path: 'http://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/restoration-stations/img/station/31c11c686cf6373172e6d95fdaf6aeb9.jpg'
-        }
-      },
-      seedUserLeader: {
-        username: 'teacher',
+      seedUser: {
+        username: process.env.MONGO_SEED_USER_USERNAME || 'user',
         provider: 'local',
-        email: 'teacher@localhost.com',
-        firstName: 'Teacher',
+        email: process.env.MONGO_SEED_USER_EMAIL || 'user@localhost.com',
+        firstName: 'User',
         lastName: 'Local',
-        displayName: 'Teacher Local',
-        teamLeadType: 'teacher',
-        roles: ['user', 'team lead']
-      },
-      seedUserMember1: {
-        username: 'student1',
-        provider: 'local',
-        email: 'student1@localhost.com',
-        firstName: 'Student1',
-        lastName: 'Local',
-        displayName: 'Student1 Local',
-        roles: ['user', 'team member']
-      },
-      seedUserMember2: {
-        username: 'student2',
-        provider: 'local',
-        email: 'student2@localhost.com',
-        firstName: 'Student2',
-        lastName: 'Local',
-        displayName: 'Student2 Local',
-        roles: ['user', 'team member']
+        displayName: 'User Local',
+        roles: ['user']
       },
       seedAdmin: {
         username: process.env.MONGO_SEED_ADMIN_USERNAME || 'admin',

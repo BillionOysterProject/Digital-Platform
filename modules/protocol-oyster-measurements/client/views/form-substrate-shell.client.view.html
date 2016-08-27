@@ -27,16 +27,24 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active" id="substrate-details"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Description</a></li>
+                                <li role="presentation" class="active" id="substrate-photos"><a href="#substrateshell-photos{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Photos</a></li>
+                                <li role="presentation" id="substrate-meta"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Baseline</a></li>
                                 <li role="presentation" id="substrate-measurements"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
                             </ul>
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="substrateshell-meta{{index}}">
+                                <div role="tabpanel" class="tab-pane active" id="substrateshell-photos{{index}}">
                                     <br />
                                     <div class="row">
                                         <div class="col-md-6">
                                             <p class="lead blue">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
+                                        </div>
+                                        <div class="col-md-6">
                                             <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="outerImg" class="control-label required">Outer side *</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader"
@@ -46,6 +54,8 @@
                                                     <p class="red">Outer side image is required.</p>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="innerImg" class="control-label required">Inner side *</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader"
@@ -56,38 +66,70 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="substrateshell-meta{{index}}">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="lead blue">On the first expedition to the ORS, enter the baseline data to measure future visits by.</p>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="row">
-                                                <div class="form-group col-sm-6">
-                                                    <label for="shellNumber" class="control-label required">Substrate Shell #</label>
+                                                <div class="form-group col-sm-4">
+                                                    <label for="shellNumber" class="control-label required">Substrate shell #</label>
                                                     <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
                                                 </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="source" class="control-label required">Source *</label>
-                                                    <input type="text" class="form-control" ng-model="substrate.source" name="source" id="source" required/>
+                                                <div class="form-group col-sm-8">
+                                                    <label for="setDate" class="control-label required">Set date *</label>
+                                                    <input type="date" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-dd"
+                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="setDate" class="control-label required">Set date *</label>
-                                                <input type="datetime-local" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-ddTHH:mm:ss"
-                                                name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
+                                            <div class="row">
+                                              <div class="form-group" ng-class="{'col-sm-6': substrate.source === 'Other',
+                                              'col-sm-12': !substrate.source || substrate.source !== 'Other'}">
+                                                  <label for="source" class="control-label required">Source *</label>
+                                                  <select class="form-control" ng-options="source.value as source.label for source in sources"
+                                                  ng-model="substrate.source" name="source" id="source" required></select>
+                                              </div>
+                                              <div class="form-group col-sm-6" ng-show="substrate.source === 'Other'">
+                                                <label for="source-other" class="control-label required">Other source *</label>
+                                                <input type="text" class="form-control" ng-model="substrate.otherSource" name="source-other" id="source-other"
+                                                ng-required="substrate.source === 'Other'"/>
+                                              </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="total" class="control-label required">Total Number of live oysters on shell *</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
-                                                id="total" min="0" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="notes" class="control-label">Notes</label>
-                                                <textarea class="form-control" rows="5" ng-model="substrate.notes" name="notes" id="notes"></textarea>
+                                                <label for="totalAtBaseline" class="control-label required">Total number of live oysters on shell at baseline *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersAtBaseline"
+                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" required/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="substrateshell-measurements{{index}}">
                                     <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="mass" class="control-label required">Total mass of scrubbed substrate shell + oysters + tag (grams) *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG" name="mass" id="mass" min="0" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="total" class="control-label required">Total number of live oysters on shell at time of monitoring *</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersOnShell" name="total"
+                                                id="total" min="0" max="{{maxLiveOysters}}" ng-change="updateMeasurementFields()" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="notes" class="control-label">Notes</label>
+                                                <textarea class="form-control" rows="5" ng-model="substrate.notes" name="notes" id="notes"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p class="lead blue">Measure and record the size (in mm) of each live oyster below.</p>
-                                    <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell in the Description tab</p>
+                                    <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell above</p>
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6" ng-repeat="measurement in substrate.measurements">
                                             <div class="form-group row" ng-show="$index < substrate.totalNumberOfLiveOystersOnShell" >

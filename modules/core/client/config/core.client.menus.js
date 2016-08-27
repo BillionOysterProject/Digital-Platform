@@ -25,7 +25,6 @@
       roles: ['user']
     });
 
-    
 
     // Menus.addSubMenuItem('account', 'settings', {
     //   title: 'Edit Profile',
