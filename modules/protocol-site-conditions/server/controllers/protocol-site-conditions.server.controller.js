@@ -318,6 +318,19 @@ exports.incrementalSave = function (req, res) {
       moment(req.body.tideConditions.closestLowTide, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     siteCondition.scribeMember = req.user;
 
+    // remove base64 text
+    var pattern = /^data:image\/jpeg;base64,/i;
+    if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
+    siteCondition.waterConditions.waterConditionPhoto.path &&
+    pattern.test(siteCondition.waterConditions.waterConditionPhoto.path)) {
+      siteCondition.waterConditions.waterConditionPhoto.path = '';
+    }
+    if (siteCondition.landConditions && siteCondition.landConditions.landConditionPhoto &&
+    siteCondition.landConditions.landConditionPhoto.path &&
+    pattern.test(siteCondition.landConditions.landConditionPhoto.path)) {
+      siteCondition.landConditions.landConditionPhoto.path = '';
+    }
+
     siteCondition.save(function (err) {
       if (err) {
         return res.status(400).send({

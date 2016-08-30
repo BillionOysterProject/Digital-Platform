@@ -197,6 +197,29 @@ exports.incrementalSave = function (req, res) {
       }
     }
 
+    // remove base64 text
+    var pattern = /^data:image\/jpeg;base64,/i;
+    if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+    oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path &&
+    pattern.test(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path)) {
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = '';
+    }
+    if (oysterMeasurement.measuringOysterGrowth && oysterMeasurement.measuringOysterGrowth.substrateShells &&
+    oysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
+      for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path &&
+        pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path)) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path = '';
+        }
+        if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto &&
+        oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path &&
+        pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path)) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path = '';
+        }
+      }
+    }
+
     oysterMeasurement.save(function (err) {
       if (err) {
         return res.status(400).send({

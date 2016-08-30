@@ -140,40 +140,40 @@
         $scope.$broadcast('show-errors-check-validity', '$scope.form.siteConditionForm');
       }
 
-      if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition && $scope.siteCondition.waterConditions &&
-          $scope.siteCondition.waterConditions.waterConditionPhoto &&
-          $scope.siteCondition.waterConditions.waterConditionPhoto.path) {
-          $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
-        } else if (!$scope.siteCondition.waterConditions) {
-          $scope.siteCondition.waterConditions = {
-            waterConditionPhoto: {
-              path: $scope.waterConditionPhotoURL
-            }
-          };
-        } else {
-          $scope.siteCondition.waterConditions.waterConditionPhoto = {
-            path: $scope.waterConditionPhotoURL
-          };
-        }
-      }
-      if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition && $scope.siteCondition.landConditions &&
-          $scope.siteCondition.landConditions.landConditionPhoto &&
-          $scope.siteCondition.landConditions.landConditionPhoto.path) {
-          $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
-        } else if (!$scope.siteCondition.landConditions) {
-          $scope.siteCondition.landConditions = {
-            landConditionPhoto: {
-              path: $scope.landConditionPhotoURL
-            }
-          };
-        } else {
-          $scope.siteCondition.landConditions.landConditionPhoto = {
-            path: $scope.landConditionPhotoURL
-          };
-        }
-      }
+      // if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
+      //   if ($scope.siteCondition && $scope.siteCondition.waterConditions &&
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto &&
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto.path) {
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
+      //   } else if (!$scope.siteCondition.waterConditions) {
+      //     $scope.siteCondition.waterConditions = {
+      //       waterConditionPhoto: {
+      //         path: $scope.waterConditionPhotoURL
+      //       }
+      //     };
+      //   } else {
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto = {
+      //       path: $scope.waterConditionPhotoURL
+      //     };
+      //   }
+      // }
+      // if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
+      //   if ($scope.siteCondition && $scope.siteCondition.landConditions &&
+      //     $scope.siteCondition.landConditions.landConditionPhoto &&
+      //     $scope.siteCondition.landConditions.landConditionPhoto.path) {
+      //     $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
+      //   } else if (!$scope.siteCondition.landConditions) {
+      //     $scope.siteCondition.landConditions = {
+      //       landConditionPhoto: {
+      //         path: $scope.landConditionPhotoURL
+      //       }
+      //     };
+      //   } else {
+      //     $scope.siteCondition.landConditions.landConditionPhoto = {
+      //       path: $scope.landConditionPhotoURL
+      //     };
+      //   }
+      // }
 
       // Use incremental-save
       var siteConditionId = $scope.siteCondition._id;
