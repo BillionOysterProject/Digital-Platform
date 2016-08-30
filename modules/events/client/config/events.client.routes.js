@@ -31,44 +31,44 @@
         data: {
           pageTitle: 'Calendar'
         }
-      // })
-      // .state('events.create', {
-      //   url: '/create',
-      //   templateUrl: 'modules/events/client/views/form-event.client.view.html',
-      //   controller: 'EventsController',
-      //   controllerAs: 'vm',
-      //   resolve: {
-      //     eventResolve: newEvent
-      //   },
-      //   data: {
-      //     roles: ['user', 'admin'],
-      //     pageTitle: 'Events Create'
-      //   }
-      // })
-      // .state('events.edit', {
-      //   url: '/:eventId/edit',
-      //   templateUrl: 'modules/events/client/views/form-event.client.view.html',
-      //   controller: 'EventsController',
-      //   controllerAs: 'vm',
-      //   resolve: {
-      //     eventResolve: getEvent
-      //   },
-      //   data: {
-      //     roles: ['user', 'admin'],
-      //     pageTitle: 'Edit Event {{ eventResolve.name }}'
-      //   }
-      // })
-      // .state('events.view', {
-      //   url: '/:eventId',
-      //   templateUrl: 'modules/events/client/views/view-event.client.view.html',
-      //   controller: 'EventsController',
-      //   controllerAs: 'vm',
-      //   resolve: {
-      //     eventResolve: getEvent
-      //   },
-      //   data: {
-      //     pageTitle: 'Event {{ eventResolve.name }}'
-      //   }
+      })
+      .state('events.create', {
+        url: '/create',
+        templateUrl: 'modules/events/client/views/form-event.client.view.html',
+        controller: 'EventsController',
+        controllerAs: 'vm',
+        resolve: {
+          eventResolve: newEvent
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Events Create'
+        }
+      })
+      .state('events.edit', {
+        url: '/:eventId/edit',
+        templateUrl: 'modules/events/client/views/form-event.client.view.html',
+        controller: 'EventsController',
+        controllerAs: 'vm',
+        resolve: {
+          eventResolve: getEvent
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Edit Event {{ eventResolve.name }}'
+        }
+      })
+      .state('events.view', {
+        url: '/:eventId',
+        templateUrl: 'modules/events/client/views/view-event.client.view.html',
+        controller: 'EventsController',
+        controllerAs: 'vm',
+        resolve: {
+          eventResolve: getEvent
+        },
+        data: {
+          pageTitle: 'Event {{ eventResolve.name }}'
+        }
       });
   }
 
