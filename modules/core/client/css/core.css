@@ -661,10 +661,10 @@ blockquote {
     border-bottom-left-radius: 6px;
 }
 
-.modal-title {
-    font-size: 16pt;
-    color: #aaa;
-}
+    .modal-title {
+        font-size: 16pt;
+        color: #aaa;
+    }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -967,5 +967,9 @@ form.ng-submitted .ng-invalid {
     width: 20%;
 }
 
+blockquote {
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
 
