@@ -22,7 +22,8 @@ var ApplicationConfiguration = (function () {
     'chart.js',
     'ngLodash',
     'colorpicker.module',
-    'angularMoment'];
+    'angularMoment',
+    'mwl.calendar'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {
