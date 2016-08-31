@@ -96,7 +96,7 @@
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
                 <tr ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
                 ng-class="{red: form.oysterMeasurementForm.$submitted && !substratesValid &&
-                  (substrate.totalNumberOfLiveOystersOnShell === 0 || substrate.totalNumberOfLiveOystersOnShell === undefined)}">
+                  (substrate.totalNumberOfLiveOystersOnShell < 0 || substrate.totalNumberOfLiveOystersOnShell === undefined)}">
                     <td>
                         <h4><i class="glyphicon glyphicon-ok-sign green" ng-show="checkDone(substrate)"></i> Substrate Shell {{substrate.substrateShellNumber}}</h4>
                     </td>
