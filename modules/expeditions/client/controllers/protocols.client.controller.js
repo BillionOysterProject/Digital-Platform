@@ -122,23 +122,23 @@
       }
     };
 
-    var populateTeamMembers = function(list, callback) {
-      var getTeamMember = function(index, done) {
-        if (index < list.length) {
-          TeamMembersService.get({
-            memberId: list[index]
-          }, function(data) {
-            list[index] = data;
-            getTeamMember(index+1, done);
-          });
-        } else {
-          done();
-        }
-      };
-      getTeamMember(0, function() {
-        if (callback) callback();
-      });
-    };
+    // var populateTeamMembers = function(list, callback) {
+    //   // var getTeamMember = function(index, done) {
+    //   //   if (index < list.length) {
+    //   //     TeamMembersService.get({
+    //   //       memberId: list[index]._id
+    //   //     }, function(data) {
+    //   //       list[index] = data;
+    //   //       getTeamMember(index+1, done);
+    //   //     });
+    //   //   } else {
+    //   //     done();
+    //   //   }
+    //   // };
+    //   // getTeamMember(0, function() {
+    //   if (callback) callback();
+    //   // });
+    // };
 
     if (vm.expedition.status === 'published' &&
     vm.expedition.protocols.siteCondition.status === 'published' &&
@@ -162,11 +162,11 @@
       vm.viewWaterQuality = true;
       vm.disabledWaterQuality = false;
 
-      populateTeamMembers($scope.siteCondition.teamMembers);
-      populateTeamMembers($scope.oysterMeasurement.teamMembers);
-      populateTeamMembers($scope.mobileTrap.teamMembers);
-      populateTeamMembers($scope.settlementTiles.teamMembers);
-      populateTeamMembers($scope.waterQuality.teamMembers);
+      // populateTeamMembers($scope.siteCondition.teamMembers);
+      // populateTeamMembers($scope.oysterMeasurement.teamMembers);
+      // populateTeamMembers($scope.mobileTrap.teamMembers);
+      // populateTeamMembers($scope.settlementTiles.teamMembers);
+      // populateTeamMembers($scope.waterQuality.teamMembers);
     } else {
       // Set up Site Condition protocol variables
       if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {

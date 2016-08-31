@@ -376,35 +376,43 @@ exports.submit = function (req, res) {
             });
           } else {
             updateActivity(function() {
-              Team.findById(expedition.team).populate('teamLead', 'email displayName profileImageURL').
-              exec(function(err, team) {
-                if (team) {
-                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-                  email.sendEmailTemplate(team.teamLead.email, 'Your team has submitted all of the protocols for the expedition ' + expedition.name,
-                  'expedition_completed', {
-                    FirstName: team.teamLead.firstName,
-                    ExpeditionName: expedition.name,
-                    LinkPublishExpedition: httpTransport + req.headers.host + 'expeditions/' + expedition._id + '/protocols',
-                    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-                  },
-                  function(info) {
-                    res.json(expedition);
-                  }, function(errorMessage) {
-                    return res.status(400).send({
-                      message: errorMessage
-                    });
-                  });
-                } else {
-                  res.json(expedition);
-                }
+              email.sendEmailTemplate(expedition.teamLead.email, 'Your team has submitted all of the protocols for the expedition ' + expedition.name,
+              'expedition_completed', {
+                FirstName: expedition.teamLead.firstName,
+                ExpeditionName: expedition.name,
+                LinkPublishExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
+                LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              },
+              function(info) {
+                res.json(expedition);
+              }, function(errorMessage) {
+                return res.status(400).send({
+                  message: errorMessage
+                });
               });
             });
           }
         });
       } else {
         updateActivity(function() {
-          res.json(expedition);
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(expedition.teamLead.email, 'Your team has submitted a protocol for the expedition ' + expedition.name,
+          'protocol_submitted', {
+            FirstName: expedition.teamLead.firstName,
+            ExpeditionName: expedition.name,
+            LinkViewExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          },
+          function(info) {
+            res.json(expedition);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
+          });
         });
       }
     });
@@ -413,6 +421,17 @@ exports.submit = function (req, res) {
       message: 'Expedition not found'
     });
   }
+};
+
+var getTeamMemberList = function(expedition) {
+  var emailArray = [];
+  emailArray = emailArray.concat(_.map(expedition.teamLists.siteCondition, 'email'));
+  emailArray = emailArray.concat(_.map(expedition.teamLists.oysterMeasurement, 'email'));
+  emailArray = emailArray.concat(_.map(expedition.teamLists.mobileTrap, 'email'));
+  emailArray = emailArray.concat(_.map(expedition.teamLists.settlementTiles, 'email'));
+  emailArray = emailArray.concat(_.map(expedition.teamLists.waterQuality, 'email'));
+  emailArray = _.uniq(emailArray);
+  return emailArray;
 };
 
 /**
@@ -446,7 +465,23 @@ exports.publish = function (req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            res.json(expedition);
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+            var toList = getTeamMemberList(expedition);
+            email.sendEmailTemplate(toList, 'Your work on the protocol(s) for expedition ' + expedition.name + ' have been published!',
+            'protocols_published', {
+              TeamName: expedition.team.name,
+              ExpeditionName: expedition.name,
+              LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
+              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            },
+            function(info) {
+              res.json(expedition);
+            }, function(errorMessage) {
+              return res.status(400).send({
+                message: errorMessage
+              });
+            });
           }
         });
       }
@@ -530,7 +565,23 @@ exports.return = function (req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            res.json(expedition);
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+            var toList = getTeamMemberList(expedition);
+            email.sendEmailTemplate(toList, 'Your work on the protocol(s) for expedition ' + expedition.name + ' was returned',
+            'protocols_returned', {
+              TeamName: expedition.team.name,
+              ExpeditionName: expedition.name,
+              LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
+              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            },
+            function(info) {
+              res.json(expedition);
+            }, function(errorMessage) {
+              return res.status(400).send({
+                message: errorMessage
+              });
+            });
           }
         });
       }
@@ -1090,14 +1141,14 @@ exports.expeditionByID = function (req, res, next, id) {
     });
   }
 
-  var query = Expedition.findById(id).populate('team').populate('team.teamLead', 'email displayName profileImageURL')
+  var query = Expedition.findById(id).populate('team').populate('teamLead', 'email displayName firstName profileImageURL')
   .populate('team.schoolOrg', 'name')
   .populate('station', 'name latitude longitude')
-  .populate('teamLists.siteCondition', 'displayName username profileImageURL')
-  .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
-  .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
-  .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
-  .populate('teamLists.waterQuality', 'displayName username profileImageURL');
+  .populate('teamLists.siteCondition', 'email displayName username profileImageURL')
+  .populate('teamLists.oysterMeasurement', 'email displayName username profileImageURL')
+  .populate('teamLists.mobileTrap', 'email displayName username profileImageURL')
+  .populate('teamLists.settlementTiles', 'email displayName username profileImageURL')
+  .populate('teamLists.waterQuality', 'email displayName username profileImageURL');
 
   if (req.query.full) {
     query.populate('protocols.siteCondition')
