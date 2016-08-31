@@ -52,7 +52,7 @@
       return $scope.mobileOrganisms[index];
     };
 
-    var setupMobileOrganisms = function(callback) {
+    var setupMobileOrganisms = function(save, callback) {
       for (var i = 0; i < $scope.mobileTrap.mobileOrganisms.length; i++) {
         var organismDetails = $scope.mobileTrap.mobileOrganisms[i];
         var organismId = (organismDetails.organism && organismDetails.organism._id) ?
@@ -75,7 +75,18 @@
         $scope.foundOrganisms[organismId].imageUrl = (organismDetails.sketchPhoto) ? organismDetails.sketchPhoto.path : '';
         $scope.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
       }
-      if (callback) callback();
+      if (save) {
+        $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+          $scope.mobileTrap)
+          .success(function (data, status, headers, config) {
+            if (callback) callback();
+          })
+          .error(function (data, status, headers, config) {
+            if (callback) callback();
+          });
+      } else {
+        if (callback) callback();
+      }
     };
 
     // Set up initial values
@@ -89,7 +100,7 @@
       if (!$scope.mobileTrap.mobileOrganisms) {
         $scope.mobileTrap.mobileOrganisms = [];
       } else {
-        setupMobileOrganisms();
+        setupMobileOrganisms(true);
       }
     });
 
@@ -228,38 +239,35 @@
 
       var mobileTrapId = $scope.mobileTrap._id;
 
-      $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
+      $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
         $scope.mobileTrap)
         .success(function (data, status, headers, config) {
-          if (data.errors) {
-            $scope.form.mobileTrapForm.$setSubmitted(true);
-            errorCallback(data.errors);
-          } else {
-            $scope.mobileTrapErrors = null;
-            successCallback();
-          }
+          saveImages(function() {
+            save();
+          });
         })
         .error(function (data, status, headers, config) {
-          $scope.form.mobileTrapForm.$setSubmitted(true);
-          errorCallback(data.message);
+          saveImages(function() {
+            save();
+          });
         });
 
-      function successCallback() {
-        $scope.mobileTrapErrors = null;
+      function saveImages(callback) {
         function uploadAllSketchPhotos(mobileTrapId, foundIds, sketchPhotosSuccessCallback, sketchPhotosErrorCallback) {
-          function uploadSketchPhoto(mobileTrapId, index, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback) {
+          function uploadSketchPhoto(mobileTrapId, index, foundIds, errorCount, uploadSketchPhotoCallback) {
             if (index < foundIds.length && foundIds[index]) {
               var organismId = foundIds[index];
               var uploader = $scope.foundOrganisms[organismId].uploader;
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
-                  uploadSketchPhoto(mobileTrapId, index+1, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
+                  uploadSketchPhoto(mobileTrapId, index+1, foundIds, errorCount, uploadSketchPhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
                   $scope.mobileTrap.mobileOrganisms[index].sketchPhoto.error = response.message;
-                  sketchPhotoErrorCallback(organismId);
+                  errorCount++;
+                  uploadSketchPhoto(mobileTrapId, index+1, foundIds, errorCount, uploadSketchPhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
@@ -267,17 +275,19 @@
                 };
                 uploader.uploadAll();
               } else {
-                uploadSketchPhoto(mobileTrapId, index+1, foundIds, sketchPhotoSuccessCallback, sketchPhotoErrorCallback);
+                uploadSketchPhoto(mobileTrapId, index+1, foundIds, errorCount, uploadSketchPhotoCallback);
               }
             } else {
-              sketchPhotoSuccessCallback();
+              uploadSketchPhotoCallback(errorCount);
             }
           }
 
-          uploadSketchPhoto(mobileTrapId, 0, foundIds, function() {
-            sketchPhotosSuccessCallback();
-          }, function(organismId) {
-            sketchPhotosErrorCallback('Error uploading sketch or photo for organism id' + organismId);
+          uploadSketchPhoto(mobileTrapId, 0, foundIds, 0, function(errorCount) {
+            if (errorCount) {
+              sketchPhotosErrorCallback('Error uploading sketch or photo for organism');
+            } else {
+              sketchPhotosSuccessCallback();
+            }
           });
         }
 
@@ -290,17 +300,40 @@
               for (var i = 0; i < organisms.length; i++) {
                 $scope.mobileTrap.mobileOrganisms[i].sketchPhoto = organisms[i].sketchPhoto;
               }
-              setupMobileOrganisms(function() {
-                saveSuccessCallback();
+              setupMobileOrganisms(false, function() {
+                callback();
               });
             } else {
-              saveSuccessCallback();
+              callback();
             }
           });
         }, function(errorMessage) {
           $scope.mobileTrapErrors = errorMessage;
-          saveErrorCallback();
+          callback();
         });
+      }
+
+      function save() {
+        $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
+          $scope.mobileTrap)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.mobileTrapForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              $scope.mobileTrapErrors = null;
+              successCallback();
+            }
+          })
+          .error(function (data, status, headers, config) {
+            $scope.form.mobileTrapForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        $scope.mobileTrapErrors = null;
+        saveSuccessCallback();
       }
 
       function errorCallback(errorMessage) {

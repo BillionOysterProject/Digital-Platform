@@ -14,8 +14,8 @@
     // Check to see if substrate is complete
     $scope.checkDone = function(substrate) {
       if ((substrate.totalNumberOfLiveOystersOnShell === 0 ||
-        substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.minimumSizeOfLiveOysters > 0 &&
-      substrate.maximumSizeOfLiveOysters > 0 && substrate.averageSizeOfLiveOysters > 0) &&
+        (substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.minimumSizeOfLiveOysters > 0 &&
+      substrate.maximumSizeOfLiveOysters > 0 && substrate.averageSizeOfLiveOysters > 0)) &&
       substrate.outerSidePhoto && substrate.outerSidePhoto.path &&
       substrate.innerSidePhoto && substrate.innerSidePhoto.path) {
         return true;
@@ -54,7 +54,14 @@
           done: false
         });
       }
-      if (callback) callback();
+      $http.post('/api/protocol-oyster-measurements/' + $scope.oysterMeasurement._id + '/incremental-save',
+        $scope.oysterMeasurement)
+        .success(function (data, status, headers, config) {
+          if (callback) callback();
+        })
+        .error(function (data, status, headers, config) {
+          if (callback) callback();
+        });
     };
 
     var findPreviousValues = function() {
@@ -286,50 +293,53 @@
         $scope.$broadcast('show-errors-check-validity', '$scope.form.oysterMeasurementForm');
       }
 
-      if ($scope.cageConditionPhotoURL !== '' && $scope.oysterMeasurement) {
-        if ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
-          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
-          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
-          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = $scope.cageConditionPhotoURL;
-        } else if (!$scope.oysterMeasurement.conditionOfOysterCage) {
-          $scope.oysterMeasurement.conditionOfOysterCage = {
-            oysterCagePhoto: {
-              path: $scope.cageConditionPhotoURL
-            }
-          };
-        } else {
-          $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = {
-            path: $scope.cageConditionPhotoURL
-          };
-        }
-      }
+      // if ($scope.cageConditionPhotoURL !== '' && $scope.oysterMeasurement) {
+      //   if ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
+      //     $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+      //     $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
+      //     $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = $scope.cageConditionPhotoURL;
+      //   } else if (!$scope.oysterMeasurement.conditionOfOysterCage) {
+      //     $scope.oysterMeasurement.conditionOfOysterCage = {
+      //       oysterCagePhoto: {
+      //         path: $scope.cageConditionPhotoURL
+      //       }
+      //     };
+      //   } else {
+      //     $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = {
+      //       path: $scope.cageConditionPhotoURL
+      //     };
+      //   }
+      // }
 
       var oysterMeasurementId = $scope.oysterMeasurement._id;
 
-      $http.post('/api/protocol-oyster-measurements/' + oysterMeasurementId + '/incremental-save',
-        $scope.oysterMeasurement)
-        .success(function (data, status, headers, config) {
-          if (data.errors) {
-            $scope.form.oysterMeasurementForm.$setSubmitted(true);
-            errorCallback(data.errors);
-          } else {
-            $scope.oysterMeasurementErrors = null;
-            successCallback();
-          }
-        })
-        .error(function (data, status, headers, config) {
-          $scope.form.oysterMeasurementForm.$setSubmitted(true);
-          errorCallback(data.message);
-        });
+      saveImages(function() {
+        save();
+      });
 
-      function successCallback() {
-        $scope.oysterMeasurementErrors = null;
-
+      function saveImages(callback) {
         function uploadCageConditionPhoto(oysterMeasurementId, cagePhotoSuccessCallback, cagePhotoErrorCallback) {
           if ($scope.cageConditionUploader.queue.length > 0) {
             $scope.cageConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
               $scope.cageConditionUploader.removeFromQueue(fileItem);
-              cagePhotoSuccessCallback();
+
+              var updatedProtocol = ProtocolOysterMeasurementsService.get({
+                oysterMeasurementId: $scope.oysterMeasurement._id
+              }, function(data) {
+                if (data.conditionOfOysterCage && data.conditionOfOysterCage.oysterCagePhoto) {
+                  if (!$scope.oysterMeasurement.conditionOfOysterCage) {
+                    $scope.oysterMeasurement.conditionOfOysterCage = {
+                      oysterCagePhoto: {}
+                    };
+                  }
+                  $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = data.conditionOfOysterCage.oysterCagePhoto;
+                  $scope.cageConditionPhotoURL = ($scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) ?
+                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+                }
+
+                cagePhotoSuccessCallback();
+              });
             };
 
             $scope.cageConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
@@ -346,18 +356,19 @@
         }
 
         function uploadAllOuterPhotos(oysterMeasurementId, outerPhotosSuccessCallback, outerPhotosErrorCallback) {
-          function uploadOuterPhoto(oysterMeasurementId, index, outerPhotoSuccessCallback, outerPhotoErrorCallback) {
+          function uploadOuterPhoto(oysterMeasurementId, index, errorCount, uploadOuterPhotoCallback) {
             if (index < $scope.outerUploaders.length && $scope.outerUploaders[index]) {
               var uploader = $scope.outerUploaders[index];
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
-                  uploadOuterPhoto(oysterMeasurementId, index+1, outerPhotoSuccessCallback, outerPhotoErrorCallback);
+                  uploadOuterPhoto(oysterMeasurementId, index+1, errorCount, uploadOuterPhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
                   $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.error = response.message;
-                  outerPhotoErrorCallback(index);
+                  errorCount++;
+                  uploadOuterPhoto(oysterMeasurementId, index+1, errorCount, uploadOuterPhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
@@ -365,33 +376,36 @@
                 };
                 uploader.uploadAll();
               } else {
-                uploadOuterPhoto(oysterMeasurementId, index+1, outerPhotoSuccessCallback, outerPhotoErrorCallback);
+                uploadOuterPhoto(oysterMeasurementId, index+1, errorCount, uploadOuterPhotoCallback);
               }
             } else {
-              outerPhotoSuccessCallback();
+              uploadOuterPhotoCallback(errorCount);
             }
           }
 
-          uploadOuterPhoto(oysterMeasurementId, 0, function() {
-            outerPhotosSuccessCallback();
-          }, function(index) {
-            outerPhotosErrorCallback('Error uploading outer side photo for Substrate Shell #' + (index+1));
+          uploadOuterPhoto(oysterMeasurementId, 0, 0, function(errorCount) {
+            if (errorCount > 0) {
+              outerPhotosErrorCallback('Error uploading outer side photo for Substrate Shells');
+            } else {
+              outerPhotosSuccessCallback();
+            }
           });
         }
 
         function uploadAllInnerPhotos(oysterMeasurementId, innerPhotosSuccessCallback, innerPhotosErrorCallback) {
-          function uploadInnerPhoto(oysterMeasurementId, index, innerPhotoSuccessCallback, innerPhotoErrorCallback) {
+          function uploadInnerPhoto(oysterMeasurementId, index, errorCount, uploadInnerPhotoCallback) {
             if (index < $scope.innerUploaders.length && $scope.innerUploaders[index]) {
               var uploader = $scope.innerUploaders[index];
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
-                  uploadInnerPhoto(oysterMeasurementId, index+1, innerPhotoSuccessCallback, innerPhotoErrorCallback);
+                  uploadInnerPhoto(oysterMeasurementId, index+1, errorCount, uploadInnerPhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
                   $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].innerSidePhoto.error = response.message;
-                  innerPhotoErrorCallback(index);
+                  errorCount++;
+                  uploadInnerPhoto(oysterMeasurementId, index+1, errorCount, uploadInnerPhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
@@ -399,33 +413,55 @@
                 };
                 uploader.uploadAll();
               } else {
-                uploadInnerPhoto(oysterMeasurementId, index+1, innerPhotoSuccessCallback, innerPhotoErrorCallback);
+                uploadInnerPhoto(oysterMeasurementId, index+1, errorCount, uploadInnerPhotoCallback);
               }
             } else {
-              innerPhotoSuccessCallback();
+              uploadInnerPhotoCallback(errorCount);
             }
           }
 
-          uploadInnerPhoto(oysterMeasurementId, 0, function() {
-            innerPhotosSuccessCallback();
-          }, function(index) {
-            innerPhotosErrorCallback('Error uploading inner side photo for Substrate Shell #' + (index+1));
+          uploadInnerPhoto(oysterMeasurementId, 0, 0, function(errorCount) {
+            if (errorCount > 0) {
+              innerPhotosErrorCallback('Error uploading inner side photos for Substrate Shells');
+            } else {
+              innerPhotosSuccessCallback();
+            }
           });
         }
 
-        uploadCageConditionPhoto(oysterMeasurementId, function() {
+        function saveCageCondition(saveCallback) {
+          uploadCageConditionPhoto(oysterMeasurementId, function() {
+            saveCallback();
+          }, function(errorMessage) {
+            $scope.oysterMeasurementErrors = errorMessage;
+            saveCallback();
+          });
+        }
+
+        function saveOuterPhotos(saveCallback) {
           uploadAllOuterPhotos(oysterMeasurementId, function() {
-            uploadAllInnerPhotos(oysterMeasurementId, function() {
+            saveCallback();
+          }, function(errorMessage) {
+            $scope.oysterMeasurementErrors = errorMessage;
+            saveCallback();
+          });
+        }
+
+        function saveInnerPhotos(saveCallback) {
+          uploadAllInnerPhotos(oysterMeasurementId, function() {
+            saveCallback();
+          }, function(errorMessage) {
+            $scope.oysterMeasurementErrors = errorMessage;
+            saveCallback();
+          });
+        }
+
+        saveCageCondition(function() {
+          saveOuterPhotos(function() {
+            saveInnerPhotos(function() {
               var updatedProtocol = ProtocolOysterMeasurementsService.get({
                 oysterMeasurementId: $scope.oysterMeasurement._id
               }, function(data) {
-                if (data.conditionOfOysterCage && data.conditionOfOysterCage.oysterCagePhoto) {
-                  $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = data.conditionOfOysterCage.oysterCagePhoto;
-                  $scope.cageConditionPhotoURL = ($scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
-                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) ?
-                    $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
-                }
-
                 if (data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
                   var substrateShells = data.measuringOysterGrowth.substrateShells;
                   for (var i = 0; i < substrateShells.length; i++) {
@@ -435,20 +471,34 @@
                       substrateShells[i].innerSidePhoto;
                   }
                 }
-                saveSuccessCallback();
+                callback();
               });
-            }, function(errorMessage) {
-              $scope.oysterMeasurementErrors = errorMessage;
-              saveErrorCallback();
             });
-          }, function(errorMessage) {
-            $scope.oysterMeasurementErrors = errorMessage;
-            saveErrorCallback();
           });
-        }, function(errorMessage) {
-          $scope.oysterMeasurementErrors = errorMessage;
-          saveErrorCallback();
         });
+      }
+
+      function save() {
+        $http.post('/api/protocol-oyster-measurements/' + oysterMeasurementId + '/incremental-save',
+          $scope.oysterMeasurement)
+          .success(function (data, status, headers, config) {
+            if (data.errors) {
+              $scope.form.oysterMeasurementForm.$setSubmitted(true);
+              errorCallback(data.errors);
+            } else {
+              $scope.oysterMeasurementErrors = null;
+              successCallback();
+            }
+          })
+          .error(function (data, status, headers, config) {
+            $scope.form.oysterMeasurementForm.$setSubmitted(true);
+            errorCallback(data.message);
+          });
+      }
+
+      function successCallback() {
+        $scope.oysterMeasurementErrors = null;
+        saveSuccessCallback();
       }
 
       function errorCallback(errorMessage) {

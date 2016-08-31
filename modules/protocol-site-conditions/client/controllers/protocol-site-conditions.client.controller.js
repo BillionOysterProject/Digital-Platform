@@ -140,40 +140,40 @@
         $scope.$broadcast('show-errors-check-validity', '$scope.form.siteConditionForm');
       }
 
-      if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition && $scope.siteCondition.waterConditions &&
-          $scope.siteCondition.waterConditions.waterConditionPhoto &&
-          $scope.siteCondition.waterConditions.waterConditionPhoto.path) {
-          $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
-        } else if (!$scope.siteCondition.waterConditions) {
-          $scope.siteCondition.waterConditions = {
-            waterConditionPhoto: {
-              path: $scope.waterConditionPhotoURL
-            }
-          };
-        } else {
-          $scope.siteCondition.waterConditions.waterConditionPhoto = {
-            path: $scope.waterConditionPhotoURL
-          };
-        }
-      }
-      if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
-        if ($scope.siteCondition && $scope.siteCondition.landConditions &&
-          $scope.siteCondition.landConditions.landConditionPhoto &&
-          $scope.siteCondition.landConditions.landConditionPhoto.path) {
-          $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
-        } else if (!$scope.siteCondition.landConditions) {
-          $scope.siteCondition.landConditions = {
-            landConditionPhoto: {
-              path: $scope.landConditionPhotoURL
-            }
-          };
-        } else {
-          $scope.siteCondition.landConditions.landConditionPhoto = {
-            path: $scope.landConditionPhotoURL
-          };
-        }
-      }
+      // if ($scope.waterConditionPhotoURL !== '' && $scope.siteCondition) {
+      //   if ($scope.siteCondition && $scope.siteCondition.waterConditions &&
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto &&
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto.path) {
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto.path = $scope.waterConditionPhotoURL;
+      //   } else if (!$scope.siteCondition.waterConditions) {
+      //     $scope.siteCondition.waterConditions = {
+      //       waterConditionPhoto: {
+      //         path: $scope.waterConditionPhotoURL
+      //       }
+      //     };
+      //   } else {
+      //     $scope.siteCondition.waterConditions.waterConditionPhoto = {
+      //       path: $scope.waterConditionPhotoURL
+      //     };
+      //   }
+      // }
+      // if ($scope.landConditionPhotoURL !== '' && $scope.siteCondition) {
+      //   if ($scope.siteCondition && $scope.siteCondition.landConditions &&
+      //     $scope.siteCondition.landConditions.landConditionPhoto &&
+      //     $scope.siteCondition.landConditions.landConditionPhoto.path) {
+      //     $scope.siteCondition.landConditions.landConditionPhoto.path = $scope.landConditionPhotoURL;
+      //   } else if (!$scope.siteCondition.landConditions) {
+      //     $scope.siteCondition.landConditions = {
+      //       landConditionPhoto: {
+      //         path: $scope.landConditionPhotoURL
+      //       }
+      //     };
+      //   } else {
+      //     $scope.siteCondition.landConditions.landConditionPhoto = {
+      //       path: $scope.landConditionPhotoURL
+      //     };
+      //   }
+      // }
 
       // Use incremental-save
       var siteConditionId = $scope.siteCondition._id;
@@ -187,7 +187,19 @@
           if ($scope.waterConditionUploader.queue.length > 0) {
             $scope.waterConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
               $scope.waterConditionUploader.removeFromQueue(fileItem);
-              waterPhotoSuccessCallback();
+
+              var updatedProtocol = ProtocolSiteConditionsService.get({
+                siteConditionId: $scope.siteCondition._id
+              }, function(data) {
+                if (data.waterConditions && data.waterConditions.waterConditionPhoto) {
+                  $scope.siteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
+                  $scope.waterConditionPhotoURL = ($scope.siteCondition.waterConditions.waterConditionPhoto &&
+                    $scope.siteCondition.waterConditions.waterConditionPhoto.path) ?
+                    $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+                }
+
+                waterPhotoSuccessCallback();
+              });
             };
 
             $scope.waterConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
@@ -207,7 +219,19 @@
           if ($scope.landConditionUploader.queue.length > 0) {
             $scope.landConditionUploader.onSuccessItem = function (fileItem, response, status, headers) {
               $scope.landConditionUploader.removeFromQueue(fileItem);
-              landPhotoSuccessCallback();
+
+              var updatedProtocol = ProtocolSiteConditionsService.get({
+                siteConditionId: $scope.siteCondition._id
+              }, function(data) {
+                if (data.landConditions && data.landConditions.landConditionPhoto) {
+                  $scope.siteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
+                  $scope.landConditionPhotoURL = ($scope.siteCondition.landConditions.landConditionPhoto &&
+                    $scope.siteCondition.landConditions.landConditionPhoto.path) ?
+                    $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+                }
+
+                landPhotoSuccessCallback();
+              });
             };
 
             $scope.landConditionUploader.onErrorItem = function (fileItem, response, status, headers) {
@@ -223,34 +247,33 @@
           }
         }
 
-        uploadWaterConditionPhoto(siteConditionId, function() {
-          uploadLandConditionPhoto(siteConditionId, function() {
-            var updatedProtocol = ProtocolSiteConditionsService.get({
-              siteConditionId: $scope.siteCondition._id
-            }, function(data) {
-              if (data.waterConditions && data.waterConditions.waterConditionPhoto) {
-                $scope.siteCondition.waterConditions.waterConditionPhoto = data.waterConditions.waterConditionPhoto;
-                $scope.waterConditionPhotoURL = ($scope.siteCondition.waterConditions.waterConditionPhoto &&
-                  $scope.siteCondition.waterConditions.waterConditionPhoto.path) ?
-                  $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
-              }
-
-              if (data.landConditions && data.landConditions.landConditionPhoto) {
-                $scope.siteCondition.landConditions.landConditionPhoto = data.landConditions.landConditionPhoto;
-                $scope.landConditionPhotoURL = ($scope.siteCondition.landConditions.landConditionPhoto &&
-                  $scope.siteCondition.landConditions.landConditionPhoto.path) ?
-                  $scope.siteCondition.landConditions.landConditionPhoto.path : '';
-              }
-
-              callback();
-            });
-          }, function(errorMessage) {
-            $scope.siteConditionErrors = errorMessage;
+        var imageSavedCount = 0;
+        var imageSavedSuccessfulCount = 0;
+        var imageSavedErrorCount = 0;
+        var imagesSaved = function(successful) {
+          if (successful) {
+            imageSavedSuccessfulCount++;
+          } else {
+            imageSavedErrorCount++;
+          }
+          imageSavedCount++;
+          if (imageSavedCount === 2) {
             callback();
-          });
+          }
+        };
+
+        uploadWaterConditionPhoto(siteConditionId, function() {
+          imagesSaved();
         }, function(errorMessage) {
           $scope.siteConditionErrors = errorMessage;
-          callback();
+          imagesSaved();
+        });
+
+        uploadLandConditionPhoto(siteConditionId, function() {
+          imagesSaved();
+        }, function(errorMessage) {
+          $scope.siteConditionErrors = errorMessage;
+          imagesSaved();
         });
       }
 
