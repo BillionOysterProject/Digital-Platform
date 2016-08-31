@@ -12,13 +12,32 @@
 
     vm.filter = {
       subjectArea: '',
+      subjectAreaName: '',
       setting: '',
       unit: '',
+      unitName: '',
       vocabulary: '',
       searchString: '',
       sort: '',
       limit: 20,
       page: 1
+    };
+
+    vm.clearFilters = function() {
+      vm.filter = {
+        subjectArea: '',
+        subjectAreaName: '',
+        setting: '',
+        unit: '',
+        unitName: '',
+        vocabulary: '',
+        searchString: '',
+        sort: '',
+        limit: 20,
+        page: 1
+      };
+      vm.findLessons();
+      vm.findLessons();
     };
 
     vm.findLessons = function() {
@@ -29,8 +48,8 @@
         vocabulary: vm.filter.vocabulary,
         status: 'published',
         searchString: vm.filter.searchString,
-        limit: vm.filter.limit,
-        page: vm.filter.page
+        // limit: vm.filter.limit,
+        // page: vm.filter.page
       }, function(data) {
         vm.lessons = data;
         vm.error = null;
@@ -49,7 +68,6 @@
     });
 
     if ($rootScope.vocabulary) {
-      console.log('vocabulary', $rootScope.vocabulary);
       vm.filter.vocabulary = $rootScope.vocabulary;
       $rootScope.vocabulary = null;
     }
@@ -58,6 +76,7 @@
 
     vm.subjectAreaSelected = function(selection) {
       vm.filter.subjectArea = (selection) ? selection._id : '';
+      vm.filter.subjectAreaName = (selection) ? selection.subject : '';
       vm.findLessons();
     };
 
@@ -68,6 +87,7 @@
 
     vm.unitSelected = function(selection) {
       vm.filter.unit = (selection) ? selection._id : '';
+      vm.filter.unitName = (selection) ? selection.title : '';
       vm.findLessons();
     };
 
