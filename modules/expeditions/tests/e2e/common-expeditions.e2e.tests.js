@@ -10,6 +10,10 @@ module.exports = {
 
   uploadImage: function(id) {
     var fileToUpload = '../../../../scripts/test-images/logo.png';
+    var largeFileToUpload = '../../../../scripts/test-images/large_photo.jpeg';
+    var veryLargeFileToUpload = '../../../../scripts/test-images/very_large_image.jpg';
+    var tooLargeFileToUpload = '../../../../scripts/test-images/too_large_image.png';
+
     var absolutePath = path.resolve(__dirname, fileToUpload);
     var imageUploader = element(by.id(id));
     var input = imageUploader.element(by.css('input[type="file"]'));

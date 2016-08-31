@@ -71,6 +71,8 @@ describe('Expedition E2E Tests', function() {
   var settlementTiles3 = CommonSettlementTiles.settlementTiles3;
   var waterQuality4 = CommonWaterQuality.waterQuality4;
 
+  var saveDraftWait = 600000;
+
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
@@ -312,7 +314,7 @@ describe('Expedition E2E Tests', function() {
         element(by.buttonText('Save Draft')).click();
 
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol1Tab = element(by.id('protocol1tab'));
         expect(protocol1Tab.isPresent()).toBe(true);
         expect(protocol1Tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -336,7 +338,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol4tab = element(by.id('protocol4tab'));
         expect(protocol4tab.isPresent()).toBe(true);
         expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -431,7 +433,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 10000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol3tab = element(by.id('protocol3tab'));
         expect(protocol3tab.isPresent()).toBe(true);
         expect(protocol3tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -524,7 +526,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol2tab = element(by.id('protocol2tab'));
         expect(protocol2tab.isPresent()).toBe(true);
         expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -548,7 +550,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 5000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol5tab = element(by.id('protocol5tab'));
         expect(protocol5tab.isPresent()).toBe(true);
         expect(protocol5tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);

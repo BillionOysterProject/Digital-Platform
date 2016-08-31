@@ -9,7 +9,7 @@ var config = {
     isVerbose: true,
     showColors: true,
     includeStackTrace: true,
-    defaultTimeoutInterval: 360000
+    defaultTimeoutInterval: 600000
   }
 };
 
