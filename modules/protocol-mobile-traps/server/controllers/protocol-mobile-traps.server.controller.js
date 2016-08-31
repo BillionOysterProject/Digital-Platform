@@ -112,6 +112,18 @@ exports.incrementalSave = function (req, res) {
     mobileTrap.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
     mobileTrap.scribeMember = req.user;
 
+    // remove base64 text
+    var pattern = /^data:image\/jpeg;base64,/i;
+    if (mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms.length > 0) {
+      for (var j = 0; j < mobileTrap.mobileOrganisms.length; j++) {
+        if (mobileTrap.mobileOrganisms[j].sketchPhoto &&
+        mobileTrap.mobileOrganisms[j].sketchPhoto.path &&
+        pattern.test(mobileTrap.mobileOrganisms[j].sketchPhoto.path)) {
+          mobileTrap.mobileOrganisms[j].sketchPhoto.path = '';
+        }
+      }
+    }
+
     mobileTrap.save(function (err) {
       if (err) {
         return res.status(400).send({
@@ -151,6 +163,18 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, validate
       mobileTrap.collectionTime = moment(mobileTrapBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       mobileTrap.scribeMember = user;
       mobileTrap.submitted = new Date();
+
+      // remove base64 text
+      var pattern = /^data:image\/jpeg;base64,/i;
+      if (mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms.length > 0) {
+        for (var j = 0; j < mobileTrap.mobileOrganisms.length; j++) {
+          if (mobileTrap.mobileOrganisms[j].sketchPhoto &&
+          mobileTrap.mobileOrganisms[j].sketchPhoto.path &&
+          pattern.test(mobileTrap.mobileOrganisms[j].sketchPhoto.path)) {
+            mobileTrap.mobileOrganisms[j].sketchPhoto.path = '';
+          }
+        }
+      }
 
       mobileTrap.save(function (err) {
         if (err) {

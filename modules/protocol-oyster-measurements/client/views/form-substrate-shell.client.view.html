@@ -129,7 +129,7 @@
                                         </div>
                                     </div>
                                     <p class="lead blue">Measure and record the size (in mm) of each live oyster below.</p>
-                                    <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell === 0">Please enter a value for Total Number of live oysters on shell above</p>
+                                    <p class="red" ng-show="substrate.totalNumberOfLiveOystersOnShell < 0">Please enter a value for Total Number of live oysters on shell above</p>
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6" ng-repeat="measurement in substrate.measurements">
                                             <div class="form-group row" ng-show="$index < substrate.totalNumberOfLiveOystersOnShell" >

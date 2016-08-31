@@ -188,12 +188,14 @@ exports.incrementalSave = function (req, res) {
 
   if (oysterMeasurement) {
     oysterMeasurement = _.extend(oysterMeasurement, req.body);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+    oysterMeasurement.collectionTime = moment(req.body.collectionTime,
+      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
     oysterMeasurement.scribeMember = req.user;
     for (var i = 0; i < req.body.measuringOysterGrowth.substrateShells.length; i++) {
       if (req.body.measuringOysterGrowth.substrateShells[i].setDate) {
         oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-          moment(req.body.measuringOysterGrowth.substrateShells[i].setDate, 'YYYY-MM-DD').startOf('day').toDate();
+          moment(req.body.measuringOysterGrowth.substrateShells[i].setDate,
+            'YYYY-MM-DD').startOf('day').toDate();
       }
     }
 
@@ -256,9 +258,40 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
 
     if (oysterMeasurement) {
       oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
+      oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime,
+        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
       oysterMeasurement.scribeMember = user;
+      for (var i = 0; i < oysterMeasurementBody.measuringOysterGrowth.substrateShells.length; i++) {
+        if (oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate) {
+          oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
+            moment(oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate,
+              'YYYY-MM-DD').startOf('day').toDate();
+        }
+      }
       oysterMeasurement.submitted = new Date();
+
+      // remove base64 text
+      var pattern = /^data:image\/jpeg;base64,/i;
+      if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
+      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path &&
+      pattern.test(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path)) {
+        oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = '';
+      }
+      if (oysterMeasurement.measuringOysterGrowth && oysterMeasurement.measuringOysterGrowth.substrateShells &&
+      oysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
+        for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
+          if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto &&
+          oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path &&
+          pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path)) {
+            oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path = '';
+          }
+          if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto &&
+          oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path &&
+          pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path)) {
+            oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path = '';
+          }
+        }
+      }
 
       oysterMeasurement.save(function (err) {
         if (err) {
@@ -398,6 +431,11 @@ exports.uploadOysterCageConditionPicture = function (req, res) {
           var uploadRemote = new UploadRemote();
           uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.oysterCageConditionUpload,
           function (fileInfo) {
+            if (!oysterMeasurement.conditionOfOysterCage) {
+              oysterMeasurement.conditionOfOysterCage = {
+                oysterCagePhoto: {}
+              };
+            }
             oysterMeasurement.conditionOfOysterCage.oysterCagePhoto = fileInfo;
 
             uploadFileSuccess(oysterMeasurement, res);

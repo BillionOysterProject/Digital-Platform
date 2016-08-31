@@ -374,6 +374,19 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, val
       siteCondition.scribeMember = user;
       siteCondition.submitted = new Date();
 
+      // remove base64 text
+      var pattern = /^data:image\/jpeg;base64,/i;
+      if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
+      siteCondition.waterConditions.waterConditionPhoto.path &&
+      pattern.test(siteCondition.waterConditions.waterConditionPhoto.path)) {
+        siteCondition.waterConditions.waterConditionPhoto.path = '';
+      }
+      if (siteCondition.landConditions && siteCondition.landConditions.landConditionPhoto &&
+      siteCondition.landConditions.landConditionPhoto.path &&
+      pattern.test(siteCondition.landConditions.landConditionPhoto.path)) {
+        siteCondition.landConditions.landConditionPhoto.path = '';
+      }
+
       siteCondition.save(function (err) {
         if (err) {
           errorCallback(errorHandler.getErrorMessage(err));

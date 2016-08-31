@@ -187,36 +187,36 @@
       for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
         var tile = $scope.settlementTiles.settlementTiles[i];
 
-        if (tile.imageUrl !== '' && tile) {
-          if (tile.tilePhoto && tile.tilePhoto.path) {
-            tile.tilePhoto.path = tile.imageUrl;
-          } else {
-            tile.tilePhoto = {
-              path: tile.imageUrl
-            };
-          }
-        }
-
-        if (!tile.tilePhoto || !tile.tilePhoto.path || tile.tilePhoto.path === '') {
-          errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
-          settlementTilesValid = false;
-        }
-
-        for (var j = 1; j <= $scope.gridCount; j++) {
-          var grid = tile['grid'+j];
-          if (!grid.organism) {
-            settlementTilesValid = false;
-            errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
-          }
-        }
-      }
-
-      if (!settlementTilesValid) {
-        // if (errorMessages.length > 0) {
-        //   $scope.settlementTilesErrors = errorMessages.join();
+        // if (tile.imageUrl !== '' && tile) {
+        //   if (tile.tilePhoto && tile.tilePhoto.path) {
+        //     tile.tilePhoto.path = tile.imageUrl;
+        //   } else {
+        //     tile.tilePhoto = {
+        //       path: tile.imageUrl
+        //     };
+        //   }
         // }
-        $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+
+        // if (!tile.imageUrl || tile.imageUrl === '') {
+        //   errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
+        //   settlementTilesValid = false;
+        // }
+        //
+        // for (var j = 1; j <= $scope.gridCount; j++) {
+        //   var grid = tile['grid'+j];
+        //   if (!grid.organism) {
+        //     settlementTilesValid = false;
+        //     errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
+        //   }
+        // }
       }
+
+      // if (!settlementTilesValid) {
+      //   // if (errorMessages.length > 0) {
+      //   //   $scope.settlementTilesErrors = errorMessages.join();
+      //   // }
+      //   $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+      // }
 
       var settlementTileId = $scope.settlementTiles._id;
 
@@ -226,18 +226,19 @@
 
       function saveImages(callback) {
         function uploadAllSettlementTilePhotos (settlementTileId, tilePhotosSuccessCallback, tilePhotosErrorCallback) {
-          function uploadSettlementTilePhoto(settlementTileId, index, tilePhotoSuccessCallback, tilePhotoErrorCallback) {
+          function uploadSettlementTilePhoto(settlementTileId, index, errorCount, uploadSettlementTilePhotoCallback) {
             if (index < $scope.settlementTilePhotoUploaders.length && $scope.settlementTilePhotoUploaders[index]) {
               var uploader = $scope.settlementTilePhotoUploaders[index];
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
-                  uploadSettlementTilePhoto(settlementTileId, index+1, tilePhotoSuccessCallback, tilePhotoErrorCallback);
+                  uploadSettlementTilePhoto(settlementTileId, index+1, errorCount, uploadSettlementTilePhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, header) {
                   $scope.settlementTiles.settlementTiles[index].tilePhoto.error = response.message;
-                  tilePhotoErrorCallback(index);
+                  errorCount++;
+                  uploadSettlementTilePhoto(settlementTileId, index+1, errorCount, uploadSettlementTilePhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
@@ -245,17 +246,19 @@
                 };
                 uploader.uploadAll();
               } else {
-                uploadSettlementTilePhoto(settlementTileId, index+1, tilePhotoSuccessCallback, tilePhotoErrorCallback);
+                uploadSettlementTilePhoto(settlementTileId, index+1, errorCount, uploadSettlementTilePhotoCallback);
               }
             } else {
-              tilePhotoSuccessCallback();
+              uploadSettlementTilePhotoCallback(errorCount);
             }
           }
 
-          uploadSettlementTilePhoto(settlementTileId, 0, function() {
-            tilePhotosSuccessCallback();
-          }, function(index) {
-            tilePhotosErrorCallback('Error uploading photo for Settlement Tile #' + (index+1));
+          uploadSettlementTilePhoto(settlementTileId, 0, 0, function(errorCount) {
+            if (errorCount) {
+              tilePhotosErrorCallback('Error uploading photo for Settlement Tiles');
+            } else {
+              tilePhotosSuccessCallback();
+            }
           });
         }
 
