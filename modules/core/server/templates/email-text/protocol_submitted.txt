@@ -1,8 +1,8 @@
-Hi <%=TeamName%>,
+Hi <%=FirstName%>,
 
-Congrats, your work on the protocol(s) for <%= ExpeditionName %> have been published!
+Your team has submitted a protocol for the expedition <b><%= ExpeditionName %></b>.
 
-Visit <%= LinkExpedition %> to view the expedition.
+Visit <%= LinkViewExpedition %> to review the protocol.
 
 Thanks!
 The Billion Oyster Project
