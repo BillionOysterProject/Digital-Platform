@@ -26,6 +26,9 @@ mongoimport -d bop-test -c schoolorgs --type json --file scripts/mongo-load/samp
 mongoimport -d bop-test -c teams --type json --file scripts/mongo-load/sample-data-tests/bop-teams.json
 mongoimport -d bop-test -c restorationstations --type json --file scripts/mongo-load/sample-data-tests/bop-restoration-stations.json
 
+mongoimport -d bop-test -c units --type json --file scripts/mongo-load/sample-data-tests/units.json
+mongoimport -d bop-test -c lessons --type json --file scripts/mongo-load/sample-data-tests/lessons.json
+
 mongoimport -d bop-test -c expeditions --type json --file scripts/mongo-load/sample-data-tests/expeditions.json
 mongoimport -d bop-test -c protocolsiteconditions --type json --file scripts/mongo-load/sample-data-tests/protocol-site-conditions.json
 mongoimport -d bop-test -c protocoloystermeasurements --type json --file scripts/mongo-load/sample-data-tests/protocol-oyster-measurements.json
