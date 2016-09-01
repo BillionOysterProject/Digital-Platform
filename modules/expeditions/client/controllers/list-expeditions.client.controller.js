@@ -57,17 +57,25 @@
 
     vm.filter = {
       station: '',
-      stationObj: '',
-      stationName: '',
+      stationObj: {
+        name: 'All'
+      },
+      stationName: 'All',
       organization: '',
-      organizationObj: '',
-      organizationName: '',
+      organizationObj: {
+        name: 'All'
+      },
+      organizationName: 'All',
       team: '',
-      teamObj: '',
-      teamName: '',
+      teamObj: {
+        name: 'All'
+      },
+      teamName: 'All',
       teamLead: '',
-      teamLeadObj: '',
-      teamLeadName: '',
+      teamLeadObj: {
+        displayName: 'All'
+      },
+      teamLeadName: 'All',
       startDate: '',
       endDate: '',
       searchString: ''
@@ -118,17 +126,25 @@
     vm.showAllPublishedExpeditions = function() {
       vm.filter = {
         station: '',
-        stationObj: '',
-        stationName: '',
+        stationObj: {
+          name: 'All'
+        },
+        stationName: 'All',
         organization: '',
-        organizationObj: '',
-        organizationName: '',
+        organizationObj: {
+          name: 'All'
+        },
+        organizationName: 'All',
         team: '',
-        teamObj: '',
-        teamName: '',
+        teamObj: {
+          name: 'All'
+        },
+        teamName: 'All',
         teamLead: '',
-        teamLeadObj: '',
-        teamLeadName: '',
+        teamLeadObj: {
+          displayName: 'All'
+        },
+        teamLeadName: 'All',
         startDate: '',
         endDate: '',
         searchString: ''

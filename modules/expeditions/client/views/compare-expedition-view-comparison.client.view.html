@@ -1,0 +1,128 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Comparison of <span class="red">{{ce.dataPointCount()}} data points</span> across
+          <span class="red">{{ce.expeditions.length}} expeditions</span></h4>
+    </div>
+    <div class="modal-body">
+        <table class="table table-responsive">
+            <tr>
+                <td></td>
+                <td ng-show="ce.dataPointProtocol1Count() > 0" colspan="{{ce.protocol1paramCount}}" class="text-center">
+                  <h6>Site Conditions</h6></td>
+                <td ng-show="ce.dataPointProtocol2Count() > 0" colspan="{{ce.protocol2paramCount}}" class="text-center">
+                  <h6>Oyster Measurements</h6></td>
+                <td ng-show="ce.dataPointProtocol3Count() > 0" colspan="{{ce.protocol3paramCount}}" class="text-center">
+                  <h6>Mobile Trap</h6></td>
+                <td ng-show="ce.dataPointProtocol4Count() > 0" colspan="{{ce.protocol4paramCount}}" class="text-center">
+                  <h6>Settlement Tiles</h6</td>
+                <td ng-show="ce.dataPointProtocol5Count() > 0" colspan="{{ce.protocol5paramCount}}" class="text-center">
+                  <h6>Water Quality</h6></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td ng-show="ce.parameters.protocol1.weatherTemperature === 'YES'"><b>Weather/temperature</b></td>
+                <td ng-show="ce.parameters.protocol1.windSpeedDirection === 'YES'"><b>Wind speed/direction</b></td>
+                <td ng-show="ce.parameters.protocol1.humidity === 'YES'"><b>Humidity</b></td>
+                <td ng-show="ce.parameters.protocol1.recentRainfall === 'YES'"><b>Recent rainfall</b></td>
+                <td ng-show="ce.parameters.protocol1.closestHighTideTime === 'YES'"><b>Closest high tide time</b></td>
+                <td ng-show="ce.parameters.protocol1.closestLowTideTime === 'YES'"><b>Closest low tide time</b></td>
+                <td ng-show="ce.parameters.protocol1.closestHighTideHeight === 'YES'"><b>Closest high tide height</b></td>
+                <td ng-show="ce.parameters.protocol1.closestLowTideHeight === 'YES'"><b>Closest low tide height</b></td>
+                <td ng-show="ce.parameters.protocol1.referencePoint === 'YES'"><b>Reference Point</b></td>
+                <td ng-show="ce.parameters.protocol1.tidalCurrent === 'YES'"><b>Tidal current</b></td>
+                <td ng-show="ce.parameters.protocol1.surfaceCurrentSpeed === 'YES'"><b>Surface current speed</b></td>
+                <td ng-show="ce.parameters.protocol1.waterColor === 'YES'"><b>Water color</b></td>
+                <td ng-show="ce.parameters.protocol1.oilSheen === 'YES'"><b>Oil sheen</b></td>
+                <td ng-show="ce.parameters.protocol1.garbageWater === 'YES'"><b>Garbage in water</b></td>
+                <td ng-show="ce.parameters.protocol1.pipes === 'YES'"><b>Pipes</b></td>
+                <td ng-show="ce.parameters.protocol1.shorelineType === 'YES'"><b>Shoreline type</b></td>
+                <td ng-show="ce.parameters.protocol1.garbageLand === 'YES'"><b>Garbage on land</b></td>
+                <td ng-show="ce.parameters.protocol1.surfaceCover === 'YES'"><b>Surface cover</b></td>
+
+                <td ng-show="ce.parameters.protocol2.submergedDepth === 'YES'"><b>Submerged depth of cage</b></td>
+                <td ng-show="ce.parameters.protocol2.bioaccumulationOnCase === 'YES'"><b>Bioaccumulation on cage</b></td>
+                <td ng-show="ce.parameters.protocol2.cageDamage === 'YES'"><b>Cage damage</b></td>
+                <td ng-show="ce.parameters.protocol2.setDate === 'YES'"><b>Substrate shell set date</b></td>
+                <td ng-show="ce.parameters.protocol2.source === 'YES'"><b>Substrate shell source</b></td>
+                <td ng-show="ce.parameters.protocol2.liveOystersBaseline === 'YES'"><b>Live oysters on shell at baseline</b></td>
+                <td ng-show="ce.parameters.protocol2.liveOystersMonitoring === 'YES'"><b>Live oysters on shell at monitoring</b></td>
+                <td ng-show="ce.parameters.protocol2.totalMass === 'YES'"><b>Total mass of scrubbed substrate shell + oysters + tag</b></td>
+                <td ng-show="ce.parameters.protocol2.oysterMeasurements === 'YES'"><b>Oyster measurements</b></td>
+
+                <td ng-show="ce.parameters.protocol3.organism === 'YES'"><b>Organisms observed</b></td>
+
+                <td ng-show="ce.parameters.protocol4.description === 'YES'"><b>Settlement tile description</b></td>
+                <td ng-show="ce.parameters.protocol4.organism === 'YES'"><b>Sessile organisms observed</b></td>
+
+                <td ng-show="ce.parameters.protocol5.depth === 'YES'"><b>Depth</b></td>
+                <td ng-show="ce.parameters.protocol5.temperature === 'YES'"><b>Temperature</b></td>
+                <td ng-show="ce.parameters.protocol5.dissolvedOxygen === 'YES'"><b>Dissolved Oxygen</b></td>
+                <td ng-show="ce.parameters.protocol5.salinity === 'YES'"><b>Salinity</b></td>
+                <td ng-show="ce.parameters.protocol5.pH === 'YES'"><b>pH</b></td>
+                <td ng-show="ce.parameters.protocol5.turbidity === 'YES'"><b>Turbidity</b></td>
+                <td ng-show="ce.parameters.protocol5.ammonia === 'YES'"><b>Ammonia</b></td>
+                <td ng-show="ce.parameters.protocol5.nitrates === 'YES'"><b>Nitrates</b></td>
+                <td ng-show="ce.parameters.protocol5.other === 'YES'"><b>Other</b></td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">Baltimore Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 7, 2016</small></td>
+                <td>43%</td>
+                <td>2.6m</td>
+                <td>1 Blackfish, 3 Black-fingered mud crab</td>
+                <td>4.1m</td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">NY Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 12, 2016</small></td>
+                <td>66%</td>
+                <td>2.6m</td>
+                <td>3 Northern pipefish</td>
+                <td>2.8m</td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">NY Class Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 13, 2016</small></td>
+                <td>21%</td>
+                <td>3.2m</td>
+                <td>8 Idotea isopod, 5 Green crab</td>
+                <td>2.8m</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">NYC Summer Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 17, 2016</small></td>
+                <td>3%</td>
+                <td>2.6m</td>
+                <td>2 Corophid amphipod, 1 Clam worm</td>
+                <td>1.4m</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">NY Harbor Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 19, 2016</small></td>
+                <td>65%</td>
+                <td>3.2m</td>
+                <td>8 Northern pipefish, 2 Idotea isopod</td>
+                <td>2.1m</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="LINKTOEXPEDITIONVIEW">3rd Grade Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 24, 2016</small></td>
+                <td>77%</td>
+                <td>4.1m</td>
+                <td>2 Clam worm, 7 Corophid amphipod</td>
+                <td>1.7m</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="ce.nextStep(2)">Back</a>
+        <a class="btn btn-primary" target="_blank">Download data</a>
+    </div>
+</div>

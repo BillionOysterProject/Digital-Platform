@@ -1,0 +1,195 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Select <span class="red">data</span> to compare</h4>
+    </div>
+    <div class="modal-body">
+        <p>Within your selection of <b class="red">{{ce.expeditions.length}}</b> expeditions, choose the protocols and parameters to include in the comparison.</p>
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+            <!-- TIFFANY: Wire up checkboxes. Selecting a parent checkbox should automatically check all the children checkboxes in the blockquote underneath. However, you can select a blockquote child checkbox without selecting the entire parent checkbox -->
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''" ng-model="ce.parameters.protocol1all">
+                          <b>Protocol 1: Site Conditions</b></label>
+                    </div>
+                    <blockquote>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.weatherTemperature"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Weather/temperature</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.windSpeedDirection"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Wind speed/direction</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.humidity"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Humidity</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.recentRainfall"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Recent rainfall</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.closestHighTideTime"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Closest high tide time</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.closestLowTideTime"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Closest low tide time</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.closestHighTideHeight"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Closest high tide height</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.closestLowTideHeight"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Closest low tide height</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.referencePoint"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Reference point</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.tidalCurrent"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Tidal current</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.surfaceCurrentSpeed"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Surface current speed</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.waterColor"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Water color</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.oilSheen"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Oil sheen</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.garbageWater"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Garbage in water</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.pipes"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Pipes</label></div>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="form-group">
+                    <blockquote>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.shorelineType"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Shoreline type</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.garbageLand"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Garbage on land</label></div>
+                        <div class="checkbox"><label>
+                          <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol1.surfaceCover"
+                          ng-checked="ce.parameters.protocol1all === 'YES'"> Surface cover</label></div>
+                    </blockquote>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''" ng-model="ce.parameters.protocol2all">
+                          <b>Protocol 2: Oyster Measurements</b></label>
+                    </div>
+                    <blockquote>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.submergedDepth"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Submerged depth of cage</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.bioaccumulationOnCase"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Bioaccumulation on cage</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.cageDamage"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Cage damage</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.setDate"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Substrate shell set date</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.source"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Substrate shell source</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.liveOystersBaseline"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Live oysters on shell at baseline</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.liveOystersMonitoring"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Live oysters on shell at monitoring</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.totalMass"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Total mass of scrubbed substrate shell + oysters + tag</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol2.oysterMeasurements"
+                          ng-checked="ce.parameters.protocol2all === 'YES'"> Oyster measurements</label></div>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''" ng-model="ce.parameters.protocol3all">
+                          <b>Protocol 3: Mobile Trap</b></label>
+                    </div>
+                    <blockquote>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol3.organism"
+                          ng-checked="ce.parameters.protocol3all === 'YES'"> Organisms observed</label></div>
+                    </blockquote>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''" ng-model="ce.parameters.protocol4all">
+                          <b>Protocol 4: Settlement Tiles</b></label>
+                    </div>
+                    <blockquote>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol4.description"
+                          ng-checked="ce.parameters.protocol4all === 'YES'"> Settlement tile description</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol4.organism"
+                          ng-checked="ce.parameters.protocol4all === 'YES'"> Sessile organisms observed</label></div>
+                    </blockquote>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''" ng-model="ce.parameters.protocol5all">
+                          <b>Protocol 5: Water Quality</b></label>
+                    </div>
+                    <blockquote>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.depth"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Depth</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.temperature"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Temperature</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.dissolvedOxygen"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Dissolved Oxygen</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.salinity"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Salinity</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.pH"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> pH</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.turbidity"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Turbidity</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.ammonia"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Ammonia</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.nitrates"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Nitrates</label></div>
+                        <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                          ng-model="ce.parameters.protocol5.other"
+                          ng-checked="ce.parameters.protocol5all === 'YES'"> Other</label></div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default" ng-click="ce.nextStep(1)">Back</a>
+        <a class="btn btn-primary" ng-click="ce.nextStep(3)">Compare</a>
+    </div>
+</div>
