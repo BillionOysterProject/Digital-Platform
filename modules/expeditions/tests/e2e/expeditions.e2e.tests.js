@@ -38,7 +38,7 @@ var path = require('path'),
   assertWaterQualityView = CommonWaterQuality.assertWaterQualityView,
   EC = protractor.ExpectedConditions;
 
-describe('Expedition E2E Tests', function() {
+xdescribe('Expedition E2E Tests', function() {
 
   var leader = CommonUser.leader;
   var member1 = CommonUser.member1;
