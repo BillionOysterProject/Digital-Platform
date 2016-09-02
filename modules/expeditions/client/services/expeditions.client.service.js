@@ -30,4 +30,34 @@
       }
     });
   }
+
+  // angular
+  //   .module('expeditions.services')
+  //   .factory('ExpeditionsCompareService', ExpeditionsCompareService);
+  //
+  // ExpeditionsCompareService.$inject = ['$resource'];
+  //
+  // function ExpeditionsCompareService($resource) {
+  //   return $resource('api/expeditions/compare', {
+  //   }, {
+  //     query: {
+  //       method: 'GET',
+  //       params: {
+  //         teamId: '@teamId',
+  //         station: '@station',
+  //         organization: '@organization',
+  //         dateRange: '@dateRange',
+  //         sort: '@sort',
+  //         limit: '@limit',
+  //         page: '@page',
+  //         protocol1: '@protocol1',
+  //         protocol2: '@protocol2',
+  //         protocol3: '@protocol3',
+  //         protocol4: '@protocol4',
+  //         protocol5: '@protocol5'
+  //       },
+  //       isArray: true
+  //     }
+  //   });
+  // }
 })();

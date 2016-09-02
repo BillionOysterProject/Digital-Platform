@@ -30,6 +30,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/expeditions/:expeditionId',
       permissions: '*'
     }, {
+      resources: '/api/expeditions/compare',
+      permissions: '*'
+    }, {
       resources: '/api/expeditions',
       permissions: '*'
     }]
@@ -42,6 +45,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/expeditions/:expeditionId',
       permissions: '*'
     }, {
+      resources: '/api/expeditions/compare',
+      permissions: '*'
+    }, {
       resources: '/api/expeditions',
       permissions: '*'
     }]
@@ -50,6 +56,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/expeditions/:expeditionId',
       permissions: ['get']
+    }, {
+      resources: '/api/expeditions/compare',
+      permissions: '*'
     }, {
       resources: '/api/expeditions',
       permissions: ['get']

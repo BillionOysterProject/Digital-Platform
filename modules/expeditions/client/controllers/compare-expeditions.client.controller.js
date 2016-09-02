@@ -5,17 +5,22 @@
     .module('expeditions')
     .controller('ExpeditionsCompareController', ExpeditionsCompareController);
 
-  ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService', 'SchoolOrganizationsService',
-    'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams', 'lodash'];
+  ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService',
+    'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
+    '$http', 'lodash'];
 
-  function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
-    RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams, lodash) {
+  function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService,
+    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams,
+    $http, lodash) {
     var ce = this;
     ce.user = Authentication.user;
 
     ce.currentStep = 1;
     ce.totalSteps = 3;
     ce.nextStep = function(step) {
+      if (step === 3) {
+        ce.compare();
+      }
       ce.currentStep = step;
     };
 
@@ -222,7 +227,7 @@
       protocol2all: '',
       protocol2: {
         submergedDepth: '',
-        bioaccumulationOnCase: '',
+        bioaccumulationOnCage: '',
         cageDamage: '',
         setDate: '',
         source: '',
@@ -275,7 +280,6 @@
           ce.protocol1paramCount++;
         }
       }
-      console.log('protocol1 ' + ce.protocol1paramCount);
       return ce.protocol1paramCount;
     };
 
@@ -286,7 +290,6 @@
           ce.protocol2paramCount++;
         }
       }
-      console.log('protocol2 ' + ce.protocol2paramCount);
       return ce.protocol2paramCount;
     };
 
@@ -297,7 +300,6 @@
           ce.protocol3paramCount++;
         }
       }
-      console.log('protocol3 ' + ce.protocol3paramCount);
       return ce.protocol3paramCount;
     };
 
@@ -308,7 +310,6 @@
           ce.protocol4paramCount++;
         }
       }
-      console.log('protocol 4 ' + ce.protocol4paramCount);
       return ce.protocol4paramCount;
     };
 
@@ -319,12 +320,33 @@
           ce.protocol5paramCount++;
         }
       }
-      console.log('protocol 5 ' + ce.protocol5paramCount);
       return ce.protocol5paramCount;
     };
 
     ce.cancelFunction = function() {
       console.log('cancel');
+    };
+
+    ce.compare = function() {
+      var expeditionIds = [];
+      for (var i = 0; i < ce.expeditions.length; i++) {
+        expeditionIds.push(ce.expeditions[i]._id);
+      }
+
+      $http.post('/api/expeditions/compare', {
+        expeditionIds: expeditionIds,
+        protocol1: ce.parameters.protocol1,
+        protocol2: ce.parameters.protocol2,
+        protocol3: ce.parameters.protocol3,
+        protocol4: ce.parameters.protocol4,
+        protocol5: ce.parameters.protocol5
+      }).
+      success(function(data, status, headers, config) {
+        console.log('expeditions', data);
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error', data);
+      });
     };
   }
 })();
