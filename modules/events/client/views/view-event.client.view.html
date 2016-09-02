@@ -1,26 +1,99 @@
-<section>
-  <div class="page-header">
-    <h1 ng-bind="vm.event.name"></h1>
-  </div>
-  <div class="pull-right"
-       ng-show="vm.event.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       ui-sref="events.edit({ eventId: vm.event._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.event.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.event.user"
-            ng-bind="vm.event.user.displayName"></span>
-      <span ng-if="!vm.event.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.event.content"></p>
+<div class="jumbotron" style="background-image: url('http://billionoysterproject.org/wp-content/uploads/2015/04/RS-training-1024x768.jpg');">
+    <section class="content">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 box pull-right text-center">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h2><b>Oct<br/><span class="h1">7</span></b><br/>2016</h2>
+                            <h5>8:00am-5:00pm</h5>
+                        </div>
+                        <div class="col-xs-6">
+                            <h1><i class="gray fa fa-calendar-times-o"></i></h1>
+                            <h6>Only 10 spots remaining</h6>
+                            <a class="btn btn-lg btn-danger">Register now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+<!-- use this functionality for the background image (if they upload an event image):
+<div class="jumbotron" ng-hide="vm.featuredImageURL"></div>
+<div class="jumbotron" ng-show="vm.featuredImageURL" ng-background-image image-url="vm.featuredImageURL"></div>
+-->
+
+<section class="content">
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="red">BOP Restoration Station Basic Training</h2> <!-- vm.event.name -->
+            </div>
+            <div class="col-sm-4 text-right"> <!-- ng-show="vm.event.isCurrentUserOwner" -->
+                <a class="btn btn-primary">Email registrees</a>
+                <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })">Edit</a>
+                <!-- move to edit page <a class="btn btn-danger" ng-click="vm.remove()">Delete</a>-->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <hr/>
+                <div class="row text-center">
+                    <h4 class="col-sm-4 text-muted">
+                        <i class="fa fa-map-marker"></i>
+                        <b>ORS Name</b> <small>Address</small>
+                    </h4>
+                    <h4 class="col-sm-4 text-muted">
+                        <i class="fa fa-clock-o"></i>
+                        <b>25 days</b> <small>left to register</small>
+                    </h4>
+                    <h4 class="col-sm-4 text-muted">
+                        <i class="fa fa-users"></i>
+                        <b>30/40 full</b>
+                    </h4>
+                </div>
+                <hr/>
+                
+                <!-- vm.event.content -->
+                <p>PLEASE NOTE the 2016 Restoration Station Basic Training is one day only. At this time we have only one training date remaining with available slots: Friday October 7 – and these are filling up fast! If you want to sign up for the training, please read all info below, including the links, then fill out the form at the bottom of the page. You will receive an email with details about the training approximately two weeks prior to the date you signed up for. Email restore@nyharbor.org with any questions.</p>
+                <p>Here’s how it works:<br/>
+                    <b>Step 1):</b> Carefully read through the BOP Oyster Restoration Station Contract to understand the commitment. Look at the map of restoration station sites to determine which is closest or most convenient to your school or organization.<br/>
+                    <b>Step 2):</b> Register above and we'll send you a confirmation email one month prior to the training.<br/>
+                    <b>Step 3):</b> Read through the ORS manual, data sheets, and other resources in the BOP Field Science Public Folder to get a sense of what will be taught at the training.
+                </p>
+                <hr/>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-3">
+                <ul class="list-unstyled">
+                    <b>Resources</b>
+                    <!-- use this functionality
+                    <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
+                        <a class="break" download="{{file.originalname}}" target="_blank"
+                        ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+                        <i class="glyphicon glyphicon-file"></i> {{file.originalname}}</a>
+                    <li>
+                    <li ng-repeat="link in vm.lesson.materialsResources.teacherResourcesLinks">
+                        <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+                        <i class="glyphicon glyphicon-link"></i> {{link.name}}</a>
+                    </li>
+                        -->
+                        
+                    <li><a class="break" target="_blank"><i class="glyphicon glyphicon-file"></i> BOP ORS Contract</a></li>
+                    <li><a class="break" target="_blank"><i class="glyphicon glyphicon-link"></i> BOP Field Science Public Folder</a></li>
+                    <li><a class="break" target="_blank"><i class="glyphicon glyphicon-link"></i> BOP ORS Manual</a></li>
+                    <li><a class="break" target="_blank"><i class="glyphicon glyphicon-link"></i> BOP Data Sheets</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                <p><b>Skills taught:</b> We invite you to join the BOP Schools and Citizen Science program by attending a training and maintaining your own dockside cage + trap we call the "BOP Oyster Restoration Station." The program is designed for schools, organizations, and individual citizen-scientists who want to be "hands-on" in monitoring and restoring the New York Harbor Estuary. During the training on Governors Island, you will receive your own three-part oyster restoration station and learn the five protocols for monitoring and data collection with students. BOP provides the starter kit of monitoring equipment, supplies, live oysters, and a permitted waterfront site at which to install your restoration station. We help you set up the site and establish good connections with the local property owner so you can run a successful restoration station and contribute to this Harbor wide citizen science initiative!</p>
+                <p><b>Cost:</b> Please note BOP asks for a minimum $100 contribution per kit from each participating organization or individual to help defray the costs of materials, equipment, and technical support personnel. If you are unable to contribute $100, please email us (restore@nyharbor.org) to request an exemption.</p>
+            </div>
+        </div>
+    </section>
 </section>

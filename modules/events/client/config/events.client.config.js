@@ -19,7 +19,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'events', {
-      title: 'List Events',
+      title: 'Events',
       state: 'events.list'
     });
 

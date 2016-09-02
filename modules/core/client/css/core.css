@@ -59,6 +59,11 @@ body {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+    
+    .jumbotron .box {
+        background: #f4f7f8;
+        margin-bottom: -45px;
+    }
 
 .navbar-default {
     background: #fff;
@@ -892,6 +897,13 @@ a:hover .header-profile-image {
 
 form.ng-submitted .ng-invalid {
     border:1px solid #ea6158;
+}
+
+
+/* CALENDAR PLUGIN */
+
+#cal-week-box {
+    display: none;
 }
 
 

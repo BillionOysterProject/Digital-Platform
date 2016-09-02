@@ -1,8 +1,14 @@
 <div class="jumbotron text-center">
     <section class="content">
         <section class="container-fluid">
-          <h1>Events</h1>
-        </div>
+          <h2>Events</h2>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <!--<a class="btn btn-default" data-toggle="modal" data-target="#modal-"></a>-->
+        <a class="btn btn-default" ui-sref="events.create"><i class="glyphicon glyphicon-plus"></i> Create an event</a>
         <div class="list-group">
           <a ng-repeat="event in vm.events"
              ui-sref="events.view({ eventId: event._id })"
@@ -16,10 +22,9 @@
             </small>
             <h4 class="list-group-item-heading" ng-bind="event.name"></h4>
           </a>
-        </div>
+            </div>
         <div class="alert alert-warning text-center" ng-if="vm.events.$resolved && !vm.events.length">
           No Events yet, why don't you <a ui-sref="events.create">create one</a>?
         </div>
     </section>
-  </section>
-</div>
+</section>
