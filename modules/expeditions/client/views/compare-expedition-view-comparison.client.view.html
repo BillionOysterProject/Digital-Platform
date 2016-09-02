@@ -43,12 +43,13 @@
                 <td ng-show="ce.parameters.protocol2.submergedDepth === 'YES'"><b>Submerged depth of cage</b></td>
                 <td ng-show="ce.parameters.protocol2.bioaccumulationOnCage === 'YES'"><b>Bioaccumulation on cage</b></td>
                 <td ng-show="ce.parameters.protocol2.cageDamage === 'YES'"><b>Cage damage</b></td>
-                <td ng-show="ce.parameters.protocol2.setDate === 'YES'"><b>Substrate shell set date</b></td>
-                <td ng-show="ce.parameters.protocol2.source === 'YES'"><b>Substrate shell source</b></td>
-                <td ng-show="ce.parameters.protocol2.liveOystersBaseline === 'YES'"><b>Live oysters on shell at baseline</b></td>
-                <td ng-show="ce.parameters.protocol2.liveOystersMonitoring === 'YES'"><b>Live oysters on shell at monitoring</b></td>
-                <td ng-show="ce.parameters.protocol2.totalMass === 'YES'"><b>Total mass of scrubbed substrate shell + oysters + tag</b></td>
-                <td ng-show="ce.parameters.protocol2.oysterMeasurements === 'YES'"><b>Oyster measurements</b></td>
+
+                <td ng-show="ce.parameters.protocol2.setDate === 'YES' ||
+                ce.parameters.protocol2.source === 'YES' ||
+                ce.parameters.protocol2.liveOystersBaseline === 'YES' ||
+                ce.parameters.protocol2.liveOystersMonitoring === 'YES' ||
+                ce.parameters.protocol2.totalMass === 'YES' ||
+                ce.parameters.protocol2.oysterMeasurements === 'YES'"><b>Substrate Shells</b></td>
 
                 <td ng-show="ce.parameters.protocol3.organism === 'YES'"><b>Organisms observed</b></td>
 
@@ -65,59 +66,310 @@
                 <td ng-show="ce.parameters.protocol5.nitrates === 'YES'"><b>Nitrates</b></td>
                 <td ng-show="ce.parameters.protocol5.other === 'YES'"><b>Other</b></td>
             </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">Baltimore Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 7, 2016</small></td>
-                <td>43%</td>
-                <td>2.6m</td>
-                <td>1 Blackfish, 3 Black-fingered mud crab</td>
-                <td>4.1m</td>
-            </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">NY Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 12, 2016</small></td>
-                <td>66%</td>
-                <td>2.6m</td>
-                <td>3 Northern pipefish</td>
-                <td>2.8m</td>
-            </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">NY Class Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, July 13, 2016</small></td>
-                <td>21%</td>
-                <td>3.2m</td>
-                <td>8 Idotea isopod, 5 Green crab</td>
-                <td>2.8m</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">NYC Summer Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 17, 2016</small></td>
-                <td>3%</td>
-                <td>2.6m</td>
-                <td>2 Corophid amphipod, 1 Clam worm</td>
-                <td>1.4m</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">NY Harbor Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 19, 2016</small></td>
-                <td>65%</td>
-                <td>3.2m</td>
-                <td>8 Northern pipefish, 2 Idotea isopod</td>
-                <td>2.1m</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><a href="LINKTOEXPEDITIONVIEW">3rd Grade Expedition</a><br/><small class="text-muted"><i class="fa fa-map-marker"></i> NY Harbor, Aug 24, 2016</small></td>
-                <td>77%</td>
-                <td>4.1m</td>
-                <td>2 Clam worm, 7 Corophid amphipod</td>
-                <td>1.7m</td>
-                <td></td>
-                <td></td>
-                <td></td>
+            <tr ng-repeat="expedition in ce.compareExpeditions">
+                <td><a ui-sref="expedition.view({ expeditionId: expedition.id })">{{expedition.name}}</a><br/>
+                  <small class="text-muted"><i class="fa fa-map-marker"></i> {{expedition.station.name}},
+                    {{ce.getExpeditionDate(expedition.monitoringStartDate)}}</small></td>
+
+                  <td ng-show="ce.parameters.protocol1.weatherTemperature === 'YES'">
+                    {{ce.getWeatherCondition(expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions)}}<br/>
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC}}&#8451;
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.windSpeedDirection === 'YES'">
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH}}mph<br/>
+                    {{ce.getWindDirection(expedition.protocols.siteCondition.meteorologicalConditions.windDirection)}} wind
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.humidity === 'YES'">
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.humidityPer}}% humidity
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.recentRainfall === 'YES'">
+                    <span id="rainedIn24Hours" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                      expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
+                      expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === true">Rain<br/>
+                      <small>in the past 24hrs</small></span>
+                    <span id="rainedIn72Hours" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                      expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
+                      (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">Rain<br/>
+                      <small>in the past 72hrs</small></span>
+                    <span id="rainedIn7Days" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                      (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
+                      (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">Rain<br/>
+                      <small>in the past 7 days</small></span>
+                    <span id="noRain" ng-show="(expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) &&
+                      (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
+                      (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                      !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">No rain<br/>
+                      <small>in the past 7 days</small></span>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.closestHighTideTime === 'YES'">
+                    {{ce.getTime(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}<br/>
+                    {{ce.getShortDate(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.closestLowTideTime === 'YES'">
+                    {{ce.getTime(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}</br>
+                    {{ce.getShortDate(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.closestHighTideHeight === 'YES'">
+                    {{expedition.protocols.siteCondition.tideConditions.closestHighTideHeight}}ft
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.closestLowTideHeight === 'YES'">
+                    {{expedition.protocols.siteCondition.tideConditions.closestLowTideHeight}}ft
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.referencePoint === 'YES'">
+                    {{expedition.protocols.siteCondition.tideConditions.referencePoint}}
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.tidalCurrent === 'YES'">
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'flood-current'">
+                      Flood current (incoming tide)
+                    </span>
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'slack-water'">
+                      Slack water
+                    </span>
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'ebb-current'">
+                      Ebb current (outgoing tide)
+                    </span>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.surfaceCurrentSpeed === 'YES'">
+                    {{expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS}} meters/sec
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.waterColor === 'YES'">
+                    {{ce.getWaterColors(expedition.protocols.siteCondition.waterConditions.waterColor)}}
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.oilSheen === 'YES'">
+                    <span id="noOilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === false ||
+                      !expedition.protocols.siteCondition.waterConditions.oilSheen"><b>No</b> oil sheen<br/></span>
+                    <span id="oilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === true">
+                      <b>Oil sheen present</b><br/></span>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.garbageWater === 'YES'">
+                    <span id="noGarbagePresentWater"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === false ||
+                      !expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent">
+                      <b>No</b> garbage present<br/></span>
+                      <p id="garbagePresentWater"
+                      ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === true">
+                        <b>Garbage present:</b><br/>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.softPlastic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.metal !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.metal)}} amount of metal,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.paper !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.paper)}} amount of paper,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.glass !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.glass)}} amount of glass,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.organic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.organic)}} amount of organic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.other.description">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.other.extent)}} amount of
+                          {{expedition.protocols.siteCondition.waterConditions.garbage.other.description}}<br/></span>
+                    </p>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.pipes === 'YES'">
+                    <span id="noMarkedCSO"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === false ||
+                      !expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent">
+                      <b>No</b> CSO pipes<br/></span>
+                    <p id="markedCSO"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                        <b>CSO pipes present:</b><br/>
+                        Location at {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}},
+                        {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}<br/>
+                        Flow: {{ce.getWaterFlows(expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough)}}
+                    </p>
+                    <span id="noUnmarkedPipe"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === false ||
+                      !expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent">
+                      <b>No</b> unmarked or other outfall pipes</span>
+                    <p id="unmarkedPipe"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
+                        <b>Unmarked or other outfall pipes present:</b><br/>
+                        Location at {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}},
+                        {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}<br/>
+                        Flow: {{ce.getWaterFlows(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough)}}<br/>
+                        <b>{{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM}}cm</b> approximate diameter
+                    </p>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.shorelineType === 'YES'">
+                    {{ce.getShorelineTypes(expedition.protocols.siteCondition.landConditions.shoreLineType)}}
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.garbageLand === 'YES'">
+                    <span id="noGarbagePresentLand"
+                    ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === false ||
+                      !expedition.protocols.siteCondition.landConditions.garbage.garbagePresent"><b>No</b> garbage present</span>
+                    <p ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === true">
+                        <b>Garbage present:</b><br/>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.hardPlastic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.softPlastic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.metal !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.metal)}} amount of metal,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.paper !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.paper)}} amount of paper,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.glass !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.glass)}} amount of glass,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.organic !== 'none'">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.organic)}} amount of organic,<br/></span>
+                        <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.other.description">
+                          {{ce.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.other.extent)}} amount of
+                          {{expedition.protocols.siteCondition.landConditions.garbage.other.description}}<br/></span>
+                    </p>
+                  </td>
+                  <td ng-show="ce.parameters.protocol1.surfaceCover === 'YES'">
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer}}%
+                      <small>Impervious Surface (concrete/asphalt paths, roads, buildings etc)</small></span><br/>
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer}}%
+                      <small>Pervious Surface (dirt, gravel etc)</small></span><br/>
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer}}%
+                      <small>Vegetated surface (grass, shrubs, trees)</small></span>
+                  </td>
+
+                  <td ng-show="ce.parameters.protocol2.submergedDepth === 'YES'">
+                    {{expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM}} meters
+                  </td>
+                  <td ng-show="ce.parameters.protocol2.bioaccumulationOnCage === 'YES'">
+                    <span id="bioaccumulationHeavy"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'heavy'">
+                      <b>Heavy bioaccumulation:</b> Encrusting macroalgae/animals reducing mesh opening by over 50%</span>
+                    <span id="bioaccumulationMedium"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'medium'">
+                      <b>Medium bioaccumulation:</b> Some encrusting macroalgae/animals reducing size of mesh opening up to 25%</span>
+                    <span id="bioaccumulationLight"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'light'">
+                      <b>Light bioaccumulation:</b> Macroalgae or minimal animals present that do not encroach on mesh openings</span>
+                    <span id="noBioaccumulation"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'none'">
+                      <b>None/clean bioaccumulation:</b> No macroalgae or animals present</span>
+                  </td>
+                  <td ng-show="ce.parameters.protocol2.cageDamage === 'YES'">
+                    {{expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}
+                  </td>
+                  <td ng-show="(substrate.setDate && substrate.setDate !== '1970-01-01T00:00:00.000Z' &&
+                  ce.parameters.protocol2.setDate === 'YES') || (substrate.source && ce.parameters.protocol2.source === 'YES') ||
+                  (substrate.otherSource && ce.parameters.protocol2.source === 'YES') ||
+                  (substrate.totalNumberOfLiveOystersAtBaseline && ce.parameters.protocol2.liveOystersBaseline === 'YES') ||
+                  (substrate.totalNumberOfLiveOystersOnShell && ce.parameters.protocol2.liveOystersMonitoring === 'YES') ||
+                  (substrate.totalMassOfScrubbedSubstrateShellOystersTagG && ce.parameters.protocol2.totalMass === 'YES') ||
+                  ((substrate.averageSizeOfLiveOysters || substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters) &&
+                  ce.parameters.protocol2.oysterMeasurements === 'YES')">
+                    <table class="table table-responsive">
+                      <tr>
+                        <td></td>
+                        <td ng-show="ce.parameters.protocol2.setDate === 'YES'"><b>Substrate shell set date</b></td>
+                        <td ng-show="ce.parameters.protocol2.source === 'YES'"><b>Substrate shell source</b></td>
+                        <td ng-show="ce.parameters.protocol2.liveOystersBaseline === 'YES'"><b>Live oysters on shell at baseline</b></td>
+                        <td ng-show="ce.parameters.protocol2.liveOystersMonitoring === 'YES'"><b>Live oysters on shell at monitoring</b></td>
+                        <td ng-show="ce.parameters.protocol2.totalMass === 'YES'"><b>Total mass of scrubbed substrate shell + oysters + tag</b></td>
+                        <td ng-show="ce.parameters.protocol2.oysterMeasurements === 'YES'"><b>Oyster measurements</b></td>
+                      </tr>
+                      <tr ng-repeat="substrate in expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells"
+                      ng-show="(substrate.setDate && substrate.setDate !== '1970-01-01T00:00:00.000Z' &&
+                      ce.parameters.protocol2.setDate === 'YES') || (substrate.source && ce.parameters.protocol2.source === 'YES') ||
+                      (substrate.otherSource && ce.parameters.protocol2.source === 'YES') ||
+                      (substrate.totalNumberOfLiveOystersAtBaseline && ce.parameters.protocol2.liveOystersBaseline === 'YES') ||
+                      (substrate.totalNumberOfLiveOystersOnShell && ce.parameters.protocol2.liveOystersMonitoring === 'YES') ||
+                      (substrate.totalMassOfScrubbedSubstrateShellOystersTagG && ce.parameters.protocol2.totalMass === 'YES') ||
+                      ((substrate.averageSizeOfLiveOysters || substrate.minimumSizeOfLiveOysters || substrate.maximumSizeOfLiveOysters) &&
+                      ce.parameters.protocol2.oysterMeasurements === 'YES')">
+                        <td>{{$index+1}}</td>
+                        <td ng-show="ce.parameters.protocol2.setDate === 'YES'">
+                          {{ce.getShortDate(substrate.setDate)}}
+                        </td>
+                        <td ng-show="ce.parameters.protocol2.source === 'YES'">
+                          <span ng-show="substrate.source !== 'Other'">{{substrate.source}}</span>
+                          <span ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</span>
+                        </td>
+                        <td ng-show="ce.parameters.protocol2.liveOystersBaseline === 'YES'">
+                          {{substrate.totalNumberOfLiveOystersAtBaseline}}
+                        </td>
+                        <td ng-show="ce.parameters.protocol2.liveOystersMonitoring === 'YES'">
+                          {{substrate.totalNumberOfLiveOystersOnShell}}
+                        </td>
+                        <td ng-show="ce.parameters.protocol2.totalMass === 'YES'">
+                          {{substrate.totalMassOfScrubbedSubstrateShellOystersTagG}}
+                        </td>
+                        <td ng-show="ce.parameters.protocol2.oysterMeasurements === 'YES'">
+                          <p id="oysterSizeOfLiveOysters{{$index}}"><b>{{substrate.averageSizeOfLiveOysters | number:2}}</b> average size<br/>
+                            <b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b> min size<br/>
+                            <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b> max size</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+
+                  <td ng-show="ce.parameters.protocol3.organism === 'YES'">
+                    <span ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms">
+                      {{organism.count}} {{ce.getMobileOrganismName(organism.organism)}},
+                    </span>
+                  </td>
+
+                  <td ng-show="ce.parameters.protocol4.description === 'YES'">
+                    <span ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles"
+                    ng-show="tile.description">
+                      Settlement Tile {{$index+1}}: {{tile.description}}<br/>
+                    </span>
+                  </td>
+                  <td ng-show="ce.parameters.protocol4.organism === 'YES'">
+                    <span ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles"
+                    ng-show="tile.grid1.organism || tile.grid2.organism || tile.grid3.organism ||
+                    tile.grid4.organism || tile.grid5.organism || tile.grid6.organism || tile.grid7.organism ||
+                    tile.grid8.organism || tile.grid9.organism || tile.grid10.organism || tile.grid11.organism ||
+                    tile.grid12.organism || tile.grid13.organism || tile.grid14.organism || tile.grid15.organism ||
+                    tile.grid16.organism || tile.grid17.organism || tile.grid18.organism || tile.grid19.organism ||
+                    tile.grid20.organism || tile.grid21.organism || tile.grid22.organism || tile.grid23.organism ||
+                    tile.grid24.organism || tile.grid25.organism">
+                      Settlement Tile {{$index+1}}:
+                      <table class="table table-bordered">
+                          <tr ng-repeat="n in [0, 1, 2, 3, 4] track by $index">
+                              <td class="col-2point4" id="settlementTile{{$parent.$index}}Grid{{1+($index*5)}}">
+                                  <h4 class="text-muted">{{1+($index*5)}}</h4>
+                                  <p>{{ce.getSessileOrganismName(tile['grid'+(1+($index*5))].organism)}}</p>
+                                  <em>{{tile['grid'+1+($index*5)].notes}}</em>
+                              </td>
+                              <td class="col-2point4" id="settlementTile{{$parent.$index}}Grid{{2+($index*5)}}">
+                                  <h4 class="text-muted">{{2+($index*5)}}</h4>
+                                  <p>{{ce.getSessileOrganismName(tile['grid'+(2+($index*5))].organism)}}</p>
+                                  <em>{{tile['grid'+2+($index*5)].notes}}</em>
+                              </td>
+                              <td class="col-2point4" id="settlementTile{{$parent.$index}}Grid{{3+($index*5)}}">
+                                  <h4 class="text-muted">{{3+($index*5)}}</h4>
+                                  <p>{{ce.getSessileOrganismName(tile['grid'+(3+($index*5))].organism)}}</p>
+                                  <em>{{tile['grid'+3+($index*5)].notes}}</em>
+                              </td>
+                              <td class="col-2point4" id="settlementTile{{$parent.$index}}Grid{{4+($index*5)}}">
+                                  <h4 class="text-muted">{{4+($index*5)}}</h4>
+                                  <p>{{ce.getSessileOrganismName(tile['grid'+(4+($index*5))].organism)}}</p>
+                                  <em>{{tile['grid'+4+($index*5)].notes}}</em>
+                              </td>
+                              <td class="col-2point4" id="settlementTile{{$parent.$index}}Grid{{5+($index*5)}}">
+                                  <h4 class="text-muted">{{5+($index*5)}}</h4>
+                                  <p>{{ce.getSessileOrganismName(tile['grid'+(5+($index*5))].organism)}}</p>
+                                  <em>{{tile['grid'+5+($index*5)].notes}}</em>
+                              </td>
+                          </tr>
+                      </table>
+                    </span>
+                  </td>
+
+                  <td ng-show="ce.parameters.protocol5.depth === 'YES'"><b>Depth</b></td>
+                  <td ng-show="ce.parameters.protocol5.temperature === 'YES'"><b>Temperature</b></td>
+                  <td ng-show="ce.parameters.protocol5.dissolvedOxygen === 'YES'"><b>Dissolved Oxygen</b></td>
+                  <td ng-show="ce.parameters.protocol5.salinity === 'YES'"><b>Salinity</b></td>
+                  <td ng-show="ce.parameters.protocol5.pH === 'YES'"><b>pH</b></td>
+                  <td ng-show="ce.parameters.protocol5.turbidity === 'YES'"><b>Turbidity</b></td>
+                  <td ng-show="ce.parameters.protocol5.ammonia === 'YES'"><b>Ammonia</b></td>
+                  <td ng-show="ce.parameters.protocol5.nitrates === 'YES'"><b>Nitrates</b></td>
+                  <td ng-show="ce.parameters.protocol5.other === 'YES'"><b>Other</b></td>
             </tr>
         </table>
     </div>

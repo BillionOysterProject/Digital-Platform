@@ -5,13 +5,13 @@
     .module('expeditions')
     .controller('ExpeditionsCompareController', ExpeditionsCompareController);
 
-  ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService',
-    'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
-    '$http', 'lodash'];
+  ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService', 'SchoolOrganizationsService',
+  'ExpeditionViewHelper',
+  'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams', '$http', 'lodash', 'moment'];
 
-  function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService,
-    SchoolOrganizationsService, RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams,
-    $http, lodash) {
+  function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
+    ExpeditionViewHelper,
+    RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams, $http, lodash, moment) {
     var ce = this;
     ce.user = Authentication.user;
 
@@ -343,10 +343,30 @@
       }).
       success(function(data, status, headers, config) {
         console.log('expeditions', data);
+        ce.compareExpeditions = data;
       }).
       error(function(data, status, headers, config) {
         console.log('error', data);
       });
+    };
+
+    ce.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
+    ce.getTime = ExpeditionViewHelper.getTime;
+    ce.getShortDate = ExpeditionViewHelper.getShortDate;
+    ce.getDate = ExpeditionViewHelper.getDate;
+
+    ce.getWeatherCondition = ExpeditionViewHelper.getWeatherCondition;
+    ce.getWaterColors = ExpeditionViewHelper.getWaterColors;
+    ce.getWaterFlows = ExpeditionViewHelper.getWaterFlows;
+    ce.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
+    ce.getWindDirection = ExpeditionViewHelper.getWindDirection;
+    ce.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
+    ce.getMobileOrganismById = ExpeditionViewHelper.getMobileOrganismById;
+    ce.getSessileOrganismName = ExpeditionViewHelper.getSessileOrganismName;
+
+    ce.getMobileOrganismName = function(id) {
+      var organism = ce.getMobileOrganismById(id);
+      return (organism) ? organism.commonName : '';
     };
   }
 })();

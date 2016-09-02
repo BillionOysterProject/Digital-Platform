@@ -1169,7 +1169,7 @@ var buildCompareQuery = function (req, callback) {
       selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
       selectProtocol1.push('waterConditions.unmarkedPipePresent');
     }
-    if (req.body.protocol1.shoreLineType === 'YES') {
+    if (req.body.protocol1.shorelineType === 'YES') {
       selectProtocol1.push('landConditions.shoreLineType');
     }
     if (req.body.protocol1.garbageLand === 'YES') {
@@ -1205,20 +1205,21 @@ var buildCompareQuery = function (req, callback) {
     if (req.body.protocol2.totalMass === 'YES') {
       selectProtocol2.push('measuringOysterGrowth.substrateShells.totalMassOfScrubbedSubstrateShellOystersTagG');
     }
-    if (req.body.protocol2.oysterMeasurement === 'YES') {
+    if (req.body.protocol2.oysterMeasurements === 'YES') {
       selectProtocol2.push('measuringOysterGrowth.substrateShells.measurements');
       selectProtocol2.push('measuringOysterGrowth.substrateShells.minimumSizeOfLiveOysters');
       selectProtocol2.push('measuringOysterGrowth.substrateShells.maximumSizeOfLiveOysters');
       selectProtocol2.push('measuringOysterGrowth.substrateShells.averageSizeOfLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.minimumSizeOfAllLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.maximumSizeOfAllLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.averageSizeOfAllLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalNumberOfAllLiveOysters');
+      selectProtocol2.push('minimumSizeOfAllLiveOysters');
+      selectProtocol2.push('maximumSizeOfAllLiveOysters');
+      selectProtocol2.push('averageSizeOfAllLiveOysters');
+      selectProtocol2.push('totalNumberOfAllLiveOysters');
     }
     // protocol 3: mobile trap
     var selectProtocol3 = [];
     if (req.body.protocol3.organism === 'YES') {
       selectProtocol3.push('mobileOrganisms.organism');
+      selectProtocol3.push('mobileOrganisms.count');
     }
     // protocol 4: settlement tiles
     var selectProtocol4 = [];
@@ -1308,9 +1309,6 @@ var buildCompareQuery = function (req, callback) {
       selectProtocol5.push('samples.others');
     }
 
-    // var selectString = select.join(' ');
-    // console.log('selectString', selectString);
-    // query.select('name station.name monitoringStartDate ' + selectString);
     var select = {
       name: 1,
       station: 1,
@@ -1321,7 +1319,6 @@ var buildCompareQuery = function (req, callback) {
     if (selectProtocol3.length > 0) select['protocols.mobileTrap'] = 1;
     if (selectProtocol4.length > 0) select['protocols.settlementTiles'] = 1;
     if (selectProtocol5.length > 0) select['protocols.waterQuality'] = 1;
-    console.log('select', select);
 
     var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('-monitoringStartDate');
 
@@ -1335,7 +1332,6 @@ var buildCompareQuery = function (req, callback) {
 
     query.exec(function (err, expeditions) {
       if (err) {
-        console.log('err', err);
         callback(errorHandler.getErrorMessage(err), null);
       } else {
         callback(null, expeditions);
@@ -1349,7 +1345,6 @@ var buildCompareQuery = function (req, callback) {
 exports.compare = function (req, res) {
   buildCompareQuery(req, function(error, expeditions) {
     if (error) {
-      console.log('error', error);
       return res.status(400).send({
         message: error
       });

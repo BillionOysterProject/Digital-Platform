@@ -7,11 +7,11 @@
 
   RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService'];
+  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
   function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
     TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
-    ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService) {
+    ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -199,14 +199,8 @@
       return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
     };
 
-    vm.getExpeditionDate = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
-
-    vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
-    };
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
+    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
 
     vm.checkWrite = function(teamList) {
       if (checkRole('team lead') || checkRole('admin')) {

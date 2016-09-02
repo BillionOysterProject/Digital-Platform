@@ -7,11 +7,11 @@
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
   '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
     $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader) {
+    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -58,35 +58,22 @@
     });
 
     // Get the formatted Expedition date
-    vm.getExpeditionDate = function() {
-      return moment(vm.expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
 
     // Get the formatted Expedition time range
-    vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
-    };
+    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
 
     // Get the formatted date
-    vm.getDate = function(date) {
-      return moment(date).format('MMMM D, YYYY');
-    };
+    vm.getDate = ExpeditionViewHelper.getDate;
 
     // Get the formatted date
-    vm.getShortDate = function(date) {
-      return moment(date).format('M/D/YY');
-    };
+    vm.getShortDate = ExpeditionViewHelper.getShortDate;
 
     // Get the formatted time
-    vm.getTime = function(date) {
-      return moment(date).format('h:mma');
-    };
+    vm.getTime = ExpeditionViewHelper.getTime;
 
     // Get the formatted date and time
-    vm.getDateTime = function(date) {
-      return moment(date).format('MMM D, YYYY, h:mma');
-    };
+    vm.getDateTime = ExpeditionViewHelper.getDateTime;
 
     // Get the link to the Expedition, if the user is an Admin or Team Lead and the Expedition is Incomplete, Returned,
     // or Unpublished take the user to the Edit Expedition page, otherwise just show them the Expedition protocols.
