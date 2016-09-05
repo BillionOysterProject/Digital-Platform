@@ -10,6 +10,7 @@ mongoimport -d bop-test -c metawinddirections --type json --file metaWindDirecti
 mongoimport -d bop-test -c metatruefalses --type json --file metaTrueFalses.json --drop
 mongoimport -d bop-test -c metawatertemperaturemethods --type json --file metaWaterTemperatureMethods.json --drop
 mongoimport -d bop-test -c metadissolvedoxygenmethods --type json --file metaDissolvedOxygenMethods.json --drop
+mongoimport -d bop-test -c metasalinitymethods --type json --file metaSalinityMethods.json --drop
 mongoimport -d bop-test -c metaorganismcategories --type json --file scripts/mongo-load/metaOrganismCategories.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
 mongoimport -d bop-test -c mobileorganisms --type json --file scripts/mongo-load/mobileOrganisms.json --drop

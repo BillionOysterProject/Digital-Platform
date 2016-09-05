@@ -23,11 +23,11 @@ var siteCondition1 = {
     windDirectionText: 'South West'
   },
   recentRainfall: {
-    rainedIn7Days: 1,
+    rainedIn7Days: 2,
     rainedIn7DaysText: 'Yes',
-    rainedIn72Hours: 1,
+    rainedIn72Hours: 2,
     rainedIn72HoursText: 'Yes',
-    rainedIn24Hours: 1,
+    rainedIn24Hours: 2,
     rainedIn24HoursText: 'Yes'
   },
   tideConditions: {
@@ -41,10 +41,10 @@ var siteCondition1 = {
     surfaceCurrentSpeedMPS: 4,
     waterColor: 4,
     waterColorText: 'Dark Green',
-    oilSheen: 1,
+    oilSheen: 2,
     oilSheenText: 'Yes',
     garbage: {
-      garbagePresent: 1,
+      garbagePresent: 2,
       garbagePresentText: 'Yes',
       hardPlastic: 1,
       hardPlasticText: 'None',
@@ -65,9 +65,9 @@ var siteCondition1 = {
       }
     },
     markedCombinedSewerOverflowPipes: {
-      markedCSOPresent: 1,
+      markedCSOPresent: 2,
       markedCSOPresentText: 'Yes',
-      flowThroughPresent: 1,
+      flowThroughPresent: 2,
       flowThroughPresentText: 'Yes',
       howMuchFlowThrough: 3,
       howMuchFlowThroughText: 'Steady Stream',
@@ -77,9 +77,9 @@ var siteCondition1 = {
       }
     },
     unmarkedOutfallPipes: {
-      unmarkedPipePresent: 1,
+      unmarkedPipePresent: 2,
       unmarkedPipePresentText: 'Yes',
-      flowThroughPresent: 1,
+      flowThroughPresent: 2,
       flowThroughPresentText: 'Yes',
       howMuchFlowThrough: 1,
       howMuchFlowThroughText: 'Trickle',
@@ -94,7 +94,7 @@ var siteCondition1 = {
     shoreLineType: 3,
     shoreLineTypeText: 'Floating Dock',
     garbage: {
-      garbagePresent: 1,
+      garbagePresent: 2,
       garbagePresentText: 'Yes',
       hardPlastic: 4,
       hardPlasticText: 'Extensive',
@@ -133,11 +133,11 @@ var siteCondition2 = {
     windDirectionText: 'South'
   },
   recentRainfall: {
-    rainedIn7Days: 1,
+    rainedIn7Days: 2,
     rainedIn7DaysText: 'Yes',
-    rainedIn72Hours: 1,
+    rainedIn72Hours: 2,
     rainedIn72HoursText: 'Yes',
-    rainedIn24Hours: 1,
+    rainedIn24Hours: 2,
     rainedIn24HoursText: 'Yes'
   },
   tideConditions: {
@@ -153,10 +153,10 @@ var siteCondition2 = {
     surfaceCurrentSpeedMPS: 5,
     waterColor: 1,
     waterColorText: 'Light Blue',
-    oilSheen: 1,
+    oilSheen: 2,
     oilSheenText: 'Yes',
     garbage: {
-      garbagePresent: 1,
+      garbagePresent: 2,
       garbagePresentText: 'Yes',
       hardPlastic: 2,
       hardPlasticText: 'Sporadic',
@@ -177,9 +177,9 @@ var siteCondition2 = {
       }
     },
     markedCombinedSewerOverflowPipes: {
-      markedCSOPresent: 1,
+      markedCSOPresent: 2,
       markedCSOPresentText: 'Yes',
-      flowThroughPresent: 1,
+      flowThroughPresent: 2,
       flowThroughPresentText: 'Yes',
       howMuchFlowThrough: 1,
       howMuchFlowThroughText: 'Trickle',
@@ -189,9 +189,9 @@ var siteCondition2 = {
       }
     },
     unmarkedOutfallPipes: {
-      unmarkedPipePresent: 1,
+      unmarkedPipePresent: 2,
       unmarkedPipePresentText: 'Yes',
-      flowThroughPresent: 1,
+      flowThroughPresent: 2,
       flowThroughPresentText: 'Yes',
       howMuchFlowThrough: 2,
       howMuchFlowThroughText: 'Light Stream',
@@ -206,7 +206,7 @@ var siteCondition2 = {
     shoreLineType: 2,
     shoreLineTypeText: 'Fixed Pier',
     garbage: {
-      garbagePresent: 1,
+      garbagePresent: 2,
       garbagePresentText: 'Yes',
       hardPlastic: 4,
       hardPlasticText: 'Extensive',
@@ -245,7 +245,7 @@ var siteCondition3 = {
     windDirectionText: 'East'
   },
   recentRainfall: {
-    rainedIn7Days: 2,
+    rainedIn7Days: 1,
     rainedIn7DaysText: 'No'
   },
   tideConditions: {
@@ -259,18 +259,18 @@ var siteCondition3 = {
     surfaceCurrentSpeedMPS: 4,
     waterColor: 5,
     waterColorText: 'Light Brown',
-    oilSheen: 2,
+    oilSheen: 1,
     oilSheenText: 'No',
     garbage: {
-      garbagePresent: 2,
+      garbagePresent: 1,
       garbagePresentText: 'No'
     },
     markedCombinedSewerOverflowPipes: {
-      markedCSOPresent: 2,
+      markedCSOPresent: 1,
       markedCSOPresentText: 'No'
     },
     unmarkedOutfallPipes: {
-      unmarkedPipePresent: 2,
+      unmarkedPipePresent: 1,
       unmarkedPipePresentText: 'No',
     }
   },
@@ -278,7 +278,7 @@ var siteCondition3 = {
     shoreLineType: 1,
     shoreLineTypeText: 'Bulkhead/Wall',
     garbage: {
-      garbagePresent: 2,
+      garbagePresent: 1,
       garbagePresentText: 'No',
     },
     shorelineSurfaceCoverEstPer: {
