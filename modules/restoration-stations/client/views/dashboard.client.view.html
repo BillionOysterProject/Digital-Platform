@@ -55,7 +55,8 @@
                             <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                                 <td>
                                     {{expedition.name}}<br/>
-                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                      {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</small>
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
@@ -160,7 +161,8 @@
                             <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                                 <td>
                                     {{expedition.name}}<br/>
-                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                      {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</small>
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td class="text-right">

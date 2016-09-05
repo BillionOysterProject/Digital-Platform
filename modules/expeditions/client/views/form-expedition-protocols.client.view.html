@@ -5,7 +5,7 @@
                 <nav class="navbar">
                     <a href="#" ui-sref="expeditions.view({ expeditionId: vm.expedition._id })"><h6 class="navbar-text blue">{{vm.expedition.name}}</h6></a>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.team.teamLead.displayName}}</h6>
-                    <h6 class="navbar-text">{{vm.getExpeditionDate}}</h6>
+                    <h6 class="navbar-text">{{vm.getExpeditionDate(vm.expedition.monitoringStartDate)}}</h6>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
                     <!--<h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.user.displayName}}</h6>-->
                     <div class="pull-right">

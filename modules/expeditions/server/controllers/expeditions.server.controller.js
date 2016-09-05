@@ -634,11 +634,8 @@ exports.delete = function (req, res) {
   }
 };
 
-/**
- * List of Expeditions
- */
-exports.list = function (req, res) {
-  function search (teams, siteConditionIds, oysterMeasurementIds,
+var buildSearchQuery = function (req, callback) {
+  function searchQuery (teams, siteConditionIds, oysterMeasurementIds,
     mobileTrapIds, settlementTileIds, waterQualityIds) {
     var query;
     var and = [];
@@ -672,9 +669,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       searchOr.push({ 'name': searchRe });
       searchOr.push({ 'notes': searchRe });
@@ -738,61 +733,13 @@ exports.list = function (req, res) {
       query = Expedition.find();
     }
 
-    if (req.query.sort) {
-      if (req.query.sort === 'startDate') {
-        query.sort('-monitoringStartDate');
-      } else if (req.query.sort === 'endDate') {
-        query.sort('-monitoringEndDate');
-      } else if (req.query.sort === 'name') {
-        query.sort('name');
-      } else if (req.query.sort === 'status') {
-        query.sort('status');
-      }
-    } else {
-      query.sort('-created');
-    }
-
-    if (req.query.limit) {
-      var limit = Number(req.query.limit);
-      if (req.query.page) {
-        var page = Number(req.query.page);
-        query.skip(limit*(page-1)).limit(limit);
-      } else {
-        query.limit(limit);
-      }
-    }
-
-    query.populate('team', 'name schoolOrg')
-    .populate('team.schoolOrg', 'name')
-    .populate('teamLead', 'displayName username profileImageURL')
-    .populate('station', 'name')
-    .populate('teamLists.siteCondition', 'displayName username profileImageURL')
-    .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
-    .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
-    .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
-    .populate('teamLists.waterQuality', 'displayName username profileImageURL')
-    .populate('protocols.siteCondition', 'status')
-    .populate('protocols.oysterMeasurement', 'status')
-    .populate('protocols.mobileTrap', 'status')
-    .populate('protocols.settlementTiles', 'status')
-    .populate('protocols.waterQuality', 'status')
-    .exec(function (err, expeditions) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(expeditions);
-      }
-    });
+    callback(null, query);
   }
 
   var findTeamIds = function(callback) {
     Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (teams && teams.length > 0) {
         var teamIds = [];
         for (var i = 0; i < teams.length; i++) {
@@ -800,7 +747,7 @@ exports.list = function (req, res) {
         }
         callback(teamIds);
       } else {
-        callback();
+        callback([]);
       }
     });
   };
@@ -812,9 +759,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       or.push({ 'notes': searchRe });
       or.push({ 'tideConditions.referencePoint': searchRe });
@@ -822,9 +767,7 @@ exports.list = function (req, res) {
 
     ProtocolSiteCondition.find({ $or: or }).exec(function(err, protocols) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (protocols && protocols.length > 0) {
         var protocolIds = [];
         for (var i = 0; i < protocols.length; i++) {
@@ -844,9 +787,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       or.push({ 'notes': searchRe });
       or.push({ 'conditionOfOysterCage.notesOnDamageToCage': searchRe });
@@ -855,9 +796,7 @@ exports.list = function (req, res) {
 
     ProtocolOysterMeasurement.find({ $or: or }).exec(function(err, protocols) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (protocols && protocols.length > 0) {
         var protocolIds = [];
         for (var i = 0; i < protocols.length; i++) {
@@ -877,9 +816,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       or.push({ 'commonName': searchRe });
       or.push({ 'latinName': searchRe });
@@ -887,9 +824,7 @@ exports.list = function (req, res) {
 
     MobileOrganism.find({ $or: or }).exec(function(err, organisms) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (organisms && organisms.length > 0) {
         var organismIds = [];
         for (var i = 0; i < organisms.length; i++) {
@@ -910,9 +845,7 @@ exports.list = function (req, res) {
         try {
           searchRe = new RegExp(req.query.searchString, 'i');
         } catch(e) {
-          return res.status(400).send({
-            message: 'Search string is invalid'
-          });
+          callback('Search string is invalid', null);
         }
         or.push({ 'notes': searchRe });
         or.push({ 'mobileOrganisms.notesQuestions': searchRe });
@@ -924,9 +857,7 @@ exports.list = function (req, res) {
 
       ProtocolMobileTrap.find({ $or: or }).exec(function(err, protocols) {
         if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+          callback(errorHandler.getErrorMessage(err), null);
         } else if (protocols && protocols.length > 0) {
           var protocolIds = [];
           for (var i = 0; i < protocols.length; i++) {
@@ -947,9 +878,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       or.push({ 'commonName': searchRe });
       or.push({ 'latinName': searchRe });
@@ -957,9 +886,7 @@ exports.list = function (req, res) {
 
     SessileOrganism.find({ $or: or }).exec(function(err, organisms) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (organisms && organisms.length > 0) {
         var organismIds = [];
         for (var i = 0; i < organisms.length; i++) {
@@ -980,9 +907,7 @@ exports.list = function (req, res) {
         try {
           searchRe = new RegExp(req.query.searchString, 'i');
         } catch(e) {
-          return res.status(400).send({
-            message: 'Search string is invalid'
-          });
+          callback('Search string is invalid', null);
         }
         or.push({ 'notes': searchRe });
         or.push({ 'settlementTiles.description': searchRe });
@@ -1043,9 +968,7 @@ exports.list = function (req, res) {
 
       ProtocolSettlementTile.find({ $or: or }).exec(function(err, protocols) {
         if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
+          callback(errorHandler.getErrorMessage(err), null);
         } else if (protocols && protocols.length > 0) {
           var protocolIds = [];
           for (var i = 0; i < protocols.length; i++) {
@@ -1066,9 +989,7 @@ exports.list = function (req, res) {
       try {
         searchRe = new RegExp(req.query.searchString, 'i');
       } catch(e) {
-        return res.status(400).send({
-          message: 'Search string is invalid'
-        });
+        callback('Search string is invalid', null);
       }
       or.push({ 'notes': searchRe });
       or.push({ 'samples.others.label': searchRe });
@@ -1076,9 +997,7 @@ exports.list = function (req, res) {
 
     ProtocolWaterQuality.find({ $or: or }).exec(function(err, protocols) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback(errorHandler.getErrorMessage(err), null);
       } else if (protocols && protocols.length > 0) {
         var protocolIds = [];
         for (var i = 0; i < protocols.length; i++) {
@@ -1100,7 +1019,7 @@ exports.list = function (req, res) {
             searchMobileTrap(function(mobileTrapIds) {
               searchSettlementTiles(function(settlementTileIds) {
                 searchWaterQuality(function(waterQualityIds) {
-                  search(teamIds, siteConditionIds, oysterMeasurementIds,
+                  searchQuery(teamIds, siteConditionIds, oysterMeasurementIds,
                     mobileTrapIds, settlementTileIds, waterQualityIds);
                 });
               });
@@ -1108,7 +1027,7 @@ exports.list = function (req, res) {
           });
         });
       } else {
-        search(teamIds);
+        searchQuery(teamIds);
       }
     });
   } else {
@@ -1118,7 +1037,7 @@ exports.list = function (req, res) {
           searchMobileTrap(function(mobileTrapIds) {
             searchSettlementTiles(function(settlementTileIds) {
               searchWaterQuality(function(waterQualityIds) {
-                search(null, siteConditionIds, oysterMeasurementIds,
+                searchQuery(null, siteConditionIds, oysterMeasurementIds,
                    mobileTrapIds, settlementTileIds, waterQualityIds);
               });
             });
@@ -1126,9 +1045,313 @@ exports.list = function (req, res) {
         });
       });
     } else {
-      search();
+      searchQuery();
     }
   }
+};
+
+/**
+ * List of Expeditions
+ */
+exports.list = function (req, res) {
+  buildSearchQuery(req, function(error, query) {
+    if (error) {
+      return res.status(400).send({
+        message: error
+      });
+    } else {
+
+      if (req.query.sort) {
+        if (req.query.sort === 'startDate') {
+          query.sort('-monitoringStartDate');
+        } else if (req.query.sort === 'endDate') {
+          query.sort('-monitoringEndDate');
+        } else if (req.query.sort === 'name') {
+          query.sort('name');
+        } else if (req.query.sort === 'status') {
+          query.sort('status');
+        }
+      } else {
+        query.sort('-created');
+      }
+
+      if (req.query.limit) {
+        var limit = Number(req.query.limit);
+        if (req.query.page) {
+          var page = Number(req.query.page);
+          query.skip(limit*(page-1)).limit(limit);
+        } else {
+          query.limit(limit);
+        }
+      }
+
+      query.populate('team', 'name schoolOrg')
+      .populate('team.schoolOrg', 'name')
+      .populate('teamLead', 'displayName username profileImageURL')
+      .populate('station', 'name')
+      .populate('teamLists.siteCondition', 'displayName username profileImageURL')
+      .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
+      .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
+      .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
+      .populate('teamLists.waterQuality', 'displayName username profileImageURL')
+      .populate('protocols.siteCondition', 'status')
+      .populate('protocols.oysterMeasurement', 'status')
+      .populate('protocols.mobileTrap', 'status')
+      .populate('protocols.settlementTiles', 'status')
+      .populate('protocols.waterQuality', 'status')
+      .exec(function (err, expeditions) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(expeditions);
+        }
+      });
+    }
+  });
+};
+
+/**
+ * Compare Expeditions
+ */
+var buildCompareQuery = function (req, callback) {
+  if (req.body.expeditionIds) {
+
+
+    // protocol 1: site condition
+    var selectProtocol1 = [];
+    if (req.body.protocol1.weatherTemperature === 'YES') {
+      selectProtocol1.push('meteorologicalConditions.weatherConditions');
+      selectProtocol1.push('meteorologicalConditions.airTemperatureC');
+    }
+    if (req.body.protocol1.windSpeedDirection === 'YES') {
+      selectProtocol1.push('meteorologicalConditions.windSpeedMPH');
+      selectProtocol1.push('meteorologicalConditions.windDirection');
+    }
+    if (req.body.protocol1.humidity === 'YES') {
+      selectProtocol1.push('meteorologicalConditions.humidityPer');
+    }
+    if (req.body.protocol1.recentRainfall === 'YES') {
+      selectProtocol1.push('recentRainfall');
+    }
+    if (req.body.protocol1.closestHighTideTime === 'YES') {
+      selectProtocol1.push('tideConditions.closestHighTide');
+    }
+    if (req.body.protocol1.closestLowTideTime === 'YES') {
+      selectProtocol1.push('tideConditions.closestLowTide');
+    }
+    if (req.body.protocol1.closestHighTideHeight === 'YES') {
+      selectProtocol1.push('tideConditions.closestHighTideHeight');
+    }
+    if (req.body.protocol1.closestLowTideHeight === 'YES') {
+      selectProtocol1.push('tideConditions.closestLowTideHeight');
+    }
+    if (req.body.protocol1.referencePoint === 'YES') {
+      selectProtocol1.push('tideConditions.referencePoint');
+    }
+    if (req.body.protocol1.tidalCurrent === 'YES') {
+      selectProtocol1.push('tideConditions.tidalCurrent');
+    }
+    if (req.body.protocol1.surfaceCurrentSpeed === 'YES') {
+      selectProtocol1.push('waterConditions.surfaceCurrentSpeedMPS');
+    }
+    if (req.body.protocol1.waterColor === 'YES') {
+      selectProtocol1.push('waterConditions.waterColor');
+    }
+    if (req.body.protocol1.oilSheen === 'YES') {
+      selectProtocol1.push('waterConditions.oilSheen');
+    }
+    if (req.body.protocol1.garbageWater === 'YES') {
+      selectProtocol1.push('waterConditions.garbage');
+    }
+    if (req.body.protocol1.pipes === 'YES') {
+      selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
+      selectProtocol1.push('waterConditions.unmarkedPipePresent');
+    }
+    if (req.body.protocol1.shorelineType === 'YES') {
+      selectProtocol1.push('landConditions.shoreLineType');
+    }
+    if (req.body.protocol1.garbageLand === 'YES') {
+      selectProtocol1.push('landConditions.garbage');
+    }
+    if (req.body.protocol1.surfaceCover === 'YES') {
+      selectProtocol1.push('landConditions.shorelineSurfaceCoverEstPer');
+    }
+    // protocol 2: oyster measurement
+    var selectProtocol2 = [];
+    if (req.body.protocol2.submergedDepth === 'YES') {
+      selectProtocol2.push('depthOfOysterCage.submergedDepthofCageM');
+    }
+    if (req.body.protocol2.bioaccumulationOnCage === 'YES') {
+      selectProtocol2.push('conditionOfOysterCage.bioaccumulationOnCage');
+    }
+    if (req.body.protocol2.cageDamage === 'YES') {
+      selectProtocol2.push('conditionOfOysterCage.notesOnDamageToCage');
+    }
+    if (req.body.protocol2.setDate === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.setDate');
+    }
+    if (req.body.protocol2.source === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.source');
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.otherSource');
+    }
+    if (req.body.protocol2.liveOystersBaseline === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalNumberOfLiveOystersAtBaseline');
+    }
+    if (req.body.protocol2.liveOystersMonitoring === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalNumberOfLiveOystersOnShell');
+    }
+    if (req.body.protocol2.totalMass === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalMassOfScrubbedSubstrateShellOystersTagG');
+    }
+    if (req.body.protocol2.oysterMeasurements === 'YES') {
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.measurements');
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.minimumSizeOfLiveOysters');
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.maximumSizeOfLiveOysters');
+      selectProtocol2.push('measuringOysterGrowth.substrateShells.averageSizeOfLiveOysters');
+      selectProtocol2.push('minimumSizeOfAllLiveOysters');
+      selectProtocol2.push('maximumSizeOfAllLiveOysters');
+      selectProtocol2.push('averageSizeOfAllLiveOysters');
+      selectProtocol2.push('totalNumberOfAllLiveOysters');
+    }
+    // protocol 3: mobile trap
+    var selectProtocol3 = [];
+    if (req.body.protocol3.organism === 'YES') {
+      selectProtocol3.push('mobileOrganisms.organism');
+      selectProtocol3.push('mobileOrganisms.count');
+    }
+    // protocol 4: settlement tiles
+    var selectProtocol4 = [];
+    if (req.body.protocol4.description === 'YES') {
+      selectProtocol4.push('settlementTiles.description');
+    }
+    if (req.body.protocol4.organism === 'YES') {
+      selectProtocol4.push('settlementTiles.grid1.organism');
+      selectProtocol4.push('settlementTiles.grid1.notes');
+      selectProtocol4.push('settlementTiles.grid2.organism');
+      selectProtocol4.push('settlementTiles.grid2.notes');
+      selectProtocol4.push('settlementTiles.grid3.organism');
+      selectProtocol4.push('settlementTiles.grid3.notes');
+      selectProtocol4.push('settlementTiles.grid4.organism');
+      selectProtocol4.push('settlementTiles.grid4.notes');
+      selectProtocol4.push('settlementTiles.grid5.organism');
+      selectProtocol4.push('settlementTiles.grid5.notes');
+      selectProtocol4.push('settlementTiles.grid6.organism');
+      selectProtocol4.push('settlementTiles.grid6.notes');
+      selectProtocol4.push('settlementTiles.grid7.organism');
+      selectProtocol4.push('settlementTiles.grid7.notes');
+      selectProtocol4.push('settlementTiles.grid8.organism');
+      selectProtocol4.push('settlementTiles.grid8.notes');
+      selectProtocol4.push('settlementTiles.grid9.organism');
+      selectProtocol4.push('settlementTiles.grid9.notes');
+      selectProtocol4.push('settlementTiles.grid10.organism');
+      selectProtocol4.push('settlementTiles.grid10.notes');
+      selectProtocol4.push('settlementTiles.grid11.organism');
+      selectProtocol4.push('settlementTiles.grid11.notes');
+      selectProtocol4.push('settlementTiles.grid12.organism');
+      selectProtocol4.push('settlementTiles.grid12.notes');
+      selectProtocol4.push('settlementTiles.grid13.organism');
+      selectProtocol4.push('settlementTiles.grid13.notes');
+      selectProtocol4.push('settlementTiles.grid14.organism');
+      selectProtocol4.push('settlementTiles.grid14.notes');
+      selectProtocol4.push('settlementTiles.grid15.organism');
+      selectProtocol4.push('settlementTiles.grid15.notes');
+      selectProtocol4.push('settlementTiles.grid16.organism');
+      selectProtocol4.push('settlementTiles.grid16.notes');
+      selectProtocol4.push('settlementTiles.grid17.organism');
+      selectProtocol4.push('settlementTiles.grid17.notes');
+      selectProtocol4.push('settlementTiles.grid18.organism');
+      selectProtocol4.push('settlementTiles.grid18.notes');
+      selectProtocol4.push('settlementTiles.grid19.organism');
+      selectProtocol4.push('settlementTiles.grid19.notes');
+      selectProtocol4.push('settlementTiles.grid20.organism');
+      selectProtocol4.push('settlementTiles.grid20.notes');
+      selectProtocol4.push('settlementTiles.grid21.organism');
+      selectProtocol4.push('settlementTiles.grid21.notes');
+      selectProtocol4.push('settlementTiles.grid22.organism');
+      selectProtocol4.push('settlementTiles.grid22.notes');
+      selectProtocol4.push('settlementTiles.grid23.organism');
+      selectProtocol4.push('settlementTiles.grid23.notes');
+      selectProtocol4.push('settlementTiles.grid24.organism');
+      selectProtocol4.push('settlementTiles.grid24.notes');
+      selectProtocol4.push('settlementTiles.grid25.organism');
+      selectProtocol4.push('settlementTiles.grid25.notes');
+    }
+    // protocol 5: water quality
+    var selectProtocol5 = [];
+    if (req.body.protocol5.depth === 'YES') {
+      selectProtocol5.push('samples.depthOfWaterSampleM');
+      selectProtocol5.push('samples.locationOfWaterSample');
+    }
+    if (req.body.protocol5.temperature === 'YES') {
+      selectProtocol5.push('samples.waterTemperature');
+    }
+    if (req.body.protocol5.dissolvedOxygen === 'YES') {
+      selectProtocol5.push('samples.dissolvedOxygen');
+    }
+    if (req.body.protocol5.salinity === 'YES') {
+      selectProtocol5.push('samples.salinity');
+    }
+    if (req.body.protocol5.pH === 'YES') {
+      selectProtocol5.push('samples.pH');
+    }
+    if (req.body.protocol5.turbidity === 'YES') {
+      selectProtocol5.push('samples.turbidity');
+    }
+    if (req.body.protocol5.ammonia === 'YES') {
+      selectProtocol5.push('samples.ammonia');
+    }
+    if (req.body.protocol5.nitrates === 'YES') {
+      selectProtocol5.push('samples.nitrates');
+    }
+    if (req.body.protocol5.other === 'YES') {
+      selectProtocol5.push('samples.others');
+    }
+
+    var select = {
+      name: 1,
+      station: 1,
+      monitoringStartDate: 1
+    };
+    if (selectProtocol1.length > 0) select['protocols.siteCondition'] = 1;
+    if (selectProtocol2.length > 0) select['protocols.oysterMeasurement'] = 1;
+    if (selectProtocol3.length > 0) select['protocols.mobileTrap'] = 1;
+    if (selectProtocol4.length > 0) select['protocols.settlementTiles'] = 1;
+    if (selectProtocol5.length > 0) select['protocols.waterQuality'] = 1;
+
+    var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('-monitoringStartDate');
+
+    query.populate('station', 'name');
+
+    if (selectProtocol1.length > 0) query.populate('protocols.siteCondition', selectProtocol1.join(' '));
+    if (selectProtocol2.length > 0) query.populate('protocols.oysterMeasurement', selectProtocol2.join(' '));
+    if (selectProtocol3.length > 0) query.populate('protocols.mobileTrap', selectProtocol3.join(' '));
+    if (selectProtocol4.length > 0) query.populate('protocols.settlementTiles', selectProtocol4.join(' '));
+    if (selectProtocol5.length > 0) query.populate('protocols.waterQuality', selectProtocol5.join(' '));
+
+    query.exec(function (err, expeditions) {
+      if (err) {
+        callback(errorHandler.getErrorMessage(err), null);
+      } else {
+        callback(null, expeditions);
+      }
+    });
+  } else {
+    callback('Must have list of expeditions', null);
+  }
+};
+
+exports.compare = function (req, res) {
+  buildCompareQuery(req, function(error, expeditions) {
+    if (error) {
+      return res.status(400).send({
+        message: error
+      });
+    } else {
+      res.json(expeditions);
+    }
+  });
 };
 
 /**

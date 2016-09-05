@@ -7,6 +7,10 @@ var expeditionsPolicy = require('../policies/expeditions.server.policy'),
   expeditions = require('../controllers/expeditions.server.controller');
 
 module.exports = function (app) {
+  // Compare expedition routes
+  app.route('/api/expeditions/compare').all(expeditionsPolicy.isAllowed)
+    .post(expeditions.compare);
+    
   // Expeditions collection routes
   app.route('/api/expeditions').all(expeditionsPolicy.isAllowed)
     .get(expeditions.list)

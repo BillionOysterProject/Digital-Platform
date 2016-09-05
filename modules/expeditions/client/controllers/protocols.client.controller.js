@@ -7,11 +7,11 @@
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
   '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
     $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader) {
+    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -58,35 +58,22 @@
     });
 
     // Get the formatted Expedition date
-    vm.getExpeditionDate = function() {
-      return moment(vm.expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
 
     // Get the formatted Expedition time range
-    vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
-    };
+    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
 
     // Get the formatted date
-    vm.getDate = function(date) {
-      return moment(date).format('MMMM D, YYYY');
-    };
+    vm.getDate = ExpeditionViewHelper.getDate;
 
     // Get the formatted date
-    vm.getShortDate = function(date) {
-      return moment(date).format('M/D/YY');
-    };
+    vm.getShortDate = ExpeditionViewHelper.getShortDate;
 
     // Get the formatted time
-    vm.getTime = function(date) {
-      return moment(date).format('h:mma');
-    };
+    vm.getTime = ExpeditionViewHelper.getTime;
 
     // Get the formatted date and time
-    vm.getDateTime = function(date) {
-      return moment(date).format('MMM D, YYYY, h:mma');
-    };
+    vm.getDateTime = ExpeditionViewHelper.getDateTime;
 
     // Get the link to the Expedition, if the user is an Admin or Team Lead and the Expedition is Incomplete, Returned,
     // or Unpublished take the user to the Edit Expedition page, otherwise just show them the Expedition protocols.
@@ -442,7 +429,7 @@
       }
     };
 
-    vm.saveDraft = function() {
+    vm.saveDraft = function(callback) {
       vm.saving = true;
 
       var finishedSaving = 0;
@@ -450,6 +437,7 @@
         finishedSaving++;
         if (finishedSaving === 5) {
           vm.saving = false;
+          if (callback) callback();
         }
       };
 
@@ -521,48 +509,50 @@
 
     // Submit the protocols as a team member
     vm.submitTeamMember = function() {
-      vm.submitting = true;
+      vm.saveDraft(function() {
+        vm.submitting = true;
 
-      vm.validateProtocols(function() {
-        if (vm.protocolsSuccessful()) {
-          var protocols = {};
-          if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
-          if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
-          if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
-          if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
-          if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
+        vm.validateProtocols(function() {
+          if (vm.protocolsSuccessful()) {
+            var protocols = {};
+            if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
+            if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
+            if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
+            if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
+            if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
-          console.log('protocols to submit', protocols);
+            console.log('protocols to submit', protocols);
 
-          $http.post('/api/expeditions/' + vm.expedition._id + '/submit?full=true', {
-            protocols: protocols
-          }).
-          success(function(data, status, headers, config) {
-            vm.expedition = data;
-            if(vm.viewSiteCondition) $scope.siteCondition = vm.expedition.protocols.siteCondition;
-            if(vm.viewOysterMeasurement) $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-            if(vm.viewMobileTrap) $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-            if(vm.viewSettlementTiles) $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-            if(vm.viewWaterQuality) $scope.waterQuality = vm.expedition.protocols.waterQuality;
-            vm.submitting = false;
-            $state.go('expeditions.view', {
-              expeditionId: vm.expedition._id
+            $http.post('/api/expeditions/' + vm.expedition._id + '/submit?full=true', {
+              protocols: protocols
+            }).
+            success(function(data, status, headers, config) {
+              vm.expedition = data;
+              if(vm.viewSiteCondition) $scope.siteCondition = vm.expedition.protocols.siteCondition;
+              if(vm.viewOysterMeasurement) $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+              if(vm.viewMobileTrap) $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+              if(vm.viewSettlementTiles) $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+              if(vm.viewWaterQuality) $scope.waterQuality = vm.expedition.protocols.waterQuality;
+              vm.submitting = false;
+              $state.go('expeditions.view', {
+                expeditionId: vm.expedition._id
+              });
+            }).
+            error(function(data, status, headers, config) {
+              console.log('data', data);
+              if (data && data.message) {
+                vm.siteConditionErrors = data.message.siteCondition;
+                vm.oysterMeasurementErrors = data.message.oysterMeasurement;
+                vm.mobileTrapErrors = data.message.mobileTrap;
+                vm.settlementTilesErrors = data.message.settlementTiles;
+                vm.waterQualityErrors = data.message.waterQuality;
+              }
+              vm.submitting = false;
             });
-          }).
-          error(function(data, status, headers, config) {
-            console.log('data', data);
-            if (data && data.message) {
-              vm.siteConditionErrors = data.message.siteCondition;
-              vm.oysterMeasurementErrors = data.message.oysterMeasurement;
-              vm.mobileTrapErrors = data.message.mobileTrap;
-              vm.settlementTilesErrors = data.message.settlementTiles;
-              vm.waterQualityErrors = data.message.waterQuality;
-            }
+          } else {
             vm.submitting = false;
-          });
-        } else {
-          vm.submitting = false;
-        }
+          }
+        });
       });
     };
 

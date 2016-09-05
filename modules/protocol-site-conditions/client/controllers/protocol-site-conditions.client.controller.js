@@ -7,11 +7,11 @@
 
   ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
   'lodash', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
-  'WaterFlowService', 'ShorelineTypesService', 'ProtocolSiteConditionsService'];
+  'WaterFlowService', 'ShorelineTypesService', 'ExpeditionViewHelper'];
 
   function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     lodash, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
-    WaterFlowService, ShorelineTypesService) {
+    WaterFlowService, ShorelineTypesService, ExpeditionViewHelper) {
 
     // Set up initial values
     $scope.siteCondition.collectionTime = moment($scope.siteCondition.collectionTime).startOf('minute').toDate();
@@ -42,76 +42,20 @@
       };
     }
 
-    // Get the values for the dropdowns
-    $scope.weatherConditions = WeatherConditionsService.query();
-    $scope.waterColors = WaterColorsService.query();
-    $scope.waterFlows = WaterFlowService.query();
-    $scope.shorelineTypes = ShorelineTypesService.query();
-
-    $scope.garbageExtent = [
-      { label: 'None', value: 'none' },
-      { label: 'Sporadic', value: 'sporadic' },
-      { label: 'Common', value: 'common' },
-      { label: 'Extensive', value: 'extensive' }
-    ];
-
-    $scope.windDirection = [
-      { label: 'North', value: 'north' },
-      { label: 'North West', value: 'northwest' },
-      { label: 'West', value: 'west' },
-      { label: 'South West', value: 'southwest' },
-      { label: 'South', value: 'south' },
-      { label: 'South East', value: 'southeast' },
-      { label: 'East', value: 'east' },
-      { label: 'North East', value: 'northeast' }
-    ];
-
-    $scope.trueFalse = [
-      { label: 'Yes', value: true },
-      { label: 'No', value: false }
-    ];
-
-    $scope.getWeatherCondition = function(value) {
-      var index = lodash.findIndex($scope.weatherConditions, function(c) {
-        return c.value === value;
-      });
-      return (index > -1) ? $scope.weatherConditions[index].label : '';
-    };
-
-    $scope.getWaterColors = function(value) {
-      var index = lodash.findIndex($scope.waterColors, function(c) {
-        return c.value === value;
-      });
-      return (index > -1) ? $scope.waterColors[index].label : '';
-    };
-
-    $scope.getWaterFlows = function(value) {
-      var index = lodash.findIndex($scope.waterFlows, function(f) {
-        return f.value === value;
-      });
-      return (index > -1) ? $scope.waterFlows[index].label : '';
-    };
-
-    $scope.getShorelineTypes = function(value) {
-      var index = lodash.findIndex($scope.shorelineTypes, function(t) {
-        return t.value === value;
-      });
-      return (index > -1) ? $scope.shorelineTypes[index].label : '';
-    };
-
-    $scope.getWindDirection = function(value) {
-      var index = lodash.findIndex($scope.windDirection, function(t) {
-        return t.value === value;
-      });
-      return (index > -1) ? $scope.windDirection[index].label : '';
-    };
-
-    $scope.getGarbageExtent = function(value) {
-      var index = lodash.findIndex($scope.garbageExtent, function(e) {
-        return e.value === value;
-      });
-      return (index > -1) ? $scope.garbageExtent[index].label : '';
-    };
+    $scope.weatherConditions = ExpeditionViewHelper.getAllWeatherConditions();
+    $scope.waterColors = ExpeditionViewHelper.getAllWaterColors();
+    $scope.waterFlows = ExpeditionViewHelper.getAllWaterFlows();
+    $scope.shorelineTypes = ExpeditionViewHelper.getAllShorelineTypes();
+    $scope.garbageExtent = ExpeditionViewHelper.getAllGarbageExtent();
+    $scope.windDirection = ExpeditionViewHelper.getAllWindDirections();
+    $scope.trueFalse = ExpeditionViewHelper.getAllTrueFalse();
+    
+    $scope.getWeatherCondition = ExpeditionViewHelper.getWeatherCondition;
+    $scope.getWaterColors = ExpeditionViewHelper.getWaterColors;
+    $scope.getWaterFlows = ExpeditionViewHelper.getWaterFlows;
+    $scope.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
+    $scope.getWindDirection = ExpeditionViewHelper.getWindDirection;
+    $scope.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
 
     $scope.openMap = function() {
       if ($scope.siteCondition.waterConditions &&
