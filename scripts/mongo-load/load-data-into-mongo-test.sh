@@ -13,6 +13,7 @@ mongoimport -d bop-test -c metadissolvedoxygenmethods --type json --file metaDis
 mongoimport -d bop-test -c metasalinitymethods --type json --file metaSalinityMethods.json --drop
 mongoimport -d bop-test -c metaphmethods --type json --file metaPhMethods.json --drop
 mongoimport -d bop-test -c metaturbiditymethods --type json --file metaTurbidityMethods.json --drop
+mongoimport -d bop-test -c metaammoniamethods --type json --file metaAmmoniaMethods.json --drop
 mongoimport -d bop-test -c metaorganismcategories --type json --file scripts/mongo-load/metaOrganismCategories.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
 mongoimport -d bop-test -c mobileorganisms --type json --file scripts/mongo-load/mobileOrganisms.json --drop
