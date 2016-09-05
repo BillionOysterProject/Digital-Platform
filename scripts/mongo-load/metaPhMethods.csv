@@ -1,0 +1,4 @@
+order,label,value
+0,Test strips,testStrips
+1,Sensor (read only),sensorRO
+2,Sensor,sensor

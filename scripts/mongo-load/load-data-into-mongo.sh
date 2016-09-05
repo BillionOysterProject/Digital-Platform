@@ -20,6 +20,7 @@ mongoimport -d bop-dev -c metatruefalses --type json --file metaTrueFalses.json 
 mongoimport -d bop-dev -c metawatertemperaturemethods --type json --file metaWaterTemperatureMethods.json --drop
 mongoimport -d bop-dev -c metadissolvedoxygenmethods --type json --file metaDissolvedOxygenMethods.json --drop
 mongoimport -d bop-dev -c metasalinitymethods --type json --file metaSalinityMethods.json --drop
+mongoimport -d bop-dev -c metaphmethods --type json --file metaPhMethods.json --drop
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
 mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --drop
