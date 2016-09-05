@@ -10,7 +10,7 @@
   'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
   'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
   'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
-  'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService',
+  'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService', 'AmmoniaUnitsService',
   'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
@@ -18,7 +18,7 @@
     GarbageExtentsService, WindDirectionsService, TrueFalsesService, WaterTemperatureMethodsService,
     DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
     AmmoniaMethodsService, NitrateMethodsService, WaterTemperatureUnitsService, DissolvedOxygenUnitsService,
-    SalinityUnitsService, PhUnitsService, TurbidityUnitsService,
+    SalinityUnitsService, PhUnitsService, TurbidityUnitsService, AmmoniaUnitsService,
     lodash, moment) {
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
@@ -44,10 +44,7 @@
     var salinityUnits = SalinityUnitsService.query();
     var pHUnits = PhUnitsService.query();
     var turbidityUnits = TurbidityUnitsService.query();
-
-    var ammoniaUnits = [
-      { name: 'ppm', value: 'ppm' }
-    ];
+    var ammoniaUnits = AmmoniaUnitsService.query();
 
     var nitratesUnits = [
       { name: 'ppm', value: 'ppm' }
