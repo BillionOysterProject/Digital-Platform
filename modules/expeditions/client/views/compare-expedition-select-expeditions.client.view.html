@@ -68,6 +68,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ce.cancelFunction()">Close</button>
-        <a class="btn btn-primary" ng-click="ce.nextStep(2)">Next</a>
+        <a class="btn btn-primary" ng-click="ce.nextStep(2)" ng-disabled="ce.expeditions.length === 0">Next</a>
     </div>
 </div>

@@ -737,17 +737,19 @@ var buildSearchQuery = function (req, callback) {
   }
 
   var findTeamIds = function(callback) {
+    console.log('req.query.organization', req.query.organization);
     Team.find({ 'schoolOrg': req.query.organization }).exec(function(err, teams) {
       if (err) {
         callback(errorHandler.getErrorMessage(err), null);
       } else if (teams && teams.length > 0) {
+        console.log('teams', teams);
         var teamIds = [];
         for (var i = 0; i < teams.length; i++) {
           teamIds.push(teams[i]._id);
         }
         callback(teamIds);
       } else {
-        callback();
+        callback([]);
       }
     });
   };

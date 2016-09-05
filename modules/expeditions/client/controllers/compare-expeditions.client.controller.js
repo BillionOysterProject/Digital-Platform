@@ -92,6 +92,7 @@
     ce.findCompareExpeditions();
 
     ce.resetFilters = function() {
+      ce.currentStep = 1;
       ce.filter = {
         station: '',
         stationObj: {
@@ -116,6 +117,62 @@
         startDate: '',
         endDate: '',
         searchString: ''
+      };
+      ce.parameters = {
+        protocol1all: '',
+        protocol1: {
+          weatherTemperature: '',
+          windSpeedDirection: '',
+          humidity: '',
+          recentRainfall: '',
+          closestHighTideTime: '',
+          closestLowTideTime: '',
+          closestHighTideHeight: '',
+          closestLowTideHeight: '',
+          referencePoint: '',
+          tidalCurrent: '',
+          surfaceCurrentSpeed: '',
+          waterColor: '',
+          oilSheen: '',
+          garbageWater: '',
+          pipes: '',
+          shorelineType: '',
+          garbageLand: '',
+          surfaceCover: ''
+        },
+        protocol2all: '',
+        protocol2: {
+          submergedDepth: '',
+          bioaccumulationOnCage: '',
+          cageDamage: '',
+          setDate: '',
+          source: '',
+          liveOystersBaseline: '',
+          liveOystersMonitoring: '',
+          totalMass: '',
+          oysterMeasurements: ''
+        },
+        protocol3all: '',
+        protocol3: {
+          organism: ''
+        },
+        protocol4all: '',
+        protocol4: {
+          description: '',
+          organism: ''
+        },
+        protocol5all: '',
+        protocol5: {
+          depth: '',
+          temperature: '',
+          dissolvedOxygen: '',
+          salinity: '',
+          pH: '',
+          turbidity: '',
+          ammonia: '',
+          nitrates: '',
+          other: ''
+        }
       };
       ce.findCompareExpeditions();
     };
@@ -151,8 +208,11 @@
     });
 
     ce.organizationSelected = function() {
+      console.log('organizationSelected');
       ce.filter.organization = (ce.filter.organizationObj && ce.filter.organizationObj._id) ? ce.filter.organizationObj._id : '';
-      ce.filter.organizationName = (ce.filter.organizationObj && ce.filter.organizationObj._id) ? ce.filter.organizationObj.name : '';
+      ce.filter.organizationName = (ce.filter.organizationObj && ce.filter.organizationObj.name) ? ce.filter.organizationObj.name : '';
+      console.log('ce.filter.organization', ce.filter.organization);
+      console.log('ce.filter.organizationName', ce.filter.organizationName);
       ce.findTeams();
       ce.findCompareExpeditions();
     };
@@ -259,6 +319,114 @@
       }
     };
 
+    ce.toggleProtocol1 = function() {
+      if (ce.parameters.protocol1all === 'YES') {
+        ce.parameters.protocol1.weatherTemperature = 'YES';
+        ce.parameters.protocol1.windSpeedDirection = 'YES';
+        ce.parameters.protocol1.humidity = 'YES';
+        ce.parameters.protocol1.recentRainfall = 'YES';
+        ce.parameters.protocol1.closestHighTideTime = 'YES';
+        ce.parameters.protocol1.closestLowTideTime = 'YES';
+        ce.parameters.protocol1.closestHighTideHeight = 'YES';
+        ce.parameters.protocol1.closestLowTideHeight = 'YES';
+        ce.parameters.protocol1.referencePoint = 'YES';
+        ce.parameters.protocol1.tidalCurrent = 'YES';
+        ce.parameters.protocol1.surfaceCurrentSpeed = 'YES';
+        ce.parameters.protocol1.waterColor = 'YES';
+        ce.parameters.protocol1.oilSheen = 'YES';
+        ce.parameters.protocol1.garbageWater = 'YES';
+        ce.parameters.protocol1.pipes = 'YES';
+        ce.parameters.protocol1.shorelineType = 'YES';
+        ce.parameters.protocol1.garbageLand = 'YES';
+        ce.parameters.protocol1.surfaceCover = 'YES';
+      } else {
+        ce.parameters.protocol1.weatherTemperature = '';
+        ce.parameters.protocol1.windSpeedDirection = '';
+        ce.parameters.protocol1.humidity = '';
+        ce.parameters.protocol1.recentRainfall = '';
+        ce.parameters.protocol1.closestHighTideTime = '';
+        ce.parameters.protocol1.closestLowTideTime = '';
+        ce.parameters.protocol1.closestHighTideHeight = '';
+        ce.parameters.protocol1.closestLowTideHeight = '';
+        ce.parameters.protocol1.referencePoint = '';
+        ce.parameters.protocol1.tidalCurrent = '';
+        ce.parameters.protocol1.surfaceCurrentSpeed = '';
+        ce.parameters.protocol1.waterColor = '';
+        ce.parameters.protocol1.oilSheen = '';
+        ce.parameters.protocol1.garbageWater = '';
+        ce.parameters.protocol1.pipes = '';
+        ce.parameters.protocol1.shorelineType = '';
+        ce.parameters.protocol1.garbageLand = '';
+        ce.parameters.protocol1.surfaceCover = '';
+      }
+    };
+
+    ce.toggleProtocol2 = function() {
+      if (ce.parameters.protocol2all === 'YES') {
+        ce.parameters.protocol2.submergedDepth = 'YES';
+        ce.parameters.protocol2.bioaccumulationOnCage = 'YES';
+        ce.parameters.protocol2.cageDamage = 'YES';
+        ce.parameters.protocol2.setDate = 'YES';
+        ce.parameters.protocol2.source = 'YES';
+        ce.parameters.protocol2.liveOystersBaseline = 'YES';
+        ce.parameters.protocol2.liveOystersMonitoring = 'YES';
+        ce.parameters.protocol2.totalMass = 'YES';
+        ce.parameters.protocol2.oysterMeasurements = 'YES';
+      } else {
+        ce.parameters.protocol2.submergedDepth = '';
+        ce.parameters.protocol2.bioaccumulationOnCage = '';
+        ce.parameters.protocol2.cageDamage = '';
+        ce.parameters.protocol2.setDate = '';
+        ce.parameters.protocol2.source = '';
+        ce.parameters.protocol2.liveOystersBaseline = '';
+        ce.parameters.protocol2.liveOystersMonitoring = '';
+        ce.parameters.protocol2.totalMass = '';
+        ce.parameters.protocol2.oysterMeasurements = '';
+      }
+    };
+
+    ce.toggleProtocol3 = function() {
+      if (ce.parameters.protocol3all === 'YES') {
+        ce.parameters.protocol3.organism = 'YES';
+      } else {
+        ce.parameters.protocol3.organism = '';
+      }
+    };
+
+    ce.toggleProtocol4 = function() {
+      if (ce.parameters.protocol4all === 'YES') {
+        ce.parameters.protocol4.description = 'YES';
+        ce.parameters.protocol4.organism = 'YES';
+      } else {
+        ce.parameters.protocol4.description = '';
+        ce.parameters.protocol4.organism = '';
+      }
+    };
+
+    ce.toggleProtocol5 = function() {
+      if (ce.parameters.protocol5all === 'YES') {
+        ce.parameters.protocol5.depth = 'YES';
+        ce.parameters.protocol5.temperature = 'YES';
+        ce.parameters.protocol5.dissolvedOxygen = 'YES';
+        ce.parameters.protocol5.salinity = 'YES';
+        ce.parameters.protocol5.pH = 'YES';
+        ce.parameters.protocol5.turbidity = 'YES';
+        ce.parameters.protocol5.ammonia = 'YES';
+        ce.parameters.protocol5.nitrates = 'YES';
+        ce.parameters.protocol5.other = 'YES';
+      } else {
+        ce.parameters.protocol5.depth = '';
+        ce.parameters.protocol5.temperature = '';
+        ce.parameters.protocol5.dissolvedOxygen = '';
+        ce.parameters.protocol5.salinity = '';
+        ce.parameters.protocol5.pH = '';
+        ce.parameters.protocol5.turbidity = '';
+        ce.parameters.protocol5.ammonia = '';
+        ce.parameters.protocol5.nitrates = '';
+        ce.parameters.protocol5.other = '';
+      }
+    };
+
     ce.dataPointCount = function() {
       var protocols = ['protocol1', 'protocol2', 'protocol3', 'protocol4', 'protocol5'];
       var count = 0;
@@ -332,6 +500,8 @@
       for (var i = 0; i < ce.expeditions.length; i++) {
         expeditionIds.push(ce.expeditions[i]._id);
       }
+      console.log('ce.parameters.protocol5all', ce.parameters.protocol5all);
+      console.log('ce.parameters.protocol5', ce.parameters.protocol5);
 
       $http.post('/api/expeditions/compare', {
         expeditionIds: expeditionIds,
@@ -363,6 +533,19 @@
     ce.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
     ce.getMobileOrganismById = ExpeditionViewHelper.getMobileOrganismById;
     ce.getSessileOrganismName = ExpeditionViewHelper.getSessileOrganismName;
+    ce.getWaterTemperatureMethod = ExpeditionViewHelper.getWaterTemperatureMethod;
+    ce.getDissolvedOxygenMethod = ExpeditionViewHelper.getDissolvedOxygenMethod;
+    ce.getSalinityMethod = ExpeditionViewHelper.getSalinityMethod;
+    ce.getPHMethod = ExpeditionViewHelper.getPHMethod;
+    ce.getTurbidityMethod = ExpeditionViewHelper.getTurbidityMethod;
+    ce.getAmmoniaMethod = ExpeditionViewHelper.getAmmoniaMethod;
+    ce.getNitratesMethod = ExpeditionViewHelper.getNitratesMethod;
+    ce.getDissolvedOxygenUnit = ExpeditionViewHelper.getDissolvedOxygenUnit;
+    ce.getSalinityUnit = ExpeditionViewHelper.getSalinityUnit;
+    ce.getPHUnits = ExpeditionViewHelper.getPHUnits;
+    ce.getTurbidityUnit = ExpeditionViewHelper.getTurbidityUnit;
+    ce.getAmmoniaUnit = ExpeditionViewHelper.getAmmoniaUnit;
+    ce.getNitratesUnit = ExpeditionViewHelper.getNitratesUnit;
 
     ce.getMobileOrganismName = function(id) {
       var organism = ce.getMobileOrganismById(id);
