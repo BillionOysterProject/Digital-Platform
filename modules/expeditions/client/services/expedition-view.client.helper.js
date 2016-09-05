@@ -10,6 +10,7 @@
   'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
   'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
   'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
+  'SalinityUnitsService',
   'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
@@ -17,6 +18,7 @@
     GarbageExtentsService, WindDirectionsService, TrueFalsesService, WaterTemperatureMethodsService,
     DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
     AmmoniaMethodsService, NitrateMethodsService, WaterTemperatureUnitsService, DissolvedOxygenUnitsService,
+    SalinityUnitsService,
     lodash, moment) {
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
@@ -39,10 +41,7 @@
 
     var waterTemperatureUnits = WaterTemperatureUnitsService.query();
     var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
-
-    var salinityUnits = [
-      { name: 'PPT', value: 'ppt' }
-    ];
+    var salinityUnits = SalinityUnitsService.query();
 
     var pHUnits = [
       { name: 'pH (logscale)', value: 'pHlogscale' }
