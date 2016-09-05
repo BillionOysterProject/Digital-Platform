@@ -7,10 +7,16 @@
 
   ExpeditionViewHelper.$inject = ['WeatherConditionsService', 'WaterColorsService',
   'WaterFlowService', 'ShorelineTypesService', 'MobileOrganismsService', 'SessileOrganismsService',
+  'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
+  'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
+  'AmmoniaMethodsService', 'NitrateMethodsService',
   'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, MobileOrganismsService, SessileOrganismsService,
+    GarbageExtentsService, WindDirectionsService, TrueFalsesService, WaterTemperatureMethodsService,
+    DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
+    AmmoniaMethodsService, NitrateMethodsService,
     lodash, moment) {
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
@@ -19,66 +25,17 @@
     var mobileOrganisms = MobileOrganismsService.query();
     var sessileOrganisms = SessileOrganismsService.query();
 
-    var garbageExtent = [
-      { label: 'None', value: 'none' },
-      { label: 'Sporadic', value: 'sporadic' },
-      { label: 'Common', value: 'common' },
-      { label: 'Extensive', value: 'extensive' }
-    ];
+    var garbageExtent = GarbageExtentsService.query();
+    var windDirection = WindDirectionsService.query();
+    var trueFalse = TrueFalsesService.query();
 
-    var windDirection = [
-      { label: 'North', value: 'north' },
-      { label: 'North West', value: 'northwest' },
-      { label: 'West', value: 'west' },
-      { label: 'South West', value: 'southwest' },
-      { label: 'South', value: 'south' },
-      { label: 'South East', value: 'southeast' },
-      { label: 'East', value: 'east' },
-      { label: 'North East', value: 'northeast' }
-    ];
-
-    var trueFalse = [
-      { label: 'Yes', value: true },
-      { label: 'No', value: false }
-    ];
-
-    var waterTemperatureMethods = [
-      { name: 'Digital thermometer', value: 'digitalThermometer' },
-      { name: 'Analog thermometer', value: 'analogThermometer' },
-      { name: 'Sensor*', value: 'sensor' }
-    ];
-
-    var dissolvedOxygenMethods = [
-      { name: 'Colormetric ampules', value: 'colormetricvAmpules' },
-      { name: 'Sensor', value: 'sensor' },
-      { name: 'Winkler', value: 'winkler' }
-    ];
-
-    var salinityMethods = [
-      { name: 'Hydrometer', value: 'hydrometer' },
-      { name: 'Refractometer', value: 'refractometer' },
-      { name: 'Sensor', value: 'sensor' }
-    ];
-
-    var pHMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Sensor (read only)', value: 'sensorRO' },
-      { name: 'Sensor', value: 'sensor' }
-    ];
-
-    var turbidityMethods = [
-      { name: 'Turbidity tube', value: 'turbidityTube' }
-    ];
-
-    var ammoniaMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Photometer', value: 'photometer' }
-    ];
-
-    var nitratesMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Photometer', value: 'photometer' }
-    ];
+    var waterTemperatureMethods = WaterTemperatureMethodsService.query();
+    var dissolvedOxygenMethods = DissolvedOxygenMethodsService.query();
+    var salinityMethods = SalinityMethodsService.query();
+    var pHMethods = PhMethodsService.query();
+    var turbidityMethods = TurbidityMethodsService.query();
+    var ammoniaMethods = AmmoniaMethodsService.query();
+    var nitratesMethods = NitrateMethodsService.query();
 
     var waterTemperatureUnits = [
       { name: 'F', value: 'f' },

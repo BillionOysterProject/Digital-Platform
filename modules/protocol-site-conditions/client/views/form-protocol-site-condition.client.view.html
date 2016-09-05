@@ -104,14 +104,20 @@
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.recentRainfall.rainedIn7Days" required></select>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn7Days === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn7Days === true}">Has it rained in the past <span class="blue">72</span> hours? *</label>
+                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn7Days === true ||
+                    siteCondition.recentRainfall.rainedIn7Days === 'true'">
+                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn7Days === true ||
+                      siteCondition.recentRainfall.rainedIn7Days === 'true'}">
+                      Has it rained in the past <span class="blue">72</span> hours? *</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.recentRainfall.rainedIn72Hours"
                         ng-required="siteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn72Hours === true}">Has it rained in the past <span class="blue">24</span> hours? *</label>
+                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn72Hours === true ||
+                    siteCondition.recentRainfall.rainedIn72Hours === 'true'">
+                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn72Hours === true ||
+                      siteCondition.recentRainfall.rainedIn72Hours === 'true'}">
+                      Has it rained in the past <span class="blue">24</span> hours? *</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.recentRainfall.rainedIn24Hours"
                         ng-required="siteCondition.recentRainfall.rainedIn72Hours"></select>
@@ -215,7 +221,8 @@
                         ng-model="siteCondition.waterConditions.garbage.garbagePresent" ></select>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true ||
+                siteCondition.waterConditions.garbage.garbagePresent === 'true'">
                     <p>Record the extent of each type of garbage in the water.</p>
                     <div class="row">
                         <div class="form-group col-sm-4">
@@ -291,7 +298,8 @@
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent" ></select>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true ||
+                siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === 'true'">
                     <p>Give more information about the marked Combined Sewer Overflow (CSO) pipes.</p>
                     <div class="form-group">
                         <label for="csoLocation" ng-class="{ required: siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent }">
@@ -308,11 +316,15 @@
                         ng-required="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"/>
                     </div>
                     <div class="row">
-                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true, 'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true ||
+                        siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'true',
+                        'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false ||
+                        siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'false'}">
                             <label>Is there any flow through the pipe?</label>
                             <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent" ></select>
                         </div>
-                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true">
+                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true ||
+                        siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === 'true'">
                             <label for="combinedFlowThroughAmount" ng-class="{ required: siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent &&
                             siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent }">
                             <br/>How much?</label>
@@ -324,7 +336,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
+                <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true ||
+                siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === 'true'">
                     <p>Give more information about the unmarked or other outfall pipes.</p>
                     <div class="form-group">
                         <label for="unmarkedLocation" ng-class="{ required: siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent }">
@@ -347,11 +360,15 @@
                         ng-required="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"/>
                     </div>
                     <div class="row">
-                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true, 'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true ||
+                        siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'true',
+                        'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false ||
+                        siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'false'}">
                             <label>Is there any flow through the pipe?</label>
                             <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent" ></select>
                         </div>
-                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
+                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true ||
+                        siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === 'true'">
                             <label for="unmarkedFlowThroughAmount" ng-class="{ required: siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent &&
                             siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent}"><br/>How much?</label>
                             <select class="form-control" name="unmarkedFlowThroughAmount"
@@ -419,7 +436,8 @@
                     </div>
                     <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true ||
+                siteCondition.landConditions.garbage.garbagePresent === 'true'">
                     <p>Record the extent of each type of garbage on the adjacent shoreline.</p>
                     <div class="row">
                         <div class="form-group col-sm-4">
