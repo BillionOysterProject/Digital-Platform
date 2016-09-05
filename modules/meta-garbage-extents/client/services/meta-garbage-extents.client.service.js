@@ -10,7 +10,7 @@
 
   function GarbageExtentsService($resource) {
     return $resource('api/garbage-extents/:garbageExtentId', {
-      metaGarbageExtentId: '@_id'
+      garbageExtentId: '@_id'
     }, {
       update: {
         method: 'PUT'

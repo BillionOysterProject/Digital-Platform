@@ -10,7 +10,7 @@
 
   function WindDirectionsService($resource) {
     return $resource('api/wind-directions/:windDirectionId', {
-      metaWindDirectionId: '@_id'
+      windDirectionId: '@_id'
     }, {
       update: {
         method: 'PUT'
