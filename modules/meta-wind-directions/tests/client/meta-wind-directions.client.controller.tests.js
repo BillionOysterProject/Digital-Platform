@@ -1,15 +1,15 @@
 // (function () {
 //   'use strict';
 //
-//   describe('Meta garbage extents Controller Tests', function () {
+//   describe('Meta wind directions Controller Tests', function () {
 //     // Initialize global variables
-//     var MetaGarbageExtentsController,
+//     var MetaWindDirectionsController,
 //       $scope,
 //       $httpBackend,
 //       $state,
 //       Authentication,
-//       MetaGarbageExtentsService,
-//       mockMetaGarbageExtent;
+//       MetaWindDirectionsService,
+//       mockMetaWindDirection;
 //
 //     // The $resource service augments the response object with methods for updating and deleting the resource.
 //     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -36,7 +36,7 @@
 //     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
 //     // This allows us to inject a service but then attach it to a variable
 //     // with the same name as the service.
-//     beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _MetaGarbageExtentsService_) {
+//     beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _MetaWindDirectionsService_) {
 //       // Set a new global scope
 //       $scope = $rootScope.$new();
 //
@@ -44,12 +44,12 @@
 //       $httpBackend = _$httpBackend_;
 //       $state = _$state_;
 //       Authentication = _Authentication_;
-//       MetaGarbageExtentsService = _MetaGarbageExtentsService_;
+//       MetaWindDirectionsService = _MetaWindDirectionsService_;
 //
-//       // create mock Meta garbage extent
-//       mockMetaGarbageExtent = new MetaGarbageExtentsService({
+//       // create mock Meta wind direction
+//       mockMetaWindDirection = new MetaWindDirectionsService({
 //         _id: '525a8422f6d0f87f0e407a33',
-//         name: 'Meta garbage extent Name'
+//         name: 'Meta wind direction Name'
 //       });
 //
 //       // Mock logged in user
@@ -57,10 +57,10 @@
 //         roles: ['user']
 //       };
 //
-//       // Initialize the Meta garbage extents controller.
-//       MetaGarbageExtentsController = $controller('Meta garbage extentsController as vm', {
+//       // Initialize the Meta wind directions controller.
+//       MetaWindDirectionsController = $controller('Meta wind directionsController as vm', {
 //         $scope: $scope,
-//         metaGarbageExtentResolve: {}
+//         metaWindDirectionResolve: {}
 //       });
 //
 //       // Spy on state go
@@ -68,34 +68,34 @@
 //     }));
 //
 //     describe('vm.save() as create', function () {
-//       var sampleMetaGarbageExtentPostData;
+//       var sampleMetaWindDirectionPostData;
 //
 //       beforeEach(function () {
-//         // Create a sample Meta garbage extent object
-//         sampleMetaGarbageExtentPostData = new MetaGarbageExtentsService({
-//           name: 'Meta garbage extent Name'
+//         // Create a sample Meta wind direction object
+//         sampleMetaWindDirectionPostData = new MetaWindDirectionsService({
+//           name: 'Meta wind direction Name'
 //         });
 //
-//         $scope.vm.metaGarbageExtent = sampleMetaGarbageExtentPostData;
+//         $scope.vm.metaWindDirection = sampleMetaWindDirectionPostData;
 //       });
 //
-//       it('should send a POST request with the form input values and then locate to new object URL', inject(function (MetaGarbageExtentsService) {
+//       it('should send a POST request with the form input values and then locate to new object URL', inject(function (MetaWindDirectionsService) {
 //         // Set POST response
-//         $httpBackend.expectPOST('api/meta-garbage-extents', sampleMetaGarbageExtentPostData).respond(mockMetaGarbageExtent);
+//         $httpBackend.expectPOST('api/meta-wind-directions', sampleMetaWindDirectionPostData).respond(mockMetaWindDirection);
 //
 //         // Run controller functionality
 //         $scope.vm.save(true);
 //         $httpBackend.flush();
 //
-//         // Test URL redirection after the Meta garbage extent was created
-//         expect($state.go).toHaveBeenCalledWith('meta-garbage-extents.view', {
-//           metaGarbageExtentId: mockMetaGarbageExtent._id
+//         // Test URL redirection after the Meta wind direction was created
+//         expect($state.go).toHaveBeenCalledWith('meta-wind-directions.view', {
+//           metaWindDirectionId: mockMetaWindDirection._id
 //         });
 //       }));
 //
 //       it('should set $scope.vm.error if error', function () {
 //         var errorMessage = 'this is an error message';
-//         $httpBackend.expectPOST('api/meta-garbage-extents', sampleMetaGarbageExtentPostData).respond(400, {
+//         $httpBackend.expectPOST('api/meta-wind-directions', sampleMetaWindDirectionPostData).respond(400, {
 //           message: errorMessage
 //         });
 //
@@ -108,27 +108,27 @@
 //
 //     describe('vm.save() as update', function () {
 //       beforeEach(function () {
-//         // Mock Meta garbage extent in $scope
-//         $scope.vm.metaGarbageExtent = mockMetaGarbageExtent;
+//         // Mock Meta wind direction in $scope
+//         $scope.vm.metaWindDirection = mockMetaWindDirection;
 //       });
 //
-//       it('should update a valid Meta garbage extent', inject(function (MetaGarbageExtentsService) {
+//       it('should update a valid Meta wind direction', inject(function (MetaWindDirectionsService) {
 //         // Set PUT response
-//         $httpBackend.expectPUT(/api\/meta-garbage-extents\/([0-9a-fA-F]{24})$/).respond();
+//         $httpBackend.expectPUT(/api\/meta-wind-directions\/([0-9a-fA-F]{24})$/).respond();
 //
 //         // Run controller functionality
 //         $scope.vm.save(true);
 //         $httpBackend.flush();
 //
 //         // Test URL location to new object
-//         expect($state.go).toHaveBeenCalledWith('meta-garbage-extents.view', {
-//           metaGarbageExtentId: mockMetaGarbageExtent._id
+//         expect($state.go).toHaveBeenCalledWith('meta-wind-directions.view', {
+//           metaWindDirectionId: mockMetaWindDirection._id
 //         });
 //       }));
 //
-//       it('should set $scope.vm.error if error', inject(function (MetaGarbageExtentsService) {
+//       it('should set $scope.vm.error if error', inject(function (MetaWindDirectionsService) {
 //         var errorMessage = 'error';
-//         $httpBackend.expectPUT(/api\/meta-garbage-extents\/([0-9a-fA-F]{24})$/).respond(400, {
+//         $httpBackend.expectPUT(/api\/meta-wind-directions\/([0-9a-fA-F]{24})$/).respond(400, {
 //           message: errorMessage
 //         });
 //
@@ -141,23 +141,23 @@
 //
 //     describe('vm.remove()', function () {
 //       beforeEach(function () {
-//         // Setup Meta garbage extents
-//         $scope.vm.metaGarbageExtent = mockMetaGarbageExtent;
+//         // Setup Meta wind directions
+//         $scope.vm.metaWindDirection = mockMetaWindDirection;
 //       });
 //
-//       it('should delete the Meta garbage extent and redirect to Meta garbage extents', function () {
+//       it('should delete the Meta wind direction and redirect to Meta wind directions', function () {
 //         // Return true on confirm message
 //         spyOn(window, 'confirm').and.returnValue(true);
 //
-//         $httpBackend.expectDELETE(/api\/meta-garbage-extents\/([0-9a-fA-F]{24})$/).respond(204);
+//         $httpBackend.expectDELETE(/api\/meta-wind-directions\/([0-9a-fA-F]{24})$/).respond(204);
 //
 //         $scope.vm.remove();
 //         $httpBackend.flush();
 //
-//         expect($state.go).toHaveBeenCalledWith('meta-garbage-extents.list');
+//         expect($state.go).toHaveBeenCalledWith('meta-wind-directions.list');
 //       });
 //
-//       it('should should not delete the Meta garbage extent and not redirect', function () {
+//       it('should should not delete the Meta wind direction and not redirect', function () {
 //         // Return false on confirm message
 //         spyOn(window, 'confirm').and.returnValue(false);
 //

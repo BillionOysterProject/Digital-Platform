@@ -1,15 +1,15 @@
 // (function () {
 //   'use strict';
 //
-//   describe('Meta garbage extents List Controller Tests', function () {
+//   describe('Meta wind directions List Controller Tests', function () {
 //     // Initialize global variables
-//     var MetaGarbageExtentsListController,
+//     var MetaWindDirectionsListController,
 //       $scope,
 //       $httpBackend,
 //       $state,
 //       Authentication,
-//       MetaGarbageExtentsService,
-//       mockMetaGarbageExtent;
+//       MetaWindDirectionsService,
+//       mockMetaWindDirection;
 //
 //     // The $resource service augments the response object with methods for updating and deleting the resource.
 //     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -36,7 +36,7 @@
 //     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
 //     // This allows us to inject a service but then attach it to a variable
 //     // with the same name as the service.
-//     beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _MetaGarbageExtentsService_) {
+//     beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _Authentication_, _MetaWindDirectionsService_) {
 //       // Set a new global scope
 //       $scope = $rootScope.$new();
 //
@@ -44,12 +44,12 @@
 //       $httpBackend = _$httpBackend_;
 //       $state = _$state_;
 //       Authentication = _Authentication_;
-//       MetaGarbageExtentsService = _MetaGarbageExtentsService_;
+//       MetaWindDirectionsService = _MetaWindDirectionsService_;
 //
 //       // create mock article
-//       mockMetaGarbageExtent = new MetaGarbageExtentsService({
+//       mockMetaWindDirection = new MetaWindDirectionsService({
 //         _id: '525a8422f6d0f87f0e407a33',
-//         name: 'Meta garbage extent Name'
+//         name: 'Meta wind direction Name'
 //       });
 //
 //       // Mock logged in user
@@ -57,8 +57,8 @@
 //         roles: ['user']
 //       };
 //
-//       // Initialize the Meta garbage extents List controller.
-//       MetaGarbageExtentsListController = $controller('MetaGarbageExtentsListController as vm', {
+//       // Initialize the Meta wind directions List controller.
+//       MetaWindDirectionsListController = $controller('MetaWindDirectionsListController as vm', {
 //         $scope: $scope
 //       });
 //
@@ -67,23 +67,23 @@
 //     }));
 //
 //     describe('Instantiate', function () {
-//       var mockMetaGarbageExtentList;
+//       var mockMetaWindDirectionList;
 //
 //       beforeEach(function () {
-//         mockMetaGarbageExtentList = [mockMetaGarbageExtent, mockMetaGarbageExtent];
+//         mockMetaWindDirectionList = [mockMetaWindDirection, mockMetaWindDirection];
 //       });
 //
-//       it('should send a GET request and return all Meta garbage extents', inject(function (MetaGarbageExtentsService) {
+//       it('should send a GET request and return all Meta wind directions', inject(function (MetaWindDirectionsService) {
 //         // Set POST response
-//         $httpBackend.expectGET('api/meta-garbage-extents').respond(mockMetaGarbageExtentList);
+//         $httpBackend.expectGET('api/meta-wind-directions').respond(mockMetaWindDirectionList);
 //
 //
 //         $httpBackend.flush();
 //
 //         // Test form inputs are reset
-//         expect($scope.vm.metaGarbageExtents.length).toEqual(2);
-//         expect($scope.vm.metaGarbageExtents[0]).toEqual(mockMetaGarbageExtent);
-//         expect($scope.vm.metaGarbageExtents[1]).toEqual(mockMetaGarbageExtent);
+//         expect($scope.vm.metaWindDirections.length).toEqual(2);
+//         expect($scope.vm.metaWindDirections[0]).toEqual(mockMetaWindDirection);
+//         expect($scope.vm.metaWindDirections[1]).toEqual(mockMetaWindDirection);
 //
 //       }));
 //     });
