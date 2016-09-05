@@ -21,6 +21,7 @@ mongoimport -d bop-test -c metasalinityunits --type json --file metaSalinityUnit
 mongoimport -d bop-test -c metaphunits --type json --file metaPhUnits.json --drop
 mongoimport -d bop-test -c metaturbidityunits --type json --file metaTurbidityUnits.json --drop
 mongoimport -d bop-test -c metaammoniaunits --type json --file metaAmmoniaUnits.json --drop
+mongoimport -d bop-test -c metanitrateunits --type json --file metaNitrateUnits.json --drop
 mongoimport -d bop-test -c metaorganismcategories --type json --file scripts/mongo-load/metaOrganismCategories.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
 mongoimport -d bop-test -c mobileorganisms --type json --file scripts/mongo-load/mobileOrganisms.json --drop
