@@ -14,6 +14,7 @@ mongoimport -d bop-dev -c metawatercolors --type json --file metaWaterColors.jso
 mongoimport -d bop-dev -c metawaterflows --type json --file metaWaterFlows.json --drop
 mongoimport -d bop-dev -c metashorelinetypes --type json --file metaShorelineTypes.json --drop
 mongoimport -d bop-dev -c metabioaccumulations --type json --file metaBioaccumulations.json --drop
+mongoimport -d bop-dev -c metagarbageextents --type json --file metaGarbageExtents.json --drop
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
 mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --drop
