@@ -27,6 +27,8 @@ mongoimport -d bop-dev -c metanitratemethods --type json --file metaNitrateMetho
 mongoimport -d bop-dev -c metawatertemperatureunits --type json --file metaWaterTemperatureUnits.json --drop
 mongoimport -d bop-dev -c metadissolvedoxygenunits --type json --file metaDissolvedOxygenUnits.json --drop
 mongoimport -d bop-dev -c metasalinityunits --type json --file metaSalinityUnits.json --drop
+mongoimport -d bop-dev -c metaphunits --type json --file metaPhUnits.json --drop
+mongoimport -d bop-dev -c metaturbidityunits --type json --file metaTurbidityUnits.json --drop
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
 mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --drop
