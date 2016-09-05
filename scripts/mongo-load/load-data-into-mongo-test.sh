@@ -16,6 +16,7 @@ mongoimport -d bop-test -c metaturbiditymethods --type json --file metaTurbidity
 mongoimport -d bop-test -c metaammoniamethods --type json --file metaAmmoniaMethods.json --drop
 mongoimport -d bop-test -c metanitratemethods --type json --file metaNitrateMethods.json --drop
 mongoimport -d bop-test -c metawatertemperatureunits --type json --file metaWaterTemperatureUnits.json --drop
+mongoimport -d bop-test -c metadissolvedoxygenunits --type json --file metaDissolvedOxygenUnits.json --drop
 mongoimport -d bop-test -c metaorganismcategories --type json --file scripts/mongo-load/metaOrganismCategories.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
 mongoimport -d bop-test -c mobileorganisms --type json --file scripts/mongo-load/mobileOrganisms.json --drop

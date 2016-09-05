@@ -9,14 +9,14 @@
   'WaterFlowService', 'ShorelineTypesService', 'MobileOrganismsService', 'SessileOrganismsService',
   'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
   'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
-  'AmmoniaMethodsService', 'NitrateMethodsService',
+  'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
   'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, MobileOrganismsService, SessileOrganismsService,
     GarbageExtentsService, WindDirectionsService, TrueFalsesService, WaterTemperatureMethodsService,
     DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
-    AmmoniaMethodsService, NitrateMethodsService,
+    AmmoniaMethodsService, NitrateMethodsService, WaterTemperatureUnitsService, DissolvedOxygenUnitsService,
     lodash, moment) {
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
@@ -37,15 +37,8 @@
     var ammoniaMethods = AmmoniaMethodsService.query();
     var nitratesMethods = NitrateMethodsService.query();
 
-    var waterTemperatureUnits = [
-      { name: 'F', value: 'f' },
-      { name: 'C', value: 'c' }
-    ];
-
-    var dissolvedOxygenUnits = [
-      { name: 'mg/L (ppm)', value: 'mgl' },
-      { name: '% saturation', value: 'saturation' }
-    ];
+    var waterTemperatureUnits = WaterTemperatureUnitsService.query();
+    var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
 
     var salinityUnits = [
       { name: 'PPT', value: 'ppt' }
