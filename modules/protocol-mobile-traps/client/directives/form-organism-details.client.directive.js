@@ -22,7 +22,6 @@
           });
 
           scope.submitForm = function(organismDetails, isValid) {
-            console.log('scope.organismDetails.organism.commonName', scope.organismDetails.organism.commonName);
             if (scope.organismDetails.organism.commonName === 'Other/Unknown' &&
             (scope.sketchPhotoUrl === undefined || scope.sketchPhotoUrl === null || scope.sketchPhotoUrl === '')) {
               scope.form.organismDetailsForm.$setValidity('sketchPhoto', false);
