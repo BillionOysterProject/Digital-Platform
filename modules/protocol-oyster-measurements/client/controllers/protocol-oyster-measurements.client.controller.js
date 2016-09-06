@@ -16,8 +16,7 @@
       if ((substrate.totalNumberOfLiveOystersOnShell === 0 ||
         (substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.minimumSizeOfLiveOysters > 0 &&
       substrate.maximumSizeOfLiveOysters > 0 && substrate.averageSizeOfLiveOysters > 0)) &&
-      substrate.outerSidePhoto && substrate.outerSidePhoto.path &&
-      substrate.innerSidePhoto && substrate.innerSidePhoto.path) {
+      substrate.source && substrate.setDate) {
         return true;
       } else {
         return false;

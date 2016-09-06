@@ -48,16 +48,7 @@
           var validate = function() {
             $scope.error = [];
             var isValid = true;
-            if ($scope.outerSubstrateUrl === undefined || $scope.outerSubstrateUrl === null || $scope.outerSubstrateUrl === '') {
-              //scope.form.substrateForm.$setValidity('outerImg', false);
-              $scope.error.push('Outer substrate image is required');
-              isValid = false;
-            }
-            if ($scope.innerSubstrateUrl === undefined || $scope.innerSubstrateUrl === null || $scope.innerSubstrateUrl === '') {
-              //scope.form.substrateForm.$setValidity('innerImg', false);
-              $scope.error.push('Inner substrate image is required');
-              isValid = false;
-            }
+            
             return isValid;
           };
 

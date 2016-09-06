@@ -84,11 +84,13 @@
     <div class="row">
       <div class="col-sm-4">
         <h6>Outer side</h6>
-        <img id="outerSidePhoto{{$index}}" class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
+        <img ng-show="substrate.outerSidePhoto.path" id="outerSidePhoto{{$index}}" class="img-rounded img-responsive" ng-src="{{substrate.outerSidePhoto.path}}"/>
+        <span ng-hide="substrate.outerSidePhoto.path">&nbsp;</span>
       </div>
       <div class="col-sm-4">
         <h6>Inner side</h6>
-        <img id="innerSidePhoto{{$index}}" class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
+        <img ng-show="substrate.innerSidePhoto.path" id="innerSidePhoto{{$index}}" class="img-rounded img-responsive" ng-src="{{substrate.innerSidePhoto.path}}"/>
+        <span ng-hide="substrate.innerSidePhoto.path">&nbsp;</span>
       </div>
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">

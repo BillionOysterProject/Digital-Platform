@@ -76,27 +76,12 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
     for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
       var substrateShell = oysterMeasurement.measuringOysterGrowth.substrateShells[j];
 
-      if (substrateShell.outerSidePhoto && substrateShell.outerSidePhoto.path !== undefined &&
-        substrateShell.outerSidePhoto.path !== '' && substrateShell.innerSidePhoto &&
-        substrateShell.innerSidePhoto.path !== undefined && substrateShell.innerSidePhoto.path !== '' &&
-        substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
+      if (substrateShell.totalNumberOfLiveOystersOnShell > 0 && allOystersMeasured(substrateShell)) {
         oneSuccessfulSubstrateShell = true;
-      } else if ((!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === undefined ||
-        substrateShell.outerSidePhoto.path === '' || JSON.stringify(substrateShell.outerSidePhoto) === '{}') &&
-        (!substrateShell.innerSidePhoto || substrateShell.innerSidePhoto.path === undefined ||
-        substrateShell.innerSidePhoto.path === '' || JSON.stringify(substrateShell.innerSidePhoto) === '{}') &&
-        (substrateShell.totalNumberOfLiveOystersOnShell === undefined || substrateShell.totalNumberOfLiveOystersOnShell <= 1)) {
+      } else if (substrateShell.totalNumberOfLiveOystersOnShell === undefined || substrateShell.totalNumberOfLiveOystersOnShell <= 1) {
 
       } else {
         var shellNumber = 1+j;
-        if (!substrateShell.outerSidePhoto || substrateShell.outerSidePhoto.path === '' ||
-        substrateShell.outerSidePhoto.path === undefined) {
-          errorMessages.push('Outer side photo is required for Substrate Shell #' + shellNumber);
-        }
-        if (!substrateShell.innerSidePhoto || substrateShell.innerSidePhoto.path === '' ||
-        substrateShell.innerSidePhoto.path === undefined) {
-          errorMessages.push('Inner side photo is required for Substrate Shell #' + shellNumber);
-        }
         if (substrateShell.totalNumberOfLiveOystersOnShell < 0) {
           errorMessages.push('The total number of live oysters on Substrate Shell #' + shellNumber + ' must be a positive number');
         } else {
