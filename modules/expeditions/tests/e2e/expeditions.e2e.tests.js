@@ -71,7 +71,7 @@ describe('Expedition E2E Tests', function() {
   var settlementTiles3 = CommonSettlementTiles.settlementTiles3;
   var waterQuality4 = CommonWaterQuality.waterQuality4;
 
-  var saveDraftWait = 300000;
+  var saveDraftWait = 450000;
 
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION

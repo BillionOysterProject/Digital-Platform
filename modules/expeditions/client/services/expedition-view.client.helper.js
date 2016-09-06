@@ -62,13 +62,13 @@
         return ShorelineTypesService.query();
       },
       getAllGarbageExtent: function() {
-        return garbageExtent;
+        return GarbageExtentsService.query();
       },
       getAllWindDirections: function() {
-        return windDirection;
+        return WindDirectionsService.query();
       },
       getAllTrueFalse: function() {
-        return trueFalse;
+        return TrueFalsesService.query();
       },
       getWeatherCondition: function(value) {
         var index = lodash.findIndex(weatherConditions, function(c) {
@@ -119,25 +119,25 @@
         return (index > -1) ? sessileOrganisms[index].commonName : '';
       },
       getAllWaterTemperatureMethods: function() {
-        return waterTemperatureMethods;
+        return WaterTemperatureMethodsService.query();
       },
       getAllDissolvedOxygenMethods: function() {
-        return dissolvedOxygenMethods;
+        return DissolvedOxygenMethodsService.query();
       },
       getAllSalinityMethods: function() {
-        return salinityMethods;
+        return SalinityMethodsService.query();
       },
       getAllPHMethods: function() {
-        return pHMethods;
+        return PhMethodsService.query();
       },
       getAllTurbidityMethods: function() {
-        return turbidityMethods;
+        return TurbidityMethodsService.query();
       },
       getAllAmmoniaMethods: function() {
-        return ammoniaMethods;
+        return AmmoniaMethodsService.query();
       },
       getAllNitratesMethods: function() {
-        return nitratesMethods;
+        return NitrateMethodsService.query();
       },
       getWaterTemperatureMethod: function(value) {
         var index = lodash.findIndex(waterTemperatureMethods, function(c) {
@@ -182,25 +182,25 @@
         return (index > -1) ? nitratesMethods[index].label : '';
       },
       getAllWaterTemperatureUnits: function() {
-        return waterTemperatureUnits;
+        return WaterTemperatureUnitsService.query();
       },
       getAllDissolvedOxygenUnits: function() {
-        return dissolvedOxygenUnits;
+        return DissolvedOxygenUnitsService.query();
       },
       getAllSalinityUnits: function() {
-        return salinityUnits;
+        return SalinityUnitsService.query();
       },
       getAllPHUnits: function() {
-        return pHUnits;
+        return PhUnitsService.query();
       },
       getAllTurbidityUnits: function() {
-        return turbidityUnits;
+        return TurbidityUnitsService.query();
       },
       getAllAmmoniaUnits: function() {
-        return ammoniaUnits;
+        return AmmoniaUnitsService.query();
       },
       getAllNitratesUnits: function() {
-        return nitratesUnits;
+        return NitrateUnitsService.query();
       },
       getDissolvedOxygenUnit: function(value) {
         var index = lodash.findIndex(dissolvedOxygenUnits, function(c) {

@@ -19,7 +19,7 @@ var MetaTrueFalseSchema = new Schema({
     required: true
   },
   value: {
-    type: String,
+    type: Boolean,
     required: true
   }
 });
