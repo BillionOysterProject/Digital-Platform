@@ -25,6 +25,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 0,
       totalMassOfScrubbedSubstrateShellOystersTagG: 0,
       notes: 'Test notes 1',
+      photoPresent: true,
       measurements: [{
       }]
     }, {
@@ -34,6 +35,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 1,
       totalMassOfScrubbedSubstrateShellOystersTagG: 10,
       notes: 'Test notes 2',
+      photoPresent: true,
       measurements: [11.1]
     }, {
       source: 3,
@@ -42,6 +44,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 2,
       totalMassOfScrubbedSubstrateShellOystersTagG: 20,
       notes: 'Test notes 3',
+      photoPresent: false,
       measurements: [23.1, 21.0]
     }, {
       source: 4,
@@ -50,6 +53,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 3,
       totalMassOfScrubbedSubstrateShellOystersTagG: 30,
       notes: 'Test notes 4',
+      photoPresent: true,
       measurements: [32.1, 33.1, 38.2]
     }, {
       source: 5,
@@ -58,6 +62,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 4,
       totalMassOfScrubbedSubstrateShellOystersTagG: 40,
       notes: 'Test notes 5',
+      photoPresent: true,
       measurements: [43.1, 40.1, 47.3, 44.2]
     }, {
       source: 6,
@@ -66,6 +71,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 5,
       totalMassOfScrubbedSubstrateShellOystersTagG: 50,
       notes: 'Test notes 6',
+      photoPresent: false,
       measurements: [53.2, 52.1, 55.2, 58.4, 57.2]
     }, {
       source: 7,
@@ -75,6 +81,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 4,
       totalMassOfScrubbedSubstrateShellOystersTagG: 40,
       notes: 'Test notes 7',
+      photoPresent: true,
       measurements: [65.2, 66.3, 62.1, 67.4]
     }, {
       source: 1,
@@ -83,6 +90,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 3,
       totalMassOfScrubbedSubstrateShellOystersTagG: 30,
       notes: 'Test notes 8',
+      photoPresent: true,
       measurements: [77.3, 74.2, 72.1]
     }, {
       source: 2,
@@ -91,6 +99,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 2,
       totalMassOfScrubbedSubstrateShellOystersTagG: 20,
       notes: 'Test notes 9',
+      photoPresent: false,
       measurements: [88.3, 84.3]
     }, {
       source: 3,
@@ -99,6 +108,7 @@ var oysterMeasurement1 = {
       totalNumberOfLiveOystersOnShell: 1,
       totalMassOfScrubbedSubstrateShellOystersTagG: 10,
       notes: 'Test notes 10',
+      photoPresent: true,
       measurements: [93.2]
     }]
   }
@@ -126,6 +136,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 10,
       totalMassOfScrubbedSubstrateShellOystersTagG: '100.00',
       notes: 'Test notes 1a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '11.55',
       minimumSizeOfLiveOysters: '11.10',
       maximumSizeOfLiveOysters: '12.00',
@@ -138,6 +149,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 11,
       totalMassOfScrubbedSubstrateShellOystersTagG: '110.00',
       notes: 'Test notes 2a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '15.60',
       minimumSizeOfLiveOysters: '15.10',
       maximumSizeOfLiveOysters: '16.10',
@@ -150,6 +162,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 12,
       totalMassOfScrubbedSubstrateShellOystersTagG: '120.00',
       notes: 'Test notes 3a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '23.25',
       minimumSizeOfLiveOysters: '20.90',
       maximumSizeOfLiveOysters: '27.30',
@@ -162,6 +175,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 13,
       totalMassOfScrubbedSubstrateShellOystersTagG: '130.00',
       notes: 'Test notes 4a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '33.24',
       minimumSizeOfLiveOysters: '30.10',
       maximumSizeOfLiveOysters: '38.20',
@@ -175,6 +189,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 14,
       totalMassOfScrubbedSubstrateShellOystersTagG: '140.00',
       notes: 'Test notes 5a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '43.66',
       minimumSizeOfLiveOysters: '40.10',
       maximumSizeOfLiveOysters: '47.30',
@@ -188,6 +203,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 15,
       totalMassOfScrubbedSubstrateShellOystersTagG: '150.00',
       notes: 'Test notes 6a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '54.11',
       minimumSizeOfLiveOysters: '50.80',
       maximumSizeOfLiveOysters: '58.40',
@@ -202,6 +218,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 16,
       totalMassOfScrubbedSubstrateShellOystersTagG: '160.00',
       notes: 'Test notes 7a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '64.09',
       minimumSizeOfLiveOysters: '60.40',
       maximumSizeOfLiveOysters: '67.40',
@@ -215,6 +232,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 17,
       totalMassOfScrubbedSubstrateShellOystersTagG: '170.00',
       notes: 'Test notes 8a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '73.74',
       minimumSizeOfLiveOysters: '70.80',
       maximumSizeOfLiveOysters: '77.40',
@@ -228,6 +246,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 18,
       totalMassOfScrubbedSubstrateShellOystersTagG: '180.00',
       notes: 'Test notes 9a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '83.71',
       minimumSizeOfLiveOysters: '80.10',
       maximumSizeOfLiveOysters: '88.30',
@@ -241,6 +260,7 @@ var oysterMeasurement2 = {
       totalNumberOfLiveOystersOnShell: 19,
       totalMassOfScrubbedSubstrateShellOystersTagG: '190.00',
       notes: 'Test notes 10a',
+      photoPresent: true,
       averageSizeOfLiveOysters: '93.31',
       minimumSizeOfLiveOysters: '90.00',
       maximumSizeOfLiveOysters: '96.10',
@@ -267,6 +287,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 5,
       totalMassOfScrubbedSubstrateShellOystersTagG: 50,
       notes: 'Test notes 1b',
+      photoPresent: true,
       measurements: [11.2,11.4,11.6,11.8,12.0]
     }, {
       source: 2,
@@ -275,6 +296,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 6,
       totalMassOfScrubbedSubstrateShellOystersTagG: 60,
       notes: 'Test notes 2b',
+      photoPresent: true,
       measurements: [15.2,15.5,15.6,15.8,16.0,16.1]
     }, {
       source: 3,
@@ -283,6 +305,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 6,
       totalMassOfScrubbedSubstrateShellOystersTagG: 60,
       notes: 'Test notes 3b',
+      photoPresent: true,
       measurements: [22.3,21.7,22.7,20.9,23.4,25.4]
     }, {
       source: 4,
@@ -291,6 +314,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 7,
       totalMassOfScrubbedSubstrateShellOystersTagG: 70,
       notes: 'Test notes 4b',
+      photoPresent: true,
       measurements: [32.2,33.2,34.5,34.7,31.5,30.9,36.4]
     }, {
       source: 5,
@@ -299,6 +323,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 7,
       totalMassOfScrubbedSubstrateShellOystersTagG: 70,
       notes: 'Test notes 5b',
+      photoPresent: true,
       measurements: [44.2,44.3,43.2,45.7,43.2,42.3,41.0]
     }, {
       source: 6,
@@ -307,6 +332,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 8,
       totalMassOfScrubbedSubstrateShellOystersTagG: 80,
       notes: 'Test notes 6b',
+      photoPresent: true,
       measurements: [53.2,58.4,57.2,55.8,53.2,56.4,50.8,51.3]
     }, {
       source: 7,
@@ -316,6 +342,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 8,
       totalMassOfScrubbedSubstrateShellOystersTagG: 80,
       notes: 'Test notes 7b',
+      photoPresent: true,
       measurements: [62.1,67.4,62.1,60.4,62.4,63.3,65.6,63.3]
     }, {
       source: 1,
@@ -324,6 +351,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 9,
       totalMassOfScrubbedSubstrateShellOystersTagG: 90,
       notes: 'Test notes 8b',
+      photoPresent: true,
       measurements: [72.1,72.2,73.4,76.4,71.9,72.3,73.5,75.5,72.9]
     }, {
       source: 2,
@@ -332,6 +360,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 9,
       totalMassOfScrubbedSubstrateShellOystersTagG: 90,
       notes: 'Test notes 9b',
+      photoPresent: true,
       measurements: [88.3,83.2,80.9,81.1,82.8,83.3,85.7,85.8,84.2]
     }, {
       source: 3,
@@ -340,6 +369,7 @@ var oysterMeasurement3 = {
       totalNumberOfLiveOystersOnShell: 10,
       totalMassOfScrubbedSubstrateShellOystersTagG: 100,
       notes: 'Test notes 10b',
+      photoPresent: true,
       measurements: [93.3,94.4,95.7,91.1,93.5,93.4,92.2,92.5,96.1,93.7]
     }]
   }
@@ -371,12 +401,12 @@ var assertSubstrateMeasurements = function(index) {
   var modal = element(by.id('modal-substrateshell'+index));
   browser.wait(EC.visibilityOf(modal), 10000);
 
+  var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+
   // Add an image to the substrate shell
   modal.element(by.id('substrate-photos')).click();
-  assertImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
-  assertImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
-
-  var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+  if (measurementsDetails.photoPresent) assertImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
+  if (measurementsDetails.photoPresent) assertImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
 
   // substrate meta
   modal.element(by.id('substrate-meta')).click();
@@ -427,12 +457,12 @@ var fillOutOysterMeasurements = function(index) {
   var modal = element(by.id('modal-substrateshell'+index));
   browser.wait(EC.visibilityOf(modal), 10000);
 
+  var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+
   // Add an image to the substrate shell
   modal.element(by.id('substrate-photos')).click();
-  uploadImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
-  uploadImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
-
-  var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+  if (measurementsDetails.photoPresent) uploadImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
+  if (measurementsDetails.photoPresent) uploadImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
 
   //modal.element(by.model('substrate.source')).all(by.tagName('option')).get(measurementsDetails.source).click();
   //if (measurementsDetails.otherSource) modal.element(by.model('substrate.otherSource')).sendKeys(measurementsDetails.otherSource);
@@ -488,20 +518,22 @@ var assertSubstrateMeasurementView = function(index, values) {
 
   expect(element(by.id('substrateShellNumber'+index)).getText())
     .toEqual('Substrate Shell ' + (index+1));
-  element(by.id('outerSidePhoto'+index)).getAttribute('src')
-    .then(function(text){
-      if (text !== null) {
-        expect(text).not.toEqual('');
-        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
-      }
-    });
-  element(by.id('innerSidePhoto'+index)).getAttribute('src')
-    .then(function(text){
-      if (text !== null) {
-        expect(text).not.toEqual('');
-        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
-      }
-    });
+  if (substrate.photoPresent) {
+    element(by.id('outerSidePhoto'+index)).getAttribute('src')
+      .then(function(text){
+        if (text !== null) {
+          expect(text).not.toEqual('');
+          expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+        }
+      });
+    element(by.id('innerSidePhoto'+index)).getAttribute('src')
+      .then(function(text){
+        if (text !== null) {
+          expect(text).not.toEqual('');
+          expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+        }
+      });
+  }
   if (substrate.sourceText === 'Other') {
     expect(element(by.id('substrateMetadata'+index)).getText())
       .toEqual('Set at ' + getDate(substrate.setDate) + '\n' +

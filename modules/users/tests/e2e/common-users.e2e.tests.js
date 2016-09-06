@@ -12,6 +12,7 @@ var signinAs = function(user) {
   signout();
   //Sign in
   browser.get('http://localhost:8081/authentication/signin');
+  browser.sleep(1000);
   // Enter UserName
   element(by.model('vm.credentials.username')).sendKeys(user.username);
   // Enter Password

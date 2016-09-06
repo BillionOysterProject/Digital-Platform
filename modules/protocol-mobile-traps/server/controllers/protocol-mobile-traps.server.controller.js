@@ -34,7 +34,6 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
 
   for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
     var mobileOrganism = mobileTrap.mobileOrganisms[i];
-    console.log('mobileOrganism', mobileOrganism);
     if (!mobileOrganism.organism) {
       errorMessages.push('Mobile organism is required');
     }
