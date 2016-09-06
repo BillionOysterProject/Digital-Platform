@@ -21,6 +21,10 @@ var MetaWindDirectionSchema = new Schema({
   value: {
     type: String,
     required: true
+  },
+  abbreviation: {
+    type: String,
+    required: true
   }
 });
 

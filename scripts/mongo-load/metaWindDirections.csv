@@ -1,9 +1,9 @@
-order,label,value
-0,North,north
-1,North West,northwest
-2,West,west
-3,South West,southwest
-4,South,south
-5,South East,southeast
-6,East,east
-7,North East,northeast
+order,label,value,abbreviation
+0,North,north,N
+1,North West,northwest,NW
+2,West,west,W
+3,South West,southwest,SW
+4,South,south,S
+5,South East,southeast,SE
+6,East,east,E
+7,North East,northeast,NE

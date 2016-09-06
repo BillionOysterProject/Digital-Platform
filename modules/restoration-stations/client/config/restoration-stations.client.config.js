@@ -39,6 +39,13 @@
       position: 2
     });
 
+    Menus.addSubMenuItem('topbar', 'restoration-stations', {
+      title: 'Data',
+      state: 'expeditions.data',
+      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user', 'guest'],
+      position: 3
+    });
+
     //Menus.addSubMenuItem('topbar', 'restoration-stations', {
     //  title: 'Submissions',
     //  state: 'expeditions.submitted',

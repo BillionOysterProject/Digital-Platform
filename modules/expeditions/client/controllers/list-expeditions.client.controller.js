@@ -12,7 +12,7 @@
     SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope, $stateParams) {
     var vm = this;
     vm.user = Authentication.user;
-    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'myexpeditions';
+    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'pubexpeditions';
 
     vm.opened = {
       startDate: false,
