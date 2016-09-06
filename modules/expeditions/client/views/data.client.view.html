@@ -1,0 +1,132 @@
+<div class="jumbotron text-center">
+  <section class="content">
+    <section class="container-fluid">
+        <h2>Data</h2>
+    </section>
+  </section>
+</div>
+<section class="content">
+  <section class="container-fluid">
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
+                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
+            <li role="presentation" ng-class="{active: vm.activeTab === 'compareexpeditions'}" ng-click="vm.switchTabs()">
+                <a href="#compareexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Compare</a></li>
+        </ul>
+        <div class="tab-content">
+        <br />
+
+            <!-- PUBLISHED EXPEDITIONS -->
+            <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <br/>
+                        <a class="btn btn-link pull-left" ng-click="vm.showAllPublishedExpeditions()">Reset filters</a>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </span>
+                            <input type="text" class="form-control" ng-model="vm.filter.searchString"
+                            ng-change="vm.searchChange()" placeholder="Search">
+                        </div>
+                        <br/>
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label class="control-label" for="startDate">Start Date</label>
+                        <div class="input-group">
+                          <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                          ng-model="vm.filter.startDate" is-open="vm.opened.startDate" name="startDate"
+                          max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                          ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.openStartDate($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                          </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label class="control-label" for="endDate">End Date</label>
+                        <div class="input-group">
+                          <input type="date" class="form-control" uib-datepicker-popup="{{vm.format}}"
+                          ng-model="vm.filter.endDate" is-open="vm.opened.endDate" name="endDate"
+                          max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                          ng-required="true" close-text="Close" ng-change="vm.dateSelected()"/>
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.openEndDate($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                          </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Location</label>
+                        <input type="text" ng-model="vm.filter.stationObj" placeholder="Location"
+                        uib-typeahead="station as station.name for station in vm.stations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.stationSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Organization</label>
+                        <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+                        uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.organizationSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Team</label>
+                        <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
+                        uib-typeahead="team as team.name for team in vm.allTeams | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamSelected()">
+                    </div>
+
+                    <div class="form-group col-md-3 col-sm-6">
+                        <label for="">Team Lead</label>
+                        <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+                        uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                        typeahead-on-select="vm.teamLeadSelected()">
+                    </div>
+                </div>
+                <hr/>
+                <div class="row" isotope-container="isotope-container">
+                    <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+                      ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                        <div class="panel" data-category="transition">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-map-marker"></i> {{expedition.station.name}}
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                <h4>{{expedition.name}}</h4>
+                                <p>{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</p>
+                                <p class="text-muted">{{expedition.notes}}</p>
+                            </div>
+                            <div class="panel-footer">
+                                {{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
+                <div class="row">
+                  <compare-expedition-wizard ></compare-expedition-wizard>
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+</section>

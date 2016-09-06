@@ -1,9 +1,9 @@
 order,label,value
-0,Sunny,sunny
-1,Partly Cloudy,partly-cloudy
-3,Rain,rain
-2,Cloudy,cloudy
-7,Thunderstorm,thunderstorm
-5,Snow,snow
-4,Fog,fog
-6,Hail,hail
+1,Sunny,sunny
+2,Partly Cloudy,partly-cloudy
+3,Cloudy,cloudy
+4,Rain,rain
+5,Fog,fog
+6,Snow,snow
+7,Hail,hail
+8,Thunderstorm,thunderstorm
