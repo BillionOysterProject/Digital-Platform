@@ -1,73 +1,64 @@
-<div class="modal-content">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Select <span class="red">expeditions</span> to compare</h4>
-    </div>
-    <div class="modal-body">
-        <p>Use these filters to find expeditions to include in the comparison. You can make your selection as broad or as narrow as you'd like.</p>
-        <form class="form-horizontal">
-            <div class="form-group">
-              <a class="btn btn-link pull-left" ng-click="ce.resetFilters()">Reset filters</a>
+<section>
+    <a class="btn btn-primary pull-right" ng-click="ce.nextStep(2)" ng-disabled="ce.expeditions.length === 0">Next</a>
+    <h3>select <span class="red">expeditions</span> to compare</h3>
+    <form class="form-horizontal">
+        <div class="form-group">
+          <a class="btn btn-link pull-left" ng-click="ce.resetFilters()">Reset filters</a>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">by Organization</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="ce.filter.organizationObj" placeholder="Organization"
+              uib-typeahead="org as org.name for org in ce.organizations | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="ce.organizationSelected()">
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">by Organization</label>
-                <div class="col-sm-9">
-                  <input type="text" ng-model="ce.filter.organizationObj" placeholder="Organization"
-                  uib-typeahead="org as org.name for org in ce.organizations | filter:{name:$viewValue}"
-                  class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                  typeahead-on-select="ce.organizationSelected()">
-                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">by Team</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="ce.filter.teamObj" placeholder="Team"
+              uib-typeahead="team as team.name for team in ce.teams | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="ce.teamSelected()">
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">by Team</label>
-                <div class="col-sm-9">
-                  <input type="text" ng-model="ce.filter.teamObj" placeholder="Team"
-                  uib-typeahead="team as team.name for team in ce.teams | filter:{name:$viewValue}"
-                  class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                  typeahead-on-select="ce.teamSelected()">
-                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">by ORS</label>
+            <div class="col-sm-9">
+              <input type="text" ng-model="ce.filter.stationObj" placeholder="Location"
+              uib-typeahead="station as station.name for station in ce.stations | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="ce.stationSelected()">
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">by ORS</label>
-                <div class="col-sm-9">
-                  <input type="text" ng-model="ce.filter.stationObj" placeholder="Location"
-                  uib-typeahead="station as station.name for station in ce.stations | filter:{name:$viewValue}"
-                  class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
-                  typeahead-on-select="ce.stationSelected()">
-                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">by date range</label>
+            <div class="col-sm-9">
+                <p class="input-group">
+                  <input type="date" class="form-control" uib-datepicker-popup="{{ce.format}}"
+                  ng-model="ce.filter.startDate" is-open="ce.opened.startDate" name="startDate"
+                  max-date="ce.maxDate" datepicker-options="ce.dateOptions"
+                  ng-required="true" close-text="Close" ng-change="ce.dateSelected()"/>
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="ce.openStartDate($event)">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                  </span>
+                </p>
+                <p class="input-group">
+                  <input type="date" class="form-control" uib-datepicker-popup="{{ce.format}}"
+                  ng-model="ce.filter.endDate" is-open="ce.opened.endDate" name="endDate"
+                  max-date="ce.maxDate" datepicker-options="ce.dateOptions"
+                  ng-required="true" close-text="Close" ng-change="ce.dateSelected()"/>
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="ce.openEndDate($event)">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                  </span>
+                </p>
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3">by date range</label>
-                <div class="col-sm-9">
-                    <p class="input-group">
-                      <input type="date" class="form-control" uib-datepicker-popup="{{ce.format}}"
-                      ng-model="ce.filter.startDate" is-open="ce.opened.startDate" name="startDate"
-                      max-date="ce.maxDate" datepicker-options="ce.dateOptions"
-                      ng-required="true" close-text="Close" ng-change="ce.dateSelected()"/>
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="ce.openStartDate($event)">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </button>
-                      </span>
-                    </p>
-                    <p class="input-group">
-                      <input type="date" class="form-control" uib-datepicker-popup="{{ce.format}}"
-                      ng-model="ce.filter.endDate" is-open="ce.opened.endDate" name="endDate"
-                      max-date="ce.maxDate" datepicker-options="ce.dateOptions"
-                      ng-required="true" close-text="Close" ng-change="ce.dateSelected()"/>
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="ce.openEndDate($event)">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </button>
-                      </span>
-                    </p>
-                </div>
-            </div>
-        </form>
-        <p>This selection currently includes <b class="red">{{ce.expeditions.length}}</b> expeditions.</p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ce.cancelFunction()">Close</button>
-        <a class="btn btn-primary" ng-click="ce.nextStep(2)" ng-disabled="ce.expeditions.length === 0">Next</a>
-    </div>
-</div>
+        </div>
+    </form>
+    <hr/>
+</section>

@@ -10,7 +10,7 @@
     <div>
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
-                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Published Expeditions</a></li>
+                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Search</a></li>
             <li role="presentation" ng-class="{active: vm.activeTab === 'compareexpeditions'}" ng-click="vm.switchTabs()">
                 <a href="#compareexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Compare</a></li>
         </ul>
@@ -122,9 +122,7 @@
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
-                <div class="row">
-                  <compare-expedition-wizard ></compare-expedition-wizard>
-                </div>
+              <compare-expedition-wizard ></compare-expedition-wizard>
             </div>
         </div>
     </div>
