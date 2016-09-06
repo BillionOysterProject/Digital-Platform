@@ -22,6 +22,7 @@
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
 
+
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -109,23 +110,23 @@
       }
     };
 
-    // var populateTeamMembers = function(list, callback) {
-    //   // var getTeamMember = function(index, done) {
-    //   //   if (index < list.length) {
-    //   //     TeamMembersService.get({
-    //   //       memberId: list[index]._id
-    //   //     }, function(data) {
-    //   //       list[index] = data;
-    //   //       getTeamMember(index+1, done);
-    //   //     });
-    //   //   } else {
-    //   //     done();
-    //   //   }
-    //   // };
-    //   // getTeamMember(0, function() {
-    //   if (callback) callback();
-    //   // });
-    // };
+    var populateTeamMembers = function(list, callback) {
+      var getTeamMember = function(index, done) {
+        if (index < list.length) {
+          TeamMembersService.get({
+            memberId: (list[index]._id) ? list[index]._id : list[index]
+          }, function(data) {
+            list[index] = data;
+            getTeamMember(index+1, done);
+          });
+        } else {
+          done();
+        }
+      };
+      getTeamMember(0, function() {
+        if (callback) callback();
+      });
+    };
 
     if (vm.expedition.status === 'published' &&
     vm.expedition.protocols.siteCondition.status === 'published' &&
@@ -149,11 +150,11 @@
       vm.viewWaterQuality = true;
       vm.disabledWaterQuality = false;
 
-      // populateTeamMembers($scope.siteCondition.teamMembers);
-      // populateTeamMembers($scope.oysterMeasurement.teamMembers);
-      // populateTeamMembers($scope.mobileTrap.teamMembers);
-      // populateTeamMembers($scope.settlementTiles.teamMembers);
-      // populateTeamMembers($scope.waterQuality.teamMembers);
+      populateTeamMembers($scope.siteCondition.teamMembers);
+      populateTeamMembers($scope.oysterMeasurement.teamMembers);
+      populateTeamMembers($scope.mobileTrap.teamMembers);
+      populateTeamMembers($scope.settlementTiles.teamMembers);
+      populateTeamMembers($scope.waterQuality.teamMembers);
     } else {
       // Set up Site Condition protocol variables
       if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
@@ -338,10 +339,8 @@
     // Check to see if all of the tabs have loaded
     vm.protocolsLoaded = function() {
       if (vm.saving === true) {
-        console.log('protocols not loaded saving');
         return false;
       } else {
-        console.log('vm.tabs.protocol1.saveSuccessful', vm.tabs.protocol1.saveSuccessful);
         var successful = true;
 
         if(vm.viewSiteCondition && vm.tabs.protocol1.saveSuccessful === undefined) successful = false;
@@ -521,8 +520,6 @@
             if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
             if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
-            console.log('protocols to submit', protocols);
-
             $http.post('/api/expeditions/' + vm.expedition._id + '/submit?full=true', {
               protocols: protocols
             }).
@@ -539,7 +536,6 @@
               });
             }).
             error(function(data, status, headers, config) {
-              console.log('data', data);
               if (data && data.message) {
                 vm.siteConditionErrors = data.message.siteCondition;
                 vm.oysterMeasurementErrors = data.message.oysterMeasurement;
@@ -660,7 +656,6 @@
         protocols: protocols
       }).
       success(function(data, status, headers, config) {
-        console.log('unpublished');
         vm.expedition = data;
         if(vm.viewSiteCondition) $scope.siteCondition.status = 'unpublished';
         if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'unpublished';
@@ -673,7 +668,6 @@
         });
       }).
       error(function(data, status, headers, config) {
-        console.log('error unpublishing');
         if (data && data.message) {
           vm.siteConditionErrors = data.message.siteCondition;
           vm.oysterMeasurementErrors = data.message.oysterMeasurement;

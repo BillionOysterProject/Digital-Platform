@@ -1,0 +1,9 @@
+order,label,value
+0,North,north
+1,North West,northwest
+2,West,west
+3,South West,southwest
+4,South,south
+5,South East,southeast
+6,East,east
+7,North East,northeast

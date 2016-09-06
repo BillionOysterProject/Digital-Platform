@@ -100,11 +100,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="waterTemperatureMethod">Method (tool or test name)</label>
-                                    <select class="form-control" name="waterTemperatureMethod" ng-model="sample.waterTemperature.method" ng-options="method.value as method.name for method in waterTemperatureMethods" required></select>
+                                    <select class="form-control" name="waterTemperatureMethod" ng-model="sample.waterTemperature.method" ng-options="method.value as method.label for method in waterTemperatureMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label for="waterTemperatureUnits">Units</label>
-                                    <select class="form-control" name="waterTemperatureUnits" ng-model="sample.waterTemperature.units" ng-options="method.value as method.name for method in waterTemperatureUnits" required></select>
+                                    <select class="form-control" name="waterTemperatureUnits" ng-model="sample.waterTemperature.units" ng-options="method.value as method.label for method in waterTemperatureUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -138,11 +138,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="dissolvedOxygenMethod" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.name for method in dissolvedOxygenMethods" required></select>
+                                    <select class="form-control" name="dissolvedOxygenMethod" ng-model="sample.dissolvedOxygen.method" ng-options="method.value as method.label for method in dissolvedOxygenMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="dissolvedOxygenUnits" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.name for method in dissolvedOxygenUnits" required></select>
+                                    <select class="form-control" name="dissolvedOxygenUnits" ng-model="sample.dissolvedOxygen.units" ng-options="method.value as method.label for method in dissolvedOxygenUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -176,11 +176,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="salinityMethod" ng-model="sample.salinity.method" ng-options="method.value as method.name for method in salinityMethods" required></select>
+                                    <select class="form-control" name="salinityMethod" ng-model="sample.salinity.method" ng-options="method.value as method.label for method in salinityMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="salinityUnits" ng-model="sample.salinity.units" ng-options="method.value as method.name for method in salinityUnits" required></select>
+                                    <select class="form-control" name="salinityUnits" ng-model="sample.salinity.units" ng-options="method.value as method.label for method in salinityUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -214,11 +214,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="pHmethod" ng-model="sample.pH.method" ng-options="method.value as method.name for method in pHMethods" required></select>
+                                    <select class="form-control" name="pHmethod" ng-model="sample.pH.method" ng-options="method.value as method.label for method in pHMethods" required></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="pHunits" ng-model="sample.pH.units" ng-options="method.value as method.name for method in pHUnits" required></select>
+                                    <select class="form-control" name="pHunits" ng-model="sample.pH.units" ng-options="method.value as method.label for method in pHUnits" required></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -252,11 +252,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="turbidityMethod" ng-model="sample.turbidity.method" ng-options="method.value as method.name for method in turbidityMethods"></select>
+                                    <select class="form-control" name="turbidityMethod" ng-model="sample.turbidity.method" ng-options="method.value as method.label for method in turbidityMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="turbidityUnits" ng-model="sample.turbidity.units" ng-options="method.value as method.name for method in turbidityUnits"></select>
+                                    <select class="form-control" name="turbidityUnits" ng-model="sample.turbidity.units" ng-options="method.value as method.label for method in turbidityUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -290,11 +290,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="ammoniaMethod" ng-model="sample.ammonia.method" ng-options="method.value as method.name for method in ammoniaMethods"></select>
+                                    <select class="form-control" name="ammoniaMethod" ng-model="sample.ammonia.method" ng-options="method.value as method.label for method in ammoniaMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="ammoniaUnits" ng-model="sample.ammonia.units" ng-options="method.value as method.name for method in ammoniaUnits"></select>
+                                    <select class="form-control" name="ammoniaUnits" ng-model="sample.ammonia.units" ng-options="method.value as method.label for method in ammoniaUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -328,11 +328,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Method (tool or test name)</label>
-                                    <select class="form-control" name="nitratesMethod" ng-model="sample.nitrates.method" ng-options="method.value as method.name for method in nitratesMethods"></select>
+                                    <select class="form-control" name="nitratesMethod" ng-model="sample.nitrates.method" ng-options="method.value as method.label for method in nitratesMethods"></select>
                                 </div>
                                 <div class="form-group">
                                     <label>Units</label>
-                                    <select class="form-control" name="nitratesUnits" ng-model="sample.nitrates.units" ng-options="method.value as method.name for method in nitratesUnits"></select>
+                                    <select class="form-control" name="nitratesUnits" ng-model="sample.nitrates.units" ng-options="method.value as method.label for method in nitratesUnits"></select>
                                 </div>
                             </div>
                             <div class="col-sm-8">

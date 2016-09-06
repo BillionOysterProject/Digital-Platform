@@ -49,7 +49,7 @@
     $scope.garbageExtent = ExpeditionViewHelper.getAllGarbageExtent();
     $scope.windDirection = ExpeditionViewHelper.getAllWindDirections();
     $scope.trueFalse = ExpeditionViewHelper.getAllTrueFalse();
-    
+
     $scope.getWeatherCondition = ExpeditionViewHelper.getWeatherCondition;
     $scope.getWaterColors = ExpeditionViewHelper.getWaterColors;
     $scope.getWaterFlows = ExpeditionViewHelper.getWaterFlows;
@@ -58,6 +58,7 @@
     $scope.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
 
     $scope.openMap = function() {
+      console.log('markedCSOPresent', $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent);
       if ($scope.siteCondition.waterConditions &&
       $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes &&
       $scope.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true &&

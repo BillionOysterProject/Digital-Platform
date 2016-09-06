@@ -7,10 +7,18 @@
 
   ExpeditionViewHelper.$inject = ['WeatherConditionsService', 'WaterColorsService',
   'WaterFlowService', 'ShorelineTypesService', 'MobileOrganismsService', 'SessileOrganismsService',
+  'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
+  'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
+  'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
+  'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService', 'AmmoniaUnitsService', 'NitrateUnitsService',
   'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, MobileOrganismsService, SessileOrganismsService,
+    GarbageExtentsService, WindDirectionsService, TrueFalsesService, WaterTemperatureMethodsService,
+    DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
+    AmmoniaMethodsService, NitrateMethodsService, WaterTemperatureUnitsService, DissolvedOxygenUnitsService,
+    SalinityUnitsService, PhUnitsService, TurbidityUnitsService, AmmoniaUnitsService, NitrateUnitsService,
     lodash, moment) {
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
@@ -19,96 +27,25 @@
     var mobileOrganisms = MobileOrganismsService.query();
     var sessileOrganisms = SessileOrganismsService.query();
 
-    var garbageExtent = [
-      { label: 'None', value: 'none' },
-      { label: 'Sporadic', value: 'sporadic' },
-      { label: 'Common', value: 'common' },
-      { label: 'Extensive', value: 'extensive' }
-    ];
+    var garbageExtent = GarbageExtentsService.query();
+    var windDirection = WindDirectionsService.query();
+    var trueFalse = TrueFalsesService.query();
 
-    var windDirection = [
-      { label: 'North', value: 'north' },
-      { label: 'North West', value: 'northwest' },
-      { label: 'West', value: 'west' },
-      { label: 'South West', value: 'southwest' },
-      { label: 'South', value: 'south' },
-      { label: 'South East', value: 'southeast' },
-      { label: 'East', value: 'east' },
-      { label: 'North East', value: 'northeast' }
-    ];
+    var waterTemperatureMethods = WaterTemperatureMethodsService.query();
+    var dissolvedOxygenMethods = DissolvedOxygenMethodsService.query();
+    var salinityMethods = SalinityMethodsService.query();
+    var pHMethods = PhMethodsService.query();
+    var turbidityMethods = TurbidityMethodsService.query();
+    var ammoniaMethods = AmmoniaMethodsService.query();
+    var nitratesMethods = NitrateMethodsService.query();
 
-    var trueFalse = [
-      { label: 'Yes', value: true },
-      { label: 'No', value: false }
-    ];
-
-    var waterTemperatureMethods = [
-      { name: 'Digital thermometer', value: 'digitalThermometer' },
-      { name: 'Analog thermometer', value: 'analogThermometer' },
-      { name: 'Sensor*', value: 'sensor' }
-    ];
-
-    var dissolvedOxygenMethods = [
-      { name: 'Colormetric ampules', value: 'colormetricvAmpules' },
-      { name: 'Sensor', value: 'sensor' },
-      { name: 'Winkler', value: 'winkler' }
-    ];
-
-    var salinityMethods = [
-      { name: 'Hydrometer', value: 'hydrometer' },
-      { name: 'Refractometer', value: 'refractometer' },
-      { name: 'Sensor', value: 'sensor' }
-    ];
-
-    var pHMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Sensor (read only)', value: 'sensorRO' },
-      { name: 'Sensor', value: 'sensor' }
-    ];
-
-    var turbidityMethods = [
-      { name: 'Turbidity tube', value: 'turbidityTube' }
-    ];
-
-    var ammoniaMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Photometer', value: 'photometer' }
-    ];
-
-    var nitratesMethods = [
-      { name: 'Test strips', value: 'testStrips' },
-      { name: 'Photometer', value: 'photometer' }
-    ];
-
-    var waterTemperatureUnits = [
-      { name: 'F', value: 'f' },
-      { name: 'C', value: 'c' }
-    ];
-
-    var dissolvedOxygenUnits = [
-      { name: 'mg/L (ppm)', value: 'mgl' },
-      { name: '% saturation', value: 'saturation' }
-    ];
-
-    var salinityUnits = [
-      { name: 'PPT', value: 'ppt' }
-    ];
-
-    var pHUnits = [
-      { name: 'pH (logscale)', value: 'pHlogscale' }
-    ];
-
-    var turbidityUnits = [
-      { name: 'cm', value: 'cm' }
-    ];
-
-    var ammoniaUnits = [
-      { name: 'ppm', value: 'ppm' }
-    ];
-
-    var nitratesUnits = [
-      { name: 'ppm', value: 'ppm' }
-    ];
+    var waterTemperatureUnits = WaterTemperatureUnitsService.query();
+    var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
+    var salinityUnits = SalinityUnitsService.query();
+    var pHUnits = PhUnitsService.query();
+    var turbidityUnits = TurbidityUnitsService.query();
+    var ammoniaUnits = AmmoniaUnitsService.query();
+    var nitratesUnits = NitrateUnitsService.query();
 
 
     return {
@@ -125,13 +62,13 @@
         return ShorelineTypesService.query();
       },
       getAllGarbageExtent: function() {
-        return garbageExtent;
+        return GarbageExtentsService.query();
       },
       getAllWindDirections: function() {
-        return windDirection;
+        return WindDirectionsService.query();
       },
       getAllTrueFalse: function() {
-        return trueFalse;
+        return TrueFalsesService.query();
       },
       getWeatherCondition: function(value) {
         var index = lodash.findIndex(weatherConditions, function(c) {
@@ -182,124 +119,124 @@
         return (index > -1) ? sessileOrganisms[index].commonName : '';
       },
       getAllWaterTemperatureMethods: function() {
-        return waterTemperatureMethods;
+        return WaterTemperatureMethodsService.query();
       },
       getAllDissolvedOxygenMethods: function() {
-        return dissolvedOxygenMethods;
+        return DissolvedOxygenMethodsService.query();
       },
       getAllSalinityMethods: function() {
-        return salinityMethods;
+        return SalinityMethodsService.query();
       },
       getAllPHMethods: function() {
-        return pHMethods;
+        return PhMethodsService.query();
       },
       getAllTurbidityMethods: function() {
-        return turbidityMethods;
+        return TurbidityMethodsService.query();
       },
       getAllAmmoniaMethods: function() {
-        return ammoniaMethods;
+        return AmmoniaMethodsService.query();
       },
       getAllNitratesMethods: function() {
-        return nitratesMethods;
+        return NitrateMethodsService.query();
       },
       getWaterTemperatureMethod: function(value) {
         var index = lodash.findIndex(waterTemperatureMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? waterTemperatureMethods[index].name : '';
+        return (index > -1) ? waterTemperatureMethods[index].label : '';
       },
       getDissolvedOxygenMethod: function(value) {
         var index = lodash.findIndex(dissolvedOxygenMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? dissolvedOxygenMethods[index].name : '';
+        return (index > -1) ? dissolvedOxygenMethods[index].label : '';
       },
       getSalinityMethod: function(value) {
         var index = lodash.findIndex(salinityMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? salinityMethods[index].name : '';
+        return (index > -1) ? salinityMethods[index].label : '';
       },
       getPHMethod: function(value) {
         var index = lodash.findIndex(pHMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? pHMethods[index].name : '';
+        return (index > -1) ? pHMethods[index].label : '';
       },
       getTurbidityMethod: function(value) {
         var index = lodash.findIndex(turbidityMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? turbidityMethods[index].name : '';
+        return (index > -1) ? turbidityMethods[index].label : '';
       },
       getAmmoniaMethod: function(value) {
         var index = lodash.findIndex(ammoniaMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? ammoniaMethods[index].name : '';
+        return (index > -1) ? ammoniaMethods[index].label : '';
       },
       getNitratesMethod: function(value) {
         var index = lodash.findIndex(nitratesMethods, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? nitratesMethods[index].name : '';
+        return (index > -1) ? nitratesMethods[index].label : '';
       },
       getAllWaterTemperatureUnits: function() {
-        return waterTemperatureUnits;
+        return WaterTemperatureUnitsService.query();
       },
       getAllDissolvedOxygenUnits: function() {
-        return dissolvedOxygenUnits;
+        return DissolvedOxygenUnitsService.query();
       },
       getAllSalinityUnits: function() {
-        return salinityUnits;
+        return SalinityUnitsService.query();
       },
       getAllPHUnits: function() {
-        return pHUnits;
+        return PhUnitsService.query();
       },
       getAllTurbidityUnits: function() {
-        return turbidityUnits;
+        return TurbidityUnitsService.query();
       },
       getAllAmmoniaUnits: function() {
-        return ammoniaUnits;
+        return AmmoniaUnitsService.query();
       },
       getAllNitratesUnits: function() {
-        return nitratesUnits;
+        return NitrateUnitsService.query();
       },
       getDissolvedOxygenUnit: function(value) {
         var index = lodash.findIndex(dissolvedOxygenUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? dissolvedOxygenUnits[index].name : '';
+        return (index > -1) ? dissolvedOxygenUnits[index].label : '';
       },
       getSalinityUnit: function(value) {
         var index = lodash.findIndex(salinityUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? salinityUnits[index].name : '';
+        return (index > -1) ? salinityUnits[index].label : '';
       },
       getPHUnits: function(value) {
         var index = lodash.findIndex(pHUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? pHUnits[index].name : '';
+        return (index > -1) ? pHUnits[index].label : '';
       },
       getTurbidityUnit: function(value) {
         var index = lodash.findIndex(turbidityUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? turbidityUnits[index].name : '';
+        return (index > -1) ? turbidityUnits[index].label : '';
       },
       getAmmoniaUnit: function(value) {
         var index = lodash.findIndex(ammoniaUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? ammoniaUnits[index].name : '';
+        return (index > -1) ? ammoniaUnits[index].label : '';
       },
       getNitratesUnit: function(value) {
         var index = lodash.findIndex(nitratesUnits, function(c) {
           return c.value === value;
         });
-        return (index > -1) ? nitratesUnits[index].name : '';
+        return (index > -1) ? nitratesUnits[index].label : '';
       },
       getExpeditionDate: function(date) {
         return (date === '1970-01-01T00:00:00.000Z') ? '' :

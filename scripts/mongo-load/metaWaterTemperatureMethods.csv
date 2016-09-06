@@ -1,0 +1,4 @@
+order,label,value
+0,Digital thermometer,digitalThermometer
+1,Analog thermometer,analogThermometer
+2,Sensor*,sensor
