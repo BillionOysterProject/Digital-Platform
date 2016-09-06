@@ -34,13 +34,15 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
 
   for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {
     var mobileOrganism = mobileTrap.mobileOrganisms[i];
+    console.log('mobileOrganism', mobileOrganism);
     if (!mobileOrganism.organism) {
       errorMessages.push('Mobile organism is required');
     }
     if (mobileOrganism.count <= 0) {
       errorMessages.push('Count of mobile organism is required');
     }
-    if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
+    if (mobileOrganism.organism.commonName === 'Other/Unknown' &&
+    (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path)) {
       errorMessages.push('Sketch or photo of mobile organism is required');
     }
   }

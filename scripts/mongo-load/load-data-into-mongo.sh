@@ -9,6 +9,7 @@ fi
 echo "Loading data into mongo..."
 
 mongoimport -d bop-dev -c sites --type json --file sites.json --drop
+
 mongoimport -d bop-dev -c metaweatherconditions --type json --file metaWeatherConditions.json --drop
 mongoimport -d bop-dev -c metawatercolors --type json --file metaWaterColors.json --drop
 mongoimport -d bop-dev -c metawaterflows --type json --file metaWaterFlows.json --drop
@@ -31,12 +32,13 @@ mongoimport -d bop-dev -c metaphunits --type json --file metaPhUnits.json --drop
 mongoimport -d bop-dev -c metaturbidityunits --type json --file metaTurbidityUnits.json --drop
 mongoimport -d bop-dev -c metaammoniaunits --type json --file metaAmmoniaUnits.json --drop
 mongoimport -d bop-dev -c metanitrateunits --type json --file metaNitrateUnits.json --drop
+
 mongoimport -d bop-dev -c metaorganismcategories --type json --file metaOrganismCategories.json --drop
 mongoimport -d bop-dev -c mobileorganisms --type json --file mobileOrganisms.json --drop
 mongoimport -d bop-dev -c sessileorganisms --type json --file sessileOrganisms.json --drop
 mongoimport -d bop-dev -c metasubjectareas --type json --file metaSubjectAreas.json --drop
-mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glossaries.json
-mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json
-mongoimport -d bop-dev -c units --type json --file sample-data/bop-dev-units.json
-mongoimport -d bop-dev -c users --type json --file sample-data/bop-dev-users.json
-mongoimport -d bop-dev -c teams --type json --file sample-data/bop-dev-teams.json
+#mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glossaries.json
+#mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json
+#mongoimport -d bop-dev -c units --type json --file sample-data/bop-dev-units.json
+#mongoimport -d bop-dev -c users --type json --file sample-data/bop-dev-users.json
+#mongoimport -d bop-dev -c teams --type json --file sample-data/bop-dev-teams.json

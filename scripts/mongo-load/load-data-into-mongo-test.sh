@@ -5,6 +5,7 @@ mongoimport -d bop-test -c metawatercolors --type json --file scripts/mongo-load
 mongoimport -d bop-test -c metawaterflows --type json --file scripts/mongo-load/metaWaterFlows.json --drop
 mongoimport -d bop-test -c metashorelinetypes --type json --file scripts/mongo-load/metaShorelineTypes.json --drop
 mongoimport -d bop-test -c metabioaccumulations --type json --file scripts/mongo-load/metaBioaccumulations.json --drop
+
 mongoimport -d bop-test -c metagarbageextents --type json --file scripts/mongo-load/metaGarbageExtents.json --drop
 mongoimport -d bop-test -c metawinddirections --type json --file scripts/mongo-load/metaWindDirections.json --drop
 mongoimport -d bop-test -c metatruefalses --type json --file scripts/mongo-load/metaTrueFalses.json --drop
@@ -22,6 +23,7 @@ mongoimport -d bop-test -c metaphunits --type json --file scripts/mongo-load/met
 mongoimport -d bop-test -c metaturbidityunits --type json --file scripts/mongo-load/metaTurbidityUnits.json --drop
 mongoimport -d bop-test -c metaammoniaunits --type json --file scripts/mongo-load/metaAmmoniaUnits.json --drop
 mongoimport -d bop-test -c metanitrateunits --type json --file scripts/mongo-load/metaNitrateUnits.json --drop
+
 mongoimport -d bop-test -c metaorganismcategories --type json --file scripts/mongo-load/metaOrganismCategories.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
 mongoimport -d bop-test -c mobileorganisms --type json --file scripts/mongo-load/mobileOrganisms.json --drop

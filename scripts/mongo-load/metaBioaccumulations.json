@@ -1,4 +1,4 @@
-{"_id":{"$oid":"56f030c2c9211c1ab6f2e246"},"order":0,"label":"None/clean – No macroalgae or animals present","value":"none"}
-{"_id":{"$oid":"56f030c2c9211c1ab6f2e247"},"order":1,"label":"Light – Macroalgae or minimal animals present that do not encroach on mesh openings","value":"light"}
-{"_id":{"$oid":"56f030c2c9211c1ab6f2e248"},"order":2,"label":"Medium – Some encrusting macroalgae/animals reducing size of mesh opening up to 25%","value":"medium"}
-{"_id":{"$oid":"56f030c2c9211c1ab6f2e249"},"order":3,"label":"Heavy – Encrusting macroalgae/animals reducing mesh opening by over 50%","value":"heavy"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e246"},"order":1,"label":"None/clean – No macroalgae or animals present","value":"none"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e247"},"order":2,"label":"Light – Macroalgae or minimal animals present that do not encroach on mesh openings","value":"light"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e248"},"order":3,"label":"Medium – Some encrusting macroalgae/animals reducing size of mesh opening up to 25%","value":"medium"}
+{"_id":{"$oid":"56f030c2c9211c1ab6f2e249"},"order":4,"label":"Heavy – Encrusting macroalgae/animals reducing mesh opening by over 50%","value":"heavy"}

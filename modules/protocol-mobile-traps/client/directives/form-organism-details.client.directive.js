@@ -22,7 +22,9 @@
           });
 
           scope.submitForm = function(organismDetails, isValid) {
-            if (scope.sketchPhotoUrl === undefined || scope.sketchPhotoUrl === null || scope.sketchPhotoUrl === '') {
+            console.log('scope.organismDetails.organism.commonName', scope.organismDetails.organism.commonName);
+            if (scope.organismDetails.organism.commonName === 'Other/Unknown' &&
+            (scope.sketchPhotoUrl === undefined || scope.sketchPhotoUrl === null || scope.sketchPhotoUrl === '')) {
               scope.form.organismDetailsForm.$setValidity('sketchPhoto', false);
               return false;
             }
