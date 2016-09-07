@@ -10,7 +10,11 @@ module.exports = function (app) {
   // Compare expedition routes
   app.route('/api/expeditions/compare').all(expeditionsPolicy.isAllowed)
     .post(expeditions.compare);
-    
+
+  // Export expedition routes
+  app.route('/api/expeditions/export').all(expeditionsPolicy.isAllowed)
+    .post(expeditions.downloadCsv);
+
   // Expeditions collection routes
   app.route('/api/expeditions').all(expeditionsPolicy.isAllowed)
     .get(expeditions.list)

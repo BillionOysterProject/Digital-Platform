@@ -16,6 +16,7 @@ var path = require('path'),
   MobileOrganism = mongoose.model('MobileOrganism'),
   SessileOrganism = mongoose.model('SessileOrganism'),
   Team = mongoose.model('Team'),
+  WeatherCondition = mongoose.model('MetaWeatherCondition'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   siteConditionHandler = require(path.resolve('./modules/protocol-site-conditions/server/controllers/protocol-site-conditions.server.controller')),
@@ -24,6 +25,9 @@ var path = require('path'),
   settlementTilesHandler = require(path.resolve('./modules/protocol-settlement-tiles/server/controllers/protocol-settlement-tiles.server.controller')),
   waterQualityHandler = require(path.resolve('./modules/protocol-water-quality/server/controllers/protocol-water-quality.server.controller')),
   moment = require('moment'),
+  csv = require('fast-csv'),
+  fs = require('fs'),
+  async = require('async'),
   _ = require('lodash');
 
 var checkRole = function(user, role) {
@@ -1330,6 +1334,256 @@ exports.compare = function (req, res) {
       });
     } else {
       res.json(expeditions);
+    }
+  });
+};
+
+var getExpeditionDate = function(date) {
+  return (date === '1970-01-01T00:00:00.000Z') ? '' :
+   moment(date).format('MMMM D, YYYY');
+};
+
+var addExpeditionToColumn = function(expedition, headers, rows, req, callback) {
+  async.parallel([
+    // Add header
+    function (done) {
+      headers.push(expedition.name+'\r\n'+expedition.station.name+',\r\n'+
+        getExpeditionDate(expedition.monitoringStartDate));
+      done(null);
+    },
+    // Add Weather/Temperature
+    function (done) {
+      if (req.body.protocol1.weatherTemperature === 'YES') {
+        rows.airTemperatureC.push(expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC);
+        WeatherCondition.findOne({ value: expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions })
+        .exec(function(err, obj) {
+          if (err) {
+            done(err);
+          } else {
+            console.log('obj', obj);
+            rows.weatherConditions.push(obj.order);
+            done(null);
+          }
+        });
+      } else {
+        done(null);
+      }
+    },
+    // Add Wind Speed/Direction
+    function (done) {
+      if (req.body.protocol1.windSpeedDirection === 'YES') {
+        rows.windSpeedMPH.push(expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH);
+        rows.windDirection.push(expedition.protocols.siteCondition.meteorologicalConditions.windDirection);
+      }
+      done(null);
+    }
+  ], function(err) {
+    if (err) {
+      callback(err);
+    } else {
+      callback();
+    }
+  });
+};
+
+exports.downloadCsv = function (req, res) {
+  buildCompareQuery(req, function(error, expeditions) {
+    if (error) {
+      return res.status(400).send({
+        message: error
+      });
+    } else {
+      res.setHeader('Content-disposition', 'attachment;');
+      res.setHeader('content-type', 'text/csv');
+      var csvArrays = [];
+      var headers = [''];
+      var rows = {
+        weatherConditions: ['Weather Conditions'],
+        airTemperatureC: ['Air Temperature in C'],
+        windSpeedMPH: ['Wind Speed MPH'],
+        windDirection: ['Wind Direction'],
+        humidityPer: ['Humidity Percentage']
+      };
+
+      var addEachExpedition = function(index, expeditions, callback) {
+        if (index < expeditions.length) {
+          var expedition = expeditions[index];
+          addExpeditionToColumn(expedition, headers, rows, req, function() {
+            addEachExpedition(index+1, expeditions, callback);
+          });
+        } else {
+          callback();
+        }
+      };
+
+      addEachExpedition(0, expeditions, function() {
+        csvArrays.push(headers);
+        if (rows.weatherConditions.length > 1) csvArrays.push(rows.weatherConditions);
+        if (rows.airTemperatureC.length > 1) csvArrays.push(rows.airTemperatureC);
+        if (rows.windSpeedMPH.length > 1) csvArrays.push(rows.windSpeedMPH);
+        if (rows.windDirection.length > 1) csvArrays.push(rows.windDirection);
+        if (rows.humidityPer.length > 1) csvArrays.push(rows.humidityPer);
+
+        csv.write(csvArrays, { headers: true, quoteHeaders: true }).pipe(res);
+      });
+
+        // if (req.body.protocol1.recentRainfall === 'YES') {
+        //   selectProtocol1.push('recentRainfall');
+        // }
+        // if (req.body.protocol1.tide === 'YES') {
+        //   selectProtocol1.push('tideConditions.closestHighTide');
+        //   selectProtocol1.push('tideConditions.closestLowTide');
+        //   selectProtocol1.push('tideConditions.closestHighTideHeight');
+        //   selectProtocol1.push('tideConditions.closestLowTideHeight');
+        // }
+        // if (req.body.protocol1.referencePoint === 'YES') {
+        //   selectProtocol1.push('tideConditions.referencePoint');
+        // }
+        // if (req.body.protocol1.tidalCurrent === 'YES') {
+        //   selectProtocol1.push('tideConditions.tidalCurrent');
+        // }
+        // if (req.body.protocol1.surfaceCurrentSpeed === 'YES') {
+        //   selectProtocol1.push('waterConditions.surfaceCurrentSpeedMPS');
+        // }
+        // if (req.body.protocol1.waterColor === 'YES') {
+        //   selectProtocol1.push('waterConditions.waterColor');
+        // }
+        // if (req.body.protocol1.oilSheen === 'YES') {
+        //   selectProtocol1.push('waterConditions.oilSheen');
+        // }
+        // if (req.body.protocol1.garbageWater === 'YES') {
+        //   selectProtocol1.push('waterConditions.garbage');
+        // }
+        // if (req.body.protocol1.pipes === 'YES') {
+        //   selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
+        //   selectProtocol1.push('waterConditions.unmarkedPipePresent');
+        // }
+        // if (req.body.protocol1.shorelineType === 'YES') {
+        //   selectProtocol1.push('landConditions.shoreLineType');
+        // }
+        // if (req.body.protocol1.garbageLand === 'YES') {
+        //   selectProtocol1.push('landConditions.garbage');
+        // }
+        // if (req.body.protocol1.surfaceCover === 'YES') {
+        //   selectProtocol1.push('landConditions.shorelineSurfaceCoverEstPer');
+        // }
+        // // protocol 2: oyster measurement
+        // var selectProtocol2 = [];
+        // if (req.body.protocol2.submergedDepth === 'YES') {
+        //   selectProtocol2.push('depthOfOysterCage.submergedDepthofCageM');
+        // }
+        // if (req.body.protocol2.bioaccumulationOnCage === 'YES') {
+        //   selectProtocol2.push('conditionOfOysterCage.bioaccumulationOnCage');
+        // }
+        // if (req.body.protocol2.cageDamage === 'YES') {
+        //   selectProtocol2.push('conditionOfOysterCage.notesOnDamageToCage');
+        // }
+        // if (req.body.protocol2.totalLive === 'YES') {
+        //   selectProtocol2.push('totalNumberOfAllLiveOysters');
+        // }
+        // if (req.body.protocol2.totalAverageSize === 'YES') {
+        //   selectProtocol2.push('averageSizeOfAllLiveOysters');
+        // }
+        // if (req.body.protocol2.totalMinimumSize === 'YES') {
+        //   selectProtocol2.push('minimumSizeOfAllLiveOysters');
+        // }
+        // if (req.body.protocol2.totalMaximumSize === 'YES') {
+        //   selectProtocol2.push('maximumSizeOfAllLiveOysters');
+        // }
+        //
+        // // protocol 3: mobile trap
+        // var selectProtocol3 = [];
+        // if (req.body.protocol3.organism === 'YES') {
+        //   selectProtocol3.push('mobileOrganisms.organism');
+        //   selectProtocol3.push('mobileOrganisms.count');
+        // }
+        // // protocol 4: settlement tiles
+        // var selectProtocol4 = [];
+        // if (req.body.protocol4.description === 'YES') {
+        //   selectProtocol4.push('settlementTiles.description');
+        // }
+        // if (req.body.protocol4.organism === 'YES') {
+        //   selectProtocol4.push('settlementTiles.grid1.organism');
+        //   selectProtocol4.push('settlementTiles.grid1.notes');
+        //   selectProtocol4.push('settlementTiles.grid2.organism');
+        //   selectProtocol4.push('settlementTiles.grid2.notes');
+        //   selectProtocol4.push('settlementTiles.grid3.organism');
+        //   selectProtocol4.push('settlementTiles.grid3.notes');
+        //   selectProtocol4.push('settlementTiles.grid4.organism');
+        //   selectProtocol4.push('settlementTiles.grid4.notes');
+        //   selectProtocol4.push('settlementTiles.grid5.organism');
+        //   selectProtocol4.push('settlementTiles.grid5.notes');
+        //   selectProtocol4.push('settlementTiles.grid6.organism');
+        //   selectProtocol4.push('settlementTiles.grid6.notes');
+        //   selectProtocol4.push('settlementTiles.grid7.organism');
+        //   selectProtocol4.push('settlementTiles.grid7.notes');
+        //   selectProtocol4.push('settlementTiles.grid8.organism');
+        //   selectProtocol4.push('settlementTiles.grid8.notes');
+        //   selectProtocol4.push('settlementTiles.grid9.organism');
+        //   selectProtocol4.push('settlementTiles.grid9.notes');
+        //   selectProtocol4.push('settlementTiles.grid10.organism');
+        //   selectProtocol4.push('settlementTiles.grid10.notes');
+        //   selectProtocol4.push('settlementTiles.grid11.organism');
+        //   selectProtocol4.push('settlementTiles.grid11.notes');
+        //   selectProtocol4.push('settlementTiles.grid12.organism');
+        //   selectProtocol4.push('settlementTiles.grid12.notes');
+        //   selectProtocol4.push('settlementTiles.grid13.organism');
+        //   selectProtocol4.push('settlementTiles.grid13.notes');
+        //   selectProtocol4.push('settlementTiles.grid14.organism');
+        //   selectProtocol4.push('settlementTiles.grid14.notes');
+        //   selectProtocol4.push('settlementTiles.grid15.organism');
+        //   selectProtocol4.push('settlementTiles.grid15.notes');
+        //   selectProtocol4.push('settlementTiles.grid16.organism');
+        //   selectProtocol4.push('settlementTiles.grid16.notes');
+        //   selectProtocol4.push('settlementTiles.grid17.organism');
+        //   selectProtocol4.push('settlementTiles.grid17.notes');
+        //   selectProtocol4.push('settlementTiles.grid18.organism');
+        //   selectProtocol4.push('settlementTiles.grid18.notes');
+        //   selectProtocol4.push('settlementTiles.grid19.organism');
+        //   selectProtocol4.push('settlementTiles.grid19.notes');
+        //   selectProtocol4.push('settlementTiles.grid20.organism');
+        //   selectProtocol4.push('settlementTiles.grid20.notes');
+        //   selectProtocol4.push('settlementTiles.grid21.organism');
+        //   selectProtocol4.push('settlementTiles.grid21.notes');
+        //   selectProtocol4.push('settlementTiles.grid22.organism');
+        //   selectProtocol4.push('settlementTiles.grid22.notes');
+        //   selectProtocol4.push('settlementTiles.grid23.organism');
+        //   selectProtocol4.push('settlementTiles.grid23.notes');
+        //   selectProtocol4.push('settlementTiles.grid24.organism');
+        //   selectProtocol4.push('settlementTiles.grid24.notes');
+        //   selectProtocol4.push('settlementTiles.grid25.organism');
+        //   selectProtocol4.push('settlementTiles.grid25.notes');
+        // }
+        // // protocol 5: water quality
+        // var selectProtocol5 = [];
+        // if (req.body.protocol5.depth === 'YES') {
+        //   selectProtocol5.push('samples.depthOfWaterSampleM');
+        // }
+        // if (req.body.protocol5.temperature === 'YES') {
+        //   selectProtocol5.push('samples.waterTemperature');
+        // }
+        // if (req.body.protocol5.dissolvedOxygen === 'YES') {
+        //   selectProtocol5.push('samples.dissolvedOxygen');
+        // }
+        // if (req.body.protocol5.salinity === 'YES') {
+        //   selectProtocol5.push('samples.salinity');
+        // }
+        // if (req.body.protocol5.pH === 'YES') {
+        //   selectProtocol5.push('samples.pH');
+        // }
+        // if (req.body.protocol5.turbidity === 'YES') {
+        //   selectProtocol5.push('samples.turbidity');
+        // }
+        // if (req.body.protocol5.ammonia === 'YES') {
+        //   selectProtocol5.push('samples.ammonia');
+        // }
+        // if (req.body.protocol5.nitrates === 'YES') {
+        //   selectProtocol5.push('samples.nitrates');
+        // }
+        // if (req.body.protocol5.other === 'YES') {
+        //   selectProtocol5.push('samples.others');
+        // }
+
     }
   });
 };

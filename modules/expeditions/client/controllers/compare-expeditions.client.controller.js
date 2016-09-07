@@ -623,6 +623,39 @@
       });
     };
 
+    vm.download = function() {
+      var expeditionIds = [];
+      for (var i = 0; i < vm.expeditions.length; i++) {
+        expeditionIds.push(vm.expeditions[i]._id);
+      }
+
+      $http.post('/api/expeditions/export', {
+        expeditionIds: expeditionIds,
+        protocol1: vm.parameters.protocol1,
+        protocol2: vm.parameters.protocol2,
+        protocol3: vm.parameters.protocol3,
+        protocol4: vm.parameters.protocol4,
+        protocol5: vm.parameters.protocol5
+      }, { responseType: 'arraybuffer' }).
+      success(function(data, status, headers, config) {
+        // TODO when WS success
+        var file = new Blob([ data ], {
+          type : 'application/csv'
+        });
+        //trick to download store a file having its URL
+        var fileURL = URL.createObjectURL(file);
+        var a = document.createElement('a');
+        a.href = fileURL;
+        a.target = '_blank';
+        a.download = 'export-expeditions.csv';
+        document.body.appendChild(a);
+        a.click();
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error', data);
+      });
+    };
+
     vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
     vm.getTime = ExpeditionViewHelper.getTime;
     vm.getShortDate = ExpeditionViewHelper.getShortDate;
