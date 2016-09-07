@@ -1,5 +1,12 @@
 <section>
-    <h3>select <span class="red">expeditions</span> to compare</h3>
+    <h3>Refine the <span class="red">expeditions</span> to compare</h3>
     <filter-expeditions></filter-expeditions>
+    <div class="alert" ng-hide="vm.compareExpeditions.length === 0">
+        Your current filters result in <b>{{vm.expeditions.length}} expeditions:</b>
+        <span ng-repeat="expedition in vm.compareExpeditions"><a ui-sref="expedition.view({ expeditionId: expedition.id })">{{expedition.name}}</a>, </span>
+    </div>
+    <div class="alert" ng-show="vm.compareExpeditions.length === 0">
+        No expeditions found. Try expanding your filters.
+    </div>
     <hr/>
 </section>
