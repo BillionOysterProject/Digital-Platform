@@ -71,7 +71,7 @@
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
                 <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id">
-                    <div class="thumbnail">
+                    <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>
                         <div class="text-center">

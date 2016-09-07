@@ -107,9 +107,9 @@ var assertMobileOrganismDetails = function(mobileOrganism, details) {
 };
 
 var assertMobileTrap = function() {
-  var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
-  assertMobileOrganismDetails(mobileOrganisms.get(0), mobileTrap1);
-  assertMobileOrganismDetails(mobileOrganisms.get(1), mobileTrap2);
+  //var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
+  assertMobileOrganismDetails(element(by.id('mobileOrganismForm-0')), mobileTrap1);
+  assertMobileOrganismDetails(element(by.id('mobileOrganismForm-1')), mobileTrap2);
 };
 
 var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
@@ -139,9 +139,9 @@ var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
 
 var fillOutMobileTraps = function() {
   // Fill in values, if you change these values, change the assert too
-  var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
-  var organism1 = mobileOrganisms.get(0);
-  var organism2 = mobileOrganisms.get(1);
+  //var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
+  var organism1 = element(by.id('mobileOrganismForm-0'));
+  var organism2 = element(by.id('mobileOrganismForm-1'));
   fillOutMobileOrganismDetails(organism1, mobileTrap1);
   fillOutMobileOrganismDetails(organism2, mobileTrap2);
 };

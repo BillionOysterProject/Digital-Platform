@@ -11,12 +11,8 @@
         },
         replace: true,
         controller: 'ExpeditionsCompareController',
-        controllerAs: 'ce',
+        controllerAs: 'vm',
         link: function(scope, element, attrs) {
-          element.bind('show.bs.modal', function () {
-            scope.resetFilters();
-          });
-
           scope.submitForm = function(organismDetails, isValid) {
           };
         }
