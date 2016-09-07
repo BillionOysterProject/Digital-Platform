@@ -429,9 +429,11 @@ describe('Expedition E2E Tests', function() {
         browser.wait(EC.visibilityOf(element(by.repeater('organism in mobileOrganisms track by organism._id'))), 5000);
 
         fillOutMobileTraps();
+        browser.sleep(1000);
 
         // Save draft
         element(by.buttonText('Save Draft')).click();
+
         // Wait until saving is done
         browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol3tab = element(by.id('protocol3tab'));
@@ -522,6 +524,7 @@ describe('Expedition E2E Tests', function() {
         browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
 
         fillOutAllOysterMeasurements();
+        browser.sleep(100);
 
         // Save draft
         element(by.buttonText('Save Draft')).click();

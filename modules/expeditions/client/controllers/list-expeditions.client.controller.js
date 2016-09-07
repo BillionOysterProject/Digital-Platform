@@ -123,7 +123,7 @@
       });
     };
 
-    vm.showAllPublishedExpeditions = function() {
+    vm.resetFilters = function() {
       vm.filter = {
         station: '',
         stationObj: {

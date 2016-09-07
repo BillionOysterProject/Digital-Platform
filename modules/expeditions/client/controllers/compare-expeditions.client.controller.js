@@ -14,6 +14,7 @@
     RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams, $http, lodash, moment) {
     var vm = this;
     vm.user = Authentication.user;
+    vm.filtered = false;
 
     vm.opened = {
       startDate: false,
@@ -75,6 +76,7 @@
         searchString: vm.filter.searchString
       }, function(data) {
         vm.expeditions = data;
+        if (vm.filtered) vm.compare();
         vm.error = null;
       }, function(error) {
         vm.error = error.data.message;
@@ -83,7 +85,7 @@
     vm.findCompareExpeditions();
 
     vm.resetFilters = function() {
-      vm.currentStep = 1;
+      vm.filtered = false;
       vm.filter = {
         station: '',
         stationObj: {
@@ -178,8 +180,9 @@
     vm.findTeams();
 
     vm.teamSelected = function() {
+      vm.filtered = true;
       vm.filter.team = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj._id : '';
-      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj.name : '';
+      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj.name) ? vm.filter.teamObj.name : '';
       vm.findCompareExpeditions();
     };
 
@@ -194,11 +197,9 @@
     });
 
     vm.organizationSelected = function() {
-      console.log('organizationSelected');
+      vm.filtered = true;
       vm.filter.organization = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj._id : '';
       vm.filter.organizationName = (vm.filter.organizationObj && vm.filter.organizationObj.name) ? vm.filter.organizationObj.name : '';
-      console.log('vm.filter.organization', vm.filter.organization);
-      console.log('vm.filter.organizationName', vm.filter.organizationName);
       vm.findTeams();
       vm.findCompareExpeditions();
     };
@@ -213,8 +214,9 @@
     });
 
     vm.stationSelected = function() {
+      vm.filtered = true;
       vm.filter.station = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj._id : '';
-      vm.filter.stationName = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj.name : '';
+      vm.filter.stationName = (vm.filter.stationObj && vm.filter.stationObj.name) ? vm.filter.stationObj.name : '';
       vm.findCompareExpeditions();
     };
 
@@ -230,23 +232,27 @@
     });
 
     vm.teamLeadSelected = function() {
+      vm.filtered = true;
       vm.filter.teamLead = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj._id : '';
-      vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj.displayName : '';
+      vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj.displayName) ? vm.filter.teamLeadObj.displayName : '';
 
       vm.findCompareExpeditions();
     };
 
     vm.dateSelected = function() {
       if (vm.filter.startDate && vm.filter.endDate) {
+        vm.filtered = true;
         vm.findCompareExpeditions();
       } else if ((!vm.filter.startDate || vm.filter.startDate === undefined || vm.filter.startDate === '') &&
       (!vm.filter.endDate || vm.filter.endDate === undefined || vm.filter.endDate === '')) {
+        vm.filtered = true;
         vm.findCompareExpeditions();
       }
     };
 
     vm.searchChange = function() {
       if (vm.filter.searchString.length >= 3 || vm.filter.searchString.length === 0) {
+        vm.filtered = true;
         vm.findCompareExpeditions();
       }
     };
@@ -304,6 +310,7 @@
     };
 
     vm.toggleProtocol1 = function() {
+      vm.filtered = true;
       if (vm.parameters.protocol1all === 'YES') {
         vm.parameters.protocol1.weatherTemperature = 'YES';
         vm.parameters.protocol1.windSpeedDirection = 'YES';
@@ -337,9 +344,11 @@
         vm.parameters.protocol1.garbageLand = '';
         vm.parameters.protocol1.surfaceCover = '';
       }
+      vm.compare();
     };
 
     vm.toggleProtocol2 = function() {
+      vm.filtered = true;
       if (vm.parameters.protocol2all === 'YES') {
         vm.parameters.protocol2.submergedDepth = 'YES';
         vm.parameters.protocol2.bioaccumulationOnCage = 'YES';
@@ -357,17 +366,21 @@
         vm.parameters.protocol2.totalMinimumSize = '';
         vm.parameters.protocol2.totalMaximumSize = '';
       }
+      vm.compare();
     };
 
     vm.toggleProtocol3 = function() {
+      vm.filtered = true;
       if (vm.parameters.protocol3all === 'YES') {
         vm.parameters.protocol3.organism = 'YES';
       } else {
         vm.parameters.protocol3.organism = '';
       }
+      vm.compare();
     };
 
     vm.toggleProtocol4 = function() {
+      vm.filtered = true;
       if (vm.parameters.protocol4all === 'YES') {
         vm.parameters.protocol4.description = 'YES';
         vm.parameters.protocol4.organism = 'YES';
@@ -375,9 +388,11 @@
         vm.parameters.protocol4.description = '';
         vm.parameters.protocol4.organism = '';
       }
+      vm.compare();
     };
 
     vm.toggleProtocol5 = function() {
+      vm.filtered = true;
       if (vm.parameters.protocol5all === 'YES') {
         vm.parameters.protocol5.depth = 'YES';
         vm.parameters.protocol5.temperature = 'YES';
@@ -399,6 +414,7 @@
         vm.parameters.protocol5.nitrates = '';
         vm.parameters.protocol5.other = '';
       }
+      vm.compare();
     };
 
     vm.dataPointCount = function() {
@@ -470,6 +486,7 @@
     };
 
     vm.compare = function() {
+      vm.filtered = true;
       var expeditionIds = [];
       for (var i = 0; i < vm.expeditions.length; i++) {
         expeditionIds.push(vm.expeditions[i]._id);

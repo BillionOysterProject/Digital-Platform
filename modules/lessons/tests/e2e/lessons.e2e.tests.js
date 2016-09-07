@@ -56,6 +56,7 @@ describe('Lesson E2E Tests', function() {
       it('should allow a team lead to filter by subject areas - Data Analysis', function() {
         subjectAreaToggle.click();
         element(by.css('[ok-sel="'+subjectAreaFilterId+'"]')).click();
+        browser.sleep(100);
 
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(2);
@@ -67,6 +68,7 @@ describe('Lesson E2E Tests', function() {
       it('should allow a team lead to filter by setting - Field', function() {
         settingToggle.click();
         settingFieldField.click();
+        browser.sleep(100);
 
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(2);
@@ -78,6 +80,7 @@ describe('Lesson E2E Tests', function() {
       it('should allow a team lead to filter by setting - Classroom', function() {
         settingToggle.click();
         settingClassroomField.click();
+        browser.sleep(100);
 
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(4);
@@ -89,6 +92,7 @@ describe('Lesson E2E Tests', function() {
       it('should allow a team lead to filter by units - Water Quality', function() {
         unitsToggle.click();
         element(by.css('[ok-sel="'+unitFilterId+'"]')).click();
+        browser.sleep(100);
 
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(2);
@@ -100,6 +104,7 @@ describe('Lesson E2E Tests', function() {
       it('should allow a team lead to filter by subject area, setting, and unit', function() {
         subjectAreaToggle.click();
         element(by.css('[ok-sel="'+subjectAreaFilterId+'"]')).click();
+        browser.sleep(100);
 
         settingToggle.click();
         settingFieldField.click();

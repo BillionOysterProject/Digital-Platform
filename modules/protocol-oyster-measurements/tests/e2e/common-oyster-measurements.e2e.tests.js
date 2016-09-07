@@ -404,6 +404,7 @@ var assertSubstrateMeasurements = function(index) {
   var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
 
   // Add an image to the substrate shell
+  browser.sleep(100);
   modal.element(by.id('substrate-photos')).click();
   if (measurementsDetails.photoPresent) assertImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
   if (measurementsDetails.photoPresent) assertImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
