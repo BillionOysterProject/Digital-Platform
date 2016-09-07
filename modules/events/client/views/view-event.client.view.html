@@ -32,9 +32,8 @@
                 <h2 class="red">BOP Restoration Station Basic Training</h2> <!-- vm.event.name -->
             </div>
             <div class="col-sm-4 text-right"> <!-- ng-show="vm.event.isCurrentUserOwner" -->
-                <a class="btn btn-primary">Email registrees</a>
+                <a class="btn btn-primary" data-toggle="modal" data-target="#modal-event-email">Email registrees</a>
                 <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })">Edit</a>
-                <!-- move to edit page <a class="btn btn-danger" ng-click="vm.remove()">Delete</a>-->
             </div>
         </div>
 
@@ -96,4 +95,56 @@
             </div>
         </div>
     </section>
+    
+    
+    
+    <!-- MODALS -->
+    <div class="modal fade" id="modal-event-email">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" ng-hide="sent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Send an email to all <b class="red">30</b> current registrees</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Subject</label>
+                                <input type="text" class="form-control" ng-model="subject" required/>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Message body</label>
+                                <textarea class="form-control" rows="4" ng-model="message" ng-required="type === 'general' || type === 'help'"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <input type="checkbox" />
+                                <label class="control-label">Include text at end:</label>
+                                <blockquote>
+                                    <p>You are currently registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">October 7, 2016, 8:00am-5:00pm</b>. No longer able to attend? <a href="#">Unregister here</a> to give your spot to somebody else.</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </div>
+            <div class="modal-content" ng-show="sent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Your message has been sent!</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
