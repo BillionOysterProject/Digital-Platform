@@ -12,40 +12,31 @@
   function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
     ExpeditionViewHelper,
     RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams, $http, lodash, moment) {
-    var ce = this;
-    ce.user = Authentication.user;
+    var vm = this;
+    vm.user = Authentication.user;
 
-    ce.currentStep = 1;
-    ce.totalSteps = 3;
-    ce.nextStep = function(step) {
-      if (step === 3) {
-        ce.compare();
-      }
-      ce.currentStep = step;
-    };
-
-    ce.opened = {
+    vm.opened = {
       startDate: false,
       endDate: false
     };
-    ce.maxDate = new Date();
-    ce.format = 'MM/dd/yyyy';
-    ce.shortFormat = 'MM/yyyy';
-    ce.dateOptions = {
+    vm.maxDate = new Date();
+    vm.format = 'MM/dd/yyyy';
+    vm.shortFormat = 'MM/yyyy';
+    vm.dateOptions = {
       formatYear: 'yy',
       startingDay: 1,
       showWeeks: false
     };
 
-    ce.openStartDate = function($event) {
-      ce.opened.startDate = true;
+    vm.openStartDate = function($event) {
+      vm.opened.startDate = true;
     };
 
-    ce.openEndDate = function($event) {
-      ce.opened.endDate = true;
+    vm.openEndDate = function($event) {
+      vm.opened.endDate = true;
     };
 
-    ce.filter = {
+    vm.filter = {
       station: '',
       stationObj: {
         name: 'All'
@@ -71,29 +62,29 @@
       searchString: ''
     };
 
-    ce.findCompareExpeditions = function() {
+    vm.findCompareExpeditions = function() {
       ExpeditionsService.query({
         published: true,
         sort: 'startDate',
-        station: ce.filter.station,
-        organization: ce.filter.organization,
-        team: ce.filter.team,
-        teamLead: ce.filter.teamLead,
-        startDate: ce.filter.startDate,
-        endDate: ce.filter.endDate,
-        searchString: ce.filter.searchString
+        station: vm.filter.station,
+        organization: vm.filter.organization,
+        team: vm.filter.team,
+        teamLead: vm.filter.teamLead,
+        startDate: vm.filter.startDate,
+        endDate: vm.filter.endDate,
+        searchString: vm.filter.searchString
       }, function(data) {
-        ce.expeditions = data;
-        ce.error = null;
+        vm.expeditions = data;
+        vm.error = null;
       }, function(error) {
-        ce.error = error.data.message;
+        vm.error = error.data.message;
       });
     };
-    ce.findCompareExpeditions();
+    vm.findCompareExpeditions();
 
-    ce.resetFilters = function() {
-      ce.currentStep = 1;
-      ce.filter = {
+    vm.resetFilters = function() {
+      vm.currentStep = 1;
+      vm.filter = {
         station: '',
         stationObj: {
           name: 'All'
@@ -118,17 +109,14 @@
         endDate: '',
         searchString: ''
       };
-      ce.parameters = {
+      vm.parameters = {
         protocol1all: '',
         protocol1: {
           weatherTemperature: '',
           windSpeedDirection: '',
           humidity: '',
           recentRainfall: '',
-          closestHighTideTime: '',
-          closestLowTideTime: '',
-          closestHighTideHeight: '',
-          closestLowTideHeight: '',
+          tide: '',
           referencePoint: '',
           tidalCurrent: '',
           surfaceCurrentSpeed: '',
@@ -145,12 +133,10 @@
           submergedDepth: '',
           bioaccumulationOnCage: '',
           cageDamage: '',
-          setDate: '',
-          source: '',
-          liveOystersBaseline: '',
-          liveOystersMonitoring: '',
-          totalMass: '',
-          oysterMeasurements: ''
+          totalLive: '',
+          totalAverageSize: '',
+          totalMinimumSize: '',
+          totalMaximumSize: ''
         },
         protocol3all: '',
         protocol3: {
@@ -174,105 +160,105 @@
           other: ''
         }
       };
-      ce.findCompareExpeditions();
+      vm.findCompareExpeditions();
     };
-    $scope.resetFilters = ce.resetFilters;
+    $scope.resetFilters = vm.resetFilters;
 
-    ce.findTeams = function() {
+    vm.findTeams = function() {
       TeamsService.query({
-        organization: ce.filter.organization
+        organization: vm.filter.organization
       }, function(data) {
-        ce.teams = [{
+        vm.teams = [{
           name: 'All'
         }];
-        ce.teams = ce.teams.concat(data);
-        ce.filter.teamObj = ce.teams[0];
+        vm.teams = vm.teams.concat(data);
+        vm.filter.teamObj = vm.teams[0];
       });
     };
-    ce.findTeams();
+    vm.findTeams();
 
-    ce.teamSelected = function() {
-      ce.filter.team = (ce.filter.teamObj && ce.filter.teamObj._id) ? ce.filter.teamObj._id : '';
-      ce.filter.teamName = (ce.filter.teamObj && ce.filter.teamObj._id) ? ce.filter.teamObj.name : '';
-      ce.findCompareExpeditions();
+    vm.teamSelected = function() {
+      vm.filter.team = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj._id : '';
+      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj.name : '';
+      vm.findCompareExpeditions();
     };
 
     SchoolOrganizationsService.query({
       sort: 'name'
     }, function(data) {
-      ce.organizations = [{
+      vm.organizations = [{
         name: 'All'
       }];
-      ce.organizations = ce.organizations.concat(data);
-      ce.filter.organizationObj = ce.organizations[0];
+      vm.organizations = vm.organizations.concat(data);
+      vm.filter.organizationObj = vm.organizations[0];
     });
 
-    ce.organizationSelected = function() {
+    vm.organizationSelected = function() {
       console.log('organizationSelected');
-      ce.filter.organization = (ce.filter.organizationObj && ce.filter.organizationObj._id) ? ce.filter.organizationObj._id : '';
-      ce.filter.organizationName = (ce.filter.organizationObj && ce.filter.organizationObj.name) ? ce.filter.organizationObj.name : '';
-      console.log('ce.filter.organization', ce.filter.organization);
-      console.log('ce.filter.organizationName', ce.filter.organizationName);
-      ce.findTeams();
-      ce.findCompareExpeditions();
+      vm.filter.organization = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj._id : '';
+      vm.filter.organizationName = (vm.filter.organizationObj && vm.filter.organizationObj.name) ? vm.filter.organizationObj.name : '';
+      console.log('vm.filter.organization', vm.filter.organization);
+      console.log('vm.filter.organizationName', vm.filter.organizationName);
+      vm.findTeams();
+      vm.findCompareExpeditions();
     };
 
     RestorationStationsService.query({
     }, function(data) {
-      ce.stations = [{
+      vm.stations = [{
         name: 'All'
       }];
-      ce.stations = ce.stations.concat(data);
-      ce.filter.stationObj = ce.stations[0];
+      vm.stations = vm.stations.concat(data);
+      vm.filter.stationObj = vm.stations[0];
     });
 
-    ce.stationSelected = function() {
-      ce.filter.station = (ce.filter.stationObj && ce.filter.stationObj._id) ? ce.filter.stationObj._id : '';
-      ce.filter.stationName = (ce.filter.stationObj && ce.filter.stationObj._id) ? ce.filter.stationObj.name : '';
-      ce.findCompareExpeditions();
+    vm.stationSelected = function() {
+      vm.filter.station = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj._id : '';
+      vm.filter.stationName = (vm.filter.stationObj && vm.filter.stationObj._id) ? vm.filter.stationObj.name : '';
+      vm.findCompareExpeditions();
     };
 
     TeamLeads.query({
       roles: 'team lead',
-      organization: ce.filter.organization
+      organization: vm.filter.organization
     }, function(data) {
-      ce.teamLeads = [{
+      vm.teamLeads = [{
         displayName: 'All'
       }];
-      ce.teamLeads = ce.teamLeads.concat(data);
-      ce.filter.teamLeadObj = ce.teamLeads[0];
+      vm.teamLeads = vm.teamLeads.concat(data);
+      vm.filter.teamLeadObj = vm.teamLeads[0];
     });
 
-    ce.teamLeadSelected = function() {
-      ce.filter.teamLead = (ce.filter.teamLeadObj && ce.filter.teamLeadObj._id) ? ce.filter.teamLeadObj._id : '';
-      ce.filter.teamLeadName = (ce.filter.teamLeadObj && ce.filter.teamLeadObj._id) ? ce.filter.teamLeadObj.displayName : '';
+    vm.teamLeadSelected = function() {
+      vm.filter.teamLead = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj._id : '';
+      vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj.displayName : '';
 
-      ce.findCompareExpeditions();
+      vm.findCompareExpeditions();
     };
 
-    ce.dateSelected = function() {
-      if (ce.filter.startDate && ce.filter.endDate) {
-        ce.findCompareExpeditions();
+    vm.dateSelected = function() {
+      if (vm.filter.startDate && vm.filter.endDate) {
+        vm.findCompareExpeditions();
+      } else if ((!vm.filter.startDate || vm.filter.startDate === undefined || vm.filter.startDate === '') &&
+      (!vm.filter.endDate || vm.filter.endDate === undefined || vm.filter.endDate === '')) {
+        vm.findCompareExpeditions();
       }
     };
 
-    ce.searchChange = function() {
-      if (ce.filter.searchString.length >= 3 || ce.filter.searchString.length === 0) {
-        ce.findCompareExpeditions();
+    vm.searchChange = function() {
+      if (vm.filter.searchString.length >= 3 || vm.filter.searchString.length === 0) {
+        vm.findCompareExpeditions();
       }
     };
 
-    ce.parameters = {
+    vm.parameters = {
       protocol1all: '',
       protocol1: {
         weatherTemperature: '',
         windSpeedDirection: '',
         humidity: '',
         recentRainfall: '',
-        closestHighTideTime: '',
-        closestLowTideTime: '',
-        closestHighTideHeight: '',
-        closestLowTideHeight: '',
+        tide: '',
         referencePoint: '',
         tidalCurrent: '',
         surfaceCurrentSpeed: '',
@@ -289,12 +275,10 @@
         submergedDepth: '',
         bioaccumulationOnCage: '',
         cageDamage: '',
-        setDate: '',
-        source: '',
-        liveOystersBaseline: '',
-        liveOystersMonitoring: '',
-        totalMass: '',
-        oysterMeasurements: ''
+        totalLive: '',
+        totalAverageSize: '',
+        totalMinimumSize: '',
+        totalMaximumSize: ''
       },
       protocol3all: '',
       protocol3: {
@@ -319,121 +303,111 @@
       }
     };
 
-    ce.toggleProtocol1 = function() {
-      if (ce.parameters.protocol1all === 'YES') {
-        ce.parameters.protocol1.weatherTemperature = 'YES';
-        ce.parameters.protocol1.windSpeedDirection = 'YES';
-        ce.parameters.protocol1.humidity = 'YES';
-        ce.parameters.protocol1.recentRainfall = 'YES';
-        ce.parameters.protocol1.closestHighTideTime = 'YES';
-        ce.parameters.protocol1.closestLowTideTime = 'YES';
-        ce.parameters.protocol1.closestHighTideHeight = 'YES';
-        ce.parameters.protocol1.closestLowTideHeight = 'YES';
-        ce.parameters.protocol1.referencePoint = 'YES';
-        ce.parameters.protocol1.tidalCurrent = 'YES';
-        ce.parameters.protocol1.surfaceCurrentSpeed = 'YES';
-        ce.parameters.protocol1.waterColor = 'YES';
-        ce.parameters.protocol1.oilSheen = 'YES';
-        ce.parameters.protocol1.garbageWater = 'YES';
-        ce.parameters.protocol1.pipes = 'YES';
-        ce.parameters.protocol1.shorelineType = 'YES';
-        ce.parameters.protocol1.garbageLand = 'YES';
-        ce.parameters.protocol1.surfaceCover = 'YES';
+    vm.toggleProtocol1 = function() {
+      if (vm.parameters.protocol1all === 'YES') {
+        vm.parameters.protocol1.weatherTemperature = 'YES';
+        vm.parameters.protocol1.windSpeedDirection = 'YES';
+        vm.parameters.protocol1.humidity = 'YES';
+        vm.parameters.protocol1.recentRainfall = 'YES';
+        vm.parameters.protocol1.tide = 'YES';
+        vm.parameters.protocol1.referencePoint = 'YES';
+        vm.parameters.protocol1.tidalCurrent = 'YES';
+        vm.parameters.protocol1.surfaceCurrentSpeed = 'YES';
+        vm.parameters.protocol1.waterColor = 'YES';
+        vm.parameters.protocol1.oilSheen = 'YES';
+        vm.parameters.protocol1.garbageWater = 'YES';
+        vm.parameters.protocol1.pipes = 'YES';
+        vm.parameters.protocol1.shorelineType = 'YES';
+        vm.parameters.protocol1.garbageLand = 'YES';
+        vm.parameters.protocol1.surfaceCover = 'YES';
       } else {
-        ce.parameters.protocol1.weatherTemperature = '';
-        ce.parameters.protocol1.windSpeedDirection = '';
-        ce.parameters.protocol1.humidity = '';
-        ce.parameters.protocol1.recentRainfall = '';
-        ce.parameters.protocol1.closestHighTideTime = '';
-        ce.parameters.protocol1.closestLowTideTime = '';
-        ce.parameters.protocol1.closestHighTideHeight = '';
-        ce.parameters.protocol1.closestLowTideHeight = '';
-        ce.parameters.protocol1.referencePoint = '';
-        ce.parameters.protocol1.tidalCurrent = '';
-        ce.parameters.protocol1.surfaceCurrentSpeed = '';
-        ce.parameters.protocol1.waterColor = '';
-        ce.parameters.protocol1.oilSheen = '';
-        ce.parameters.protocol1.garbageWater = '';
-        ce.parameters.protocol1.pipes = '';
-        ce.parameters.protocol1.shorelineType = '';
-        ce.parameters.protocol1.garbageLand = '';
-        ce.parameters.protocol1.surfaceCover = '';
+        vm.parameters.protocol1.weatherTemperature = '';
+        vm.parameters.protocol1.windSpeedDirection = '';
+        vm.parameters.protocol1.humidity = '';
+        vm.parameters.protocol1.recentRainfall = '';
+        vm.parameters.protocol1.tide = '';
+        vm.parameters.protocol1.referencePoint = '';
+        vm.parameters.protocol1.tidalCurrent = '';
+        vm.parameters.protocol1.surfaceCurrentSpeed = '';
+        vm.parameters.protocol1.waterColor = '';
+        vm.parameters.protocol1.oilSheen = '';
+        vm.parameters.protocol1.garbageWater = '';
+        vm.parameters.protocol1.pipes = '';
+        vm.parameters.protocol1.shorelineType = '';
+        vm.parameters.protocol1.garbageLand = '';
+        vm.parameters.protocol1.surfaceCover = '';
       }
     };
 
-    ce.toggleProtocol2 = function() {
-      if (ce.parameters.protocol2all === 'YES') {
-        ce.parameters.protocol2.submergedDepth = 'YES';
-        ce.parameters.protocol2.bioaccumulationOnCage = 'YES';
-        ce.parameters.protocol2.cageDamage = 'YES';
-        ce.parameters.protocol2.setDate = 'YES';
-        ce.parameters.protocol2.source = 'YES';
-        ce.parameters.protocol2.liveOystersBaseline = 'YES';
-        ce.parameters.protocol2.liveOystersMonitoring = 'YES';
-        ce.parameters.protocol2.totalMass = 'YES';
-        ce.parameters.protocol2.oysterMeasurements = 'YES';
+    vm.toggleProtocol2 = function() {
+      if (vm.parameters.protocol2all === 'YES') {
+        vm.parameters.protocol2.submergedDepth = 'YES';
+        vm.parameters.protocol2.bioaccumulationOnCage = 'YES';
+        vm.parameters.protocol2.cageDamage = 'YES';
+        vm.parameters.protocol2.totalLive = 'YES';
+        vm.parameters.protocol2.totalAverageSize = 'YES';
+        vm.parameters.protocol2.totalMinimumSize = 'YES';
+        vm.parameters.protocol2.totalMaximumSize = 'YES';
       } else {
-        ce.parameters.protocol2.submergedDepth = '';
-        ce.parameters.protocol2.bioaccumulationOnCage = '';
-        ce.parameters.protocol2.cageDamage = '';
-        ce.parameters.protocol2.setDate = '';
-        ce.parameters.protocol2.source = '';
-        ce.parameters.protocol2.liveOystersBaseline = '';
-        ce.parameters.protocol2.liveOystersMonitoring = '';
-        ce.parameters.protocol2.totalMass = '';
-        ce.parameters.protocol2.oysterMeasurements = '';
+        vm.parameters.protocol2.submergedDepth = '';
+        vm.parameters.protocol2.bioaccumulationOnCage = '';
+        vm.parameters.protocol2.cageDamage = '';
+        vm.parameters.protocol2.totalLive = '';
+        vm.parameters.protocol2.totalAverageSize = '';
+        vm.parameters.protocol2.totalMinimumSize = '';
+        vm.parameters.protocol2.totalMaximumSize = '';
       }
     };
 
-    ce.toggleProtocol3 = function() {
-      if (ce.parameters.protocol3all === 'YES') {
-        ce.parameters.protocol3.organism = 'YES';
+    vm.toggleProtocol3 = function() {
+      if (vm.parameters.protocol3all === 'YES') {
+        vm.parameters.protocol3.organism = 'YES';
       } else {
-        ce.parameters.protocol3.organism = '';
+        vm.parameters.protocol3.organism = '';
       }
     };
 
-    ce.toggleProtocol4 = function() {
-      if (ce.parameters.protocol4all === 'YES') {
-        ce.parameters.protocol4.description = 'YES';
-        ce.parameters.protocol4.organism = 'YES';
+    vm.toggleProtocol4 = function() {
+      if (vm.parameters.protocol4all === 'YES') {
+        vm.parameters.protocol4.description = 'YES';
+        vm.parameters.protocol4.organism = 'YES';
       } else {
-        ce.parameters.protocol4.description = '';
-        ce.parameters.protocol4.organism = '';
+        vm.parameters.protocol4.description = '';
+        vm.parameters.protocol4.organism = '';
       }
     };
 
-    ce.toggleProtocol5 = function() {
-      if (ce.parameters.protocol5all === 'YES') {
-        ce.parameters.protocol5.depth = 'YES';
-        ce.parameters.protocol5.temperature = 'YES';
-        ce.parameters.protocol5.dissolvedOxygen = 'YES';
-        ce.parameters.protocol5.salinity = 'YES';
-        ce.parameters.protocol5.pH = 'YES';
-        ce.parameters.protocol5.turbidity = 'YES';
-        ce.parameters.protocol5.ammonia = 'YES';
-        ce.parameters.protocol5.nitrates = 'YES';
-        ce.parameters.protocol5.other = 'YES';
+    vm.toggleProtocol5 = function() {
+      if (vm.parameters.protocol5all === 'YES') {
+        vm.parameters.protocol5.depth = 'YES';
+        vm.parameters.protocol5.temperature = 'YES';
+        vm.parameters.protocol5.dissolvedOxygen = 'YES';
+        vm.parameters.protocol5.salinity = 'YES';
+        vm.parameters.protocol5.pH = 'YES';
+        vm.parameters.protocol5.turbidity = 'YES';
+        vm.parameters.protocol5.ammonia = 'YES';
+        vm.parameters.protocol5.nitrates = 'YES';
+        vm.parameters.protocol5.other = 'YES';
       } else {
-        ce.parameters.protocol5.depth = '';
-        ce.parameters.protocol5.temperature = '';
-        ce.parameters.protocol5.dissolvedOxygen = '';
-        ce.parameters.protocol5.salinity = '';
-        ce.parameters.protocol5.pH = '';
-        ce.parameters.protocol5.turbidity = '';
-        ce.parameters.protocol5.ammonia = '';
-        ce.parameters.protocol5.nitrates = '';
-        ce.parameters.protocol5.other = '';
+        vm.parameters.protocol5.depth = '';
+        vm.parameters.protocol5.temperature = '';
+        vm.parameters.protocol5.dissolvedOxygen = '';
+        vm.parameters.protocol5.salinity = '';
+        vm.parameters.protocol5.pH = '';
+        vm.parameters.protocol5.turbidity = '';
+        vm.parameters.protocol5.ammonia = '';
+        vm.parameters.protocol5.nitrates = '';
+        vm.parameters.protocol5.other = '';
       }
     };
 
-    ce.dataPointCount = function() {
+    vm.dataPointCount = function() {
       var protocols = ['protocol1', 'protocol2', 'protocol3', 'protocol4', 'protocol5'];
       var count = 0;
       for (var i = 0; i < protocols.length; i++) {
         var protocol = protocols[i];
-        for (var param in ce.parameters[protocol]) {
-          if(ce.parameters[protocol][param] === 'YES'){
+        for (var param in vm.parameters[protocol]) {
+          if(vm.parameters[protocol][param] === 'YES'){
             count++;
           }
         }
@@ -441,114 +415,226 @@
       return count;
     };
 
-    ce.dataPointProtocol1Count = function() {
-      ce.protocol1paramCount = 0;
-      for (var param in ce.parameters.protocol1) {
-        if(ce.parameters.protocol1[param] === 'YES'){
-          ce.protocol1paramCount++;
+    vm.dataPointProtocol1Count = function() {
+      vm.protocol1paramCount = 0;
+      for (var param in vm.parameters.protocol1) {
+        if(vm.parameters.protocol1[param] === 'YES'){
+          vm.protocol1paramCount++;
         }
       }
-      return ce.protocol1paramCount;
+      return vm.protocol1paramCount;
     };
 
-    ce.dataPointProtocol2Count = function() {
-      ce.protocol2paramCount = 0;
-      for (var param in ce.parameters.protocol2) {
-        if(ce.parameters.protocol2[param] === 'YES'){
-          ce.protocol2paramCount++;
+    vm.dataPointProtocol2Count = function() {
+      vm.protocol2paramCount = 0;
+      for (var param in vm.parameters.protocol2) {
+        if(vm.parameters.protocol2[param] === 'YES'){
+          vm.protocol2paramCount++;
         }
       }
-      return ce.protocol2paramCount;
+      return vm.protocol2paramCount;
     };
 
-    ce.dataPointProtocol3Count = function() {
-      ce.protocol3paramCount = 0;
-      for (var param in ce.parameters.protocol3) {
-        if(ce.parameters.protocol3[param] === 'YES'){
-          ce.protocol3paramCount++;
+    vm.dataPointProtocol3Count = function() {
+      vm.protocol3paramCount = 0;
+      for (var param in vm.parameters.protocol3) {
+        if(vm.parameters.protocol3[param] === 'YES'){
+          vm.protocol3paramCount++;
         }
       }
-      return ce.protocol3paramCount;
+      return vm.protocol3paramCount;
     };
 
-    ce.dataPointProtocol4Count = function() {
-      ce.protocol4paramCount = 0;
-      for (var param in ce.parameters.protocol4) {
-        if(ce.parameters.protocol4[param] === 'YES'){
-          ce.protocol4paramCount++;
+    vm.dataPointProtocol4Count = function() {
+      vm.protocol4paramCount = 0;
+      for (var param in vm.parameters.protocol4) {
+        if(vm.parameters.protocol4[param] === 'YES'){
+          vm.protocol4paramCount++;
         }
       }
-      return ce.protocol4paramCount;
+      return vm.protocol4paramCount;
     };
 
-    ce.dataPointProtocol5Count = function() {
-      ce.protocol5paramCount = 0;
-      for (var param in ce.parameters.protocol5) {
-        if(ce.parameters.protocol5[param] === 'YES'){
-          ce.protocol5paramCount++;
+    vm.dataPointProtocol5Count = function() {
+      vm.protocol5paramCount = 0;
+      for (var param in vm.parameters.protocol5) {
+        if(vm.parameters.protocol5[param] === 'YES'){
+          vm.protocol5paramCount++;
         }
       }
-      return ce.protocol5paramCount;
+      return vm.protocol5paramCount;
     };
 
-    ce.cancelFunction = function() {
+    vm.cancelFunction = function() {
       console.log('cancel');
     };
 
-    ce.compare = function() {
+    vm.compare = function() {
       var expeditionIds = [];
-      for (var i = 0; i < ce.expeditions.length; i++) {
-        expeditionIds.push(ce.expeditions[i]._id);
+      for (var i = 0; i < vm.expeditions.length; i++) {
+        expeditionIds.push(vm.expeditions[i]._id);
       }
-      console.log('ce.parameters.protocol5all', ce.parameters.protocol5all);
-      console.log('ce.parameters.protocol5', ce.parameters.protocol5);
 
       $http.post('/api/expeditions/compare', {
         expeditionIds: expeditionIds,
-        protocol1: ce.parameters.protocol1,
-        protocol2: ce.parameters.protocol2,
-        protocol3: ce.parameters.protocol3,
-        protocol4: ce.parameters.protocol4,
-        protocol5: ce.parameters.protocol5
+        protocol1: vm.parameters.protocol1,
+        protocol2: vm.parameters.protocol2,
+        protocol3: vm.parameters.protocol3,
+        protocol4: vm.parameters.protocol4,
+        protocol5: vm.parameters.protocol5
       }).
       success(function(data, status, headers, config) {
-        console.log('expeditions', data);
-        ce.compareExpeditions = data;
+        vm.compareExpeditions = data;
+        for (var i = 0; i < vm.compareExpeditions.length; i++) {
+          var totalDepthOfWaterSampleM = 0;
+          var countDepthOfWaterSampleM = 0;
+          var totalWaterTemperatureC = 0;
+          var countWaterTemperature = 0;
+          var totalDissolvedOxygen = 0;
+          var countDissolvedOxygen = 0;
+          var totalSalinity = 0;
+          var countSalinity = 0;
+          var totalPH = 0;
+          var countPH = 0;
+          var totalTurbidity = 0;
+          var countTurbidity = 0;
+          var totalAmmonia = 0;
+          var countAmmonia = 0;
+          var totalNitrates = 0;
+          var countNitrates = 0;
+          var avgOther = {};
+
+          if (vm.compareExpeditions[i].protocols.waterQuality) {
+            for (var j = 0; j < vm.compareExpeditions[i].protocols.waterQuality.samples.length; j++) {
+              var sample = vm.compareExpeditions[i].protocols.waterQuality.samples[j];
+              if (sample.depthOfWaterSampleM) {
+                totalDepthOfWaterSampleM += sample.depthOfWaterSampleM;
+                countDepthOfWaterSampleM++;
+              }
+              if (sample.waterTemperature) {
+                var cTemp = 0;
+                if (sample.waterTemperature.units === 'c') {
+                  cTemp = sample.waterTemperature.average;
+                } else {
+                  cTemp = (sample.waterTemperature.average - 32) / 1.8;
+                }
+                totalWaterTemperatureC += cTemp;
+                countWaterTemperature++;
+              }
+              if (sample.dissolvedOxygen) {
+                totalDissolvedOxygen += sample.dissolvedOxygen.average;
+                countDissolvedOxygen++;
+              }
+              if (sample.salinity) {
+                totalSalinity += sample.salinity.average;
+                countSalinity++;
+              }
+              if (sample.pH) {
+                totalPH += sample.pH.average;
+                countPH++;
+              }
+              if (sample.turbidity) {
+                totalTurbidity += sample.turbidity.average;
+                countTurbidity++;
+              }
+              if (sample.ammonia) {
+                totalAmmonia += sample.ammonia.average;
+                countAmmonia++;
+              }
+              if (sample.nitrates) {
+                totalNitrates += sample.nitrates.average;
+                countNitrates++;
+              }
+              if (sample.others && sample.others[0] && sample.others[0].label) {
+                if (avgOther[sample.others[0].label]) {
+                  avgOther[sample.others[0].label].total += sample.others[0].average;
+                  avgOther[sample.others[0].label].count++;
+                } else {
+                  avgOther[sample.others[0].label] = {
+                    total: sample.others[0].average,
+                    count: 1,
+                    units: sample.others[0].units,
+                    label: sample.others[0].label
+                  };
+                }
+              }
+            }
+
+            vm.compareExpeditions[i].protocols.waterQuality.avgSample = {};
+            if (totalDepthOfWaterSampleM && countDepthOfWaterSampleM) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.depthOfWaterSampleM = totalDepthOfWaterSampleM/countDepthOfWaterSampleM;
+            }
+            if (totalWaterTemperatureC && countWaterTemperature) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.waterTemperatureC = totalWaterTemperatureC/countWaterTemperature;
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.waterTemperatureF = (vm.compareExpeditions[i].protocols.waterQuality.avgSample.waterTemperatureC * 9/5 + 32);
+            }
+            if (totalDissolvedOxygen && countDissolvedOxygen) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.dissolvedOxygen = totalDissolvedOxygen/countDissolvedOxygen;
+            }
+            if (totalSalinity && countSalinity) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.salinity = totalSalinity/countSalinity;
+            }
+            if (totalPH && countPH) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.pH = totalPH/countPH;
+            }
+            if (totalTurbidity && countTurbidity) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.turbidity = totalTurbidity/countTurbidity;
+            }
+            if (totalAmmonia && countAmmonia) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.ammonia = totalAmmonia/countAmmonia;
+            }
+            if (totalNitrates && countNitrates) {
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.nitrates = totalNitrates/countNitrates;
+            }
+            if (Object.keys(avgOther).length > 0) {
+              var keys = Object.keys(avgOther);
+              vm.compareExpeditions[i].protocols.waterQuality.avgSample.avgOthers = {};
+              for (var m = 0; m < keys.length; m++) {
+                var key = keys[m];
+                vm.compareExpeditions[i].protocols.waterQuality.avgSample.avgOthers[key] = {
+                  average: avgOther[key].total/avgOther[key].count,
+                  units: avgOther[key].units,
+                  label: avgOther[key].label
+                };
+              }
+            }
+          }
+        }
       }).
       error(function(data, status, headers, config) {
         console.log('error', data);
       });
     };
 
-    ce.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
-    ce.getTime = ExpeditionViewHelper.getTime;
-    ce.getShortDate = ExpeditionViewHelper.getShortDate;
-    ce.getDate = ExpeditionViewHelper.getDate;
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
+    vm.getTime = ExpeditionViewHelper.getTime;
+    vm.getShortDate = ExpeditionViewHelper.getShortDate;
+    vm.getDate = ExpeditionViewHelper.getDate;
 
-    ce.getWeatherCondition = ExpeditionViewHelper.getWeatherCondition;
-    ce.getWaterColors = ExpeditionViewHelper.getWaterColors;
-    ce.getWaterFlows = ExpeditionViewHelper.getWaterFlows;
-    ce.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
-    ce.getWindDirection = ExpeditionViewHelper.getWindDirection;
-    ce.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
-    ce.getMobileOrganismById = ExpeditionViewHelper.getMobileOrganismById;
-    ce.getSessileOrganismName = ExpeditionViewHelper.getSessileOrganismName;
-    ce.getWaterTemperatureMethod = ExpeditionViewHelper.getWaterTemperatureMethod;
-    ce.getDissolvedOxygenMethod = ExpeditionViewHelper.getDissolvedOxygenMethod;
-    ce.getSalinityMethod = ExpeditionViewHelper.getSalinityMethod;
-    ce.getPHMethod = ExpeditionViewHelper.getPHMethod;
-    ce.getTurbidityMethod = ExpeditionViewHelper.getTurbidityMethod;
-    ce.getAmmoniaMethod = ExpeditionViewHelper.getAmmoniaMethod;
-    ce.getNitratesMethod = ExpeditionViewHelper.getNitratesMethod;
-    ce.getDissolvedOxygenUnit = ExpeditionViewHelper.getDissolvedOxygenUnit;
-    ce.getSalinityUnit = ExpeditionViewHelper.getSalinityUnit;
-    ce.getPHUnits = ExpeditionViewHelper.getPHUnits;
-    ce.getTurbidityUnit = ExpeditionViewHelper.getTurbidityUnit;
-    ce.getAmmoniaUnit = ExpeditionViewHelper.getAmmoniaUnit;
-    ce.getNitratesUnit = ExpeditionViewHelper.getNitratesUnit;
+    vm.getWeatherCondition = ExpeditionViewHelper.getWeatherCondition;
+    vm.getWaterColors = ExpeditionViewHelper.getWaterColors;
+    vm.getWaterFlows = ExpeditionViewHelper.getWaterFlows;
+    vm.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
+    vm.getWindDirection = ExpeditionViewHelper.getWindDirection;
+    vm.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
+    vm.getMobileOrganismById = ExpeditionViewHelper.getMobileOrganismById;
+    vm.getSessileOrganismName = ExpeditionViewHelper.getSessileOrganismName;
+    vm.getWaterTemperatureMethod = ExpeditionViewHelper.getWaterTemperatureMethod;
+    vm.getDissolvedOxygenMethod = ExpeditionViewHelper.getDissolvedOxygenMethod;
+    vm.getSalinityMethod = ExpeditionViewHelper.getSalinityMethod;
+    vm.getPHMethod = ExpeditionViewHelper.getPHMethod;
+    vm.getTurbidityMethod = ExpeditionViewHelper.getTurbidityMethod;
+    vm.getAmmoniaMethod = ExpeditionViewHelper.getAmmoniaMethod;
+    vm.getNitratesMethod = ExpeditionViewHelper.getNitratesMethod;
+    vm.getDissolvedOxygenUnit = ExpeditionViewHelper.getDissolvedOxygenUnit;
+    vm.getSalinityUnit = ExpeditionViewHelper.getSalinityUnit;
+    vm.getPHUnits = ExpeditionViewHelper.getPHUnits;
+    vm.getTurbidityUnit = ExpeditionViewHelper.getTurbidityUnit;
+    vm.getAmmoniaUnit = ExpeditionViewHelper.getAmmoniaUnit;
+    vm.getNitratesUnit = ExpeditionViewHelper.getNitratesUnit;
 
-    ce.getMobileOrganismName = function(id) {
-      var organism = ce.getMobileOrganismById(id);
+    vm.getMobileOrganismName = function(id) {
+      var organism = vm.getMobileOrganismById(id);
       return (organism) ? organism.commonName : '';
     };
   }

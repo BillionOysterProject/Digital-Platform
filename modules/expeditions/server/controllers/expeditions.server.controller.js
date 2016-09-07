@@ -1135,16 +1135,10 @@ var buildCompareQuery = function (req, callback) {
     if (req.body.protocol1.recentRainfall === 'YES') {
       selectProtocol1.push('recentRainfall');
     }
-    if (req.body.protocol1.closestHighTideTime === 'YES') {
+    if (req.body.protocol1.tide === 'YES') {
       selectProtocol1.push('tideConditions.closestHighTide');
-    }
-    if (req.body.protocol1.closestLowTideTime === 'YES') {
       selectProtocol1.push('tideConditions.closestLowTide');
-    }
-    if (req.body.protocol1.closestHighTideHeight === 'YES') {
       selectProtocol1.push('tideConditions.closestHighTideHeight');
-    }
-    if (req.body.protocol1.closestLowTideHeight === 'YES') {
       selectProtocol1.push('tideConditions.closestLowTideHeight');
     }
     if (req.body.protocol1.referencePoint === 'YES') {
@@ -1189,32 +1183,19 @@ var buildCompareQuery = function (req, callback) {
     if (req.body.protocol2.cageDamage === 'YES') {
       selectProtocol2.push('conditionOfOysterCage.notesOnDamageToCage');
     }
-    if (req.body.protocol2.setDate === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.setDate');
-    }
-    if (req.body.protocol2.source === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.source');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.otherSource');
-    }
-    if (req.body.protocol2.liveOystersBaseline === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalNumberOfLiveOystersAtBaseline');
-    }
-    if (req.body.protocol2.liveOystersMonitoring === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalNumberOfLiveOystersOnShell');
-    }
-    if (req.body.protocol2.totalMass === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.totalMassOfScrubbedSubstrateShellOystersTagG');
-    }
-    if (req.body.protocol2.oysterMeasurements === 'YES') {
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.measurements');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.minimumSizeOfLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.maximumSizeOfLiveOysters');
-      selectProtocol2.push('measuringOysterGrowth.substrateShells.averageSizeOfLiveOysters');
-      selectProtocol2.push('minimumSizeOfAllLiveOysters');
-      selectProtocol2.push('maximumSizeOfAllLiveOysters');
-      selectProtocol2.push('averageSizeOfAllLiveOysters');
+    if (req.body.protocol2.totalLive === 'YES') {
       selectProtocol2.push('totalNumberOfAllLiveOysters');
     }
+    if (req.body.protocol2.totalAverageSize === 'YES') {
+      selectProtocol2.push('averageSizeOfAllLiveOysters');
+    }
+    if (req.body.protocol2.totalMinimumSize === 'YES') {
+      selectProtocol2.push('minimumSizeOfAllLiveOysters');
+    }
+    if (req.body.protocol2.totalMaximumSize === 'YES') {
+      selectProtocol2.push('maximumSizeOfAllLiveOysters');
+    }
+
     // protocol 3: mobile trap
     var selectProtocol3 = [];
     if (req.body.protocol3.organism === 'YES') {
@@ -1282,7 +1263,6 @@ var buildCompareQuery = function (req, callback) {
     var selectProtocol5 = [];
     if (req.body.protocol5.depth === 'YES') {
       selectProtocol5.push('samples.depthOfWaterSampleM');
-      selectProtocol5.push('samples.locationOfWaterSample');
     }
     if (req.body.protocol5.temperature === 'YES') {
       selectProtocol5.push('samples.waterTemperature');

@@ -238,6 +238,9 @@
     vm.dateSelected = function() {
       if (vm.filter.startDate && vm.filter.endDate) {
         vm.findPublishedExpeditions();
+      } else if ((!vm.filter.startDate || vm.filter.startDate === undefined || vm.filter.startDate === '') &&
+      (!vm.filter.endDate || vm.filter.endDate === undefined || vm.filter.endDate === '')) {
+        vm.findPublishedExpeditions();
       }
     };
 
