@@ -94,7 +94,7 @@
         <tr ng-show="vm.parameters.protocol1.referencePoint === 'YES'">
             <td><b>Reference Point</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.siteCondition.tideConditions.referencePoint}}&nbps;
+              {{expedition.protocols.siteCondition.tideConditions.referencePoint}}&nbsp;
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol1.tidalCurrent === 'YES'">
@@ -268,28 +268,28 @@
               {{expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.totalNumberOfAllLiveOysters === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.totalLive === 'YES'">
             <td><b>Population live</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               {{expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.averageSizeOfAllLiveOysters === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.totalAverageSize === 'YES'">
             <td><b>Population avg size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.minimumSizeOfAllLiveOysters === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.totalMinimumSize === 'YES'">
             <td><b>Population min size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.maximumSizeOfAllLiveOysters === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.totalMaximumSize === 'YES'">
             <td><b>Population max size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}&nbsp;
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol3.organism === 'YES'">
@@ -312,12 +312,16 @@
         <tr ng-show="vm.parameters.protocol4.organism === 'YES'">
             <td><b>Sessile organisms observed</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-              14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
-                <h4 class="text-muted">{{i}}</h4> :
-                {{vm.getSessileOrganismName(tile['grid'+i].organism)}}
-                <em ng-show="tile['grid'+i].notes">{{tile['grid'+i].notes}}</em><br/>
-              </span>
+              <span ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism">
+                Settlement Tile #{{h+1}}<br/>
+                <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
+                  <span>
+                    <h4 class="text-muted">{{i}}</h4> :
+                    {{vm.getSessileOrganismName(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}
+                    <em>{{expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].notes}}</em><br/>
+                  </span>
+                </span><br/>
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol5.depth === 'YES'">
@@ -395,7 +399,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <!-- {{expedition.protocols.waterQuality.avgSample.avgOthers}} -->
               <span ng-repeat="(key, value) in expedition.protocols.waterQuality.avgSample.avgOthers">
-                {{expedition.protocols.waterQuality.avgSample.avgOthers[key].label}}: 
+                {{expedition.protocols.waterQuality.avgSample.avgOthers[key].label}}:
                 {{expedition.protocols.waterQuality.avgSample.avgOthers[key].average | number:2}}
                 {{expedition.protocols.waterQuality.avgSample.avgOthers[key].units}}<br/>
               </span>&nbsp;
