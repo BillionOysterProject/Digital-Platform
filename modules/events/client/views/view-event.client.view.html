@@ -4,14 +4,30 @@
             <div class="row">
                 <div class="col-md-4 col-sm-6 box pull-right text-center">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-6"><!--TIFF: If event date is past, switch to "col-xs-12" -->
                             <h2><b>Oct<br/><span class="h1">7</span></b><br/>2016</h2>
                             <h5>8:00am-5:00pm</h5>
                         </div>
+                        
+                        <!--TIFF: If event date is past, hide entire column -->
                         <div class="col-xs-6">
+                            <!-- TIFF: If user is logged out, button should redirect to sign in page (they can click sign up from there), and then immediately return to this page when logged in -->
+                            
+                            <!-- IF UNREGISTERED: -->
                             <h1><i class="gray fa fa-calendar-times-o"></i></h1>
                             <h6>Only 10 spots remaining</h6>
-                            <a class="btn btn-lg btn-danger">Register now</a>
+                            <a class="btn btn-lg btn-danger" data-toggle="modal" data-target="#modal-event-register">Register now</a>
+                            
+                            <!-- IF REGISTERED: 
+                            <h1><i class="green fa fa-check"></i></h1>
+                            <h6>You are registered!</h6>
+                            <a class="btn btn-lg btn-primary" data-toggle="modal" data-target="#modal-event-unregister">Unregister</a>
+                            -->
+                            
+                            <!-- IF UNREGISTERED AND EVENT IS FULL OR REGISTRATION DEADLINE IS PAST:
+                            <h1><i class="gray fa fa-calendar-times-o"></i></h1>
+                            <h6>Registration is closed</h6>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -31,7 +47,7 @@
             <div class="col-sm-8">
                 <h2 class="red">BOP Restoration Station Basic Training</h2> <!-- vm.event.name -->
             </div>
-            <div class="col-sm-4 text-right"> <!-- ng-show="vm.event.isCurrentUserOwner" -->
+            <div class="col-sm-4 text-right"> <!-- TIFF: buttons should only show if admin: ng-show="vm.event.isCurrentUserOwner" -->
                 <a class="btn btn-primary" data-toggle="modal" data-target="#modal-event-email">Email registrees</a>
                 <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })">Edit</a>
             </div>
@@ -47,15 +63,91 @@
                     </h4>
                     <h4 class="col-sm-4 text-muted">
                         <i class="fa fa-clock-o"></i>
+                        
+                        <!-- TIFF: If registration is open (deadline isn't past, event isn't full), show: -->
                         <b>25 days</b> <small>left to register</small>
+                        
+                        <!-- TIFF: If registration deadline is past OR event is full, replace with:
+                        <b>Registration closed</b>
+                        
+                        <!-- TIFF: If event date is past, replace with:
+                        <b>Event is over</b>-->
+                        
                     </h4>
+                    <!-- TIFF: Hide entire h4 below if NOT AN ADMIN and registration deadline is past or event date is past (show to everyone if neither date has past) -->
                     <h4 class="col-sm-4 text-muted">
                         <i class="fa fa-users"></i>
                         <b>30/40 full</b>
                     </h4>
                 </div>
                 <hr/>
-                
+            </div>
+        </div>
+    </section>
+</section>
+
+<!-- TIFF: Show only if admin -->
+<section class="content shaded">
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="blue">Registrees</h3>
+                <table class="table table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Organization</th>
+                            <th>Teams</th>
+                            <th>Email</th>
+                            <th>Date Registered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Fearless</td>
+                            <td>Team 1, Team 2, Team 3</td>
+                            <td>jsmith@email.com</td>
+                            <td>September 8, 2016</td>
+                        </tr>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Fearless</td>
+                            <td>Team 1, Team 2, Team 3</td>
+                            <td>jsmith@email.com</td>
+                            <td>September 8, 2016</td>
+                        </tr>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Fearless</td>
+                            <td>Team 1, Team 2, Team 3</td>
+                            <td>jsmith@email.com</td>
+                            <td>September 8, 2016</td>
+                        </tr>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Fearless</td>
+                            <td>Team 1, Team 2, Team 3</td>
+                            <td>jsmith@email.com</td>
+                            <td>September 8, 2016</td>
+                        </tr>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Fearless</td>
+                            <td>Team 1, Team 2, Team 3</td>
+                            <td>jsmith@email.com</td>
+                            <td>September 8, 2016</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+<section class="content">
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-12">
                 <!-- vm.event.content -->
                 <p>PLEASE NOTE the 2016 Restoration Station Basic Training is one day only. At this time we have only one training date remaining with available slots: Friday October 7 – and these are filling up fast! If you want to sign up for the training, please read all info below, including the links, then fill out the form at the bottom of the page. You will receive an email with details about the training approximately two weeks prior to the date you signed up for. Email restore@nyharbor.org with any questions.</p>
                 <p>Here’s how it works:<br/>
@@ -66,7 +158,6 @@
                 <hr/>
             </div>
         </div>
-        
         <div class="row">
             <div class="col-sm-3">
                 <ul class="list-unstyled">
@@ -95,56 +186,108 @@
             </div>
         </div>
     </section>
-    
-    
-    
-    <!-- MODALS -->
-    <div class="modal fade" id="modal-event-email">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" ng-hide="sent">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Send an email to all <b class="red">30</b> current registrees</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="control-label">Subject</label>
-                                <input type="text" class="form-control" ng-model="subject" required/>
-                            </div>
+</section>
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-event-email">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-hide="sent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Send an email to all <b class="red">30</b> current registrees</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label">Subject</label>
+                            <input type="text" class="form-control" ng-model="subject" required/>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="control-label">Message body</label>
-                                <textarea class="form-control" rows="4" ng-model="message" ng-required="type === 'general' || type === 'help'"></textarea>
-                            </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label">Message body</label>
+                            <textarea class="form-control" rows="4" ng-model="message" ng-required="type === 'general' || type === 'help'"></textarea>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <input type="checkbox" />
-                                <label class="control-label">Include text at end:</label>
-                                <blockquote>
-                                    <p>You are currently registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">October 7, 2016, 8:00am-5:00pm</b>. No longer able to attend? <a href="#">Unregister here</a> to give your spot to somebody else.</p>
-                                </blockquote>
-                            </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input type="checkbox" />
+                            <label class="control-label">Include text at end:</label>
+                            <blockquote>
+                                <p>You are currently registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">October 7, 2016, 8:00am-5:00pm</b>. No longer able to attend? <a href="#">Unregister here</a> to give your spot to somebody else.</p>
+                            </blockquote>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
-                  <button type="submit" class="btn btn-primary">Send</button>
-                </div>
             </div>
-            <div class="modal-content" ng-show="sent">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Your message has been sent!</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" ng-click="close()">Close</button>
-                </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+              <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+        <div class="modal-content" ng-show="sent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Your message has been sent!</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+
+<div class="modal fade" id="modal-event-register">
+    <div class="modal-dialog" role="document">
+        <!-- TIFF: Show this modal-content if logged in as team lead/admin -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">You are now registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">Oct 7, 2016</b></h4>
+            </div>
+            <div class="modal-body">
+                <p>Looking forward to seeing you there. We'll be in touch closer to the date!</p>
+                <p>If something changes and you can no longer make it, return to this event page to unregister and give your spot to somebody else.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        
+        <!-- TIFF: Show this modal-content if NOT logged in as team lead/admin:
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sorry, you must be a team lead to register for events</h4>
+            </div>
+            <div class="modal-body">
+                <p>Think you have the wrong account role? <a href="LINK TO SUPPORT MODAL">Contact us</a> and we'll get it sorted out.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        -->
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-event-unregister">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">You are no longer registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">Oct 7, 2016</b></h4>
+            </div>
+            <div class="modal-body">
+                <p>We'll miss you. Let us know if something changes!</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
