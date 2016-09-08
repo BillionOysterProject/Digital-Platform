@@ -603,7 +603,52 @@ h6, .h6 {
 
 blockquote {
     font-size: inherit;
+    padding-top: 0;
+    padding-bottom: 0;
 }
+
+.nav-tabs {
+    border-color: #ea6158;
+}
+
+    .nav-tabs > li > a {
+        font-size: 16px;
+    }
+    
+        .nav-tabs > li > a:hover {
+            border-color: #eee #eee #ea6158;
+        }
+
+        .nav-tabs > li.active > a, 
+        .nav-tabs > li.active > a:hover, 
+        .nav-tabs > li.active > a:focus {
+            font-weight: bold;
+            color: #ea6158;
+            border-color: #ea6158;
+            border-bottom-color: transparent;
+        }
+        
+/* RESET FOR NAV JUSTIFIED TABS (protocols/forms)*/
+.nav-tabs.nav-justified {
+    border-color: #ddd;
+}
+
+    .nav-tabs.nav-justified > li > a {
+        font-size: inherit;
+    }
+    
+        .nav-tabs.nav-justified > li > a:hover {
+            border-color: #eee #eee #ddd;
+        }
+
+        .nav-tabs.nav-justified > li.active > a, 
+        .nav-tabs.nav-justified > li.active > a:hover, 
+        .nav-tabs.nav-justified > li.active > a:focus {
+            font-weight: normal;
+            color: #555;
+            border-color: #ddd;
+            border-bottom-color: transparent;
+        }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -978,10 +1023,3 @@ form.ng-submitted .ng-invalid {
 .col-2point4 {
     width: 20%;
 }
-
-blockquote {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-
