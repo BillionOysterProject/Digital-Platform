@@ -9,6 +9,18 @@ module.exports = {
   // //   certificate: './config/sslcerts/cert.pem'
   // },
   port: process.env.PORT || 8081,
+  // Session Cookie settings
+  sessionCookie: {
+    // session expiration is set by default to 24 hours
+    maxAge: 7 * 24 * (60 * 60 * 1000),
+    // httpOnly flag makes sure the cookie is only accessed
+    // through the HTTP protocol and not JS/browser
+    httpOnly: true,
+    // secure cookie should be turned to true to provide additional
+    // layer of security so that the cookie is set only when working
+    // in HTTPS mode.
+    secure: true
+  },
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '0.0.0.0',
   db: {
