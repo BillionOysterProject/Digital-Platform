@@ -475,12 +475,9 @@
 
     vm.compare = function() {
       vm.filtered = true;
-      $timeout(function() {
-        $location.hash('view-comparison');
-        $anchorScroll();
-        document.getElementById('view-comparison').focus();
-      });
-
+      $location.hash('view-comparison');
+      $anchorScroll();
+      document.getElementById('view-comparison').focus();
       var expeditionIds = [];
       for (var i = 0; i < vm.expeditions.length; i++) {
         expeditionIds.push(vm.expeditions[i]._id);

@@ -10,24 +10,25 @@
   function menuConfig(Menus) {
     Menus.addMenuItem('topbar', {
       title: 'Events',
-      state: 'events',
-      type: 'dropdown',
-      roles: ['*'],
+      state: 'events.list',
+      // state: 'events',
+      // type: 'dropdown',
+      // roles: ['*'],
       icon: 'glyphicon glyphicon-calendar',
       position: 3
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'events', {
-      title: 'Events',
-      state: 'events.list'
-    });
+    // Menus.addSubMenuItem('topbar', 'events', {
+    //   title: 'Events',
+    //   state: 'events.list'
+    // });
 
     // Add the dropdown calendar item
-    Menus.addSubMenuItem('topbar', 'events', {
-      title: 'Calendar',
-      state: 'events.calendar'
-    });
+    // Menus.addSubMenuItem('topbar', 'events', {
+    //   title: 'Calendar',
+    //   state: 'events.calendar'
+    // });
 
     // // Add the dropdown create item
     // Menus.addSubMenuItem('topbar', 'events', {

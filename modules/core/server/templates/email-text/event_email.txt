@@ -1,0 +1,10 @@
+Hi <%=FirstName%>,
+
+<%= EventEmailMessage %>
+
+You are currently registered for <%= EventName %> on <%= EventDate %>. No longer able to attend? Visit <%= LinkEvent %> to unregister and give your spot to somebody else.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
