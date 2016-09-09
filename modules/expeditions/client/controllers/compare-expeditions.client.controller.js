@@ -7,11 +7,11 @@
 
   ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService', 'SchoolOrganizationsService',
   'ExpeditionViewHelper', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
-  '$http', '$location', '$anchorScroll', '$timeout', 'lodash', 'moment'];
+  '$http', '$location', '$anchorScroll', '$timeout', '$window', 'lodash', 'moment'];
 
   function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
     ExpeditionViewHelper, RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams,
-    $http, $location, $anchorScroll, $timeout, lodash, moment) {
+    $http, $location, $anchorScroll, $timeout, $window, lodash, moment) {
     var vm = this;
     vm.user = Authentication.user;
     vm.filtered = false;
@@ -475,9 +475,10 @@
 
     vm.compare = function() {
       vm.filtered = true;
-      $location.hash('view-comparison');
+      $location.hash('select-comparison-parameters');
+      $anchorScroll.yOffset = 100;
       $anchorScroll();
-      document.getElementById('view-comparison').focus();
+      //$window.scrollTo(0, document.getElementById('view-comparison').offsetTop);
       var expeditionIds = [];
       for (var i = 0; i < vm.expeditions.length; i++) {
         expeditionIds.push(vm.expeditions[i]._id);

@@ -751,7 +751,6 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            console.log('obj', obj);
             rows.weatherConditions.push(obj.order);
             done(null);
           }
@@ -780,7 +779,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Recent Rainfail
     function (done) {
       if (req.body.protocol1.recentRainfall === 'YES') {
-        rows.recentRainfall.push('');
+        rows.recentRainfallHeader.push('');
         rows.rainfall24hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours) ? 1 : 0);
         rows.rainfall72hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) ? 1 : 0);
         rows.rainfall7days.push((expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) ? 1 : 0);
@@ -789,7 +788,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     },
     function (done) {
       if (req.body.protocol1.tide === 'YES') {
-        rows.tideConditions.push('');
+        rows.tideConditionsHeader.push('');
         rows.closestHighTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestHighTide));
         rows.closestHighTideHeight.push(expedition.protocols.siteCondition.tideConditions.closestHighTideHeight);
         rows.closestLowTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestLowTide));
@@ -964,7 +963,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Oyster Measurements
     function (done) {
       if (req.body.protocol2.oysterMeasurements === 'YES') {
-        rows.oysterMeasurements.push('');
+        rows.oysterMeasurementsHeader.push('');
         rows.minSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters);
         rows.maxSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters);
         rows.avgSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters);
@@ -972,7 +971,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         for (var n = 0; n < expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells.length; n++) {
           var substrateShell = expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells[n];
           var shellIndex = substrateShell.substrateShellNumber-1;
-          rows.substrateShells[shellIndex].substrateShellNumber.push('');
+          rows.substrateShells[shellIndex].substrateShellNumberHeader.push('');
           rows.substrateShells[shellIndex].setDate.push(getShortDate(substrateShell.setDate));
           rows.substrateShells[shellIndex].source.push((substrateShell.otherSource) ? substrateShell.otherSource : substrateShell.source);
           rows.substrateShells[shellIndex].liveAtBaseline.push(substrateShell.totalNumberOfLiveOystersAtBaseline);
@@ -1026,35 +1025,31 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Settlement Tile Organisms
     function (done) {
       if (req.body.protocol4.organism === 'YES') {
-        var addSessileOrganism = function(index, tile, organisms, callback) {
+        var addSessileOrganism = function(index, tile, tileNumber, callback) {
           if (index < 26) {
             getSessileOrganismName(tile['grid'+index].organism, function(err, commonName) {
               if (err) done (err);
-              if (commonName) {
-                if (tile['grid'+index].notes) {
-                  organisms.push(commonName + ' - ' + tile['grid'+index].notes);
-                } else {
-                  organisms.push(commonName);
-                }
-              }
-              addSessileOrganism(index+1, tile, organisms, callback);
+              rows.settlementTiles[tileNumber]['grid'+index+'-organism'].push((commonName) ? commonName : '');
+              rows.settlementTiles[tileNumber]['grid'+index+'-notes'].push((tile['grid'+index].notes) ?
+                tile['grid'+index].notes : '');
+              addSessileOrganism(index+1, tile, tileNumber, callback);
             });
           } else {
-            callback(organisms);
+            callback();
           }
         };
-        addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[0], [], function(organismsTile1) {
-          rows.settlementTiles[0].settlementTileNumber.push('');
-          rows.settlementTiles[0].organisms.push(organismsTile1.join(',\r\n'));
-          addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[1], [], function(organismsTile2) {
-            rows.settlementTiles[1].settlementTileNumber.push('');
-            rows.settlementTiles[1].organisms.push(organismsTile2.join(',\r\n'));
-            addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[2], [], function(organismsTile3) {
-              rows.settlementTiles[2].settlementTileNumber.push('');
-              rows.settlementTiles[2].organisms.push(organismsTile3.join(',\r\n'));
-              addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[3], [], function(organismsTile4) {
-                rows.settlementTiles[3].settlementTileNumber.push('');
-                rows.settlementTiles[3].organisms.push(organismsTile4.join(',\r\n'));
+        addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[0], 0, function() {
+          rows.settlementTiles[0].settlementTileNumberHeader.push('');
+          rows.settlementTiles[0].organismsHeader.push('');
+          addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[1], 1, function() {
+            rows.settlementTiles[1].settlementTileNumberHeader.push('');
+            rows.settlementTiles[1].organismsHeader.push('');
+            addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[2], 2, function() {
+              rows.settlementTiles[2].settlementTileNumberHeader.push('');
+              rows.settlementTiles[2].organismsHeader.push('');
+              addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[3], 3, function() {
+                rows.settlementTiles[3].settlementTileNumberHeader.push('');
+                rows.settlementTiles[3].organismsHeader.push('');
                 done(null);
               });
             });
@@ -1072,7 +1067,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       req.body.protocol5.ammonia === 'YES' || req.body.protocol5.nitrates === 'YES' ||
       req.body.protocol5.other === 'YES') {
         for (var i = 0; i < expedition.protocols.waterQuality.samples.length; i++) {
-          rows.waterSamples[i].sampleNumber.push('');
+          rows.waterSamples[i].sampleNumberHeader.push('');
         }
       }
       done(null);
@@ -1099,7 +1094,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         var addWaterTemperature = function(index, samples, maxSamples, callback) {
           if (index < samples.length) {
             var sample = samples[index];
-            rows.waterSamples[index].waterTemperature.push('');
+            rows.waterSamples[index].waterTemperatureHeader.push('');
             WaterTemperatureMethod.findOne({ value: sample.waterTemperature.method }).exec(function(err, method) {
               if (err) done(err);
               rows.waterSamples[index].waterTemperatureMethod.push((method) ? method.label : '');
@@ -1112,7 +1107,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               });
             });
           } else if (index < maxSamples) {
-            rows.waterSamples[index].waterTemperature.push('');
+            rows.waterSamples[index].waterTemperatureHeader.push('');
             rows.waterSamples[index].waterTemperatureMethod.push('');
             rows.waterSamples[index].waterTemperatureUnit.push('');
             rows.waterSamples[index].waterTemperatureResults.push('');
@@ -1136,7 +1131,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         var addDissolvedOxygen = function(index, samples, maxSamples, callback) {
           if (index < samples.length) {
             var sample = samples[index];
-            rows.waterSamples[index].dissolvedOxygen.push('');
+            rows.waterSamples[index].dissolvedOxygenHeader.push('');
             DissolvedOxygenMethod.findOne({ value: sample.dissolvedOxygen.method }).exec(function(err, method) {
               if (err) done(err);
               rows.waterSamples[index].dissolvedOxygenMethod.push((method) ? method.label : '');
@@ -1149,7 +1144,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               });
             });
           } else if (index < maxSamples) {
-            rows.waterSamples[index].dissolvedOxygen.push('');
+            rows.waterSamples[index].dissolvedOxygenHeader.push('');
             rows.waterSamples[index].dissolvedOxygenMethod.push('');
             rows.waterSamples[index].dissolvedOxygenUnit.push('');
             rows.waterSamples[index].dissolvedOxygenResults.push('');
@@ -1173,7 +1168,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         var addSalinity = function(index, samples, maxSamples, callback) {
           if (index < samples.length) {
             var sample = samples[index];
-            rows.waterSamples[index].salinity.push('');
+            rows.waterSamples[index].salinityHeader.push('');
             SalinityMethod.findOne({ value: sample.salinity.method }).exec(function(err, method) {
               if (err) done(err);
               rows.waterSamples[index].salinityMethod.push((method) ? method.label : '');
@@ -1186,7 +1181,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               });
             });
           } else if (index < maxSamples) {
-            rows.waterSamples[index].salinity.push('');
+            rows.waterSamples[index].salinityHeader.push('');
             rows.waterSamples[index].salinityMethod.push('');
             rows.waterSamples[index].salinityUnit.push('');
             rows.waterSamples[index].salinityResults.push('');
@@ -1210,7 +1205,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         var addPh = function(index, samples, maxSamples, callback) {
           if (index < samples.length) {
             var sample = samples[index];
-            rows.waterSamples[index].pH.push('');
+            rows.waterSamples[index].pHHeader.push('');
             PhMethod.findOne({ value: sample.pH.method }).exec(function(err, method) {
               if (err) done(err);
               rows.waterSamples[index].pHMethod.push((method) ? method.label : '');
@@ -1223,7 +1218,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               });
             });
           } else if (index < maxSamples) {
-            rows.waterSamples[index].pH.push('');
+            rows.waterSamples[index].pHHeader.push('');
             rows.waterSamples[index].pHMethod.push('');
             rows.waterSamples[index].pHUnit.push('');
             rows.waterSamples[index].pHResults.push('');
@@ -1248,7 +1243,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (index < samples.length) {
             var sample = samples[index];
             if (sample && sample.turbidity && sample.turbidity.method && sample.turbidity.units) {
-              rows.waterSamples[index].turbidity.push('');
+              rows.waterSamples[index].turbidityHeader.push('');
               TurbidityMethod.findOne({ value: sample.turbidity.method }).exec(function(err, method) {
                 if (err) done(err);
                 rows.waterSamples[index].turbidityMethod.push((method) ? method.label : '');
@@ -1261,7 +1256,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
                 });
               });
             } else {
-              rows.waterSamples[index].turbidity.push('');
+              rows.waterSamples[index].turbidityHeader.push('');
               rows.waterSamples[index].turbidityMethod.push('');
               rows.waterSamples[index].turbidityUnit.push('');
               rows.waterSamples[index].turbidityResults.push('');
@@ -1269,7 +1264,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               addTurbidity(index+1, samples, maxSamples, callback);
             }
           } else if (index < maxSamples) {
-            rows.waterSamples[index].turbidity.push('');
+            rows.waterSamples[index].turbidityHeader.push('');
             rows.waterSamples[index].turbidityMethod.push('');
             rows.waterSamples[index].turbidityUnit.push('');
             rows.waterSamples[index].turbidityResults.push('');
@@ -1294,7 +1289,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (index < samples.length) {
             var sample = samples[index];
             if (sample && sample.ammonia && sample.ammonia.method && sample.ammonia.units) {
-              rows.waterSamples[index].ammonia.push('');
+              rows.waterSamples[index].ammoniaHeader.push('');
               AmmoniaMethod.findOne({ value: sample.ammonia.method }).exec(function(err, method) {
                 if (err) done(err);
                 rows.waterSamples[index].ammoniaMethod.push((method) ? method.label : '');
@@ -1307,7 +1302,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
                 });
               });
             } else {
-              rows.waterSamples[index].ammonia.push('');
+              rows.waterSamples[index].ammoniaHeader.push('');
               rows.waterSamples[index].ammoniaMethod.push('');
               rows.waterSamples[index].ammoniaUnit.push('');
               rows.waterSamples[index].ammoniaResults.push('');
@@ -1315,7 +1310,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               addAmmonia(index+1, samples, maxSamples, callback);
             }
           } else if (index < maxSamples) {
-            rows.waterSamples[index].ammonia.push('');
+            rows.waterSamples[index].ammoniaHeader.push('');
             rows.waterSamples[index].ammoniaMethod.push('');
             rows.waterSamples[index].ammoniaUnit.push('');
             rows.waterSamples[index].ammoniaResults.push('');
@@ -1340,7 +1335,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (index < samples.length) {
             var sample = samples[index];
             if (sample && sample.nitrates && sample.nitrates.method && sample.nitrates.units) {
-              rows.waterSamples[index].nitrate.push('');
+              rows.waterSamples[index].nitrateHeader.push('');
               NitrateMethod.findOne({ value: sample.nitrates.method }).exec(function(err, method) {
                 if (err) done(err);
                 rows.waterSamples[index].nitrateMethod.push((method) ? method.label : '');
@@ -1353,7 +1348,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
                 });
               });
             } else {
-              rows.waterSamples[index].nitrate.push('');
+              rows.waterSamples[index].nitrateHeader.push('');
               rows.waterSamples[index].nitrateMethod.push('');
               rows.waterSamples[index].nitrateUnit.push('');
               rows.waterSamples[index].nitrateResults.push('');
@@ -1361,7 +1356,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               addNitrate(index+1, samples, maxSamples, callback);
             }
           } else if (index < maxSamples) {
-            rows.waterSamples[index].nitrate.push('');
+            rows.waterSamples[index].nitrateHeader.push('');
             rows.waterSamples[index].nitrateMethod.push('');
             rows.waterSamples[index].nitrateUnit.push('');
             rows.waterSamples[index].nitrateResults.push('');
@@ -1387,7 +1382,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             var sample = samples[index];
             if (sample && sample.others[0] && sample.others[0].label &&
               sample.others[0].method && sample.others[0].units) {
-              rows.waterSamples[index].others.push('');
+              rows.waterSamples[index].otherHeader.push('');
               rows.waterSamples[index].otherLabel.push(sample.others[0].label);
               rows.waterSamples[index].otherMethod.push(sample.others[0].method);
               rows.waterSamples[index].otherUnit.push(sample.others[0].units);
@@ -1395,7 +1390,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               rows.waterSamples[index].otherAverage.push(sample.others[0].average);
               addOther(index+1, samples, maxSamples, callback);
             } else {
-              rows.waterSamples[index].others.push('');
+              rows.waterSamples[index].otherHeader.push('');
               rows.waterSamples[index].otherLabel.push('');
               rows.waterSamples[index].otherMethod.push('');
               rows.waterSamples[index].otherUnit.push('');
@@ -1404,7 +1399,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               addOther(index+1, samples, maxSamples, callback);
             }
           } else if (index < maxSamples) {
-            rows.waterSamples[index].others.push('');
+            rows.waterSamples[index].otherHeader.push('');
             rows.waterSamples[index].otherLabel.push('');
             rows.waterSamples[index].otherMethod.push('');
             rows.waterSamples[index].otherUnit.push('');
@@ -1438,16 +1433,18 @@ var createCsv = function(req, expeditions, callback) {
   var csvArrays = [];
   var headers = [''];
   var rows = {
-    weatherConditions: ['Weather conditions'],
+    weatherConditions: ['Weather conditions\r\n'+
+    '(1=Sunny,2=Partly Cloudy,3=Cloudy,4=Rain,\r\n'+
+    '5=Fog,6=Snow,7=Hail,8=Thunderstorm)'],
     windDirection: ['Wind direction'],
     windSpeedMPH: ['Wind speed (mph)'],
     airTemperatureC: ['Air temperature in C'],
     humidityPer: ['Humidity (%)'],
-    recentRainfall: ['Recent Rainfall'],
-    rainfall24hrs: ['24 hrs rainfall'],
-    rainfall72hrs: ['72 hrs rainfall'],
-    rainfall7days: ['7 days rainfall'],
-    tideConditions: ['Tide conditions'],
+    recentRainfallHeader: ['Recent Rainfall'],
+    rainfall24hrs: ['24 hrs rainfall\r\n'+'(1=Yes,0=No)'],
+    rainfall72hrs: ['72 hrs rainfall\r\n'+'(1=Yes,0=No)'],
+    rainfall7days: ['7 days rainfall\r\n'+'(1=Yes,0=No)'],
+    tideConditionsHeader: ['Tide conditions'],
     referencePoint: ['Reference Point (location name)'],
     closestHighTide: ['Closest High Tide (date, time)'],
     closestHighTideHeight: ['Closest High Tide Height'],
@@ -1457,44 +1454,65 @@ var createCsv = function(req, expeditions, callback) {
     tidalCurrent: ['Tidal Current'],
     waterConditions: ['Water Conditions'],
     waterConditionPhoto: ['Water condition photo'],
-    waterColor: ['Water color'],
-    oilSheen: ['Oil sheen present?'],
-    garbageWater: ['Garbage in water?'],
-    hardPlasticWater: ['If Y, Type and Extent for Hard Plastic'],
-    softPlasticWater: ['If Y, Type and Extent for Soft Plastic'],
-    metalWater: ['If Y, Type and Extent for Metal'],
-    paperWater: ['If Y, Type and Extent for Paper'],
-    glassWater: ['If Y, Type and Extent for Glass'],
-    organicWater: ['If Y, Type and Extent for Organic'],
+    waterColor: ['Water color\r\n'+
+    '(1=Light Blue,2=Dark Blue,3=Light Green,\r\n'+
+    '4=Dark Green,5=Light Brown,6=Dark Brown)'],
+    oilSheen: ['Oil sheen present?\r\n'+'(1=Yes,0=No)'],
+    garbageWater: ['Garbage in water?\r\n'+'(1=Yes,0=No)'],
+    hardPlasticWater: ['If Y, Type and Extent for Hard Plastic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    softPlasticWater: ['If Y, Type and Extent for Soft Plastic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    metalWater: ['If Y, Type and Extent for Metal\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    paperWater: ['If Y, Type and Extent for Paper\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    glassWater: ['If Y, Type and Extent for Glass\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    organicWater: ['If Y, Type and Extent for Organic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
     otherWater: ['Other/Notes'],
-    markedCSOPipes: ['Marked Combined Sewer Overflow (CSO) pipes?'],
+    markedCSOPipes: ['Marked Combined Sewer Overflow (CSO) pipes?\r\n'+'(1=Yes,0=No)'],
     markedCSOLocation: ['Location? (coordinates)'],
-    markedCSOFlow: ['Flow?'],
-    markedCSOVolume: ['Volume?'],
-    unmarkedPipes: ['Unmarked or other outfall pipes? Y/N'],
+    markedCSOFlow: ['Flow?\r\n'+'(1=Yes,0=No)'],
+    markedCSOVolume: ['Volume?\r\n'+
+    '(1=Trickle,2=Light Stream,\r\n'+
+    '3=Steady Stream,4=Full Flow)'],
+    unmarkedPipes: ['Unmarked or other outfall pipes? Y/N\r\n'+'(1=Yes,0=No)'],
     unmarkedPipesLocation: ['Location? (coordinates)'],
     unmarkedPipesDiameter: ['Approximate diameter of pipe (cm)?'],
-    unmarkedPipesFlow: ['Flow?'],
-    unmarkedPipesVolume: ['Volume?'],
+    unmarkedPipesFlow: ['Flow?\r\n'+'(1=Yes,0=No)'],
+    unmarkedPipesVolume: ['Volume?\r\n'+
+    '(1=Trickle,2=Light Stream,\r\n'+
+    '3=Steady Stream,4=Full Flow)'],
     landConditions: ['Land Conditions'],
     landConditionPhoto: ['Land condition photo'],
-    shoreLineType: ['Shoreline type'],
+    shoreLineType: ['Shoreline type\r\n'+
+    '(1,Bulkhead/Wall,2=Fixed Pier,3=Floating Dock,\r\n'+
+    '4=Riprap/Rocky Shoreline,5=Dirt/Sand,6=Other)'],
     imperviousSurfacePer: ['% surface cover of adjacent shoreline (500 x 500 ft) that is Impervious Surface (concrete/asphalt paths, roads, buildings etc.)'],
     perviousSurfacePer: ['% surface cover of adjacent shoreline (500 x 500 ft) that is Pervious Surface (dirt, gravel etc.)'],
     vegetatedSurfacePer: ['% surface cover for adjacent shoreline (500 x 500 ft) that is Vegetated surface (grass, shrubs, trees)'],
-    garbageLand: ['Garbage in water?'],
-    hardPlasticLand: ['If Y, Type and Extent for Hard Plastic'],
-    softPlasticLand: ['If Y, Type and Extent for Soft Plastic'],
-    metalLand: ['If Y, Type and Extent for Metal'],
-    paperLand: ['If Y, Type and Extent for Paper'],
-    glassLand: ['If Y, Type and Extent for Glass'],
-    organicLand: ['If Y, Type and Extent for Organic'],
+    garbageLand: ['Garbage in water?\r\n'+'(1=Yes,0=No)'],
+    hardPlasticLand: ['If Y, Type and Extent for Hard Plastic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    softPlasticLand: ['If Y, Type and Extent for Soft Plastic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    metalLand: ['If Y, Type and Extent for Metal\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    paperLand: ['If Y, Type and Extent for Paper\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    glassLand: ['If Y, Type and Extent for Glass\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
+    organicLand: ['If Y, Type and Extent for Organic\r\n'+
+    '(1=None,2=Sporadic,3=Common,4=Extensive)'],
     otherLand: ['Other/Notes'],
 
     submergedDepth: ['Submerged depth of cage'],
-    bioaccumulationOnCage: ['Bioaccumulation on cage'],
+    bioaccumulationOnCage: ['Bioaccumulation on cage\r\n'+
+    '(1=None/clean,2=Light,3=Medium,4=Heavy)'],
     cageDamage: ['Cage damage'],
-    oysterMeasurements: ['Oyster Measurements'],
+    oysterMeasurementsHeader: ['Oyster Measurements'],
     substrateShells: [],
     minSizeOfAllOysters: ['Minimum size of all live oysters'],
     maxSizeOfAllOysters: ['Maximum size of all live oysters'],
@@ -1511,7 +1529,7 @@ var createCsv = function(req, expeditions, callback) {
   if (expeditions[0].protocols.oysterMeasurement) {
     for (var i = 1; i < 11; i++) {
       rows.substrateShells.push({
-        substrateShellNumber: ['Substrate Shell #'+i],
+        substrateShellNumberHeader: ['Substrate Shell #'+i],
         setDate: ['Set date'],
         source: ['Source'],
         liveAtBaseline: ['Total number of live oysters at baseline'],
@@ -1527,11 +1545,17 @@ var createCsv = function(req, expeditions, callback) {
 
   if (expeditions[0].protocols.settlementTiles) {
     for (var j = 1; j < 5; j++) {
-      rows.settlementTiles.push({
-        settlementTileNumber: ['Settlement Tile #'+j],
-        description: ['Settlment Tile #' + j + ' description'],
-        organisms: ['Sessile organisms observed']
-      });
+      var tile = {
+        settlementTileNumberHeader: ['Settlement Tile #'+j],
+        description: ['Settlement Tile #' + j + ' description'],
+        organismsHeader: ['Sessile organisms observed']
+      };
+      for (var n = 1; n < 26; n++) {
+        tile['grid'+n+'-organism'] = ['Grid #' + n + ' organism'];
+        tile['grid'+n+'-notes'] = ['Grid #' + n + ' notes'];
+      }
+
+      rows.settlementTiles.push(tile);
     }
   }
 
@@ -1544,45 +1568,45 @@ var createCsv = function(req, expeditions, callback) {
     }
     for (var m = 1; m <= maxSamples; m++) {
       rows.waterSamples.push({
-        sampleNumber: ['Water Quality Sample #'+m],
+        sampleNumberHeader: ['Water Quality Sample #'+m],
         depth: ['Depth'],
         location: ['Location (coordinates)'],
-        waterTemperature: ['Water Temperature'],
+        waterTemperatureHeader: ['Water Temperature'],
         waterTemperatureMethod: ['Method'],
         waterTemperatureUnit: ['Unit'],
         waterTemperatureResults: ['Results'],
         waterTemperatureAverage: ['Average'],
-        dissolvedOxygen: ['Dissolved Oxygen'],
+        dissolvedOxygenHeader: ['Dissolved Oxygen'],
         dissolvedOxygenMethod: ['Method'],
         dissolvedOxygenUnit: ['Unit'],
         dissolvedOxygenResults: ['Results'],
         dissolvedOxygenAverage: ['Average'],
-        salinity: ['Salinity'],
+        salinityHeader: ['Salinity'],
         salinityMethod: ['Method'],
         salinityUnit: ['Unit'],
         salinityResults: ['Results'],
         salinityAverage: ['Average'],
-        pH: ['pH'],
+        pHHeader: ['pH'],
         pHMethod: ['Method'],
         pHUnit: ['Unit'],
         pHResults: ['Results'],
         pHAverage: ['Average'],
-        turbidity: ['Turbidity'],
+        turbidityHeader: ['Turbidity'],
         turbidityMethod: ['Method'],
         turbidityUnit: ['Unit'],
         turbidityResults: ['Results'],
         turbidityAverage: ['Average'],
-        ammonia: ['Ammonia'],
+        ammoniaHeader: ['Ammonia'],
         ammoniaMethod: ['Method'],
         ammoniaUnit: ['Unit'],
         ammoniaResults: ['Results'],
         ammoniaAverage: ['Average'],
-        nitrate: ['Nitrates'],
+        nitrateHeader: ['Nitrates'],
         nitrateMethod: ['Method'],
         nitrateUnit: ['Unit'],
         nitrateResults: ['Results'],
         nitrateAverage: ['Average'],
-        others: ['Other'],
+        otherHeader: ['Other'],
         otherLabel: ['Label'],
         otherMethod: ['Method'],
         otherUnit: ['Unit'],
@@ -1603,6 +1627,10 @@ var createCsv = function(req, expeditions, callback) {
     }
   };
 
+  var emptyStringCheck = function(value) {
+    return value === '';
+  };
+
   addEachExpedition(0, expeditions, function() {
     csvArrays.push(headers);
     for (var value in rows) {
@@ -1610,14 +1638,20 @@ var createCsv = function(req, expeditions, callback) {
         for (var i in rows[value]) {
           if (typeof rows[value][i] === 'object') {
             for (var array in rows[value][i]) {
-              if (rows[value][i][array].length > 1) csvArrays.push(rows[value][i][array]);
+              if (rows[value][i][array].length > 1 &&
+                (!rows[value][i][array].slice(1, rows[value][i][array].length).every(emptyStringCheck) ||
+                array.includes('Header'))) csvArrays.push(rows[value][i][array]);
             }
           } else {
-            if (rows[value][i].length > 1) csvArrays.push(rows[value][i]);
+            if (rows[value][i].length > 1 &&
+              (!rows[value][i].slice(1, rows[value][i].length).every(emptyStringCheck) ||
+              i.includes('Header'))) csvArrays.push(rows[value][i]);
           }
         }
       } else {
-        if (rows[value].length > 1) csvArrays.push(rows[value]);
+        if (rows[value].length > 1 &&
+          (!rows[value].slice(1, rows[value].length).every(emptyStringCheck) ||
+          value.includes('Header'))) csvArrays.push(rows[value]);
       }
     }
 
