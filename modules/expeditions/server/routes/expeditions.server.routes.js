@@ -12,8 +12,8 @@ module.exports = function (app) {
     .post(expeditions.compare);
 
   // Export expedition routes
-  app.route('/api/expeditions/export').all(expeditionsPolicy.isAllowed)
-    .post(expeditions.downloadCsv);
+  app.route('/api/expeditions/export-compare').all(expeditionsPolicy.isAllowed)
+    .post(expeditions.downloadCompareCsv);
 
   // Expeditions collection routes
   app.route('/api/expeditions').all(expeditionsPolicy.isAllowed)

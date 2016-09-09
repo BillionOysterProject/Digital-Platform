@@ -66,7 +66,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/expeditions/compare',
       permissions: '*'
     }, {
-      resources: '/api/expeditions/export',
+      resources: '/api/expeditions/export-compare',
       permissions: '*'
     }, {
       resources: '/api/expeditions',

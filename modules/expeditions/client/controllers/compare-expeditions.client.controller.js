@@ -6,12 +6,12 @@
     .controller('ExpeditionsCompareController', ExpeditionsCompareController);
 
   ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService', 'SchoolOrganizationsService',
-  'ExpeditionViewHelper',
-  'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams', '$http', 'lodash', 'moment'];
+  'ExpeditionViewHelper', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
+  '$http', '$location', '$anchorScroll', '$timeout', 'lodash', 'moment'];
 
   function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
-    ExpeditionViewHelper,
-    RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams, $http, lodash, moment) {
+    ExpeditionViewHelper, RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams,
+    $http, $location, $anchorScroll, $timeout, lodash, moment) {
     var vm = this;
     vm.user = Authentication.user;
     vm.filtered = false;
@@ -135,10 +135,7 @@
           submergedDepth: '',
           bioaccumulationOnCage: '',
           cageDamage: '',
-          totalLive: '',
-          totalAverageSize: '',
-          totalMinimumSize: '',
-          totalMaximumSize: ''
+          oysterMeasurements: ''
         },
         protocol3all: '',
         protocol3: {
@@ -281,10 +278,7 @@
         submergedDepth: '',
         bioaccumulationOnCage: '',
         cageDamage: '',
-        totalLive: '',
-        totalAverageSize: '',
-        totalMinimumSize: '',
-        totalMaximumSize: ''
+        oysterMeasurements: ''
       },
       protocol3all: '',
       protocol3: {
@@ -353,18 +347,12 @@
         vm.parameters.protocol2.submergedDepth = 'YES';
         vm.parameters.protocol2.bioaccumulationOnCage = 'YES';
         vm.parameters.protocol2.cageDamage = 'YES';
-        vm.parameters.protocol2.totalLive = 'YES';
-        vm.parameters.protocol2.totalAverageSize = 'YES';
-        vm.parameters.protocol2.totalMinimumSize = 'YES';
-        vm.parameters.protocol2.totalMaximumSize = 'YES';
+        vm.parameters.protocol2.oysterMeasurements = 'YES';
       } else {
         vm.parameters.protocol2.submergedDepth = '';
         vm.parameters.protocol2.bioaccumulationOnCage = '';
         vm.parameters.protocol2.cageDamage = '';
-        vm.parameters.protocol2.totalLive = '';
-        vm.parameters.protocol2.totalAverageSize = '';
-        vm.parameters.protocol2.totalMinimumSize = '';
-        vm.parameters.protocol2.totalMaximumSize = '';
+        vm.parameters.protocol2.oysterMeasurements = '';
       }
       vm.compare();
     };
@@ -487,6 +475,12 @@
 
     vm.compare = function() {
       vm.filtered = true;
+      $timeout(function() {
+        $location.hash('view-comparison');
+        $anchorScroll();
+        document.getElementById('view-comparison').focus();
+      });
+
       var expeditionIds = [];
       for (var i = 0; i < vm.expeditions.length; i++) {
         expeditionIds.push(vm.expeditions[i]._id);
@@ -528,7 +522,7 @@
                 totalDepthOfWaterSampleM += sample.depthOfWaterSampleM;
                 countDepthOfWaterSampleM++;
               }
-              if (sample.waterTemperature) {
+              if (sample.waterTemperature && sample.waterTemperature.average) {
                 var cTemp = 0;
                 if (sample.waterTemperature.units === 'c') {
                   cTemp = sample.waterTemperature.average;
@@ -538,31 +532,31 @@
                 totalWaterTemperatureC += cTemp;
                 countWaterTemperature++;
               }
-              if (sample.dissolvedOxygen) {
+              if (sample.dissolvedOxygen && sample.dissolvedOxygen.average) {
                 totalDissolvedOxygen += sample.dissolvedOxygen.average;
                 countDissolvedOxygen++;
               }
-              if (sample.salinity) {
+              if (sample.salinity && sample.salinity.average) {
                 totalSalinity += sample.salinity.average;
                 countSalinity++;
               }
-              if (sample.pH) {
+              if (sample.pH && sample.pH.average) {
                 totalPH += sample.pH.average;
                 countPH++;
               }
-              if (sample.turbidity) {
+              if (sample.turbidity && sample.turbidity.average) {
                 totalTurbidity += sample.turbidity.average;
                 countTurbidity++;
               }
-              if (sample.ammonia) {
+              if (sample.ammonia && sample.ammonia.average) {
                 totalAmmonia += sample.ammonia.average;
                 countAmmonia++;
               }
-              if (sample.nitrates) {
+              if (sample.nitrates && sample.nitrates.average) {
                 totalNitrates += sample.nitrates.average;
                 countNitrates++;
               }
-              if (sample.others && sample.others[0] && sample.others[0].label) {
+              if (sample.others && sample.others[0] && sample.others[0].average && sample.others[0].label) {
                 if (avgOther[sample.others[0].label]) {
                   avgOther[sample.others[0].label].total += sample.others[0].average;
                   avgOther[sample.others[0].label].count++;
@@ -629,7 +623,7 @@
         expeditionIds.push(vm.expeditions[i]._id);
       }
 
-      $http.post('/api/expeditions/export', {
+      $http.post('/api/expeditions/export-compare', {
         expeditionIds: expeditionIds,
         protocol1: vm.parameters.protocol1,
         protocol2: vm.parameters.protocol2,
