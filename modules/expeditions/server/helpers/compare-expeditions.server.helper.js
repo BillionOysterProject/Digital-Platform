@@ -751,7 +751,6 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            console.log('obj', obj);
             rows.weatherConditions.push(obj.order);
             done(null);
           }
@@ -1639,23 +1638,17 @@ var createCsv = function(req, expeditions, callback) {
         for (var i in rows[value]) {
           if (typeof rows[value][i] === 'object') {
             for (var array in rows[value][i]) {
-                console.log('array: '+ array, rows[value][i][array]);
-                console.log('slice: ', rows[value][i][array].slice(1, rows[value][i][array].length));
-                if (rows[value][i][array].length > 1 &&
-                  (!rows[value][i][array].slice(1, rows[value][i][array].length).every(emptyStringCheck) ||
-                  array.includes('Header'))) csvArrays.push(rows[value][i][array]);
+              if (rows[value][i][array].length > 1 &&
+                (!rows[value][i][array].slice(1, rows[value][i][array].length).every(emptyStringCheck) ||
+                array.includes('Header'))) csvArrays.push(rows[value][i][array]);
             }
           } else {
-            console.log('i: ' + i, rows[value][i]);
-            console.log('slice: ' + rows[value][i].slice(1, rows[value][i].length));
             if (rows[value][i].length > 1 &&
               (!rows[value][i].slice(1, rows[value][i].length).every(emptyStringCheck) ||
               i.includes('Header'))) csvArrays.push(rows[value][i]);
           }
         }
       } else {
-        console.log('value: ' + value, rows[value]);
-        console.log('slice: ' + rows[value].slice(1, rows[value].length));
         if (rows[value].length > 1 &&
           (!rows[value].slice(1, rows[value].length).every(emptyStringCheck) ||
           value.includes('Header'))) csvArrays.push(rows[value]);
