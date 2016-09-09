@@ -1102,10 +1102,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             rows.waterSamples[index].waterTemperature.push('');
             WaterTemperatureMethod.findOne({ value: sample.waterTemperature.method }).exec(function(err, method) {
               if (err) done(err);
-              rows.waterSamples[index].waterTemperatureMethod.push(method.label);
+              rows.waterSamples[index].waterTemperatureMethod.push((method) ? method.label : '');
               WaterTemperatureUnit.findOne({ value: sample.waterTemperature.units }).exec(function(err, unit) {
                 if (err) done(err);
-                rows.waterSamples[index].waterTemperatureUnit.push(unit.label);
+                rows.waterSamples[index].waterTemperatureUnit.push((unit) ? unit.label : '');
                 rows.waterSamples[index].waterTemperatureResults.push(sample.waterTemperature.results);
                 rows.waterSamples[index].waterTemperatureAverage.push(sample.waterTemperature.average);
                 addWaterTemperature(index+1, samples, maxSamples, callback);
@@ -1139,10 +1139,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             rows.waterSamples[index].dissolvedOxygen.push('');
             DissolvedOxygenMethod.findOne({ value: sample.dissolvedOxygen.method }).exec(function(err, method) {
               if (err) done(err);
-              rows.waterSamples[index].dissolvedOxygenMethod.push(method.label);
+              rows.waterSamples[index].dissolvedOxygenMethod.push((method) ? method.label : '');
               DissolvedOxygenUnit.findOne({ value: sample.dissolvedOxygen.units }).exec(function(err, unit) {
                 if (err) done(err);
-                rows.waterSamples[index].dissolvedOxygenUnit.push(unit.label);
+                rows.waterSamples[index].dissolvedOxygenUnit.push((unit) ? unit.label : '');
                 rows.waterSamples[index].dissolvedOxygenResults.push(sample.dissolvedOxygen.results);
                 rows.waterSamples[index].dissolvedOxygenAverage.push(sample.dissolvedOxygen.average);
                 addDissolvedOxygen(index+1, samples, maxSamples, callback);
@@ -1176,10 +1176,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             rows.waterSamples[index].salinity.push('');
             SalinityMethod.findOne({ value: sample.salinity.method }).exec(function(err, method) {
               if (err) done(err);
-              rows.waterSamples[index].salinityMethod.push(method.label);
+              rows.waterSamples[index].salinityMethod.push((method) ? method.label : '');
               SalinityUnit.findOne({ value: sample.salinity.units }).exec(function(err, unit) {
                 if (err) done(err);
-                rows.waterSamples[index].salinityUnit.push(unit.label);
+                rows.waterSamples[index].salinityUnit.push((unit) ? unit.label : '');
                 rows.waterSamples[index].salinityResults.push(sample.salinity.results);
                 rows.waterSamples[index].salinityAverage.push(sample.salinity.average);
                 addSalinity(index+1, samples, maxSamples, callback);
@@ -1213,10 +1213,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             rows.waterSamples[index].pH.push('');
             PhMethod.findOne({ value: sample.pH.method }).exec(function(err, method) {
               if (err) done(err);
-              rows.waterSamples[index].pHMethod.push(method.label);
+              rows.waterSamples[index].pHMethod.push((method) ? method.label : '');
               PhUnit.findOne({ value: sample.pH.units }).exec(function(err, unit) {
                 if (err) done(err);
-                rows.waterSamples[index].pHUnit.push(unit.label);
+                rows.waterSamples[index].pHUnit.push((unit) ? unit.label : '');
                 rows.waterSamples[index].pHResults.push(sample.pH.results);
                 rows.waterSamples[index].pHAverage.push(sample.pH.average);
                 addPh(index+1, samples, maxSamples, callback);
@@ -1251,10 +1251,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               rows.waterSamples[index].turbidity.push('');
               TurbidityMethod.findOne({ value: sample.turbidity.method }).exec(function(err, method) {
                 if (err) done(err);
-                rows.waterSamples[index].turbidityMethod.push(method.label);
+                rows.waterSamples[index].turbidityMethod.push((method) ? method.label : '');
                 TurbidityUnit.findOne({ value: sample.turbidity.units }).exec(function(err, unit) {
                   if (err) done(err);
-                  rows.waterSamples[index].turbidityUnit.push(unit.label);
+                  rows.waterSamples[index].turbidityUnit.push((unit) ? unit.label : '');
                   rows.waterSamples[index].turbidityResults.push(sample.turbidity.results);
                   rows.waterSamples[index].turbidityAverage.push(sample.turbidity.average);
                   addTurbidity(index+1, samples, maxSamples, callback);
@@ -1297,10 +1297,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               rows.waterSamples[index].ammonia.push('');
               AmmoniaMethod.findOne({ value: sample.ammonia.method }).exec(function(err, method) {
                 if (err) done(err);
-                rows.waterSamples[index].ammoniaMethod.push(method.label);
+                rows.waterSamples[index].ammoniaMethod.push((method) ? method.label : '');
                 AmmoniaUnit.findOne({ value: sample.ammonia.units }).exec(function(err, unit) {
                   if (err) done(err);
-                  rows.waterSamples[index].ammoniaUnit.push(unit.label);
+                  rows.waterSamples[index].ammoniaUnit.push((unit) ? unit.label : '');
                   rows.waterSamples[index].ammoniaResults.push(sample.ammonia.results);
                   rows.waterSamples[index].ammoniaAverage.push(sample.ammonia.average);
                   addAmmonia(index+1, samples, maxSamples, callback);
@@ -1343,10 +1343,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
               rows.waterSamples[index].nitrate.push('');
               NitrateMethod.findOne({ value: sample.nitrates.method }).exec(function(err, method) {
                 if (err) done(err);
-                rows.waterSamples[index].nitrateMethod.push(method.label);
+                rows.waterSamples[index].nitrateMethod.push((method) ? method.label : '');
                 NitrateUnit.findOne({ value: sample.nitrates.units }).exec(function(err, unit) {
                   if (err) done(err);
-                  rows.waterSamples[index].nitrateUnit.push(unit.label);
+                  rows.waterSamples[index].nitrateUnit.push((unit) ? unit.label : '');
                   rows.waterSamples[index].nitrateResults.push(sample.nitrates.results);
                   rows.waterSamples[index].nitrateAverage.push(sample.nitrates.average);
                   addNitrate(index+1, samples, maxSamples, callback);
