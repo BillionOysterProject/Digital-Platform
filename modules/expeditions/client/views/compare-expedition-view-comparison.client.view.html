@@ -4,11 +4,11 @@
             <h3>
                 3. Here's the results of these <span class="red">{{vm.dataPointCount()}} data points</span> across
                 <span class="red">{{vm.expeditions.length}} expeditions</span>
-                <a class="btn btn-primary" target="_blank">Download all data</a>
+                <a class="btn btn-primary" ng-click="vm.download()">Download all data</a>
             </h3>
         </div>
     </div>
-    <table class="table table-responsive">
+    <table class="table table-responsive" id="view-comparison">
         <!-- <tr>
             <td></td>
             <td ng-show="vm.dataPointProtocol1Count() > 0" colspan="{{vm.protocol1paramCount}}" class="text-center">
@@ -271,25 +271,25 @@
               {{expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.totalLive === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'">
             <td><b>Population live</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               {{expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.totalAverageSize === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'">
             <td><b>Population avg size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.totalMinimumSize === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'">
             <td><b>Population min size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}&nbsp;
             </td>
         </tr>
-        <tr ng-show="vm.parameters.protocol2.totalMaximumSize === 'YES'">
+        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'">
             <td><b>Population max size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}&nbsp;
