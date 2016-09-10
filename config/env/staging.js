@@ -19,7 +19,7 @@ module.exports = {
     // secure cookie should be turned to true to provide additional
     // layer of security so that the cookie is set only when working
     // in HTTPS mode.
-    secure: true
+    secure: false
   },
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '0.0.0.0',
