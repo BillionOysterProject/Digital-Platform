@@ -465,7 +465,7 @@ var buildCompareQuery = function (req, callback) {
     }
     if (req.body.protocol1.pipes === 'YES') {
       selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
-      selectProtocol1.push('waterConditions.unmarkedPipePresent');
+      selectProtocol1.push('waterConditions.unmarkedOutfallPipes');
     }
     if (req.body.protocol1.shorelineType === 'YES') {
       selectProtocol1.push('landConditions.shoreLineType');

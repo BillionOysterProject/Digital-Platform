@@ -13,12 +13,14 @@ var path = require('path'),
   assertSiteCondition = CommonSiteConditions.assertSiteCondition,
   fillOutSiteConditions = CommonSiteConditions.fillOutSiteConditions,
   assertSiteConditionView = CommonSiteConditions.assertSiteConditionView,
+  assertSiteConditionCompare = CommonSiteConditions.assertSiteConditionCompare,
   CommonOysterMeasurements = require('../../../protocol-oyster-measurements/tests/e2e/common-oyster-measurements.e2e.tests'),
   assertSubstrateMeasurements = CommonOysterMeasurements.assertSubstrateMeasurements,
   assertOysterMeasurements = CommonOysterMeasurements.assertOysterMeasurements,
   fillOutOysterMeasurements = CommonOysterMeasurements.fillOutOysterMeasurements,
   fillOutAllOysterMeasurements = CommonOysterMeasurements.fillOutAllOysterMeasurements,
   assertOysterMeasurementsView = CommonOysterMeasurements.assertOysterMeasurementsView,
+  assertOysterMeasurementCompare = CommonOysterMeasurements.assertOysterMeasurementCompare,
   CommonMobileTraps = require('../../../protocol-mobile-traps/tests/e2e/common-mobile-traps.e2e.tests'),
   assertMobileOrganismDetails = CommonMobileTraps.assertMobileOrganismDetails,
   assertMobileTrap = CommonMobileTraps.assertMobileTrap,
@@ -76,15 +78,15 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  describe('List/Search Expeditions Tests', function() {
+  xdescribe('List/Search Expeditions Tests', function() {
     describe('Search Expeditions', function() {
-      var startDate = element(by.model('vm.filter.startDate'));
-      var endDate = element(by.model('vm.filter.endDate'));
-      var searchField = element(by.model('vm.filter.searchString'));
-      var stationFilter = element(by.model('vm.filter.stationObj'));
-      var orgFilter = element(by.model('vm.filter.organizationObj'));
-      var teamFilter = element(by.model('vm.filter.teamObj'));
-      var teamLeadFilter = element(by.model('vm.filter.teamLeadObj'));
+      var startDate = element.all(by.model('vm.filter.startDate')).get(0);
+      var endDate = element.all(by.model('vm.filter.endDate')).get(0);
+      var searchField = element.all(by.model('vm.filter.searchString')).get(0);
+      var stationFilter = element.all(by.model('vm.filter.stationObj')).get(0);
+      var orgFilter = element.all(by.model('vm.filter.organizationObj')).get(0);
+      var teamFilter = element.all(by.model('vm.filter.teamObj')).get(0);
+      var teamLeadFilter = element.all(by.model('vm.filter.teamLeadObj')).get(0);
 
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
@@ -150,7 +152,74 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  describe('View Expedition Tests', function() {
+  describe('Compare Expeditions Tests', function() {
+    describe('Compare Expeditions', function() {
+      it('should allow a team member to view expedition', function() {
+        // Sign in as team member
+        signinAs(member1);
+        // Assert that it went to the correct opening page
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        // Go to published expeditions
+        element(by.id('pubexpeditions')).click();
+        browser.sleep(500);
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+
+        element(by.partialLinkText('Compare')).click();
+        browser.wait(EC.visibilityOf(element(by.id('step1-header'))), 5000);
+        browser.sleep(500);
+        expect(element(by.id('step1-header')).getText()).toEqual('1. Refine the expeditions to compare');
+      });
+
+      it('should allow a team member to filter expeditions', function() {
+        var teamLeadFilter = element.all(by.model('vm.filter.teamLeadObj')).get(1);
+        expect(teamLeadFilter.isPresent()).toBe(true);
+        teamLeadFilter.clear().sendKeys('tea').click();
+        browser.sleep(100);
+
+        expect(element(by.id('step2-header')).getText()).toEqual('2. Select parameters to compare from these 2 expeditions');
+      });
+
+      it('should allow a team member to filter parameters by protocol 1', function() {
+        element(by.model('vm.parameters.protocol1all')).click();
+        browser.sleep(100);
+
+        expect(element(by.id('step3-header')).getText()).toEqual('3. Here\'s the results of these 15 data points across 2 expeditions Download all data');
+
+        var assertHeaderCompare = function(index, expeditionValues, stationValues) {
+          // Expedition Header
+          var expeditionHeaderRow = element(by.id('expedition-compare-header')).all(by.tagName('td'));
+          var header = expeditionHeaderRow.get(index);
+          expect(header.getText()).toEqual(expeditionValues.name + '\n' + stationValues.name + ', ' +
+            moment(expeditionValues.monitoringStartDate).format('MMMM D, YYYY'));
+        };
+
+        assertHeaderCompare(1, expedition2, station);
+        assertHeaderCompare(2, expedition3, station2);
+
+        assertSiteConditionCompare(1, siteCondition2);
+        assertSiteConditionCompare(2, siteCondition3);
+
+        element(by.model('vm.parameters.protocol1all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 2', function() {
+        element(by.model('vm.parameters.protocol2all')).click();
+        browser.sleep(100);
+
+        expect(element(by.id('step3-header')).getText()).toEqual('3. Here\'s the results of these 4 data points across 2 expeditions Download all data');
+
+        assertOysterMeasurementCompare(1, oysterMeasurement2);
+        assertOysterMeasurementCompare(2, oysterMeasurement3);
+      });
+    });
+  });
+
+//############################################################################//
+//  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
+//############################################################################//
+  xdescribe('View Expedition Tests', function() {
     describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
@@ -221,7 +290,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - CREATE EXPEDITION
 //############################################################################//
 
-  describe('Full Expedition Creation Tests', function() {
+  xdescribe('Full Expedition Creation Tests', function() {
     describe('Create Expedition', function() {
       it('should create an expedition using auto-assign', function() {
         //Sign in as team leader

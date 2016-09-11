@@ -151,14 +151,6 @@
         vm.expeditions = data;
       });
 
-      ExpeditionsService.query({
-        published: true,
-        sort: 'startDate',
-        limit: 5
-      }, function(data) {
-        vm.published = data;
-      });
-
       ExpeditionActivitiesService.query({
         teamId: vm.filter.teamId,
         limit: 5
@@ -172,6 +164,14 @@
         vm.activitiesCount = data.length;
       });
     };
+
+    ExpeditionsService.query({
+      published: true,
+      sort: 'startDate',
+      limit: 5
+    }, function(data) {
+      vm.published = data;
+    });
 
     if (vm.isTeamLead || vm.isTeamMember || vm.isAdmin) {
       vm.findTeams();
