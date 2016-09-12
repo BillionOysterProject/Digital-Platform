@@ -27,17 +27,20 @@ var path = require('path'),
   fillOutMobileOrganismDetails = CommonMobileTraps.fillOutMobileOrganismDetails,
   fillOutMobileTraps = CommonMobileTraps.fillOutMobileTraps,
   assertMobileTrapView = CommonMobileTraps.assertMobileTrapView,
+  assertMobileTrapCompare = CommonMobileTraps.assertMobileTrapCompare,
   CommonSettlementTiles = require('../../../protocol-settlement-tiles/tests/e2e/common-settlement-tiles.e2e.tests'),
   assertSettlementTile = CommonSettlementTiles.assertSettlementTile,
   assertSettlementTiles = CommonSettlementTiles.assertSettlementTiles,
   fillOutSettlementTile = CommonSettlementTiles.fillOutSettlementTile,
   fillOutSettlementTiles = CommonSettlementTiles.fillOutSettlementTiles,
   assertSettlementTilesView = CommonSettlementTiles.assertSettlementTilesView,
+  assertSettlementTileCompare = CommonSettlementTiles.assertSettlementTileCompare,
   CommonWaterQuality = require('../../../protocol-water-quality/tests/e2e/common-water-quality.e2e.tests'),
   assertWaterQuality = CommonWaterQuality.assertWaterQuality,
   fillOutWaterQualitySample = CommonWaterQuality.fillOutWaterQualitySample,
   fillOutWaterQuality = CommonWaterQuality.fillOutWaterQuality,
   assertWaterQualityView = CommonWaterQuality.assertWaterQualityView,
+  assertWaterQualityCompare = CommonWaterQuality.assertWaterQualityCompare,
   EC = protractor.ExpectedConditions;
 
 describe('Expedition E2E Tests', function() {
@@ -212,6 +215,42 @@ describe('Expedition E2E Tests', function() {
 
         assertOysterMeasurementCompare(1, oysterMeasurement2);
         assertOysterMeasurementCompare(2, oysterMeasurement3);
+
+        element(by.model('vm.parameters.protocol2all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 3', function() {
+        element(by.model('vm.parameters.protocol3all')).click();
+        browser.sleep(100);
+
+        assertMobileTrapCompare(1, mobileTrap3);
+        assertMobileTrapCompare(2, mobileTrap4);
+
+        element(by.model('vm.parameters.protocol3all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 4', function() {
+        element(by.model('vm.parameters.protocol4all')).click();
+        browser.sleep(100);
+
+        assertSettlementTileCompare(1, settlementTiles2);
+        assertSettlementTileCompare(2, settlementTiles3);
+
+        element(by.model('vm.parameters.protocol4all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 5', function() {
+        element(by.model('vm.parameters.protocol5all')).click();
+        browser.sleep(100);
+
+        assertWaterQualityCompare(1, waterQuality3);
+        assertWaterQualityCompare(2, waterQuality4);
+
+        element(by.model('vm.parameters.protocol5all')).click();
+        browser.sleep(100);
       });
     });
   });

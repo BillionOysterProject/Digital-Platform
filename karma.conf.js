@@ -43,7 +43,8 @@ module.exports = function (karmaConfig) {
 
     // Test results reporter to use
     // Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: karmaReporters,
+    //reporters: karmaReporters,
+    reporters: ['progress'],
 
     // Configure the coverage reporter
     coverageReporter: {

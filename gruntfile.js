@@ -325,12 +325,12 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'copy:fonts', 'cssmin']);
 
   // Run the project tests
-  grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'run:testDBload', 'server', 'mochaTest', 'karma:unit', 'protractor']);
-  grunt.registerTask('test:server', ['env:test', 'lint', 'run:testDBload', 'server', 'mochaTest']);
-  grunt.registerTask('test:client', ['env:test', 'lint', 'run:testDBload', 'karma:unit']);
+  grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'dropdb', 'run:testDBload', 'server', 'protractor', 'mochaTest']); //, 'karma:unit'
+  grunt.registerTask('test:server', ['env:test', 'lint', 'dropdb', 'run:testDBload', 'server', 'mochaTest']);
+  grunt.registerTask('test:client', ['env:test', 'lint', 'dropdb', 'run:testDBload']); //, 'karma:unit'
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'run:testDBload', 'server', 'protractor']);
   // Run project coverage
-  grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);
+  grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage']); //, 'karma:unit'
 
   // Run the project in development mode
   grunt.registerTask('default', ['env:devlocal', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);

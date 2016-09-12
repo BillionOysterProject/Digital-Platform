@@ -567,6 +567,46 @@ var assertOysterMeasurementCompare = function(index, values) {
     var submergedDepth = submergedDepthRow.get(index);
     expect(submergedDepth.getText()).toEqual(values.depthOfOysterCage.submergedDepthofCageM + ' meters ');
   }
+  if (element(by.id('bioaccumulation-on-cage-compare')).isPresent()) {
+    var bioaccumulationOnCageRow = element(by.id('bioaccumulation-on-cage-compare')).all(by.tagName('td'));
+    var bioaccumulationOnCage = bioaccumulationOnCageRow.get(index);
+    var bioaccumulationOnCageString = '';
+    if (values.conditionOfOysterCage.bioaccumulationOnCage === 4) {
+      bioaccumulationOnCageString = 'Heavy ';
+    } else if (values.conditionOfOysterCage.bioaccumulationOnCage === 3) {
+      bioaccumulationOnCageString = 'Medium ';
+    } else if (values.conditionOfOysterCage.bioaccumulationOnCage === 2) {
+      bioaccumulationOnCageString = 'Light ';
+    } else if (values.conditionOfOysterCage.bioaccumulationOnCage === 1) {
+      bioaccumulationOnCageString = 'None/clean';
+    }
+    expect(bioaccumulationOnCage.getText()).toEqual(bioaccumulationOnCageString + ' ');
+  }
+  if (element(by.id('cage-damage-compare')).isPresent()) {
+    var cageDamageRow = element(by.id('cage-damage-compare')).all(by.tagName('td'));
+    var cageDamage = cageDamageRow.get(index);
+    expect(cageDamage.getText()).toEqual(values.conditionOfOysterCage.notesOnDamageToCage + ' ');
+  }
+  if (element(by.id('oyster-population-live-compare')).isPresent()) {
+    var liveOystersRow = element(by.id('oyster-population-live-compare')).all(by.tagName('td'));
+    var liveOysters = liveOystersRow.get(index);
+    expect(liveOysters.getText()).toEqual(values.totalNumberOfAllLiveOysters.toString() + ' ');
+  }
+  if (element(by.id('oyster-population-avg-size-compare')).isPresent()) {
+    var avgSizeRow = element(by.id('oyster-population-avg-size-compare')).all(by.tagName('td'));
+    var avgSize = avgSizeRow.get(index);
+    expect(avgSize.getText()).toEqual(values.averageSizeOfAllLiveOysters + ' ');
+  }
+  if (element(by.id('oyster-population-min-size-compare')).isPresent()) {
+    var minSizeRow = element(by.id('oyster-population-min-size-compare')).all(by.tagName('td'));
+    var minSize = minSizeRow.get(index);
+    expect(minSize.getText()).toEqual(values.minimumSizeOfAllLiveOysters + ' ');
+  }
+  if (element(by.id('oyster-population-max-size-compare')).isPresent()) {
+    var maxSizeRow = element(by.id('oyster-population-max-size-compare')).all(by.tagName('td'));
+    var maxSize = maxSizeRow.get(index);
+    expect(maxSize.getText()).toEqual(values.maximumSizeOfAllLiveOysters + ' ');
+  }
 };
 
 module.exports = {

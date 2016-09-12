@@ -479,6 +479,52 @@ var assertWaterQualityView = function(values, teamMember) {
   }
 };
 
+var assertWaterQualityCompare = function(index, values) {
+  if (element(by.id('depth-of-water-sample-compare')).isPresent()) {
+    var depthRow = element(by.id('depth-of-water-sample-compare')).all(by.tagName('td'));
+    var depth = depthRow.get(index);
+    expect(depth.getText()).toEqual(values.depthOfWaterSampleM + ' meters ');
+  }
+  if (element(by.id('water-temperature-compare')).isPresent()) {
+    var waterTemperatureRow = element(by.id('water-temperature-compare')).all(by.tagName('td'));
+    var waterTemperature = waterTemperatureRow.get(index);
+    var tempF = 0;
+    var tempC = 0;
+    if (values.waterTemperature.unitsText === 'C') {
+      tempF = (values.waterTemperature.average * 9/5 + 32);
+      tempC = values.waterTemperature.average;
+    }
+    if (values.waterTemperature.unitsText === 'F') {
+      tempC = (values.waterTemperature.average - 32) / 1.8;
+      tempF = values.waterTemperature.average;
+    }
+    tempF = parseFloat(tempF).toFixed(2);
+    tempC = parseFloat(tempC).toFixed(2);
+    expect(waterTemperature.getText()).toEqual(tempF + '℉ / ' + tempC + '℃  ');
+  }
+  if (element(by.id('dissolved-oxygen-compare')).isPresent()) {
+    var dissolvedOxygenRow = element(by.id('dissolved-oxygen-compare')).all(by.tagName('td'));
+    var dissolvedOxygen = dissolvedOxygenRow.get(index);
+    var dissolvedOxygenAverage = parseFloat(values.dissolvedOxygen.average).toFixed(2);
+    expect(dissolvedOxygen.getText()).toEqual(dissolvedOxygenAverage + ' ' +
+      values.dissolvedOxygen.unitsText + '  ');
+  }
+  if (element(by.id('salinity-compare')).isPresent()) {
+    var salinityRow = element(by.id('salinity-compare')).all(by.tagName('td'));
+    var salinity = salinityRow.get(index);
+    var salinityAverage = parseFloat(values.salinity.average).toFixed(2);
+    expect(salinity.getText()).toEqual(salinityAverage + ' ' +
+      values.salinity.unitsText + '  ');
+  }
+  if (element(by.id('pH-compare')).isPresent()) {
+    var phRow = element(by.id('pH-compare')).all(by.tagName('td'));
+    var ph = phRow.get(index);
+    var phAverage = parseFloat(values.pH.average).toFixed(2);
+    expect(ph.getText()).toEqual(phAverage + ' ' +
+      values.pH.unitsText + '  ');
+  }
+};
+
 module.exports = {
   waterQuality1: waterQuality1,
   waterQuality2: waterQuality2,
@@ -488,5 +534,6 @@ module.exports = {
   assertWaterQuality: assertWaterQuality,
   fillOutWaterQualitySample: fillOutWaterQualitySample,
   fillOutWaterQuality: fillOutWaterQuality,
-  assertWaterQualityView: assertWaterQualityView
+  assertWaterQualityView: assertWaterQualityView,
+  assertWaterQualityCompare: assertWaterQualityCompare
 };

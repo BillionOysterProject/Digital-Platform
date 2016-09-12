@@ -8,11 +8,13 @@ module.exports = {
   expedition2: {
     name: 'Test Expedition 2 - Fully Filled Out',
     notes: 'Test special instructions',
-    monitoringStartDate: '2016-08-24T14:00:00.000Z'
+    monitoringStartDate: '2016-08-24T14:00:00.000Z',
+    _id: '57bf2bcdd9bd331294fdf6c8'
   },
   expedition3: {
     name: 'Test Expedition 3 - Only Required Filled Out',
-    monitoringStartDate: '2016-08-22T14:00:00.000Z'
+    monitoringStartDate: '2016-08-22T14:00:00.000Z',
+    _id: '57bf2becd9bd331294fdf6ce'
   },
 
   uploadImage: function(id) {

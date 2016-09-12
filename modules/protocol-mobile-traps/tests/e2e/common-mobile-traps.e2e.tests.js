@@ -177,6 +177,14 @@ var assertMobileTrapView = function(values, teamMember) {
   }
 };
 
+var assertMobileTrapCompare = function(index, values) {
+  if (element(by.id('mobile-organisms-observed-compare')).isPresent()) {
+    var organismsRow = element(by.id('mobile-organisms-observed-compare')).all(by.tagName('td'));
+    var organisms = organismsRow.get(index);
+    expect(organisms.getText()).toEqual(values.count.toString() + ' ' + values.organism.commonName);
+  }
+};
+
 module.exports = {
   mobileTrap1: mobileTrap1,
   mobileTrap2: mobileTrap2,
@@ -186,5 +194,6 @@ module.exports = {
   assertMobileTrap: assertMobileTrap,
   fillOutMobileOrganismDetails: fillOutMobileOrganismDetails,
   fillOutMobileTraps: fillOutMobileTraps,
-  assertMobileTrapView: assertMobileTrapView
+  assertMobileTrapView: assertMobileTrapView,
+  assertMobileTrapCompare: assertMobileTrapCompare
 };

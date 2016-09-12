@@ -8,7 +8,7 @@
             </h3>
         </div>
     </div>
-    <table class="table table-responsive" id="view-comparison">
+    <table class="table table-responsive">
         <!-- <tr>
             <td></td>
             <td ng-show="vm.dataPointProtocol1Count() > 0" colspan="{{vm.protocol1paramCount}}" class="text-center">
@@ -315,7 +315,7 @@
         </tr>
         <tr ng-show="vm.parameters.protocol4.organism === 'YES'" id="sessile-organisms-observed-compare">
             <td><b>Sessile organisms observed</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
+            <td ng-repeat="expedition in vm.compareExpeditions" id="sessile-organisms-table-{{$index}}">
                 <table class="table-condensed">
                     <tr>
                       <td ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism">
@@ -323,7 +323,7 @@
                         <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
                           <span>
-                            <h4 class="text-muted">{{i}}</h4> :
+                            <h4 class="text-muted">{{i}}</h4>:
                             {{vm.getSessileOrganismName(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}
                             <em>{{expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].notes}}</em><br/>
                           </span>
@@ -353,7 +353,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.dissolvedOxygen">
                 {{expedition.protocols.waterQuality.avgSample.dissolvedOxygen | number:2}}
-                {{vm.getDissolvedOxygenUnit(expedition.protocols.waterQuality.avgSample.dissolvedOxygen)}}
+                {{vm.getDissolvedOxygenUnit(expedition.protocols.waterQuality.samples[0].dissolvedOxygen.units)}}
               </span>&nbsp;
             </td>
         </tr>
@@ -362,7 +362,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.salinity">
                 {{expedition.protocols.waterQuality.avgSample.salinity | number:2}}
-                {{vm.getSalinityUnit(expedition.protocols.waterQuality.avgSample.salinity)}}
+                {{vm.getSalinityUnit(expedition.protocols.waterQuality.samples[0].salinity.units)}}
               </span>&nbsp;
             </td>
         </tr>
@@ -371,7 +371,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.pH">
                 {{expedition.protocols.waterQuality.avgSample.pH | number:2}}
-                {{vm.getPHUnits(expedition.protocols.waterQuality.avgSample.pH)}}
+                {{vm.getPHUnits(expedition.protocols.waterQuality.samples[0].pH.units)}}
               </span>&nbsp;
             </td>
         </tr>
@@ -380,7 +380,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.turbidity">
                 {{expedition.protocols.waterQuality.avgSample.turbidity | number:2}}
-                {{vm.getTurbidityUnit(expedition.protocols.waterQuality.avgSample.turbidity)}}
+                {{vm.getTurbidityUnit(expedition.protocols.waterQuality.samples[0].turbidity.units)}}
               </span>&nbsp;
             </td>
         </tr>
@@ -389,7 +389,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.ammonia">
                 {{expedition.protocols.waterQuality.avgSample.ammonia | number:2}}
-                {{vm.getAmmoniaUnit(expedition.protocols.waterQuality.avgSample.ammonia)}}
+                {{vm.getAmmoniaUnit(expedition.protocols.waterQuality.samples[0].ammonia.units)}}
               </span>&nbsp;
             </td>
         </tr>
@@ -398,7 +398,7 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-show="expedition.protocols.waterQuality.avgSample.nitrates">
                 {{expedition.protocols.waterQuality.avgSample.nitrates | number:2}}
-                {{vm.getNitratesUnit(expedition.protocols.waterQuality.avgSample.nitrates)}}
+                {{vm.getNitratesUnit(expedition.protocols.waterQuality.samples[0].nitrates.units)}}
               </span>&nbsp;
             </td>
         </tr>
