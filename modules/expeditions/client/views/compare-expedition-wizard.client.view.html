@@ -1,5 +1,7 @@
 <div>
     <compare-expedition-select-expeditions></compare-expedition-select-expeditions>
     <compare-expedition-select-data ng-hide="vm.compareExpeditions.length === 0"></compare-expedition-select-data>
-    <compare-expedition-view-comparison ng-show="vm.compareExpeditions && vm.compareExpeditions.length > 0"></compare-expedition-view-comparison>
+    <div id="view-comparison">
+      <compare-expedition-view-comparison ng-show="vm.compareExpeditions && vm.compareExpeditions.length > 0"></compare-expedition-view-comparison>
+    </div>
 </div>

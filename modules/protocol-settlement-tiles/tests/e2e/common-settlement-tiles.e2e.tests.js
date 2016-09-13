@@ -244,6 +244,66 @@ var assertSettlementTilesView = function(values, teamMember) {
   }
 };
 
+var getSettlementTileGridList = function(organisms, notes) {
+  var gridList = '';
+  for (var i = 0; i < organisms.length; i++) {
+    var commonName = organisms[i];
+    if (commonName === 'Other (mark in notes)') {
+      gridList += (i+1) + ': Other ' + notes + '\n';
+    } else {
+      gridList += (i+1) + ': ' + commonName + '\n';
+    }
+  }
+  return gridList.trim();
+};
+
+var assertSettlementTileCompare = function(index, values) {
+  if (element(by.id('settlement-tile-description-compare')).isPresent()) {
+    var tileDescriptionRow = element(by.id('settlement-tile-description-compare')).all(by.tagName('td'));
+    var tileDescription = tileDescriptionRow.get(index);
+    var tileDescriptionString = '';
+    if (values.settlementTile1) {
+      tileDescriptionString += 'Settlement Tile 1: ' + values.settlementTile1.description + '\n';
+    }
+    if (values.settlementTile2) {
+      tileDescriptionString += 'Settlement Tile 2: ' + values.settlementTile2.description + '\n';
+    }
+    if (values.settlementTile3) {
+      tileDescriptionString += 'Settlement Tile 3: ' + values.settlementTile3.description + '\n';
+    }
+    if (values.settlementTile4) {
+      tileDescriptionString += 'Settlement Tile 4: ' + values.settlementTile4.description + '\n';
+    }
+    expect(tileDescription.getText()).toEqual(tileDescriptionString.trim());
+  }
+  if (element(by.id('sessile-organisms-observed-compare')).isPresent()) {
+    // var organismsRow = element(by.id('sessile-organisms-observed-compare')).all(by.tagName('td'));
+    // var tileTable = organismsRow.get(index);
+    var tileTable = element(by.id('sessile-organisms-table-'+(index-1))).all(by.tagName('table'));
+    //var tileTable = organismsRow.get(index-1);
+    var tileTableString = '';
+    if (values.settlementTile1) {
+      tileTableString += 'SETTLEMENT TILE #1\n' +
+        getSettlementTileGridList(values.settlementTile1.organismsText, values.settlementTile1.notes) + '\n';
+    }
+    if (values.settlementTile2) {
+      tileTableString += 'SETTLEMENT TILE #2\n' +
+        getSettlementTileGridList(values.settlementTile2.organismsText, values.settlementTile2.notes) + '\n';
+    }
+    if (values.settlementTile3) {
+      tileTableString += 'SETTLEMENT TILE #3\n' +
+        getSettlementTileGridList(values.settlementTile3.organismsText, values.settlementTile3.notes) + '\n';
+    }
+    if (values.settlementTile4) {
+      tileTableString += 'SETTLEMENT TILE #4\n' +
+        getSettlementTileGridList(values.settlementTile4.organismsText, values.settlementTile4.notes) + '\n';
+    }
+    var tileTableArray = [];
+    tileTableArray.push(tileTableString.trim());
+    expect(tileTable.getText()).toEqual(tileTableArray);
+  }
+};
+
 module.exports = {
   settlementTiles1: settlementTiles1,
   settlementTiles2: settlementTiles2,
@@ -252,5 +312,6 @@ module.exports = {
   assertSettlementTiles: assertSettlementTiles,
   fillOutSettlementTile: fillOutSettlementTile,
   fillOutSettlementTiles: fillOutSettlementTiles,
-  assertSettlementTilesView: assertSettlementTilesView
+  assertSettlementTilesView: assertSettlementTilesView,
+  assertSettlementTileCompare: assertSettlementTileCompare
 };

@@ -465,7 +465,7 @@ var buildCompareQuery = function (req, callback) {
     }
     if (req.body.protocol1.pipes === 'YES') {
       selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
-      selectProtocol1.push('waterConditions.unmarkedPipePresent');
+      selectProtocol1.push('waterConditions.unmarkedOutfallPipes');
     }
     if (req.body.protocol1.shorelineType === 'YES') {
       selectProtocol1.push('landConditions.shoreLineType');
@@ -828,7 +828,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       if (req.body.protocol1.waterColor === 'YES') {
         WaterColor.findOne({ value: expedition.protocols.siteCondition.waterConditions.waterColor })
         .exec(function(err, color) {
-          rows.waterColor.push(color.label);
+          rows.waterColor.push(color.order);
           done(null);
         });
       } else {
@@ -889,6 +889,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           .exec(function(err, flow) {
             if (err) done(err);
             rows.unmarkedPipesVolume.push(flow.order);
+            done(null);
           });
         } else {
           rows.unmarkedPipesLocation.push('');
@@ -907,7 +908,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         ShorelineType.findOne({ value: expedition.protocols.siteCondition.landConditions.shoreLineType })
         .exec(function (err, type) {
           if (err) done(err);
-          rows.shoreLineType.push(type.label);
+          rows.shoreLineType.push(type.order);
           done(null);
         });
       } else {

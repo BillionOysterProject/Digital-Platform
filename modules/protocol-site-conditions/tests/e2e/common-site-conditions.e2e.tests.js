@@ -130,7 +130,8 @@ var siteCondition2 = {
     weatherConditions: 4,
     weatherConditionsText: 'Rain',
     windDirection: 5,
-    windDirectionText: 'South'
+    windDirectionText: 'South',
+    windDirectionAbbr: 'S'
   },
   recentRainfall: {
     rainedIn7Days: 2,
@@ -242,14 +243,17 @@ var siteCondition3 = {
     weatherConditions: 5,
     weatherConditionsText: 'Fog',
     windDirection: 7,
-    windDirectionText: 'East'
+    windDirectionText: 'East',
+    windDirectionAbbr: 'E'
   },
   recentRainfall: {
     rainedIn7Days: 1,
     rainedIn7DaysText: 'No'
   },
   tideConditions: {
+    closestHighTide: '2016-08-25T20:24:00.000Z',
     closestHighTideHeight: 7,
+    closestLowTide: '2016-08-25T20:24:00.000Z',
     closestLowTideHeight: 1,
     referencePoint: 'Test reference point 3',
     tidalCurrent: 1,
@@ -586,11 +590,214 @@ var assertSiteConditionView = function(values, teamMember) {
   }
 };
 
+var assertSiteConditionCompare = function(index, siteConditionValues) {
+  //Meteorological conditions
+  if (element(by.id('weather-temperature-compare')).isPresent()) {
+    var waterTemperatureRow = element(by.id('weather-temperature-compare')).all(by.tagName('td'));
+    var waterTemperature = waterTemperatureRow.get(index);
+    expect(waterTemperature.getText()).toEqual(siteConditionValues.meteorologicalConditions.weatherConditionsText + '\n' +
+      siteConditionValues.meteorologicalConditions.airTemperatureC + '℃  ');
+  }
+  if (element(by.id('wind-speed-direction-compare')).isPresent()) {
+    var windSpeedDirectionRow = element(by.id('wind-speed-direction-compare')).all(by.tagName('td'));
+    var windSpeedDirection = windSpeedDirectionRow.get(index);
+    expect(windSpeedDirection.getText()).toEqual(siteConditionValues.meteorologicalConditions.windSpeedMPH + 'mph ' +
+      siteConditionValues.meteorologicalConditions.windDirectionText + '  ');
+  }
+  if (element(by.id('humidity-compare')).isPresent()) {
+    var humidityRow = element(by.id('humidity-compare')).all(by.tagName('td'));
+    var humidity = humidityRow.get(index);
+    expect(humidity.getText()).toEqual(siteConditionValues.meteorologicalConditions.humidityPer + '%  ');
+  }
+  if (element(by.id('recent-rainfall-compare')).isPresent()) {
+    var recentRainfallRow = element(by.id('recent-rainfall-compare')).all(by.tagName('td'));
+    var recentRainfall = recentRainfallRow.get(index);
+    var recentRainfallString = 'None in the past 7 days';
+    if (siteConditionValues.recentRainfall.rainedIn7DaysText === 'Yes' &&
+      siteConditionValues.recentRainfall.rainedIn72HoursText === 'Yes' &&
+      siteConditionValues.recentRainfall.rainedIn24HoursText === 'Yes') {
+      recentRainfallString = 'past 24 hours';
+    } else if (siteConditionValues.recentRainfall.rainedIn7DaysText === 'Yes' &&
+      siteConditionValues.recentRainfall.rainedIn72HoursText === 'Yes' &&
+      (siteConditionValues.recentRainfall.rainedIn24HoursText === 'No' ||
+      !siteConditionValues.recentRainfall.rainedIn24HoursText)) {
+      recentRainfallString = 'past 72 hours';
+    } else if (siteConditionValues.recentRainfall.rainedIn7DaysText === 'Yes' &&
+      (siteConditionValues.recentRainfall.rainedIn72HoursText === 'No' ||
+      !siteConditionValues.recentRainfall.rainedIn72HoursText) &&
+      (siteConditionValues.recentRainfall.rainedIn24HoursText === 'No' ||
+      !siteConditionValues.recentRainfall.rainedIn24HoursText)) {
+      recentRainfallString = 'past 7 days';
+    }
+    expect(recentRainfall.getText()).toEqual(recentRainfallString);
+  }
+  if (element(by.id('tide-compare')).isPresent()) {
+    var tideRow = element(by.id('tide-compare')).all(by.tagName('td'));
+    var tide = tideRow.get(index);
+    expect(tide.getText()).toEqual('Closest high tide: ' +
+    siteConditionValues.tideConditions.closestHighTideHeight + 'ft at ' +
+    getTime(siteConditionValues.tideConditions.closestHighTide) + ' ' +
+    getShortDate(siteConditionValues.tideConditions.closestHighTide) + '\n' + 'Closest low tide: ' +
+    siteConditionValues.tideConditions.closestLowTideHeight + 'ft at ' +
+    getTime(siteConditionValues.tideConditions.closestLowTide) + ' ' +
+    getShortDate(siteConditionValues.tideConditions.closestLowTide));
+  }
+  if (element(by.id('reference-point-compare')).isPresent()) {
+    var referencePointRow = element(by.id('reference-point-compare')).all(by.tagName('td'));
+    var referencePoint = referencePointRow.get(index);
+    expect(referencePoint.getText()).toEqual(siteConditionValues.tideConditions.referencePoint + ' ');
+  }
+  if (element(by.id('tidal-current-compare')).isPresent()) {
+    var tidalCurrentRow = element(by.id('tidal-current-compare')).all(by.tagName('td'));
+    var tidalCurrent = tidalCurrentRow.get(index);
+    var tidalCurrentString = '';
+    if (siteConditionValues.tideConditions.tidalCurrent === 1) {
+      tidalCurrentString = 'Flood current';
+    } else if (siteConditionValues.tideConditions.tidalCurrent === 2) {
+      tidalCurrentString = 'Slack water';
+    } else if (siteConditionValues.tideConditions.tidalCurrent === 3) {
+      tidalCurrentString = 'Ebb current';
+    }
+    expect(tidalCurrent.getText()).toEqual(tidalCurrentString + '  ');
+  }
+  if (element(by.id('surface-current-speed-compare')).isPresent()) {
+    var surfaceCurrentSpeedRow = element(by.id('surface-current-speed-compare')).all(by.tagName('td'));
+    var surfaceCurrentSpeed = surfaceCurrentSpeedRow.get(index);
+    expect(surfaceCurrentSpeed.getText()).toEqual(siteConditionValues.waterConditions.surfaceCurrentSpeedMPS + ' meters/sec  ');
+  }
+  if (element(by.id('water-color-compare')).isPresent()) {
+    var waterColorRow = element(by.id('water-color-compare')).all(by.tagName('td'));
+    var waterColor = waterColorRow.get(index);
+    expect(waterColor.getText()).toEqual(siteConditionValues.waterConditions.waterColorText + ' ');
+  }
+  if (element(by.id('oil-sheen-compare')).isPresent()) {
+    var oilSheenRow = element(by.id('oil-sheen-compare')).all(by.tagName('td'));
+    var oilSheen = oilSheenRow.get(index);
+    expect(oilSheen.getText()).toEqual(siteConditionValues.waterConditions.oilSheenText + '  ');
+  }
+  if (element(by.id('garbage-water-compare')).isPresent()) {
+    var garbageWaterRow = element(by.id('garbage-water-compare')).all(by.tagName('td'));
+    var garbageWater = garbageWaterRow.get(index);
+    if (siteConditionValues.waterConditions.garbage.garbagePresentText === 'No') {
+      expect(garbageWater.getText()).toEqual(siteConditionValues.waterConditions.garbage.garbagePresentText);
+    } else {
+      var garbageWaterString = 'Yes:\n';
+      if (siteConditionValues.waterConditions.garbage.hardPlasticText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.hardPlasticText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.hardPlasticText + ' amount of hard plastic,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.softPlasticText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.softPlasticText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.softPlasticText + ' amount of soft plastic,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.metalText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.metalText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.metalText + ' amount of metal,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.paperText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.paperText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.paperText + ' amount of paper,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.glassText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.glassText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.glassText + ' amount of glass,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.organicText) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.organicText === 'None') ? '\n' :
+          siteConditionValues.waterConditions.garbage.organicText + ' amount of organic,\n';
+      }
+      if (siteConditionValues.waterConditions.garbage.other.description) {
+        garbageWaterString += (siteConditionValues.waterConditions.garbage.other.extentText === 'None') ? '' :
+          siteConditionValues.waterConditions.garbage.other.extentText + ' amount of ' +
+          siteConditionValues.waterConditions.garbage.other.description + '';
+      }
+      expect(garbageWater.getText()).toEqual(garbageWaterString);
+    }
+  }
+  if (element(by.id('pipes-compare')).isPresent()) {
+    var pipesRow = element(by.id('pipes-compare')).all(by.tagName('td'));
+    var pipes = pipesRow.get(index);
+    var csoString = '';
+    if (siteConditionValues.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresentText === 'No') {
+      csoString = 'No CSO pipes\n\n';
+    } else {
+      csoString = 'CSO pipes present:\n' + 'Location at ' +
+      siteConditionValues.waterConditions.markedCombinedSewerOverflowPipes.location.latitude + ', ' +
+      siteConditionValues.waterConditions.markedCombinedSewerOverflowPipes.location.longitude + '\n' +
+      'Flow: ' + siteConditionValues.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThroughText;
+    }
+    var unmarkedString = '';
+    if (siteConditionValues.waterConditions.unmarkedOutfallPipes.unmarkedPipePresentText === 'No') {
+      unmarkedString = 'No unmarked or other outfall pipes';
+    } else {
+      unmarkedString = 'Unmarked or other outfall pipes present:\n' + 'Location at ' +
+      siteConditionValues.waterConditions.unmarkedOutfallPipes.location.latitude + ', ' +
+      siteConditionValues.waterConditions.unmarkedOutfallPipes.location.longitude + '\n' +
+      'Flow: ' + siteConditionValues.waterConditions.unmarkedOutfallPipes.howMuchFlowThroughText + '\n' +
+      siteConditionValues.waterConditions.unmarkedOutfallPipes.approximateDiameterCM + 'cm approximate diameter';
+    }
+    expect(pipes.getText()).toEqual(csoString + '\n' + unmarkedString);
+  }
+  if (element(by.id('shoreline-type-compare')).isPresent()) {
+    var shorelineTypeRow = element(by.id('shoreline-type-compare')).all(by.tagName('td'));
+    var shorelineType = shorelineTypeRow.get(index);
+    expect(shorelineType.getText()).toEqual(siteConditionValues.landConditions.shoreLineTypeText + ' ');
+  }
+  if (element(by.id('garbage-land-compare')).isPresent()) {
+    var garbageLandRow = element(by.id('garbage-land-compare')).all(by.tagName('td'));
+    var garbageLand = garbageLandRow.get(index);
+    if (siteConditionValues.landConditions.garbage.garbagePresentText === 'No') {
+      expect(garbageLand.getText()).toEqual(siteConditionValues.landConditions.garbage.garbagePresentText);
+    } else {
+      var garbageLandString = 'Yes:\n';
+      if (siteConditionValues.landConditions.garbage.hardPlasticText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.hardPlasticText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.hardPlasticText + ' amount of hard plastic,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.softPlasticText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.softPlasticText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.softPlasticText + ' amount of soft plastic,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.metalText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.metalText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.metalText + ' amount of metal,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.paperText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.paperText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.paperText + ' amount of paper,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.glassText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.glassText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.glassText + ' amount of glass,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.organicText) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.organicText === 'None') ? '\n' :
+          siteConditionValues.landConditions.garbage.organicText + ' amount of organic,\n';
+      }
+      if (siteConditionValues.landConditions.garbage.other.description) {
+        garbageLandString += (siteConditionValues.landConditions.garbage.other.extentText === 'None') ? '' :
+          siteConditionValues.landConditions.garbage.other.extentText + ' amount of ' +
+          siteConditionValues.landConditions.garbage.other.description + '';
+      }
+      expect(garbageLand.getText()).toEqual(garbageLandString);
+    }
+  }
+  if (element(by.id('surface-cover-compare')).isPresent()) {
+    var surfaceCoverRow = element(by.id('surface-cover-compare')).all(by.tagName('td'));
+    var surfaceCover = surfaceCoverRow.get(index);
+    expect(surfaceCover.getText()).toEqual(
+      siteConditionValues.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + '% Impervious Surface\n' +
+      siteConditionValues.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + '% Pervious Surface\n' +
+      siteConditionValues.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer + '% Vegetated Surface');
+  }
+};
+
 module.exports = {
   siteCondition1: siteCondition1,
   siteCondition2: siteCondition2,
   siteCondition3: siteCondition3,
   assertSiteCondition: assertSiteCondition,
   fillOutSiteConditions: fillOutSiteConditions,
-  assertSiteConditionView: assertSiteConditionView
+  assertSiteConditionView: assertSiteConditionView,
+  assertSiteConditionCompare: assertSiteConditionCompare
 };

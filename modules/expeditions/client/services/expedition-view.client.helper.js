@@ -41,6 +41,7 @@
 
     var waterTemperatureUnits = WaterTemperatureUnitsService.query();
     var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
+    console.log('dissolvedOxygenUnits', dissolvedOxygenUnits);
     var salinityUnits = SalinityUnitsService.query();
     var pHUnits = PhUnitsService.query();
     var turbidityUnits = TurbidityUnitsService.query();
@@ -113,10 +114,14 @@
         return mobileOrganisms[index];
       },
       getSessileOrganismName: function(value) {
-        var index = lodash.findIndex(sessileOrganisms, function(o) {
-          return o._id === value;
-        });
-        return (index > -1) ? sessileOrganisms[index].commonName : '';
+        if (!value) {
+          return 'Other';
+        } else {
+          var index = lodash.findIndex(sessileOrganisms, function(o) {
+            return o._id === value;
+          });
+          return (index > -1) ? sessileOrganisms[index].commonName : '';
+        }
       },
       getAllWaterTemperatureMethods: function() {
         return WaterTemperatureMethodsService.query();
