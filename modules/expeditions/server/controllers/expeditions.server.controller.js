@@ -702,6 +702,7 @@ exports.list = function (req, res) {
 };
 
 exports.compare = function (req, res) {
+  console.log('req', req);
   compareHelper.buildCompareQuery(req, function(error, expeditions) {
     if (error) {
       return res.status(400).send({

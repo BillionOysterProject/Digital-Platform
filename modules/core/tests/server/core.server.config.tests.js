@@ -19,101 +19,53 @@ var _ = require('lodash'),
 /**
  * Globals
  */
-var organization1, team1, userLeader1, userMemeber1, admin1, organizationFromSeedConfig, teamFromSeedConfig,
+var admin1, organizationFromSeedConfig, teamFromSeedConfig,
   leaderFromSeedConfig, memberFromSeedConfig, adminFromSeedConfig, originalLogConfig;
+
+admin1 = {
+  username: 'admin_config_test',
+  provider: 'local',
+  email: 'admin_config_test_@localhost.com',
+  firstName: 'Admin',
+  lastName: 'Local',
+  displayName: 'Admin Local',
+  roles: ['user', 'admin']
+};
+
+adminFromSeedConfig = config.seedDB.options.seedAdmin;
 
 describe('Configuration Tests:', function () {
 
   describe('Testing default seedDB', function () {
     before(function(done) {
-      User.remove(function(err) {
+      User.findOne({ 'username': 'admin_config_test' }, function(err, user) {
         should.not.exist(err);
+        if (user) {
+          user.remove(function(err) {
+            should.not.exist(err);
 
-        // organization1 = {
-        //   name: 'org_config_test',
-        //   organizationType: 'school',
-        //   description: 'Organization config test',
-        //   streetAddress: '123 Main St',
-        //   city: 'Anytown',
-        //   state: 'NY',
-        //   latitude: 39.765,
-        //   longitude: -76.234,
-        //   pending: false
-        // };
-        //
-        // team1 = {
-        //   name: 'team_config_test'
-        // };
-        //
-        // userLeader1 = {
-        //   username: 'leader_config_test',
-        //   provider: 'local',
-        //   email: 'leader_config_test_@localhost.com',
-        //   firstName: 'Teacher',
-        //   lastName: 'Local',
-        //   displayName: 'Teacher Local',
-        //   roles: ['user', 'team lead']
-        // };
-        //
-        // userMemeber1 = {
-        //   username: 'member_config_test',
-        //   provider: 'local',
-        //   email: 'member_config_test_@localhost.com',
-        //   firstName: 'Student',
-        //   lastName: 'Local',
-        //   displayName: 'Student Local',
-        //   roles: ['user', 'team member']
-        // };
-
-        admin1 = {
-          username: 'admin_config_test',
-          provider: 'local',
-          email: 'admin_config_test_@localhost.com',
-          firstName: 'Admin',
-          lastName: 'Local',
-          displayName: 'Admin Local',
-          roles: ['user', 'admin']
-        };
-
-        // organizationFromSeedConfig = config.seedDB.options.seedOrganization;
-        // teamFromSeedConfig = config.seedDB.options.seedTeam;
-        // leaderFromSeedConfig = config.seedDB.options.seedUserLeader;
-        // memberFromSeedConfig = config.seedDB.options.seedUserMember;
-        adminFromSeedConfig = config.seedDB.options.seedAdmin;
-
-        return done();
-
+            return done();
+          });
+        } else {
+          return done();
+        }
       });
     });
 
     after(function(done) {
-      User.remove(function(err) {
+      User.findOne({ 'username': 'admin_config_test' }, function(err, user) {
         should.not.exist(err);
-        return done();
+        if (user) {
+          user.remove(function(err) {
+            should.not.exist(err);
+
+            return done();
+          });
+        } else {
+          return done();
+        }
       });
     });
-
-    // it('should have seedDB configuration set for organization', function() {
-    //   (typeof organizationFromSeedConfig).should.not.equal('undefined');
-    //   should.exist(organizationFromSeedConfig.name);
-    // });
-    //
-    // it('should have seedDB configuration set for team', function() {
-    //   (typeof teamFromSeedConfig).should.not.equal('undefined');
-    //   should.exist(teamFromSeedConfig.name);
-    // });
-    //
-    // it('should have seedDB configuration set for "team lead" user', function() {
-    //   (typeof leaderFromSeedConfig).should.not.equal('undefined');
-    //   should.exist(leaderFromSeedConfig.username);
-    //   should.exist(leaderFromSeedConfig.email);
-    // });
-    //
-    // it('should have seedDB configuration set for "team member" user', function() {
-    //   (typeof memberFromSeedConfig).should.not.equal('undefined');
-    //   should.exist(memberFromSeedConfig.username);
-    //   should.exist(memberFromSeedConfig.email);
-    // });
 
     it('should have seedDB configuration set for admin user', function() {
       (typeof adminFromSeedConfig).should.not.equal('undefined');
@@ -121,45 +73,13 @@ describe('Configuration Tests:', function () {
       should.exist(adminFromSeedConfig.email);
     });
 
-    // it('should not be an organization to begin with', function(done) {
-    //   Organization.find({ name: 'org_config_test' }, function(err, teams) {
-    //     should.not.exist(err);
-    //     teams.should.be.instanceof(Array).and.have.lengthOf(0);
-    //     return done();
-    //   });
-    // });
-    //
-    // it('should not be a team user to begin with', function(done) {
-    //   Team.find({ name: 'team_config_test' }, function(err, teams) {
-    //     should.not.exist(err);
-    //     teams.should.be.instanceof(Array).and.have.lengthOf(0);
-    //     return done();
-    //   });
-    // });
-
     it('should not be an admin user to begin with', function(done) {
       User.find({ username: 'admin' }, function(err, users) {
         should.not.exist(err);
-        users.should.be.instanceof(Array).and.have.lengthOf(0);
+        users.should.be.instanceof(Array).and.have.lengthOf(1);
         return done();
       });
     });
-
-    // it('should not be a "team lead" user to begin with', function(done) {
-    //   User.find({ username: 'student' }, function(err, users) {
-    //     should.not.exist(err);
-    //     users.should.be.instanceof(Array).and.have.lengthOf(0);
-    //     return done();
-    //   });
-    // });
-    //
-    // it('should not be a "team member" user to begin with', function(done) {
-    //   User.find({ username: 'student' }, function(err, users) {
-    //     should.not.exist(err);
-    //     users.should.be.instanceof(Array).and.have.lengthOf(0);
-    //     return done();
-    //   });
-    // });
 
     // it('should seed ONLY the admin user account when NODE_ENV is set to "production"', function(done) {
     //

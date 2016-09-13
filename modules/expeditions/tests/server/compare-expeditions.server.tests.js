@@ -1,10 +1,11 @@
 'use strict';
 
 var should = require('should'),
-  request = require('request'),
+  request = require('supertest'),
   path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  CalendarEvent = mongoose.model('CalendarEvent'),
   express = require(path.resolve('./config/lib/express')),
   CommonUser = require('../../../users/tests/e2e/common-users.e2e.tests');
 
@@ -993,23 +994,25 @@ describe('Compare Expedition routes tests', function() {
   before(function (done) {
     // Get application
     app = express.init(mongoose);
-    agent = require.agent(app);
+    agent = request.agent(app);
 
     done();
   });
 
   it('should be able to download a Expedition compare if logged in', function (done) {
     agent.post('/api/auth/signin')
-      .send(member1)
+      .send({
+        username: member1.username,
+        password: member1.password
+      })
       .expect(200)
       .end(function (signinErr, sigininRes) {
         // Handle signin error
         if (signinErr) {
+          console.log('signinErr', signinErr);
           return done(signinErr);
         }
 
-        // Get the userId
-        var userId = user.id;
         agent.post('/api/expeditions/export-compare')
           .send({
             expeditionIds: [expedition2._id, expedition3._id],
@@ -1064,7 +1067,7 @@ describe('Compare Expedition routes tests', function() {
 
             var csv = downloadRes.body;
 
-            console.log('csv', csv);
+            console.log('csv', downloadRes.res.text);
 
             done();
           });

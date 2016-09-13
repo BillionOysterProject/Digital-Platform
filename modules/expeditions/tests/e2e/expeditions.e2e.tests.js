@@ -81,7 +81,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('List/Search Expeditions Tests', function() {
+  describe('List/Search Expeditions Tests', function() {
     describe('Search Expeditions', function() {
       var startDate = element.all(by.model('vm.filter.startDate')).get(0);
       var endDate = element.all(by.model('vm.filter.endDate')).get(0);
@@ -258,7 +258,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('View Expedition Tests', function() {
+  describe('View Expedition Tests', function() {
     describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
@@ -329,7 +329,7 @@ describe('Expedition E2E Tests', function() {
 //  TEAM LEAD - CREATE EXPEDITION
 //############################################################################//
 
-  xdescribe('Full Expedition Creation Tests', function() {
+  describe('Full Expedition Creation Tests', function() {
     describe('Create Expedition', function() {
       it('should create an expedition using auto-assign', function() {
         //Sign in as team leader
