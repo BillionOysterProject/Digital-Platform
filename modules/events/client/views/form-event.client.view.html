@@ -17,26 +17,6 @@
                                         <p class="help-block error-text" ng-message="required">Event name is required.</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group" show-errors>
-                                    <label class="control-label">Date *</label>
-                                    <input type="date" class="form-control" required />
-                                    <div role="alert">
-                                        <p class="help-block error-text" ng-message="required">Date is required.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <!--TIFF: Should be default as the date of the event as soon as they fill out that field, they can change to an earlier date (but not a later date) if they want -->
-                                <div class="form-group" show-errors>
-                                    <label class="control-label">Deadline to register</label>
-                                    <input type="date" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
                                 <div class="form-group" show-errors>
                                     <label class="control-label">Location *</label>
                                     <input type="text" class="form-control" required />
@@ -45,16 +25,64 @@
                                     </div>
                                 </div>
                                 <div class="form-group" show-errors>
-                                    <label class="control-label">Maximum Capacity</label>
-                                    <input type="number" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group" show-errors>
                                     <label class="control-label">Cost *</label>
                                     <textarea class="form-control"></textarea>
                                     <div role="alert">
                                         <p class="help-block error-text" ng-message="required">Cost is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group" show-errors>
+                                            <label class="control-label">Date *</label>
+                                            <input type="date" class="form-control" required />
+                                            <div role="alert">
+                                                <p class="help-block error-text" ng-message="required">Date is required.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-group" show-errors>
+                                            <label class="control-label">Start Time *</label>
+                                            <input type="time" class="form-control" required />
+                                            <div role="alert">
+                                                <p class="help-block error-text" ng-message="required">Start time is required.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-group" show-errors>
+                                            <label class="control-label">End Time *</label>
+                                            <input type="time" class="form-control" required />
+                                            <div role="alert">
+                                                <p class="help-block error-text" ng-message="required">End time is required.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <!--TIFF: This button should add an additional row above, duplicate of the date/time row above. No more than 1 date/time set is required-->
+                                            <a class="btn btn-default btn-block">Add additional date</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group" show-errors>
+                                            <label class="control-label">Maximum Capacity</label>
+                                            <input type="number" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!--TIFF: Should be default as the date of the event as soon as they fill out that field, they can change to an earlier date (but not a later date) if they want -->
+                                        <div class="form-group" show-errors>
+                                            <label class="control-label">Deadline to register</label>
+                                            <input type="date" class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +122,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="vocabulary" class="control-label">Resources</label>
-                                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
+                                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add resource</a>
                                 </div>
                                 <table class="table">
                                   <tr ng-repeat="link in vm.resourceLinks">
