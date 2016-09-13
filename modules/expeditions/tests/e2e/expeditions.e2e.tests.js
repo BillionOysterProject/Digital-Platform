@@ -13,29 +13,34 @@ var path = require('path'),
   assertSiteCondition = CommonSiteConditions.assertSiteCondition,
   fillOutSiteConditions = CommonSiteConditions.fillOutSiteConditions,
   assertSiteConditionView = CommonSiteConditions.assertSiteConditionView,
+  assertSiteConditionCompare = CommonSiteConditions.assertSiteConditionCompare,
   CommonOysterMeasurements = require('../../../protocol-oyster-measurements/tests/e2e/common-oyster-measurements.e2e.tests'),
   assertSubstrateMeasurements = CommonOysterMeasurements.assertSubstrateMeasurements,
   assertOysterMeasurements = CommonOysterMeasurements.assertOysterMeasurements,
   fillOutOysterMeasurements = CommonOysterMeasurements.fillOutOysterMeasurements,
   fillOutAllOysterMeasurements = CommonOysterMeasurements.fillOutAllOysterMeasurements,
   assertOysterMeasurementsView = CommonOysterMeasurements.assertOysterMeasurementsView,
+  assertOysterMeasurementCompare = CommonOysterMeasurements.assertOysterMeasurementCompare,
   CommonMobileTraps = require('../../../protocol-mobile-traps/tests/e2e/common-mobile-traps.e2e.tests'),
   assertMobileOrganismDetails = CommonMobileTraps.assertMobileOrganismDetails,
   assertMobileTrap = CommonMobileTraps.assertMobileTrap,
   fillOutMobileOrganismDetails = CommonMobileTraps.fillOutMobileOrganismDetails,
   fillOutMobileTraps = CommonMobileTraps.fillOutMobileTraps,
   assertMobileTrapView = CommonMobileTraps.assertMobileTrapView,
+  assertMobileTrapCompare = CommonMobileTraps.assertMobileTrapCompare,
   CommonSettlementTiles = require('../../../protocol-settlement-tiles/tests/e2e/common-settlement-tiles.e2e.tests'),
   assertSettlementTile = CommonSettlementTiles.assertSettlementTile,
   assertSettlementTiles = CommonSettlementTiles.assertSettlementTiles,
   fillOutSettlementTile = CommonSettlementTiles.fillOutSettlementTile,
   fillOutSettlementTiles = CommonSettlementTiles.fillOutSettlementTiles,
   assertSettlementTilesView = CommonSettlementTiles.assertSettlementTilesView,
+  assertSettlementTileCompare = CommonSettlementTiles.assertSettlementTileCompare,
   CommonWaterQuality = require('../../../protocol-water-quality/tests/e2e/common-water-quality.e2e.tests'),
   assertWaterQuality = CommonWaterQuality.assertWaterQuality,
   fillOutWaterQualitySample = CommonWaterQuality.fillOutWaterQualitySample,
   fillOutWaterQuality = CommonWaterQuality.fillOutWaterQuality,
   assertWaterQualityView = CommonWaterQuality.assertWaterQualityView,
+  assertWaterQualityCompare = CommonWaterQuality.assertWaterQualityCompare,
   EC = protractor.ExpectedConditions;
 
 describe('Expedition E2E Tests', function() {
@@ -71,18 +76,20 @@ describe('Expedition E2E Tests', function() {
   var settlementTiles3 = CommonSettlementTiles.settlementTiles3;
   var waterQuality4 = CommonWaterQuality.waterQuality4;
 
+  var saveDraftWait = 450000;
+
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
   describe('List/Search Expeditions Tests', function() {
     describe('Search Expeditions', function() {
-      var startDate = element(by.model('vm.filter.startDate'));
-      var endDate = element(by.model('vm.filter.endDate'));
-      var searchField = element(by.model('vm.filter.searchString'));
-      var stationFilter = element(by.model('vm.filter.stationObj'));
-      var orgFilter = element(by.model('vm.filter.organizationObj'));
-      var teamFilter = element(by.model('vm.filter.teamObj'));
-      var teamLeadFilter = element(by.model('vm.filter.teamLeadObj'));
+      var startDate = element.all(by.model('vm.filter.startDate')).get(0);
+      var endDate = element.all(by.model('vm.filter.endDate')).get(0);
+      var searchField = element.all(by.model('vm.filter.searchString')).get(0);
+      var stationFilter = element.all(by.model('vm.filter.stationObj')).get(0);
+      var orgFilter = element.all(by.model('vm.filter.organizationObj')).get(0);
+      var teamFilter = element.all(by.model('vm.filter.teamObj')).get(0);
+      var teamLeadFilter = element.all(by.model('vm.filter.teamLeadObj')).get(0);
 
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
@@ -141,6 +148,109 @@ describe('Expedition E2E Tests', function() {
         expect(expeditions.count()).toEqual(1);
 
         searchField.clear().click();
+      });
+    });
+  });
+
+//############################################################################//
+//  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
+//############################################################################//
+  describe('Compare Expeditions Tests', function() {
+    describe('Compare Expeditions', function() {
+      it('should allow a team member to view expedition', function() {
+        // Sign in as team member
+        signinAs(member1);
+        // Assert that it went to the correct opening page
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        // Go to published expeditions
+        element(by.id('pubexpeditions')).click();
+        browser.sleep(500);
+        var expeditions = element.all(by.repeater('expedition in vm.published'));
+        expect(expeditions.count()).toEqual(2);
+
+        element(by.partialLinkText('Compare')).click();
+        browser.wait(EC.visibilityOf(element(by.id('step1-header'))), 5000);
+        browser.sleep(500);
+        expect(element(by.id('step1-header')).getText()).toEqual('1. Refine the expeditions to compare');
+      });
+
+      it('should allow a team member to filter expeditions', function() {
+        var teamLeadFilter = element.all(by.model('vm.filter.teamLeadObj')).get(1);
+        expect(teamLeadFilter.isPresent()).toBe(true);
+        teamLeadFilter.clear().sendKeys('tea').click();
+        browser.sleep(100);
+
+        expect(element(by.id('step2-header')).getText()).toEqual('2. Select parameters to compare from these 2 expeditions');
+      });
+
+      it('should allow a team member to filter parameters by protocol 1', function() {
+        element(by.model('vm.parameters.protocol1all')).click();
+        browser.sleep(100);
+
+        expect(element(by.id('step3-header')).getText()).toEqual('3. Here\'s the results of these 15 data points across 2 expeditions Download all data');
+
+        var assertHeaderCompare = function(index, expeditionValues, stationValues) {
+          // Expedition Header
+          var expeditionHeaderRow = element(by.id('expedition-compare-header')).all(by.tagName('td'));
+          var header = expeditionHeaderRow.get(index);
+          expect(header.getText()).toEqual(expeditionValues.name + '\n' + stationValues.name + ', ' +
+            moment(expeditionValues.monitoringStartDate).format('MMMM D, YYYY'));
+        };
+
+        assertHeaderCompare(1, expedition2, station);
+        assertHeaderCompare(2, expedition3, station2);
+
+        assertSiteConditionCompare(1, siteCondition2);
+        assertSiteConditionCompare(2, siteCondition3);
+
+        element(by.model('vm.parameters.protocol1all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 2', function() {
+        element(by.model('vm.parameters.protocol2all')).click();
+        browser.sleep(100);
+
+        expect(element(by.id('step3-header')).getText()).toEqual('3. Here\'s the results of these 4 data points across 2 expeditions Download all data');
+
+        assertOysterMeasurementCompare(1, oysterMeasurement2);
+        assertOysterMeasurementCompare(2, oysterMeasurement3);
+
+        element(by.model('vm.parameters.protocol2all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 3', function() {
+        element(by.model('vm.parameters.protocol3all')).click();
+        browser.sleep(100);
+
+        assertMobileTrapCompare(1, mobileTrap3);
+        assertMobileTrapCompare(2, mobileTrap4);
+
+        element(by.model('vm.parameters.protocol3all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 4', function() {
+        element(by.model('vm.parameters.protocol4all')).click();
+        browser.sleep(100);
+
+        assertSettlementTileCompare(1, settlementTiles2);
+        assertSettlementTileCompare(2, settlementTiles3);
+
+        element(by.model('vm.parameters.protocol4all')).click();
+        browser.sleep(100);
+      });
+
+      it('should allow a team member to filter parameters by protocol 5', function() {
+        element(by.model('vm.parameters.protocol5all')).click();
+        browser.sleep(100);
+
+        assertWaterQualityCompare(1, waterQuality3);
+        assertWaterQualityCompare(2, waterQuality4);
+
+        element(by.model('vm.parameters.protocol5all')).click();
+        browser.sleep(100);
       });
     });
   });
@@ -312,7 +422,7 @@ describe('Expedition E2E Tests', function() {
         element(by.buttonText('Save Draft')).click();
 
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol1Tab = element(by.id('protocol1tab'));
         expect(protocol1Tab.isPresent()).toBe(true);
         expect(protocol1Tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -336,7 +446,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol4tab = element(by.id('protocol4tab'));
         expect(protocol4tab.isPresent()).toBe(true);
         expect(protocol4tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -427,11 +537,13 @@ describe('Expedition E2E Tests', function() {
         browser.wait(EC.visibilityOf(element(by.repeater('organism in mobileOrganisms track by organism._id'))), 5000);
 
         fillOutMobileTraps();
+        browser.sleep(1000);
 
         // Save draft
         element(by.buttonText('Save Draft')).click();
+
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 10000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol3tab = element(by.id('protocol3tab'));
         expect(protocol3tab.isPresent()).toBe(true);
         expect(protocol3tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -520,11 +632,12 @@ describe('Expedition E2E Tests', function() {
         browser.wait(EC.visibilityOf(element(by.cssContainingText('.blue', 'measuring growth and recording mortality of oysters'))), 5000);
 
         fillOutAllOysterMeasurements();
+        browser.sleep(100);
 
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 60000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol2tab = element(by.id('protocol2tab'));
         expect(protocol2tab.isPresent()).toBe(true);
         expect(protocol2tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);
@@ -548,7 +661,7 @@ describe('Expedition E2E Tests', function() {
         // Save draft
         element(by.buttonText('Save Draft')).click();
         // Wait until saving is done
-        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), 5000);
+        browser.wait(EC.invisibilityOf(element(by.id('saving-exp-spinner'))), saveDraftWait);
         var protocol5tab = element(by.id('protocol5tab'));
         expect(protocol5tab.isPresent()).toBe(true);
         expect(protocol5tab.element(by.className('glyphicon-ok-sign')).isDisplayed()).toBe(true);

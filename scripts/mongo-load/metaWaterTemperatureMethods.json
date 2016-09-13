@@ -1,0 +1,3 @@
+{"_id":{"$oid":"57cda449eebbe0f7b940ac2d"},"order":1,"label":"Digital thermometer","value":"digitalThermometer"}
+{"_id":{"$oid":"57cda449eebbe0f7b940ac2f"},"order":2,"label":"Analog thermometer","value":"analogThermometer"}
+{"_id":{"$oid":"57cda449eebbe0f7b940ac2e"},"order":3,"label":"Sensor*","value":"sensor"}

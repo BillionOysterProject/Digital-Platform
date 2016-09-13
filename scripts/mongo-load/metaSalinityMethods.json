@@ -1,0 +1,3 @@
+{"_id":{"$oid":"57cdbf8eeebbe0f7b940ac33"},"order":1,"label":"Hydrometer","value":"hydrometer"}
+{"_id":{"$oid":"57cdbf8eeebbe0f7b940ac35"},"order":2,"label":"Refractometer","value":"refractometer"}
+{"_id":{"$oid":"57cdbf8eeebbe0f7b940ac34"},"order":3,"label":"Sensor","value":"sensor"}

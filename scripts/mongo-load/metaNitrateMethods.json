@@ -1,0 +1,2 @@
+{"_id":{"$oid":"57cdca5ceebbe0f7b940ac3c"},"order":1,"label":"Test strips","value":"testStrips"}
+{"_id":{"$oid":"57cdca5ceebbe0f7b940ac3d"},"order":2,"label":"Photometer","value":"photometer"}

@@ -13,7 +13,8 @@ module.exports = {
         'public/lib/angular-chart.js/dist/angular-chart.min.css',
         'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/css/bootstrap-iconpicker.min.css',
-        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css'
+        'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css',
+        'public/lib/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.min.js',
@@ -49,7 +50,8 @@ module.exports = {
         'public/lib/moment/min/moment.min.js',
         'public/lib/angular-moment/angular-moment.min.js',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
-        'public/lib/angular-isotope/dist/angular-isotope.min.js'
+        'public/lib/angular-isotope/dist/angular-isotope.min.js',
+        'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js'
       ]
     },
     css: 'public/dist/application.min.css',

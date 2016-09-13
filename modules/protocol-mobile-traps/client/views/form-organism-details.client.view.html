@@ -27,11 +27,12 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label>Add a sketch or photograph *</label>
+                                <label>Add a sketch or photograph
+                                  {{(organismDetails.organism.commonName === 'Other/Unknown') ? '*' : ''}}</label>
                                 <single-image-drop-zone uploader="sketchPhotoUploader" image-url="sketchPhotoUrl"
                                 image-alt="Sketch or Photo" id="mobileTrapSketchPhoto-{{organismId}}"></single-image-drop-zone>
                                 <div ng-show="form.organismDetailsForm.$invalid && form.organismDetailsForm.$submitted &&
-                                !sketchPhotoUrl">
+                                !sketchPhotoUrl && organismDetails.organism.commonName === 'Other/Unknown'">
                                     <p class="red">Sketch or photograph is required.</p>
                                 </div>
                             </div>

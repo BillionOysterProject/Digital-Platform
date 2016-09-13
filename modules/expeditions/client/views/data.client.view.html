@@ -1,0 +1,53 @@
+<div class="jumbotron text-center">
+  <section class="content">
+    <section class="container-fluid">
+        <h2>Data</h2>
+    </section>
+  </section>
+</div>
+<section class="content">
+  <section class="container-fluid">
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
+                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Search</a></li>
+            <li role="presentation" ng-class="{active: vm.activeTab === 'compareexpeditions'}" ng-click="vm.switchTabs()">
+                <a href="#compareexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Compare</a></li>
+        </ul>
+        <div class="tab-content">
+        <br />
+
+            <!-- PUBLISHED EXPEDITIONS -->
+            <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
+                <filter-expeditions></filter-expeditions>
+                <hr/>
+                <div class="row" isotope-container="isotope-container">
+                    <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+                      ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                        <div class="panel" data-category="transition">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-map-marker"></i> {{expedition.station.name}}
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                <h4>{{expedition.name}}</h4>
+                                <p>{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</p>
+                                <p class="text-muted">{{expedition.notes}}</p>
+                            </div>
+                            <div class="panel-footer">
+                                {{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
+              <compare-expedition-wizard ></compare-expedition-wizard>
+            </div>
+        </div>
+    </div>
+  </section>
+</section>

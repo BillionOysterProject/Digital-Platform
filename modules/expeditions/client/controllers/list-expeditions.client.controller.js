@@ -5,14 +5,14 @@
     .module('expeditions')
     .controller('ExpeditionsListController', ExpeditionsListController);
 
-  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService',
+  ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService', 'ExpeditionViewHelper',
   'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope', '$stateParams'];
 
-  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService,
+  function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService, ExpeditionViewHelper,
     SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope, $stateParams) {
     var vm = this;
     vm.user = Authentication.user;
-    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'myexpeditions';
+    vm.activeTab = ($stateParams.active) ? $stateParams.active : 'pubexpeditions';
 
     vm.opened = {
       startDate: false,
@@ -57,17 +57,25 @@
 
     vm.filter = {
       station: '',
-      stationObj: '',
-      stationName: '',
+      stationObj: {
+        name: 'All'
+      },
+      stationName: 'All',
       organization: '',
-      organizationObj: '',
-      organizationName: '',
+      organizationObj: {
+        name: 'All'
+      },
+      organizationName: 'All',
       team: '',
-      teamObj: '',
-      teamName: '',
+      teamObj: {
+        name: 'All'
+      },
+      teamName: 'All',
       teamLead: '',
-      teamLeadObj: '',
-      teamLeadName: '',
+      teamLeadObj: {
+        displayName: 'All'
+      },
+      teamLeadName: 'All',
       startDate: '',
       endDate: '',
       searchString: ''
@@ -115,20 +123,28 @@
       });
     };
 
-    vm.showAllPublishedExpeditions = function() {
+    vm.resetFilters = function() {
       vm.filter = {
         station: '',
-        stationObj: '',
-        stationName: '',
+        stationObj: {
+          name: 'All'
+        },
+        stationName: 'All',
         organization: '',
-        organizationObj: '',
-        organizationName: '',
+        organizationObj: {
+          name: 'All'
+        },
+        organizationName: 'All',
         team: '',
-        teamObj: '',
-        teamName: '',
+        teamObj: {
+          name: 'All'
+        },
+        teamName: 'All',
         teamLead: '',
-        teamLeadObj: '',
-        teamLeadName: '',
+        teamLeadObj: {
+          displayName: 'All'
+        },
+        teamLeadName: 'All',
         startDate: '',
         endDate: '',
         searchString: ''
@@ -222,6 +238,9 @@
     vm.dateSelected = function() {
       if (vm.filter.startDate && vm.filter.endDate) {
         vm.findPublishedExpeditions();
+      } else if ((!vm.filter.startDate || vm.filter.startDate === undefined || vm.filter.startDate === '') &&
+      (!vm.filter.endDate || vm.filter.endDate === undefined || vm.filter.endDate === '')) {
+        vm.findPublishedExpeditions();
       }
     };
 
@@ -242,14 +261,9 @@
       return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
     };
 
-    vm.getExpeditionDate = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
 
-    vm.getExpeditionTimeRange = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma')+'-'+
-        moment(expedition.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma');
-    };
+    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
 
     vm.checkWrite = function(teamList) {
       if (checkRole('team lead') || checkRole('admin')) {

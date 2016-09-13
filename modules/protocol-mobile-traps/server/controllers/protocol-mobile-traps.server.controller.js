@@ -40,7 +40,8 @@ var validateMobileTrap = function(mobileTrap, successCallback, errorCallback) {
     if (mobileOrganism.count <= 0) {
       errorMessages.push('Count of mobile organism is required');
     }
-    if (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path) {
+    if (mobileOrganism.organism.commonName === 'Other/Unknown' &&
+    (!mobileOrganism.sketchPhoto || !mobileOrganism.sketchPhoto.path)) {
       errorMessages.push('Sketch or photo of mobile organism is required');
     }
   }

@@ -1,0 +1,8 @@
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac23"},"order":1,"label":"North","value":"north","abbreviation":"N"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac24"},"order":2,"label":"North West","value":"northwest","abbreviation":"NW"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac25"},"order":3,"label":"West","value":"west","abbreviation":"W"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac26"},"order":4,"label":"South West","value":"southwest","abbreviation":"SW"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac27"},"order":5,"label":"South","value":"south","abbreviation":"S"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac28"},"order":6,"label":"South East","value":"southeast","abbreviation":"SE"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac29"},"order":7,"label":"East","value":"east","abbreviation":"E"}
+{"_id":{"$oid":"57cd9d9deebbe0f7b940ac2a"},"order":8,"label":"North East","value":"northeast","abbreviation":"NE"}

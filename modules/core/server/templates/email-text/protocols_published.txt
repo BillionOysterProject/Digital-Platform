@@ -1,4 +1,4 @@
-Hi <%=FirstName%>,
+Hi <%=TeamName%>,
 
 Congrats, your work on the protocol(s) for <%= ExpeditionName %> have been published!
 

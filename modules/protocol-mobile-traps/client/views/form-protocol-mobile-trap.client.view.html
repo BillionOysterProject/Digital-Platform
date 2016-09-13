@@ -71,7 +71,7 @@
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
                 <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id">
-                    <div class="thumbnail">
+                    <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
                         <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
                         <h4 class="text-center" ng-bind="organism.commonName"></h4>
                         <div class="text-center">
@@ -86,7 +86,9 @@
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
-                        <a href="#" class="btn btn-default btn-block" ng-click="openOrganismDetails(organism)" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]">Add notes or an image *</a>
+                        <a href="#" class="btn btn-default btn-block" ng-click="openOrganismDetails(organism)"
+                        ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]">
+                        Add notes or an image {{(organism.commonName === 'Other/Unknown') ? '*' : ''}}</a>
                         <!-- TODO: when notes/photo is added, show this instead
                         <a href="#" class="btn btn-default btn-sm btn-block" data-toggle="modal" data-target="#modal-input">Edit notes or an image *</a>-->
                     </div>

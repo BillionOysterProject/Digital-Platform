@@ -6,10 +6,10 @@
     .controller('SubmittedExpeditionsListController', SubmittedExpeditionsListController);
 
   SubmittedExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService', 'ExpeditionViewHelper'];
 
   function SubmittedExpeditionsListController(moment, lodash, Authentication,
-    ExpeditionsService, ExpeditionActivitiesService, TeamsService) {
+    ExpeditionsService, ExpeditionActivitiesService, TeamsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -29,9 +29,7 @@
       return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
     };
 
-    vm.getExpeditionDate = function(expedition) {
-      return moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
-    };
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
 
     vm.displaySubmittedProtocols = function(activity) {
       var changed = [];

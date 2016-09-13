@@ -20,7 +20,7 @@
                 <tr ng-repeat="activity in vm.activities"
                   ui-sref="expeditions.view({ expeditionId: activity.expedition._id })">
                     <td><h4>{{vm.displaySubmittedProtocols(activity)}}</h4></td>
-                    <td>{{activity.expedition.name}}<br/><small>{{vm.getExpeditionDate(activity.expedition)}}</small></td>
+                    <td>{{activity.expedition.name}}<br/><small>{{vm.getExpeditionDate(activity.expedition.monitoringStartDate)}}</small></td>
                     <td><img ng-src="{{activity.user.profileImageURL}}" class="header-profile-image">
                       <b>{{activity.user.displayName}}</b><br/><p class="text-muted">{{activity.team.name}}</p></td>
                     <td class="text-right">

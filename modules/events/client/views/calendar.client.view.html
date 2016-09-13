@@ -1,0 +1,21 @@
+<div class="jumbotron text-center">
+  <section class="content">
+    <section class="container-fluid">
+      <h2>Calendar</h2>
+    </section>
+  </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <a class="btn btn-default" ui-sref="events.create"><i class="glyphicon glyphicon-plus"></i> Create an event</a>
+        <mwl-calendar
+            view="vm.calendarView"
+            view-date="vm.calendarDate"
+            events="vm.events"
+            view-title="calendarTitle"
+            on-event-click="eventClicked(calendarEvent)"
+            on-event-times-changed="calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
+            cell-is-open="true">
+        </mwl-calendar>
+    </section>
+</section>
