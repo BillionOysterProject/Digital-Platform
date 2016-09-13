@@ -17,12 +17,14 @@
                                         <p class="help-block error-text" ng-message="required">Event name is required.</p>
                                     </div>
                                 </div>
-                                <div class="form-group" show-errors>
+                                <div class="form-group">
                                     <label class="control-label">Location *</label>
-                                    <input type="text" class="form-control" required />
-                                    <div role="alert">
-                                        <p class="help-block error-text" ng-message="required">Location is required.</p>
-                                    </div>
+                                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-event-map"
+                                    ng-click="openMap()">Mark location on map</a>
+                                    <input class="form-control" type="text" value="{{event.latitude}}, {{event.longitude}}"
+                                    data-toggle="modal" data-target="#modal-event-map" ng-click="openMap()"
+                                    ng-show="event.latitude && event.longitude"
+                                     readonly/>
                                 </div>
                                 <div class="form-group" show-errors>
                                     <label class="control-label">Cost *</label>
