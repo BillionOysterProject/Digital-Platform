@@ -1,0 +1,10 @@
+Hi <%=FirstName%>,
+
+Your team has submitted a protocol for the expedition <b><%= ExpeditionName %></b>.
+
+Visit <%= LinkViewExpedition %> to review the protocol.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

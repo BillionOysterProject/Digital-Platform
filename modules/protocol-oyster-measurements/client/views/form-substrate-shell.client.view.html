@@ -46,24 +46,18 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="outerImg" class="control-label required">Outer side *</label>
+                                                <label for="outerImg" class="control-label required">Outer side</label>
                                                 <single-image-drop-zone uploader="outerSubstrateUploader"
                                                 image-url="outerSubstrateUrl" image-alt="Outer side"
                                                 id="outer-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
-                                                <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !outerSubstrateUrl">
-                                                    <p class="red">Outer side image is required.</p>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="innerImg" class="control-label required">Inner side *</label>
+                                                <label for="innerImg" class="control-label required">Inner side</label>
                                                 <single-image-drop-zone uploader="innerSubstrateUploader"
                                                 image-url="innerSubstrateUrl" image-alt="Inner side"
                                                 id="inner-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
-                                                <div ng-show="form.substrateForm.$invalid && form.substrateForm.$submitted && !innerSubstrateUrl">
-                                                    <p class="red">Inner side image is required.</p>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -100,9 +94,9 @@
                                               </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="totalAtBaseline" class="control-label required">Total number of live oysters on shell at baseline *</label>
+                                                <label for="totalAtBaseline" class="control-label">Total number of live oysters on shell at baseline</label>
                                                 <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersAtBaseline"
-                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" required/>
+                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -112,8 +106,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="mass" class="control-label required">Total mass of scrubbed substrate shell + oysters + tag (grams) *</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG" name="mass" id="mass" min="0" required/>
+                                                <label for="mass" class="control-label">Total mass of scrubbed substrate shell + oysters + tag (grams)</label>
+                                                <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG" name="mass" id="mass" min="0"/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="total" class="control-label required">Total number of live oysters on shell at time of monitoring *</label>

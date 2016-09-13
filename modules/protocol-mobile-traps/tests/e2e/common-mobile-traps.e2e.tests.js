@@ -14,9 +14,10 @@ var mobileTrap1 = {
   },
   count: 1,
   organism: {
-    commonName: 'Other',
+    commonName: 'Other/Unknown',
     latinName: 'Unlisted organism'
-  }
+  },
+  photoPresent: true
 };
 
 var mobileTrap2 = {
@@ -27,7 +28,8 @@ var mobileTrap2 = {
   organism: {
     commonName: 'Black-fingered mud crab',
     latinName: 'Panopeus herbstii'
-  }
+  },
+  photoPresent: false
 };
 
 var mobileTrap3 = {
@@ -38,7 +40,8 @@ var mobileTrap3 = {
   organism: {
     commonName: 'Blackfish, Tautog',
     latinName: 'Tautoga onitis'
-  }
+  },
+  photoPresent: true
 };
 
 var mobileTrap4 = {
@@ -49,7 +52,8 @@ var mobileTrap4 = {
   organism: {
     commonName: 'Blue crab',
     latinName: 'Callinectes sapidus'
-  }
+  },
+  photoPresent: false
 };
 
 // Get the formatted date
@@ -92,7 +96,7 @@ var assertMobileOrganismDetails = function(mobileOrganism, details) {
     browser.wait(EC.visibilityOf(modal), 5000);
 
     // Add an image to the mobile organism details
-    assertImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
+    if (details.photoPresent) assertImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
     // Add a description
     expect(modal.element(by.model('organismDetails.notes')).getAttribute('value')).toEqual(details.organismDetails.notes);
     // Don't change the mobile organism details
@@ -103,9 +107,9 @@ var assertMobileOrganismDetails = function(mobileOrganism, details) {
 };
 
 var assertMobileTrap = function() {
-  var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
-  assertMobileOrganismDetails(mobileOrganisms.get(0), mobileTrap1);
-  assertMobileOrganismDetails(mobileOrganisms.get(1), mobileTrap2);
+  //var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
+  assertMobileOrganismDetails(element(by.id('mobileOrganismForm-0')), mobileTrap1);
+  assertMobileOrganismDetails(element(by.id('mobileOrganismForm-1')), mobileTrap2);
 };
 
 var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
@@ -123,7 +127,7 @@ var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
     browser.wait(EC.visibilityOf(modal), 5000);
 
     // Add an image to the mobile organism details
-    uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
+    if (details.photoPresent) uploadImage('mobileTrapSketchPhoto-'+organismId); // Mobile Trap Organism Detail Image Upload
     // Add a description
     modal.element(by.model('organismDetails.notes')).sendKeys(details.organismDetails.notes);
     // Save the mobile organism details
@@ -135,9 +139,9 @@ var fillOutMobileOrganismDetails = function(mobileOrganism, details) {
 
 var fillOutMobileTraps = function() {
   // Fill in values, if you change these values, change the assert too
-  var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
-  var organism1 = mobileOrganisms.get(0);
-  var organism2 = mobileOrganisms.get(1);
+  //var mobileOrganisms = element.all(by.repeater('organism in mobileOrganisms track by organism._id'));
+  var organism1 = element(by.id('mobileOrganismForm-0'));
+  var organism2 = element(by.id('mobileOrganismForm-1'));
   fillOutMobileOrganismDetails(organism1, mobileTrap1);
   fillOutMobileOrganismDetails(organism2, mobileTrap2);
 };
@@ -147,12 +151,12 @@ var assertMobileOrganismDetailView = function(index, values) {
   expect(element(by.id('mobileOrganismCount'+index)).getText())
     .toEqual(organismDetails.count + ' ' + organismDetails.organism.commonName);
   element(by.id('organismSketchPhoto'+index)).getAttribute('src')
-    .then(function(text){
-      if (text !== null) {
-        expect(text).not.toEqual('');
-        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
-      }
-    });
+  .then(function(text){
+    if (text !== null) {
+      expect(text).not.toEqual('');
+      expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+    }
+  });
   expect(element(by.id('mobileOrganismNotes'+index)).getText())
     .toEqual('Notes: ' + organismDetails.organismDetails.notes);
 };
@@ -173,6 +177,14 @@ var assertMobileTrapView = function(values, teamMember) {
   }
 };
 
+var assertMobileTrapCompare = function(index, values) {
+  if (element(by.id('mobile-organisms-observed-compare')).isPresent()) {
+    var organismsRow = element(by.id('mobile-organisms-observed-compare')).all(by.tagName('td'));
+    var organisms = organismsRow.get(index);
+    expect(organisms.getText()).toEqual(values.count.toString() + ' ' + values.organism.commonName);
+  }
+};
+
 module.exports = {
   mobileTrap1: mobileTrap1,
   mobileTrap2: mobileTrap2,
@@ -182,5 +194,6 @@ module.exports = {
   assertMobileTrap: assertMobileTrap,
   fillOutMobileOrganismDetails: fillOutMobileOrganismDetails,
   fillOutMobileTraps: fillOutMobileTraps,
-  assertMobileTrapView: assertMobileTrapView
+  assertMobileTrapView: assertMobileTrapView,
+  assertMobileTrapCompare: assertMobileTrapCompare
 };

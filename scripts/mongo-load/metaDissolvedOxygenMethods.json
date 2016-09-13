@@ -1,0 +1,3 @@
+{"_id":{"$oid":"57cda725eebbe0f7b940ac30"},"order":1,"label":"Colormetric ampules","value":"colormetricvAmpules"}
+{"_id":{"$oid":"57cda725eebbe0f7b940ac31"},"order":2,"label":"Sensor","value":"sensor"}
+{"_id":{"$oid":"57cda725eebbe0f7b940ac32"},"order":3,"label":"Winkler","value":"winkler"}

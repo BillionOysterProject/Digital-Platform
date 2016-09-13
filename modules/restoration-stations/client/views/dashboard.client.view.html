@@ -55,7 +55,8 @@
                             <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                                 <td>
                                     {{expedition.name}}<br/>
-                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                      {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</small>
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
@@ -66,9 +67,9 @@
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-default" ui-sref="expeditions.list({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
-                        <!-- TIFFANY: Wire up download modal (currently living on Expeditions list page) -->
-                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-download-expedition-data">Download data</a> -->
+                        <a class="btn btn-default" ui-sref="expeditions.data({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
+                        <!-- TIFFANY: Wire up compare modal (currently living on Expeditions list page) -->
+                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-compare-expedition-data">Compare data</a> -->
                     </div>
                 </div>
                 <div class="row">
@@ -160,7 +161,8 @@
                             <tr ng-repeat="expedition in vm.expeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                                 <td>
                                     {{expedition.name}}<br/>
-                                    <small class="text-muted">{{vm.getExpeditionDate(expedition)}}, {{vm.getExpeditionTimeRange(expedition)}}</small>
+                                    <small class="text-muted">{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                      {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</small>
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td class="text-right">

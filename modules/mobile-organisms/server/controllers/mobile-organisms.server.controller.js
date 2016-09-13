@@ -144,7 +144,7 @@ exports.list = function(req, res) {
       });
     } else {
       var moIndex = _.findIndex(mobileOrganisms, function(m) {
-        return m.commonName === 'Other';
+        return m.commonName === 'Other/Unknown';
       });
       if (moIndex > -1) {
         var other = mobileOrganisms.splice(moIndex, 1);

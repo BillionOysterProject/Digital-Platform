@@ -3,7 +3,7 @@
 <section class="content">
     <section class="container">
         <div class="row">
-            <div class="col col-sm-6">
+            <div class="col-sm-6">
                 <h2>{{vm.lesson.title}}
                     <small>
                         <a ng-click="vm.favoriteLesson()" ng-hide="vm.lesson.saved"><i class="glyphicon glyphicon-star-empty"></i></a>
@@ -11,7 +11,7 @@
                     </small>
                 </h2>
             </div>
-            <div class="col col-sm-6 text-right">
+            <div class="col-sm-6 text-right">
                 <h6 ng-show="vm.lesson.status === 'draft'">Draft</h6>
                 <h6 ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
                 <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
@@ -25,7 +25,7 @@
         </div>
 
         <div class="row text-muted">
-            <div class="col col-sm-10">
+            <div class="col-sm-10">
                 <h5><!-- TODO: Need to get images into user -->
                     <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
                     <b>{{vm.lesson.user.displayName}}</b><br>
@@ -33,7 +33,7 @@
                     <span ng-hide="!vm.lesson.user.team">{{vm.lesson.user.team.name}} / </span><a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
                 </h5>
             </div>
-            <div class="col col-sm-2 text-right">
+            <div class="col-sm-2 text-right">
                 <p ng-bind="vm.lesson.created | date:'mediumDate'"></p>
             </div>
         </div>
@@ -41,10 +41,10 @@
         <hr />
 
         <div class="row">
-            <div class="col col-sm-6">
+            <div class="col-sm-6">
                 <h4><b>Unit:</b> <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">{{vm.lesson.unit.title}}</a></h4>
             </div>
-            <!-- <div class="col col-sm-6">
+            <!-- <div class="col-sm-6">
                 <h4><b>Protocols:</b>
                     <span ng-repeat="protocol in vm.lesson.lessonOverview.protocolConnections">
                         <span ng-bind="protocol | protocolConnections"></span>
@@ -54,19 +54,19 @@
         </div>
 
         <div class="row">
-            <div class="col col-sm-2">
+            <div class="col-sm-2">
                 <b>Grade</b>
                 <p ng-bind="vm.lesson.lessonOverview.grade"></p>
             </div>
-            <div class="col col-sm-2">
+            <div class="col-sm-2">
                 <b>Class Periods</b>
                 <p ng-bind="vm.lesson.lessonOverview.classPeriods"></p>
             </div>
-            <div class="col col-sm-2">
+            <div class="col-sm-2">
                 <b>Setting</b>
                 <p ng-bind="vm.lesson.lessonOverview.setting"></p>
             </div>
-            <div class="col col-sm-6">
+            <div class="col-sm-6">
                 <b>Subject Areas</b>
                 <ul class="list-inline">
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
@@ -121,45 +121,45 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-9">
+            <div class="col-sm-9">
                 <h3>Lesson Overview</h3>
                 <div class="row">
-                    <div class="col col-sm-12">
+                    <div class="col-sm-12">
                         <div ng-bind="vm.lesson.lessonOverview.lessonSummary"></div>
                     </div>
-                    <div class="col col-sm-6">
+                    <div class="col-sm-6">
                         <h3>Objectives</h3>
                         <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
                     </div>
-                    <div class="col col-sm-6">
+                    <div class="col-sm-6">
                         <h3>Vocabulary</h3>
                         <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
                             <a href="#" uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}"
                             popover-trigger="mouseenter" popover-placement="top"><i class="glyphicon glyphicon-comment"></i> {{vocabulary.term}}</a>
                         </div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col-sm-12">
                         <h3>Background</h3>
                         <div ng-bind-html="vm.lesson.background | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12">
+                    <div class="col-sm-12">
                         <h3>Instruction Plan</h3>
                         <h4 ng-hide="!vm.lesson.instructionPlan.engage">Engage</h4>
                         <div ng-hide="!vm.lesson.instructionPlan.engage" ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.explore">
+                    <div class="col-sm-12" ng-hide="!vm.lesson.instructionPlan.explore">
                         <h4>Explore</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.explore | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.explain">
+                    <div class="col-sm-12" ng-hide="!vm.lesson.instructionPlan.explain">
                         <h4>Explain</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.explain | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.elaborate">
+                    <div class="col-sm-12" ng-hide="!vm.lesson.instructionPlan.elaborate">
                         <h4>Elaborate</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.elaborate | sanitize"></div>
                     </div>
-                    <div class="col col-sm-12" ng-hide="!vm.lesson.instructionPlan.evaluate">
+                    <div class="col-sm-12" ng-hide="!vm.lesson.instructionPlan.evaluate">
                         <h4>Evaluate</h4>
                         <div ng-bind-html="vm.lesson.instructionPlan.evaluate | sanitize"></div>
                     </div>
@@ -170,10 +170,10 @@
         <hr />
 
         <div class="row">
-            <div class="col col-sm-12">
+            <div class="col-sm-12">
                 <h3>Standards</h3>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nycsssUnits">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.nycsssUnits">
                 <b>NYC Science Scope &amp; Sequence - Units</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
@@ -183,7 +183,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssKeyIdeas">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.nysssKeyIdeas">
                 <b>NYS Science Standards - Key Ideas</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
@@ -193,7 +193,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMajorUnderstandings">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.nysssMajorUnderstandings">
                 <b>NYS Science Standards - Major Understandings</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
@@ -203,7 +203,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.nysssMst">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.nysssMst">
                 <b>NYS Science Standards - MST</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
@@ -213,7 +213,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.ngssDisciplinaryCoreIdeas">
                 <b>NGSS - Disciplinary Core Ideas</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
@@ -223,7 +223,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssScienceEngineeringPractices">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.ngssScienceEngineeringPractices">
                 <b>NGSS - Science and Engineering Practices</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
@@ -233,7 +233,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.ngssCrossCuttingConcepts">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.ngssCrossCuttingConcepts">
                 <b>NGSS - Cross-Cutting Concepts</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
@@ -243,7 +243,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsMathematics">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.cclsMathematics">
                 <b>CCLS - Mathematics</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
@@ -253,7 +253,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col col-sm-3" ng-show="vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+            <div class="col-sm-3" ng-show="vm.lesson.standards.cclsElaScienceTechnicalSubjects">
                 <b>CCLS - ELA Science &amp; Technical Subjects</b>
                 <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
                 <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->

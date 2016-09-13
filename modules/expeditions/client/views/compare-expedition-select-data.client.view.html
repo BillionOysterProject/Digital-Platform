@@ -1,0 +1,151 @@
+<section>
+    <h3 id="step2-header">2. Select <span class="red">parameters</span> to compare from these <b class="red">{{vm.expeditions.length}}</b> expeditions</h3>
+    <div class="row" id="select-comparison-parameters">
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol1all" ng-click="vm.toggleProtocol1()">
+                      <b>Protocol 1: Site Conditions</b></label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <blockquote>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.weatherTemperature" ng-click="vm.compare()"> Weather/temperature</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.windSpeedDirection" ng-click="vm.compare()"> Wind speed/direction</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.humidity" ng-click="vm.compare()"> Humidity</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.recentRainfall" ng-click="vm.compare()"> Recent rainfall</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.tide" ng-click="vm.compare()"> Tide</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.referencePoint" ng-click="vm.compare()"> Reference point</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.tidalCurrent" ng-click="vm.compare()"> Tidal current</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.surfaceCurrentSpeed" ng-click="vm.compare()"> Surface current speed</label></div>
+                        </blockquote>
+                    </div>
+                    <div class="col-sm-6">
+                        <blockquote>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.waterColor" ng-click="vm.compare()"> Water color</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.oilSheen" ng-click="vm.compare()"> Oil sheen</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.garbageWater" ng-click="vm.compare()"> Garbage in water</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.pipes" ng-click="vm.compare()"> Pipes</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.shorelineType" ng-click="vm.compare()"> Shoreline type</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.garbageLand" ng-click="vm.compare()"> Garbage on land</label></div>
+                            <div class="checkbox"><label>
+                              <input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol1.surfaceCover" ng-click="vm.compare()"> Surface cover</label></div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol2all" ng-click="vm.toggleProtocol2()">
+                      <b>Protocol 2: Oyster Measurements</b></label>
+                </div>
+                <blockquote>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol2.submergedDepth" ng-click="vm.compare()"> Cage submerged depth</label></div>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol2.bioaccumulationOnCage" ng-click="vm.compare()"> Cage bioaccumulation</label></div>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol2.cageDamage" ng-click="vm.compare()"> Cage damage</label></div>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol2.oysterMeasurements" ng-click="vm.compare()"> Oyster Measurements</label></div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol3all" ng-click="vm.toggleProtocol3()">
+                      <b>Protocol 3: Mobile Trap</b></label>
+                </div>
+                <blockquote>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol3.organism" ng-click="vm.compare()"> Organisms observed</label></div>
+                </blockquote>
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol4all" ng-click="vm.toggleProtocol4()">
+                      <b>Protocol 4: Settlement Tiles</b></label>
+                </div>
+                <blockquote>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol4.description" ng-click="vm.compare()"> Settlement tile description</label></div>
+                    <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol4.organism" ng-click="vm.compare()"> Sessile organisms observed</label></div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                      ng-model="vm.parameters.protocol5all" ng-click="vm.toggleProtocol5()">
+                      <b>Protocol 5: Water Quality</b></label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <blockquote>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.depth" ng-click="vm.compare()"> Depth</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.temperature" ng-click="vm.compare()"> Temperature</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.dissolvedOxygen" ng-click="vm.compare()"> Dissolved Oxygen</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.salinity" ng-click="vm.compare()"> Salinity</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.pH" ng-click="vm.compare()"> pH</label></div>
+                        </blockquote>
+                    </div>
+                    <div class="col-sm-6">
+                        <blockquote>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.turbidity" ng-click="vm.compare()"> Turbidity</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.ammonia" ng-click="vm.compare()"> Ammonia</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.nitrates" ng-click="vm.compare()"> Nitrates</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-true-value="'YES'" ng-false-value="''"
+                              ng-model="vm.parameters.protocol5.other" ng-click="vm.compare()"> Other</label></div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <!-- <a class="btn btn-default pull-right" ng-click="vm.compare()" ng-disabled="vm.expeditions.length === 0 || vm.dataPointCount() === 0">Compare</a> -->
+</section>

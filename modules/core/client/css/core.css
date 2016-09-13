@@ -59,6 +59,11 @@ body {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+    
+    .jumbotron .box {
+        background: #f4f7f8;
+        margin-bottom: -45px;
+    }
 
 .navbar-default {
     background: #fff;
@@ -598,7 +603,52 @@ h6, .h6 {
 
 blockquote {
     font-size: inherit;
+    padding-top: 0;
+    padding-bottom: 0;
 }
+
+.nav-tabs {
+    border-color: #ea6158;
+}
+
+    .nav-tabs > li > a {
+        font-size: 16px;
+    }
+    
+        .nav-tabs > li > a:hover {
+            border-color: #eee #eee #ea6158;
+        }
+
+        .nav-tabs > li.active > a, 
+        .nav-tabs > li.active > a:hover, 
+        .nav-tabs > li.active > a:focus {
+            font-weight: bold;
+            color: #ea6158;
+            border-color: #ea6158;
+            border-bottom-color: transparent;
+        }
+        
+/* RESET FOR NAV JUSTIFIED TABS (protocols/forms)*/
+.nav-tabs.nav-justified {
+    border-color: #ddd;
+}
+
+    .nav-tabs.nav-justified > li > a {
+        font-size: inherit;
+    }
+    
+        .nav-tabs.nav-justified > li > a:hover {
+            border-color: #eee #eee #ddd;
+        }
+
+        .nav-tabs.nav-justified > li.active > a, 
+        .nav-tabs.nav-justified > li.active > a:hover, 
+        .nav-tabs.nav-justified > li.active > a:focus {
+            font-weight: normal;
+            color: #555;
+            border-color: #ddd;
+            border-bottom-color: transparent;
+        }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -661,10 +711,10 @@ blockquote {
     border-bottom-left-radius: 6px;
 }
 
-.modal-title {
-    font-size: 16pt;
-    color: #aaa;
-}
+    .modal-title {
+        font-size: 16pt;
+        color: #aaa;
+    }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -895,6 +945,13 @@ form.ng-submitted .ng-invalid {
 }
 
 
+/* CALENDAR PLUGIN */
+
+#cal-week-box {
+    display: none;
+}
+
+
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
              PANELS
@@ -955,3 +1012,14 @@ form.ng-submitted .ng-invalid {
         background: #ea6158; /*fallback*/
         color: #fff;
     }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+              GRID
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.col-2point4 {
+    width: 20%;
+}

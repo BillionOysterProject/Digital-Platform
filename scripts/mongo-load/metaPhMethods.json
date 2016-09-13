@@ -1,0 +1,3 @@
+{"_id":{"$oid":"57cdc399eebbe0f7b940ac37"},"order":1,"label":"Test strips","value":"testStrips"}
+{"_id":{"$oid":"57cdc399eebbe0f7b940ac36"},"order":2,"label":"Sensor (read only)","value":"sensorRO"}
+{"_id":{"$oid":"57cdc399eebbe0f7b940ac38"},"order":3,"label":"Sensor","value":"sensor"}

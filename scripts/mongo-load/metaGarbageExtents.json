@@ -1,0 +1,4 @@
+{"_id":{"$oid":"57cd9915eebbe0f7b940ac1f"},"order":1,"label":"None","value":"none"}
+{"_id":{"$oid":"57cd9915eebbe0f7b940ac22"},"order":2,"label":"Sporadic","value":"sporadic"}
+{"_id":{"$oid":"57cd9915eebbe0f7b940ac20"},"order":3,"label":"Common","value":"common"}
+{"_id":{"$oid":"57cd9915eebbe0f7b940ac21"},"order":4,"label":"Extensive","value":"extensive"}
