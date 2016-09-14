@@ -32,6 +32,15 @@
       $location.path().split(/[\s/]+/).pop() !== 'create') ? true : false;
     vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
 
+    vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
+    vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
+    vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
+    vm.tempResourceFiles = [];
+    vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
+    vm.tempResourceLinkName = '';
+    vm.tempResourceLink = '';
+    vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
+
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
       id: '_id',
@@ -198,139 +207,9 @@
       });
     }
 
-    var setupValues = function() {
-      vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
-      vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
-      vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
-      vm.tempResourceFiles = [];
-      vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
-      vm.tempResourceLinkName = '';
-      vm.tempResourceLink = '';
-      vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
-    };
-
-    // Incremental Saving
-    var save;
-    var stopIncrementalSavingLoop = function() {
-      console.log('stopIncrementalSavingLoop');
-      if (angular.isDefined(save)) {
-        $interval.cancel(save);
-        save = undefined;
-      }
-    };
-
-    var startIncrementalSavingLoop = function() {
-      console.log('startIncrementalSavingLoop');
-      if (angular.isDefined(save)) return;
-
-      save = $interval(function() {
-        console.log('incremental save');
-        vm.saveOnBlur();
-      }, 15000);
-    };
-
-    var startSaving = function() {
-      vm.saving = true;
-      stopIncrementalSavingLoop();
-    };
-
-    var stopSaving = function() {
-      $timeout(function() {
-        vm.saving = false;
-      }, 2000);
-      startIncrementalSavingLoop();
-    };
-
-    vm.saveOnBlur = function(force, callback) {
-      console.log('saveOnBlur');
-      var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
-
-      if (!vm.lesson._id || force ||(vm.form.lessonForm && !vm.form.lessonForm.$pristine && vm.form.lessonForm.$dirty)) {
-        console.log('saving');
-        startSaving();
-        $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
-        .success(function(data, status, headers, config) {
-          if (!vm.lesson._id) {
-            vm.lesson._id = data.lesson._id;
-            $location.path('/lessons/' + vm.lesson._id + '/draft', false);
-          }
-          vm.lesson.status = 'draft';
-          if (data.errors) {
-            vm.error = data.errors;
-            vm.valid = false;
-            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          } else if (data.successful) {
-            vm.error = null;
-            vm.valid = true;
-            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          }
-          stopSaving();
-          if (callback) callback();
-        })
-        .error(function(data, status, headers, config) {
-          vm.error = data.message;
-          vm.valid = false;
-          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          stopSaving();
-          if (callback) callback();
-        });
-      } else {
-        startIncrementalSavingLoop();
-      }
-    };
-
-    vm.saveDraft = function() {
-      stopIncrementalSavingLoop();
-      var lessonId = (vm.lesson._id) ? vm.lesson._id : '000000000000000000000000';
-      vm.lesson.status = 'draft';
-      $http.post('api/lessons/' + lessonId + '/incremental-save', vm.lesson)
-      .success(function(data, status, headers, config) {
-        $state.go('lessons.view', {
-          lessonId: lessonId
-        });
-      })
-      .error(function(data, status, headers, config) {
-        vm.error = data.message;
-        vm.valid = false;
-        if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-        stopSaving();
-      });
-    };
-
-    vm.initialSaveDraft = function() {
-      console.log('initialSaveDraft');
-      if (vm.lesson._id) {
-        var lesson = angular.copy(vm.lesson);
-        lesson.initial = true;
-        $http.post('api/lessons/' + vm.lesson._id + '/incremental-save', lesson)
-        .success(function(data, status, headers, config) {
-          if (data.errors) {
-            vm.error = data.errors;
-            vm.valid = false;
-            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          } else if (data.successful) {
-            vm.error = null;
-            vm.valid = true;
-            if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          }
-          startIncrementalSavingLoop();
-        })
-        .error(function(data, status, headers, config) {
-          vm.error = data.message;
-          vm.valid = false;
-          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-          startIncrementalSavingLoop();
-        });
-      } else {
-        startIncrementalSavingLoop();
-      }
-    };
-
     $timeout(function() {
       if (vm.form.lessonForm && vm.lesson._id && vm.lesson.title && !vm.viewing) {
-        setupValues();
         console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
-        vm.initialSaveDraft();
       }
     });
 
@@ -366,181 +245,165 @@
       vm.lesson.$remove($state.go('lessons.list'));
     };
 
-    // Watch Featured Image
-    $scope.$watch('vm.featuredImageURL', function(newValue, oldValue) {
-      if (!vm.viewing) {
-        if (vm.lesson._id && vm.featuredImageURL !== '') {
-          if (vm.featuredImageUploader.queue.length > 0) {
-            var spinner;
-            vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
-              vm.featuredImageUploader.removeFromQueue(fileItem);
-              LessonsService.get({
-                lessonId: vm.lesson._id
-              }, function(data) {
-                vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
-                spinner.stop();
-                stopSaving();
-              });
-            };
+    var uploadFeaturedImage = function (lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
+      if (vm.featuredImageUploader.queue.length > 0) {
+        vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          vm.featuredImageUploader.removeFromQueue(fileItem);
+          featuredImageSuccessCallback();
+        };
 
-            vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-              vm.error = response.message;
-              spinner.stop();
-              stopSaving();
-            };
+        vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+          featuredImageErrorCallback(response.message);
+        };
 
-            vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-              item.url = 'api/lessons/' + vm.lesson._id + '/upload-featured-image';
-            };
-            spinner = new Spinner({}).spin(document.getElementById('lesson-featured-image'));
-            startSaving();
-            vm.featuredImageUploader.uploadAll();
-          }
-        } else if (vm.lesson._id && vm.featuredImageURL === '' && vm.lesson.featuredImage &&
-          oldValue !== undefined && oldValue !== null) {
-          console.log('oldValue !== undefined', (oldValue !== undefined));
-          console.log('oldValue !== null', (oldValue !== null));
-          vm.lesson.featuredImage.path = '';
-          console.log('featuredImage force save new:' + newValue + ' old: ' + oldValue);
-          vm.saveOnBlur(true);
-        }
-      }
-    });
-
-    $scope.$watch('vm.handouts.length', function(newValue, oldValue) {
-      if (newValue < oldValue && !vm.viewing) {
-        vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
-        console.log('handouts length changed');
-        vm.saveOnBlur(true);
-      }
-    });
-
-    $scope.$watch('vm.handoutFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.handouts && !vm.viewing) {
-        if (vm.handoutFilesUploader.queue.length > 0) {
-          var spinner;
-          vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            vm.handoutFilesUploader.removeFromQueue(fileItem);
-            LessonsService.get({
-              lessonId: vm.lesson._id
-            }, function(data) {
-              vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
-              spinner.stop();
-              stopSaving();
-            });
-          };
-
-          vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-            vm.error = response.message;
-            spinner.stop();
-            stopSaving();
-          };
-
-          vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/lessons/' + vm.lesson._id + '/upload-handouts';
-          };
-          spinner = new Spinner({}).spin(document.getElementById('lesson-handout-files'));
-          startSaving();
-          vm.handoutFilesUploader.uploadAll();
-        }
-      }
-    });
-
-    $scope.$watch('vm.resourceFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue && !vm.viewing) {
-        vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
-        console.log('resource file length changed');
-        vm.saveOnBlur(true);
-      }
-    });
-
-    var uploadResourceFiles = function() {
-      if (vm.lesson._id && vm.resourceFiles) {
-        if (vm.teacherResourceFilesUploader.queue.length > 0) {
-          var spinner;
-          vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            vm.teacherResourceFilesUploader.removeFromQueue(fileItem);
-            LessonsService.get({
-              lessonId: vm.lesson._id
-            }, function(data) {
-              vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
-              spinner.stop();
-              stopSaving();
-            });
-          };
-
-          vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-            vm.error = response.message;
-            spinner.stop();
-            stopSaving();
-          };
-
-          vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/lessons/' + vm.lesson._id + '/upload-teacher-resources';
-          };
-          spinner = new Spinner({}).spin(document.getElementById('lesson-teach-resource-files'));
-          startSaving();
-          vm.teacherResourceFilesUploader.uploadAll();
-        }
+        vm.featuredImageUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
+        };
+        vm.featuredImageUploader.uploadAll();
+      } else {
+        featuredImageSuccessCallback();
       }
     };
 
-    $scope.$watch('vm.stateTestQuestionsFiles.length', function(newValue, oldValue) {
-      if (newValue < oldValue && !vm.viewing) {
-        vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
-        console.log('state test questions length changed');
-        vm.saveOnBlur(true);
+    var uploadHandoutFiles = function (lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
+      if (vm.handoutFilesUploader.queue.length > 0) {
+        vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          vm.handoutFilesUploader.removeFromQueue(fileItem);
+          handoutFileSuccessCallback();
+        };
+
+        vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+          handoutFileErrorCallback(response.message);
+        };
+
+        vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/lessons/' + lessonId + '/upload-handouts';
+        };
+        vm.handoutFilesUploader.uploadAll();
+      } else {
+        handoutFileSuccessCallback();
       }
-    });
+    };
 
-    $scope.$watch('vm.stateTestQuestionsFilesUploader.queue.length', function(newValue, oldValue) {
-      if (vm.lesson._id && vm.stateTestQuestionsFiles && !vm.viewing) {
-        if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
-          var spinner;
-          vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-            vm.stateTestQuestionsFilesUploader.removeFromQueue(fileItem);
-            LessonsService.get({
-              lessonId: vm.lesson._id
-            }, function(data) {
-              vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
-              spinner.stop();
-              stopSaving();
-            });
-          };
+    var uploadResourceFiles = function (lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
+      if (vm.teacherResourceFilesUploader.queue.length > 0) {
+        vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          vm.teacherResourceFilesUploader.removeFromQueue(fileItem);
+          resourceFileSuccessCallback();
+        };
 
-          vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-            vm.error = response.message;
-            spinner.stop();
-            stopSaving();
-          };
+        vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+          resourceFileErrorCallback(response.message);
+        };
 
-          vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
-            item.url = 'api/lessons/' + vm.lesson._id + '/upload-state-test-questions';
-          };
-          spinner = new Spinner({}).spin(document.getElementById('lesson-state-test-questions'));
-          startSaving();
-          vm.stateTestQuestionsFilesUploader.uploadAll();
+        vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
+        };
+        vm.teacherResourceFilesUploader.uploadAll();
+      } else {
+        resourceFileSuccessCallback();
+      }
+    };
+
+    var uploadStateTestQuestionFiles = function (lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
+      if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
+        vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          vm.stateTestQuestionsFilesUploader.removeFromQueue(fileItem);
+          questionFileSuccessCallback();
+        };
+
+        vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+          questionFileErrorCallback(response.message);
+        };
+
+        vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
+        };
+        vm.stateTestQuestionsFilesUploader.uploadAll();
+      } else {
+        questionFileSuccessCallback();
+      }
+    };
+
+    vm.saveDraft = function(isValid) {
+      vm.lesson.status = 'draft';
+      var saveDraftUrl = '';
+      if (vm.lesson._id) {
+        saveDraftUrl = 'api/lessons/' + vm.lesson._id + '/incremental-save';
+      } else {
+        saveDraftUrl = 'api/lessons/000000000000000000000000/incremental-save';
+      }
+      $http.post(saveDraftUrl, vm.lesson)
+      .success(function(data, status, headers, config) {
+        if (data.errors) {
+          vm.error = data.errors;
+          vm.valid = false;
+          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+        } else if (data.successful) {
+          vm.error = null;
+          vm.valid = true;
+          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
         }
+        successCallback(data.lesson);
+      })
+      .error(function(data, status, headers, config) {
+        errorCallback();
+      });
+
+      function successCallback(res) {
+        console.log('successful');
+        var lessonId = res._id;
+
+        uploadFeaturedImage(lessonId, function() {
+          uploadHandoutFiles(lessonId, function() {
+            uploadResourceFiles(lessonId, function() {
+              uploadStateTestQuestionFiles(lessonId, function () {
+                LessonsService.get({
+                  lessonId: lessonId
+                }, function(data) {
+                  vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+                  vm.handouts = (data && data.materialsResources) ? data.materialsResources.handoutsFileInput : [];
+                  vm.resourceFiles = (data && data.materialsResources) ? data.materialsResources.teacherResourcesFiles : [];
+                  vm.stateTestQuestionsFiles = (data && data.materialsResources) ? data.materialsResources.stateTestQuestions : [];
+
+                  if (!vm.lesson._id) {
+                    vm.lesson._id = data._id;
+                    $location.path('/lessons/' + vm.lesson._id + '/draft', false);
+                  }
+                });
+              }, function(errorMessage) {
+              });
+            }, function(errorMessage) {
+            });
+          }, function(errorMessage) {
+          });
+        }, function(errorMessage) {
+        });
       }
-    });
+
+      function errorCallback(res) {
+        console.log('error: ' + res.data.message);
+        vm.error = res.data.message;
+        vm.valid = false;
+      }
+    };
 
     // Save Lesson
     vm.save = function(isValid) {
-      stopIncrementalSavingLoop();
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lessonForm');
         return false;
       }
 
-      vm.lesson.featuredImage = {
-        path: vm.featuredImageURL
-      };
-
-      vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
-      vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
-      vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
-      vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+      // vm.lesson.featuredImage = {
+      //   path: vm.featuredImageURL
+      // };
+      //
+      // vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+      // vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+      // vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
+      // vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
 
       // TODO: move create/update logic to service
       var content = angular.element('#modal-saved-lesson');
@@ -563,87 +426,10 @@
           function goToView(lessonId) {
             content.modal('hide');
             $timeout(function () {
-              stopIncrementalSavingLoop();
               $state.go('lessons.view', {
                 lessonId: lessonId
               });
             }, 1000);
-          }
-
-          function uploadFeaturedImage(lessonId, featuredImageSuccessCallback, featuredImageErrorCallback) {
-            if (vm.featuredImageUploader.queue.length > 0) {
-              vm.featuredImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
-                featuredImageSuccessCallback();
-              };
-
-              vm.featuredImageUploader.onErrorItem = function (fileItem, response, status, headers) {
-                featuredImageErrorCallback(response.message);
-              };
-
-              vm.featuredImageUploader.onBeforeUploadItem = function(item) {
-                item.url = 'api/lessons/' + lessonId + '/upload-featured-image';
-              };
-              vm.featuredImageUploader.uploadAll();
-            } else {
-              featuredImageSuccessCallback();
-            }
-          }
-
-          function uploadHandoutFiles(lessonId, handoutFileSuccessCallback, handoutFileErrorCallback) {
-            if (vm.handoutFilesUploader.queue.length > 0) {
-              vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-                handoutFileSuccessCallback();
-              };
-
-              vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-                handoutFileErrorCallback(response.message);
-              };
-
-              vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
-                item.url = 'api/lessons/' + lessonId + '/upload-handouts';
-              };
-              vm.handoutFilesUploader.uploadAll();
-            } else {
-              handoutFileSuccessCallback();
-            }
-          }
-
-          function uploadResourceFiles(lessonId, resourceFileSuccessCallback, resourceFileErrorCallback) {
-            if (vm.teacherResourceFilesUploader.queue.length > 0) {
-              vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-                resourceFileSuccessCallback();
-              };
-
-              vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-                resourceFileErrorCallback(response.message);
-              };
-
-              vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
-                item.url = 'api/lessons/' + lessonId + '/upload-teacher-resources';
-              };
-              vm.teacherResourceFilesUploader.uploadAll();
-            } else {
-              resourceFileSuccessCallback();
-            }
-          }
-
-          function uploadStateTestQuestionFiles(lessonId, questionFileSuccessCallback, questionFileErrorCallback) {
-            if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
-              vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-                questionFileSuccessCallback();
-              };
-
-              vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-                questionFileErrorCallback(response.message);
-              };
-
-              vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
-                item.url = 'api/lessons/' + lessonId + '/upload-state-test-questions';
-              };
-              vm.stateTestQuestionsFilesUploader.uploadAll();
-            } else {
-              questionFileSuccessCallback();
-            }
           }
 
           var unsubmitLesson = function(errorMessage) {
@@ -652,7 +438,6 @@
               _id: vm.lesson.unit
             };
             vm.error = errorMessage;
-            startIncrementalSavingLoop();
           };
 
           uploadFeaturedImage(lessonId, function() {
@@ -679,14 +464,12 @@
           console.log('error: ' + res.data.message);
           vm.error = res.data.message;
           vm.valid = false;
-          startIncrementalSavingLoop();
         }
         //angular.element('#modal-saved-lesson').modal('hide');
       }, 5000);
     };
 
     vm.cancel = function() {
-      stopIncrementalSavingLoop();
       $state.go('lessons.list');
     };
 
@@ -820,9 +603,5 @@
     vm.closeLessonFeedback = function() {
       angular.element('#modal-lesson-feedback').modal('hide');
     };
-
-    $scope.$on('$locationChangeStart', function(event) {
-      stopIncrementalSavingLoop();
-    });
   }
 })();

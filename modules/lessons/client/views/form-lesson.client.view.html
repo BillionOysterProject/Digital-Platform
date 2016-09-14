@@ -25,7 +25,7 @@
                   <div class="form-group" show-errors>
                     <label for="lessonTitle" class="control-label required">Lesson Title *</label>
                     <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title"
-                    ng-blur="vm.saveOnBlur(true)" required/>
+                    required/>
                     <div ng-messages="vm.form.lessonForm.lessonTitle.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
                     </div>
