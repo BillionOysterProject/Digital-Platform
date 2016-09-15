@@ -27,57 +27,57 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
   if (!lesson.title) {
     errorMessages.push('Lesson title is required');
   }
-  if (!lesson.unit) {
-    errorMessages.push('Unit is required');
-  }
-
-  // Lesson Overview
-  if (!lesson.lessonOverview || !lesson.lessonOverview.grade) {
-    errorMessages.push('Grade is required');
-  }
-  if (!lesson.lessonOverview || !lesson.lessonOverview.classPeriods) {
-    errorMessages.push('Class periods is required');
-  }
-  if (!lesson.lessonOverview || !lesson.lessonOverview.setting) {
-    errorMessages.push('Setting is required');
-  }
-  if (!lesson.lessonOverview || !lesson.lessonOverview.subjectAreas || lesson.lessonOverview.subjectAreas.length <= 0) {
-    errorMessages.push('Subject area(s) is required');
-  }
-  if (!lesson.lessonOverview || !lesson.lessonOverview.lessonSummary) {
-    errorMessages.push('Lesson summary is required');
-  }
-
-  if (!lesson.lessonObjectives) {
-    errorMessages.push('Lesson objectives is required');
-  }
-
-  // Material Resources
-  if (!lesson.materialsResources || !lesson.materialsResources.supplies) {
-    errorMessages.push('Supplies is required');
-  }
-  if (!lesson.materialsResources || !lesson.materialsResources.vocabulary) {
-    errorMessages.push('Vocabulary is required');
-  }
-
-  if (!lesson.background) {
-    errorMessages.push('Background is required');
-  }
-
-  if ((!lesson.instructionPlan) ||
-  (!lesson.instructionPlan.engage && !lesson.instructionPlan.explore && !lesson.instructionPlan.explain &&
-  !lesson.instructionPlan.elaborate && !lesson.instructionPlan.evaluate)) {
-    errorMessages.push('At least one Instruction plan is required');
-  }
-
-  if ((!lesson.standards) ||
-  (!lesson.standards.cclsElaScienceTechnicalSubjects && !lesson.standards.cclsMathematics &&
-  !lesson.standards.ngssCrossCuttingConcepts && !lesson.standards.ngssDisciplinaryCoreIdeas &&
-  !lesson.standards.ngssScienceEngineeringPractices && !lesson.standards.nycsssUnits &&
-  !lesson.standards.nysssKeyIdeas && !lesson.standards.nysssMajorUnderstandings &&
-  !lesson.standards.nysssMst)) {
-    errorMessages.push('At least one Standard is required');
-  }
+  // if (!lesson.unit) {
+  //   errorMessages.push('Unit is required');
+  // }
+  //
+  // // Lesson Overview
+  // if (!lesson.lessonOverview || !lesson.lessonOverview.grade) {
+  //   errorMessages.push('Grade is required');
+  // }
+  // if (!lesson.lessonOverview || !lesson.lessonOverview.classPeriods) {
+  //   errorMessages.push('Class periods is required');
+  // }
+  // if (!lesson.lessonOverview || !lesson.lessonOverview.setting) {
+  //   errorMessages.push('Setting is required');
+  // }
+  // if (!lesson.lessonOverview || !lesson.lessonOverview.subjectAreas || lesson.lessonOverview.subjectAreas.length <= 0) {
+  //   errorMessages.push('Subject area(s) is required');
+  // }
+  // if (!lesson.lessonOverview || !lesson.lessonOverview.lessonSummary) {
+  //   errorMessages.push('Lesson summary is required');
+  // }
+  //
+  // if (!lesson.lessonObjectives) {
+  //   errorMessages.push('Lesson objectives is required');
+  // }
+  //
+  // // Material Resources
+  // if (!lesson.materialsResources || !lesson.materialsResources.supplies) {
+  //   errorMessages.push('Supplies is required');
+  // }
+  // if (!lesson.materialsResources || !lesson.materialsResources.vocabulary) {
+  //   errorMessages.push('Vocabulary is required');
+  // }
+  //
+  // if (!lesson.background) {
+  //   errorMessages.push('Background is required');
+  // }
+  //
+  // if ((!lesson.instructionPlan) ||
+  // (!lesson.instructionPlan.engage && !lesson.instructionPlan.explore && !lesson.instructionPlan.explain &&
+  // !lesson.instructionPlan.elaborate && !lesson.instructionPlan.evaluate)) {
+  //   errorMessages.push('At least one Instruction plan is required');
+  // }
+  //
+  // if ((!lesson.standards) ||
+  // (!lesson.standards.cclsElaScienceTechnicalSubjects && !lesson.standards.cclsMathematics &&
+  // !lesson.standards.ngssCrossCuttingConcepts && !lesson.standards.ngssDisciplinaryCoreIdeas &&
+  // !lesson.standards.ngssScienceEngineeringPractices && !lesson.standards.nycsssUnits &&
+  // !lesson.standards.nysssKeyIdeas && !lesson.standards.nysssMajorUnderstandings &&
+  // !lesson.standards.nysssMst)) {
+  //   errorMessages.push('At least one Standard is required');
+  // }
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -175,6 +175,7 @@ exports.incrementalSave = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
+    // console.log('lesson.materialsResources.vocabulary', lesson.materialsResources.vocabulary);
     lesson.returnedNotes = '';
     if (!req.body.initial) lesson.status = 'draft';
 

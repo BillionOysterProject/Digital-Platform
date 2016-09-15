@@ -513,7 +513,7 @@
           var countNitrates = 0;
           var avgOther = {};
 
-          if (vm.compareExpeditions[i] && vm.compareExpeditions[i].protocols && 
+          if (vm.compareExpeditions[i] && vm.compareExpeditions[i].protocols &&
             vm.compareExpeditions[i].protocols.waterQuality) {
             for (var j = 0; j < vm.compareExpeditions[i].protocols.waterQuality.samples.length; j++) {
               var sample = vm.compareExpeditions[i].protocols.waterQuality.samples[j];
