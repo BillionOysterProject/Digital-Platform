@@ -36,8 +36,8 @@
                   <h6>Temperature</h6>
                   <h4 class="green">
                       <img class="pull-left" width="30" style="margin-right: 5px;" src="modules/core/client/img/icons/temperature.svg" />
-                      <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average}}&#8457;</span>
-                      <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average}}&#8451;</span><br/>
+                      <span ng-show="sample.waterTemperature.units === 'f'">{{sample.waterTemperature.average | number:2}}&#8457;</span>
+                      <span ng-show="sample.waterTemperature.units === 'c'">{{sample.waterTemperature.average | number:2}}&#8451;</span><br/>
                       <small>via {{getWaterTemperatureMethod(sample.waterTemperature.method) | lowercase}}</small>
                   </h4>
               </div>
