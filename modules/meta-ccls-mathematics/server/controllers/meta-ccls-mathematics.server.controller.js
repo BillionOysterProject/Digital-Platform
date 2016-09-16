@@ -83,7 +83,23 @@ exports.delete = function (req, res) {
  * List of Standards
  */
 exports.list = function (req, res) {
-  MetaCclsMathematics.find().sort('code').exec(function (err, standards) {
+  var query;
+
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+      query = MetaCclsMathematics.find({ $or: [{ 'code': searchRe }, { 'description': searchRe }] });
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+  } else {
+    query = MetaCclsMathematics.find();
+  }
+
+  query.sort('code').exec(function (err, standards) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
