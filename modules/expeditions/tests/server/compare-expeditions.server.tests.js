@@ -1009,7 +1009,6 @@ describe('Compare Expedition routes tests', function() {
       .end(function (signinErr, sigininRes) {
         // Handle signin error
         if (signinErr) {
-          console.log('signinErr', signinErr);
           return done(signinErr);
         }
 

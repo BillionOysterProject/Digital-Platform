@@ -22,7 +22,7 @@ exports.create = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(event);
+      res.json(event);
     }
   });
 };
@@ -38,7 +38,7 @@ exports.read = function(req, res) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   event.isCurrentUserOwner = req.user && event.user && event.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(event);
+  res.json(event);
 };
 
 /**
@@ -55,7 +55,7 @@ exports.update = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(event);
+      res.json(event);
     }
   });
 };
@@ -72,7 +72,7 @@ exports.delete = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(event);
+      res.json(event);
     }
   });
 };
@@ -81,13 +81,13 @@ exports.delete = function(req, res) {
  * List of CalendarEvents
  */
 exports.list = function(req, res) {
-  CalendarEvent.find().sort('-created').populate('user', 'displayName').exec(function(err, events) {
+  CalendarEvent.find().sort('date.startDateTime').populate('user', 'displayName').exec(function(err, events) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(events);
+      res.json(events);
     }
   });
 };
@@ -99,7 +99,7 @@ exports.eventByID = function(req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Calendar Event is invalid'
+      message: 'Event is invalid'
     });
   }
 
@@ -108,7 +108,7 @@ exports.eventByID = function(req, res, next, id) {
       return next(err);
     } else if (!event) {
       return res.status(404).send({
-        message: 'No Calendar Event with that identifier has been found'
+        message: 'No Event with that identifier has been found'
       });
     }
     req.event = event;

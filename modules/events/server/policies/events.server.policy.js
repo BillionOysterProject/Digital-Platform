@@ -22,16 +22,16 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['team lead', 'team lead pending', 'partner'],
     allows: [{
       resources: '/api/events',
       permissions: ['get', 'post']
     }, {
       resources: '/api/events/:eventId',
-      permissions: ['get']
+      permissions: ['get', 'post']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['guest', 'user', 'team member', 'team member pending'],
     allows: [{
       resources: '/api/events',
       permissions: ['get']
