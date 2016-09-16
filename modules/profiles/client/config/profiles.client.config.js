@@ -18,23 +18,28 @@
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
+      title: 'Profiles',
+      state: 'profiles'
+    });
+
+    Menus.addSubMenuItem('topbar', 'profiles', {
+      title: 'Teams',
+      state: 'profiles.team'
+    });
+
+    Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Team Leads',
       state: 'profiles.team-lead'
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Team',
-      state: 'profiles.team'
-    });
-
-    Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Organization',
+      title: 'Organizations',
       state: 'profiles.organization',
     });
 
-    Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Restoration Station',
-      state: 'profiles.restoration-station',
-    });
+    //Menus.addSubMenuItem('topbar', 'profiles', {
+    //  title: 'Restoration Station',
+    //  state: 'profiles.restoration-station',
+    //});
   }
 }());
