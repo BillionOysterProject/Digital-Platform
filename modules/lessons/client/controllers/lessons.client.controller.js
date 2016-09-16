@@ -49,7 +49,9 @@
         return SubjectAreasService.get({ subjectAreaId: id }).$promise;
       },
       options: function(searchText) {
-        return SubjectAreasService.query();
+        return SubjectAreasService.query({
+          searchString: searchText
+        });
       }
     };
 
@@ -65,10 +67,7 @@
       mode: 'tags-id',
       id: 'value',
       text: 'name',
-      options: vm.protocolConnections,
-      select2: {
-        minimumInputLength: 2
-      }
+      options: vm.protocolConnections
     };
 
     vm.vocabularySelectConfig = {
@@ -79,10 +78,9 @@
         return GlossaryService.get({ termId: id }).$promise;
       },
       options: function(searchText) {
-        return GlossaryService.query();
-      },
-      select2: {
-        minimumInputLength: 2
+        return GlossaryService.query({
+          searchString: searchText
+        });
       }
     };
 
@@ -94,10 +92,7 @@
         return CclsElaScienceTechnicalSubjectsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return CclsElaScienceTechnicalSubjectsService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return CclsElaScienceTechnicalSubjectsService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -109,10 +104,7 @@
         return CclsMathematicsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return CclsMathematicsService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return CclsMathematicsService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -124,10 +116,7 @@
         return NgssCrossCuttingConceptsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NgssCrossCuttingConceptsService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NgssCrossCuttingConceptsService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -139,10 +128,7 @@
         return NgssDisciplinaryCoreIdeasService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NgssDisciplinaryCoreIdeasService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NgssDisciplinaryCoreIdeasService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -154,10 +140,7 @@
         return NgssScienceEngineeringPracticesService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NgssScienceEngineeringPracticesService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NgssScienceEngineeringPracticesService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -169,10 +152,7 @@
         return NycsssUnitsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NycsssUnitsService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NycsssUnitsService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -184,10 +164,7 @@
         return NysssKeyIdeasService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NysssKeyIdeasService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NysssKeyIdeasService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -199,10 +176,7 @@
         return NysssMajorUnderstandingsService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NysssMajorUnderstandingsService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NysssMajorUnderstandingsService.query({ select: true, searchString: searchText });
       }
     };
 
@@ -214,10 +188,7 @@
         return NysssMstService.get({ standardId: id, select: true }).$promise;
       },
       options: function(searchText) {
-        return NysssMstService.query({ select: true });
-      },
-      select2: {
-        minimumInputLength: 2
+        return NysssMstService.query({ select: true, searchString: searchText });
       }
     };
 

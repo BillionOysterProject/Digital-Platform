@@ -17,7 +17,8 @@
       query: {
         method: 'GET',
         params: {
-          select: '@select'
+          select: '@select',
+          searchString: '@searchString'
         },
         isArray: true
       }

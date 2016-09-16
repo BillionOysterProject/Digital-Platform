@@ -83,7 +83,22 @@ exports.delete = function (req, res) {
  * List of Standards
  */
 exports.list = function (req, res) {
-  MetaNgssCrossCuttingConcept.find().sort({ 'header': 1, 'description': 1 }).exec(function (err, standards) {
+  var query;
+
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+      query = MetaNgssCrossCuttingConcept.find({ $or: [{ 'header': searchRe },{ 'description': searchRe }] });
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+  } else {
+    query = MetaNgssCrossCuttingConcept.find();
+  }
+  query.sort({ 'header': 1, 'description': 1 }).exec(function (err, standards) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
