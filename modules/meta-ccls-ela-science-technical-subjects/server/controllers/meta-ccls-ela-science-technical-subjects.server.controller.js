@@ -83,7 +83,24 @@ exports.delete = function (req, res) {
  * List of Standards
  */
 exports.list = function (req, res) {
-  MetaCclsElaScienceTechnicalSubject.find().sort('code').exec(function (err, standards) {
+  var query;
+
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+      query = MetaCclsElaScienceTechnicalSubject.find({ $or: [{ 'code': searchRe },
+        { 'description': searchRe }] });
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+  } else {
+    query = MetaCclsElaScienceTechnicalSubject.find();
+  }
+
+  query.sort('code').exec(function (err, standards) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

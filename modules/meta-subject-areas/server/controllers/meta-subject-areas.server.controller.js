@@ -78,7 +78,23 @@ exports.delete = function (req, res) {
  * List of Subject Areas
  */
 exports.list = function (req, res) {
-  MetaSubjectArea.find().sort('subject').exec(function (err, subjectAreas) {
+  var query;
+
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+      query = MetaSubjectArea.find({ 'subject': searchRe });
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+  } else {
+    query = MetaSubjectArea.find();
+  }
+
+  query.sort('subject').exec(function (err, subjectAreas) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
