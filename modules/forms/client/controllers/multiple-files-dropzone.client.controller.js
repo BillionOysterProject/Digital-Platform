@@ -41,6 +41,7 @@
         fileReader.onload = function (fileReaderEvent) {
           $timeout(function () {
             //console.log('result', fileItem);
+            console.log('files', $scope.files);
             $scope.files.push({
               originalname: fileItem.file.name,
               mimetype: fileItem.file.type,

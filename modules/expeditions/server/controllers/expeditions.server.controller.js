@@ -652,9 +652,11 @@ exports.list = function (req, res) {
 
       if (req.query.sort) {
         if (req.query.sort === 'startDate') {
+          query.sort('monitoringStartDate');
+        } else if (req.query.sort === 'startDateRev') {
           query.sort('-monitoringStartDate');
         } else if (req.query.sort === 'endDate') {
-          query.sort('-monitoringEndDate');
+          query.sort('monitoringEndDate');
         } else if (req.query.sort === 'name') {
           query.sort('name');
         } else if (req.query.sort === 'status') {
@@ -702,7 +704,6 @@ exports.list = function (req, res) {
 };
 
 exports.compare = function (req, res) {
-  console.log('req', req);
   compareHelper.buildCompareQuery(req, function(error, expeditions) {
     if (error) {
       return res.status(400).send({

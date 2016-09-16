@@ -554,7 +554,7 @@ var buildCompareQuery = function (req, callback) {
     if (selectProtocol4.length > 0) select['protocols.settlementTiles'] = 1;
     if (selectProtocol5.length > 0) select['protocols.waterQuality'] = 1;
 
-    var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('-monitoringStartDate');
+    var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('monitoringStartDate');
 
     query.populate('station', 'name');
 
