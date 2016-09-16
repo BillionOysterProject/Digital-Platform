@@ -13,8 +13,8 @@
     vm.filter = {
       searchString: '',
       sort: '',
-      limit: 20,
-      page: 1
+      // limit: 20,
+      // page: 1
     };
 
     vm.findGlossary = function() {
@@ -26,6 +26,7 @@
       }, function(data) {
         vm.glossary = data;
         vm.error = null;
+        vm.buildPager();
       }, function(error) {
         vm.error = error.data.message;
       });
@@ -45,8 +46,21 @@
       vm.findGlossary();
     };
 
+    vm.buildPager = function() {
+      vm.pagedItems = [];
+      vm.itemsPerPage = 15;
+      vm.currentPage = 1;
+      vm.figureOutItemsToDisplay();
+    };
+
+    vm.figureOutItemsToDisplay = function() {
+      var begin = ((vm.currentPage - 1) * vm.itemsPerPage);
+      var end = begin + vm.itemsPerPage;
+      vm.pagedItems = vm.glossary.slice(begin, end);
+    };
+
     vm.pageChanged = function() {
-      vm.findGlossary();
+      vm.figureOutItemsToDisplay();
     };
 
     vm.authentication = Authentication;

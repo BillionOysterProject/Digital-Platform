@@ -30,7 +30,7 @@
 
       function successCallback(res) {
         var termId = res._id;
-        $scope.saveFunction();
+        $scope.saveFunction(termId);
         $scope.form.termForm.$setPristine();
       }
 

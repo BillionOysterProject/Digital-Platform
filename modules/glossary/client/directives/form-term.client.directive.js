@@ -13,9 +13,10 @@
           cancelFunction: '='
         },
         replace: true,
+        transclude: true,
         controller: 'TermController',
         link: function(scope, element, attrs) {
-          
+
         }
       };
     });

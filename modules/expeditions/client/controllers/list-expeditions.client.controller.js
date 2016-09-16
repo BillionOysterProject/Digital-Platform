@@ -91,7 +91,7 @@
     vm.findPublishedExpeditions = function() {
       ExpeditionsService.query({
         published: true,
-        sort: 'startDate',
+        sort: 'startDateRev',
         station: vm.filter.station,
         organization: vm.filter.organization,
         team: vm.filter.team,
