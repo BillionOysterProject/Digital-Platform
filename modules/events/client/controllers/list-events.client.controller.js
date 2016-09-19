@@ -33,14 +33,41 @@
     // vm.calendarView = 'month';
     // vm.calendarDate = new Date();
 
-    vm.getEventDatesSame = function(startDate, endDate) {
-      var beginStartDate = moment(startDate).startOf('day').toDate();
-      var beginEndDate = moment(endDate).startOf('day').toDate();
-      return beginStartDate === beginEndDate;
+    vm.getEventDate = function(startDate) {
+      return moment(startDate).format('MMM D');
     };
 
-    vm.getEventYear = function(startDate, endDate) {
+    vm.getEventYear = function(startDate) {
+      return moment(startDate).format('YYYY');
+    };
 
+    vm.getEventTimeRange = function(startDate, endDate) {
+      return moment(startDate).format('h:mma') + '-' + moment(endDate).format('h:mma');
+    };
+
+    vm.getOpenSpots = function(registrants, maximumCapacity) {
+      if (registrants && registrants.length >=0 && maximumCapacity && maximumCapacity >= 0) {
+        return maximumCapacity - registrants.length;
+      } else {
+        return null;
+      }
+    };
+
+    vm.getDaysRemaining = function(dates, deadlineToRegister) {
+      var today = moment();
+      if (deadlineToRegister) {
+        return moment(deadlineToRegister).diff(today, 'days');
+      } else {
+        var earliestDate = (dates && dates.length > 0) ?
+          moment(dates[0].startDateTime) : null;
+        for (var j = 1; j < dates.length; j++) {
+          if (moment(dates[j].startDateTime).isBefore(earliestDate)) {
+            earliestDate = moment(dates[j].startDateTime);
+          }
+        }
+
+        return earliestDate.diff(today, 'days');
+      }
     };
   }
 }());

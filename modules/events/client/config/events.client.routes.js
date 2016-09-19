@@ -75,10 +75,9 @@
   getEvent.$inject = ['$stateParams', 'EventsService'];
 
   function getEvent($stateParams, EventsService) {
-    // return EventsService.get({
-    //   eventId: $stateParams.eventId
-    // }).$promise; //TODO
-    return new EventsService();
+    return EventsService.get({
+      eventId: $stateParams.eventId
+    }).$promise;
   }
 
   newEvent.$inject = ['EventsService'];

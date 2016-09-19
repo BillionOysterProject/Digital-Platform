@@ -31,20 +31,25 @@
       vm.event.dates.splice(index, 1);
     };
 
+    console.log('dates', vm.event.dates);
     if (!vm.event.dates || vm.event.dates.length === 0) {
       vm.event.dates = [];
       vm.addDate();
+    } else {
+      for (var i = 0; i < vm.event.dates.length; i++) {
+        vm.event.dates[i].date = (vm.event.dates[i].startDateTime) ?
+          moment(vm.event.dates[i].startDateTime).startOf('day').toDate() : '';
+        vm.event.dates[i].startTime = (vm.event.dates[i].startDateTime) ?
+          moment(vm.event.dates[i].startDateTime).toDate() : '';
+        vm.event.dates[i].endTime = (vm.event.dates[i].endDateTime) ?
+          moment(vm.event.dates[i].endDateTime).toDate() : '';
+      }
     }
+
     vm.featuredImageURL = (vm.event && vm.event.featuredImage) ? vm.event.featuredImage.path : '';
     vm.resourceFiles = (vm.event && vm.event.materialsResources) ? vm.event.materialsResources.teacherResourcesFiles : [];
     vm.resourceLinks = (vm.event && vm.event.materialsResources) ? vm.event.materialsResources.teacherResourcesLinks : [];
     vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
-    if (vm.event.dates && vm.event.dates.length > 0) {
-      for (var i = 0; i < vm.event.dates.length; i++) {
-        vm.event.dates[i].startDateTime = (vm.event.dates[i].startDateTime) ? moment(vm.event.dates[i].startDateTime).toDate() : '';
-        vm.event.dates[i].endDateTime = (vm.event.dates[i].endDateTime) ? moment(vm.event.dates[i].endDateTime).toDate() : '';
-      }
-    }
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',

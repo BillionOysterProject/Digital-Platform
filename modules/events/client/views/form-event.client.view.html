@@ -44,6 +44,9 @@
                                         <!-- <option="expedition">Expedition</option> -->
                                         <option value="other">Other</option>
                                       </select>
+                                      <div ng-messages="vm.form.eventForm.category.$error" role="alert">
+                                        <p class="help-block error-text" ng-message="required">Type is required.</p>
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="col-md-6" ng-show="vm.event.category.type === 'other'">
@@ -62,8 +65,12 @@
                                   </div>
                                   <div ng-class="{'col-sm-10': $index>0, 'col-sm-12': $index==0}">
                                       <div class="form-group" show-errors>
-                                          <label class="control-label">Date<span ng-show="$index==0"> *</span></label>
-                                          <input type="date" class="form-control" ng-model="date.date"/>
+                                          <label class="control-label required" for="date">Date<span ng-show="$index==0"> *</span></label>
+                                          <input type="date" class="form-control" name="date-{{$index}}" id="date-{{$index}}"
+                                          ng-model="date.date" required/>
+                                          <div ng-messages="vm.form.eventForm.date-$index.$error" role="alert">
+                                            <p class="help-block error-text" ng-message="required">Date is required.</p>
+                                          </div>
                                       </div>
                                   </div>
                                   <div class="col-sm-2" ng-show="$index>0">
@@ -74,14 +81,22 @@
                                   </div>
                                   <div class="col-sm-6">
                                       <div class="form-group" show-errors>
-                                          <label class="control-label">Start Time</label>
-                                          <input type="time" class="form-control" ng-model="date.startTime"/>
+                                          <label class="control-label required" for="startTime">Start Time *</label>
+                                          <input type="time" class="form-control" name="startTime-{{$index}}" id="startTime-{{$index}}"
+                                          ng-model="date.startTime" required/>
+                                          <div ng-messages="vm.form.eventForm.startTime-$index.$error" role="alert">
+                                            <p class="help-block error-text" ng-message="required">Start time is required.</p>
+                                          </div>
                                       </div>
                                   </div>
                                   <div class="col-sm-6">
                                       <div class="form-group" show-errors>
-                                          <label class="control-label">End Time</label>
-                                          <input type="time" class="form-control" ng-model="date.endTime"/>
+                                          <label class="control-label required" for="endTime">End Time *</label>
+                                          <input type="time" class="form-control" name="endTime-{{$index}}" id="endDate-{{$index}}"
+                                          ng-model="date.endTime" required/>
+                                          <div ng-messages="vm.form.eventForm.endTime-$index.$error" role="alert">
+                                            <p class="help-block error-text" ng-message="required">End date is required.</p>
+                                          </div>
                                       </div>
                                   </div>
                                 </div>

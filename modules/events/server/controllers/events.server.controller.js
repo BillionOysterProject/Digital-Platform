@@ -13,7 +13,8 @@ var path = require('path'),
   request = require('request'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
-  moment = require('moment');
+  moment = require('moment'),
+  lodash = require('lodash');
 
 var emptyString = function(string) {
   if (!string || string === null || string === '') {
@@ -23,7 +24,7 @@ var emptyString = function(string) {
   }
 };
 
-var validateEvent = function(calendarEvent, successCallback, errorCallback) {
+var validateEvent = function(calendarEvent, dates, successCallback, errorCallback) {
   var errorMessages = [];
 
   if (emptyString(calendarEvent.title)) {
@@ -39,6 +40,15 @@ var validateEvent = function(calendarEvent, successCallback, errorCallback) {
       errorMessages.push('Please fill in Event other category');
     }
   }
+  if (dates.length === 0) {
+    errorMessages.push('Please fill in Event date and start/end time');
+  } else {
+    for (var n = 0; n < dates.length; n++) {
+      if (emptyString(dates[n].date) || emptyString(dates[n].startTime) || emptyString(dates[n].endTime)) {
+        errorMessages.push('Please fill in Event date and start/end time');
+      }
+    }
+  }
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -51,29 +61,54 @@ var getDateTime = function(date, time) {
   var dateString = '';
   if (date && time) {
     dateString += moment(date).format('YYYY/MM/DD');
-    dateString += ' ' + time;
-    console.log('dateString', dateString);
+    dateString += ' ';
+    dateString += moment(time, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm:ss');
     return moment(dateString, 'YYYY/MM/DD HH:mm:ss').toDate();
   } else {
     return '';
   }
 };
 
+var firstIndexOfAfter = function(ordered, date) {
+  var index = _.findLastIndex(ordered, function(d) {
+    return moment(d.startDateTime).isBefore(moment(date));
+  });
+  return index;
+};
+
+var sortDates = function(dates) {
+  var ordered = [];
+  for (var n = 0; n < dates.length; n++) {
+    if (ordered.length === 0) {
+      ordered.push(dates[n]);
+    } else {
+      var index = firstIndexOfAfter(ordered, dates[n].startDateTime);
+      if (index >= 0) {
+        ordered.splice(index+1, 0, dates[n]);
+      } else {
+        ordered.splice(0, 0, dates[n]);
+      }
+    }
+  }
+  return ordered;
+};
+
 /**
  * Create a CalendarEvent
  */
 exports.create = function(req, res) {
-  validateEvent(req.body,
+  validateEvent(req.body, req.body.dates,
   function(eventJSON) {
     var calendarEvent = new CalendarEvent(eventJSON);
-    for (var i = 0; i < calendarEvent.dates; i++) {
+    for (var i = 0; i < req.body.dates.length; i++) {
       calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
         req.body.dates[i].startTime);
       calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
         req.body.dates[i].endTime);
     }
-    calendarEvent.deadlineToRegister = moment(req.body.deadlineToRegister,
-      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
+    calendarEvent.dates = sortDates(calendarEvent.dates);
+    calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
+      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
     calendarEvent.resources.resourcesFiles = [];
     calendarEvent.user = req.user;
 
@@ -99,13 +134,15 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
   // convert mongoose document to JSON
-  var event = req.calendarEvent ? req.calendarEvent.toJSON() : {};
+  var calendarEvent = req.calendarEvent ? req.calendarEvent.toJSON() : {};
 
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  event.isCurrentUserOwner = req.user && event.user && event.user._id.toString() === req.user._id.toString();
+  calendarEvent.isCurrentUserOwner = req.user && calendarEvent.user &&
+    calendarEvent.user._id.toString() === req.user._id.toString();
+  calendarEvent.dates = sortDates(calendarEvent.dates);
 
-  res.json(event);
+  res.json(calendarEvent);
 };
 
 /**
@@ -113,16 +150,18 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
   var calendarEvent = req.calendarEvent;
-  validateEvent(req.body,
+  validateEvent(req.body, req.body.dates,
   function(eventJSON) {
     if (calendarEvent) {
       calendarEvent = _.extend(calendarEvent, eventJSON);
-      for (var i = 0; i < calendarEvent.dates; i++) {
-        calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime,
-          'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-        calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime,
-          'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      for (var i = 0; i < req.body.dates.length; i++) {
+        calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
+          req.body.dates[i].startTime);
+        calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
+          req.body.dates[i].endTime);
       }
+      calendarEvent.dates = sortDates(calendarEvent.dates);
+
       calendarEvent.deadlineToRegister = moment(req.body.deadlineToRegister,
         'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
 
