@@ -281,7 +281,51 @@ exports.delete = function(req, res) {
  * List of CalendarEvents
  */
 exports.list = function(req, res) {
-  CalendarEvent.find().sort('date.startDateTime').populate('user', 'displayName').exec(function(err, events) {
+  var query;
+  var and = [];
+
+  if (req.query.category) {
+    and.push({ 'event.category.type': req.query.category });
+  }
+
+  var or = [];
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'title': searchRe });
+    or.push({ 'description': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  var startDate;
+  var endDate;
+  if (req.query.startDate && req.query.endDate) {
+    startDate = moment(req.query.startDate).toDate();
+    endDate = moment(req.query.endDate).toDate();
+
+    if (startDate && endDate) {
+      and.push({ $and: [{ 'dates.startDateTime': { '$gte': startDate } }, { 'dates.startDateTime': { '$lte': endDate } },
+      { 'dates.endDateTime': { '$gte': startDate } }, { 'dates.endDateTime': { '$lte': endDate } }] });
+    }
+  }
+
+  if (and.length === 1) {
+    query = CalendarEvent.find(and[0]);
+  } else if (and.length > 0) {
+    query = CalendarEvent.find({ $and: and });
+  } else {
+    query = CalendarEvent.find();
+  }
+
+  query.sort('dates.startDateTime').populate('user', 'displayName').exec(function(err, events) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

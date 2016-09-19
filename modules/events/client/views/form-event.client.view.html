@@ -27,28 +27,32 @@
                                     ng-show="vm.event.location.latitude && vm.event.location.longitude"
                                      readonly/>
                                 </div>
-                                <div class="form-group" show-errors>
+                                <div class="form-group">
                                     <label class="control-label" for="cost">Cost</label>
                                     <textarea name="cost" class="form-control" ng-model="vm.event.cost" id="cost"></textarea>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="row" ng-repeat="date in vm.event.dates">
-                                  <div class="col-md-6 col-sm-6">
+                              <div class="row">
+                                  <div class="col-md-5">
                                       <div class="form-group" show-errors>
-                                          <label class="control-label">Start Date/Time</label>
-                                          <input type="datetime-local" placeholder="yyyy-MM-ddTHH:mm" class="form-control"
-                                          ng-model="date.startDateTime"/>
+                                          <label class="control-label">Date</label>
+                                          <input type="date" class="form-control" required />
                                       </div>
                                   </div>
-                                  <div class="col-md-5 col-sm-5">
+                                  <div class="col-md-3 col-sm-5">
                                       <div class="form-group" show-errors>
-                                          <label class="control-label">End Date/Time</label>
-                                          <input type="datetime-local" placeholder="yyyy-MM-ddTHH:mm" class="form-control"
-                                          ng-model="date.endDateTime"/>
+                                          <label class="control-label">Start Time</label>
+                                          <input type="time" class="form-control" required />
                                       </div>
                                   </div>
-                                  <div class="col-md-1 col-sm-1">
+                                  <div class="col-md-3 col-sm-5">
+                                      <div class="form-group" show-errors>
+                                          <label class="control-label">End Time</label>
+                                          <input type="time" class="form-control" required />
+                                      </div>
+                                  </div>
+                                  <div class="col-md-1 col-sm-2">
                                     <div class="form-group">
                                       <a href="" ng-click="vm.removeDate()" ng-show="$index>0">x</a>
                                     </div>
@@ -63,13 +67,13 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-group" show-errors>
+                                        <div class="form-group">
                                             <label class="control-label">Maximum Capacity</label>
                                             <input type="number" class="form-control" ng-model="vm.event.maximumCapacity"/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group" show-errors>
+                                        <div class="form-group">
                                             <label class="control-label">Deadline to register</label>
                                             <input type="date" class="form-control" ng-model="vm.event.deadlineToRegister"
                                             ng-max="vm.event.startDateTime"/>
@@ -92,7 +96,7 @@
                                     </div>
                                   </div>
                                   <div class="col-md-6" ng-show="vm.event.category.type === 'other'">
-                                    <div class="form-group" show-errors>
+                                    <div class="form-group">
                                       <label class="control-label" ng-class="{required: vm.event.category.type === 'other'}">Other Category *</label>
                                       <input type="text" class="form-control" ng-model="vm.event.category.otherType"
                                       ng-required="vm.event.category.type === 'other'"/>
@@ -115,7 +119,7 @@
                                       <p class="help-block error-text" ng-message="required">Description is required.</p>
                                     </div>
                                 </div>
-                                <div class="form-group" show-errors>
+                                <div class="form-group">
                                     <label class="control-label">Skills taught</label>
                                     <textarea class="form-control" ng-model="vm.event.skillsTaught"></textarea>
                                 </div>
@@ -127,7 +131,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group" show-errors>
+                                <div class="form-group">
                                     <label for="image" class="control-label">Featured Image</label>
                                     <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
                                     image-alt="Featured Image" id="event-featured-image"></single-image-drop-zone>
@@ -143,14 +147,14 @@
                                     <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
                                     <td>{{link.link}}</td>
                                     <td>
-                                      <a ng-click="vm.deleteTeacherResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
+                                      <a ng-click="vm.deleteResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                   </tr>
                                   <tr ng-repeat="file in vm.resourceFiles">
                                     <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                                     <td></td>
                                     <td id="event-resource-files">
-                                        <a ng-click="vm.deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i>
+                                        <a ng-click="vm.deleteResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i>
                                     </td>
                                   </tr>
                                 </table>
@@ -183,54 +187,7 @@
         longitude="vm.event.location.longitude" can-geocode="true" can-click-map-to-add-marker="true"
         can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
     </div>
-    <!--TIFF: Need delete event modal (copy from lesson form) -->
-    <!--TIFF: Resources modal copied from lesson form - adjust as needed -->
-    <div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 class="modal-title">Add a teacher resource</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active">
-                      <a href="#link" data-toggle="tab" aria-controls="link" role="tab">Link</a>
-                    </li>
-                    <li role="presentation">
-                      <a href="#upload" data-toggle="tab" aria-controls="upload" role="tab">Upload</a>
-                    </li>
-                  </ul>
-                  <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="link">
-                      <br/>
-                      <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" ng-model="vm.tempResourceLinkName"/>
-                      </div>
-                      <div class="form-group">
-                        <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
-                        <input type="text" class="form-control" ng-model="vm.tempResourceLink"/>
-                      </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="upload">
-                      <br/>
-                      <multiple-file-drop-zone uploader="vm.resourceFilesUploader" files="vm.tempResourceFiles"></multiple-file-drop-zone>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.cancelTeacherResources()">Cancel</button>
-              <!-- <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.deleteTeacherResources()">Delete</button> -->
-              <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addTeacherResources()">Add</button>
-            </div>
-          </div>
-        </div>
-    </div>
+    <resource-upload-modal resource-files-uploader="vm.resourceFilesUploader"
+    resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+    close-function=""></resource-upload-modal>
 </section>

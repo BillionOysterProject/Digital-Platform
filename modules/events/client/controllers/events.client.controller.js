@@ -15,7 +15,7 @@
 
     vm.authentication = Authentication;
     vm.event = event;
-    vm.error = null;
+    vm.error = [];
     vm.form = {};
     vm.save = save;
 
@@ -34,12 +34,16 @@
       vm.event.dates = [];
       vm.addDate();
     }
-    vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
-    vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
-    vm.tempResourceFiles = [];
-    vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
-    vm.tempResourceLinkName = '';
-    vm.tempResourceLink = '';
+    vm.featuredImageURL = (vm.event && vm.event.featuredImage) ? vm.event.featuredImage.path : '';
+    vm.resourceFiles = (vm.event && vm.event.materialsResources) ? vm.event.materialsResources.teacherResourcesFiles : [];
+    vm.resourceLinks = (vm.event && vm.event.materialsResources) ? vm.event.materialsResources.teacherResourcesLinks : [];
+    vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
+    if (vm.event.dates && vm.event.dates.length > 0) {
+      for (var i = 0; i < vm.event.dates.length; i++) {
+        vm.event.dates[i].startDateTime = (vm.event.dates[i].startDateTime) ? moment(vm.event.dates[i].startDateTime).toDate() : '';
+        vm.event.dates[i].endDateTime = (vm.event.dates[i].endDateTime) ? moment(vm.event.dates[i].endDateTime).toDate() : '';
+      }
+    }
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -50,6 +54,17 @@
       alias: 'newResourceFile',
       queueLimit: 20
     });
+
+    vm.deleteResourceFile = function(index, file) {
+      if (file.index) {
+        vm.resourceFilesUploader.removeFromQueue(file.index);
+      }
+      vm.resourcesFiles.splice(index, 1);
+    };
+
+    vm.deleteResourceLink = function(index) {
+      vm.resourceLinks.splice(index, 1);
+    };
 
     vm.openDeleteEvent = function() {
       angular.element('#modal-delete-event').modal('show');
@@ -134,6 +149,7 @@
             if (vm.error && vm.error.length > 0) {
               vm.valid = false;
             } else {
+              vm.error = [];
               goToView(eventId);
             }
           });

@@ -20,7 +20,8 @@
         params: {
           category: '@category',
           searchString: '@searchString',
-          dateRange: '@dateRange',
+          startDate: '@startDate',
+          endDate: '@endDate',
           sort: '@sort',
           limit: '@limit',
           page: '@page'
