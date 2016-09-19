@@ -14,6 +14,18 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET',
+        params: {
+          category: '@category',
+          searchString: '@searchString',
+          dateRange: '@dateRange',
+          sort: '@sort',
+          limit: '@limit',
+          page: '@page'
+        },
+        isArray: true
       }
     });
   }

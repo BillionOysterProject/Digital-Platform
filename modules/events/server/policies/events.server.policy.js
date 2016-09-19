@@ -18,6 +18,15 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events',
       permissions: '*'
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-featured-image',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-resources',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId',
       permissions: '*'
     }]
@@ -27,6 +36,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId',
       permissions: ['get', 'post']
     }]
@@ -35,6 +47,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/events',
       permissions: ['get']
+    }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
     }, {
       resources: '/api/events/:eventId',
       permissions: ['get']

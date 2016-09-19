@@ -20,6 +20,14 @@ var CalendarEventSchema = new Schema({
     startDateTime: Date,
     endDateTime: Date,
   }],
+  category: {
+    type: {
+      type: String,
+      enum: ['professional development', 'field training', 'workshop', 'expedition', 'other'],
+      required: 'Please fill in Event category'
+    },
+    otherType: String
+  },
   deadlineToRegister: {
     type: Date
   },
@@ -42,20 +50,24 @@ var CalendarEventSchema = new Schema({
     path: String
   },
   resources: {
-    teacherResourcesLinks: [{
+    resourcesLinks: [{
       name: String,
       link: {
         type: String,
         trim: true
       }
     }],
-    teacherResourcesFiles: [{
+    resourcesFiles: [{
       originalname: String,
       mimetype: String,
       filename: String,
       path: String
     }],
   },
+  registrants: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }],
   created: {
     type: Date,
     default: Date.now

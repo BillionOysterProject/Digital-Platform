@@ -4,6 +4,7 @@ var should = require('should'),
   request = require('supertest'),
   path = require('path'),
   mongoose = require('mongoose'),
+  moment = require('moment'),
   User = mongoose.model('User'),
   CalendarEvent = mongoose.model('CalendarEvent'),
   express = require(path.resolve('./config/lib/express')),
@@ -33,9 +34,6 @@ var app,
 describe('Calendar Event CRUD tests', function () {
 
   before(function (done) {
-    // Get application
-    app = express.init(mongoose);
-    agent = request.agent(app);
 
     credentials = {
       username: admin.username,
@@ -43,6 +41,59 @@ describe('Calendar Event CRUD tests', function () {
     };
 
     done();
+  });
+
+  beforeEach(function(done) {
+    // Get application
+    app = express.init(mongoose);
+    agent = request.agent(app);
+    
+    User.findOne({ 'username': admin.username }).exec(function(err, adminUser) {
+      should.not.exist(err);
+
+      user = adminUser;
+      calendarEvent = {
+        title: 'Calendar Event',
+        dates: [{
+          startDateTime: moment().toDate(),
+          endDateTime: moment().toDate()
+        }],
+        category: {
+          type: 'field training',
+        },
+        deadlineToRegister: moment().toDate(),
+        location: {
+          addressString: '123 Main St, New York, New York',
+          latitude: 39.765,
+          longitude: -76.234
+        },
+        cost: '$100 donation',
+        maximumCapacity: 40,
+        description: 'This is a test event',
+        skillsTaught: 'How to add an event',
+        featuredImage: {
+          originalname: 'someimage.png',
+          mimetype: 'image/png',
+          filename: '1234567890.png',
+          path: 'aws.com/1234567890.png'
+        },
+        resources: {
+          teacherResourcesLinks: [{
+            name: 'Link Resource 1',
+            link: 'www.resource.com/resource1'
+          }],
+          teacherResourcesFiles: [{
+            originalname: 'resourcefile.pdf',
+            mimetype: 'application/pdf',
+            filename: '0987654321.pdf',
+            path: 'aws.com/0987654321.pdf'
+          }]
+        },
+        user: user
+      };
+
+      done();
+    });
   });
 
   it('should be able to save a Calendar Event if logged in', function (done) {
@@ -81,7 +132,7 @@ describe('Calendar Event CRUD tests', function () {
 
                 // Set assertions
                 (events[0].user._id).should.equal(userId);
-                (events[0].name).should.match('Calendar Event name');
+                (events[0].title).should.match('Calendar Event');
 
                 // Call the assertion callback
                 done();
@@ -100,9 +151,9 @@ describe('Calendar Event CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an Calendar Event if no name is provided', function (done) {
-    // Invalidate name field
-    calendarEvent.name = '';
+  it('should not be able to save an Calendar Event if no title is provided', function (done) {
+    // Invalidate title field
+    calendarEvent.title = '';
 
     agent.post('/api/auth/signin')
       .send(credentials)
@@ -122,7 +173,7 @@ describe('Calendar Event CRUD tests', function () {
           .expect(400)
           .end(function (eventSaveErr, eventSaveRes) {
             // Set message assertion
-            (eventSaveRes.body.message).should.match('Please fill Calendar Event name');
+            (eventSaveRes.body.message).should.match('Please fill in Event title');
 
             // Handle Calendar Event save error
             done(eventSaveErr);
@@ -154,7 +205,7 @@ describe('Calendar Event CRUD tests', function () {
             }
 
             // Update Calendar Event name
-            calendarEvent.name = 'WHY YOU GOTTA BE SO MEAN?';
+            calendarEvent.title = 'Updated Calendar Event';
 
             // Update an existing Calendar Event
             agent.put('/api/events/' + eventSaveRes.body._id)
@@ -168,7 +219,7 @@ describe('Calendar Event CRUD tests', function () {
 
                 // Set assertions
                 (eventUpdateRes.body._id).should.equal(eventSaveRes.body._id);
-                (eventUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+                (eventUpdateRes.body.title).should.match('Updated Calendar Event');
 
                 // Call the assertion callback
                 done();
@@ -205,7 +256,7 @@ describe('Calendar Event CRUD tests', function () {
       request(app).get('/api/events/' + eventObj._id)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('name', calendarEvent.name);
+          res.body.should.be.instanceof(Object).and.have.property('title', calendarEvent.title);
 
           // Call the assertion callback
           done();
@@ -218,7 +269,7 @@ describe('Calendar Event CRUD tests', function () {
     request(app).get('/api/events/test')
       .end(function (req, res) {
         // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'Calendar Event is invalid');
+        res.body.should.be.instanceof(Object).and.have.property('message', 'Event is invalid');
 
         // Call the assertion callback
         done();
@@ -230,7 +281,7 @@ describe('Calendar Event CRUD tests', function () {
     request(app).get('/api/events/559e9cd815f80b4c256a8f41')
       .end(function (req, res) {
         // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'No Calendar Event with that identifier has been found');
+        res.body.should.be.instanceof(Object).and.have.property('message', 'No Event with that identifier has been found');
 
         // Call the assertion callback
         done();
@@ -300,93 +351,6 @@ describe('Calendar Event CRUD tests', function () {
           done(eventDeleteErr);
         });
 
-    });
-  });
-
-  it('should be able to get a single Calendar Event that has an orphaned user reference', function (done) {
-    // Create orphan user creds
-    var _creds = {
-      username: 'orphan',
-      password: 'M3@n.jsI$Aw3$0m3'
-    };
-
-    // Create orphan user
-    var _orphan = new User({
-      firstName: 'Full',
-      lastName: 'Name',
-      displayName: 'Full Name',
-      email: 'orphan@test.com',
-      username: _creds.username,
-      password: _creds.password,
-      provider: 'local'
-    });
-
-    _orphan.save(function (err, orphan) {
-      // Handle save error
-      if (err) {
-        return done(err);
-      }
-
-      agent.post('/api/auth/signin')
-        .send(_creds)
-        .expect(200)
-        .end(function (signinErr, signinRes) {
-          // Handle signin error
-          if (signinErr) {
-            return done(signinErr);
-          }
-
-          // Get the userId
-          var orphanId = orphan._id;
-
-          // Save a new Calendar Event
-          agent.post('/api/events')
-            .send(calendarEvent)
-            .expect(200)
-            .end(function (eventSaveErr, eventSaveRes) {
-              // Handle Calendar Event save error
-              if (eventSaveErr) {
-                return done(eventSaveErr);
-              }
-
-              // Set assertions on new Calendar Event
-              (eventSaveRes.body.name).should.equal(calendarEvent.name);
-              should.exist(eventSaveRes.body.user);
-              should.equal(eventSaveRes.body.user._id, orphanId);
-
-              // force the Calendar Event to have an orphaned user reference
-              orphan.remove(function () {
-                // now signin with valid user
-                agent.post('/api/auth/signin')
-                  .send(credentials)
-                  .expect(200)
-                  .end(function (err, res) {
-                    // Handle signin error
-                    if (err) {
-                      return done(err);
-                    }
-
-                    // Get the Calendar Event
-                    agent.get('/api/events/' + eventSaveRes.body._id)
-                      .expect(200)
-                      .end(function (eventInfoErr, eventInfoRes) {
-                        // Handle Calendar Event error
-                        if (eventInfoErr) {
-                          return done(eventInfoErr);
-                        }
-
-                        // Set assertions
-                        (eventInfoRes.body._id).should.equal(eventSaveRes.body._id);
-                        (eventInfoRes.body.name).should.equal(calendarEvent.name);
-                        should.equal(eventInfoRes.body.user, undefined);
-
-                        // Call the assertion callback
-                        done();
-                      });
-                  });
-              });
-            });
-        });
     });
   });
 

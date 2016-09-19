@@ -35,11 +35,14 @@ describe('Calendar Event Model Unit Tests:', function() {
 
       user = adminUser;
       calendarEvent = new CalendarEvent({
-        title: 'Calendar Event Name',
+        title: 'Calendar Event',
         dates: [{
           startDateTime: moment().toDate(),
           endDateTime: moment().toDate()
         }],
+        category: {
+          type: 'field training',
+        }, 
         deadlineToRegister: moment().toDate(),
         location: {
           addressString: '123 Main St, New York, New York',
