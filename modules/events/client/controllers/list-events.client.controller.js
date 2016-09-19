@@ -5,9 +5,9 @@
     .module('events')
     .controller('EventsListController', EventsListController);
 
-  EventsListController.$inject = ['EventsService'];
+  EventsListController.$inject = ['EventsService', 'moment'];
 
-  function EventsListController(EventsService) {
+  function EventsListController(EventsService, moment) {
     var vm = this;
 
     vm.filter = {
@@ -30,7 +30,17 @@
 
     vm.findEvents();
 
-    vm.calendarView = 'month';
-    vm.calendarDate = new Date();
+    // vm.calendarView = 'month';
+    // vm.calendarDate = new Date();
+
+    vm.getEventDatesSame = function(startDate, endDate) {
+      var beginStartDate = moment(startDate).startOf('day').toDate();
+      var beginEndDate = moment(endDate).startOf('day').toDate();
+      return beginStartDate === beginEndDate;
+    };
+
+    vm.getEventYear = function(startDate, endDate) {
+
+    };
   }
 }());

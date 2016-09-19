@@ -47,6 +47,18 @@ var validateEvent = function(calendarEvent, successCallback, errorCallback) {
   }
 };
 
+var getDateTime = function(date, time) {
+  var dateString = '';
+  if (date && time) {
+    dateString += moment(date).format('YYYY/MM/DD');
+    dateString += ' ' + time;
+    console.log('dateString', dateString);
+    return moment(dateString, 'YYYY/MM/DD HH:mm:ss').toDate();
+  } else {
+    return '';
+  }
+};
+
 /**
  * Create a CalendarEvent
  */
@@ -55,10 +67,10 @@ exports.create = function(req, res) {
   function(eventJSON) {
     var calendarEvent = new CalendarEvent(eventJSON);
     for (var i = 0; i < calendarEvent.dates; i++) {
-      calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
+        req.body.dates[i].startTime);
+      calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
+        req.body.dates[i].endTime);
     }
     calendarEvent.deadlineToRegister = moment(req.body.deadlineToRegister,
       'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();

@@ -33,28 +33,28 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                              <div class="row">
+                              <div class="row" ng-repeat="date in vm.event.dates">
                                   <div class="col-md-5">
                                       <div class="form-group" show-errors>
                                           <label class="control-label">Date</label>
-                                          <input type="date" class="form-control" required />
+                                          <input type="date" class="form-control" ng-model="date.date"/>
                                       </div>
                                   </div>
                                   <div class="col-md-3 col-sm-5">
                                       <div class="form-group" show-errors>
                                           <label class="control-label">Start Time</label>
-                                          <input type="time" class="form-control" required />
+                                          <input type="time" class="form-control" ng-model="date.startTime"/>
                                       </div>
                                   </div>
                                   <div class="col-md-3 col-sm-5">
                                       <div class="form-group" show-errors>
                                           <label class="control-label">End Time</label>
-                                          <input type="time" class="form-control" required />
+                                          <input type="time" class="form-control" ng-model="date.endTime"/>
                                       </div>
                                   </div>
                                   <div class="col-md-1 col-sm-2">
                                     <div class="form-group">
-                                      <a href="" ng-click="vm.removeDate()" ng-show="$index>0">x</a>
+                                      <a href="" ng-click="vm.removeDate($index)" ng-show="$index>0">x</a>
                                     </div>
                                   </div>
                                 </div>

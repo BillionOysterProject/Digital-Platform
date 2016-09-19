@@ -21,8 +21,9 @@
 
     vm.addDate = function() {
       vm.event.dates.push({
-        startDateTime: moment().startOf('hour').toDate(),
-        endDateTime: moment().startOf('hour').toDate()
+        date: moment().startOf('day').toDate(),
+        startTime: moment().startOf('hour').toDate(),
+        endTime: moment().startOf('hour').toDate()
       });
     };
 
