@@ -19,7 +19,7 @@
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Profile',
-      state: 'profiles'
+      state: 'profiles.main'
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
