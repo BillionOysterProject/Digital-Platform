@@ -22,6 +22,11 @@ var signinAs = function(user) {
 };
 
 module.exports = {
+  admin: {
+    username: 'admin',
+    password: 'P@$$w0rd!!',
+    displayName: 'Admin Local'
+  },
   leader: {
     username: 'teacher',
     password: 'P@$$w0rd!!',

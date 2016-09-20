@@ -141,6 +141,20 @@ module.exports = {
       limits: {
         fileSize: 20*1024*1024
       }
-    }
+    },
+    eventFeaturedImageUpload: {
+      s3dest: 'uploads/events/img/featured-images/',
+      dest: './modules/events/client/img/featured-image/uploads/', // Event upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    eventResourcesUpload: {
+      s3dest: 'uploads/events/files/resources/',
+      dest: './modules/events/client/files/resources/uploads/', // Event upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
   }
 };
