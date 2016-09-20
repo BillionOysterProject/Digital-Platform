@@ -1,7 +1,81 @@
 <div class="jumbotron text-center">
     <section class="content">
         <section class="container-fluid">
-          <h2>Organizations</h2>
+            <h2>Organizations</h2>
+            <!--TIFF: this is just copied from lessons -->
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for an organization...">
+            </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
         </section>
     </section>
 </div>
+<section class="content">
+    <section class="container-fluid">
+        <!--TIFF: these are just copied from lessons -->
+        <nav class="navbar">
+            <!--TIFF: should open Add Org modal from Settings -->
+            <a class="btn btn-default pull-right" view-permissions="admin">
+                <i class="glyphicon glyphicon-plus"></i> Add organization
+            </a>
+            <ul class="nav navbar-nav">
+                <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
+                <li class="dropdown" id="subjectAreaSelection">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Type{{(vm.filter.subjectAreaName) ? ': ' + vm.filter.subjectAreaName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.subjectAreaSelected()" ok-sel=".all">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li ng-repeat="subject in vm.subjectAreas">
+                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">
+                            {{subject.subject}}
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="row" isotope-container="isotope-container">
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Middle School</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>Organization Name</h4>
+                        <p><i class="fa fa-map-marker"></i> 8 Market Place, Baltimore, MD</p>
+                        <p class="text-muted small">We love to save oysters! Further description. We love to save oysters! Further description. We love to save oysters! Further description.</p><!--TIFF: limit to 200 -->
+                        <img class="img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" /><!--TIFF: only show if they have an image -->
+                        <hr/>
+                        <p>
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt="" 
+                                class="header-profile-image">
+                            <b>Org Lead</b>&nbsp;&nbsp;/&nbsp;&nbsp;
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt="" 
+                                class="header-profile-image">
+                            <b>Org Lead</b>
+                        </p>
+                    </div>
+                    <div class="panel-footer text-muted">
+                        <ul class="list-inline">
+                            <li><b>53</b> members</li>
+                            <li><b>3</b> leads</li>
+                            <li><b>8</b> teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

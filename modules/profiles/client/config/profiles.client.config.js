@@ -18,7 +18,7 @@
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Profiles',
+      title: 'Profile',
       state: 'profiles'
     });
 
@@ -27,10 +27,10 @@
       state: 'profiles.team'
     });
 
-    Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Team Leads',
-      state: 'profiles.team-lead'
-    });
+    //Menus.addSubMenuItem('topbar', 'profiles', {
+    //  title: 'Team Leads',
+    //  state: 'profiles.team-lead'
+    //});
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Organizations',

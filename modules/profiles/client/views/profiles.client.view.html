@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-4 shaded">
                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                <h3 class="text-muted text-center">Sally Smith</h3>
+                <h3 class="text-center"><a href="#" data-toggle="modal" data-target="#modal-profile-user">Sally Smith</a></h3>
                 <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
                 <hr/>
                 <h6>Team</h6><!--TIFF: If more than one, say "Teams"-->
-                <h4><a>Team Oyster</a><br/><!--TIFF: Only show <small> div if user profile is not the team lead of the team listed --><small><a>Mrs. Sandra Jones</a></small></h4>
+                <h4><a>Team Oyster</a><br/><!--TIFF: Only show <small> div if user profile is not the team lead of the team listed --><small><a data-toggle="modal" data-target="#modal-profile-user">Mrs. Sandra Jones</a></small></h4>
                 <hr/>
                 <h6>Organization</h6>
                 <h4><a>New York Public Schools</a><br/><small>New York, NY</small></h4>
@@ -35,13 +35,13 @@
                                 <h6><i class="fa fa-user"></i> Team Lead</h6><!--TIFF: If more than one, say "Team Leads"-->
                                 <p>
                                     <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt="" 
-                                        class="img-circle pull-left header-profile-image">
-                                    <b><a>Team Lead</a></b>
+                                        class="pull-left header-profile-image">
+                                    <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
                                 </p>
                                 <p>
                                     <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt="" 
-                                        class="img-circle pull-left header-profile-image">
-                                    <b><a>Team Lead</a></b>
+                                        class="pull-left header-profile-image">
+                                    <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
                                 </p>
                             </div>
                             <div class="col-sm-4">
@@ -73,9 +73,7 @@
                 <hr/>
                 <div class="row" isotope-container="isotope-container">
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-member">
-                            <div class="panel-heading">
-                            </div>
+                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-user">
                             <div class="panel-body">
                                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
                                 <h3 class="text-muted text-center">Sally Smith</h3>
@@ -86,9 +84,7 @@
                         </div>
                     </div>
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-member">
-                            <div class="panel-heading">
-                            </div>
+                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-user">
                             <div class="panel-body">
                                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
                                 <h3 class="text-muted text-center">Sally Smith</h3>
@@ -99,9 +95,7 @@
                         </div>
                     </div>
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-member">
-                            <div class="panel-heading">
-                            </div>
+                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-user">
                             <div class="panel-body">
                                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
                                 <h3 class="text-muted text-center">Sally Smith</h3>
@@ -112,9 +106,7 @@
                         </div>
                     </div>
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-member">
-                            <div class="panel-heading">
-                            </div>
+                        <div class="panel" data-category="transition" ui-sref="" data-toggle="modal" data-target="#modal-profile-user">
                             <div class="panel-body">
                                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
                                 <h3 class="text-muted text-center">Sally Smith</h3>
@@ -135,7 +127,7 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-profile-member" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal-profile-user" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
