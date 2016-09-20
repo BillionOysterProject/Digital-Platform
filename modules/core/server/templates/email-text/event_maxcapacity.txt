@@ -1,8 +1,8 @@
-Hi <%=FirstName%>,
+Hi <%= FirstName %>,
 
-Registration is now full for <%= EventName %> on <%= EventDate %>. 
+Registration is now full for <%= EventName %> on <%= EventDate %>.
 
-Visit <%= LinkEvent %> to open up registration again by editing the maximum capacity, or to see the list of registrees.
+Visit <%= LinkEvent %> to open up registration again by editing the maximum capacity, or to see the list of registrants.
 
 Thanks!
 The Billion Oyster Project

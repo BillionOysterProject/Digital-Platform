@@ -15,22 +15,23 @@
                             </span>
 
                             <span ng-show="vm.event.dates && vm.event.dates.length === 1">
-                              <h2><b>{{vm.getEventMonthShort(date.startDateTime)}}<br/>
-                                <span class="h1">{{vm.getEventDay(date.startDateTime)}}</span></b>
-                                <br/>{{vm.getEventYear(date.startDateTime)}}</h2>
-                                <h5>{{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</h5>
+                              <h2><b>{{vm.getEventMonthShort(vm.event.dates[0].startDateTime)}}<br/>
+                                <span class="h1">{{vm.getEventDay(vm.event.dates[0].startDateTime)}}</span></b>
+                                <br/>{{vm.getEventYear(vm.event.dates[0].startDateTime)}}</h2>
+                                <h5>{{vm.getEventTimeRange(vm.event.dates[0].startDateTime, vm.event.dates[0].endDateTime)}}</h5>
                             </span>
                         </div>
 
                         <div class="col-xs-6" ng-show="vm.past === false">
-                            <!-- TIFF: If user is logged out, button should redirect to sign in page (they can click sign up from there), and then immediately return to this page when logged in -->
-
                             <span ng-hide="vm.event.isRegistered">
                               <span ng-show="!vm.event.maximumCapacity || vm.openSpots > 0">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
                                 <h6 ng-show="vm.event.maximumCapacity">
                                   Only {{vm.openSpots}} spots remaining</h6>
-                                <a class="btn btn-lg btn-danger" ng-click="vm.registerEvent()">Register now</a>
+                                <a class="btn btn-lg btn-danger" ng-click="vm.registerEvent()"
+                                  ng-hide="vm.notLoggedIn">Register now</a>
+                                <a class="btn btn-lg btn-danger" ng-click="vm.signinOrRegister()"
+                                  ng-show="vm.notLoggedIn">Register now</a>
                               </span>
                               <span ng-hide="!vm.event.maximumCapacity || vm.openSpots > 0">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
@@ -58,9 +59,8 @@
             </div>
             <div class="col-sm-4 text-right" ng-show="vm.isAdmin && vm.event.isCurrentUserOwner">
                 <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })">Edit</a>
-                <!--TIFF: link should take admin to new "create event" form with content copied from this event other than the date (same functionality as lesson duplication)-->
                 <a class="btn btn-default" ng-click="vm.duplicateEvent()">Duplicate</a>
-                <a class="btn btn-primary" data-toggle="modal" data-target="#modal-event-email">Email registrants</a>
+                <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
             </div>
         </div>
 
@@ -76,7 +76,7 @@
                     </h4>
                     <h4 class="text-muted" ng-class="{'col-sm-4': vm.event.location.addressString,
                       'col-sm-6': !vm.event.location.addressString,
-                      'col-sm-12': vm.past && !vm.isAdmin}">
+                      'col-sm-12': (vm.past && !vm.isAdmin) || !vm.event.maximumCapacity}">
                         <span ng-show="!vm.past && (!vm.event.deadlineToRegister || vm.openSpots > 0)">
                           <i class="fa fa-clock-o"></i>
                           <b>{{vm.daysRemaining}} days</b>
@@ -93,9 +93,10 @@
 
                     </h4>
                     <h4 class="text-muted" ng-class="{'col-sm-4': vm.event.location.addressString,
-                      'col-sm-6': !vm.event.location.addressString}" ng-show="!vm.past || (vm.past && vm.isAdmin)">
+                      'col-sm-6': !vm.event.location.addressString}"
+                      ng-show="(!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity">
                         <i class="fa fa-users"></i>
-                        <b>30/40 full</b>
+                        <b>{{vm.event.registrants.length}}/{{vm.event.maximumCapacity}} full</b>
                     </h4>
                 </div>
                 <hr/>
@@ -176,54 +177,6 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-event-email">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" ng-hide="sent">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Send an email to all <b class="red">30</b> current registrants</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="control-label">Subject</label>
-                            <input type="text" class="form-control" ng-model="subject" required/>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="control-label">Message body</label>
-                            <textarea class="form-control" rows="4" ng-model="message" ng-required="type === 'general' || type === 'help'"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <input type="checkbox" />
-                            <label class="control-label">Include text at end:</label>
-                            <blockquote>
-                                <p>You are currently registered for the <b class="red">BOP Restoration Station Basic Training</b> on <b class="red">October 7, 2016, 8:00am-5:00pm</b>. No longer able to attend? <a href="#">Unregister here</a> to give your spot to somebody else.</p>
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
-              <button type="submit" class="btn btn-primary">Send</button>
-            </div>
-        </div>
-        <div class="modal-content" ng-show="sent">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Your message has been sent!</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <register-event-modal can-register="(vm.isAdmin || vm.isTeamLead) ? true : false"
   event="vm.event" date-string="{{vm.earliestDateString}}"
@@ -231,6 +184,9 @@
 
 <unregister-event-modal event="vm.event" date-string="{{vm.earliestDateString}}">
   </unregister-event-modal>
+
+<email-registrants-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}">
+  </email-registrants-modal>
 
 <!-- TIFF: Wire up modal (copied from another map)-->
 <div class="modal fade" id="modal-event-map">

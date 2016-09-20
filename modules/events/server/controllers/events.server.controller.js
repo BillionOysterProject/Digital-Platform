@@ -11,6 +11,7 @@ var path = require('path'),
   Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   request = require('request'),
   multer = require('multer'),
@@ -95,6 +96,17 @@ var sortDates = function(dates) {
   return ordered;
 };
 
+var getExistingResources = function(resourcesFiles) {
+  var existingResources = [];
+  for (var j = 0; j < resourcesFiles.length; j++) {
+    var resource = resourcesFiles[j];
+    if (resource.path && resource.originalname && resource.filename) {
+      existingResources.push(resource);
+    }
+  }
+  return existingResources;
+};
+
 /**
  * Create a CalendarEvent
  */
@@ -111,7 +123,7 @@ exports.create = function(req, res) {
     calendarEvent.dates = sortDates(calendarEvent.dates);
     calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
       'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
-    calendarEvent.resources.resourcesFiles = [];
+    calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
     calendarEvent.user = req.user;
 
     var pattern = /^data:image\/jpeg;base64,/i;
@@ -188,8 +200,11 @@ exports.read = function(req, res) {
   } else if (req.query.duplicate) {
     delete calendarEvent._id;
     delete calendarEvent._created;
-    delete calendarEvent.title;
     delete calendarEvent.user;
+    delete calendarEvent.registrants;
+    delete calendarEvent.dates;
+    calendarEvent.dates = [];
+    delete calendarEvent.deadlineToRegister;
 
     res.json(calendarEvent);
   } else {
@@ -217,14 +232,15 @@ exports.update = function(req, res) {
       calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
         'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
 
-      var existingResources = [];
-      for (var j = 0; j < calendarEvent.resources.resourcesFiles.length; j++) {
-        var resource = calendarEvent.resources.resourcesFiles[j];
-        if (resource.path && resource.originalname && resource.filename) {
-          existingResources.push(resource);
-        }
-      }
-      calendarEvent.resources.resourcesFiles = existingResources;
+      // var existingResources = [];
+      // for (var j = 0; j < calendarEvent.resources.resourcesFiles.length; j++) {
+      //   var resource = calendarEvent.resources.resourcesFiles[j];
+      //   if (resource.path && resource.originalname && resource.filename) {
+      //     existingResources.push(resource);
+      //   }
+      // }
+      // calendarEvent.resources.resourcesFiles = existingResources;
+      calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
 
       var pattern = /^data:image\/jpeg;base64,/i;
       if (pattern.test(calendarEvent.featuredImage.path)) {
@@ -397,7 +413,44 @@ exports.register = function(req, res) {
 
           fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
             calendarEventJSON.registrants = registrants;
-            res.json(calendarEventJSON);
+
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+            calendarEventJSON.dates = sortDates(calendarEventJSON.dates);
+            var eventDate = (calendarEventJSON.dates[0]) ? moment(calendarEventJSON.dates[0]).format('MMMM D, YYYY, h:mma-h:mma') : '';
+
+            var sendEventFullEmail = function(callback) {
+              if (calendarEventJSON.maximumCapacity === calendarEventJSON.registrants.length) {
+                email.sendEmailTemplate(calendarEventJSON.user.email, calendarEventJSON.title + ' registration is now full', 'event_maxcapacity', {
+                  FirstName: calendarEventJSON.user.firstName,
+                  EventName: calendarEventJSON.title,
+                  EventDate: eventDate,
+                  LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
+                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                }, function(info) {
+                  callback();
+                }, function(errorMessage) {
+                  callback();
+                });
+              } else {
+                callback();
+              }
+            };
+
+            email.sendEmailTemplate(req.user.email, 'You are now registered for ' + calendarEventJSON.title, 'event_confirmation', {
+              EventName: calendarEventJSON.title,
+              FirstName: req.user.firstName,
+              EventDate: eventDate,
+              LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
+              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            }, function (info) {
+              sendEventFullEmail(function () {
+                res.json(calendarEventJSON);
+              });
+            }, function (errorMessage) {
+              sendEventFullEmail(function () {
+                res.json(calendarEventJSON);
+              });
+            });
           });
         }
       });
@@ -438,6 +491,46 @@ exports.unregister = function(req, res) {
         }
       });
     }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
+var getRegistrantsList = function(registrants) {
+  var emailArray = [];
+  emailArray = emailArray.concat(_.map(registrants, 'user.email'));
+  return emailArray;
+};
+
+exports.emailRegistrants = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.user;
+  var subject = req.body.subject;
+  var message = req.body.message;
+  var footer = req.body.footer;
+
+  if (calendarEvent) {
+    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+    calendarEvent.dates = sortDates(calendarEvent.dates);
+    var eventDate = (calendarEvent.dates[0]) ? moment(calendarEvent.dates[0]).format('MMMM D, YYYY, h:mma-h:mma') : '';
+
+    var toList = getRegistrantsList(calendarEvent.registrants);
+
+    email.sendEmailTemplate(toList, subject, 'event_email', {
+      EventEmailSubject: subject,
+      EventEmailMessage: message,
+      Footer: footer,
+      EventName: calendarEvent.title,
+      EventDate: eventDate,
+      LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEvent._id,
+      LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+    }, function (info) {
+      res.json(calendarEvent);
+    }, function (errorMessage) {
+      res.json(calendarEvent);
+    });
   } else {
     return res.status(400).send({
       message: 'Could not find event'
@@ -536,7 +629,7 @@ exports.eventByID = function(req, res, next, id) {
   }
 
   CalendarEvent.findById(id)
-    .populate('user', 'displayName')
+    .populate('user', 'displayName firstName email')
     .populate('registrants.user', 'displayName email schoolOrg')
     .populate('registrants.user.schoolOrg', 'name')
     .exec(function (err, calendarEvent) {

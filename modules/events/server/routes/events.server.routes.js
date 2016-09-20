@@ -32,6 +32,10 @@ module.exports = function(app) {
   app.route('/api/events/:eventId/unregister').all(eventsPolicy.isAllowed)
     .post(events.unregister);
 
+  // Email registrants
+  app.route('/api/events/:eventId/email-registrants').all(eventsPolicy.isAllowed)
+    .post(events.emailRegistrants);
+
   app.route('/api/events/:eventId').all(eventsPolicy.isAllowed)
     .get(events.read)
     .put(events.update)

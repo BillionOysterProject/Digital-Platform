@@ -6,11 +6,11 @@
     .module('events')
     .controller('EventsController', EventsController);
 
-  EventsController.$inject = ['$scope', '$state', '$window', '$http', 'Authentication', 'eventResolve',
-  'EventHelper', 'FileUploader', 'moment', 'lodash'];
+  EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location',
+  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'moment', 'lodash'];
 
-  function EventsController ($scope, $state, $window, $http, Authentication, event,
-    EventHelper, FileUploader, moment, lodash) {
+  function EventsController ($scope, $rootScope, $state, $window, $http, $location,
+    Authentication, event, EventHelper, FileUploader, moment, lodash) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -26,6 +26,7 @@
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
+    vm.earliestDateTimeString = EventHelper.getEarliestDateTimeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
     vm.daysRemaining = EventHelper.getDaysRemaining(vm.event.dates, vm.event.deadlineToRegister);
     vm.past = (vm.daysRemaining < 0) ? true : false;
@@ -36,8 +37,21 @@
       });
       return (roleIndex > -1) ? true : false;
     };
-    vm.isAdmin = checkRole('admin');
-    vm.isTeamLead = (checkRole('team lead') || checkRole('team lead pending')) ? true : false;
+
+    if (vm.user) {
+      vm.isAdmin = checkRole('admin');
+      vm.isTeamLead = (checkRole('team lead') || checkRole('team lead pending')) ? true : false;
+      vm.notLoggedIn = false;
+    } else {
+      vm.notLoggedIn = true;
+      vm.isAdmin = false;
+      vm.isTeamLead = false;
+    }
+
+    vm.signinOrRegister = function() {
+      $rootScope.redirectFromLogin = $location.path();
+      $location.path('/authentication/signin');
+    };
 
     vm.getRegistrationDate = function(date) {
       return moment(date).format('MMMM D, YYYY');
@@ -45,6 +59,10 @@
 
     vm.openFeedback = function() {
       angular.element('#modal-feedback').modal('show');
+    };
+
+    vm.openEmailRegistrants = function() {
+      angular.element('#modal-email-registrants').modal('show');
     };
 
     vm.addDate = function() {

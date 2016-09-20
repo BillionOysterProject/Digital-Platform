@@ -49,7 +49,12 @@
 
     var getEarliestDateString = function(dates) {
       var earliestDate = getEarliestDate(dates);
-      return earliestDate.format('MMM D, YYYY');
+      return (earliestDate) ? earliestDate.format('MMM D, YYYY') : '';
+    };
+
+    var getEarliestDateTimeString = function(dates) {
+      var earliestDate = getEarliestDate(dates);
+      return (earliestDate) ? earliestDate.format('MMMM D, YYYY, h:mma-h:mma') : '';
     };
 
     var getDaysRemaining = function(dates, deadlineToRegister) {
@@ -58,7 +63,7 @@
         return moment(deadlineToRegister).diff(today, 'days');
       } else {
         var earliestDate = getEarliestDate(dates);
-        return earliestDate.diff(today, 'days');
+        return (earliestDate) ? earliestDate.diff(today, 'days') : null;
       }
     };
 
@@ -71,7 +76,8 @@
       getOpenSpots: getOpenSpots,
       getDaysRemaining: getDaysRemaining,
       getEarliestDate: getEarliestDate,
-      getEarliestDateString: getEarliestDateString
+      getEarliestDateString: getEarliestDateString,
+      getEarliestDateTimeString: getEarliestDateTimeString
     };
   }
 })();
