@@ -13,7 +13,7 @@
       state: 'events.list',
       // state: 'events',
       // type: 'dropdown',
-      // roles: ['*'],
+      roles: ['*'],
       icon: 'glyphicon glyphicon-calendar',
       position: 3
     });

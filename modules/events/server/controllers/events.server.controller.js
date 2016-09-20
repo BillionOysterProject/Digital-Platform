@@ -7,6 +7,8 @@ var path = require('path'),
   fs = require('fs'),
   mongoose = require('mongoose'),
   CalendarEvent = mongoose.model('CalendarEvent'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
+  Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
@@ -129,6 +131,35 @@ exports.create = function(req, res) {
   });
 };
 
+var fillInRegistrantsData = function(registrants, callback) {
+  var getOrgTeamValues = function(index, registrantsList, callbackInternal) {
+    if (index < registrantsList.length) {
+      var registrant = registrantsList[index];
+      SchoolOrg.findById(registrant.user.schoolOrg).select('name').exec(function(err, schoolOrg) {
+        registrant.user.schoolOrg = schoolOrg;
+        Team.find({ $or: [{ 'teamLead': registrant.user._id },
+          { 'teamMembers': registrant.user._id }] }, { 'name': 1 }).exec(function(err, teams) {
+            if (teams && teams.length > 0) {
+              var teamNames = [];
+              for (var i = 0; i < teams.length; i++) {
+                teamNames.push(teams[i].name);
+              }
+              registrant.user.teams = teamNames.join(', ');
+            }
+            registrantsList[index] = registrant;
+            getOrgTeamValues(index+1, registrantsList, callbackInternal);
+          });
+      });
+    } else {
+      callbackInternal(registrantsList);
+    }
+  };
+
+  getOrgTeamValues(0, registrants, function(registrantsList) {
+    callback(registrantsList);
+  });
+};
+
 /**
  * Show the current CalendarEvent
  */
@@ -136,13 +167,34 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var calendarEvent = req.calendarEvent ? req.calendarEvent.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  calendarEvent.isCurrentUserOwner = req.user && calendarEvent.user &&
-    calendarEvent.user._id.toString() === req.user._id.toString();
+  if (req.user) {
+    // is the current user the owner of the event
+    calendarEvent.isCurrentUserOwner = req.user && calendarEvent.user &&
+      calendarEvent.user._id.toString() === req.user._id.toString();
+
+    // is the current user registered for the event
+    var index = _.findIndex(calendarEvent.registrants, function(r) {
+      return r.user._id.toString() === req.user._id.toString();
+    });
+    calendarEvent.isRegistered = (index > -1) ? true : false;
+  }
   calendarEvent.dates = sortDates(calendarEvent.dates);
 
-  res.json(calendarEvent);
+  if (req.query.full) {
+    fillInRegistrantsData(calendarEvent.registrants, function(registrants) {
+      calendarEvent.registrants = registrants;
+      res.json(calendarEvent);
+    });
+  } else if (req.query.duplicate) {
+    delete calendarEvent._id;
+    delete calendarEvent._created;
+    delete calendarEvent.title;
+    delete calendarEvent.user;
+
+    res.json(calendarEvent);
+  } else {
+    res.json(calendarEvent);
+  }
 };
 
 /**
@@ -162,8 +214,8 @@ exports.update = function(req, res) {
       }
       calendarEvent.dates = sortDates(calendarEvent.dates);
 
-      calendarEvent.deadlineToRegister = moment(req.body.deadlineToRegister,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
+      calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
+        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
 
       var existingResources = [];
       for (var j = 0; j < calendarEvent.resources.resourcesFiles.length; j++) {
@@ -312,6 +364,87 @@ exports.downloadFile = function(req, res) {
   request(req.query.path).pipe(res);
 };
 
+var findUserInRegistrants = function(user, registrants) {
+  var index = _.findIndex(registrants, function(r) {
+    return r.user._id.toString() === user._id.toString();
+  });
+  return index;
+};
+
+exports.register = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.user;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      return res.status(400).send({
+        message: 'User is already registered for event'
+      });
+    } else {
+      calendarEvent.registrants.push({
+        user: req.user,
+        registrationDate: new Date()
+      });
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
+exports.unregister = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.user;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+
+    if (index === -1) {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    } else {
+      calendarEvent.registrants.splice(index, 1);
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
 /**
  * Delete an CalendarEvent
  */
@@ -376,15 +509,19 @@ exports.list = function(req, res) {
     query = CalendarEvent.find();
   }
 
-  query.sort('dates.startDateTime').populate('user', 'displayName').exec(function(err, events) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(events);
-    }
-  });
+  query.sort('dates.startDateTime')
+    .populate('user', 'displayName')
+    .populate('registrants.user', 'displayName email schoolOrg')
+    .populate('registrants.user.schoolOrg', 'name')
+    .exec(function(err, events) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(events);
+      }
+    });
 };
 
 /**
@@ -398,15 +535,20 @@ exports.eventByID = function(req, res, next, id) {
     });
   }
 
-  CalendarEvent.findById(id).populate('user', 'displayName').exec(function (err, calendarEvent) {
-    if (err) {
-      return next(err);
-    } else if (!calendarEvent) {
-      return res.status(404).send({
-        message: 'No Event with that identifier has been found'
-      });
-    }
-    req.calendarEvent = calendarEvent;
-    next();
-  });
+  CalendarEvent.findById(id)
+    .populate('user', 'displayName')
+    .populate('registrants.user', 'displayName email schoolOrg')
+    .populate('registrants.user.schoolOrg', 'name')
+    .exec(function (err, calendarEvent) {
+      if (err) {
+        return next(err);
+      } else if (!calendarEvent) {
+        return res.status(404).send({
+          message: 'No Event with that identifier has been found'
+        });
+      }
+
+      req.calendarEvent = calendarEvent;
+      next();
+    });
 };

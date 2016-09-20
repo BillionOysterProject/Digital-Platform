@@ -27,6 +27,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events/:eventId/upload-resources',
       permissions: ['*']
     }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId',
       permissions: '*'
     }]
@@ -38,6 +44,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/events/download-file',
       permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['post']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['post']
     }, {
       resources: '/api/events/:eventId',
       permissions: ['get', 'post']

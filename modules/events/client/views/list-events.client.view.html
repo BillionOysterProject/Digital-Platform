@@ -8,7 +8,8 @@
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" ui-sref="events.create"><i class="glyphicon glyphicon-plus"></i> Create an event</a>
+            <a class="btn btn-default pull-right" ui-sref="events.create" view-permissions="admin">
+              <i class="glyphicon glyphicon-plus"></i> Create an event</a>
         </nav>
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
             <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
@@ -35,8 +36,7 @@
             </div>
         </div>
 
-        <!-- TIFF: is vm.isAdmin correct? -->
-        <div class="alert" ng-if="vm.events.$resolved && !vm.events.length && vm.isAdmin">
+        <div class="alert" ng-if="vm.events.$resolved && !vm.events && vm.events.length === 0" view-permissions="admin">
             No events yet, why don't you <a ui-sref="events.create">create one</a>?
         </div>
     </section>

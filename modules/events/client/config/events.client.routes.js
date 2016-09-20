@@ -41,7 +41,7 @@
           eventResolve: newEvent
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Events Create'
         }
       })
@@ -54,8 +54,21 @@
           eventResolve: getEvent
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['admin'],
           pageTitle: 'Edit Event {{ eventResolve.name }}'
+        }
+      })
+      .state('events.duplicate', {
+        url: '/:eventId/duplicate',
+        templateUrl: 'modules/events/client/views/form-event.client.view.html',
+        controller: 'EventsController',
+        controllerAs: 'vm',
+        resolve: {
+          eventResolve: getEventDuplicate
+        },
+        data: {
+          roles: ['admin'],
+          pageTitle: 'Duplicate Event'
         }
       })
       .state('events.view', {
@@ -76,7 +89,17 @@
 
   function getEvent($stateParams, EventsService) {
     return EventsService.get({
-      eventId: $stateParams.eventId
+      eventId: $stateParams.eventId,
+      full: true
+    }).$promise;
+  }
+
+  getEventDuplicate.$inject = ['$stateParams', 'EventsService'];
+
+  function getEventDuplicate($stateParams, EventsService) {
+    return EventsService.get({
+      eventId: $stateParams.eventId,
+      duplicate: true
     }).$promise;
   }
 

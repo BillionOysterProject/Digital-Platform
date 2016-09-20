@@ -24,6 +24,14 @@ module.exports = function(app) {
   app.route('/api/events/:eventId/upload-resources').all(eventsPolicy.isAllowed)
     .post(events.uploadResources);
 
+  // Register for event
+  app.route('/api/events/:eventId/register').all(eventsPolicy.isAllowed)
+    .post(events.register);
+
+  // Unregister for event
+  app.route('/api/events/:eventId/unregister').all(eventsPolicy.isAllowed)
+    .post(events.unregister);
+
   app.route('/api/events/:eventId').all(eventsPolicy.isAllowed)
     .get(events.read)
     .put(events.update)

@@ -65,8 +65,11 @@ var CalendarEventSchema = new Schema({
     }],
   },
   registrants: [{
-    type: Schema.ObjectId,
-    ref: 'User'
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    },
+    registrationDate: Date
   }],
   created: {
     type: Date,
