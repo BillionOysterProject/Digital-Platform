@@ -41,7 +41,6 @@
 
     var waterTemperatureUnits = WaterTemperatureUnitsService.query();
     var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
-    console.log('dissolvedOxygenUnits', dissolvedOxygenUnits);
     var salinityUnits = SalinityUnitsService.query();
     var pHUnits = PhUnitsService.query();
     var turbidityUnits = TurbidityUnitsService.query();

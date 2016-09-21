@@ -9,23 +9,18 @@
 
   function GoogleGeocodeController($scope,GoogleGeoCodeService) {
     var vm = this;
-
     vm.selectedPlace = null;
-
 
     activate();
 
     function activate(){
-
     }
 
     vm.getLocation = function(val) {
-
       return GoogleGeoCodeService.query({
         address:val,
         sensor:false
       }).$promise.then(function(data) {
-        console.log('address', data);
         return data.results.map(function (item) {
           return {
             place:item.formatted_address,
@@ -35,12 +30,10 @@
       });
     };
 
-    vm.selectPlace = function ($item, $model, $label, $event) {
-      if ($event.which === 13 || $event.which === 1) {
+    vm.selectPlace = function() {
+      if (vm.selectedPlace) {
         vm.placeSelected()(vm.selectedPlace);
-
       }
-
     };
   }
 })();
