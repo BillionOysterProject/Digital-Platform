@@ -8,7 +8,7 @@
   GoogleGeoCodeService.$inject = ['$resource'];
 
   function GoogleGeoCodeService($resource) {
-    return $resource('//maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDzLHr0NnBoLz3Cllv1AQ5nKbWTlAy6_Cs', null, {
+    return $resource('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDzLHr0NnBoLz3Cllv1AQ5nKbWTlAy6_Cs', null, {
       query: {
         method: 'GET',
         params: {

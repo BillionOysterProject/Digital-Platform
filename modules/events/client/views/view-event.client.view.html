@@ -69,7 +69,7 @@
                 <hr/>
                 <div class="row text-center">
                     <h4 class="col-sm-4 text-muted" ng-show="vm.event.location.addressString">
-                        <a href="#" data-toggle="modal" data-target="#modal-event-map">
+                        <a href="#" ng-click="vm.openMap()">
                             <i class="fa fa-map-marker"></i>
                             <!-- <b>ORS Name</b> --><small>{{vm.event.location.addressString}}</small>
                         </a>
@@ -194,13 +194,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">123 Main Street</h4>
-                <h5><i class="fa fa-map-marker"></i> <b>ORS Name</b></h5>
+                <h4 class="modal-title">{{vm.event.location.addressString}}</h4>
+                <!-- <h5><i class="fa fa-map-marker"></i> <b>{{vm.event.location.addressString}}</b></h5> -->
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
-                      <leaflet-map map-controls="vm.mapControls" show-marker="vm.showMarker"></leaflet-map>
+                      <leaflet-map map-controls="vm.mapControls" can-click-map-to-add-marker="false"
+                        map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd"
+                        can-move-marker="false" show-marker="true"
+                        add-points="vm.mapPoints">
+                      </leaflet-map>
                     </div>
                 </div>
             </div>

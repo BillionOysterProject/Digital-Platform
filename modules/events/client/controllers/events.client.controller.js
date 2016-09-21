@@ -6,10 +6,10 @@
     .module('events')
     .controller('EventsController', EventsController);
 
-  EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location',
+  EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location', '$timeout',
   'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'moment', 'lodash'];
 
-  function EventsController ($scope, $rootScope, $state, $window, $http, $location,
+  function EventsController ($scope, $rootScope, $state, $window, $http, $location, $timeout,
     Authentication, event, EventHelper, FileUploader, moment, lodash) {
     var vm = this;
 
@@ -19,6 +19,25 @@
     vm.error = [];
     vm.form = {};
     vm.save = save;
+
+    vm.mapControls = {};
+    vm.mapClick = function(e){
+    };
+    vm.markerDragEnd = function(location){
+    };
+    if (vm.event.location) {
+      vm.mapPoints = [{
+        lat: vm.event.location.latitude,
+        lng: vm.event.location.longitude,
+        icon: {
+          icon: 'glyphicon-map-marker',
+          prefix: 'glyphicon',
+          markerColor: 'blue'
+        },
+      }];
+    } else {
+      vm.mapPoints = [];
+    }
 
     vm.getEventDate = EventHelper.getEventDate;
     vm.getEventMonthShort = EventHelper.getEventMonthShort;
@@ -63,6 +82,13 @@
 
     vm.openEmailRegistrants = function() {
       angular.element('#modal-email-registrants').modal('show');
+    };
+
+    vm.openMap = function() {
+      angular.element('#modal-event-map').modal('show');
+      $timeout(function() {
+        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
+      }, 300);
     };
 
     vm.addDate = function() {

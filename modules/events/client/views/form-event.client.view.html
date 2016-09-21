@@ -20,12 +20,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Location</label>
-                                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-event-map"
-                                    ng-click="vm.openMap()">Mark location on map</a>
+                                    <a class="btn btn-default btn-block" data-toggle="modal"
+                                    data-target="#modal-event-map">Mark location on map</a>
+                                    <input class="form-control" type="text" value="{{vm.event.location.addressString}}"
+                                    data-toggle="modal" data-target="#modal-event-map"
+                                    ng-show="vm.event.location.addressString" readonly/>
                                     <input class="form-control" type="text" value="{{vm.event.location.latitude}}, {{vm.event.location.longitude}}"
-                                    data-toggle="modal" data-target="#modal-event-map" ng-click="vm.openMap()"
-                                    ng-show="vm.event.location.latitude && vm.event.location.longitude"
-                                     readonly/>
+                                    data-toggle="modal" data-target="#modal-event-map"
+                                    ng-show="vm.event.location.latitude && vm.event.location.longitude" readonly/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="cost">Cost</label>
@@ -203,7 +205,8 @@
     <delete-event-modal callback-function="vm.confirmEventLesson"></delete-event-modal>
     <div class="modal fade" id="modal-event-map" tabindex="-1" role="dialog">
         <map-select modal-id="modal-event-map" latitude="vm.event.location.latitude"
-        longitude="vm.event.location.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+        longitude="vm.event.location.longitude" address="vm.event.location.addressString"
+        can-geocode="true" can-click-map-to-add-marker="true"
         can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
     </div>
     <resource-upload-modal resource-files-uploader="vm.resourceFilesUploader"
