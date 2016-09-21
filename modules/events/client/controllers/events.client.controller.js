@@ -39,6 +39,49 @@
       vm.mapPoints = [];
     }
 
+    vm.featuredImageURL = (vm.event && vm.event.featuredImage) ? vm.event.featuredImage.path : '';
+    vm.resourceFiles = (vm.event && vm.event.resources && vm.event.resources.resourcesFiles) ?
+      vm.event.resources.resourcesFiles : [];
+    vm.resourceLinks = (vm.event && vm.event.resources && vm.event.resources.resourcesLinks) ?
+      vm.event.resources.resourcesLinks : [];
+    vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
+
+    vm.featuredImageUploader = new FileUploader({
+      alias: 'newFeaturedImage',
+      queueLimit: 2
+    });
+
+    vm.resourceFilesUploader = new FileUploader({
+      alias: 'newResourceFile',
+      queueLimit: 20
+    });
+
+    vm.addDate = function() {
+      vm.event.dates.push({
+        date: moment().startOf('day').toDate(),
+        startTime: moment().startOf('hour').toDate(),
+        endTime: moment().startOf('hour').toDate()
+      });
+    };
+
+    vm.removeDate = function(index) {
+      vm.event.dates.splice(index, 1);
+    };
+
+    if (!vm.event.dates || vm.event.dates.length === 0) {
+      vm.event.dates = [];
+      vm.addDate();
+    } else {
+      for (var i = 0; i < vm.event.dates.length; i++) {
+        vm.event.dates[i].date = (vm.event.dates[i].startDateTime) ?
+          moment(vm.event.dates[i].startDateTime).startOf('day').toDate() : '';
+        vm.event.dates[i].startTime = (vm.event.dates[i].startDateTime) ?
+          moment(vm.event.dates[i].startDateTime).toDate() : '';
+        vm.event.dates[i].endTime = (vm.event.dates[i].endDateTime) ?
+          moment(vm.event.dates[i].endDateTime).toDate() : '';
+      }
+    }
+
     vm.getEventDate = EventHelper.getEventDate;
     vm.getEventMonthShort = EventHelper.getEventMonthShort;
     vm.getEventDay = EventHelper.getEventDay;
@@ -90,47 +133,6 @@
         vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
       }, 300);
     };
-
-    vm.addDate = function() {
-      vm.event.dates.push({
-        date: moment().startOf('day').toDate(),
-        startTime: moment().startOf('hour').toDate(),
-        endTime: moment().startOf('hour').toDate()
-      });
-    };
-
-    vm.removeDate = function(index) {
-      vm.event.dates.splice(index, 1);
-    };
-
-    if (!vm.event.dates || vm.event.dates.length === 0) {
-      vm.event.dates = [];
-      vm.addDate();
-    } else {
-      for (var i = 0; i < vm.event.dates.length; i++) {
-        vm.event.dates[i].date = (vm.event.dates[i].startDateTime) ?
-          moment(vm.event.dates[i].startDateTime).startOf('day').toDate() : '';
-        vm.event.dates[i].startTime = (vm.event.dates[i].startDateTime) ?
-          moment(vm.event.dates[i].startDateTime).toDate() : '';
-        vm.event.dates[i].endTime = (vm.event.dates[i].endDateTime) ?
-          moment(vm.event.dates[i].endDateTime).toDate() : '';
-      }
-    }
-
-    vm.featuredImageURL = (vm.event && vm.event.featuredImage) ? vm.event.featuredImage.path : '';
-    vm.resourceFiles = (vm.event && vm.event.resources.resourcesFiles) ? vm.event.resources.resourcesFiles : [];
-    vm.resourceLinks = (vm.event && vm.event.resources.resourcesLinks) ? vm.event.resources.resourcesLinks : [];
-    vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
-
-    vm.featuredImageUploader = new FileUploader({
-      alias: 'newFeaturedImage',
-      queueLimit: 2
-    });
-
-    vm.resourceFilesUploader = new FileUploader({
-      alias: 'newResourceFile',
-      queueLimit: 20
-    });
 
     vm.deleteResourceFile = function(index, file) {
       if (file.index) {
