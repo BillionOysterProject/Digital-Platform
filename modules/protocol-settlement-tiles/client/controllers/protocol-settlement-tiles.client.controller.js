@@ -184,38 +184,8 @@
 
       var errorMessages = [];
       var settlementTilesValid = true;
-      for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
-        var tile = $scope.settlementTiles.settlementTiles[i];
-
-        // if (tile.imageUrl !== '' && tile) {
-        //   if (tile.tilePhoto && tile.tilePhoto.path) {
-        //     tile.tilePhoto.path = tile.imageUrl;
-        //   } else {
-        //     tile.tilePhoto = {
-        //       path: tile.imageUrl
-        //     };
-        //   }
-        // }
-
-        // if (!tile.imageUrl || tile.imageUrl === '') {
-        //   errorMessages.push('Photo is requires for Settlement Tile #' + (i+1));
-        //   settlementTilesValid = false;
-        // }
-        //
-        // for (var j = 1; j <= $scope.gridCount; j++) {
-        //   var grid = tile['grid'+j];
-        //   if (!grid.organism) {
-        //     settlementTilesValid = false;
-        //     errorMessages.push('Grid ' + (j+1) + ' on Settlement Tile #' + (i+1) + ' is missing an dominate organism');
-        //   }
-        // }
-      }
-
-      // if (!settlementTilesValid) {
-      //   // if (errorMessages.length > 0) {
-      //   //   $scope.settlementTilesErrors = errorMessages.join();
-      //   // }
-      //   $scope.$broadcast('show-errors-check-validity', 'st.form.settlementTilesForm');
+      // for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
+      //   var tile = $scope.settlementTiles.settlementTiles[i];
       // }
 
       var settlementTileId = $scope.settlementTiles._id;
@@ -232,17 +202,20 @@
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
+                  $scope.finishedSaving += 4;
                   uploadSettlementTilePhoto(settlementTileId, index+1, errorCount, uploadSettlementTilePhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, header) {
                   $scope.settlementTiles.settlementTiles[index].tilePhoto.error = response.message;
                   errorCount++;
+                  $scope.finishedSaving += 4;
                   uploadSettlementTilePhoto(settlementTileId, index+1, errorCount, uploadSettlementTilePhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
                   item.url = 'api/protocol-settlement-tiles/' + settlementTileId + '/index/' + index + '/upload-tile-photo';
+                  $scope.savingStatus = 'Saving Settlement Tiles: Uploading photo for Settlement Tile ' + (index+1);
                 };
                 uploader.uploadAll();
               } else {
@@ -286,6 +259,7 @@
       }
 
       function save() {
+        $scope.savingStatus = 'Saving Settlement Tiles';
         $http.post('/api/protocol-settlement-tiles/' + settlementTileId + '/incremental-save',
           $scope.settlementTiles)
           .success(function (data, status, headers, config) {
