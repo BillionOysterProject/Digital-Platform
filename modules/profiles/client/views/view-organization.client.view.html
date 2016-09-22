@@ -1,0 +1,125 @@
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <h2>New York Public Schools</h2>
+                <h4 class="text-muted">Organization Type</a></h4>
+                <p>We love to save oysters! Further description ...</p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h6><i class="fa fa-user"></i> Organization Lead</h6><!--TIFF: If more than one, say "Org Leads"-->
+                <p>
+                    <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                        class="pull-left header-profile-image">
+                    <b><a data-toggle="modal" data-target="#modal-profile-user">Org Lead</a></b>
+                </p>
+                <p>
+                    <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                        class="pull-left header-profile-image">
+                    <b><a data-toggle="modal" data-target="#modal-profile-user">Org Lead</a></b>
+                </p>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="content">
+    <section class="container-fluid">
+        <nav class="nav nav-default text-right">
+            <div class="form-group col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </span>
+                    <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+                </div>
+            </div>
+            
+            <!--TIFF: only show buttons if team lead -->
+            <a class="btn btn-default">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
+            <a class="btn btn-default" data-toggle="modal" data-target="#modal-org-lead-invite">Invite leads</a>
+            <a class="btn btn-danger">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
+        </nav>
+        <hr/>
+        
+        <div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
+            No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+        </div>
+        
+        <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
+            You have <b>{{leadRequests.length}}</b> new team lead requests. 
+            <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a>
+            <!--TIFF: Open modal from Settings -->
+        </div>
+                
+        <div class="row" isotope-container="isotope-container">
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: 0000 })">
+                    <div class="panel-body text-center">
+                        <h4>Team Name</h4>
+                        <p class="text-muted small">We love to save oysters! Further description. We love to save oysters! Further description. We love to save oysters! Further description.</p><!--TIFF: limit to 200 -->
+                        <img class="img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" /><!--TIFF: only show if they have an image -->
+                        <hr/>
+                        <p>
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                                class="header-profile-image">
+                            <b>Team Lead</b>&nbsp;&nbsp;/&nbsp;&nbsp;
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                                class="header-profile-image">
+                            <b>Team Lead</b>
+                        </p>
+                    </div>
+                    <div class="panel-footer text-muted">
+                        <ul class="list-inline">
+                            <li><i class="fa fa-users"></i> <b>53</b> members</li>
+                            <li><i class="fa fa-map-marker"></i> <b>3</b> ORS</li>
+                            <li><i class="fa fa-flask"></i> <b>8</b> expeditions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<!--MODALS-->
+<div class="modal fade" id="modal-org-lead-invite" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Invite organization leads</h4>
+            </div>
+            <div class="modal-body">
+                <!--TIFF: wire up all org names in text/labels below -->
+                <p>You can add organization leads to help manage <b>New York Public Schools</b>. These organization leads will have all the same permissions to edit and delete the organization - so proceed with caution.</p>
+                <hr/>
+                <p>If they already have a team lead account in the <b>New York Public Schools</b> organization, select their name below.</p>
+                <div class="form-group">
+                    <label for="">Team Leads in the <span class="red">New York Public Schools</span> organization</label>
+                    <select class="form-control"><!--TIFF: Should be a type ahead select -->
+                        <option>Team Lead</option>
+                        <option>Team Lead</option>
+                    </select>
+                </div>
+                <hr/>
+                <p>If they don't already have a team lead account in the <b>New York Public Schools</b> organization, send them an invite to join.</p>
+                <div class="form-group" show-errors>
+                    <label for="">Email address</label>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <!--TIFF: validation should only allow one or the other field -->
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default">Cancel</a>
+                <a class="btn btn-primary">Invite</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--END MODALS-->

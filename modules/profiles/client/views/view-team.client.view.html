@@ -1,0 +1,337 @@
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h2>Team Oyster</h2>
+                <h4><a href="#">New York Public Schools</a></h4>
+                <p>We love to save oysters! Further description ...</p>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <br/>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h6><i class="fa fa-user"></i> Team Lead</h6><!--TIFF: If more than one, say "Team Leads"-->
+                        <p>
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                                class="pull-left header-profile-image">
+                            <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
+                        </p>
+                        <p>
+                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                                class="pull-left header-profile-image">
+                            <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
+                        </p>
+                    </div>
+                    <div class="col-sm-4">
+                        <h6><i class="fa fa-map-marker"></i> Restoration Stations</h6>
+                        <ul class="list-unstyled">
+                            <li><a>Baltimore Harbor</a></li>
+                            <li><a>NYC Harbor</a></li>
+                            <li><a>East Side</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4">
+                        <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
+                        <ul class="list-unstyled">
+                            <li><a>September Expedition</a></li>
+                            <li><a>October Expedition</a></li>
+                            <li><a>November Expedition</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+        
+        
+<!--TIFF: Team members below should only be visible to people within the team, the team leads of the current team, and admin (hide for other team leads/members) -->
+<section class="content">
+    <section class="container-fluid">
+        <nav class="nav nav-default text-right">
+            <div class="form-group col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </span>
+                    <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+                </div>
+            </div>
+            
+            <!--TIFF: only show buttons if team lead -->
+            <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-edit">Edit team profile</a>
+            <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-invite">Invite leads</a>
+            <a class="btn btn-default">Add members</a><!--TIFF: Open add members modal from Settings page -->
+            <a class="btn btn-default">Import members</a><!--TIFF: Open import members modal from Settings page -->
+            <a class="btn btn-danger">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
+        </nav>
+        <hr/>
+        
+        <div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
+            No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+        </div>
+        <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
+            You have <b>{{vm.teamRequests.length}}</b> team member requests. 
+            <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
+        </div><!--TIFF: Open modal from Settings -->
+        
+        <div class="row" isotope-container="isotope-container">
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
+                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                </div>
+                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                    <div class="panel-body text-muted text-center">
+                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                        <h3>Sally Smith</h3>
+                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
+                    </div>
+                </div>
+            </div>
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
+                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                </div>
+                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                    <div class="panel-body text-muted text-center">
+                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                        <h3>Sally Smith</h3>
+                        <h6 class="red">Pending</h6><!-- ng-show="{{member.pending === true}}" -->
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
+                    </div>
+                </div>
+            </div>
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
+                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                </div>
+                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                    <div class="panel-body text-muted text-center">
+                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                        <h3>Sally Smith</h3>
+                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
+                    </div>
+                </div>
+            </div>
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
+                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                </div>
+                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                    <div class="panel-body text-muted text-center">
+                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                        <h3>Sally Smith</h3>
+                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-profile-user" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <img class="img-circle img-responsive" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Sally Smith</h3>
+                        <h6>Team member</h6>
+                        <p class="text-muted"><b>ssmith</b><br/><a href="mailto:">sallysmith@email.com</a></p>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <h6>Team</h6><!--TIFF: If more than one, say "Teams"-->
+                        <h4>
+                            <a>Team Oyster</a><br/>
+                            <!--TIFF: Only show if user profile is not the team lead of the team -->
+                            <small><a>Mrs. Sandra Jones</a></small>
+                        </h4>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <h6>Organization</h6>
+                        <h4><a>New York Public Schools</a><br/><small>New York, NY</small></h4>
+                    </div>
+                </div>
+                <hr/>
+                
+                <nav class="nav nav-default text-right"><!-- TIFF: Show if admin -->
+                    <h6 class="pull-left">Pending&nbsp;&nbsp;</h6><!-- ng-show="{{member.pending === true}}" -->
+                    <a class="btn btn-primary pull-left" ng-click="vm.sendReminder(member, member.team.name)" ng-hide="vm.reminderSent && member._id === vm.memberReminderId"><i class="fa fa-envelope"></i> Send reminder</a><!-- ng-show="{{member.pending === true}}" -->
+                    <h6 class="green pull-left" ng-show="vm.reminderSent && member._id === vm.memberReminderId"><i class="fa fa-check"></i> Reminder sent</h6><!-- ng-show="{{member.pending === true}}" -->
+                    <a class="btn btn-default">Edit profile</a><!--TIFF: Open user edit modal from Settings -->
+                    <a class="btn btn-danger">Delete</a><!--TIFF: Open user delete modal from Settings -->
+                    <hr/>
+                </nav>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>Expeditions</dt>
+                            <dd><a>Nov Expedition</a>: Protocols 1-3</dd>
+                            <dd><a>Sept Expedition</a>: Protocol 5</dd>
+                            <dd><a>Oct Expedition</a>: Protocol 2</dd>
+                        </dl>
+                    </div>
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>Research</dt>
+                            <dd><a>Project 1</a></dd>
+                            <dd><a>Project 2</a></dd>
+                        </dl>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>Motivations</dt>
+                            <dd>...</dd>
+                            <dd>...</dd>
+                            <dd>...</dd>
+                        </dl>
+                    </div>
+                    <div class="col-sm-6"><!-- SHOW IF TEAM LEAD: -->
+                        <dl class="dl-horizontal">
+                            <dt>Grade levels</dt>
+                            <dd>9th-12th</dd>
+                            <dt>Subjects</dt>
+                            <dd>English, Science</dd>
+                            <dt>Students</dt>
+                            <dd>25</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-team-edit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit the <span class="red">Team Oyster</span> profile</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" show-errors>
+                    <label for="">Team Name</label>
+                    <input type="text" class="form-control" required />
+                    <div role="alert">
+                        <p class="help-block error-text" ng-message="required">Team name is required.</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label for="">Team Description</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+                <!--TIFF: Copied from user profile - is it easy to wait to implement a new photo on the modal Save click, or should the profile pic upload really be in a separate modal? -->
+                <div ng-controller="ChangeProfilePictureController">
+                    <div class="text-center form-group">
+                        <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail">
+                    </div>
+                    <div class="text-center form-group" ng-hide="uploader.queue.length">
+                        <span class="btn btn-default btn-file">
+                          Select picture <input type="file" nv-file-select uploader="uploader">
+                        </span>
+                    </div>
+                    <div ng-show="success" class="text-center alert alert-success">
+                        <strong>Picture changed successfully</strong>
+                    </div>
+                    <div ng-show="error" class="text-center alert alert-danger">
+                        <strong ng-bind="error"></strong>
+                    </div>
+                    <div class="text-center form-group" ng-show="uploader.queue.length">
+                        <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
+                        <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload selected picture</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default">Cancel</a>
+                <a class="btn btn-primary">Save</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-team-lead-invite" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Invite team leads</h4>
+            </div>
+            <div class="modal-body">
+                <!--TIFF: wire up all team/org names in text/labels below -->
+                <p>You can add additional team leads to help manage <b>Team Oyster</b>. These team leads will have all the same permissions to edit and delete the team; add, edit and delete members; and create, edit and publish expeditions - so proceed with caution.</p>
+                <hr/>
+                <p>If they already have a team lead account in the <b>New York Public Schools</b> organization, select their name below.</p>
+                <div class="form-group">
+                    <label for="">Team Leads in the <span class="red">New York Public Schools</span> organization</label>
+                    <select class="form-control"><!--TIFF: Should be a type ahead select -->
+                        <option>Team Lead</option>
+                        <option>Team Lead</option>
+                    </select>
+                </div>
+                <hr/>
+                <p>If they don't already have a team lead account in the <b>New York Public Schools</b> organization, send them an invite to join.</p>
+                <div class="form-group" show-errors>
+                    <label for="">Email address</label>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <!--TIFF: validation should only allow one or the other field -->
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default">Cancel</a>
+                <a class="btn btn-primary">Invite</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END OF MODALS-->

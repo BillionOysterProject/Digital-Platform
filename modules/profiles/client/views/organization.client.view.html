@@ -21,6 +21,15 @@
 </div>
 <section class="content">
     <section class="container-fluid">
+
+        <div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
+            No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
+        </div>
+        <div class="alert alert-success" ng-show="vm.orgRequests && vm.orgRequests.length > 0" role="alert">
+            You have <b>{{vm.orgRequests.length}}</b> new organization requests.
+            <a class="btn btn-sm btn-default" ng-click="vm.openApproveSchoolOrgs()">Respond</a>
+      </div>
+          
         <!--TIFF: these are just copied from lessons -->
         <nav class="navbar">
             <!--TIFF: should open Add Org modal from Settings -->

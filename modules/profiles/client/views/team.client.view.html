@@ -23,9 +23,7 @@
     <section class="container-fluid">
         <!--TIFF: these are just copied from lessons -->
         <nav class="navbar">
-            <a class="btn btn-default pull-right" view-permissions="admin,team lead">
-                <i class="glyphicon glyphicon-plus"></i> Create new team
-            </a>
+            <a class="btn btn-default pull-right" view-permissions="admin,team lead" data-toggle="modal" data-target="#modal-team-edit"><i class="glyphicon glyphicon-plus"></i> Create new team</a><!--TIFF: Open edit/create team modal currently in ViewTeam, on Submit of modal, open new ViewTeam page with that new team -->
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="subjectAreaSelection">
