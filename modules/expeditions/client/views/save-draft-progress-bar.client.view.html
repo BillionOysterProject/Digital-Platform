@@ -2,13 +2,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Saving Draft</h4>
+        <h4 class="modal-title">Saving draft: <small>{{status}}</small></h4>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
             <uib-progressbar class="progress-striped active" value="value" type="{{status}}">
-              <span style="color:black; white-space:nowrap;">{{status}}</span>
             </uib-progressbar>
           </div>
         </div>
