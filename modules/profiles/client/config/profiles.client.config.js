@@ -27,19 +27,16 @@
       state: 'profiles.team'
     });
 
-    //Menus.addSubMenuItem('topbar', 'profiles', {
-    //  title: 'Team Leads',
-    //  state: 'profiles.team-lead'
-    //});
-
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Organizations',
-      state: 'profiles.organization',
+      state: 'profiles.organization'
     });
 
+    //TIFF: This should go to the accounts page, but without the old Settings header/tabs. Only viewable to Admin 
     //Menus.addSubMenuItem('topbar', 'profiles', {
-    //  title: 'Restoration Station',
-    //  state: 'profiles.restoration-station',
+    //  title: 'Accounts',
+    //  state: 'settings.admin-users',
+    //  roles: ['admin']
     //});
   }
 }());
