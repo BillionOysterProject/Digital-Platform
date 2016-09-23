@@ -48,7 +48,7 @@
                             <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
                         </div>
                         <div class="col-lg-6 col-md-6">
-                            <h2><a>New York Public Schools</a></h2>
+                            <h2><a href="#" ui-sref="profiles.organization-view({ schoolOrgId: 00000000 })">New York Public Schools</a></h2>
                             <h4 class="text-muted">Organization Type</a></h4>
                             <p>We love to save oysters! Further description ...</p>
                         </div>
@@ -70,6 +70,7 @@
                         <!--TIFF: only show buttons if team lead -->
                         <a class="btn btn-default">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
                         <a class="btn btn-default" data-toggle="modal" data-target="#modal-org-lead-invite">Invite leads</a>
+                        <a class="btn btn-danger" data-toggle="modal" data-target="#modal-org-lead-remove">Remove leads</a>
                         <a class="btn btn-danger">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
                     </nav>
                     <hr/>
