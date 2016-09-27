@@ -9,18 +9,14 @@
 
   function GoogleGeocodeController($scope,GoogleGeoCodeService) {
     var vm = this;
-    
     vm.selectedPlace = null;
-    
 
     activate();
 
     function activate(){
-      
     }
 
     vm.getLocation = function(val) {
-
       return GoogleGeoCodeService.query({
         address:val,
         sensor:false
@@ -33,13 +29,11 @@
         });
       });
     };
-    
-    vm.selectPlace = function ($item, $model, $label, $event) {
-      if ($event.which === 13 || $event.which === 1) {
-        vm.placeSelected()(vm.selectedPlace);
-        
-      }
 
+    vm.selectPlace = function() {
+      if (vm.selectedPlace) {
+        vm.placeSelected()(vm.selectedPlace);
+      }
     };
   }
 })();

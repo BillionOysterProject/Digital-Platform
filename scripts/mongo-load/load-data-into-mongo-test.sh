@@ -40,8 +40,8 @@ mongoimport -d bop-test -c metanyssskeyideas --type json --file scripts/mongo-lo
 mongoimport -d bop-test -c metanysssmajorunderstandings --type json --file scripts/mongo-load/standards/metaNysssMajorUnderstandings.json --drop
 mongoimport -d bop-test -c metanysssmsts --type json --file scripts/mongo-load/standards/metaNysssMsts.json --drop
 
-mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-data-tests/bop-users.json --drop
 mongoimport -d bop-test -c schoolorgs --type json --file scripts/mongo-load/sample-data-tests/bop-school-orgs.json --drop
+mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-data-tests/bop-users.json --drop
 mongoimport -d bop-test -c teams --type json --file scripts/mongo-load/sample-data-tests/bop-teams.json --drop
 mongoimport -d bop-test -c restorationstations --type json --file scripts/mongo-load/sample-data-tests/bop-restoration-stations.json --drop
 

@@ -8,61 +8,35 @@
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" ui-sref="events.create"><i class="glyphicon glyphicon-plus"></i> Create an event</a>
+            <a class="btn btn-default pull-right" ui-sref="events.create" view-permissions="admin">
+              <i class="glyphicon glyphicon-plus"></i> Create an event</a>
         </nav>
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
+            <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
                     <div class="panel-body text-center">
-                        <!--TIFF: Repeat <h3> for each date (see 3rd event sample) -->
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
+                        <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
+                          {{vm.getEventYear(date.startDateTime)}}<br/>
+                          {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
+                        <h4><b class="red" ng-bind="calendarEvent.title"></b></h4>
+                        <p ng-show="calendarEvent.location.addressString"><i class="fa fa-map-marker"></i> {{calendarEvent.location.addressString}}</p>
                     </div>
                     <div class="panel-footer">
                         <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
-                    <div class="panel-body text-center">
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
-                    <div class="panel-body text-center">
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h3 class="blue">Oct 9 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h3 class="blue">Oct 11 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
+                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and </span>
+                            <span ng-show="(calendarEvent.dates && calendarEvent.dates.length > 0) ||
+                              calendarEvent.deadlineToRegister">
+                              <i class="fa fa-clock-o"></i>
+                              <b>{{vm.getDaysRemaining(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> remaining</span>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- TIFF: is vm.isAdmin correct? -->
-        <div class="alert" ng-if="vm.events.$resolved && !vm.events.length && vm.isAdmin"> 
+
+        <div class="alert" ng-if="vm.events.$resolved && !vm.events && vm.events.length === 0" view-permissions="admin">
             No events yet, why don't you <a ui-sref="events.create">create one</a>?
         </div>
     </section>
