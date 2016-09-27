@@ -82,6 +82,10 @@
       }
     }
 
+    vm.resetDateValidity = function(fieldName) {
+      vm.form.eventForm[fieldName].$setValidity('required', true);
+    };
+
     vm.getEventDate = EventHelper.getEventDate;
     vm.getEventMonthShort = EventHelper.getEventMonthShort;
     vm.getEventDay = EventHelper.getEventDay;
@@ -145,6 +149,12 @@
       vm.resourceLinks.splice(index, 1);
     };
 
+    vm.changedCategory = function() {
+      if (vm.event.category.type !== 'other') {
+        vm.event.category.otherType = null;
+      }
+    };
+
     vm.registerEvent = function() {
       $http.post('/api/events/' + vm.event._id + '/register', {
         full: true
@@ -153,6 +163,7 @@
         angular.element('#modal-event-register').modal('show');
         vm.event.isRegistered = true;
         vm.event.registrants = data.registrants;
+        vm.error = [];
       }).
       error(function(data, status, headers, config) {
         vm.error = data.message;
@@ -168,6 +179,7 @@
         angular.element('#modal-event-unregister').modal('show');
         vm.event.isRegistered = false;
         vm.event.registrants = data.registrants;
+        vm.error = [];
       }).
       error(function(data, status, headers, config) {
         vm.error = data.message;
@@ -195,9 +207,35 @@
 
     // Save Event
     function save(isValid) {
+      vm.error = [];
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.eventForm');
         return false;
+      }
+      var dateError = false;
+      var dateErrors = {};
+      if (!vm.event.dates || vm.event.dates.length === 0) {
+        vm.error.push('Must have at least one date');
+        dateError = true;
+      } else if (vm.event.dates.length > 0) {
+        for (var i = 0; i < vm.event.dates.length; i++) {
+          if (!vm.event.dates[i].date || !vm.event.dates[i].startTime || !vm.event.dates[i].endTime) {
+            //vm.error.push('Must fill in date and start/end times');
+            if(!vm.event.dates[i].date) vm.form.eventForm['date-'+i].$setValidity('required', false);
+            if(!vm.event.dates[i].startTime) vm.form.eventForm['startTime-'+i].$setValidity('required', false);
+            if(!vm.event.dates[i].endTime) vm.form.eventForm['endTime-'+i].$setValidity('required', false);
+            dateError = true;
+          }
+        }
+      }
+      if (dateError) return false;
+
+      if (!vm.event.resources) {
+        vm.event.resources = {
+          resourcesLinks: vm.resourceLinks
+        };
+      } else if (!vm.event.resources.resourcesLinks) {
+        vm.event.resources.resourcesLinks = vm.resourceLinks;
       }
 
       // TODO: move create/update logic to service
@@ -209,7 +247,6 @@
 
       function successCallback(res) {
         var eventId = res._id;
-        vm.error = [];
 
         function goToView(eventId) {
           $state.go('events.view', {
@@ -257,19 +294,25 @@
           }
         };
 
-        uploadFeaturedImage(eventId, function(uploadFeaturedImageError) {
-          if (uploadFeaturedImageError) vm.error.push(uploadFeaturedImageError);
-          uploadResourceFiles(eventId, function(uploadResourceFilesError) {
-            if (uploadResourceFilesError) vm.error.push(uploadResourceFilesError);
+        $timeout(function (){
+          uploadFeaturedImage(eventId, function(uploadFeaturedImageError) {
+            if (uploadFeaturedImageError) vm.error.push(uploadFeaturedImageError);
+            $timeout(function (){
+              uploadResourceFiles(eventId, function(uploadResourceFilesError) {
+                if (uploadResourceFilesError) vm.error.push(uploadResourceFilesError);
 
-            if (vm.error && vm.error.length > 0) {
-              vm.valid = false;
-            } else {
-              vm.error = [];
-              goToView(eventId);
-            }
+                if (vm.error && vm.error.length > 0) {
+                  vm.valid = false;
+                } else {
+                  vm.error = [];
+                  $timeout(function (){
+                    goToView(eventId);
+                  }, 1000);
+                }
+              });
+            }, 500);
           });
-        });
+        }, 500);
       }
 
       function errorCallback(res) {

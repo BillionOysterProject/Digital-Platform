@@ -5,7 +5,7 @@ var path = require('path'),
   signinAs = CommonUser.signinAs,
   EC = protractor.ExpectedConditions;
 
-describe('Lesson E2E Tests', function() {
+xdescribe('Lesson E2E Tests', function() {
   var leader = CommonUser.leader;
   var member1 = CommonUser.member1;
   var member2 = CommonUser.member2;

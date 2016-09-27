@@ -21,6 +21,24 @@ var signinAs = function(user) {
   element(by.id('signin')).click();
 };
 
+var signup = function(user) {
+  //Assumes already on signup page
+  element(by.model('vm.credentials.firstName')).sendKeys(user.firstName);
+  element(by.model('vm.credentials.lastName')).sendKeys(user.lastName);
+  element(by.model('vm.credentials.email')).sendKeys(user.email);
+  element(by.model('vm.credentials.userrole')).all(by.tagName('option')).get(user.userrole).click();
+  if (user.userroleText === 'team lead pending')
+    element(by.model('vm.credentials.teamLeadType')).all(by.tagName('option')).get(user.typeLeadType).click();
+  element(by.model('vm.credentials.schoolOrg')).all(by.tagName('option')).get(user.schoolOrg).click();
+  if (user.userroleText === 'team member pending')
+    element(by.model('vm.credentials.teamLead')).all(by.tagName('option')).get(user.teamLead).click();
+  element(by.model('vm.credentials.username')).sendKeys(user.username);
+  element(by.model('vm.credentials.password')).sendKeys(user.password);
+  element(by.model('vm.credentials.retypePassword')).sendKeys(user.password);
+  element(by.buttonText('Sign up')).click();
+  browser.sleep(1000);
+};
+
 module.exports = {
   admin: {
     username: 'admin',
@@ -30,7 +48,8 @@ module.exports = {
   leader: {
     username: 'teacher',
     password: 'P@$$w0rd!!',
-    displayName: 'Teacher Local'
+    displayName: 'Teacher Local',
+    email: 'teacher@localhost.com'
   },
   member1: {
     username: 'student1',
@@ -42,11 +61,40 @@ module.exports = {
     password: 'P@$$w0rd!!',
     displayName: 'Student2 Local'
   },
+  newLeader: {
+    firstName: 'New Leader',
+    lastName: 'Local',
+    email: 'newleader@localhost.com',
+    userrole: 1,
+    userroleText: 'team lead pending',
+    typeLeadType: 1,
+    typeLeadTypeText: 'Teacher',
+    schoolOrg: 1,
+    schoolOrgText: 'Org1',
+    username: 'newleader',
+    password: 'P@$$w0rd!!',
+    displayName: 'New Leader Local'
+  },
+  newStudent: {
+    firstName: 'New Student',
+    lastName: 'Local',
+    email: 'newstudent@@localhost.com',
+    userrole: 2,
+    userroleText: 'team member pending',
+    schoolOrg: 1,
+    schoolOrgText: 'Org1',
+    teamLead: 1,
+    teamLeadText: 'Teacher Local',
+    username: 'newstudent',
+    password: 'P@$$w0rd!!',
+    displayName: 'New Student Local'
+  },
   team: { name: 'Test Team' },
   organization: { name: 'Org1' },
   station: { name: 'Test Station' },
   station2: { name: 'Other Station' },
 
   signout: signout,
-  signinAs: signinAs
+  signinAs: signinAs,
+  signup: signup
 };

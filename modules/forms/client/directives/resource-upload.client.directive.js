@@ -11,6 +11,7 @@
           resourceFilesUploader: '=',
           resourceFiles: '=',
           resourceLinks: '=',
+          resourceDropzoneId: '@',
           closeFunction: '='
         },
         link: function (scope, element, attrs) {
