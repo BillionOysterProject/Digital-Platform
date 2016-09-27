@@ -18,23 +18,53 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events',
       permissions: '*'
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-featured-image',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-resources',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/email-registrants',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId',
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['team lead', 'team lead pending', 'partner'],
     allows: [{
       resources: '/api/events',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['post']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['post']
+    }, {
       resources: '/api/events/:eventId',
-      permissions: ['get']
+      permissions: ['get', 'post']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['guest', 'user', 'team member', 'team member pending'],
     allows: [{
       resources: '/api/events',
       permissions: ['get']
+    }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
     }, {
       resources: '/api/events/:eventId',
       permissions: ['get']

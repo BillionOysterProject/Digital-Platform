@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window',
-'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
-  function ($scope, $state, $http, $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$rootScope', '$state', '$http',
+'$location', '$window', 'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
+  function ($scope, $rootScope, $state, $http,
+    $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -29,8 +30,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
 
-        // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        if ($rootScope.redirectFromLogin) {
+          $location.path($rootScope.redirectFromLogin);
+        } else {
+          // And redirect to the previous or home page
+          $state.go($state.previous.state.name || 'home', $state.previous.params);
+        }
       }).error(function (response) {
         vm.error = response.message;
       });
@@ -49,19 +54,23 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
 
-        // And redirect to the previous or home page
-        var checkRole = function(role) {
-          var teamLeadIndex = lodash.findIndex(vm.authentication.user.roles, function(o) {
-            return o === role;
-          });
-          return (teamLeadIndex > -1) ? true : false;
-        };
+        if ($rootScope.redirectFromLogin) {
+          $location.path($rootScope.redirectFromLogin);
+        } else {
+          // And redirect to the previous or home page
+          var checkRole = function(role) {
+            var teamLeadIndex = lodash.findIndex(vm.authentication.user.roles, function(o) {
+              return o === role;
+            });
+            return (teamLeadIndex > -1) ? true : false;
+          };
 
-        var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
-          'lessons.list' : 'restoration-stations.dashboard';
+          var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
+            'lessons.list' : 'restoration-stations.dashboard';
 
-        $state.go($state.previous.state.name || dashboard, $state.previous.params);
-        //$state.go(dashboard);
+          $state.go($state.previous.state.name || dashboard, $state.previous.params);
+          //$state.go(dashboard);
+        }
       }).error(function (response) {
         vm.error = response.message;
       });

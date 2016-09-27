@@ -15,6 +15,7 @@
           canMoveMarker:'=',
           latitude: '=',
           longitude: '=',
+          address: '=',
           modalId:'@',
           showMarker:'=',
           dismissFunction: '='

@@ -261,17 +261,22 @@
               if (uploader.queue.length > 0) {
                 uploader.onSuccessItem = function (fileItem, response, status, headers) {
                   uploader.removeFromQueue(fileItem);
+                  $scope.finishedSaving += Math.floor((1/foundIds.length)*15);
                   uploadSketchPhoto(mobileTrapId, index+1, foundIds, errorCount, uploadSketchPhotoCallback);
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
                   $scope.mobileTrap.mobileOrganisms[index].sketchPhoto.error = response.message;
                   errorCount++;
+                  $scope.finishedSaving += Math.floor((1/foundIds.length)*15);
                   uploadSketchPhoto(mobileTrapId, index+1, foundIds, errorCount, uploadSketchPhotoCallback);
                 };
 
                 uploader.onBeforeUploadItem = function(item) {
                   item.url = 'api/protocol-mobile-traps/' + mobileTrapId + '/organisms/' + organismId + '/upload-sketch-photo';
+                  var organism = getMobileOrganismById(organismId);
+                  var organismName = (organism) ? organism.commonName : 'organism';
+                  $scope.savingStatus = 'Saving Mobile Trap: Uploading sketch or photo for ' + organismName;
                 };
                 uploader.uploadAll();
               } else {
@@ -314,6 +319,7 @@
       }
 
       function save() {
+        $scope.savingStatus = 'Saving Mobile Trap';
         $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {

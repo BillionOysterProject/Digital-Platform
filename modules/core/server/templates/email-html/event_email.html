@@ -23,12 +23,14 @@
     <tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
     <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Hi <%= FirstName %>,</p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Hi,</p>
 
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;"><%= EventEmailMessage %></p>
 
         <!-- IF ADMIN CHECKED YES TO THIS OPTIONAL PARAGRAPH: -->
+        <% if(Footer === true) { %>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">You are currently registered for <b style="color: #ea6158;"><%= EventName %></b> on <b style="color: #ea6158;"><%= EventDate %></b>. No longer able to attend? <a style="color: #ea6158;" href="<%= LinkEvent %>">Unregister here</a> to give your spot to somebody else.</p>
+        <% } %>
 
         <br/>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Thanks,</p>

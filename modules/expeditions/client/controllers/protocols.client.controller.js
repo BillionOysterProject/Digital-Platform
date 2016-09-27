@@ -430,80 +430,118 @@
 
     vm.saveDraft = function(callback) {
       vm.saving = true;
+      $scope.finishedSaving = 0;
+      $scope.savingStatus = 'Saving';
 
-      var finishedSaving = 0;
-      var allDone = function() {
-        finishedSaving++;
-        if (finishedSaving === 5) {
-          vm.saving = false;
-          if (callback) callback();
+      function saveDraftSiteCondition(saveCallback) {
+        if(vm.viewSiteCondition && $scope.siteCondition) {
+          $scope.saveSiteCondition(function() {
+            vm.tabs.protocol1.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol1.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol1.saveSuccessful = undefined;
+          saveCallback();
         }
-      };
-
-      if(vm.viewSiteCondition && $scope.siteCondition) {
-        $scope.saveSiteCondition(function() {
-          vm.tabs.protocol1.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol1.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol1.saveSuccessful = undefined;
-        allDone();
       }
 
-      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
-        $scope.saveOysterMeasurement(function() {
-          vm.tabs.protocol2.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol2.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol2.saveSuccessful = undefined;
-        allDone();
+      function saveDraftOysterMeasurement(saveCallback) {
+        if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+          $scope.saveOysterMeasurement(function() {
+            vm.tabs.protocol2.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol2.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol2.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewMobileTrap && $scope.mobileTrap) {
-        $scope.saveMobileTrap(function() {
-          vm.tabs.protocol3.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol3.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol3.saveSuccessful = undefined;
-        allDone();
+      function saveDraftMobileTrap(saveCallback) {
+        if(vm.viewMobileTrap && $scope.mobileTrap) {
+          $scope.saveMobileTrap(function() {
+            vm.tabs.protocol3.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol3.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol3.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewSettlementTiles && $scope.settlementTiles) {
-        $scope.saveSettlementTile(function() {
-          vm.tabs.protocol4.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol4.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol4.saveSuccessful = undefined;
-        allDone();
+      function saveDraftSettlementTiles(saveCallback) {
+        if(vm.viewSettlementTiles && $scope.settlementTiles) {
+          $scope.saveSettlementTile(function() {
+            vm.tabs.protocol4.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol4.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol4.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewWaterQuality && $scope.waterQuality) {
-        $scope.saveWaterQuality(function() {
-          vm.tabs.protocol5.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol5.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol5.saveSuccessful = undefined;
-        allDone();
+      function saveDraftWaterQuality(saveCallback) {
+        if(vm.viewWaterQuality && $scope.waterQuality) {
+          $scope.saveWaterQuality(function() {
+            vm.tabs.protocol5.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol5.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol5.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
+
+      angular.element('#modal-save-draft-progress-bar').modal('show');
+      $scope.savingStatus = 'Saving Site Condition';
+      $timeout(function () {
+        saveDraftSiteCondition(function () {
+          $scope.finishedSaving = 20;
+          $scope.savingStatus = 'Saving Oyster Measurement';
+          $timeout(function() {
+            saveDraftOysterMeasurement(function() {
+              $scope.finishedSaving = 40;
+              $scope.savingStatus = 'Saving Mobile Trap';
+              $timeout(function () {
+                saveDraftMobileTrap(function() {
+                  $scope.finishedSaving = 60;
+                  $scope.savingStatus = 'Saving Settlement Tiles';
+                  $timeout(function () {
+                    saveDraftSettlementTiles(function() {
+                      $scope.finishedSaving = 80;
+                      $scope.savingStatus = 'Saving Water Quality';
+                      $timeout(function () {
+                        saveDraftWaterQuality(function() {
+                          $scope.finishedSaving = 100;
+                          vm.saving = false;
+                          angular.element('#modal-save-draft-progress-bar').modal('hide');
+                          if (callback) callback();
+                        });
+                      }, 1000);
+                    });
+                  }, 1000);
+                });
+              }, 1000);
+            });
+          }, 1000);
+        });
+      }, 1000);
     };
 
     // Submit the protocols as a team member

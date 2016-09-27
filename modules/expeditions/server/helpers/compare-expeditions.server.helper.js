@@ -751,7 +751,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            rows.weatherConditions.push(obj.order);
+            rows.weatherConditions.push((obj) ? obj.order : '');
             done(null);
           }
         });
@@ -768,7 +768,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            rows.windDirection.push(dir.abbreviation);
+            rows.windDirection.push((dir) ? dir.abbreviation : '');
             done(null);
           }
         });
@@ -828,7 +828,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       if (req.body.protocol1.waterColor === 'YES') {
         WaterColor.findOne({ value: expedition.protocols.siteCondition.waterConditions.waterColor })
         .exec(function(err, color) {
-          rows.waterColor.push(color.order);
+          rows.waterColor.push((color) ? color.order : '');
           done(null);
         });
       } else {
@@ -863,7 +863,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough })
           .exec(function(err, flow) {
             if (err) done(err);
-            rows.markedCSOVolume.push(flow.order);
+            rows.markedCSOVolume.push((flow) ? flow.order : '');
             done(null);
           });
         } else {
@@ -888,7 +888,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough })
           .exec(function(err, flow) {
             if (err) done(err);
-            rows.unmarkedPipesVolume.push(flow.order);
+            rows.unmarkedPipesVolume.push((flow) ? flow.order : '');
             done(null);
           });
         } else {
@@ -908,7 +908,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         ShorelineType.findOne({ value: expedition.protocols.siteCondition.landConditions.shoreLineType })
         .exec(function (err, type) {
           if (err) done(err);
-          rows.shoreLineType.push(type.order);
+          rows.shoreLineType.push((type) ? type.order : '');
           done(null);
         });
       } else {
@@ -947,7 +947,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         Bioaccumulation.findOne({ value: expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage })
           .exec(function(err, bio) {
             if (err) done(err);
-            rows.bioaccumulationOnCage.push(bio.order);
+            rows.bioaccumulationOnCage.push((bio) ? bio.order : '');
             done(null);
           });
       } else {
