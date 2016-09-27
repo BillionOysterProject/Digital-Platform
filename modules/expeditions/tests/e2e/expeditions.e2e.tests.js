@@ -43,7 +43,7 @@ var path = require('path'),
   assertWaterQualityCompare = CommonWaterQuality.assertWaterQualityCompare,
   EC = protractor.ExpectedConditions;
 
-xdescribe('Expedition E2E Tests', function() {
+describe('Expedition E2E Tests', function() {
 
   var leader = CommonUser.leader;
   var member1 = CommonUser.member1;
@@ -197,11 +197,11 @@ xdescribe('Expedition E2E Tests', function() {
             moment(expeditionValues.monitoringStartDate).format('MMMM D, YYYY'));
         };
 
-        assertHeaderCompare(1, expedition2, station);
-        assertHeaderCompare(2, expedition3, station2);
+        assertHeaderCompare(1, expedition3, station2);
+        assertHeaderCompare(2, expedition2, station);
 
-        assertSiteConditionCompare(1, siteCondition2);
-        assertSiteConditionCompare(2, siteCondition3);
+        assertSiteConditionCompare(1, siteCondition3);
+        assertSiteConditionCompare(2, siteCondition2);
 
         element(by.model('vm.parameters.protocol1all')).click();
         browser.sleep(100);
@@ -213,8 +213,8 @@ xdescribe('Expedition E2E Tests', function() {
 
         expect(element(by.id('step3-header')).getText()).toEqual('3. Here\'s the results of these 4 data points across 2 expeditions Download all data');
 
-        assertOysterMeasurementCompare(1, oysterMeasurement2);
-        assertOysterMeasurementCompare(2, oysterMeasurement3);
+        assertOysterMeasurementCompare(1, oysterMeasurement3);
+        assertOysterMeasurementCompare(2, oysterMeasurement2);
 
         element(by.model('vm.parameters.protocol2all')).click();
         browser.sleep(100);
@@ -224,8 +224,8 @@ xdescribe('Expedition E2E Tests', function() {
         element(by.model('vm.parameters.protocol3all')).click();
         browser.sleep(100);
 
-        assertMobileTrapCompare(1, mobileTrap3);
-        assertMobileTrapCompare(2, mobileTrap4);
+        assertMobileTrapCompare(1, mobileTrap4);
+        assertMobileTrapCompare(2, mobileTrap3);
 
         element(by.model('vm.parameters.protocol3all')).click();
         browser.sleep(100);
@@ -235,8 +235,8 @@ xdescribe('Expedition E2E Tests', function() {
         element(by.model('vm.parameters.protocol4all')).click();
         browser.sleep(100);
 
-        assertSettlementTileCompare(1, settlementTiles2);
-        assertSettlementTileCompare(2, settlementTiles3);
+        assertSettlementTileCompare(1, settlementTiles3);
+        assertSettlementTileCompare(2, settlementTiles2);
 
         element(by.model('vm.parameters.protocol4all')).click();
         browser.sleep(100);
@@ -246,8 +246,8 @@ xdescribe('Expedition E2E Tests', function() {
         element(by.model('vm.parameters.protocol5all')).click();
         browser.sleep(100);
 
-        assertWaterQualityCompare(1, waterQuality3);
-        assertWaterQualityCompare(2, waterQuality4);
+        assertWaterQualityCompare(1, waterQuality4);
+        assertWaterQualityCompare(2, waterQuality3);
 
         element(by.model('vm.parameters.protocol5all')).click();
         browser.sleep(100);
