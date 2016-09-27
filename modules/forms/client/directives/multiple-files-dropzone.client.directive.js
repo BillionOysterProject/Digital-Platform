@@ -10,7 +10,8 @@
         scope: {
           uploader: '=',
           files: '=',
-        }, 
+          id: '@'
+        },
         controller: 'FileDropzoneController',
         controllerAs: 'vm'
       };

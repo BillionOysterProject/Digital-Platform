@@ -1,5 +1,5 @@
 <!-- <div class="jumbotron" ng-hide="vm.featuredImageURL"></div> -->
-<div class="jumbotron" ng-background-image image-url="vm.featuredImageURL">
+<div class="jumbotron" ng-background-image image-url="vm.featuredImageURL" id="view-event">
     <section class="content">
         <section class="container">
             <div class="row">
@@ -14,7 +14,7 @@
                               <h5>{{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</h5>
                             </span>
 
-                            <span ng-show="vm.event.dates && vm.event.dates.length === 1">
+                            <span ng-show="vm.event.dates && vm.event.dates.length === 1" id="singleDateDisplay">
                               <h2><b>{{vm.getEventMonthShort(vm.event.dates[0].startDateTime)}}<br/>
                                 <span class="h1">{{vm.getEventDay(vm.event.dates[0].startDateTime)}}</span></b>
                                 <br/>{{vm.getEventYear(vm.event.dates[0].startDateTime)}}</h2>
@@ -22,9 +22,9 @@
                             </span>
                         </div>
 
-                        <div class="col-xs-6" ng-show="vm.past === false">
-                            <span ng-hide="vm.event.isRegistered">
-                              <span ng-show="!vm.event.maximumCapacity || vm.openSpots > 0">
+                        <div class="col-xs-6" ng-show="vm.past === false && (vm.isAdmin || vm.isTeamLead || vm.notLoggedIn)">
+                            <span ng-hide="vm.event.isRegistered" id="notRegisteredForEvent">
+                              <span ng-show="!vm.event.maximumCapacity || vm.openSpots > 0" id="openSpotsLeft">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
                                 <h6 ng-show="vm.event.maximumCapacity">
                                   Only {{vm.openSpots}} spots remaining</h6>
@@ -33,13 +33,13 @@
                                 <a class="btn btn-lg btn-danger" ng-click="vm.signinOrRegister()"
                                   ng-show="vm.notLoggedIn">Register now</a>
                               </span>
-                              <span ng-hide="!vm.event.maximumCapacity || vm.openSpots > 0">
+                              <span ng-hide="!vm.event.maximumCapacity || vm.openSpots > 0" id="noOpenSpotsLeft">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
                                 <h6>Registration is closed</h6>
                               </span>
                             </span>
 
-                            <span ng-show="vm.event.isRegistered">
+                            <span ng-show="vm.event.isRegistered && (vm.isAdmin || vm.isTeamLead)" id="registeredForEvent">
                               <h1><i class="green fa fa-check"></i></h1>
                               <h6>You are registered!</h6>
                               <a class="btn btn-lg btn-primary" ng-click="vm.unregisterEvent()">Unregister</a>
@@ -58,7 +58,7 @@
                 <h2 class="red">{{vm.event.title}}</h2>
             </div>
             <div class="col-sm-4 text-right" ng-show="vm.isAdmin && vm.event.isCurrentUserOwner">
-                <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })">Edit</a>
+                <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })" id="editEvent">Edit</a>
                 <a class="btn btn-default" ng-click="vm.duplicateEvent()">Duplicate</a>
                 <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
             </div>
@@ -71,23 +71,23 @@
                     <h4 class="col-sm-4 text-muted" ng-show="vm.event.location.addressString">
                         <a href="#" ng-click="vm.openMap()">
                             <i class="fa fa-map-marker"></i>
-                            <!-- <b>ORS Name</b> --><small>{{vm.event.location.addressString}}</small>
+                            <small>{{vm.event.location.addressString}}</small>
                         </a>
                     </h4>
                     <h4 class="text-muted" ng-class="{'col-sm-4': vm.event.location.addressString,
                       'col-sm-6': !vm.event.location.addressString,
                       'col-sm-12': (vm.past && !vm.isAdmin) || !vm.event.maximumCapacity}">
-                        <span ng-show="!vm.past && (!vm.event.deadlineToRegister || vm.openSpots > 0)">
+                        <span ng-show="!vm.past && (!vm.event.deadlineToRegister || vm.openSpots > 0)" id="daysRemaining">
                           <i class="fa fa-clock-o"></i>
                           <b>{{vm.daysRemaining}} days</b>
                             <small>left to register</small>
                         </span>
 
-                        <span ng-show="vm.event.deadlineToRegister && vm.openSpots <= 0">
+                        <span ng-show="vm.event.deadlineToRegister && vm.openSpots <= 0" id="registrationClosed">
                           <b>Registration closed</b>
                         </span>
 
-                        <span ng-show="vm.past">
+                        <span ng-show="vm.past" id="eventIsOver">
                           <b>Event is over</b>
                         </span>
 
@@ -139,7 +139,7 @@
     <section class="container">
         <div class="row">
             <div class="col-sm-12">
-                <b>
+                <b id="eventCategory">
                   <span ng-show="vm.event.category.type === 'professional development'">Professional development</span>
                   <span ng-show="vm.event.category.type === 'field training'">Field training</span>
                   <span ng-show="vm.event.category.type === 'workshop'">Workshop</span>

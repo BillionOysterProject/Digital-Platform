@@ -39,7 +39,7 @@
                                     <div class="form-group" show-errors>
                                       <label class="control-label required">Type *</label>
                                       <select class="form-control" name="category" id="category"
-                                      ng-model="vm.event.category.type" required>
+                                      ng-model="vm.event.category.type" ng-change="vm.changedCategory()" required>
                                         <option value="professional development">Professional development</option>
                                         <option value="field training">Field training</option>
                                         <option value="workshop">Workshop</option>
@@ -65,14 +65,11 @@
                                   <div class="col-sm-12" ng-show="$index>0">
                                     <hr/>
                                   </div>
-                                  <div ng-class="{'col-sm-10': $index>0, 'col-sm-12': $index==0}">
-                                      <div class="form-group" show-errors>
-                                          <label class="control-label required" for="date">Date<span ng-show="$index==0"> *</span></label>
+                                  <div ng-class="{'col-sm-10': $index>0, 'col-sm-12': $index===0}">
+                                      <div class="form-group">
+                                          <label class="control-label" for="date-{{$index}}">Date<span ng-show="$index===0"> *</span></label>
                                           <input type="date" class="form-control" name="date-{{$index}}" id="date-{{$index}}"
-                                          ng-model="date.date" required/>
-                                          <div ng-messages="vm.form.eventForm.date-$index.$error" role="alert">
-                                            <p class="help-block error-text" ng-message="required">Date is required.</p>
-                                          </div>
+                                            ng-model="date.date" ng-blur="vm.resetDateValidity('date-'+$index)"/>
                                       </div>
                                   </div>
                                   <div class="col-sm-2" ng-show="$index>0">
@@ -82,23 +79,17 @@
                                     </div>
                                   </div>
                                   <div class="col-sm-6">
-                                      <div class="form-group" show-errors>
-                                          <label class="control-label required" for="startTime">Start Time *</label>
+                                      <div class="form-group">
+                                          <label class="control-label" for="startTime-{{$index}}">Start Time *</label>
                                           <input type="time" class="form-control" name="startTime-{{$index}}" id="startTime-{{$index}}"
-                                          ng-model="date.startTime" required/>
-                                          <div ng-messages="vm.form.eventForm.startTime-$index.$error" role="alert">
-                                            <p class="help-block error-text" ng-message="required">Start time is required.</p>
-                                          </div>
+                                          ng-model="date.startTime" ng-blur="vm.resetDateValidity('startTime-'+$index)"/>
                                       </div>
                                   </div>
                                   <div class="col-sm-6">
-                                      <div class="form-group" show-errors>
-                                          <label class="control-label required" for="endTime">End Time *</label>
+                                      <div class="form-group">
+                                          <label class="control-label" for="endTime-{{$index}}">End Time *</label>
                                           <input type="time" class="form-control" name="endTime-{{$index}}" id="endDate-{{$index}}"
-                                          ng-model="date.endTime" required/>
-                                          <div ng-messages="vm.form.eventForm.endTime-$index.$error" role="alert">
-                                            <p class="help-block error-text" ng-message="required">End date is required.</p>
-                                          </div>
+                                          ng-model="date.endTime" ng-blur="vm.resetDateValidity('endTime-'+$index)"/>
                                       </div>
                                   </div>
                                 </div>
@@ -183,8 +174,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-danger" ng-show="(vm.form.eventForm.$dirty || vm.form.eventForm.$submitted) &&
-                vm.form.eventForm.$invalid && (vm.form.eventForm.$error || vm.error.length > 0)">
+                <div class="alert alert-danger" ng-show="vm.form.eventForm.$submitted &&
+                (vm.form.eventForm.$invalid || vm.error.length > 0)">
                     <h4>Sorry, you can't submit just yet!</h4>
                     <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.eventForm.$error track by $index">
                         <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
@@ -211,5 +202,6 @@
     </div>
     <resource-upload-modal resource-files-uploader="vm.resourceFilesUploader"
     resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+    resource-dropzone-id="event-resources-file-dropzone"
     close-function=""></resource-upload-modal>
 </section>

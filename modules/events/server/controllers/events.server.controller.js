@@ -98,10 +98,12 @@ var sortDates = function(dates) {
 
 var getExistingResources = function(resourcesFiles) {
   var existingResources = [];
-  for (var j = 0; j < resourcesFiles.length; j++) {
-    var resource = resourcesFiles[j];
-    if (resource.path && resource.originalname && resource.filename) {
-      existingResources.push(resource);
+  if (resourcesFiles) {
+    for (var j = 0; j < resourcesFiles.length; j++) {
+      var resource = resourcesFiles[j];
+      if (resource.path && resource.originalname && resource.filename) {
+        existingResources.push(resource);
+      }
     }
   }
   return existingResources;
@@ -123,6 +125,13 @@ exports.create = function(req, res) {
     calendarEvent.dates = sortDates(calendarEvent.dates);
     calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
       'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
+    if (!calendarEvent.resources) {
+      calendarEvent.resources = {
+        resourcesFiles: []
+      };
+    } else if (!calendarEvent.resources.resourcesFiles) {
+      calendarEvent.resources.resourcesFiles = [];
+    }
     calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
     calendarEvent.user = req.user;
 
@@ -156,6 +165,7 @@ var fillInRegistrantsData = function(registrants, callback) {
               for (var i = 0; i < teams.length; i++) {
                 teamNames.push(teams[i].name);
               }
+              console.log('teamNames', teamNames);
               registrant.user.teams = teamNames.join(', ');
             }
             registrantsList[index] = registrant;
@@ -232,14 +242,13 @@ exports.update = function(req, res) {
       calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
         'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
 
-      // var existingResources = [];
-      // for (var j = 0; j < calendarEvent.resources.resourcesFiles.length; j++) {
-      //   var resource = calendarEvent.resources.resourcesFiles[j];
-      //   if (resource.path && resource.originalname && resource.filename) {
-      //     existingResources.push(resource);
-      //   }
-      // }
-      // calendarEvent.resources.resourcesFiles = existingResources;
+      if (!calendarEvent.resources) {
+        calendarEvent.resources = {
+          resourcesFiles: []
+        };
+      } else if (!calendarEvent.resources.resourcesFiles) {
+        calendarEvent.resources.resourcesFiles = [];
+      }
       calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
 
       var pattern = /^data:image\/jpeg;base64,/i;
