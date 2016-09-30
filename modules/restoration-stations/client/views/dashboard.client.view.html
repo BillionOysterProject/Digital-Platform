@@ -124,7 +124,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
                     </div>
@@ -145,12 +145,13 @@
                                 </td>
                               </tr>
                         </table>
-                        <div class="alert" ng-show="vm.stations.length === 0">
+                        <div class="alert" ng-show="vm.stations.length === 0" ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">
                             No ORS yet! Why don't you <a ng-click="vm.openFormRestorationStation()" id="register-first-ORS">register one</a>?
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS">Register an ORS</a>
+                        <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS"
+                        ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
                 </div>
                 <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">

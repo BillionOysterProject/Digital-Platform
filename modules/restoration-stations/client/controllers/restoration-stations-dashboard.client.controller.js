@@ -61,14 +61,14 @@
 
 
     var getORSes = function(teamLeadId) {
-      if (vm.isAdmin) {
+      if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
+          teamLead: true
         }, function(data) {
           vm.stations = data;
         });
-      } else if (vm.isTeamLead || vm.isTeamLeadPending) {
+      } else if (vm.isAdmin) {
         RestorationStationsService.query({
-          teamLead: true
         }, function(data) {
           vm.stations = data;
         });
