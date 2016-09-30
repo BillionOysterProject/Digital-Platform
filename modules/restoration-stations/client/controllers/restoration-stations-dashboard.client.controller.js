@@ -138,6 +138,7 @@
       RestorationStationsService.query({
         //schoolOrgId: schoolOrgId
       }, function(data) {
+        console.log('ORSes', data);
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
           var station = data[i];
