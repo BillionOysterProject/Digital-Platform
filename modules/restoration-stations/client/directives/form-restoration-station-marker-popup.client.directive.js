@@ -30,7 +30,7 @@
           }
 
           function appendHtml(){
-            if (html && scope) {
+            if (html && scope && element) {
               var template = $compile(html)(scope);
               if (template) element.append(template);
             }
