@@ -9,7 +9,8 @@
         scope: {
           name: '=',
           bodyOfWater: '=',
-          team: '=',
+          teamLead: '=',
+          schoolOrg: '=',
           photoUrl: '='
         },
         replace: true,

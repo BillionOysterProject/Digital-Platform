@@ -5,6 +5,8 @@ mongoimport -d bop-test -c metawatercolors --type json --file scripts/mongo-load
 mongoimport -d bop-test -c metawaterflows --type json --file scripts/mongo-load/metaWaterFlows.json --drop
 mongoimport -d bop-test -c metashorelinetypes --type json --file scripts/mongo-load/metaShorelineTypes.json --drop
 mongoimport -d bop-test -c metabioaccumulations --type json --file scripts/mongo-load/metaBioaccumulations.json --drop
+mongoimport -d bop-test -c metabodiesofwater --type json --file scripts/mongo-load/metaBodiesOfWater.json --drop
+mongoimport -d bop-test -c metaboroughscounties --type json --file scripts/mongo-load/metaBoroughsCounties.json --drop
 
 mongoimport -d bop-test -c metagarbageextents --type json --file scripts/mongo-load/metaGarbageExtents.json --drop
 mongoimport -d bop-test -c metawinddirections --type json --file scripts/mongo-load/metaWindDirections.json --drop

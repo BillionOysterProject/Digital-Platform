@@ -33,7 +33,6 @@
 
     $scope.save = function(isValid) {
       $scope.disableCancel = true;
-      console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.teamMemberForm');
         return false;
@@ -58,7 +57,6 @@
       }
 
       function successCallback(res) {
-        console.log('successful');
         var stationId = res._id;
 
         function uploadStationPhoto(stationId, imageSuccessCallback, imageErrorCallback) {
@@ -103,8 +101,9 @@
 
     // Remove existing Lesson
     $scope.remove = function() {
-      $scope.station.$remove();
-      $scope.removeFunction();
+      $scope.station.$remove($timeout(function() {
+        $scope.removeFunction();
+      }));
     };
 
     $scope.placeSelected = function (place) {
