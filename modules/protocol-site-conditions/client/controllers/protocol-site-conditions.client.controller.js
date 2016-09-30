@@ -86,6 +86,7 @@
 
       // Use incremental-save
       var siteConditionId = $scope.siteCondition._id;
+      $scope.siteConditionErrors = null;
 
       saveImages(function() {
         save();

@@ -474,8 +474,9 @@
     };
 
     vm.compare = function() {
+      console.log('compare');
       vm.filtered = true;
-      $location.hash('select-comparison-parameters');
+      $location.hash('view-comparison-section');
       $anchorScroll.yOffset = 100;
       $anchorScroll();
       //$window.scrollTo(0, document.getElementById('view-comparison').offsetTop);

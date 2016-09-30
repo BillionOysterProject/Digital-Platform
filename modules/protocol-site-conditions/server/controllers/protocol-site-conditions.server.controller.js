@@ -113,10 +113,12 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
       errorMessages.push('Tide Conditions - Closest Low Tide Time is not valid');
     }
   }
-  if (!siteCondition.tideConditions.closestHighTideHeight) {
+  if (siteCondition.tideConditions.closestHighTideHeight === undefined ||
+    siteCondition.tideConditions.closestHighTideHeight < 0) {
     errorMessages.push('Closest high tide height is required');
   }
-  if (!siteCondition.tideConditions.closestLowTideHeight) {
+  if (siteCondition.tideConditions.closestLowTideHeight === undefined ||
+    siteCondition.tideConditions.closestLowTideHeight < 0) {
     errorMessages.push('Closest low tide height is required');
   }
   if (emptyString(siteCondition.tideConditions.tidalCurrent)) {
