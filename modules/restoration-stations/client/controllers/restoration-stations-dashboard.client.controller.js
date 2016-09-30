@@ -18,7 +18,8 @@
     vm.user = Authentication.user;
 
     vm.filter = {
-      teamId: ''
+      teamId: '',
+      teamLeadId: ''
     };
 
     vm.canGeocode = false;
@@ -59,7 +60,7 @@
 
 
 
-    var getORSes = function(teamId) {
+    var getORSes = function(teamLeadId) {
       if (vm.isAdmin) {
         RestorationStationsService.query({
         }, function(data) {
@@ -72,9 +73,9 @@
           vm.stations = data;
         });
       } else {
-        if (teamId) {
+        if (teamLeadId) {
           RestorationStationsService.query({
-            teamId: vm.filter.teamId
+            teamLeadId: teamLeadId
           }, function(data) {
             vm.stations = data;
           });
@@ -118,6 +119,7 @@
             vm.findTeamValues();
           }
         }
+        if (vm.team) vm.filter.teamLeadId = (vm.team.teamLead._id) ? vm.team.teamLead._id : vm.team.teamLead;
       });
     };
 
@@ -223,6 +225,7 @@
     vm.fieldChanged = function(team) {
       vm.filter.teamId = (team) ? team._id : '';
       vm.team = team;
+      if (vm.team) vm.filter.teamLeadId = (vm.team.teamLead._id) ? vm.team.teamLead._id : vm.team.teamLead;
       vm.findTeamValues();
     };
 

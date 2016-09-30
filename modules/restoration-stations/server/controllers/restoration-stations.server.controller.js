@@ -132,8 +132,8 @@ exports.list = function (req, res) {
   var query;
   var and = [];
 
-  if (req.query.teamId) {
-    and.push({ 'team': req.query.teamId });
+  if (req.query.teamLeadId) {
+    and.push({ 'teamLeadId': req.query.teamLeadId });
   }
   if (req.query.teamLead) {
     and.push({ 'teamLead': req.user._id });

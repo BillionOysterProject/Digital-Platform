@@ -30,8 +30,10 @@
           }
 
           function appendHtml(){
-            var template = $compile(html)(scope);
-            element.append(template);
+            if (html && scope) {
+              var template = $compile(html)(scope);
+              if (template) element.append(template);
+            }
           }
         }
       };
