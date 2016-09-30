@@ -15,6 +15,8 @@ mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metawatercolors <username/p
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metawaterflows <username/password> --type json --file metaWaterFlows.json --drop
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metashorelinetypes <username/password> --type json --file metaShorelineTypes.json --drop
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metabioaccumulations <username/password> --type json --file metaBioaccumulations.json --drop
+mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metabodiesofwater <username/password> --type json --file metaBodiesOfWater.json --drop
+mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metaboroughscounties <username/password> --type json --file metaBoroughsCounties.json --drop
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metagarbageextents <username/password> --type json --file metaGarbageExtents.json --drop
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metawinddirections <username/password> --type json --file metaWindDirections.json --drop
 mongoimport -h ds039195.mlab.com:39195 -d bop-dev -c metatruefalses <username/password> --type json --file metaTrueFalses.json --drop
