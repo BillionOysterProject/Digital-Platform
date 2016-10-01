@@ -58,6 +58,37 @@
       vm.boroughsCounties = data;
     });
 
+    var findSchoolOrgRestorationStations = function() {
+      RestorationStationsService.query({
+      }, function(data) {
+        vm.mapPoints = [];
+        for (var i = 0; i < data.length; i++) {
+          var station = data[i];
+          var photoUrl = (station.photo && station.photo.path) ? station.photo.path : '';
+
+          var stationMap = {
+            lat: station.latitude,
+            lng: station.longitude,
+            icon: {
+              icon: 'glyphicon-map-marker',
+              prefix: 'glyphicon',
+              markerColor: (station.status === 'Active') ? 'green' : 'red'
+            },
+            info:{
+              name: station.name,
+              bodyOfWater: station.bodyOfWater,
+              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
+              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
+              photoUrl: photoUrl,
+              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
+            }
+          };
+
+          vm.mapPoints.push(stationMap);
+        }
+      });
+    };
+
     var getORSes = function(teamLeadId) {
       if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
@@ -79,6 +110,7 @@
           });
         }
       }
+      findSchoolOrgRestorationStations();
     };
     getORSes();
 
@@ -116,53 +148,20 @@
             vm.filter.teamId = (vm.team) ? vm.team._id : '';
             vm.findTeamValues();
           }
-        } else {
-          vm.findSchoolOrgRestorationStations();
         }
         if (vm.team) vm.filter.teamLeadId = (vm.team.teamLead._id) ? vm.team.teamLead._id : vm.team.teamLead;
       });
     };
 
-    vm.findTeamRequests = function() {
-      TeamRequestsService.query({
-        byMember: true
-      }, function(data) {
-        if (data.length > 0) {
-          vm.findSchoolOrgRestorationStations();
-        }
-      });
-    };
-
-    vm.findSchoolOrgRestorationStations = function() {
-      RestorationStationsService.query({
-      }, function(data) {
-        vm.mapPoints = [];
-        for (var i = 0; i < data.length; i++) {
-          var station = data[i];
-          var photoUrl = (station.photo && station.photo.path) ? station.photo.path : '';
-
-          var stationMap = {
-            lat: station.latitude,
-            lng: station.longitude,
-            icon: {
-              icon: 'glyphicon-map-marker',
-              prefix: 'glyphicon',
-              markerColor: (station.status === 'Active') ? 'green' : 'red'
-            },
-            info:{
-              name: station.name,
-              bodyOfWater: station.bodyOfWater,
-              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
-              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
-              photoUrl: photoUrl,
-              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
-            }
-          };
-
-          vm.mapPoints.push(stationMap);
-        }
-      });
-    };
+    // vm.findTeamRequests = function() {
+    //   TeamRequestsService.query({
+    //     byMember: true
+    //   }, function(data) {
+    //     if (data.length > 0) {
+    //       vm.findSchoolOrgRestorationStations();
+    //     }
+    //   });
+    // };
 
     vm.findTeamValues = function() {
       TeamMembersService.query({
@@ -171,8 +170,6 @@
       }, function(data) {
         vm.members = data;
       });
-
-      vm.findSchoolOrgRestorationStations();
 
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
@@ -214,8 +211,6 @@
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
-    } else {
-      vm.findSchoolOrgRestorationStations();
     }
 
     vm.fieldChanged = function(team) {
