@@ -19,9 +19,15 @@ var RestorationStationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Team'
   },
+  teamLead: {
+    type: Schema.ObjectId,
+    ref: 'User',
+    required: true
+  },
   schoolOrg: {
     type: Schema.ObjectId,
-    ref: 'SchoolOrg'
+    ref: 'SchoolOrg',
+    required: true
   },
   latitude: {
     type: Number,
@@ -33,8 +39,11 @@ var RestorationStationSchema = new Schema({
   },
   bodyOfWater: {
     type: String,
-    required: true,
-    trim: true
+    required: true
+  },
+  boroughCounty: {
+    type: String,
+    required: true
   },
   status: {
     type: String,

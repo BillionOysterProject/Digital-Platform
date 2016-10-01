@@ -374,7 +374,6 @@ describe('Event E2E Tests', function () {
       });
       it('should allow guest to register for event', function() {
         browser.getCurrentUrl().then(function(currentUrl) {
-          console.log('currentUrl', currentUrl);
           element(by.css('a[ng-click="vm.signinOrRegister()"]')).click();
           browser.sleep(500);
 

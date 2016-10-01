@@ -13,7 +13,7 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin', 'team lead'],
+    roles: ['admin', 'team lead', 'team lead pending'],
     allows: [{
       resources: '/api/restoration-stations',
       permissions: '*'
@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'team member', 'partner', 'team lead pending', 'team member pending'],
+    roles: ['user', 'team member', 'partner', 'team member pending'],
     allows: [{
       resources: '/api/restoration-stations',
       permissions: ['get']
