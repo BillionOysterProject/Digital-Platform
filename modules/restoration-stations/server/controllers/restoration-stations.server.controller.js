@@ -14,16 +14,16 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   _ = require('lodash');
 
-var getTeam = function(teamId, successCallback, errorCallback) {
-  // Get School/Organization from team
-  Team.findById(teamId).exec(function (err, team) {
-    if (err) {
-      errorCallback(errorHandler.getErrorMessage(err));
-    } else {
-      successCallback(team);
-    }
-  });
-};
+// var getTeam = function(teamId, successCallback, errorCallback) {
+//   // Get School/Organization from team
+//   Team.findById(teamId).exec(function (err, team) {
+//     if (err) {
+//       errorCallback(errorHandler.getErrorMessage(err));
+//     } else {
+//       successCallback(team);
+//     }
+//   });
+// };
 
 /**
  * Create a restoration station
@@ -31,23 +31,30 @@ var getTeam = function(teamId, successCallback, errorCallback) {
 exports.create = function (req, res) {
   var station = new RestorationStation(req.body);
 
-  getTeam(req.body.team, function(team) {
-    station.schoolOrg = team.schoolOrg;
+  // getTeam(req.body.team, function(team) {
+  station.team = null;
+  station.schoolOrg = req.user.schoolOrg;
+  station.teamLead = req.user;
 
-    station.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(station);
-      }
-    });
-  }, function(errorMessage) {
-    return res.status(400).send({
-      message: errorMessage
-    });
+  var pattern = /^data:image\/jpeg;base64,/i;
+  if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
+    station.photo.path = '';
+  }
+
+  station.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(station);
+    }
   });
+  // }, function(errorMessage) {
+  //   return res.status(400).send({
+  //     message: errorMessage
+  //   });
+  // });
 };
 
 /**
@@ -56,6 +63,9 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var station = req.station ? req.station.toJSON() : {};
+
+  station.isCurrentUserOwner = req.user && station.teamLead &&
+    station.teamLead._id.toString() === req.user._id.toString();
 
   res.json(station);
 };
@@ -68,27 +78,33 @@ exports.update = function (req, res) {
 
   if (station) {
     station = _.extend(station, req.body);
-    if (!req.body.photo) {
-      delete station.photo;
+    // if (!req.body.photo) {
+    //   delete station.photo;
+    // }
+    var pattern = /^data:image\/jpeg;base64,/i;
+    if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
+      station.photo.path = '';
     }
 
-    getTeam(req.body.team, function(team) {
-      station.schoolOrg = team.schoolOrg;
+    // getTeam(req.body.team, function(team) {
+    station.team = null;
+    station.schoolOrg = req.user.schoolOrg;
+    station.teamLead = req.user;
 
-      station.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(station);
-        }
-      });
-    }, function(errorMessage) {
-      return res.status(400).send({
-        message: errorMessage
-      });
+    station.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(station);
+      }
     });
+    // }, function(errorMessage) {
+    //   return res.status(400).send({
+    //     message: errorMessage
+    //   });
+    // });
   }
 };
 
@@ -116,8 +132,11 @@ exports.list = function (req, res) {
   var query;
   var and = [];
 
-  if (req.query.teamId) {
-    and.push({ 'team': req.query.teamId });
+  if (req.query.teamLeadId) {
+    and.push({ 'teamLeadId': req.query.teamLeadId });
+  }
+  if (req.query.teamLead) {
+    and.push({ 'teamLead': req.user._id });
   }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });
@@ -149,13 +168,22 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('team', 'name').exec(function (err, stations) {
+  query.populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, stations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(stations);
+      var stationsJSON = [];
+      for (var i = 0; i < stations.length; i++) {
+        var station = stations[i] ? stations[i].toJSON() : {};
+
+        station.isCurrentUserOwner = req.user && station.teamLead &&
+          station.teamLead._id.toString() === req.user._id.toString();
+        stationsJSON.push(station);
+      }
+
+      res.json(stationsJSON);
     }
   });
 };
@@ -171,7 +199,7 @@ exports.stationByID = function (req, res, next, id) {
     });
   }
 
-  RestorationStation.findById(id).exec(function (err, station) {
+  RestorationStation.findById(id).populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, station) {
     if (err) {
       return next(err);
     } else if (!station) {

@@ -145,12 +145,12 @@
                         <div class="form-group col-sm-6">
                             <label for="closestHighTideHeight" class="required">Closest high tide height (ft) *</label>
                             <input class="form-control" type="number" name="closestHighTideHeight"
-                            ng-model="siteCondition.tideConditions.closestHighTideHeight" required/>
+                            ng-model="siteCondition.tideConditions.closestHighTideHeight" min="0" required/>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="closestLowTideHeight" class="required">Closest low tide height (ft) *</label>
                             <input class="form-control" type="number" name="closestLowTideHeight"
-                            ng-model="siteCondition.tideConditions.closestLowTideHeight" required/>
+                            ng-model="siteCondition.tideConditions.closestLowTideHeight" min="0" required/>
                         </div>
                     </div>
                     <div class="row">

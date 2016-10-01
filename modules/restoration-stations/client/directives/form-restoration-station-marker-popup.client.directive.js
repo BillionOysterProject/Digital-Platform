@@ -9,7 +9,8 @@
         scope: {
           name: '=',
           bodyOfWater: '=',
-          team: '=',
+          teamLead: '=',
+          schoolOrg: '=',
           photoUrl: '='
         },
         replace: true,
@@ -29,8 +30,10 @@
           }
 
           function appendHtml(){
-            var template = $compile(html)(scope);
-            element.append(template);
+            if (html && scope && element) {
+              var template = $compile(html)(scope);
+              if (template) element.append(template);
+            }
           }
         }
       };

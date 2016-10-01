@@ -58,11 +58,12 @@
     };
 
     var getDaysRemaining = function(dates, deadlineToRegister) {
-      var today = moment();
+      var today = moment().startOf('day');
       if (deadlineToRegister) {
-        return moment(deadlineToRegister).diff(today, 'days');
+        var deadline = moment(deadlineToRegister).startOf('day');
+        return deadline.diff(today, 'days');
       } else {
-        var earliestDate = getEarliestDate(dates);
+        var earliestDate = getEarliestDate(dates).startOf('day');
         return (earliestDate) ? earliestDate.diff(today, 'days') : null;
       }
     };
