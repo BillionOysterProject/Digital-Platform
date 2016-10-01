@@ -138,7 +138,6 @@
       RestorationStationsService.query({
         //schoolOrgId: schoolOrgId
       }, function(data) {
-        console.log('ORSes', data);
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
           var station = data[i];
@@ -155,8 +154,8 @@
             info:{
               name: station.name,
               bodyOfWater: station.bodyOfWater,
-              teamLead: station.teamLead.displayName,
-              schoolOrg: station.schoolOrg.name,
+              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
+              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
               photoUrl: photoUrl,
               html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
             }
