@@ -58,8 +58,6 @@
       vm.boroughsCounties = data;
     });
 
-
-
     var getORSes = function(teamLeadId) {
       if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
@@ -118,6 +116,8 @@
             vm.filter.teamId = (vm.team) ? vm.team._id : '';
             vm.findTeamValues();
           }
+        } else {
+          vm.findSchoolOrgRestorationStations();
         }
         if (vm.team) vm.filter.teamLeadId = (vm.team.teamLead._id) ? vm.team.teamLead._id : vm.team.teamLead;
       });
@@ -128,15 +128,13 @@
         byMember: true
       }, function(data) {
         if (data.length > 0) {
-          vm.findSchoolOrgRestorationStations((data[0] && data[0].teamLead && data[0].teamLead.schoolOrg &&
-            data[0].teamLead.schoolOrg._id) ? data[0].teamLead.schoolOrg._id : data[0].teamLead.schoolOrg);
+          vm.findSchoolOrgRestorationStations();
         }
       });
     };
 
-    vm.findSchoolOrgRestorationStations = function(schoolOrgId) {
+    vm.findSchoolOrgRestorationStations = function() {
       RestorationStationsService.query({
-        //schoolOrgId: schoolOrgId
       }, function(data) {
         vm.mapPoints = [];
         for (var i = 0; i < data.length; i++) {
@@ -174,8 +172,7 @@
         vm.members = data;
       });
 
-      vm.findSchoolOrgRestorationStations((vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
-        vm.team.schoolOrg._id : vm.team.schoolOrg);
+      vm.findSchoolOrgRestorationStations();
 
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
@@ -218,8 +215,7 @@
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
     } else {
-      vm.findSchoolOrgRestorationStations((vm.user && vm.user.schoolOrg && vm.user.schoolOrg._id) ?
-        vm.user.schoolOrg._id : vm.user.schoolOrg);
+      vm.findSchoolOrgRestorationStations();
     }
 
     vm.fieldChanged = function(team) {
