@@ -58,7 +58,36 @@
       vm.boroughsCounties = data;
     });
 
+    var findSchoolOrgRestorationStations = function() {
+      RestorationStationsService.query({
+      }, function(data) {
+        vm.mapPoints = [];
+        for (var i = 0; i < data.length; i++) {
+          var station = data[i];
+          var photoUrl = (station.photo && station.photo.path) ? station.photo.path : '';
 
+          var stationMap = {
+            lat: station.latitude,
+            lng: station.longitude,
+            icon: {
+              icon: 'glyphicon-map-marker',
+              prefix: 'glyphicon',
+              markerColor: (station.status === 'Active') ? 'green' : 'red'
+            },
+            info:{
+              name: station.name,
+              bodyOfWater: station.bodyOfWater,
+              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
+              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
+              photoUrl: photoUrl,
+              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
+            }
+          };
+
+          vm.mapPoints.push(stationMap);
+        }
+      });
+    };
 
     var getORSes = function(teamLeadId) {
       if (vm.isTeamLead || vm.isTeamLeadPending) {
@@ -81,6 +110,7 @@
           });
         }
       }
+      findSchoolOrgRestorationStations();
     };
     getORSes();
 
@@ -123,48 +153,15 @@
       });
     };
 
-    vm.findTeamRequests = function() {
-      TeamRequestsService.query({
-        byMember: true
-      }, function(data) {
-        if (data.length > 0) {
-          vm.findSchoolOrgRestorationStations((data[0] && data[0].teamLead && data[0].teamLead.schoolOrg &&
-            data[0].teamLead.schoolOrg._id) ? data[0].teamLead.schoolOrg._id : data[0].teamLead.schoolOrg);
-        }
-      });
-    };
-
-    vm.findSchoolOrgRestorationStations = function(schoolOrgId) {
-      RestorationStationsService.query({
-        //schoolOrgId: schoolOrgId
-      }, function(data) {
-        vm.mapPoints = [];
-        for (var i = 0; i < data.length; i++) {
-          var station = data[i];
-          var photoUrl = (station.photo && station.photo.path) ? station.photo.path : '';
-
-          var stationMap = {
-            lat: station.latitude,
-            lng: station.longitude,
-            icon: {
-              icon: 'glyphicon-map-marker',
-              prefix: 'glyphicon',
-              markerColor: (station.status === 'Active') ? 'green' : 'red'
-            },
-            info:{
-              name: station.name,
-              bodyOfWater: station.bodyOfWater,
-              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
-              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
-              photoUrl: photoUrl,
-              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
-            }
-          };
-
-          vm.mapPoints.push(stationMap);
-        }
-      });
-    };
+    // vm.findTeamRequests = function() {
+    //   TeamRequestsService.query({
+    //     byMember: true
+    //   }, function(data) {
+    //     if (data.length > 0) {
+    //       vm.findSchoolOrgRestorationStations();
+    //     }
+    //   });
+    // };
 
     vm.findTeamValues = function() {
       TeamMembersService.query({
@@ -173,9 +170,6 @@
       }, function(data) {
         vm.members = data;
       });
-
-      vm.findSchoolOrgRestorationStations((vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
-        vm.team.schoolOrg._id : vm.team.schoolOrg);
 
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
@@ -217,9 +211,6 @@
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
-    } else {
-      vm.findSchoolOrgRestorationStations((vm.user && vm.user.schoolOrg && vm.user.schoolOrg._id) ?
-        vm.user.schoolOrg._id : vm.user.schoolOrg);
     }
 
     vm.fieldChanged = function(team) {
