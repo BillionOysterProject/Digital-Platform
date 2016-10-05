@@ -9,7 +9,6 @@
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-substrate-shell.client.view.html',
         scope: {
           substrate: '=',
-          baseline: '=',
           maxLiveOysters: '=',
           outerSubstrateUploader: '=',
           innerSubstrateUploader: '=',

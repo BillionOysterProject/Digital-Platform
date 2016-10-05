@@ -57,19 +57,6 @@ var RestorationStationSchema = new Schema({
     filename: String,
     path: String
   },
-  baselineHistory: [{
-    substrateShells: [{
-      substrateShellNumber: Number,
-      setDate: Date,
-      source: String,
-      otherSource: String,
-      totalNumberOfLiveOystersAtBaseline: Number,
-      entered: {
-        type: Date,
-        default: Date.now
-      }
-    }]
-  }],
   created: {
     type: Date,
     default: Date.now

@@ -160,7 +160,6 @@
 
     $scope.openSubstrateForm = function(index) {
       $scope.substrate = angular.copy($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index]);
-      $scope.baseline = angular.copy();
 
       $scope.outerSubstrateURL = ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ?
         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.path : '';

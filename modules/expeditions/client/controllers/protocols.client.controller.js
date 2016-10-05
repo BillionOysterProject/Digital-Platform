@@ -213,7 +213,6 @@
     }
 
     $scope.station = vm.expedition.station;
-    console.log('station', $scope.station);
 
     // Set up variables used by the tab element
     vm.tabs = {
