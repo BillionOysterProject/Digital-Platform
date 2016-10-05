@@ -128,13 +128,11 @@
       } else {
         byMember = true;
       }
-      console.log('byOwner', byOwner);
       TeamsService.query({
         byOwner: byOwner,
         byMember: byMember
       }, function(data) {
         vm.teams = data;
-        console.log('team', vm.teams);
 
         if ($rootScope.teamId) {
           vm.filter.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
