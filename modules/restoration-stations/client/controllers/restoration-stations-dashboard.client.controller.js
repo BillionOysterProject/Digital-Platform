@@ -359,8 +359,10 @@
     }
 
     vm.createExpedition = function() {
-      $rootScope.teamId = vm.filter.teamId;
-      $state.go('expeditions.create');
+      if (!vm.isTeamLeadPending) {
+        $rootScope.teamId = vm.filter.teamId;
+        $state.go('expeditions.create');
+      }
     };
   }
 })();
