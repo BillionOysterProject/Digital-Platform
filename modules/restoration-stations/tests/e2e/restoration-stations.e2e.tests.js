@@ -164,6 +164,8 @@ describe('Restoration Station E2E Tests', function() {
       // Go to Dashboard
       browser.get('http://localhost:8081/restoration-stations');
 
+      expect(element(by.id('single-team-name')).getText()).toEqual('Default');
+
       var orses = element.all(by.repeater('station in vm.stations'));
       expect(orses.count()).toEqual(0);
 

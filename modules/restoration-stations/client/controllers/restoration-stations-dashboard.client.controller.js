@@ -128,11 +128,13 @@
       } else {
         byMember = true;
       }
+      console.log('byOwner', byOwner);
       TeamsService.query({
         byOwner: byOwner,
         byMember: byMember
       }, function(data) {
         vm.teams = data;
+        console.log('team', vm.teams);
 
         if ($rootScope.teamId) {
           vm.filter.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
@@ -207,7 +209,7 @@
       vm.published = data;
     });
 
-    if (vm.isTeamLead || vm.isTeamMember || vm.isAdmin) {
+    if (vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember || vm.isAdmin) {
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();

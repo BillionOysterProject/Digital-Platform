@@ -10,10 +10,10 @@
                             <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
                         </ul>
                     </div>
-                    <div class="pull-right" ng-show="vm.teams.length === 1">
+                    <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
                         <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
                     </div>
-                    <p ng-show="vm.teams.length > 0">
+                    <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
                         <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
@@ -108,7 +108,8 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': (vm.team), 'col-lg-12': (!vm.team) }">
+                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': (vm.team && (vm.isTeamLead || vm.isAdmin)),
+                    'col-lg-12': (!vm.team || vm.isTeamLeadPending) }">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -154,7 +155,7 @@
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember) && vm.team">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
@@ -176,7 +177,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isAdmin)">
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
                             No expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
                         </div>
                         <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember === true &&
@@ -187,7 +188,7 @@
                     <div class="panel-footer">
                         <!-- TIFFANY: change link to My Expeditions tab of Expeditions list page -->
                         <a class="btn btn-default" ui-sref="expeditions.list" id="myexpeditions">See all</a>
-                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isAdmin">Create an expedition</a>
+                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin">Create an expedition</a>
                     </div>
                 </div>
             </div>
