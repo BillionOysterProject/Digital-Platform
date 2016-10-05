@@ -48,7 +48,7 @@
           var validate = function() {
             $scope.error = [];
             var isValid = true;
-            
+
             return isValid;
           };
 

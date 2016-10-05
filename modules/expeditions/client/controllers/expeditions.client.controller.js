@@ -54,6 +54,18 @@
 
     vm.findTeams();
 
+    var getORSes = function(callback) {
+      if (vm.team) {
+        RestorationStationsService.query({
+          schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
+            vm.team.schoolOrg._id : vm.team.schoolOrg
+        }, function(data) {
+          vm.stations = data;
+          if (callback) callback();
+        });
+      }
+    };
+
     vm.findTeamValues = function() {
       if (vm.teamId === '') {
         vm.team = (vm.teams && vm.teams.length > 0) ? vm.teams[0] : null;
@@ -76,17 +88,7 @@
         });
       }
 
-      if (vm.team) {
-        RestorationStationsService.query({
-          schoolOrgId: (vm.team && vm.team.schoolOrg && vm.team.schoolOrg._id) ?
-            vm.team.schoolOrg._id : vm.team.schoolOrg
-        }, function(data) {
-          vm.stations = data;
-          if (!vm.expedition.station || vm.expedition.station === undefined) {
-            vm.expedition.station = vm.stations[0];
-          }
-        });
-      }
+      getORSes();
 
       if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) {
         vm.expedition.teamLists = {
@@ -251,6 +253,27 @@
         expedition.status === 'unpublished')) ?
       'expeditions.view({ expeditionId: expedition._id })' :
       'expeditions.protocols({ expeditionId: expedition._id })';
+    };
+
+    vm.openFormRestorationStation = function(station) {
+      vm.station = new RestorationStationsService();
+
+      angular.element('#modal-station-register').modal('show');
+    };
+
+    vm.saveFormRestorationStation = function() {
+      getORSes(function() {
+        vm.stationId = vm.station._id;
+        vm.station = {};
+
+        angular.element('#modal-station-register').modal('hide');
+      });
+    };
+
+    vm.cancelFormRestorationStation = function() {
+      vm.station = {};
+
+      angular.element('#modal-station-register').modal('hide');
     };
   }
 })();

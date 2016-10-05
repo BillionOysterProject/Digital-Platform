@@ -128,12 +128,12 @@
       }
     };
 
-
     // Set up initial values
     $scope.oysterMeasurement.collectionTime = moment($scope.oysterMeasurement.collectionTime).startOf('minute').toDate();
     $scope.cageConditionPhotoURL = ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
       $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
       $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+
     if (!$scope.oysterMeasurement.measuringOysterGrowth ||
       !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells) {
       setupSubstrateShells(findPreviousValues());

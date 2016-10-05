@@ -7,11 +7,11 @@
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
   '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
     $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper) {
+    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -211,6 +211,8 @@
         vm.disabledWaterQuality = true;
       }
     }
+
+    $scope.station = vm.expedition.station;
 
     // Set up variables used by the tab element
     vm.tabs = {
