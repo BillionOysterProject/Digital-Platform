@@ -10,10 +10,10 @@
                             <li ng-repeat="team in vm.teams"><a href="#" ng-click="vm.fieldChanged(team)">{{team.name}}</a></li>
                         </ul>
                     </div>
-                    <div class="pull-right" ng-show="vm.teams.length === 1">
+                    <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
                         <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
                     </div>
-                    <p ng-show="vm.teams.length > 0">
+                    <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
                         <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
@@ -74,22 +74,27 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4" ng-show="vm.isTeamLead && vm.team">
+                    <div class="col-lg-4" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
-                                <div class="alert" ng-show="vm.members.length === 0">No members yet! To start, <a ui-sref="settings.admin-team-owner">invite members to join</a>.</div>
+                                <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
+                                  <a ui-sref="settings.admin-team-owner" ng-class="{ 'disabled': vm.isTeamLeadPending }"
+                                  ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
+                                </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner">Add members</a>
+                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner"
+                                ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
+                                disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
+                        <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activitiesCount}}</span></h4>
                             </div>
@@ -102,13 +107,15 @@
                                     <div class="col-sm-10 col-xs-8">
                                         <p>{{activity.user.displayName}} <small class="text-muted" am-time-ago="activity.created"></small><br />
                                         <span class="text-muted">{{activity.status}}</span>
-                                        <a ui-sref="expeditions.protocols({ expeditionId: activity.expedition._id })">{{vm.displaySubmittedProtocols(activity)}}</a></p>
+                                        <a ui-sref="expeditions.protocols({ expeditionId: activity.expedition._id })"
+                                        ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
+                                        disable-link="vm.isTeamLeadPending">{{vm.displaySubmittedProtocols(activity)}}</a></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': (vm.team), 'col-lg-12': (!vm.team) }">
+                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': vm.team, 'col-lg-12': !vm.team }">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
@@ -154,7 +161,7 @@
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember) && vm.team">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
@@ -176,8 +183,9 @@
                                 </td>
                             </tr>
                         </table>
-                        <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isAdmin)">
-                            No expeditions yet! Why don't you <a ng-click="vm.createExpedition()">create one</a>?
+                        <div class="alert" ng-show="vm.expeditions.length === 0 && (vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
+                            No expeditions yet! Why don't you <a ng-click="vm.createExpedition()"
+                            ng-class="{ 'disabled': vm.isTeamLeadPending }" disable-link="vm.isTeamLeadPending">create one</a>?
                         </div>
                         <div class="alert" ng-show="vm.expeditions.length === 0 && vm.isTeamMember === true &&
                         vm.isAdmin === false && vm.isTeamLead === false">
@@ -186,8 +194,11 @@
                     </div>
                     <div class="panel-footer">
                         <!-- TIFFANY: change link to My Expeditions tab of Expeditions list page -->
-                        <a class="btn btn-default" ui-sref="expeditions.list" id="myexpeditions">See all</a>
-                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isAdmin">Create an expedition</a>
+                        <a class="btn btn-default" ui-sref="expeditions.list" id="myexpeditions"
+                        ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">See all</a>
+                        <a class="btn btn-primary" ng-click="vm.createExpedition()" ng-show="vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin"
+                         ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">
+                          Create an expedition</a>
                     </div>
                 </div>
             </div>

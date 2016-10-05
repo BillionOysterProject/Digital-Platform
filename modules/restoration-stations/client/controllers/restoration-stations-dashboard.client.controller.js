@@ -207,7 +207,7 @@
       vm.published = data;
     });
 
-    if (vm.isTeamLead || vm.isTeamMember || vm.isAdmin) {
+    if (vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember || vm.isAdmin) {
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
@@ -359,8 +359,10 @@
     }
 
     vm.createExpedition = function() {
-      $rootScope.teamId = vm.filter.teamId;
-      $state.go('expeditions.create');
+      if (!vm.isTeamLeadPending) {
+        $rootScope.teamId = vm.filter.teamId;
+        $state.go('expeditions.create');
+      }
     };
   }
 })();

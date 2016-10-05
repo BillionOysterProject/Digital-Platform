@@ -13,6 +13,7 @@ var path = require('path'),
   UserActivity = mongoose.model('UserActivity'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   async = require('async'),
+  Team = mongoose.model('Team'),
   TeamRequest = mongoose.model('TeamRequest');
 
 // URLs for which user can't be redirected on signin
@@ -104,6 +105,24 @@ exports.signup = function (req, res) {
         user.password = undefined;
         user.salt = undefined;
 
+        //CREATE A DEAFAULT TEAM FOR TEAM LEADS
+        var createDefaultTeam = function(teamCallback) {
+          var defaultTeam = new Team({
+            name: 'Default',
+            schoolOrg: user.schoolOrg,
+            teamLead: user
+          });
+          defaultTeam.save(function(saveErr) {
+            if (saveErr) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(saveErr)
+              });
+            } else {
+              teamCallback();
+            }
+          });
+        };
+
         var loginNewUser = function() {
           req.login(user, function (err) {
             if (err) {
@@ -147,28 +166,30 @@ exports.signup = function (req, res) {
             }
           });
         } else if (req.body.userrole === 'team lead pending') {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          createDefaultTeam(function() {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          var sendAdminNewTeamLeadEmail = function(callback) {
-            email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
-              TeamLeadName: user.displayName,
-              LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users'
+            var sendAdminNewTeamLeadEmail = function(callback) {
+              email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
+                TeamLeadName: user.displayName,
+                LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users'
+              }, function(info) {
+                if (callback) callback();
+              }, function(errorMessage) {
+                if (callback) callback();
+              });
+            };
+
+            email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
+              FirstName: user.firstName,
+              TeamMemberName: user.displayName,
+              LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
+              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
             }, function(info) {
-              if (callback) callback();
+              sendAdminNewTeamLeadEmail(loginNewUser());
             }, function(errorMessage) {
-              if (callback) callback();
+              sendAdminNewTeamLeadEmail(loginNewUser());
             });
-          };
-
-          email.sendEmailTemplate(user.email, 'Thanks for joining the Billion Oyster Project', 'lead_pending', {
-            FirstName: user.firstName,
-            TeamMemberName: user.displayName,
-            LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-          }, function(info) {
-            sendAdminNewTeamLeadEmail(loginNewUser());
-          }, function(errorMessage) {
-            sendAdminNewTeamLeadEmail(loginNewUser());
           });
         } else {
           loginNewUser();
