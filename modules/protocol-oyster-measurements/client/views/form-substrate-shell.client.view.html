@@ -72,30 +72,30 @@
                                             <div class="row">
                                                 <div class="form-group col-sm-4">
                                                     <label for="shellNumber" class="control-label required">Substrate shell #</label>
-                                                    <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
+                                                    <input type="number" class="form-control" ng-model="baseline.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
                                                 </div>
                                                 <div class="form-group col-sm-8">
                                                     <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="date" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-dd"
+                                                    <input type="date" class="form-control" ng-model="baseline.setDate" placeholder="yyyy-MM-dd"
                                                     name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                              <div class="form-group" ng-class="{'col-sm-6': substrate.source === 'Other',
-                                              'col-sm-12': !substrate.source || substrate.source !== 'Other'}">
+                                              <div class="form-group" ng-class="{'col-sm-6': baseline.source === 'Other',
+                                              'col-sm-12': !baseline.source || baseline.source !== 'Other'}">
                                                   <label for="source" class="control-label required">Source *</label>
                                                   <select class="form-control" ng-options="source.value as source.label for source in sources"
-                                                  ng-model="substrate.source" name="source" id="source" required></select>
+                                                  ng-model="baseline.source" name="source" id="source" required></select>
                                               </div>
-                                              <div class="form-group col-sm-6" ng-show="substrate.source === 'Other'">
+                                              <div class="form-group col-sm-6" ng-show="baseline.source === 'Other'">
                                                 <label for="source-other" class="control-label required">Other source *</label>
-                                                <input type="text" class="form-control" ng-model="substrate.otherSource" name="source-other" id="source-other"
-                                                ng-required="substrate.source === 'Other'"/>
+                                                <input type="text" class="form-control" ng-model="baseline.otherSource" name="source-other" id="source-other"
+                                                ng-required="baseline.source === 'Other'"/>
                                               </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="totalAtBaseline" class="control-label">Total number of live oysters on shell at baseline</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersAtBaseline"
+                                                <input type="number" class="form-control" ng-model="baseline.totalNumberOfLiveOystersAtBaseline"
                                                 name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}"/>
                                             </div>
                                         </div>

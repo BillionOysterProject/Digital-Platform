@@ -18,10 +18,11 @@
                             </select>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="station" required>Select a location *</label>
+                            <label for="station" required>Select an ORS *</label>
                             <select class="form-control" ng-model="vm.stationId" name="station" id="station"
                               ng-options="station._id as station.name for station in vm.stations" required>
                             </select>
+                            <a ng-click="vm.openFormRestorationStation()" id="register-first-ORS">Register an ORS</a>
                         </div>
                     </div>
                 </div>
@@ -167,3 +168,9 @@
 </form>
 
 <delete-expedition-modal callback-function="vm.confirmDeleteExpedition"></delete-expedition-modal>
+
+<!-- MODALS -->
+<form-restoration-station-modal station="vm.station" mapPoints="[]"
+save-function="vm.saveFormRestorationStation"
+cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
+<!--END MODALS-->

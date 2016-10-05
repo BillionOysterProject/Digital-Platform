@@ -9,8 +9,6 @@
         templateUrl: 'modules/restoration-stations/client/views/form-restoration-station.client.view.html',
         scope: {
           station: '=',
-          bodiesOfWater: '=',
-          boroughsCounties: '=',
           mapPoints: '=',
           saveFunction: '=',
           removeFunction: '=',

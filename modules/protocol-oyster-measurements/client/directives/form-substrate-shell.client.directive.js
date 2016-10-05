@@ -9,6 +9,7 @@
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-substrate-shell.client.view.html',
         scope: {
           substrate: '=',
+          baseline: '=',
           maxLiveOysters: '=',
           outerSubstrateUploader: '=',
           innerSubstrateUploader: '=',
@@ -48,7 +49,7 @@
           var validate = function() {
             $scope.error = [];
             var isValid = true;
-            
+
             return isValid;
           };
 
