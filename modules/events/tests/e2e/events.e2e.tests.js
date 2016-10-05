@@ -234,7 +234,7 @@ describe('Event E2E Tests', function () {
     } else if (values.maximumCapacity && openSpots <= 0 && (isAdmin || isTeamLead)) {
       expect(element(by.id('noOpenSpotsLeft')).getText()).toEqual('REGISTRATION IS CLOSED');
     } else if (isAdmin || isTeamLead) {
-      var daysRemaining = (values.deadlineToRegister) ? '4' : '6';
+      var daysRemaining = (values.deadlineToRegister) ? '5' : '7';
       expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register');
     }
 
@@ -255,7 +255,7 @@ describe('Event E2E Tests', function () {
         if (registeredCount > 1) {
           var newLeaderRegistrant = registrantsList.get(1);
           expect(newLeaderRegistrant.getText()).toEqual(newLeader.displayName + ' ' + organization.name + ' ' +
-            newLeader.email + ' ' + moment().format('MMMM D, YYYY'));
+            'Default ' + newLeader.email + ' ' + moment().format('MMMM D, YYYY'));
         }
       }
     }
