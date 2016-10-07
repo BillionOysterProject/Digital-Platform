@@ -203,8 +203,10 @@ describe('Expedition E2E Tests', function() {
         assertSiteConditionCompare(1, siteCondition3);
         assertSiteConditionCompare(2, siteCondition2);
 
-        element(by.model('vm.parameters.protocol1all')).click();
-        browser.sleep(100);
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+          element(by.model('vm.parameters.protocol1all')).click();
+          browser.sleep(100);
+        });
       });
 
       it('should allow a team member to filter parameters by protocol 2', function() {
@@ -216,8 +218,10 @@ describe('Expedition E2E Tests', function() {
         assertOysterMeasurementCompare(1, oysterMeasurement3);
         assertOysterMeasurementCompare(2, oysterMeasurement2);
 
-        element(by.model('vm.parameters.protocol2all')).click();
-        browser.sleep(100);
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+          element(by.model('vm.parameters.protocol2all')).click();
+          browser.sleep(100);
+        });
       });
 
       it('should allow a team member to filter parameters by protocol 3', function() {
@@ -227,8 +231,10 @@ describe('Expedition E2E Tests', function() {
         assertMobileTrapCompare(1, mobileTrap4);
         assertMobileTrapCompare(2, mobileTrap3);
 
-        element(by.model('vm.parameters.protocol3all')).click();
-        browser.sleep(100);
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+          element(by.model('vm.parameters.protocol3all')).click();
+          browser.sleep(100);
+        });
       });
 
       it('should allow a team member to filter parameters by protocol 4', function() {
@@ -238,8 +244,10 @@ describe('Expedition E2E Tests', function() {
         assertSettlementTileCompare(1, settlementTiles3);
         assertSettlementTileCompare(2, settlementTiles2);
 
-        element(by.model('vm.parameters.protocol4all')).click();
-        browser.sleep(100);
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+          element(by.model('vm.parameters.protocol4all')).click();
+          browser.sleep(100);
+        });
       });
 
       it('should allow a team member to filter parameters by protocol 5', function() {
@@ -249,8 +257,10 @@ describe('Expedition E2E Tests', function() {
         assertWaterQualityCompare(1, waterQuality4);
         assertWaterQualityCompare(2, waterQuality3);
 
-        element(by.model('vm.parameters.protocol5all')).click();
-        browser.sleep(100);
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+          element(by.model('vm.parameters.protocol5all')).click();
+          browser.sleep(100);
+        });
       });
     });
   });
@@ -298,7 +308,7 @@ describe('Expedition E2E Tests', function() {
       it('should show protocol 2', function() {
         element(by.partialLinkText('Oyster Measurements')).click();
 
-        assertOysterMeasurementsView(oysterMeasurement2, member1);
+        assertOysterMeasurementsView(oysterMeasurement2, station, member1);
       });
 
       it('should show protocol 3', function() {

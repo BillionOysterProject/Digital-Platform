@@ -22,7 +22,8 @@
         category: vm.filter.category,
         searchString: vm.filter.searchString,
         startDate: vm.filter.startDate,
-        endDate: vm.filter.endDate
+        endDate: vm.filter.endDate,
+        future: true
       }, function (data) {
         vm.events = data;
       });

@@ -142,10 +142,10 @@
 
 <!-- MODALS -->
 <form-substrate-shell ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
-substrate="substrate" max-live-oysters="liveShellCount" outer-substrate-uploader="outerUploaders[$index]"
-inner-substrate-uploader="innerUploaders[$index]" outer-substrate-url="outerSubstrateURL"
-inner-substrate-url="innerSubstrateURL" save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm"
-index="{{$index}}"></form-substrate-shell>
+substrate="substrate" baseline="station.baselinesArray[$index]" station-id="{{station._id}}" max-live-oysters="liveShellCount"
+outer-substrate-uploader="outerUploaders[$index]" inner-substrate-uploader="innerUploaders[$index]"
+outer-substrate-url="outerSubstrateURL" inner-substrate-url="innerSubstrateURL"
+save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>
 
 <div class="modal fade" id="modal-oyster-measurement-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-oyster-measurement-map" latitude="oysterMeasurement.latitude"
