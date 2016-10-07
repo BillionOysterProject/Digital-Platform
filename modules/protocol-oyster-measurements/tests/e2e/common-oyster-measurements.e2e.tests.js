@@ -5,6 +5,9 @@ var CommonExpedition = require('../../../expeditions/tests/e2e/common-expedition
   assertImage = CommonExpedition.assertImage,
   defaultMapCoordinates = CommonExpedition.defaultMapCoordinates,
   assertMapCoordinates = CommonExpedition.assertMapCoordinates,
+  CommonUsers = require('../../../users/tests/e2e/common-users.e2e.tests'),
+  station = CommonUsers.station,
+  station2 = CommonUsers.station2,
   moment = require('moment'),
   EC = protractor.ExpectedConditions;
 
@@ -19,9 +22,6 @@ var oysterMeasurement1 = {
   },
   measuringOysterGrowth: {
     substrateShells: [{
-      source: 1,
-      sourceText: 'Muscongus Bay, Maine',
-      totalNumberOfLiveOystersAtBaseline: 10,
       totalNumberOfLiveOystersOnShell: 0,
       totalMassOfScrubbedSubstrateShellOystersTagG: 0,
       notes: 'Test notes 1',
@@ -29,82 +29,54 @@ var oysterMeasurement1 = {
       measurements: [{
       }]
     }, {
-      source: 2,
-      sourceText: 'Fishers Island, New York',
-      totalNumberOfLiveOystersAtBaseline: 11,
       totalNumberOfLiveOystersOnShell: 1,
       totalMassOfScrubbedSubstrateShellOystersTagG: 10,
       notes: 'Test notes 2',
       photoPresent: true,
       measurements: [11.1]
     }, {
-      source: 3,
-      sourceText: 'Soundview, New York',
-      totalNumberOfLiveOystersAtBaseline: 12,
       totalNumberOfLiveOystersOnShell: 2,
       totalMassOfScrubbedSubstrateShellOystersTagG: 20,
       notes: 'Test notes 3',
       photoPresent: false,
       measurements: [23.1, 21.0]
     }, {
-      source: 4,
-      sourceText: 'Bronx River, New York',
-      totalNumberOfLiveOystersAtBaseline: 13,
       totalNumberOfLiveOystersOnShell: 3,
       totalMassOfScrubbedSubstrateShellOystersTagG: 30,
       notes: 'Test notes 4',
       photoPresent: true,
       measurements: [32.1, 33.1, 38.2]
     }, {
-      source: 5,
-      sourceText: 'Tappan Zee, New York',
-      totalNumberOfLiveOystersAtBaseline: 14,
       totalNumberOfLiveOystersOnShell: 4,
       totalMassOfScrubbedSubstrateShellOystersTagG: 40,
       notes: 'Test notes 5',
       photoPresent: true,
       measurements: [43.1, 40.1, 47.3, 44.2]
     }, {
-      source: 6,
-      sourceText: 'Hudson River, New York',
-      totalNumberOfLiveOystersAtBaseline: 15,
       totalNumberOfLiveOystersOnShell: 5,
       totalMassOfScrubbedSubstrateShellOystersTagG: 50,
       notes: 'Test notes 6',
       photoPresent: false,
       measurements: [53.2, 52.1, 55.2, 58.4, 57.2]
     }, {
-      source: 7,
-      sourceText: 'Other',
-      otherSource: 'Other Test',
-      totalNumberOfLiveOystersAtBaseline: 16,
       totalNumberOfLiveOystersOnShell: 4,
       totalMassOfScrubbedSubstrateShellOystersTagG: 40,
       notes: 'Test notes 7',
       photoPresent: true,
       measurements: [65.2, 66.3, 62.1, 67.4]
     }, {
-      source: 1,
-      sourceText: 'Muscongus Bay, Maine',
-      totalNumberOfLiveOystersAtBaseline: 17,
       totalNumberOfLiveOystersOnShell: 3,
       totalMassOfScrubbedSubstrateShellOystersTagG: 30,
       notes: 'Test notes 8',
       photoPresent: true,
       measurements: [77.3, 74.2, 72.1]
     }, {
-      source: 2,
-      sourceText: 'Fishers Island, New York',
-      totalNumberOfLiveOystersAtBaseline: 18,
       totalNumberOfLiveOystersOnShell: 2,
       totalMassOfScrubbedSubstrateShellOystersTagG: 20,
       notes: 'Test notes 9',
       photoPresent: false,
       measurements: [88.3, 84.3]
     }, {
-      source: 3,
-      sourceText: 'Soundview, New York',
-      totalNumberOfLiveOystersAtBaseline: 19,
       totalNumberOfLiveOystersOnShell: 1,
       totalMassOfScrubbedSubstrateShellOystersTagG: 10,
       notes: 'Test notes 10',
@@ -132,7 +104,7 @@ var oysterMeasurement2 = {
       source: 1,
       sourceText: 'Muscongus Bay, Maine',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 10,
+      totalNumberOfLiveOystersAtBaseline: 40,
       totalNumberOfLiveOystersOnShell: 10,
       totalMassOfScrubbedSubstrateShellOystersTagG: '100.00',
       notes: 'Test notes 1a',
@@ -145,7 +117,7 @@ var oysterMeasurement2 = {
       source: 2,
       sourceText: 'Fishers Island, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 11,
+      totalNumberOfLiveOystersAtBaseline: 35,
       totalNumberOfLiveOystersOnShell: 11,
       totalMassOfScrubbedSubstrateShellOystersTagG: '110.00',
       notes: 'Test notes 2a',
@@ -158,7 +130,7 @@ var oysterMeasurement2 = {
       source: 3,
       sourceText: 'Soundview, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 12,
+      totalNumberOfLiveOystersAtBaseline: 30,
       totalNumberOfLiveOystersOnShell: 12,
       totalMassOfScrubbedSubstrateShellOystersTagG: '120.00',
       notes: 'Test notes 3a',
@@ -171,7 +143,7 @@ var oysterMeasurement2 = {
       source: 4,
       sourceText: 'Bronx River, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 13,
+      totalNumberOfLiveOystersAtBaseline: 25,
       totalNumberOfLiveOystersOnShell: 13,
       totalMassOfScrubbedSubstrateShellOystersTagG: '130.00',
       notes: 'Test notes 4a',
@@ -185,7 +157,7 @@ var oysterMeasurement2 = {
       source: 5,
       sourceText: 'Tappan Zee, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 14,
+      totalNumberOfLiveOystersAtBaseline: 20,
       totalNumberOfLiveOystersOnShell: 14,
       totalMassOfScrubbedSubstrateShellOystersTagG: '140.00',
       notes: 'Test notes 5a',
@@ -214,12 +186,12 @@ var oysterMeasurement2 = {
       sourceText: 'Other',
       otherSource: 'Other Test',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 16,
-      totalNumberOfLiveOystersOnShell: 16,
-      totalMassOfScrubbedSubstrateShellOystersTagG: '160.00',
+      totalNumberOfLiveOystersAtBaseline: 10,
+      totalNumberOfLiveOystersOnShell: 6,
+      totalMassOfScrubbedSubstrateShellOystersTagG: '60.00',
       notes: 'Test notes 7a',
       photoPresent: true,
-      averageSizeOfLiveOysters: '64.09',
+      averageSizeOfLiveOysters: '63.65',
       minimumSizeOfLiveOysters: '60.40',
       maximumSizeOfLiveOysters: '67.40',
       measurements: [65.2,66.3,62.1,67.4,62.1,66.4,65.3,60.4,62.4,63.3,
@@ -228,12 +200,12 @@ var oysterMeasurement2 = {
       source: 1,
       sourceText: 'Muscongus Bay, Maine',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 17,
-      totalNumberOfLiveOystersOnShell: 17,
-      totalMassOfScrubbedSubstrateShellOystersTagG: '170.00',
+      totalNumberOfLiveOystersAtBaseline: 5,
+      totalNumberOfLiveOystersOnShell: 3,
+      totalMassOfScrubbedSubstrateShellOystersTagG: '30.00',
       notes: 'Test notes 8a',
       photoPresent: true,
-      averageSizeOfLiveOysters: '73.74',
+      averageSizeOfLiveOysters: '73.77',
       minimumSizeOfLiveOysters: '70.80',
       maximumSizeOfLiveOysters: '77.40',
       measurements: [77.3,74.2,72.1,77.4,73.1,72.2,73.4,76.4,73.5,70.8,
@@ -242,12 +214,12 @@ var oysterMeasurement2 = {
       source: 2,
       sourceText: 'Fishers Island, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 18,
-      totalNumberOfLiveOystersOnShell: 18,
-      totalMassOfScrubbedSubstrateShellOystersTagG: '180.00',
+      totalNumberOfLiveOystersAtBaseline: 10,
+      totalNumberOfLiveOystersOnShell: 8,
+      totalMassOfScrubbedSubstrateShellOystersTagG: '80.00',
       notes: 'Test notes 9a',
       photoPresent: true,
-      averageSizeOfLiveOysters: '83.71',
+      averageSizeOfLiveOysters: '83.46',
       minimumSizeOfLiveOysters: '80.10',
       maximumSizeOfLiveOysters: '88.30',
       measurements: [88.3,84.3,80.1,83.2,80.9,84.3,81.1,85.5,86.3,82.8,83.3,
@@ -256,12 +228,12 @@ var oysterMeasurement2 = {
       source: 3,
       sourceText: 'Soundview, New York',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 19,
-      totalNumberOfLiveOystersOnShell: 19,
-      totalMassOfScrubbedSubstrateShellOystersTagG: '190.00',
+      totalNumberOfLiveOystersAtBaseline: 15,
+      totalNumberOfLiveOystersOnShell: 9,
+      totalMassOfScrubbedSubstrateShellOystersTagG: '90.00',
       notes: 'Test notes 10a',
       photoPresent: true,
-      averageSizeOfLiveOysters: '93.31',
+      averageSizeOfLiveOysters: '93.34',
       minimumSizeOfLiveOysters: '90.00',
       maximumSizeOfLiveOysters: '96.10',
       measurements: [93.2,90.9,93.3,94.4,91.8,94.7,95.7,91.1,93.5,94.5,95.7,
@@ -288,7 +260,7 @@ var oysterMeasurement3 = {
       source: 1,
       sourceText: 'Muscongus Bay, Maine',
       setDate: '2016-08-20T18:30:00.000Z',
-      totalNumberOfLiveOystersAtBaseline: 10,
+      totalNumberOfLiveOystersAtBaseline: 40,
       totalNumberOfLiveOystersOnShell: 5,
       totalMassOfScrubbedSubstrateShellOystersTagG: '50.00',
       notes: 'Test notes 1b',
@@ -328,6 +300,7 @@ var assertSubstrateMeasurements = function(index) {
   browser.wait(EC.visibilityOf(modal), 10000);
 
   var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+  var baseline = station.baselines['substrateShell'+(index+1)];
 
   // Add an image to the substrate shell
   browser.sleep(100);
@@ -337,9 +310,10 @@ var assertSubstrateMeasurements = function(index) {
 
   // substrate meta
   modal.element(by.id('substrate-meta')).click();
-  expect(modal.element(by.model('substrate.source')).$('option:checked').getText()).toEqual(measurementsDetails.sourceText);
-  if (measurementsDetails.otherSource) expect(modal.element(by.model('substrate.otherSource')).getAttribute('value')).toEqual(measurementsDetails.otherSource);
-  expect(modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(measurementsDetails.totalNumberOfLiveOystersAtBaseline.toString());
+  expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
+  if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
+  if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
+  if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
 
   // substrate measurements
   modal.element(by.id('substrate-measurements')).click();
@@ -385,6 +359,7 @@ var fillOutOysterMeasurements = function(index) {
   browser.wait(EC.visibilityOf(modal), 10000);
 
   var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+  var baseline = station.baselines['substrateShell'+(index+1)];
 
   // Add an image to the substrate shell
   modal.element(by.id('substrate-photos')).click();
@@ -396,9 +371,10 @@ var fillOutOysterMeasurements = function(index) {
   //modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
   // substrate meta
   modal.element(by.id('substrate-meta')).click();
-  expect(modal.element(by.model('substrate.source')).$('option:checked').getText()).toEqual(measurementsDetails.sourceText);
-  if (measurementsDetails.otherSource) expect(modal.element(by.model('substrate.otherSource')).getAttribute('value')).toEqual(measurementsDetails.otherSource);
-  expect(modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(measurementsDetails.totalNumberOfLiveOystersAtBaseline.toString());
+  expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
+  if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
+  if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
+  if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
 
   // substrate measurements
   modal.element(by.id('substrate-measurements')).click();
@@ -440,8 +416,9 @@ var fillOutAllOysterMeasurements = function() {
   fillOutOysterMeasurements(9);
 };
 
-var assertSubstrateMeasurementView = function(index, values) {
+var assertSubstrateMeasurementView = function(index, values, stationValues) {
   var substrate = values.measuringOysterGrowth.substrateShells[index];
+  var baseline = stationValues.baselines['substrateShell'+(index+1)];
 
   expect(element(by.id('substrateShellNumber'+index)).getText())
     .toEqual('Substrate Shell ' + (index+1));
@@ -461,28 +438,28 @@ var assertSubstrateMeasurementView = function(index, values) {
         }
       });
   }
-  if (substrate.sourceText === 'Other') {
+  if (baseline.sourceText === 'Other') {
     expect(element(by.id('substrateMetadata'+index)).getText())
-      .toEqual('Set at ' + getDate(substrate.setDate) + '\n' +
-      'Source: ' + substrate.otherSource + ' Notes: ' + substrate.notes);
+      .toEqual('Set at ' + getDate(baseline.setDate) + '\n' +
+      'Source: ' + baseline.otherSource + ' Notes: ' + substrate.notes);
   } else {
     expect(element(by.id('substrateMetadata'+index)).getText())
-    .toEqual('Set at ' + getDate(substrate.setDate) + '\n' +
-    'Source: ' + substrate.sourceText + ' Notes: ' + substrate.notes);
+    .toEqual('Set at ' + getDate(baseline.setDate) + '\n' +
+    'Source: ' + baseline.sourceText + ' Notes: ' + substrate.notes);
   }
-  if (substrate.totalNumberOfLiveOystersAtBaseline) {
-    if (substrate.totalNumberOfLiveOystersOnShell < substrate.totalNumberOfLiveOystersAtBaseline) {
+  if (baseline.totalNumberOfLiveOystersAtBaseline) {
+    if (substrate.totalNumberOfLiveOystersOnShell < baseline.totalNumberOfLiveOystersAtBaseline) {
       expect(element(by.id('oystersAtBaselineCompare'+index)).getText())
         .toEqual(substrate.totalNumberOfLiveOystersOnShell + ' live oysters on shell\n' +
-        'down from ' + substrate.totalNumberOfLiveOystersAtBaseline + ' at baseline');
-    } else if (substrate.totalNumberOfLiveOystersOnShell > substrate.totalNumberOfLiveOystersAtBaseline) {
+        'down from ' + baseline.totalNumberOfLiveOystersAtBaseline + ' at baseline');
+    } else if (substrate.totalNumberOfLiveOystersOnShell > baseline.totalNumberOfLiveOystersAtBaseline) {
       expect(element(by.id('oystersAtBaselineCompare'+index)).getText())
         .toEqual(substrate.totalNumberOfLiveOystersOnShell + ' live oysters on shell\n' +
-        'up from ' + substrate.totalNumberOfLiveOystersAtBaseline + ' at baseline');
+        'up from ' + baseline.totalNumberOfLiveOystersAtBaseline + ' at baseline');
     } else {
       expect(element(by.id('oystersAtBaselineCompare'+index)).getText())
         .toEqual(substrate.totalNumberOfLiveOystersOnShell + ' live oysters on shell\n' +
-        'same as ' + substrate.totalNumberOfLiveOystersAtBaseline + ' at baseline');
+        'same as ' + baseline.totalNumberOfLiveOystersAtBaseline + ' at baseline');
     }
   } else {
     expect(element(by.id('totalLiveOystersNoBaseline'+index)).getText())
@@ -503,7 +480,7 @@ var assertSubstrateMeasurementView = function(index, values) {
     substrate.maximumSizeOfLiveOysters + ' max size');
 };
 
-var assertOysterMeasurementsView = function(values, teamMember) {
+var assertOysterMeasurementsView = function(values, stationValues, teamMember) {
   //Meta data
   var members = element.all(by.repeater('member in oysterMeasurement.teamMembers'));
   expect(members.count()).toEqual(1);
@@ -549,16 +526,16 @@ var assertOysterMeasurementsView = function(values, teamMember) {
     expect(element(by.binding('oysterMeasurement.maximumSizeOfAllLiveOysters')).getText())
       .toEqual(values.maximumSizeOfAllLiveOysters);
   }
-  assertSubstrateMeasurementView(0, values);
-  assertSubstrateMeasurementView(1, values);
-  assertSubstrateMeasurementView(2, values);
-  assertSubstrateMeasurementView(3, values);
-  assertSubstrateMeasurementView(4, values);
-  assertSubstrateMeasurementView(5, values);
-  assertSubstrateMeasurementView(6, values);
-  assertSubstrateMeasurementView(7, values);
-  assertSubstrateMeasurementView(8, values);
-  assertSubstrateMeasurementView(9, values);
+  assertSubstrateMeasurementView(0, values, stationValues);
+  assertSubstrateMeasurementView(1, values, stationValues);
+  assertSubstrateMeasurementView(2, values, stationValues);
+  assertSubstrateMeasurementView(3, values, stationValues);
+  assertSubstrateMeasurementView(4, values, stationValues);
+  assertSubstrateMeasurementView(5, values, stationValues);
+  assertSubstrateMeasurementView(6, values, stationValues);
+  assertSubstrateMeasurementView(7, values, stationValues);
+  assertSubstrateMeasurementView(8, values, stationValues);
+  assertSubstrateMeasurementView(9, values, stationValues);
 };
 
 var assertOysterMeasurementCompare = function(index, values) {

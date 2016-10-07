@@ -12,6 +12,7 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  moment = require('moment'),
   _ = require('lodash');
 
 // var getTeam = function(teamId, successCallback, errorCallback) {
@@ -39,6 +40,12 @@ exports.create = function (req, res) {
   var pattern = /^data:image\/jpeg;base64,/i;
   if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
     station.photo.path = '';
+  }
+
+  station.baseline = {};
+  //set default baseline information
+  for (var i = 1; i <= 10; i++) {
+    station.baseline['substrateShell'+i] = [];
   }
 
   station.save(function (err) {
@@ -105,6 +112,43 @@ exports.update = function (req, res) {
     //     message: errorMessage
     //   });
     // });
+  }
+};
+
+/**
+ * Add a baseline to the history
+ */
+exports.updateBaselines = function (req, res) {
+  var station = req.station;
+
+  if (station) {
+    var index = req.body.substrateShellNumber;
+    if (req.body.substrateShellNumber && station.baselines['substrateShell'+index]) {
+      var baseline = req.body;
+      baseline.entered = new Date();
+      baseline.setDate = moment(req.body.setDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
+      station.baselines['substrateShell'+index].push(baseline);
+
+      station.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var baselines = station.baselines['substrateShell'+index];
+          var latestBaseline = baselines[baselines.length-1];
+          res.json(latestBaseline);
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Substrate Shell #' + index + ' does not exist'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
+    });
   }
 };
 

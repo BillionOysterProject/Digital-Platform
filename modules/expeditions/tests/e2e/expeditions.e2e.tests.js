@@ -308,7 +308,7 @@ describe('Expedition E2E Tests', function() {
       it('should show protocol 2', function() {
         element(by.partialLinkText('Oyster Measurements')).click();
 
-        assertOysterMeasurementsView(oysterMeasurement2, member1);
+        assertOysterMeasurementsView(oysterMeasurement2, station, member1);
       });
 
       it('should show protocol 3', function() {

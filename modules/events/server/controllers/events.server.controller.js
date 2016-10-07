@@ -574,6 +574,16 @@ exports.list = function(req, res) {
     and.push({ 'event.category.type': req.query.category });
   }
 
+  if (req.query.future) {
+    var today1 = moment().startOf('day').toDate();
+    and.push({ 'dates.startDateTime': { '$gte': today1 } });
+  }
+
+  if (req.query.past) {
+    var today2 = moment().startOf('day').toDate();
+    and.push({ 'dates.startDateTime': { '$lt': today2 } });
+  }
+
   var or = [];
   var searchRe;
   if (req.query.searchString) {

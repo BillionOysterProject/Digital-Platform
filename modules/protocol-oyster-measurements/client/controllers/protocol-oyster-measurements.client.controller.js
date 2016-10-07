@@ -13,10 +13,8 @@
 
     // Check to see if substrate is complete
     $scope.checkDone = function(substrate) {
-      if ((substrate.totalNumberOfLiveOystersOnShell === 0 ||
-        (substrate.totalNumberOfLiveOystersOnShell > 0 && substrate.minimumSizeOfLiveOysters > 0 &&
-      substrate.maximumSizeOfLiveOysters > 0 && substrate.averageSizeOfLiveOysters > 0)) &&
-      substrate.source && substrate.setDate) {
+      if (substrate.totalNumberOfLiveOystersOnShell >= 0 && substrate.minimumSizeOfLiveOysters >= 0 &&
+      substrate.maximumSizeOfLiveOysters >= 0 && substrate.averageSizeOfLiveOysters >= 0) {
         return true;
       } else {
         return false;
@@ -46,7 +44,6 @@
       for (var i = 1; i <= totalToAdd; i++) {
         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
           substrateShellNumber: i,
-          totalNumberOfLiveOystersAtBaseline: 0,
           totalNumberOfLiveOystersOnShell: 0,
           totalMassOfScrubbedSubstrateShellOystersTagG: 0,
           measurements: angular.copy(measurements),
@@ -71,7 +68,7 @@
           $scope.oysterMeasurement.averageSizeOfAllLiveOysters && data.averageSizeOfAllLiveOysters &&
           $scope.oysterMeasurement.minimumSizeOfAllLiveOysters && data.minimumSizeOfAllLiveOysters &&
           $scope.oysterMeasurement.maximumSizeOfAllLiveOysters && data.maximumSizeOfAllLiveOysters) {
-            var mortality = ((($scope.oysterMeasurement.totalNumberOfAllLiveOysters - data.totalNumberOfAllLiveOysters) / data.totalNumberOfAllLiveOysters)*-100).toFixed(2);
+            var mortality = (((data.totalNumberOfAllLiveOysters - $scope.oysterMeasurement.totalNumberOfAllLiveOysters) / data.totalNumberOfAllLiveOysters)*100).toFixed(2);
             var growth = ((($scope.oysterMeasurement.averageSizeOfAllLiveOysters - data.averageSizeOfAllLiveOysters) / data.averageSizeOfAllLiveOysters)*100).toFixed(2);
             var min = ((($scope.oysterMeasurement.minimumSizeOfAllLiveOysters - data.minimumSizeOfAllLiveOysters) / data.minimumSizeOfAllLiveOysters)*100).toFixed(2);
             var max = ((($scope.oysterMeasurement.maximumSizeOfAllLiveOysters - data.maximumSizeOfAllLiveOysters) / data.maximumSizeOfAllLiveOysters)*100).toFixed(2);
@@ -84,43 +81,43 @@
               total: data.totalNumberOfAllLiveOysters
             };
           }
-          if (data && data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
-            for (var i = 0; i < data.measuringOysterGrowth.substrateShells.length; i++) {
-              var prevShell = data.measuringOysterGrowth.substrateShells[i];
-              if (prevShell && prevShell.setDate && prevShell.source && prevShell.totalNumberOfLiveOystersAtBaseline) {
-                var shell = $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i];
-                if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
-                  $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
-                    substrateShellNumber: i,
-                    setDate: moment(prevShell.setDate).startOf('day').toDate(),
-                    source: prevShell.source,
-                    sourceOther: prevShell.sourceOther,
-                    totalNumberOfLiveOystersAtBaseline: prevShell.totalNumberOfLiveOystersAtBaseline,
-                    totalNumberOfLiveOystersOnShell: 0,
-                    totalMassOfScrubbedSubstrateShellOystersTagG: 0,
-                    measurements: [],
-                    done: false
-                  });
-                } else if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
-                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate && prevShell.setDate) {
-                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-                      moment(prevShell.setDate).startOf('day').toDate();
-                  }
-                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source && prevShell.source) {
-                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source = prevShell.source;
-                  }
-                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource && prevShell.otherSource) {
-                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource = prevShell.otherSource;
-                  }
-                  if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline &&
-                    prevShell.totalNumberOfLiveOystersAtBaseline) {
-                    $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline =
-                      prevShell.totalNumberOfLiveOystersAtBaseline;
-                  }
-                }
-              }
-            }
-          }
+          // if (data && data.measuringOysterGrowth && data.measuringOysterGrowth.substrateShells) {
+          //   for (var i = 0; i < data.measuringOysterGrowth.substrateShells.length; i++) {
+          //     var prevShell = data.measuringOysterGrowth.substrateShells[i];
+          //     if (prevShell && prevShell.setDate && prevShell.source && prevShell.totalNumberOfLiveOystersAtBaseline) {
+          //       var shell = $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i];
+          //       if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i]) {
+          //         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.push({
+          //           substrateShellNumber: i,
+          //           setDate: moment(prevShell.setDate).startOf('day').toDate(),
+          //           source: prevShell.source,
+          //           sourceOther: prevShell.sourceOther,
+          //           totalNumberOfLiveOystersAtBaseline: prevShell.totalNumberOfLiveOystersAtBaseline,
+          //           totalNumberOfLiveOystersOnShell: 0,
+          //           totalMassOfScrubbedSubstrateShellOystersTagG: 0,
+          //           measurements: [],
+          //           done: false
+          //         });
+          //       } else if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source) {
+          //         if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate && prevShell.setDate) {
+          //           $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
+          //             moment(prevShell.setDate).startOf('day').toDate();
+          //         }
+          //         if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source && prevShell.source) {
+          //           $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].source = prevShell.source;
+          //         }
+          //         if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource && prevShell.otherSource) {
+          //           $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].otherSource = prevShell.otherSource;
+          //         }
+          //         if (!$scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline &&
+          //           prevShell.totalNumberOfLiveOystersAtBaseline) {
+          //           $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[i].totalNumberOfLiveOystersAtBaseline =
+          //             prevShell.totalNumberOfLiveOystersAtBaseline;
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
         })
         .error(function (data, status, headers, config) {
           console.log('Could not find previous');
@@ -135,23 +132,10 @@
       $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
 
     if (!$scope.oysterMeasurement.measuringOysterGrowth ||
-      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells) {
-      setupSubstrateShells(findPreviousValues());
-    } else if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
-      for (var j = 0; j < $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
-        if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate) {
-          $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate =
-            moment($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[j].setDate).startOf('day').toDate();
-        }
-      }
+      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
+      $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
       setupSubstrateShells(findPreviousValues());
     } else {
-      for (var k = 0; k < $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length; k++) {
-        if ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate) {
-          $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate =
-            moment($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[k].setDate).startOf('day').toDate();
-        }
-      }
       findPreviousValues();
     }
 
@@ -160,6 +144,7 @@
 
     $scope.openSubstrateForm = function(index) {
       $scope.substrate = angular.copy($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index]);
+      $scope.baseline = angular.copy($scope.station.baselinesArray[index]);
 
       $scope.outerSubstrateURL = ($scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto) ?
         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index].outerSidePhoto.path : '';
@@ -183,6 +168,7 @@
 
           $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[substrate.substrateShellNumber-1] = angular.copy(substrate);
           $scope.substrate = {};
+          $scope.baseline = {};
           $scope.outerSubstrateURL = '';
           $scope.innerSubstrateURL = '';
 
@@ -257,8 +243,10 @@
       angular.element('#modal-substrateshell'+index).modal('hide');
       $timeout(function() {
         $scope.oysterMeasurement.measuringOysterGrowth.substrateShells[index] = angular.copy($scope.substrate);
+        $scope.station.baselinesArray[index] = angular.copy($scope.baseline);
 
         $scope.substrate = {};
+        $scope.baseline = {};
         $scope.outerUploaders[index].clearQueue();
         $scope.innerUploaders[index].clearQueue();
         $scope.outerSubstrateURL = '';

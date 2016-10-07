@@ -86,27 +86,27 @@
     <div class="row">
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">
-          Set at <b>{{vm.getDate(substrate.setDate)}}</b><br/>
-          Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
-          <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
+          Set at <b>{{vm.getDate(station.baselinesArray[$index].setDate)}}</b><br/>
+          Source: <b ng-show="station.baselinesArray[$index].source !== 'Other'">{{station.baselinesArray[$index].source}}</b>
+          <b ng-show="station.baselinesArray[$index].source === 'Other'">{{station.baselinesArray[$index].otherSource}}</b>
           <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>
         </p>
-        <h3 id="oystersAtBaselineCompare{{$index}}" ng-show="substrate.totalNumberOfLiveOystersAtBaseline"
-          ng-class="{red: substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell,
-          green: substrate.totalNumberOfLiveOystersOnShell >= substrate.totalNumberOfLiveOystersAtBaseline}">
-          <i class="fa fa-arrow-down" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell"></i>
-          <i class="fa fa-arrow-up" ng-show="substrate.totalNumberOfLiveOystersOnShell > substrate.totalNumberOfLiveOystersAtBaseline"></i>
+        <h3 id="oystersAtBaselineCompare{{$index}}" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline"
+          ng-class="{red: station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell,
+          green: substrate.totalNumberOfLiveOystersOnShell >= station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}">
+          <i class="fa fa-arrow-down" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell"></i>
+          <i class="fa fa-arrow-up" ng-show="substrate.totalNumberOfLiveOystersOnShell > station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline"></i>
           {{substrate.totalNumberOfLiveOystersOnShell}}
           <small>live oysters on shell<br/>
-            <span class="red" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell">
-              down from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
-            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell > substrate.totalNumberOfLiveOystersAtBaseline">
-              up from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
-            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell === substrate.totalNumberOfLiveOystersAtBaseline">
-              same as <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="red" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell">
+              down from <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell > station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline">
+              up from <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell === station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline">
+              same as <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
           </small>
         </h3>
-        <h3 id="totalLiveOystersNoBaseline{{$index}}" ng-hide="substrate.totalNumberOfLiveOystersAtBaseline" class="green">
+        <h3 id="totalLiveOystersNoBaseline{{$index}}" ng-hide="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline" class="green">
           {{substrate.totalNumberOfLiveOystersOnShell}}
           <small>live oysters on shell<br/>
             total number of live oysters at baseline not provided
