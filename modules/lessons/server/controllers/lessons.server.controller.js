@@ -100,6 +100,11 @@ exports.create = function(req, res) {
     lesson.materialsResources.stateTestQuestions = [];
     lesson.status = 'pending';
 
+    var pattern = /^data:image\/[a-z]*;base64,/i;
+    if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
+      lesson.featuredImage.path = '';
+    }
+
     lesson.save(function(err) {
       if (err) {
         return res.status(400).send({
@@ -215,6 +220,11 @@ exports.incrementalSave = function(req, res) {
     lesson.status = 'draft';
   }
 
+  var pattern = /^data:image\/[a-z]*;base64,/i;
+  if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
+    lesson.featuredImage.path = '';
+  }
+
   lesson.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -275,6 +285,11 @@ exports.update = function(req, res) {
         }
       }
       lesson.materialsResources.stateTestQuestions = existingQuestions;
+
+      var pattern = /^data:image\/[a-z]*;base64,/i;
+      if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
+        lesson.featuredImage.path = '';
+      }
 
       if (!lesson.updated) lesson.updated = [];
       lesson.updated.push(Date.now());

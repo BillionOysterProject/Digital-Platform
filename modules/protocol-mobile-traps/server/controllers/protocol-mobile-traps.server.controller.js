@@ -114,7 +114,7 @@ exports.incrementalSave = function (req, res) {
     mobileTrap.scribeMember = req.user;
 
     // remove base64 text
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms.length > 0) {
       for (var j = 0; j < mobileTrap.mobileOrganisms.length; j++) {
         if (mobileTrap.mobileOrganisms[j].sketchPhoto &&
@@ -166,7 +166,7 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, validate
       mobileTrap.submitted = new Date();
 
       // remove base64 text
-      var pattern = /^data:image\/jpeg;base64,/i;
+      var pattern = /^data:image\/[a-z]*;base64,/i;
       if (mobileTrap.mobileOrganisms && mobileTrap.mobileOrganisms.length > 0) {
         for (var j = 0; j < mobileTrap.mobileOrganisms.length; j++) {
           if (mobileTrap.mobileOrganisms[j].sketchPhoto &&

@@ -204,11 +204,10 @@ var assertSettlementTileView = function(index, tile) {
       }
     });
   };
-
   for (var i = 1; i <= tile.organisms.length; i++) {
     var expectedString = '' + i + ' ' + tile.organismsText[i-1];
     if (tile.organismsText[i-1] === 'Other (mark in notes)') {
-      expectedString = '' + i;
+      expectedString = '' + i + '\n' + tile.notes;
       expect(element(by.id('settlementTile'+index+'Grid'+i)).getText())
         .toEqual(expectedString);
     } else {

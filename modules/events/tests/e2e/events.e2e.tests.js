@@ -42,8 +42,8 @@ describe('Event E2E Tests', function () {
     title: 'Initial Event',
     dates: [{
       date: date1Field,
-      startTime: '13:00',
-      endTime: '17:00',
+      startTime: '01:00PM',
+      endTime: '05:00PM',
       startDateTime: date1JSON+'T13:00:00.000Z',
       endDateTime: date1JSON+'T17:00:00.000Z',
       singleDateString: date1StringSingle,
@@ -62,8 +62,8 @@ describe('Event E2E Tests', function () {
     title: 'Updated Event',
     dates: [{
       date: date1Field,
-      startTime: '13:00',
-      endTime: '17:00',
+      startTime: '01:00PM',
+      endTime: '05:00PM',
       startDateTime: date1JSON+'T13:00:00.000Z',
       endDateTime: date1JSON+'T17:00:00.000Z',
       singleDateString: date1StringSingle,
@@ -71,8 +71,8 @@ describe('Event E2E Tests', function () {
       timeRangeString: '1:00pm-5:00pm'
     }, {
       date: date2Field,
-      startTime: '14:00',
-      endTime: '16:00',
+      startTime: '02:00PM',
+      endTime: '04:00PM',
       startDateTime: date2JSON+'T14:00:00.000Z',
       endDateTime: date2JSON+'T16:00:00.000Z',
       singleDateString: date2StringSingle,
@@ -234,7 +234,7 @@ describe('Event E2E Tests', function () {
     } else if (values.maximumCapacity && openSpots <= 0 && (isAdmin || isTeamLead)) {
       expect(element(by.id('noOpenSpotsLeft')).getText()).toEqual('REGISTRATION IS CLOSED');
     } else if (isAdmin || isTeamLead) {
-      var daysRemaining = (values.deadlineToRegister) ? '4' : '6';
+      var daysRemaining = (values.deadlineToRegister) ? '5' : '7';
       expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register');
     }
 
@@ -255,7 +255,7 @@ describe('Event E2E Tests', function () {
         if (registeredCount > 1) {
           var newLeaderRegistrant = registrantsList.get(1);
           expect(newLeaderRegistrant.getText()).toEqual(newLeader.displayName + ' ' + organization.name + ' ' +
-            newLeader.email + ' ' + moment().format('MMMM D, YYYY'));
+            'Default ' + newLeader.email + ' ' + moment().format('MMMM D, YYYY'));
         }
       }
     }

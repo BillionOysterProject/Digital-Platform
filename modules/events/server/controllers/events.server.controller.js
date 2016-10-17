@@ -135,7 +135,7 @@ exports.create = function(req, res) {
     calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
     calendarEvent.user = req.user;
 
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (pattern.test(calendarEvent.featuredImage.path)) {
       calendarEvent.featuredImage.path = '';
     }
@@ -251,7 +251,7 @@ exports.update = function(req, res) {
       }
       calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
 
-      var pattern = /^data:image\/jpeg;base64,/i;
+      var pattern = /^data:image\/[a-z]*;base64,/i;
       if (pattern.test(calendarEvent.featuredImage.path)) {
         calendarEvent.featuredImage.path = '';
       }
@@ -572,6 +572,16 @@ exports.list = function(req, res) {
 
   if (req.query.category) {
     and.push({ 'event.category.type': req.query.category });
+  }
+
+  if (req.query.future) {
+    var today1 = moment().startOf('day').toDate();
+    and.push({ 'dates.startDateTime': { '$gte': today1 } });
+  }
+
+  if (req.query.past) {
+    var today2 = moment().startOf('day').toDate();
+    and.push({ 'dates.startDateTime': { '$lt': today2 } });
   }
 
   var or = [];

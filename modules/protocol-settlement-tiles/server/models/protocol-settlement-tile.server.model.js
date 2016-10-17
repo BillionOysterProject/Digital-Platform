@@ -9,6 +9,14 @@ var mongoose = require('mongoose'),
 /**
  * Settlement Tile Schema
  */
+var GridDetails = new Schema({
+  organism: {
+    type: Schema.ObjectId,
+    ref: 'SessileOrganism'
+  },
+  notes: String
+});
+
 var ProtocolSettlementTileSchema = new Schema({
   collectionTime: Date,
   latitude: Number,
@@ -37,181 +45,31 @@ var ProtocolSettlementTileSchema = new Schema({
       filename: String,
       path: String
     },
-    grid1: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid2: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid3: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid4: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid5: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid6: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid7: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid8: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid9: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid10: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid11: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid12: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid13: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid14: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid15: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid16: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid17: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid18: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid19: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid20: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid21: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid22: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid23: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid24: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    },
-    grid25: {
-      organism: {
-        type: Schema.ObjectId,
-        ref: 'SessileOrganism'
-      },
-      notes: String
-    }
+    grid1: GridDetails,
+    grid2: GridDetails,
+    grid3: GridDetails,
+    grid4: GridDetails,
+    grid5: GridDetails,
+    grid6: GridDetails,
+    grid7: GridDetails,
+    grid8: GridDetails,
+    grid9: GridDetails,
+    grid10: GridDetails,
+    grid11: GridDetails,
+    grid12: GridDetails,
+    grid13: GridDetails,
+    grid14: GridDetails,
+    grid15: GridDetails,
+    grid16: GridDetails,
+    grid17: GridDetails,
+    grid18: GridDetails,
+    grid19: GridDetails,
+    grid20: GridDetails,
+    grid21: GridDetails,
+    grid22: GridDetails,
+    grid23: GridDetails,
+    grid24: GridDetails,
+    grid25: GridDetails
   }]
 });
 

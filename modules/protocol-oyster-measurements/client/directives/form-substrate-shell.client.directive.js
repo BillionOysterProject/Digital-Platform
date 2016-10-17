@@ -9,6 +9,8 @@
         templateUrl: 'modules/protocol-oyster-measurements/client/views/form-substrate-shell.client.view.html',
         scope: {
           substrate: '=',
+          stationId: '@',
+          baseline: '=',
           maxLiveOysters: '=',
           outerSubstrateUploader: '=',
           innerSubstrateUploader: '=',
@@ -29,7 +31,14 @@
               scope.$apply();
           });
         },
-        controller: ['$scope', function ($scope) {
+        controller: ['$scope', '$http', function ($scope, $http) {
+          if (!$scope.baseline.substrateShellNumber) $scope.baseline.substrateShellNumber = $scope.substrate.substrateShellNumber;
+          $scope.readonlyBaseline = ($scope.baseline && $scope.baseline.setDate) ? true : false;
+          $scope.editing = false;
+          if ($scope.baseline) {
+            $scope.baseline.setDate = moment($scope.baseline.setDate).startOf('day').toDate();
+          }
+
           $scope.dateTime = {
             min: moment().subtract(50, 'years').toDate(),
             max: moment().endOf('day').toDate()
@@ -48,8 +57,20 @@
           var validate = function() {
             $scope.error = [];
             var isValid = true;
-            
+
             return isValid;
+          };
+
+          $scope.editBaseline = function() {
+            $scope.tempBaseline = angular.copy($scope.baseline);
+            $scope.readonlyBaseline = false;
+            $scope.editing = true;
+          };
+
+          $scope.cancelEditingBaseline = function() {
+            $scope.baseline = angular.copy($scope.tempBaseline);
+            $scope.readonlyBaseline = ($scope.baseline && $scope.baseline.setDate) ? true : false;
+            $scope.editing = false;
           };
 
           $scope.updateMeasurementFields = function() {
@@ -70,13 +91,39 @@
               $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
               return false;
             }
-            $scope.substrate.outerSidePhoto = {
-              path: $scope.outerSubstrateUrl
+
+            var saveSubstrateShell = function() {
+              $scope.substrate.outerSidePhoto = {
+                path: $scope.outerSubstrateUrl
+              };
+              $scope.substrate.innerSidePhoto = {
+                path: $scope.innerSubstrateUrl
+              };
+              $scope.saveFunction($scope.substrate, $scope.index, isValid);
             };
-            $scope.substrate.innerSidePhoto = {
-              path: $scope.innerSubstrateUrl
+
+            var saveBaselineHistory = function(callback) {
+              $http.post('/api/restoration-stations/' + $scope.stationId + '/substrate-history',
+              $scope.baseline)
+              .success(function (data, status, headers, config) {
+                $scope.baseline = data;
+                $scope.baseline.setDate = moment($scope.baseline.setDate).startOf('day').toDate();
+                callback();
+              })
+              .error(function (data, status, headers, config) {
+                $scope.error.push('Could not save new baseline information.');
+                $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
+                return false;
+              });
             };
-            $scope.saveFunction($scope.substrate, $scope.index, isValid);
+
+            if ($scope.editing) {
+              saveBaselineHistory(function() {
+                saveSubstrateShell();
+              });
+            } else {
+              saveSubstrateShell();
+            }
           };
 
           $scope.$watch('outerSubstrateUrl', function(newValue, oldValue) {

@@ -7,13 +7,11 @@
 
   RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
   'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService',
-  'BodiesOfWaterService', 'BoroughsCountiesService','ExpeditionViewHelper'];
+  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
   function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
     TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
-    ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService,
-    BodiesOfWaterService, BoroughsCountiesService, ExpeditionViewHelper) {
+    ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
 
@@ -46,16 +44,6 @@
       sort: 'name'
     }, function(data) {
       vm.organizations = data;
-    });
-
-    BodiesOfWaterService.query({
-    }, function(data) {
-      vm.bodiesOfWater = data;
-    });
-
-    BoroughsCountiesService.query({
-    }, function(data) {
-      vm.boroughsCounties = data;
     });
 
     var findSchoolOrgRestorationStations = function() {
@@ -207,7 +195,7 @@
       vm.published = data;
     });
 
-    if (vm.isTeamLead || vm.isTeamMember || vm.isAdmin) {
+    if (vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember || vm.isAdmin) {
       vm.findTeams();
     } else if (vm.isTeamMemberPending) {
       vm.findTeamRequests();
@@ -359,8 +347,10 @@
     }
 
     vm.createExpedition = function() {
-      $rootScope.teamId = vm.filter.teamId;
-      $state.go('expeditions.create');
+      if (!vm.isTeamLeadPending) {
+        $rootScope.teamId = vm.filter.teamId;
+        $state.go('expeditions.create');
+      }
     };
   }
 })();
