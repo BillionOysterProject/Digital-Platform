@@ -33,6 +33,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations',
       permissions: ['get']
     }, {
+      resources: '/api/restoration-stations/:stationId/substrate-history',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: ['get']
     }]

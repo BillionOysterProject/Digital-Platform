@@ -32,6 +32,7 @@
           });
         },
         controller: ['$scope', '$http', function ($scope, $http) {
+          if (!$scope.baseline.substrateShellNumber) $scope.baseline.substrateShellNumber = $scope.substrate.substrateShellNumber;
           $scope.readonlyBaseline = ($scope.baseline && $scope.baseline.setDate) ? true : false;
           $scope.editing = false;
           if ($scope.baseline) {

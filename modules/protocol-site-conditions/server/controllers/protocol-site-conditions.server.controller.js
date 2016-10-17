@@ -321,7 +321,7 @@ exports.incrementalSave = function (req, res) {
     siteCondition.scribeMember = req.user;
 
     // remove base64 text
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
     siteCondition.waterConditions.waterConditionPhoto.path &&
     pattern.test(siteCondition.waterConditions.waterConditionPhoto.path)) {
@@ -377,7 +377,7 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, val
       siteCondition.submitted = new Date();
 
       // remove base64 text
-      var pattern = /^data:image\/jpeg;base64,/i;
+      var pattern = /^data:image\/[a-z]*;base64,/i;
       if (siteCondition.waterConditions && siteCondition.waterConditions.waterConditionPhoto &&
       siteCondition.waterConditions.waterConditionPhoto.path &&
       pattern.test(siteCondition.waterConditions.waterConditionPhoto.path)) {

@@ -1016,7 +1016,41 @@ describe('Expedition E2E Tests', function() {
 
         browser.wait(EC.visibilityOf(element(by.cssContainingText('.gray', 'Protocols'))), 5000);
         // Click to view the protocols in the expedition
-        element(by.id('protocol1Link')).isDisplayed().click();
+        element(by.id('protocol2Link')).isDisplayed().click();
+      });
+
+      it ('should allow team lead to update a substrate baseline', function() {
+        element(by.id('protocol2tab')).click();
+
+        browser.wait(EC.visibilityOf(element(by.repeater('substrate in oysterMeasurement.measuringOysterGrowth.substrateShells'))), 5000);
+
+        var index = 4;
+        element(by.id('edit-measurements-'+index)).click();
+        var modal = element(by.id('modal-substrateshell'+index));
+        browser.wait(EC.visibilityOf(modal), 10000);
+
+        var measurementsDetails = oysterMeasurement1.measuringOysterGrowth.substrateShells[index];
+        var baseline = station.baselines['substrateShell'+(index+1)];
+
+        modal.element(by.id('substrate-meta')).click();
+        browser.sleep(200);
+        modal.element(by.id('edit-baseline')).click();
+        modal.element(by.id('source')).all(by.tagName('option')).get(measurementsDetails.source).click();
+        if (measurementsDetails.otherSource) modal.element(by.model('baseline.otherSource')).sendKeys(measurementsDetails.otherSource);
+        if (measurementsDetails.totalNumberOfLiveOystersAtBaseline) modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
+        if (measurementsDetails.totalMassOfLiveOystersAtBaselineG) modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).clear().sendKeys(measurementsDetails.totalMassOfLiveOystersAtBaselineG);
+        modal.element(by.buttonText('Save')).click();
+        browser.wait(EC.invisibilityOf(modal), 5000);
+        //browser.pause();
+
+        element(by.id('edit-measurements-'+index)).click();
+        browser.sleep(200);
+        expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(measurementsDetails.sourceText);
+        if (measurementsDetails.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(measurementsDetails.otherSource);
+        if (measurementsDetails.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(measurementsDetails.totalNumberOfLiveOystersAtBaseline.toString());
+        if (measurementsDetails.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(measurementsDetails.totalMassOfLiveOystersAtBaselineG.toString());
+        modal.element(by.buttonText('Cancel')).click();
+        browser.wait(EC.invisibilityOf(modal), 5000);
       });
 
       it ('should allow team lead to publish the expedition', function() {
