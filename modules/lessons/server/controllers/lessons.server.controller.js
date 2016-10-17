@@ -101,7 +101,7 @@ exports.create = function(req, res) {
     lesson.status = 'pending';
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
-    if (lesson.featuredImage && lesson.featuredImage.path && pattern(lesson.featuredImage.path)) {
+    if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
       lesson.featuredImage.path = '';
     }
 
@@ -221,7 +221,7 @@ exports.incrementalSave = function(req, res) {
   }
 
   var pattern = /^data:image\/[a-z]*;base64,/i;
-  if (lesson.featuredImage && lesson.featuredImage.path && pattern(lesson.featuredImage.path)) {
+  if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
     lesson.featuredImage.path = '';
   }
 
