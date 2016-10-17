@@ -42,8 +42,8 @@ describe('Event E2E Tests', function () {
     title: 'Initial Event',
     dates: [{
       date: date1Field,
-      startTime: '13:00',
-      endTime: '17:00',
+      startTime: '01:00PM',
+      endTime: '05:00PM',
       startDateTime: date1JSON+'T13:00:00.000Z',
       endDateTime: date1JSON+'T17:00:00.000Z',
       singleDateString: date1StringSingle,
@@ -62,8 +62,8 @@ describe('Event E2E Tests', function () {
     title: 'Updated Event',
     dates: [{
       date: date1Field,
-      startTime: '13:00',
-      endTime: '17:00',
+      startTime: '01:00PM',
+      endTime: '05:00PM',
       startDateTime: date1JSON+'T13:00:00.000Z',
       endDateTime: date1JSON+'T17:00:00.000Z',
       singleDateString: date1StringSingle,
@@ -71,8 +71,8 @@ describe('Event E2E Tests', function () {
       timeRangeString: '1:00pm-5:00pm'
     }, {
       date: date2Field,
-      startTime: '14:00',
-      endTime: '16:00',
+      startTime: '02:00PM',
+      endTime: '04:00PM',
       startDateTime: date2JSON+'T14:00:00.000Z',
       endDateTime: date2JSON+'T16:00:00.000Z',
       singleDateString: date2StringSingle,

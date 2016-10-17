@@ -37,7 +37,7 @@ exports.create = function (req, res) {
   station.schoolOrg = req.user.schoolOrg;
   station.teamLead = req.user;
 
-  var pattern = /^data:image\/jpeg;base64,/i;
+  var pattern = /^data:image\/[a-z]*;base64,/i;
   if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
     station.photo.path = '';
   }
@@ -88,7 +88,7 @@ exports.update = function (req, res) {
     // if (!req.body.photo) {
     //   delete station.photo;
     // }
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
       station.photo.path = '';
     }

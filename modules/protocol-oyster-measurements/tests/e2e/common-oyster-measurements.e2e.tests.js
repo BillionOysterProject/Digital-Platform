@@ -29,6 +29,12 @@ var oysterMeasurement1 = {
       measurements: [{
       }]
     }, {
+      updateBaseline: true,
+      source: 2,
+      sourceText: 'Soundview, New York',
+      setDate: '2016-08-20T18:30:00.000Z',
+      totalNumberOfLiveOystersAtBaseline: 30,
+      totalMassOfLiveOystersAtBaselineG: 300,
       totalNumberOfLiveOystersOnShell: 1,
       totalMassOfScrubbedSubstrateShellOystersTagG: 10,
       notes: 'Test notes 2',
@@ -47,6 +53,11 @@ var oysterMeasurement1 = {
       photoPresent: true,
       measurements: [32.1, 33.1, 38.2]
     }, {
+      source: 5,
+      sourceText: 'Hudson River, New York',
+      setDate: '2016-08-20T18:30:00.000Z',
+      totalNumberOfLiveOystersAtBaseline: 20,
+      totalMassOfLiveOystersAtBaselineG: 200,
       totalNumberOfLiveOystersOnShell: 4,
       totalMassOfScrubbedSubstrateShellOystersTagG: 40,
       notes: 'Test notes 5',
@@ -304,16 +315,22 @@ var assertSubstrateMeasurements = function(index) {
 
   // Add an image to the substrate shell
   browser.sleep(100);
-  modal.element(by.id('substrate-photos')).click();
   if (measurementsDetails.photoPresent) assertImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
   if (measurementsDetails.photoPresent) assertImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
 
   // substrate meta
   modal.element(by.id('substrate-meta')).click();
-  expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
-  if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
-  if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
-  if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
+  if (measurementsDetails.updateBaseline) {
+    expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(measurementsDetails.sourceText);
+    if (measurementsDetails.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(measurementsDetails.otherSource);
+    if (measurementsDetails.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(measurementsDetails.totalNumberOfLiveOystersAtBaseline.toString());
+    if (measurementsDetails.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(measurementsDetails.totalMassOfLiveOystersAtBaselineG.toString());
+  } else {
+    expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
+    if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
+    if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
+    if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
+  }
 
   // substrate measurements
   modal.element(by.id('substrate-measurements')).click();
@@ -366,15 +383,21 @@ var fillOutOysterMeasurements = function(index) {
   if (measurementsDetails.photoPresent) uploadImage('outer-substrate-image-dropzone-'+index); // substrate shell outer photo
   if (measurementsDetails.photoPresent) uploadImage('inner-substrate-image-dropzone-'+index); // substrate shell inner photo
 
-  //modal.element(by.model('substrate.source')).all(by.tagName('option')).get(measurementsDetails.source).click();
-  //if (measurementsDetails.otherSource) modal.element(by.model('substrate.otherSource')).sendKeys(measurementsDetails.otherSource);
-  //modal.element(by.model('substrate.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
   // substrate meta
   modal.element(by.id('substrate-meta')).click();
-  expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
-  if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
-  if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
-  if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
+  if (measurementsDetails.updateBaseline) {
+    browser.sleep(200);
+    modal.element(by.id('edit-baseline')).click();
+    modal.element(by.id('source')).all(by.tagName('option')).get(measurementsDetails.source).click();
+    if (measurementsDetails.otherSource) modal.element(by.model('baseline.otherSource')).sendKeys(measurementsDetails.otherSource);
+    if (measurementsDetails.totalNumberOfLiveOystersAtBaseline) modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
+    if (measurementsDetails.totalMassOfLiveOystersAtBaselineG) modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).clear().sendKeys(measurementsDetails.totalMassOfLiveOystersAtBaselineG);
+  } else {
+    expect(modal.element(by.id('source-readonly')).getAttribute('value')).toEqual(baseline.sourceText);
+    if (baseline.otherSource) expect(modal.element(by.model('baseline.otherSource')).getAttribute('value')).toEqual(baseline.otherSource);
+    if (baseline.totalNumberOfLiveOystersAtBaseline) expect(modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).getAttribute('value')).toEqual(baseline.totalNumberOfLiveOystersAtBaseline.toString());
+    if (baseline.totalMassOfLiveOystersAtBaselineG) expect(modal.element(by.model('baseline.totalMassOfLiveOystersAtBaselineG')).getAttribute('value')).toEqual(baseline.totalMassOfLiveOystersAtBaselineG.toString());
+  }
 
   // substrate measurements
   modal.element(by.id('substrate-measurements')).click();
@@ -392,7 +415,8 @@ var fillOutOysterMeasurements = function(index) {
 
   // Save the substrate shell
   modal.element(by.buttonText('Save')).click();
-  //browser.wait(EC.invisibilityOf(modal), 5000);
+
+  browser.wait(EC.invisibilityOf(modal), 5000);
 };
 
 var fillOutAllOysterMeasurements = function() {
@@ -474,10 +498,10 @@ var assertSubstrateMeasurementView = function(index, values, stationValues) {
       .toEqual('total mass not provided (shell + oysters + tag)');
   }
   expect(element(by.id('averageSizeOfLiveOysters'+index)).getText())
-    .toEqual(substrate.averageSizeOfLiveOysters + '\naverage size');
+    .toEqual(substrate.averageSizeOfLiveOysters + ' mm\naverage size');
   expect(element(by.id('minMaxSizeOfLiveOysters'+index)).getText())
-    .toEqual(substrate.minimumSizeOfLiveOysters + ' min size\n' +
-    substrate.maximumSizeOfLiveOysters + ' max size');
+    .toEqual(substrate.minimumSizeOfLiveOysters + ' mm min size\n' +
+    substrate.maximumSizeOfLiveOysters + ' mm max size');
 };
 
 var assertOysterMeasurementsView = function(values, stationValues, teamMember) {
@@ -520,11 +544,11 @@ var assertOysterMeasurementsView = function(values, stationValues, teamMember) {
 
   } else {
     expect(element(by.cssContainingText('.green', 'average size')).getText())
-      .toEqual(values.averageSizeOfAllLiveOysters + ' average size');
+      .toEqual(values.averageSizeOfAllLiveOysters + ' mm average size');
     expect(element(by.binding('oysterMeasurement.minimumSizeOfAllLiveOysters')).getText())
-      .toEqual(values.minimumSizeOfAllLiveOysters);
+      .toEqual(values.minimumSizeOfAllLiveOysters + ' mm');
     expect(element(by.binding('oysterMeasurement.maximumSizeOfAllLiveOysters')).getText())
-      .toEqual(values.maximumSizeOfAllLiveOysters);
+      .toEqual(values.maximumSizeOfAllLiveOysters + ' mm');
   }
   assertSubstrateMeasurementView(0, values, stationValues);
   assertSubstrateMeasurementView(1, values, stationValues);
