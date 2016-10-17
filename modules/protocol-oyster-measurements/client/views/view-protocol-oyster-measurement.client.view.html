@@ -58,7 +58,7 @@
         <h3 ng-class="{green: previous.growth <= 0, red: previous.growth > 0}">
           <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
           <i class="fa" ng-class="{ 'fa-arrow-up': previous.growth <= 0, 'fa fa-arrow-down': previous.growth > 0 }"></i>
-          {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}
+          {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} mm
           <small>average size<br/>
             <b class="green" ng-show="previous.growth <= 0">up {{(previous.growth*-1)}}%</b>
             <b class="red" ng-show="previous.growth > 0">down {{previous.growth}}%</b> from previous expedition
@@ -68,12 +68,12 @@
       <div class="col-sm-8" ng-hide="previous">
         <h3 class="green">
           <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
-          {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} <small>average size</small>
+          {{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} mm <small>average size</small>
         </h3>
       </div>
       <div class="col-sm-4 text-muted">
-        <br/><p><b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b> min size<br/>
-        <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b> max size</p>
+        <br/><p><b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}} mm</b> min size<br/>
+        <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}} mm</b> max size</p>
       </div>
     </div>
   </div>
@@ -86,27 +86,27 @@
     <div class="row">
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">
-          Set at <b>{{vm.getDate(substrate.setDate)}}</b><br/>
-          Source: <b ng-show="substrate.source !== 'Other'">{{substrate.source}}</b>
-          <b ng-show="substrate.source === 'Other'">{{substrate.otherSource}}</b>
+          Set at <b>{{vm.getDate(station.baselinesArray[$index].setDate)}}</b><br/>
+          Source: <b ng-show="station.baselinesArray[$index].source !== 'Other'">{{station.baselinesArray[$index].source}}</b>
+          <b ng-show="station.baselinesArray[$index].source === 'Other'">{{station.baselinesArray[$index].otherSource}}</b>
           <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>
         </p>
-        <h3 id="oystersAtBaselineCompare{{$index}}" ng-show="substrate.totalNumberOfLiveOystersAtBaseline"
-          ng-class="{red: substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell,
-          green: substrate.totalNumberOfLiveOystersOnShell >= substrate.totalNumberOfLiveOystersAtBaseline}">
-          <i class="fa fa-arrow-down" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell"></i>
-          <i class="fa fa-arrow-up" ng-show="substrate.totalNumberOfLiveOystersOnShell > substrate.totalNumberOfLiveOystersAtBaseline"></i>
+        <h3 id="oystersAtBaselineCompare{{$index}}" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline"
+          ng-class="{red: station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell,
+          green: substrate.totalNumberOfLiveOystersOnShell >= station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}">
+          <i class="fa fa-arrow-down" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell"></i>
+          <i class="fa fa-arrow-up" ng-show="substrate.totalNumberOfLiveOystersOnShell > station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline"></i>
           {{substrate.totalNumberOfLiveOystersOnShell}}
           <small>live oysters on shell<br/>
-            <span class="red" ng-show="substrate.totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell">
-              down from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
-            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell > substrate.totalNumberOfLiveOystersAtBaseline">
-              up from <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
-            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell === substrate.totalNumberOfLiveOystersAtBaseline">
-              same as <b>{{substrate.totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="red" ng-show="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline > substrate.totalNumberOfLiveOystersOnShell">
+              down from <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell > station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline">
+              up from <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
+            <span class="green" ng-show="substrate.totalNumberOfLiveOystersOnShell === station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline">
+              same as <b>{{station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline}}</b> at baseline</span>
           </small>
         </h3>
-        <h3 id="totalLiveOystersNoBaseline{{$index}}" ng-hide="substrate.totalNumberOfLiveOystersAtBaseline" class="green">
+        <h3 id="totalLiveOystersNoBaseline{{$index}}" ng-hide="station.baselinesArray[$index].totalNumberOfLiveOystersAtBaseline" class="green">
           {{substrate.totalNumberOfLiveOystersOnShell}}
           <small>live oysters on shell<br/>
             total number of live oysters at baseline not provided
@@ -123,12 +123,12 @@
         <div class="row">
           <div class="col-sm-6 text-right">
             <img class="pull-right" width="30" src="modules/core/client/img/icons/oyster-measurement.svg" />
-            <p id="averageSizeOfLiveOysters{{$index}}"><b class="blue">{{substrate.averageSizeOfLiveOysters | number:2}}</b>
+            <p id="averageSizeOfLiveOysters{{$index}}"><b class="blue">{{substrate.averageSizeOfLiveOysters | number:2}} mm</b>
               <br/>average size</p>
           </div>
           <div class="col-sm-6 text-muted">
-            <p id="minMaxSizeOfLiveOysters{{$index}}"><b>{{substrate.minimumSizeOfLiveOysters | number:2}}</b> min size<br/>
-              <b>{{substrate.maximumSizeOfLiveOysters | number:2}}</b> max size</p>
+            <p id="minMaxSizeOfLiveOysters{{$index}}"><b>{{substrate.minimumSizeOfLiveOysters | number:2}} mm</b> min size<br/>
+              <b>{{substrate.maximumSizeOfLiveOysters | number:2}} mm</b> max size</p>
           </div>
         </div>
       </div>

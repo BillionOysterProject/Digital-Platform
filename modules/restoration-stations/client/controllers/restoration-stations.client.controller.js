@@ -5,9 +5,11 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader'];
+  RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader',
+  'BodiesOfWaterService', 'BoroughsCountiesService'];
 
-  function RestorationStationsController($scope, $http, $timeout, FileUploader) {
+  function RestorationStationsController($scope, $http, $timeout, FileUploader,
+  BodiesOfWaterService, BoroughsCountiesService) {
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
@@ -17,6 +19,16 @@
 
     $scope.stationPhotoUploader = new FileUploader({
       alias: 'stationPhoto'
+    });
+
+    BodiesOfWaterService.query({
+    }, function(data) {
+      $scope.bodiesOfWater = data;
+    });
+
+    BoroughsCountiesService.query({
+    }, function(data) {
+      $scope.boroughsCounties = data;
     });
 
     angular.element(document.querySelector('#modal-station-register')).on('shown.bs.modal', function(){
@@ -101,9 +113,11 @@
 
     // Remove existing Lesson
     $scope.remove = function() {
-      $scope.station.$remove($timeout(function() {
-        $scope.removeFunction();
-      }));
+      if ($scope.removeFunction) {
+        $scope.station.$remove($timeout(function() {
+          $scope.removeFunction();
+        }));
+      }
     };
 
     $scope.placeSelected = function (place) {

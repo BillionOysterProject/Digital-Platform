@@ -91,8 +91,158 @@ module.exports = {
   },
   team: { name: 'Test Team' },
   organization: { name: 'Org1' },
-  station: { name: 'Test Station' },
-  station2: { name: 'Other Station' },
+  station: {
+    name: 'Test Station',
+    baselines: {
+      substrateShell1: {
+        substrateShellNumber: 1,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 1,
+        sourceText: 'Muscongus Bay, Maine',
+        totalNumberOfLiveOystersAtBaseline: 40
+      },
+      substrateShell2: {
+        substrateShellNumber: 2,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 2,
+        sourceText: 'Fishers Island, New York',
+        totalNumberOfLiveOystersAtBaseline: 35
+      },
+      substrateShell3: {
+        substrateShellNumber: 3,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 3,
+        sourceText: 'Soundview, New York',
+        totalNumberOfLiveOystersAtBaseline: 30
+      },
+      substrateShell4: {
+        substrateShellNumber: 4,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 4,
+        sourceText: 'Bronx River, New York',
+        totalNumberOfLiveOystersAtBaseline: 25
+      },
+      substrateShell5: {
+        substrateShellNumber: 5,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 5,
+        sourceText: 'Tappan Zee, New York',
+        totalNumberOfLiveOystersAtBaseline: 20
+      },
+      substrateShell6: {
+        substrateShellNumber: 6,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 6,
+        sourceText: 'Hudson River, New York',
+        totalNumberOfLiveOystersAtBaseline: 15
+      },
+      substrateShell7: {
+        substrateShellNumber: 7,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 7,
+        sourceText: 'Other',
+        otherSource: 'Other Test',
+        totalNumberOfLiveOystersAtBaseline: 10
+      },
+      substrateShell8: {
+        substrateShellNumber: 8,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 1,
+        sourceText: 'Muscongus Bay, Maine',
+        totalNumberOfLiveOystersAtBaseline: 5
+      },
+      substrateShell9: {
+        substrateShellNumber: 9,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 2,
+        sourceText: 'Fishers Island, New York',
+        totalNumberOfLiveOystersAtBaseline: 10
+      },
+      substrateShell10: {
+        substrateShellNumber: 10,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 3,
+        sourceText: 'Soundview, New York',
+        totalNumberOfLiveOystersAtBaseline: 15
+      }
+    }
+  },
+  station2: {
+    name: 'Other Station',
+    baselines: {
+      substrateShell1: {
+        substrateShellNumber: 1,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 1,
+        sourceText: 'Muscongus Bay, Maine',
+        totalNumberOfLiveOystersAtBaseline: 40
+      },
+      substrateShell2: {
+        substrateShellNumber: 2,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 2,
+        sourceText: 'Fishers Island, New York',
+        totalNumberOfLiveOystersAtBaseline: 35
+      },
+      substrateShell3: {
+        substrateShellNumber: 3,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 3,
+        sourceText: 'Soundview, New York',
+        totalNumberOfLiveOystersAtBaseline: 30
+      },
+      substrateShell4: {
+        substrateShellNumber: 4,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 4,
+        sourceText: 'Bronx River, New York',
+        totalNumberOfLiveOystersAtBaseline: 25
+      },
+      substrateShell5: {
+        substrateShellNumber: 5,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 5,
+        sourceText: 'Tappan Zee, New York',
+        totalNumberOfLiveOystersAtBaseline: 20
+      },
+      substrateShell6: {
+        substrateShellNumber: 6,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 6,
+        sourceText: 'Hudson River, New York',
+        totalNumberOfLiveOystersAtBaseline: 15
+      },
+      substrateShell7: {
+        substrateShellNumber: 7,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 7,
+        sourceText: 'Other',
+        otherSource: 'Other Test',
+        totalNumberOfLiveOystersAtBaseline: 10
+      },
+      substrateShell8: {
+        substrateShellNumber: 8,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 1,
+        sourceText: 'Muscongus Bay, Maine',
+        totalNumberOfLiveOystersAtBaseline: 5
+      },
+      substrateShell9: {
+        substrateShellNumber: 9,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 2,
+        sourceText: 'Fishers Island, New York',
+        totalNumberOfLiveOystersAtBaseline: 10
+      },
+      substrateShell10: {
+        substrateShellNumber: 10,
+        setDate: '2016-08-11T06:00:00.000Z',
+        source: 3,
+        sourceText: 'Soundview, New York',
+        totalNumberOfLiveOystersAtBaseline: 15
+      }
+    }
+  },
 
   signout: signout,
   signinAs: signinAs,

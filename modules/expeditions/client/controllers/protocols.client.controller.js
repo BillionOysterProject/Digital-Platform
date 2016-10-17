@@ -7,11 +7,11 @@
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
   '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
     $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper) {
+    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -210,6 +210,15 @@
         vm.viewWaterQuality = false;
         vm.disabledWaterQuality = true;
       }
+    }
+
+    $scope.station = vm.expedition.station;
+    $scope.station.baselinesArray = new Array(10);
+    // Get latest baseline history for each substrate shell
+    for (var i = 1; i <= 10; i++) {
+      var baselines = $scope.station.baselines['substrateShell'+i];
+      $scope.station.baselinesArray[i-1] = (baselines && baselines.length > 0) ?
+        baselines[baselines.length - 1] : {};
     }
 
     // Set up variables used by the tab element
@@ -435,6 +444,7 @@
 
       function saveDraftSiteCondition(saveCallback) {
         if(vm.viewSiteCondition && $scope.siteCondition) {
+          $scope.savingStatus = 'Saving Site Condition';
           $scope.saveSiteCondition(function() {
             vm.tabs.protocol1.saveSuccessful = true;
             saveCallback();
@@ -450,6 +460,7 @@
 
       function saveDraftOysterMeasurement(saveCallback) {
         if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+          $scope.savingStatus = 'Saving Oyster Measurement';
           $scope.saveOysterMeasurement(function() {
             vm.tabs.protocol2.saveSuccessful = true;
             saveCallback();
@@ -465,6 +476,7 @@
 
       function saveDraftMobileTrap(saveCallback) {
         if(vm.viewMobileTrap && $scope.mobileTrap) {
+          $scope.savingStatus = 'Saving Mobile Trap';
           $scope.saveMobileTrap(function() {
             vm.tabs.protocol3.saveSuccessful = true;
             saveCallback();
@@ -480,6 +492,7 @@
 
       function saveDraftSettlementTiles(saveCallback) {
         if(vm.viewSettlementTiles && $scope.settlementTiles) {
+          $scope.savingStatus = 'Saving Settlement Tiles';
           $scope.saveSettlementTile(function() {
             vm.tabs.protocol4.saveSuccessful = true;
             saveCallback();
@@ -495,6 +508,7 @@
 
       function saveDraftWaterQuality(saveCallback) {
         if(vm.viewWaterQuality && $scope.waterQuality) {
+          $scope.savingStatus = 'Saving Water Quality';
           $scope.saveWaterQuality(function() {
             vm.tabs.protocol5.saveSuccessful = true;
             saveCallback();
@@ -509,23 +523,18 @@
       }
 
       angular.element('#modal-save-draft-progress-bar').modal('show');
-      $scope.savingStatus = 'Saving Site Condition';
       $timeout(function () {
         saveDraftSiteCondition(function () {
           $scope.finishedSaving = 20;
-          $scope.savingStatus = 'Saving Oyster Measurement';
           $timeout(function() {
             saveDraftOysterMeasurement(function() {
               $scope.finishedSaving = 40;
-              $scope.savingStatus = 'Saving Mobile Trap';
               $timeout(function () {
                 saveDraftMobileTrap(function() {
                   $scope.finishedSaving = 60;
-                  $scope.savingStatus = 'Saving Settlement Tiles';
                   $timeout(function () {
                     saveDraftSettlementTiles(function() {
                       $scope.finishedSaving = 80;
-                      $scope.savingStatus = 'Saving Water Quality';
                       $timeout(function () {
                         saveDraftWaterQuality(function() {
                           $scope.finishedSaving = 100;

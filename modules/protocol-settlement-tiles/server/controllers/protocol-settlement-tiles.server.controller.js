@@ -201,7 +201,7 @@ exports.incrementalSave = function (req, res) {
     settlementTiles.scribeMember = req.user;
 
     // remove base64 text
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
       for (var j = 0; j < settlementTiles.settlementTiles.length; j++) {
         if (settlementTiles.settlementTiles[j].tilePhoto &&
@@ -254,7 +254,7 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
       settlementTiles.submitted = new Date();
 
       // remove base64 text
-      var pattern = /^data:image\/jpeg;base64,/i;
+      var pattern = /^data:image\/[a-z]*;base64,/i;
       if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
         for (var j = 0; j < settlementTiles.settlementTiles.length; j++) {
           if (settlementTiles.settlementTiles[j].tilePhoto &&

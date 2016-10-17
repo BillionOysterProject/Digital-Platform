@@ -68,35 +68,48 @@
                                         <div class="col-md-6">
                                             <p class="lead blue">On the first expedition to the ORS, enter the baseline data to measure future visits by.</p>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 callout" ng-class="{'shaded': readonlyBaseline}">
                                             <div class="row">
                                                 <div class="form-group col-sm-4">
                                                     <label for="shellNumber" class="control-label required">Substrate shell #</label>
-                                                    <input type="number" class="form-control" ng-model="substrate.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
+                                                    <input type="number" class="form-control" ng-model="baseline.substrateShellNumber" name="shellNumber" id="shellNumber" readonly required/>
                                                 </div>
                                                 <div class="form-group col-sm-8">
                                                     <label for="setDate" class="control-label required">Set date *</label>
-                                                    <input type="date" class="form-control" ng-model="substrate.setDate" placeholder="yyyy-MM-dd"
-                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" required/>
+                                                    <input type="date" class="form-control" ng-model="baseline.setDate" placeholder="yyyy-MM-dd"
+                                                    name="setDate" id="setDate" min="{{dateTime.min}}" max="{{dateTime.max}}" ng-readonly="readonlyBaseline" required/>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                              <div class="form-group" ng-class="{'col-sm-6': substrate.source === 'Other',
-                                              'col-sm-12': !substrate.source || substrate.source !== 'Other'}">
+                                              <div class="form-group" ng-class="{'col-sm-6': baseline.source === 'Other',
+                                              'col-sm-12': !baseline.source || baseline.source !== 'Other'}">
                                                   <label for="source" class="control-label required">Source *</label>
                                                   <select class="form-control" ng-options="source.value as source.label for source in sources"
-                                                  ng-model="substrate.source" name="source" id="source" required></select>
+                                                  ng-model="baseline.source" name="source" id="source" ng-hide="readonlyBaseline" required></select>
+                                                  <input type="text" class="form-control" ng-model="baseline.source" name="source-readonly" id="source-readonly"
+                                                  ng-show="readonlyBaseline" readonly required/>
                                               </div>
-                                              <div class="form-group col-sm-6" ng-show="substrate.source === 'Other'">
+                                              <div class="form-group col-sm-6" ng-show="baseline.source === 'Other'">
                                                 <label for="source-other" class="control-label required">Other source *</label>
-                                                <input type="text" class="form-control" ng-model="substrate.otherSource" name="source-other" id="source-other"
-                                                ng-required="substrate.source === 'Other'"/>
+                                                <input type="text" class="form-control" ng-model="baseline.otherSource" name="source-other" id="source-other"
+                                                ng-required="baseline.source === 'Other'" ng-readonly="readonlyBaseline"/>
                                               </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="totalAtBaseline" class="control-label">Total number of live oysters on shell at baseline</label>
-                                                <input type="number" class="form-control" ng-model="substrate.totalNumberOfLiveOystersAtBaseline"
-                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}"/>
+                                                <input type="number" class="form-control" ng-model="baseline.totalNumberOfLiveOystersAtBaseline"
+                                                name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" ng-readonly="readonlyBaseline"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="massAtBaseline" class="control-label">Total mass of substrate shell at baseline (grams)</label>
+                                                <input type="number" class="form-control" ng-model="baseline.totalMassOfLiveOystersAtBaselineG"
+                                                name="massAtBaseline" id="massAtBaseline" min="0" ng-readonly="readonlyBaseline"/>
+                                            </div>
+                                            <div class="row" ng-show="baseline.setDate">
+                                              <div class="form-group col-md-12">
+                                                <a class="btn btn-default pull-right" ng-click="editBaseline()" ng-show="readonlyBaseline" id="edit-baseline">Edit</a>
+                                                <a class="btn btn-danger pull-right" ng-click="cancelEditingBaseline()" ng-show="editing">Cancel</a>
+                                              </div>
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +119,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="mass" class="control-label">Total mass of scrubbed substrate shell + oysters + tag (grams)</label>
+                                                <label for="mass" class="control-label">Total wet mass of substrate shell + oysters + tag (grams)</label>
                                                 <input type="number" class="form-control" ng-model="substrate.totalMassOfScrubbedSubstrateShellOystersTagG" name="mass" id="mass" min="0"/>
                                             </div>
                                             <div class="form-group">
