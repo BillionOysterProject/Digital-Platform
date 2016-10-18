@@ -56,7 +56,7 @@ var RestorationStationSchema = new Schema({
   },
   boroughCounty: {
     type: String,
-    required: true
+    //required: true
   },
   status: {
     type: String,
