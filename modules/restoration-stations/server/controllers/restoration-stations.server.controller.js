@@ -123,14 +123,17 @@ exports.updateBaselines = function (req, res) {
 
   if (station) {
     var index = req.body.substrateShellNumber;
+    console.log('index', index);
     if (req.body.substrateShellNumber && station.baselines['substrateShell'+index]) {
       var baseline = req.body;
+      console.log('baseline', baseline);
       baseline.entered = new Date();
       baseline.setDate = moment(req.body.setDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
       station.baselines['substrateShell'+index].push(baseline);
 
       station.save(function(err) {
         if (err) {
+          console.log('save err', err);
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
