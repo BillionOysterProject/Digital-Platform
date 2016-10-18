@@ -309,7 +309,6 @@ exports.uploadStationPhoto = function (req, res) {
           }
         });
       }, function(errorMessage) {
-        console.log('errorMessage', errorMessage);
         deleteInternal(station,
         function(station) {
           return res.status(400).send({
