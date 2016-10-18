@@ -111,7 +111,6 @@
                 callback();
               })
               .error(function (data, status, headers, config) {
-                console.log('data', data);
                 $scope.error.push('Could not save new baseline information.');
                 $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
                 return false;
