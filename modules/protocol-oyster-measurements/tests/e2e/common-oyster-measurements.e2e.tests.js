@@ -492,7 +492,7 @@ var assertSubstrateMeasurementView = function(index, values, stationValues) {
   }
   if (substrate.totalMassOfScrubbedSubstrateShellOystersTagG) {
     expect(element(by.id('totalMassOfOysters'+index)).getText())
-      .toEqual(substrate.totalMassOfScrubbedSubstrateShellOystersTagG + ' total mass (shell + oysters + tag)');
+      .toEqual(substrate.totalMassOfScrubbedSubstrateShellOystersTagG + ' g total mass (shell + oysters + tag)');
   } else {
     expect(element(by.id('noMassOfOysters'+index)).getText())
       .toEqual('total mass not provided (shell + oysters + tag)');
@@ -596,17 +596,17 @@ var assertOysterMeasurementCompare = function(index, values) {
   if (element(by.id('oyster-population-avg-size-compare')).isPresent()) {
     var avgSizeRow = element(by.id('oyster-population-avg-size-compare')).all(by.tagName('td'));
     var avgSize = avgSizeRow.get(index);
-    expect(avgSize.getText()).toEqual(values.averageSizeOfAllLiveOysters + ' ');
+    expect(avgSize.getText()).toEqual(values.averageSizeOfAllLiveOysters + 'mm ');
   }
   if (element(by.id('oyster-population-min-size-compare')).isPresent()) {
     var minSizeRow = element(by.id('oyster-population-min-size-compare')).all(by.tagName('td'));
     var minSize = minSizeRow.get(index);
-    expect(minSize.getText()).toEqual(values.minimumSizeOfAllLiveOysters + ' ');
+    expect(minSize.getText()).toEqual(values.minimumSizeOfAllLiveOysters + 'mm ');
   }
   if (element(by.id('oyster-population-max-size-compare')).isPresent()) {
     var maxSizeRow = element(by.id('oyster-population-max-size-compare')).all(by.tagName('td'));
     var maxSize = maxSizeRow.get(index);
-    expect(maxSize.getText()).toEqual(values.maximumSizeOfAllLiveOysters + ' ');
+    expect(maxSize.getText()).toEqual(values.maximumSizeOfAllLiveOysters + 'mm ');
   }
 };
 
