@@ -72,6 +72,19 @@ var getDateTime = function(date, time) {
   }
 };
 
+var getDateAndRange = function(date) {
+  if (date) {
+    var dateString = '';
+    dateString += moment(date.startDateTime).format('MMMM D, YYYY, ');
+    dateString += moment(date.startDateTime).format('h:mma');
+    dateString += '-';
+    dateString += moment(date.endDateTime).format('h:mma');
+    return dateString;
+  } else {
+    return '';
+  }
+};
+
 var firstIndexOfAfter = function(ordered, date) {
   var index = _.findLastIndex(ordered, function(d) {
     return moment(d.startDateTime).isBefore(moment(date));
@@ -165,7 +178,6 @@ var fillInRegistrantsData = function(registrants, callback) {
               for (var i = 0; i < teams.length; i++) {
                 teamNames.push(teams[i].name);
               }
-              console.log('teamNames', teamNames);
               registrant.user.teams = teamNames.join(', ');
             }
             registrantsList[index] = registrant;
@@ -425,7 +437,7 @@ exports.register = function(req, res) {
 
             var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
             calendarEventJSON.dates = sortDates(calendarEventJSON.dates);
-            var eventDate = (calendarEventJSON.dates[0]) ? moment(calendarEventJSON.dates[0]).format('MMMM D, YYYY, h:mma-h:mma') : '';
+            var eventDate = getDateAndRange(calendarEventJSON.dates[0]);
 
             var sendEventFullEmail = function(callback) {
               if (calendarEventJSON.maximumCapacity === calendarEventJSON.registrants.length) {
@@ -523,7 +535,7 @@ exports.emailRegistrants = function(req, res) {
   if (calendarEvent) {
     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
     calendarEvent.dates = sortDates(calendarEvent.dates);
-    var eventDate = (calendarEvent.dates[0]) ? moment(calendarEvent.dates[0]).format('MMMM D, YYYY, h:mma-h:mma') : '';
+    var eventDate = getDateAndRange(calendarEvent.dates[0]);
 
     var toList = getRegistrantsList(calendarEvent.registrants);
 
