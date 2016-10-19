@@ -127,6 +127,7 @@
           oilSheen: '',
           garbageWater: '',
           pipes: '',
+          landConditionPhoto: '',
           shorelineType: '',
           garbageLand: '',
           surfaceCover: ''
