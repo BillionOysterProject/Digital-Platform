@@ -122,6 +122,17 @@
           return (index > -1) ? sessileOrganisms[index].commonName : '';
         }
       },
+      getSessileOrganismPhoto: function(value) {
+        if (!value) {
+          return '';
+        } else {
+          var index = lodash.findIndex(sessileOrganisms, function(o) {
+            return o._id === value;
+          });
+          return (index > -1 && sessileOrganisms[index] && sessileOrganisms[index].image) ?
+            sessileOrganisms[index].image.path : '';
+        }
+      },
       getAllWaterTemperatureMethods: function() {
         return WaterTemperatureMethodsService.query();
       },

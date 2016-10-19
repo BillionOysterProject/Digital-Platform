@@ -121,11 +121,13 @@
           tide: '',
           referencePoint: '',
           tidalCurrent: '',
+          waterConditionPhoto: '',
           surfaceCurrentSpeed: '',
           waterColor: '',
           oilSheen: '',
           garbageWater: '',
           pipes: '',
+          landConditionPhoto: '',
           shorelineType: '',
           garbageLand: '',
           surfaceCover: ''
@@ -133,6 +135,7 @@
         protocol2all: '',
         protocol2: {
           submergedDepth: '',
+          oysterCagePhoto: '',
           bioaccumulationOnCage: '',
           cageDamage: '',
           oysterMeasurements: ''
@@ -264,11 +267,13 @@
         tide: '',
         referencePoint: '',
         tidalCurrent: '',
+        waterConditionPhoto: '',
         surfaceCurrentSpeed: '',
         waterColor: '',
         oilSheen: '',
         garbageWater: '',
         pipes: '',
+        landConditionPhoto: '',
         shorelineType: '',
         garbageLand: '',
         surfaceCover: ''
@@ -276,6 +281,7 @@
       protocol2all: '',
       protocol2: {
         submergedDepth: '',
+        oysterCagePhoto: '',
         bioaccumulationOnCage: '',
         cageDamage: '',
         oysterMeasurements: ''
@@ -313,11 +319,13 @@
         vm.parameters.protocol1.tide = 'YES';
         vm.parameters.protocol1.referencePoint = 'YES';
         vm.parameters.protocol1.tidalCurrent = 'YES';
+        vm.parameters.protocol1.waterConditionPhoto = 'YES';
         vm.parameters.protocol1.surfaceCurrentSpeed = 'YES';
         vm.parameters.protocol1.waterColor = 'YES';
         vm.parameters.protocol1.oilSheen = 'YES';
         vm.parameters.protocol1.garbageWater = 'YES';
         vm.parameters.protocol1.pipes = 'YES';
+        vm.parameters.protocol1.landConditionPhoto = 'YES';
         vm.parameters.protocol1.shorelineType = 'YES';
         vm.parameters.protocol1.garbageLand = 'YES';
         vm.parameters.protocol1.surfaceCover = 'YES';
@@ -329,11 +337,13 @@
         vm.parameters.protocol1.tide = '';
         vm.parameters.protocol1.referencePoint = '';
         vm.parameters.protocol1.tidalCurrent = '';
+        vm.parameters.protocol1.waterConditionPhoto = '';
         vm.parameters.protocol1.surfaceCurrentSpeed = '';
         vm.parameters.protocol1.waterColor = '';
         vm.parameters.protocol1.oilSheen = '';
         vm.parameters.protocol1.garbageWater = '';
         vm.parameters.protocol1.pipes = '';
+        vm.parameters.protocol1.landConditionPhoto = '';
         vm.parameters.protocol1.shorelineType = '';
         vm.parameters.protocol1.garbageLand = '';
         vm.parameters.protocol1.surfaceCover = '';
@@ -345,11 +355,13 @@
       vm.filtered = true;
       if (vm.parameters.protocol2all === 'YES') {
         vm.parameters.protocol2.submergedDepth = 'YES';
+        vm.parameters.protocol2.oysterCagePhoto = 'YES';
         vm.parameters.protocol2.bioaccumulationOnCage = 'YES';
         vm.parameters.protocol2.cageDamage = 'YES';
         vm.parameters.protocol2.oysterMeasurements = 'YES';
       } else {
         vm.parameters.protocol2.submergedDepth = '';
+        vm.parameters.protocol2.oysterCagePhoto = '';
         vm.parameters.protocol2.bioaccumulationOnCage = '';
         vm.parameters.protocol2.cageDamage = '';
         vm.parameters.protocol2.oysterMeasurements = '';
@@ -663,6 +675,7 @@
     vm.getGarbageExtent = ExpeditionViewHelper.getGarbageExtent;
     vm.getMobileOrganismById = ExpeditionViewHelper.getMobileOrganismById;
     vm.getSessileOrganismName = ExpeditionViewHelper.getSessileOrganismName;
+    vm.getSessileOrganismPhoto = ExpeditionViewHelper.getSessileOrganismPhoto;
     vm.getWaterTemperatureMethod = ExpeditionViewHelper.getWaterTemperatureMethod;
     vm.getDissolvedOxygenMethod = ExpeditionViewHelper.getDissolvedOxygenMethod;
     vm.getSalinityMethod = ExpeditionViewHelper.getSalinityMethod;
@@ -681,5 +694,15 @@
       var organism = vm.getMobileOrganismById(id);
       return (organism) ? organism.commonName : '';
     };
+
+    vm.getMobileOrganismPhoto = function(sketchPhoto, id) {
+      if (sketchPhoto && sketchPhoto.path) {
+        return sketchPhoto.path;
+      } else {
+        var organism = vm.getMobileOrganismById(id);
+        return (organism && organism.image) ? organism.image.path : '';
+      }
+    };
+
   }
 })();
