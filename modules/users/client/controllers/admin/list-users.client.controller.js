@@ -18,10 +18,10 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.searchChange = function($event) {
-      if ($scope.filter.searchString.length >= 3 || $scope.filter.searchString.length === 0) {
+      if ($scope.filter.searchString.length >= 2 || $scope.filter.searchString.length === 0) {
         $scope.filter.page = 1;
         $scope.findUsers();
-        $scope.figureOutItemsToDisplay();
+        //$scope.figureOutItemsToDisplay();
       }
     };
 

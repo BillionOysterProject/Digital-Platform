@@ -16,6 +16,7 @@
       byOwner: true,
       teamId: '',
       searchString: '',
+      sort: 'lastName'
       //page: 1,
       //limit: 8
     };
@@ -26,7 +27,7 @@
 
     vm.searchChange = function($event){
       console.log('search changed');
-      if (vm.filter.searchString.length >= 3 || vm.filter.searchString.length === 0) {
+      if (vm.filter.searchString.length >= 2 || vm.filter.searchString.length === 0) {
         vm.filter.page = 1;
         vm.findTeamMembers();
       }
@@ -37,12 +38,13 @@
         byOwner: true,
         teamId: vm.filter.teamId,
         searchString: vm.filter.searchString,
+        sort: vm.filter.sort,
         //page: vm.filter.page,
         //limit: vm.filter.limit
       }, function(data) {
         vm.members = data;
-        vm.buildPager();
         vm.error = null;
+        vm.buildPager();
       }, function(error) {
         vm.error = error.data.message;
       });

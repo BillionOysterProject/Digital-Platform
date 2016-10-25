@@ -153,90 +153,103 @@ exports.list = function (req, res) {
 };
 
 exports.listMembers = function (req, res) {
-  var query;
-  var and = [];
+  var queryTeam;
+  var andTeam = [];
 
   if (req.query.byOwner) {
-    and.push({ 'teamLead': req.user });
+    andTeam.push({ 'teamLead': req.user });
   }
   if (req.query.teamId) {
-    and.push({ '_id': req.query.teamId });
+    andTeam.push({ '_id': req.query.teamId });
   }
 
-  var searchRe;
-  var or = [];
-  if (req.query.searchString) {
-    try {
-      searchRe = new RegExp(req.query.searchString, 'i');
-    } catch(e) {
-      return res.status(400).send({
-        message: 'Search string is invalid'
-      });
-    }
-
-    or.push({ 'displayName': searchRe });
-    or.push({ 'email': searchRe });
-    or.push({ 'username': searchRe });
-
-    and.push({ $or: or });
-  }
-
-  if (and.length === 1) {
-    query = Team.find(and[0]);
-  } else if (and.length > 0) {
-    query = Team.find({ $and: and });
+  if (andTeam.length === 1) {
+    queryTeam = Team.find(andTeam[0]);
+  } else if (andTeam.length > 0) {
+    queryTeam = Team.find({ $and: andTeam });
   } else {
-    query = Team.find();
+    queryTeam = Team.find();
   }
 
-  if (req.query.sort) {
-    if (req.query.sort === 'owner') {
-      query.sort({ 'teamLead': 1, 'name': 1 });
-    }
-  } else {
-    query.sort('name');
-  }
-
-  if (req.query.limit) {
-    if (req.query.page) {
-      var limit = Number(req.query.limit);
-      var page = Number(req.query.page);
-      query.skip(limit*(page-1)).limit(limit);
-    }
-  } else {
-    var limit2 = Number(req.query.limit);
-    query.limit(limit2);
-  }
-
-  query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName').exec(function (err, teams) {
+  queryTeam.populate('teamLead', 'displayName').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var members = [];
+      var memberIds = [];
       for (var i = 0; i < teams.length; i++) {
-        var team = teams[i];
-        for (var j = 0; j < team.teamMembers.length; j++) {
-          var member = team.teamMembers[j];
-          members.push({
-            _id: member._id,
-            displayName: member.displayName,
-            firstName: member.firstName,
-            lastName: member.lastName,
-            username: member.username,
-            email: member.email,
-            profileImageURL: member.profileImageURL,
-            pending: member.pending,
-            team: {
-              _id: team._id,
-              name: team.name
-            }
-          });
-        }
+        memberIds = memberIds.concat(teams[i].teamMembers);
       }
-      res.json(members);
+
+      if (memberIds.length > 0) {
+        var query;
+        var and = [];
+
+        and.push({ '_id': { $in: memberIds } });
+
+        var searchRe;
+        var or = [];
+        if (req.query.searchString) {
+          
+          try {
+            searchRe = new RegExp(req.query.searchString, 'i');
+          } catch(e) {
+            return res.status(400).send({
+              message: 'Search string is invalid'
+            });
+          }
+
+          or.push({ 'displayName': searchRe });
+          or.push({ 'firstName': searchRe });
+          or.push({ 'lastName': searchRe });
+          or.push({ 'email': searchRe });
+          or.push({ 'username': searchRe });
+
+          and.push({ $or: or });
+        }
+
+        if (and.length === 1) {
+          query = User.find(and[0], '-salt -password');
+        } else if (and.length > 0) {
+          query = User.find({ $and: and }, '-salt -password');
+        } else {
+          query = User.find({}, '-salt -password');
+        }
+
+        if (req.query.sort) {
+          if (req.query.sort === 'firstName') {
+            query.sort({ 'firstName': 1 });
+          } else if (req.query.sort === 'lastName') {
+            query.sort({ 'lastName': 1 });
+          }
+        } else {
+          query.sort('-create');
+        }
+
+        if (req.query.limit) {
+          if (req.query.page) {
+            var limit = Number(req.query.limit);
+            var page = Number(req.query.page);
+            query.skip(limit*(page-1)).limit(limit);
+          }
+        } else {
+          var limit2 = Number(req.query.limit);
+          query.limit(limit2);
+        }
+
+        query.populate('teamLead', 'displayName').exec(function (err, members) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(members);
+          }
+        });
+      } else {
+        res.json({});
+      }
     }
   });
 };
