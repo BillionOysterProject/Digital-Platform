@@ -92,7 +92,7 @@
                 </ul>
                 <br/>
                 <ul class="list-unstyled">
-                    <b>Teacher Resources</b>
+                    <b>Lesson Resources</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.teacherResourcesFiles">
                         <a class="break" download="{{file.originalname}}" target="_blank"
                         ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
