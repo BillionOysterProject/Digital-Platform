@@ -144,6 +144,10 @@
                         <div ng-bind-html="vm.lesson.background | sanitize"></div>
                     </div>
                     <div class="col-sm-12">
+                        <h3>Preparation</h3>
+                        <div ng-bind-html="vm.lesson.preparation | sanitize"></div>
+                    </div>
+                    <div class="col-sm-12">
                         <h3>Instruction Plan</h3>
                         <h4 ng-hide="!vm.lesson.instructionPlan.engage">Engage</h4>
                         <div ng-hide="!vm.lesson.instructionPlan.engage" ng-bind-html="vm.lesson.instructionPlan.engage | sanitize"></div>
