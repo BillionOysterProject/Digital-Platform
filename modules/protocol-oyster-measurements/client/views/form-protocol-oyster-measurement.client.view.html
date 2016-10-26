@@ -118,9 +118,9 @@
             <p class="lead blue" ng-show="oysterMeasurement.minimumSizeOfAllLiveOysters || oysterMeasurement.maximumSizeOfAllLiveOysters ||
             oysterMeasurement.averageSizeOfAllLiveOysters || oysterMeasurement.totalNumberOfAllLiveOysters">
             Great work! Of the total population, the
-                minimum shell size is <b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
-                maximum size is <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
-                average size is <b>{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
+                minimum shell size is <b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}} mm</b>,
+                maximum size is <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}} mm</b>,
+                average size is <b>{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} mm</b>, and
                 total oysters alive is <b>{{oysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
               <p ng-show="previous &&
               previous.totalNumberOfAllLiveOysters === oysterMeasurement.totalNumberOfAllLiveOysters">
