@@ -82,16 +82,6 @@
         <div class="row">
             <div class="col-sm-3">
                 <ul class="list-unstyled">
-                    <b>Supplies</b>
-                    <p ng-bind-html="vm.lesson.materialsResources.supplies | sanitize"></p>
-                </ul>
-                <br/>
-                <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.teacherTips">
-                    <b>Teacher Tips</b>
-                    <p ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></p>
-                </ul>
-                <br/>
-                <ul class="list-unstyled">
                     <b>Lesson Resources</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.teacherResourcesFiles">
                         <a class="break" download="{{file.originalname}}" target="_blank"
@@ -140,12 +130,20 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <h3>Background</h3>
-                        <div ng-bind-html="vm.lesson.background | sanitize"></div>
+                        <h3>Supplies</h3>
+                        <div ng-bind-html="vm.lesson.materialsResources.supplies | sanitize"></div>
                     </div>
                     <div class="col-sm-12">
                         <h3>Preparation</h3>
                         <div ng-bind-html="vm.lesson.preparation | sanitize"></div>
+                    </div>
+                    <div class="col-sm-12">
+                        <h3>Background</h3>
+                        <div ng-bind-html="vm.lesson.background | sanitize"></div>
+                    </div>
+                    <div class="col-sm-12">
+                        <h3>Teacher Tips</h3>
+                        <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div>
                     </div>
                     <div class="col-sm-12">
                         <h3>Instruction Plan</h3>
