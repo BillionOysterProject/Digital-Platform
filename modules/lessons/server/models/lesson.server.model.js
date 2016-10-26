@@ -121,6 +121,10 @@ var LessonSchema = new Schema({
     type: String,
     trim: true
   },
+  preparation: {
+    type: String,
+    trim: true
+  },
   instructionPlan: {
     type: instructionPlans,
     validate: instructionPlanValidator
