@@ -469,6 +469,47 @@
       $state.go('lessons.list');
     };
 
+    var shouldShowSidebar = function() {
+      return (vm.lesson.materialsResources.teacherResourcesFiles &&
+      vm.lesson.materialsResources.teacherResourcesFiles.length > 0) ||
+      (vm.lesson.materialsResources.teacherResourcesLinks &&
+      vm.lesson.materialsResources.teacherResourcesLinks.length > 0) ||
+      (vm.lesson.materialsResources.handoutsFileInput &&
+      vm.lesson.materialsResources.handoutsFileInput.length > 0) ||
+      (vm.lesson.materialsResources.stateTestQuestions &&
+      vm.lesson.materialsResources.stateTestQuestions.length > 0);
+    };
+    vm.showSidebar = shouldShowSidebar();
+
+    var getStandardCount = function() {
+      var count = 0;
+      if (vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) count++;
+      if (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) count++;
+      if (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) count++;
+      if (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) count++;
+      if (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) count++;
+      if (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) count++;
+      if (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) count++;
+      if (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) count++;
+      if (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0) count++;
+      return count;
+    };
+    var getStandardsClass = function() {
+      var count = getStandardCount();
+      if (count === 1) {
+        return 'col-sm-12';
+      } else if (count === 2) {
+        return 'col-sm-6';
+      } else if (count === 3) {
+        return 'col-sm-4';
+      } else if (count === 4) {
+        return 'col-sm-3';
+      } else {
+        return 'col-sm-4';
+      }
+    };
+    vm.standardClass = getStandardsClass();
+
     vm.toggleVocabularyModal = function() {
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };

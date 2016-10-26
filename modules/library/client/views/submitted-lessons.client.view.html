@@ -11,16 +11,16 @@
         </div>
         <div class="panel" ui-sref="lessons.view({ lessonId: submitted._id })">
             <div class="panel-heading" style="background: {{submitted.unit.color}}">
-                <span class="pull-right">{{submitted.lessonOverview.grade}}</span>
-                <h3 class="panel-title">
+                <span class="pull-right" ng-show="submitted.lessonOverview.grade">{{submitted.lessonOverview.grade}}</span>
+                <h3 class="panel-title" ng-show="submitted.unit">
                     <i class="{{submitted.unit.icon}}"></i>
                     {{submitted.unit.title}}
                 </h3>
             </div>
             <div class="panel-body">
-                <small>{{submitted.lessonOverview.setting}}</small>
+                <small ng-show="submitted.lessonOverview.setting">{{submitted.lessonOverview.setting}}</small>
                 <h4>{{submitted.title}}</h4>
-                <p ng-bind="submitted.lessonOverview.lessonSummary | limitTo:200"></p>
+                <p ng-bind-html="submitted.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
                 <img ng-show="submitted.featuredImage" ng-src="{{submitted.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
