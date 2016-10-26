@@ -122,8 +122,10 @@
               <div class="row">
                 <!-- Switched to textarea instead of wysiwyg -- <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>-->
                 <div class="form-group col-sm-12" show-errors>
-                    <label for="lessonSummary" class="control-label">Lesson Summary *</label>
-                    <textarea name="lessonSummary" id="lessonSummary" class="form-control" ng-model="vm.lesson.lessonOverview.lessonSummary" rows="7"></textarea>
+                    <!-- <label for="lessonSummary" class="control-label">Lesson Summary *</label>
+                    <textarea name="lessonSummary" id="lessonSummary" class="form-control" ng-model="vm.lesson.lessonOverview.lessonSummary" rows="7"></textarea> -->
+                    <wysiwyg-editor outer-column="col-md-12" name="lessonSummary"
+                    in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
                 </div>
               </div>
             </div>
@@ -147,9 +149,11 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group" show-errors>
-                    <label for="supplies" class="control-label">Supplies *</label>
+                    <!-- <label for="supplies" class="control-label">Supplies *</label> -->
                     <!-- <select class="select2create form-control" name="supplies" multiple="multiple" ng-model="vm.lesson.materialsResources.supplies"></select> -->
-                    <textarea name="supplies" id="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies"></textarea>
+                    <!-- <textarea name="supplies" id="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies"></textarea> -->
+                    <wysiwyg-editor outer-column="col-md-12" name="supplies"
+                    in-title="Supplies *" ng-model="vm.lesson.materialsResources.supplies" label-class="control-label"></wysiwyg-editor>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -200,8 +204,10 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="teacherTips" class="control-label">Teacher Tips</label>
-                    <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips" rows="7"></textarea>
+                    <!-- <label for="teacherTips" class="control-label">Teacher Tips</label>
+                    <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips" rows="7"></textarea> -->
+                    <wysiwyg-editor outer-column="col-md-12" name="teacherTips"
+                    in-title="Teacher Tips" ng-model="vm.lesson.materialsResources.teacherTips" label-class="control-label"></wysiwyg-editor>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -221,7 +227,8 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background *" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
+                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background *"
+                ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
