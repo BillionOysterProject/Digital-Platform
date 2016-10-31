@@ -379,16 +379,18 @@
                 LessonsService.get({
                   lessonId: lessonId
                 }, function(data) {
-                  vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
-                  vm.handouts = (data && data.materialsResources) ? data.materialsResources.handoutsFileInput : [];
-                  vm.resourceFiles = (data && data.materialsResources) ? data.materialsResources.teacherResourcesFiles : [];
-                  vm.stateTestQuestionsFiles = (data && data.materialsResources) ? data.materialsResources.stateTestQuestions : [];
-
                   vm.saving = false;
+                  console.log('vm.lesson._id', vm.lesson._id);
                   if (!vm.lesson._id) {
                     vm.lesson._id = data._id;
                     $location.path('/lessons/' + vm.lesson._id + '/draft', false);
                   }
+
+                  vm.lesson = data;
+                  vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+                  vm.handouts = (data && data.materialsResources) ? data.materialsResources.handoutsFileInput : [];
+                  vm.resourceFiles = (data && data.materialsResources) ? data.materialsResources.teacherResourcesFiles : [];
+                  vm.stateTestQuestionsFiles = (data && data.materialsResources) ? data.materialsResources.stateTestQuestions : [];
 
                   if (vm.error && vm.error.length > 0) {
                     vm.valid = false;
@@ -496,28 +498,31 @@
     };
 
     var shouldShowSidebar = function() {
-      return (vm.lesson.materialsResources.teacherResourcesFiles &&
+      return vm.lesson && vm.lesson.materialsResources &&
+      ((vm.lesson.materialsResources.teacherResourcesFiles &&
       vm.lesson.materialsResources.teacherResourcesFiles.length > 0) ||
       (vm.lesson.materialsResources.teacherResourcesLinks &&
       vm.lesson.materialsResources.teacherResourcesLinks.length > 0) ||
       (vm.lesson.materialsResources.handoutsFileInput &&
       vm.lesson.materialsResources.handoutsFileInput.length > 0) ||
       (vm.lesson.materialsResources.stateTestQuestions &&
-      vm.lesson.materialsResources.stateTestQuestions.length > 0);
+      vm.lesson.materialsResources.stateTestQuestions.length > 0));
     };
     vm.showSidebar = shouldShowSidebar();
 
     var getStandardCount = function() {
       var count = 0;
-      if (vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) count++;
-      if (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) count++;
-      if (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) count++;
-      if (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) count++;
-      if (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) count++;
-      if (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) count++;
-      if (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) count++;
-      if (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) count++;
-      if (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0) count++;
+      if (vm.lesson && vm.lesson.standards) {
+        if (vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) count++;
+        if (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) count++;
+        if (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) count++;
+        if (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) count++;
+        if (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) count++;
+        if (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) count++;
+        if (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) count++;
+        if (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) count++;
+        if (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0) count++;
+      }
       return count;
     };
     var getStandardsClass = function() {
