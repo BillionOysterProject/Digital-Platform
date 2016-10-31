@@ -114,7 +114,10 @@ var getExistingResources = function(resourcesFiles) {
   if (resourcesFiles) {
     for (var j = 0; j < resourcesFiles.length; j++) {
       var resource = resourcesFiles[j];
-      if (resource.path && resource.originalname && resource.filename) {
+      if (resource.path !== undefined && resource.path !== '' &&
+        resource.originalname !== undefined && resource.originalname !== '' &&
+        resource.filename !== undefined && resource.filename !== '' &&
+        resource.mimetype !== undefined && resource.mimetype !== '') {
         existingResources.push(resource);
       }
     }
@@ -142,10 +145,10 @@ exports.create = function(req, res) {
       calendarEvent.resources = {
         resourcesFiles: []
       };
-    } else if (!calendarEvent.resources.resourcesFiles) {
+    } else {
       calendarEvent.resources.resourcesFiles = [];
     }
-    calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
+    calendarEvent.resources.resourcesFiles = getExistingResources(req.body.resources.resourcesFiles);
     calendarEvent.user = req.user;
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -258,10 +261,10 @@ exports.update = function(req, res) {
         calendarEvent.resources = {
           resourcesFiles: []
         };
-      } else if (!calendarEvent.resources.resourcesFiles) {
+      } else {
         calendarEvent.resources.resourcesFiles = [];
       }
-      calendarEvent.resources.resourcesFiles = getExistingResources(calendarEvent.resources.resourcesFiles);
+      calendarEvent.resources.resourcesFiles = getExistingResources(req.body.resources.resourcesFiles);
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
       if (pattern.test(calendarEvent.featuredImage.path)) {

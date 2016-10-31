@@ -92,7 +92,7 @@
 
     // Cancel the upload process
     $scope.removeFile = function (index, file) {
-      if (file.index) {
+      if (file.index !== undefined && file.index > -1) {
         $scope.uploader.removeFromQueue(file.index);
       }
       var filesToDelete = $scope.files.splice(index,1);

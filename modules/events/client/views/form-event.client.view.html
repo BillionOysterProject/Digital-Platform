@@ -162,7 +162,7 @@
                                       <a ng-click="vm.deleteResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                   </tr>
-                                  <tr ng-repeat="file in vm.resourceFiles">
+                                  <tr ng-repeat="file in vm.resourcesFiles">
                                     <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                                     <td></td>
                                     <td id="event-resource-files">
@@ -200,8 +200,8 @@
         can-geocode="true" can-click-map-to-add-marker="true"
         can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
     </div>
-    <resource-upload-modal resource-files-uploader="vm.resourceFilesUploader"
-    resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+    <resource-upload-modal resource-files-uploader="vm.resourcesFilesUploader"
+    resource-files="vm.resourcesFiles" resource-links="vm.resourceLinks"
     resource-dropzone-id="event-resources-file-dropzone"
     close-function=""></resource-upload-modal>
 </section>
