@@ -378,54 +378,10 @@
   <!-- MODALS -->
   <saved-lesson-modal></saved-lesson-modal>
   <updated-lesson-modal></updated-lesson-modal>
-  <div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title">Add a teacher resource</h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-12">
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                  <a href="#link" data-toggle="tab" aria-controls="link" role="tab">Link</a>
-                </li>
-                <li role="presentation">
-                  <a href="#upload" data-toggle="tab" aria-controls="upload" role="tab">Upload</a>
-                </li>
-              </ul>
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="link">
-                  <br/>
-                  <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" ng-model="vm.tempResourceLinkName"/>
-                  </div>
-                  <div class="form-group">
-                    <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
-                    <input type="text" class="form-control" ng-model="vm.tempResourceLink"/>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="upload">
-                  <br/>
-                  <multiple-file-drop-zone uploader="vm.teacherResourceFilesUploader" files="vm.tempResourceFiles"></multiple-file-drop-zone>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.cancelTeacherResources()">Cancel</button>
-          <!-- <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.deleteTeacherResources()">Delete</button> -->
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addTeacherResources()">Add</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
+  resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+  resource-dropzone-id="lesson-resources-file-dropzone"
+  close-function=""></resource-upload-modal>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
   <form-term-modal term="vm.term" save-function="vm.saveTerm" cancel-function="vm.cancelTermAdd"></form-term-modal>
   <!--END MODALS-->

@@ -35,10 +35,7 @@
     vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
     vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
     vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
-    vm.tempResourceFiles = [];
     vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
-    vm.tempResourceLinkName = '';
-    vm.tempResourceLink = '';
     vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
 
     vm.subjectAreasSelectConfig = {
@@ -335,6 +332,21 @@
       } else {
         saveDraftUrl = 'api/lessons/000000000000000000000000/incremental-save';
       }
+
+      if (!vm.lesson.materialsResources) {
+        vm.lesson.materialsResources = {
+          handoutsFileInput: vm.handouts,
+          teacherResourcesFiles: vm.resourceFiles,
+          teacherResourcesLinks: vm.resourceLinks,
+          stateTestQuestions: vm.stateTestQuestionsFiles
+        };
+      } else {
+        vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+        vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+        vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
+        vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+      }
+
       $http.post(saveDraftUrl, vm.lesson)
       .success(function(data, status, headers, config) {
         if (data.errors) {
@@ -403,6 +415,20 @@
       vm.saving = true;
       vm.error = [];
       vm.valid = true;
+
+      if (!vm.lesson.materialsResources) {
+        vm.lesson.materialsResources = {
+          handoutsFileInput: vm.handouts,
+          teacherResourcesFiles: vm.resourceFiles,
+          teacherResourcesLinks: vm.resourceLinks,
+          stateTestQuestions: vm.stateTestQuestionsFiles
+        };
+      } else {
+        vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
+        vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
+        vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
+        vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+      }
 
       var content = angular.element('#modal-saved-lesson');
 
@@ -514,30 +540,8 @@
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };
 
-    vm.cancelTeacherResources = function() {
-      vm.tempResourceFiles = [];
-
-      vm.tempResourceLinkName = '';
-      vm.tempResourceLink = '';
-    };
-
-    vm.addTeacherResources = function() {
-      if (vm.tempResourceFiles.length > 0) {
-        vm.resourceFiles = vm.resourceFiles.concat(vm.tempResourceFiles);
-        vm.tempResourceFiles = [];
-      }
-      if (vm.tempResourceLink) {
-        vm.resourceLinks.push({
-          name: vm.tempResourceLinkName,
-          link: vm.tempResourceLink
-        });
-        vm.tempResourceLinkName = '';
-        vm.tempResourceLink = '';
-      }
-    };
-
     vm.deleteTeacherResourceFile = function(index, file) {
-      if (file.index) {
+      if (file.index !== undefined && file.index > -1) {
         vm.teacherResourceFilesUploader.removeFromQueue(file.index);
       }
       vm.resourceFiles.splice(index,1);
