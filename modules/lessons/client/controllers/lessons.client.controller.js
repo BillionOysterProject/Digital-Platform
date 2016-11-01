@@ -26,11 +26,8 @@
     vm.showVocabularyModal = false;
     vm.saving = false;
     vm.valid = (vm.lesson.status === 'published') ? true : false;
-    vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
-    vm.viewing = ($location.path().split(/[\s/]+/).pop() !== 'edit' &&
-      $location.path().split(/[\s/]+/).pop() !== 'draft' &&
-      $location.path().split(/[\s/]+/).pop() !== 'create') ? true : false;
-    vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' : 'lessons.edit({ lessonId: vm.lesson._id })';
+    vm.editLink = (vm.lesson.status === 'draft') ? 'lessons.draft({ lessonId: vm.lesson._id })' :
+      'lessons.edit({ lessonId: vm.lesson._id })';
 
     vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
     vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
@@ -50,21 +47,6 @@
           searchString: searchText
         });
       }
-    };
-
-    vm.protocolConnections = [
-      { type: 'Protocol 1', name: 'Protocol 1: Site Conditions', value: 'protocol1' },
-      { type: 'Protocol 2', name: 'Protocol 2: Oyster Measurements', value: 'protocol2' },
-      { type: 'Protocol 3', name: 'Protocol 3: Mobile Trap', value: 'protocol3' },
-      { type: 'Protocol 4', name: 'Protocol 4: Settlement Tiles', value: 'protocol4' },
-      { type: 'Protocol 5', name: 'Protocol 5: Water Quality', value: 'protocol5' },
-    ];
-
-    vm.protocolConnectionsSelectConfig = {
-      mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.protocolConnections
     };
 
     vm.vocabularySelectConfig = {
@@ -352,15 +334,15 @@
         if (data.errors) {
           vm.error = data.errors;
           vm.valid = false;
-          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
         } else if (data.successful) {
           vm.error = [];
           vm.valid = true;
-          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
         }
+        if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
         successCallback(data.lesson);
       })
       .error(function(data, status, headers, config) {
+        if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
         errorCallback();
       });
 
@@ -455,14 +437,6 @@
             }, 1000);
           }
 
-          var unsubmitLesson = function(errorMessage) {
-            delete vm.lesson._id;
-            vm.lesson.unit = {
-              _id: vm.lesson.unit
-            };
-            vm.error = errorMessage;
-          };
-
           uploadFeaturedImage(lessonId, function(uploadFeaturedImageError) {
             if (uploadFeaturedImageError) vm.error.push(uploadFeaturedImageError);
             uploadHandoutFiles(lessonId, function(uploadHandoutFilesError) {
@@ -473,6 +447,7 @@
                   if (uploadStateTestQuestionFilesError) vm.error.push(uploadStateTestQuestionFilesError);
 
                   vm.saving = false;
+                  angular.element('#modal-saved-lesson').modal('hide');
                   if (vm.error && vm.error.length > 0) {
                     vm.valid = false;
                   } else {
@@ -494,7 +469,13 @@
     };
 
     vm.cancel = function() {
-      $state.go('lessons.list');
+      if (vm.lesson._id) {
+        $state.go('lessons.view', {
+          lessonId: vm.lesson._id
+        });
+      } else {
+        $state.go('lessons.list');
+      }
     };
 
     var shouldShowSidebar = function() {
@@ -525,6 +506,7 @@
       }
       return count;
     };
+
     var getStandardsClass = function() {
       var count = getStandardCount();
       if (count === 1) {

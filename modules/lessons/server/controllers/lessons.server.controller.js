@@ -199,6 +199,9 @@ exports.incrementalSave = function(req, res) {
     lesson.featuredImage.path = '';
   }
 
+  if (!lesson.updated) lesson.updated = [];
+  lesson.updated.push(Date.now());
+
   lesson.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -436,13 +439,19 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     }
     if (lesson.materialsResources) {
       if (lesson.materialsResources.teacherResourcesFiles && lesson.materialsResources.teacherResourcesFiles.path) {
-        filesToDelete.push(lesson.materialsResources.teacherResourcesFiles.path);
+        for (var i = 0; i < lesson.materialsResources.teacherResourcesFiles.length; i++) {
+          filesToDelete.push(lesson.materialsResources.teacherResourcesFiles[i].path);
+        }
       }
       if (lesson.materialsResources.handoutsFileInput && lesson.materialsResources.handoutsFileInput.path) {
-        filesToDelete.push(lesson.materialsResources.handoutsFileInput.path);
+        for (var j = 0; j < lesson.materialsResources.handoutsFileInput.length; j++) {
+          filesToDelete.push(lesson.materialsResources.handoutsFileInput[j].path);
+        }
       }
       if (lesson.materialsResources.stateTestQuestions && lesson.materialsResources.stateTestQuestions.path) {
-        filesToDelete.push(lesson.materialsResources.stateTestQuestions.path);
+        for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+          filesToDelete.push(lesson.materialsResources.stateTestQuestions[k].path);
+        }
       }
     }
   }
@@ -591,16 +600,19 @@ var uploadFileSuccess = function(lesson, res) {
 
 var uploadFileError = function(lesson, errorMessage, res) {
   console.log('errorMessage', errorMessage);
-  deleteInternal(lesson,
-  function(lesson) {
-    return res.status(400).send({
-      message: errorMessage
-    });
-  }, function(err) {
-    return res.status(400).send({
-      message: err
-    });
+  return res.status(400).send({
+    message: errorMessage
   });
+  // deleteInternal(lesson,
+  // function(lesson) {
+  //   return res.status(400).send({
+  //     message: errorMessage
+  //   });
+  // }, function(err) {
+  //   return res.status(400).send({
+  //     message: err
+  //   });
+  // });
 };
 
 /**
