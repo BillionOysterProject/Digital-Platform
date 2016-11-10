@@ -40,7 +40,7 @@
     }
 
     vm.featuredImageURL = (vm.event && vm.event.featuredImage) ? vm.event.featuredImage.path : '';
-    vm.resourceFiles = (vm.event && vm.event.resources && vm.event.resources.resourcesFiles) ?
+    vm.resourcesFiles = (vm.event && vm.event.resources && vm.event.resources.resourcesFiles) ?
       vm.event.resources.resourcesFiles : [];
     vm.resourceLinks = (vm.event && vm.event.resources && vm.event.resources.resourcesLinks) ?
       vm.event.resources.resourcesLinks : [];
@@ -51,7 +51,7 @@
       queueLimit: 2
     });
 
-    vm.resourceFilesUploader = new FileUploader({
+    vm.resourcesFilesUploader = new FileUploader({
       alias: 'newResourceFile',
       queueLimit: 20
     });
@@ -139,8 +139,8 @@
     };
 
     vm.deleteResourceFile = function(index, file) {
-      if (file.index) {
-        vm.resourceFilesUploader.removeFromQueue(file.index);
+      if (file.index !== undefined && file.index > -1) {
+        vm.resourcesFilesUploader.removeFromQueue(file.index);
       }
       vm.resourcesFiles.splice(index, 1);
     };
@@ -232,10 +232,12 @@
 
       if (!vm.event.resources) {
         vm.event.resources = {
-          resourcesLinks: vm.resourceLinks
+          resourcesLinks: vm.resourceLinks,
+          resourcesFiles: vm.resourcesFiles
         };
-      } else if (!vm.event.resources.resourcesLinks) {
+      } else {
         vm.event.resources.resourcesLinks = vm.resourceLinks;
+        vm.event.resources.resourcesFiles = vm.resourcesFiles;
       }
 
       // TODO: move create/update logic to service
@@ -275,20 +277,20 @@
         };
 
         var uploadResourceFiles = function (eventId, resourceFileCallback) {
-          if (vm.resourceFilesUploader.queue.length > 0) {
-            vm.resourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-              vm.resourceFilesUploader.removeFromQueue(fileItem);
+          if (vm.resourcesFilesUploader.queue.length > 0) {
+            vm.resourcesFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+              vm.resourcesFilesUploader.removeFromQueue(fileItem);
               resourceFileCallback();
             };
 
-            vm.resourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+            vm.resourcesFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
               resourceFileCallback(response.message);
             };
 
-            vm.resourceFilesUploader.onBeforeUploadItem = function(item) {
+            vm.resourcesFilesUploader.onBeforeUploadItem = function(item) {
               item.url = 'api/events/' + eventId + '/upload-resources';
             };
-            vm.resourceFilesUploader.uploadAll();
+            vm.resourcesFilesUploader.uploadAll();
           } else {
             resourceFileCallback();
           }
