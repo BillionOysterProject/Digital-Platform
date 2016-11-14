@@ -565,7 +565,7 @@ describe('Lesson E2E Tests', function() {
 //############################################################################//
 // TEAM LEAD - VIEW PUBLISHED LESSONS
 //############################################################################//
-  xdescribe('List/Search Lesson Tests', function() {
+  describe('List/Search Lesson Tests', function() {
     describe('Search Lessons', function() {
       var searchField = element(by.model('vm.filter.searchString'));
       var showAllButton = element(by.css('[ng-click="vm.clearFilters()"]'));
