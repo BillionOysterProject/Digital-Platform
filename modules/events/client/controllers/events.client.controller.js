@@ -92,7 +92,7 @@
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
-    vm.earliestDateTimeString = EventHelper.getEarliestDateTimeString(vm.event.dates);
+    vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
     vm.daysRemaining = EventHelper.getDaysRemaining(vm.event.dates, vm.event.deadlineToRegister);
     vm.past = (vm.daysRemaining < 0) ? true : false;

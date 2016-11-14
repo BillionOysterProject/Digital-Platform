@@ -329,59 +329,84 @@
         vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
       }
 
-      $http.post(saveDraftUrl, vm.lesson)
-      .success(function(data, status, headers, config) {
-        if (data.errors) {
-          vm.error = data.errors;
-          vm.valid = false;
-        } else if (data.successful) {
-          vm.error = [];
-          vm.valid = true;
-        }
-        if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-        successCallback(data.lesson);
-      })
-      .error(function(data, status, headers, config) {
-        if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
-        errorCallback();
-      });
+      // angular.element('#modal-save-draft-progress-bar').modal('show');
+      $scope.finishedSaving = 0;
+      $timeout(function() {
+        $scope.savingStatus = 'Saving Lesson Draft';
+        $http.post(saveDraftUrl, vm.lesson)
+        .success(function(data, status, headers, config) {
+          if (data.errors) {
+            vm.error = data.errors;
+            vm.valid = false;
+          } else if (data.successful) {
+            vm.error = [];
+            vm.valid = true;
+          }
+          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+          successCallback(data.lesson);
+        })
+        .error(function(data, status, headers, config) {
+          if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
+          errorCallback();
+        });
+      }, 1000);
 
       function successCallback(res) {
+        $scope.finishedSaving = 20;
         var lessonId = res._id;
 
-        uploadFeaturedImage(lessonId, function(uploadFeaturedImageError) {
-          if (uploadFeaturedImageError) vm.error.push(uploadFeaturedImageError);
-          uploadHandoutFiles(lessonId, function(uploadHandoutFilesError) {
-            if (uploadHandoutFilesError) vm.error.push(uploadHandoutFilesError);
-            uploadResourceFiles(lessonId, function(uploadResourceFilesError) {
-              if (uploadResourceFilesError) vm.error.push(uploadResourceFilesError);
-              uploadStateTestQuestionFiles(lessonId, function (uploadStateTestQuestionFilesError) {
-                if (uploadStateTestQuestionFilesError) vm.error.push(uploadStateTestQuestionFilesError);
+        $scope.savingStatus = (vm.featuredImageUploader.queue.length > 0) ? 'Uploading Featured Image' : 'Saving Lesson Draft';
+        $timeout(function() {
+          uploadFeaturedImage(lessonId, function(uploadFeaturedImageError) {
+            if (uploadFeaturedImageError) vm.error.push(uploadFeaturedImageError);
+            $scope.finishedSaving = 40;
+            $scope.savingStatus = (vm.handoutFilesUploader.queue.length > 0) ? 'Uploading Handouts' : 'Saving Lesson Draft';
+            $timeout(function() {
+              uploadHandoutFiles(lessonId, function(uploadHandoutFilesError) {
+                if (uploadHandoutFilesError) vm.error.push(uploadHandoutFilesError);
+                $scope.finishedSaving = 60;
+                $scope.savingStatus = (vm.teacherResourceFilesUploader.queue.length > 0) ? 'Uploading Lesson Resources' : 'Saving Lesson Draft';
+                $timeout(function() {
+                  uploadResourceFiles(lessonId, function(uploadResourceFilesError) {
+                    if (uploadResourceFilesError) vm.error.push(uploadResourceFilesError);
+                    $scope.finishedSaving = 80;
+                    $scope.savingStatus = (vm.stateTestQuestionsFilesUploader.queue.length > 0) ? 'Uploading State Questions' : 'Saving Lesson Draft';
+                    $timeout(function() {
+                      uploadStateTestQuestionFiles(lessonId, function (uploadStateTestQuestionFilesError) {
+                        if (uploadStateTestQuestionFilesError) vm.error.push(uploadStateTestQuestionFilesError);
 
-                LessonsService.get({
-                  lessonId: lessonId
-                }, function(data) {
-                  vm.saving = false;
-                  console.log('vm.lesson._id', vm.lesson._id);
-                  if (!vm.lesson._id) {
-                    vm.lesson._id = data._id;
-                    $location.path('/lessons/' + vm.lesson._id + '/draft', false);
-                  }
+                        LessonsService.get({
+                          lessonId: lessonId
+                        }, function(data) {
+                          $scope.finishedSaving = 100;
+                          $timeout(function () {
+                            vm.saving = false;
+                            console.log('vm.lesson._id', vm.lesson._id);
+                            if (!vm.lesson._id) {
+                              vm.lesson._id = data._id;
+                              $location.path('/lessons/' + vm.lesson._id + '/draft', false);
+                            }
 
-                  vm.lesson = data;
-                  vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
-                  vm.handouts = (data && data.materialsResources) ? data.materialsResources.handoutsFileInput : [];
-                  vm.resourceFiles = (data && data.materialsResources) ? data.materialsResources.teacherResourcesFiles : [];
-                  vm.stateTestQuestionsFiles = (data && data.materialsResources) ? data.materialsResources.stateTestQuestions : [];
+                            vm.lesson = data;
+                            vm.featuredImageURL = (data && data.featuredImage) ? data.featuredImage.path : '';
+                            vm.handouts = (data && data.materialsResources) ? data.materialsResources.handoutsFileInput : [];
+                            vm.resourceFiles = (data && data.materialsResources) ? data.materialsResources.teacherResourcesFiles : [];
+                            vm.stateTestQuestionsFiles = (data && data.materialsResources) ? data.materialsResources.stateTestQuestions : [];
 
-                  if (vm.error && vm.error.length > 0) {
-                    vm.valid = false;
-                  }
-                });
+                            if (vm.error && vm.error.length > 0) {
+                              vm.valid = false;
+                            }
+                            // angular.element('#modal-save-draft-progress-bar').modal('hide');
+                          }, 500);
+                        });
+                      });
+                    }, 500);
+                  });
+                }, 500);
               });
-            });
+            }, 500);
           });
-        });
+        }, 500);
       }
 
       function errorCallback(res) {
@@ -569,10 +594,9 @@
         } else if (!vm.lesson.materialsResources.vocabulary) {
           vm.lesson.materialsResources.vocabulary = [];
         }
-        vm.lesson.materialsResources.vocabulary.push(id);
         $timeout(function() {
-          angular.element(document.querySelector('#vocabulary')).change();
           vm.lesson.materialsResources.vocabulary.push(id);
+          angular.element('#vocabulary-select').change();
         });
       });
     };

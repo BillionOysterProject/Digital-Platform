@@ -144,7 +144,7 @@
                                                   Oyster {{$index + 1}}</label>
                                                 <div class="col-sm-8">
                                                     <input class="form-control" type="number" ng-model="substrate.measurements[$index].sizeOfLiveOysterMM"
-                                                    name="measure{{$index}}" id="measure{{$index}}" ng-required="$index < substrate.totalNumberOfLiveOystersOnShell">
+                                                    name="measure{{$index}}" id="measure{{$index}}" ng-required="$index < substrate.totalNumberOfLiveOystersOnShell" min="0">
                                                 </div>
                                             </div>
                                         </div>
