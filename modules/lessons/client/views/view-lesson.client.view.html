@@ -1,10 +1,11 @@
-<div class="jumbotron" ng-hide="vm.featuredImageURL"></div>
-<div class="jumbotron" ng-show="vm.featuredImageURL" ng-background-image image-url="vm.featuredImageURL"></div>
+<div class="jumbotron" id="no-lesson-featured-image" ng-hide="vm.featuredImageURL"></div>
+<div class="jumbotron" id="lesson-featured-image" ng-show="vm.featuredImageURL" ng-background-image
+  image-url="vm.featuredImageURL"></div>
 <section class="content">
     <section class="container">
         <div class="row">
             <div class="col-sm-6">
-                <h2>{{vm.lesson.title}}
+                <h2 id="lesson-title">{{vm.lesson.title}}
                     <small>
                         <a ng-click="vm.favoriteLesson()" ng-hide="vm.lesson.saved"><i class="glyphicon glyphicon-star-empty"></i></a>
                         <a ng-click="vm.unfavoriteLesson()" ng-show="vm.lesson.saved"><i class="glyphicon glyphicon-star red"></i></a>
@@ -12,10 +13,10 @@
                 </h2>
             </div>
             <div class="col-sm-6 text-right">
-                <h6 ng-show="vm.lesson.status === 'draft'">Draft</h6>
-                <h6 ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
-                <h6 ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
-                <h6 ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
+                <h6 id="status-draft" ng-show="vm.lesson.status === 'draft'">Draft</h6>
+                <h6 id="status-pending" ng-show="vm.lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
+                <h6 id="status-returned" ng-show="vm.lesson.status === 'returned'" class="red">Returned</h6>
+                <h6 id="status-published" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
                 <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'"
                   ui-sref="{{vm.editLink}}">{{vm.lesson.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
                 <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
@@ -26,14 +27,16 @@
 
         <div class="row text-muted">
             <div class="col-sm-10">
-                <h5><!-- TODO: Need to get images into user -->
-                    <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
+                <h5 id="lesson-author-info"><!-- TODO: Need to get images into user -->
+                    <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}"
+                    class="img-circle pull-left col-sm-1 col-xs-3">
                     <b>{{vm.lesson.user.displayName}}</b><br>
                     <!-- TODO: I don't know where the team name is stored right now -->
-                    <span ng-hide="!vm.lesson.user.team">{{vm.lesson.user.team.name}} / </span><a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
+                    <span ng-hide="!vm.lesson.user.team">{{vm.lesson.user.team.name}} / </span>
+                    <a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
                 </h5>
             </div>
-            <div class="col-sm-2 text-right">
+            <div class="col-sm-2 text-right" id="lesson-created-date">
                 <p ng-bind="vm.lesson.created | date:'mediumDate'"></p>
             </div>
         </div>
@@ -59,7 +62,7 @@
                 <b>Setting</b>
                 <p ng-bind="vm.lesson.lessonOverview.setting"></p>
             </div>
-            <div class="col-sm-6" ng-show="vm.lesson.lessonOverview.subjectAreas">
+            <div class="col-sm-6" ng-show="vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0">
                 <b>Subject Areas</b>
                 <ul class="list-inline">
                     <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
@@ -74,7 +77,7 @@
 
         <div class="row">
             <div class="col-sm-3" ng-show="vm.showSidebar">
-                <ul class="list-unstyled" ng-show="(vm.lesson.materialsResources.teacherResourcesFiles &&
+                <ul class="list-unstyled" id="lesson-resources" ng-show="(vm.lesson.materialsResources.teacherResourcesFiles &&
                 vm.lesson.materialsResources.teacherResourcesFiles.length > 0) ||
                 (vm.lesson.materialsResources.teacherResourcesLinks &&
                 vm.lesson.materialsResources.teacherResourcesLinks.length > 0)">
@@ -91,7 +94,8 @@
                     <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
                 </ul>
                 <br/>
-                <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.handoutsFileInput &&
+                <ul class="list-unstyled" id="lesson-handouts"
+                ng-show="vm.lesson.materialsResources.handoutsFileInput &&
                 vm.lesson.materialsResources.handoutsFileInput.length > 0">
                     <b>Hand Outs</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
@@ -101,11 +105,12 @@
                     </li>
                 </ul>
                 <br/>
-                <ul class="list-unstyled" ng-show="vm.lesson.materialsResources.stateTestQuestions &&
+                <ul class="list-unstyled" id="lesson-state-test-questions"
+                ng-show="vm.lesson.materialsResources.stateTestQuestions &&
                 vm.lesson.materialsResources.stateTestQuestions.length > 0">
                     <b>State Test Questions</b>
                     <li ng-repeat="file in vm.lesson.materialsResources.stateTestQuestions">
-                        <img ng-src="{{file.path}}" class="img-responsive" />
+                        <img ng-src="{{file.path}}" class="img-responsive" id="img-{{file.originalname}}"/>
                     </li>
                 </ul>
             </div>
@@ -124,7 +129,7 @@
                         <h3>Objectives</h3>
                         <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
                     </div>
-                    <div ng-show="vm.lesson.materialsResources.vocabulary &&
+                    <div id="lesson-vocabulary" ng-show="vm.lesson.materialsResources.vocabulary &&
                     vm.lesson.materialsResources.vocabulary.length > 0"
                     ng-class="{ 'col-sm-6': vm.lesson.lessonObjectives, 'col-sm-12': !vm.lesson.lessonObjectives}">
                         <h3>Vocabulary</h3>
@@ -149,7 +154,8 @@
                         <h3>Teacher Tips</h3>
                         <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div>
                     </div>
-                    <div class="col-sm-12" ng-show="vm.lesson.instructionPlan.engage ||
+                    <div class="col-sm-12" id="lesson-instruction-plan"
+                    ng-show="vm.lesson.instructionPlan.engage ||
                     vm.lesson.instructionPlan.explore || vm.lesson.instructionPlan.explain ||
                     vm.lesson.instructionPlan.elaborate || vm.lesson.instructionPlan.evaluate">
                         <h3>Instruction Plan</h3>
@@ -181,7 +187,8 @@
         <hr />
 
         <div class="row">
-            <div class="col-sm-12" ng-show="(vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) ||
+            <div class="col-sm-12" id="lesson-standards"
+            ng-show="(vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) ||
             (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) ||
             (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) ||
             (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) ||

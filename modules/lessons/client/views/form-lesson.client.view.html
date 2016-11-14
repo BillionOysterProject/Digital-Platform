@@ -15,7 +15,7 @@
                 <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
                 <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
             </div>
-            <h1>{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
+            <h1 id="lesson-header">{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
           </div>
 
           <!-- Lesson -->
@@ -101,11 +101,14 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group" show-errors>
+                  <!-- <div class="form-group" show-errors>
                     <label for="subjectAreas" class="control-label">Subject Area(s)</label>
-                    <div aa-select2="vm.subjectAreasSelectConfig" name="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas"
+                    <div aa-select2="vm.subjectAreasSelectConfig" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas"
                     class="form-control"></div>
-                  </div>
+                  </div> -->
+                  <select-tags outer-column="col-md-12" name="subjectAreas" id="subjectAreas"
+                  in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas"
+                  label-class="control-label" select-config="vm.subjectAreasSelectConfig"></select-tags>
                 </div>
               </div>
               <div class="row">
@@ -140,16 +143,19 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group" id="vocabulary">
                     <label for="vocabulary" class="control-label">Vocabulary</label>
                     <div class="input-group">
-                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
-                      class="form-control col-md-10" id="vocabulary"></div>
+                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary-select" id="vocabulary-select"
+                      ng-model="vm.lesson.materialsResources.vocabulary" class="form-control col-md-10"></div>
                       <div class="input-group-btn">
                         <a class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></a>
                       </div>
                     </div>
                   </div>
+                  <!-- <select-tags outer-column="col-md-12" name="vocabulary" id="vocabulary"
+                  in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
+                  label-class="control-label" select-config="vm.vocabularySelectConfig"></select-tags> -->
                 </div>
               </div>
               <div class="row">
@@ -195,7 +201,7 @@
                     <label for="stateTestQuestions" class="control-label">State Test Questions</label>
                     <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
                     <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
-                    id="lesson-state-test-questions"></multiple-file-drop-zone>
+                    id="lesson-state-test-questions-files"></multiple-file-drop-zone>
                   </div>
                 </div>
               </div>
@@ -284,47 +290,47 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nycsssUnits"
+                <select-tags outer-column="col-md-12" name="nycsssUnits" id="nycsssUnits"
                 in-title="NYC Science Scope &amp; Sequence - Units" ng-model="vm.lesson.standards.nycsssUnits"
                 label-class="control-label" select-config="vm.nycsssUnitsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssKeyIdeas"
+                <select-tags outer-column="col-md-12" name="nysssKeyIdeas" id="nysssKeyIdeas"
                 in-title="NYS Science Standards - Key Ideas" ng-model="vm.lesson.standards.nysssKeyIdeas"
                 label-class="control-label" select-config="vm.nysssKeyIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings"
+                <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings" id="nysssMajorUnderstandings"
                 in-title="NYS Science Standards - Major Understandings" ng-model="vm.lesson.standards.nysssMajorUnderstandings"
                 label-class="control-label" select-config="vm.nysssMajorUnderstandingsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssMst"
+                <select-tags outer-column="col-md-12" name="nysssMst" id="nysssMst"
                 in-title="NYS Science Standards - MST" ng-model="vm.lesson.standards.nysssMst"
                 label-class="control-label" select-config="vm.nysssMstSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas"
+                <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas" id="ngssDisciplinaryCoreIdeas"
                 in-title="NGSS - Disciplinary Core Ideas" ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas"
                 label-class="control-label" select-config="vm.ngssDisciplinaryCoreIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices"
+                <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices" id="ngssScienceEngineeringPractices"
                 in-title="NGSS - Science and Engineering Practices" ng-model="vm.lesson.standards.ngssScienceEngineeringPractices"
                 label-class="control-label" select-config="vm.ngssScienceEngineeringPracticesSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts"
+                <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts" id="ngssCrossCuttingConcepts"
                 in-title="NGSS - Cross-Cutting Concepts" ng-model="vm.lesson.standards.ngssCrossCuttingConcepts"
                 label-class="control-label" select-config="vm.ngssCrossCuttingConceptsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="cclsMathematics"
+                <select-tags outer-column="col-md-12" name="cclsMathematics" id="cclsMathematics"
                 in-title="CCLS - Mathematics" ng-model="vm.lesson.standards.cclsMathematics"
                 label-class="control-label" select-config="vm.cclsMathematicsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
+                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects" id="cclsElaScienceTechnicalSubjects"
                 in-title="CCLS - ELA Science & Technical Subjects" ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects"
                 label-class="control-label" select-config="vm.cclsElaScienceTechnicalSubjectsSelectConfig"></select-tags>
               </div>
@@ -364,5 +370,6 @@
   close-function=""></resource-upload-modal>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
   <form-term-modal term="vm.term" save-function="vm.saveTerm" cancel-function="vm.cancelTermAdd"></form-term-modal>
+  <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
   <!--END MODALS-->
 </section>

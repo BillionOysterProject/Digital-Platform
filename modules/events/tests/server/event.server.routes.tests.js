@@ -47,7 +47,7 @@ describe('Calendar Event CRUD tests', function () {
     // Get application
     app = express.init(mongoose);
     agent = request.agent(app);
-    
+
     User.findOne({ 'username': admin.username }).exec(function(err, adminUser) {
       should.not.exist(err);
 
@@ -78,11 +78,11 @@ describe('Calendar Event CRUD tests', function () {
           path: 'aws.com/1234567890.png'
         },
         resources: {
-          teacherResourcesLinks: [{
+          resourcesLinks: [{
             name: 'Link Resource 1',
             link: 'www.resource.com/resource1'
           }],
-          teacherResourcesFiles: [{
+          resourcesFiles: [{
             originalname: 'resourcefile.pdf',
             mimetype: 'application/pdf',
             filename: '0987654321.pdf',

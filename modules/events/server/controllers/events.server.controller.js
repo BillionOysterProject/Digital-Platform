@@ -75,10 +75,10 @@ var getDateTime = function(date, time) {
 var getDateAndRange = function(date) {
   if (date) {
     var dateString = '';
-    dateString += moment(date.startDateTime).format('MMMM D, YYYY, ');
-    dateString += moment(date.startDateTime).format('h:mma');
+    dateString += moment(date.startDateTime).local().format('MMMM D, YYYY, ');
+    dateString += moment(date.startDateTime).local().format('h:mma');
     dateString += '-';
-    dateString += moment(date.endDateTime).format('h:mma');
+    dateString += moment(date.endDateTime).local().format('h:mma');
     return dateString;
   } else {
     return '';

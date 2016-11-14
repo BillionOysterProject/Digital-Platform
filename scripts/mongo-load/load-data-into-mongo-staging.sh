@@ -20,6 +20,7 @@ mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metaboroughscounties <u
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metagarbageextents <username/password> --type json --file metaGarbageExtents.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawinddirections <username/password> --type json --file metaWindDirections.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metatruefalses <username/password> --type json --file metaTrueFalses.json --drop
+mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metasubjectareas <username/password> --type json --file metaSubjectAreas.json --drop
 
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawatertemperaturemethods <username/password> --type json --file metaWaterTemperatureMethods.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metadissolvedoxygenmethods <username/password> --type json --file metaDissolvedOxygenMethods.json --drop
