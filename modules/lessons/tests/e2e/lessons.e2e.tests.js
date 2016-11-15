@@ -691,7 +691,7 @@ describe('Lesson E2E Tests', function() {
     var waitForSave = function(visibilityTimeout, invisibilityTimeout) {
       var saveModal = element(by.id('modal-saved-lesson'));
       if (visibilityTimeout > 0) browser.wait(EC.visibilityOf(saveModal), visibilityTimeout);
-      if (visibilityTimeout > 0) browser.sleep(500);
+      if (invisibilityTimeout > 0) browser.sleep(500);
       if (invisibilityTimeout > 0) browser.wait(EC.invisibilityOf(saveModal), invisibilityTimeout);
     };
 

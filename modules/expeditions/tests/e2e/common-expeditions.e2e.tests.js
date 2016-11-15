@@ -42,8 +42,8 @@ module.exports = {
 
   defaultMapCoordinates: function(target) {
     element(by.css('a[data-target="#'+target+'"]')).click();
-    element(by.id('saveMapSelectModal-'+target)).click();
     browser.sleep(1000);
+    element(by.id('saveMapSelectModal-'+target)).click();
     browser.wait(EC.invisibilityOf(element(by.id('saveMapSelectModal-'+target))), 5000);
     browser.sleep(1000);
   },
