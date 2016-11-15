@@ -17,6 +17,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/remote-files/delete-file',
       permissions: '*'
+    }, {
+      resources: '/api/remote-files/upload-wysiwyg-images',
+      permissions: '*'
     }]
   }]);
 };
