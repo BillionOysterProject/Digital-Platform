@@ -2,6 +2,8 @@
   <div class="form-group">
     <label for="{{name}}" class="{{labelClass}}" ng-show="inTitle">{{inTitle}}</label>
     <!-- <ng-quill-editor ng-model="outModel" name="{{name}}" id="{{name}}" toolbar="true" link-tooltip="true" toolbar-entries="bold list bullet italic underline strike align color background link image" image-tooltip="true" editor-required="true" required="{{required}}" error-class="input-error"></ng-quill-editor> -->
-    <text-angular ng-model="outModel" ta-toolbar="[['ul','ol','bold','italics','underline','strikeThrough','quote','justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertImage','insertLink','insertVideo','wordcount','charcount','undo','redo','clear']]"></text-angular>
+    <!-- <text-angular ng-model="outModel" ta-toolbar="[['ul','ol','bold','italics','underline','strikeThrough','quote','justifyLeft','justifyCenter','justifyRight','justifyFull','indent','outdent','insertImage','insertLink','insertVideo','wordcount','charcount','undo','redo','clear']]"></text-angular> -->
+    <summernote ng-model="outModel" config="options"
+    on-image-upload="imageUpload(files)" editable="editable" editor="editor"></summernote>
   </div>
 </div>

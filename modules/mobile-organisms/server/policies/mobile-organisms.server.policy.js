@@ -3,7 +3,9 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backed
 acl = new acl(new acl.memoryBackend());
@@ -44,7 +46,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-  
+
   // If a lesson is being processed and the current user created it then allow any manipulation
   // if (req.lesson && req.user && req.lesson.user && req.lesson.user.id === req.user.id) {
   //   return next();
@@ -60,9 +62,15 @@ exports.isAllowed = function (req, res, next) {
         // Access granted! Invoke next middleware
         return next();
       } else {
-        return res.status(403).json({
-          message: 'User is not authorized'
-        });
+        if (authHelper.isLoggedIn(roles)) {
+          return res.status(403).json({
+            message: 'User is not authorized'
+          });
+        } else {
+          return res.status(401).json({
+            message: 'User logged out'
+          });
+        }
       }
     }
   });
