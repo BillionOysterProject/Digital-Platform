@@ -62,11 +62,15 @@ exports.delete = function (req, res) {
   });
 };
 
-var isAdmin = function(user) {
+var hasRole = function(user, role) {
   var index = _.findIndex(user.roles, function(r) {
-    return r === 'admin';
+    return r === role;
   });
   return (index > -1) ? true : false;
+};
+
+var isAdmin = function(user) {
+  return hasRole(user, 'admin');
 };
 
 exports.approve = function (req, res) {
@@ -135,8 +139,11 @@ exports.list = function (req, res) {
   var query;
   var and = [];
 
-  if (req.query.role) {
+  if (req.query.role && req.query.role !== undefined && req.query.role !== null && req.query.role !== '') {
     and.push({ 'roles': req.query.role });
+  } else if (req.query.searchString) {
+    and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' },
+    { 'roles': 'team member' }, { 'roles': 'team member pending' }, { 'roles': 'partner' }] });
   } else {
     and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' }] });
   }
@@ -156,6 +163,7 @@ exports.list = function (req, res) {
       });
     }
 
+    or.push({ 'displayName': searchRe });
     or.push({ 'firstName': searchRe });
     or.push({ 'lastName': searchRe });
     or.push({ 'email': searchRe });
@@ -164,7 +172,6 @@ exports.list = function (req, res) {
     and.push({ $or: or });
   }
 
-  console.log('and', and);
   if (and.length === 1) {
     query = User.find(and[0], '-salt -password');
   } else if (and.length > 0) {
@@ -193,7 +200,7 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('user', 'displayName email profileImageURL')
+  query.populate('user', 'displayName email roles profileImageURL')
   .populate('schoolOrg', 'name pending').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
@@ -201,9 +208,15 @@ exports.list = function (req, res) {
       });
     }
     if (req.query.showTeams) {
-      if (users && users.length) {
+      if (users && users.length > 0) {
         var findTeams = function(user, callback) {
-          Team.find({ 'teamLead': user }).populate('teamMembers', 'displayName profileImageURL email username')
+          var queryTeam;
+          if (hasRole(user, 'team member')) {
+            queryTeam = Team.find({ 'teamMembers': user });
+          } else {
+            queryTeam = Team.find({ 'teamLead': user });
+          }
+          queryTeam.populate('teamMembers', 'displayName profileImageURL email username')
           .populate('teamLead', 'displayName profileImageURL email')
           .populate('schoolOrg', 'name')
           .exec(function(err, teams) {
@@ -218,7 +231,6 @@ exports.list = function (req, res) {
               if (teams && teams.length) {
                 user.teams = teams;
               }
-              console.log('user', user);
               updatedUsers.push(user);
               findTeamsForUsers(index+1, users, updatedUsers, callback);
             });
@@ -228,7 +240,6 @@ exports.list = function (req, res) {
         };
 
         findTeamsForUsers(0, users, [], function(updatedUsers) {
-          console.log('users', updatedUsers);
           res.json(updatedUsers);
         });
       } else {

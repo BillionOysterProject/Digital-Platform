@@ -1,7 +1,7 @@
 <form name="form.siteConditionForm" id="form.siteConditionForm" ng-submit="save(form.siteConditionForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container" id="site-condition-form">
-            <h2>Protocol 1 <small>Site Conditions</small></h2>
+            <h2 id="protocol-1-form">Protocol 1 <small>Site Conditions</small></h2>
             <hr />
             <div class="alert alert-danger" ng-show="siteConditionErrors">
                 <h4>We're still missing some information.</h4>
@@ -145,12 +145,12 @@
                         <div class="form-group col-sm-6">
                             <label for="closestHighTideHeight" class="required">Closest high tide height (ft) *</label>
                             <input class="form-control" type="number" name="closestHighTideHeight"
-                            ng-model="siteCondition.tideConditions.closestHighTideHeight" min="0" required/>
+                            ng-model="siteCondition.tideConditions.closestHighTideHeight" required/>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="closestLowTideHeight" class="required">Closest low tide height (ft) *</label>
                             <input class="form-control" type="number" name="closestLowTideHeight"
-                            ng-model="siteCondition.tideConditions.closestLowTideHeight" min="0" required/>
+                            ng-model="siteCondition.tideConditions.closestLowTideHeight" required/>
                         </div>
                     </div>
                     <div class="row">

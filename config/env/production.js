@@ -138,6 +138,13 @@ module.exports = {
         fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
     },
+    wysiwygImageUploader: {
+      s3dest: 'uploads/forms/img/wysiwyg-images/',
+      dest: './modules/forms/client/img/wysiwyg-images/uploads/', // Wysiwyg upload destination path
+      limits: {
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
+      }
+    },
     waterConditionUpload: {
       s3dest: 'uploads/protocols/site-conditions/img/water-conditions/',
       dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path

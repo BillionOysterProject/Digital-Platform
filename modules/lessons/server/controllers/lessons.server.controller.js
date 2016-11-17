@@ -8,6 +8,7 @@ var path = require('path'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
   SavedLesson = mongoose.model('SavedLesson'),
+  Team = mongoose.model('Team'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -27,57 +28,6 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
   if (!lesson.title) {
     errorMessages.push('Lesson title is required');
   }
-  // if (!lesson.unit) {
-  //   errorMessages.push('Unit is required');
-  // }
-  //
-  // // Lesson Overview
-  // if (!lesson.lessonOverview || !lesson.lessonOverview.grade) {
-  //   errorMessages.push('Grade is required');
-  // }
-  // if (!lesson.lessonOverview || !lesson.lessonOverview.classPeriods) {
-  //   errorMessages.push('Class periods is required');
-  // }
-  // if (!lesson.lessonOverview || !lesson.lessonOverview.setting) {
-  //   errorMessages.push('Setting is required');
-  // }
-  // if (!lesson.lessonOverview || !lesson.lessonOverview.subjectAreas || lesson.lessonOverview.subjectAreas.length <= 0) {
-  //   errorMessages.push('Subject area(s) is required');
-  // }
-  // if (!lesson.lessonOverview || !lesson.lessonOverview.lessonSummary) {
-  //   errorMessages.push('Lesson summary is required');
-  // }
-  //
-  // if (!lesson.lessonObjectives) {
-  //   errorMessages.push('Lesson objectives is required');
-  // }
-  //
-  // // Material Resources
-  // if (!lesson.materialsResources || !lesson.materialsResources.supplies) {
-  //   errorMessages.push('Supplies is required');
-  // }
-  // if (!lesson.materialsResources || !lesson.materialsResources.vocabulary) {
-  //   errorMessages.push('Vocabulary is required');
-  // }
-  //
-  // if (!lesson.background) {
-  //   errorMessages.push('Background is required');
-  // }
-  //
-  // if ((!lesson.instructionPlan) ||
-  // (!lesson.instructionPlan.engage && !lesson.instructionPlan.explore && !lesson.instructionPlan.explain &&
-  // !lesson.instructionPlan.elaborate && !lesson.instructionPlan.evaluate)) {
-  //   errorMessages.push('At least one Instruction plan is required');
-  // }
-  //
-  // if ((!lesson.standards) ||
-  // (!lesson.standards.cclsElaScienceTechnicalSubjects && !lesson.standards.cclsMathematics &&
-  // !lesson.standards.ngssCrossCuttingConcepts && !lesson.standards.ngssDisciplinaryCoreIdeas &&
-  // !lesson.standards.ngssScienceEngineeringPractices && !lesson.standards.nycsssUnits &&
-  // !lesson.standards.nysssKeyIdeas && !lesson.standards.nysssMajorUnderstandings &&
-  // !lesson.standards.nysssMst)) {
-  //   errorMessages.push('At least one Standard is required');
-  // }
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -146,6 +96,10 @@ exports.read = function(req, res) {
     lesson.saved = req.lessonSaved;
   }
 
+  if (req.team) {
+    lesson.user.team = req.team;
+  }
+
   if (req.query.duplicate) {
     delete lesson._id;
     delete lesson.created;
@@ -171,6 +125,54 @@ exports.read = function(req, res) {
   }
 };
 
+var updateHandouts = function(lesson) {
+  var existingHandouts = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.handoutsFileInput) {
+    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
+      var handout = lesson.materialsResources.handoutsFileInput[i];
+      if (handout.path !== undefined && handout.path !== '' &&
+        handout.originalname !== undefined && handout.originalname !== '' &&
+        handout.filename !== undefined && handout.filename !== '' &&
+        handout.mimetype !== undefined && handout.mimetype !== '') {
+        existingHandouts.push(handout);
+      }
+    }
+  }
+  return existingHandouts;
+};
+
+var updateResources = function(lesson) {
+  var existingResources = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.teacherResourcesFiles) {
+    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
+      var resource = lesson.materialsResources.teacherResourcesFiles[j];
+      if (resource.path !== undefined && resource.path !== '' &&
+        resource.originalname !== undefined && resource.originalname !== '' &&
+        resource.filename !== undefined && resource.filename !== '' &&
+        resource.mimetype !== undefined && resource.mimetype !== '') {
+        existingResources.push(resource);
+      }
+    }
+  }
+  return existingResources;
+};
+
+var updateQuestions = function(lesson) {
+  var existingQuestions = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.stateTestQuestions) {
+    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+      var question = lesson.materialsResources.stateTestQuestions[k];
+      if (question.path !== undefined && question.path !== '' &&
+        question.originalname !== undefined && question.originalname !== '' &&
+        question.filename !== undefined && question.filename !== '' &&
+        question.mimetype !== undefined && question.mimetype !== '') {
+        existingQuestions.push(question);
+      }
+    }
+  }
+  return existingQuestions;
+};
+
 /**
  * Incrementally save a lesson
  */
@@ -184,32 +186,9 @@ exports.incrementalSave = function(req, res) {
     lesson.returnedNotes = '';
     if (!req.body.initial) lesson.status = 'draft';
 
-    var existingHandouts = [];
-    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
-      var handout = lesson.materialsResources.handoutsFileInput[i];
-      if (handout.path) {
-        existingHandouts.push(handout);
-      }
-    }
-    lesson.materialsResources.handoutsFileInput = existingHandouts;
-
-    var existingResources = [];
-    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
-      var resource = lesson.materialsResources.teacherResourcesFiles[j];
-      if (resource.path) {
-        existingResources.push(resource);
-      }
-    }
-    lesson.materialsResources.teacherResourcesFiles = existingResources;
-
-    var existingQuestions = [];
-    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
-      var question = lesson.materialsResources.stateTestQuestions[k];
-      if (question.path) {
-        existingQuestions.push(question);
-      }
-    }
-    lesson.materialsResources.stateTestQuestions = existingQuestions;
+    lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
+    lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
+    lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
   } else {
     lesson = new Lesson(req.body);
 
@@ -224,6 +203,9 @@ exports.incrementalSave = function(req, res) {
   if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
     lesson.featuredImage.path = '';
   }
+
+  if (!lesson.updated) lesson.updated = [];
+  lesson.updated.push(Date.now());
 
   lesson.save(function (err) {
     if (err) {
@@ -259,32 +241,9 @@ exports.update = function(req, res) {
       lesson.returnedNotes = '';
       lesson.status = 'pending';
 
-      var existingHandouts = [];
-      for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
-        var handout = lesson.materialsResources.handoutsFileInput[i];
-        if (handout.path) {
-          existingHandouts.push(handout);
-        }
-      }
-      lesson.materialsResources.handoutsFileInput = existingHandouts;
-
-      var existingResources = [];
-      for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
-        var resource = lesson.materialsResources.teacherResourcesFiles[j];
-        if (resource.path) {
-          existingResources.push(resource);
-        }
-      }
-      lesson.materialsResources.teacherResourcesFiles = existingResources;
-
-      var existingQuestions = [];
-      for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
-        var question = lesson.materialsResources.stateTestQuestions[k];
-        if (question.path) {
-          existingQuestions.push(question);
-        }
-      }
-      lesson.materialsResources.stateTestQuestions = existingQuestions;
+      lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
+      lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
+      lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
       if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
@@ -485,13 +444,19 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     }
     if (lesson.materialsResources) {
       if (lesson.materialsResources.teacherResourcesFiles && lesson.materialsResources.teacherResourcesFiles.path) {
-        filesToDelete.push(lesson.materialsResources.teacherResourcesFiles.path);
+        for (var i = 0; i < lesson.materialsResources.teacherResourcesFiles.length; i++) {
+          filesToDelete.push(lesson.materialsResources.teacherResourcesFiles[i].path);
+        }
       }
       if (lesson.materialsResources.handoutsFileInput && lesson.materialsResources.handoutsFileInput.path) {
-        filesToDelete.push(lesson.materialsResources.handoutsFileInput.path);
+        for (var j = 0; j < lesson.materialsResources.handoutsFileInput.length; j++) {
+          filesToDelete.push(lesson.materialsResources.handoutsFileInput[j].path);
+        }
       }
       if (lesson.materialsResources.stateTestQuestions && lesson.materialsResources.stateTestQuestions.path) {
-        filesToDelete.push(lesson.materialsResources.stateTestQuestions.path);
+        for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+          filesToDelete.push(lesson.materialsResources.stateTestQuestions[k].path);
+        }
       }
     }
   }
@@ -640,16 +605,19 @@ var uploadFileSuccess = function(lesson, res) {
 
 var uploadFileError = function(lesson, errorMessage, res) {
   console.log('errorMessage', errorMessage);
-  deleteInternal(lesson,
-  function(lesson) {
-    return res.status(400).send({
-      message: errorMessage
-    });
-  }, function(err) {
-    return res.status(400).send({
-      message: err
-    });
+  return res.status(400).send({
+    message: errorMessage
   });
+  // deleteInternal(lesson,
+  // function(lesson) {
+  //   return res.status(400).send({
+  //     message: errorMessage
+  //   });
+  // }, function(err) {
+  //   return res.status(400).send({
+  //     message: err
+  //   });
+  // });
 };
 
 /**
@@ -899,7 +867,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'firstName displayName email team profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {
@@ -926,9 +894,19 @@ exports.lessonByID = function(req, res, next, id) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          req.lesson = lesson;
-          req.lessonSaved = (savedLesson) ? true : false;
-          next();
+          Team.findOne({ teamLead: req.user }).exec(function(err, team) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.lesson = lesson;
+              req.lessonSaved = (savedLesson) ? true : false;
+              req.team = team;
+              next();
+            }
+          });
+
         }
       });
     } else {

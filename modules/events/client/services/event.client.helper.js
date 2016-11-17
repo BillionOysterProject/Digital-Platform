@@ -38,33 +38,45 @@
 
     var getEarliestDate = function(dates) {
       var earliestDate = (dates && dates.length > 0) ?
-        moment(dates[0].startDateTime) : null;
+        dates[0] : null;
       for (var j = 1; j < dates.length; j++) {
-        if (moment(dates[j].startDateTime).isBefore(earliestDate)) {
-          earliestDate = moment(dates[j].startDateTime);
+        if (moment(dates[j].startDateTime).isBefore(moment(earliestDate.startDateTime))) {
+          earliestDate = dates[j];
         }
       }
       return earliestDate;
     };
 
+    var getEarliestDateAsMoment = function(dates) {
+      var date = getEarliestDate(dates);
+      return (date) ? moment(date.startDateTime) : null;
+    };
+
     var getEarliestDateString = function(dates) {
-      var earliestDate = getEarliestDate(dates);
+      var earliestDate = getEarliestDateAsMoment(dates);
       return (earliestDate) ? earliestDate.format('MMM D, YYYY') : '';
     };
 
-    var getEarliestDateTimeString = function(dates) {
+    var getEarliestDateTimeRangeString = function(dates) {
       var earliestDate = getEarliestDate(dates);
-      return (earliestDate) ? earliestDate.format('MMMM D, YYYY, h:mma-h:mma') : '';
+      console.log('earliestDate', earliestDate);
+      if (earliestDate) {
+        return moment(earliestDate.startDateTime).format('MMMM D, YYYY, h:mma') + '-' +
+          moment(earliestDate.endDateTime).format('h:mma');
+      } else {
+        return '';
+      }
     };
 
     var getDaysRemaining = function(dates, deadlineToRegister) {
-      var today = moment().startOf('day');
+      var today = moment().endOf('day');
       if (deadlineToRegister) {
-        var deadline = moment(deadlineToRegister).startOf('day');
+        var deadline = moment(deadlineToRegister).endOf('day');
         return deadline.diff(today, 'days');
       } else {
-        var earliestDate = getEarliestDate(dates).startOf('day');
-        return (earliestDate) ? earliestDate.diff(today, 'days') : null;
+        var earliestDate = getEarliestDateAsMoment(dates);
+        var earliest = (earliestDate) ? earliestDate.endOf('day') : null;
+        return (earliest) ? earliest.diff(today, 'days') : null;
       }
     };
 
@@ -77,8 +89,9 @@
       getOpenSpots: getOpenSpots,
       getDaysRemaining: getDaysRemaining,
       getEarliestDate: getEarliestDate,
+      getEarliestDateAsMoment: getEarliestDateAsMoment,
       getEarliestDateString: getEarliestDateString,
-      getEarliestDateTimeString: getEarliestDateTimeString
+      getEarliestDateTimeRangeString: getEarliestDateTimeRangeString
     };
   }
 })();

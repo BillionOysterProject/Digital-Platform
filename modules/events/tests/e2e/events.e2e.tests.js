@@ -9,6 +9,8 @@ var path = require('path'),
   CommonExpedition = require('../../../expeditions/tests/e2e/common-expeditions.e2e.tests'),
   uploadImage = CommonExpedition.uploadImage,
   assertImage = CommonExpedition.assertImage,
+  uploadFile = CommonExpedition.uploadFile,
+  assertFiles = CommonExpedition.assertFiles,
   EC = protractor.ExpectedConditions;
 
 describe('Event E2E Tests', function () {
@@ -102,24 +104,6 @@ describe('Event E2E Tests', function () {
       }],
       resourcesFiles: true
     }
-  };
-
-  var uploadFile = function(id, filepath) {
-    var absolutePath = path.resolve(__dirname, filepath);
-    var fileUploader = element(by.id(id));
-    var input = fileUploader.element(by.css('input[type="file"]'));
-    input.sendKeys(absolutePath);
-    browser.sleep(500);
-  };
-
-  var assertFiles = function(id) {
-    var fileList = element.all(by.id(id));
-    fileList.get(0).getAttribute('href').then(function(text) {
-      if (text !== null) {
-        expect(text).not.toEqual('');
-        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
-      }
-    });
   };
 
   var saveWait = 450000;

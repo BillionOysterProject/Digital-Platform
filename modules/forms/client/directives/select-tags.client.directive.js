@@ -5,6 +5,7 @@
     .module('forms')
     .directive('selectTags', function() {
       return {
+        priority: 1,
         restrict: 'AE',
         templateUrl: 'modules/forms/client/views/select-tags.client.view.html',
         scope: {
