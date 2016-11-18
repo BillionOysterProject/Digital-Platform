@@ -2,7 +2,7 @@
     <section class="container">
         <div class="row">
             <div class="col col-sm-6">
-                <h2>{{vm.expedition.name}}</h2>
+                <h2 id="expedition-view">{{vm.expedition.name}}</h2>
             </div>
             <div class="col col-sm-6 text-right" ng-show="(vm.isTeamLead || vm.isTeamMember || vm.isAdmin)">
                 <h6 ng-show="vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned'">Incomplete</h6>

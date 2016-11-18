@@ -39,7 +39,8 @@
     "Leaflet.awesome-markers": "^2.0.2",
     "bootstrap-iconpicker": "^1.7.0",
     "textAngular": "^1.5.1",
-    "angular-bootstrap-calendar": "^0.23.0"
+    "angular-bootstrap-calendar": "^0.26.1",
+    "angular-summernote": "~0.4.2"
   },
   "resolutions": {
     "angular": "~1.3",

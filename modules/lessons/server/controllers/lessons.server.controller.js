@@ -8,6 +8,7 @@ var path = require('path'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
   SavedLesson = mongoose.model('SavedLesson'),
+  Team = mongoose.model('Team'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -93,6 +94,10 @@ exports.read = function(req, res) {
 
   if (req.lessonSaved) {
     lesson.saved = req.lessonSaved;
+  }
+
+  if (req.team) {
+    lesson.user.team = req.team;
   }
 
   if (req.query.duplicate) {
@@ -862,7 +867,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'firstName displayName email team profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {
@@ -889,9 +894,19 @@ exports.lessonByID = function(req, res, next, id) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          req.lesson = lesson;
-          req.lessonSaved = (savedLesson) ? true : false;
-          next();
+          Team.findOne({ teamLead: req.user }).exec(function(err, team) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.lesson = lesson;
+              req.lessonSaved = (savedLesson) ? true : false;
+              req.team = team;
+              next();
+            }
+          });
+
         }
       });
     } else {
