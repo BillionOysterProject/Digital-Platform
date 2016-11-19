@@ -22,6 +22,13 @@ var emptyString = function(string) {
   }
 };
 
+var emptyNumber = function(num) {
+  if(num === null || num === undefined) {
+    return true;
+  }
+  return false;
+};
+
 var checkRole = function(role, user) {
   var roleIndex = _.findIndex(user.roles, function(r) {
     return r === role;
@@ -67,15 +74,14 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
     if (!siteCondition.meteorologicalConditions.airTemperatureC) {
       errorMessages.push('Air temperature is required');
     }
-    if (siteCondition.meteorologicalConditions.windSpeedMPH < 0) {
-      errorMessages.push('Wind speed must be positive');
+    if(emptyNumber(siteCondition.meteorologicalConditions.windSpeedMPH)) {
+      errorMessages.push('Wind speed is required and must be positive');
     }
     if (emptyString(siteCondition.meteorologicalConditions.windDirection)) {
       errorMessages.push('Wind direction is required');
     }
-    if (siteCondition.meteorologicalConditions.humidityPer === undefined ||
-      siteCondition.meteorologicalConditions.humidityPer < 0) {
-      errorMessages.push('Humidity percentage is required');
+    if (emptyNumber(siteCondition.meteorologicalConditions.humidityPer)) {
+      errorMessages.push('Humidity percentage is required and must be positive');
     }
   }
 
@@ -129,8 +135,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.waterConditions.waterConditionPhoto) {
     errorMessages.push('Water condition photo is required');
   }
-  if (!siteCondition.waterConditions.surfaceCurrentSpeedMPS) {
-    errorMessages.push('Surface Current Speed is required');
+  if (emptyNumber(siteCondition.waterConditions.surfaceCurrentSpeedMPS)) {
+    errorMessages.push('Surface current speed is required and must be positive');
   }
   if (emptyString(siteCondition.waterConditions.waterColor)) {
     errorMessages.push('Water color is required');
@@ -203,9 +209,21 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (!siteCondition.landConditions.landConditionPhoto) {
     errorMessages.push('Land condition photo is required');
   }
-  if (siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
-    siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
-    siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
+  if(emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer)) {
+    errorMessages.push('Estimated percent impervious surface cover is required and must be positive');
+  }
+  if(emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer)) {
+    errorMessages.push('Estimated percent pervious surface cover is required and must be positive');
+  }
+  if(emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer)) {
+    errorMessages.push('Estimated percent vegetated surface cover is required and must be positive');
+  }
+  if (!emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer) &&
+      !emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer) &&
+      !emptyNumber(siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer) &&
+      siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer +
+      siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer +
+      siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer !== 100) {
     errorMessages.push('Estimated percent surface cover should add up to 100%');
   }
   if (emptyString(siteCondition.landConditions.shoreLineType)) {
