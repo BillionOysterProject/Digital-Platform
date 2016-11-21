@@ -139,13 +139,6 @@
     <section class="container">
         <div class="row">
             <div class="col-sm-12">
-                <b id="eventCategory">
-                  <span ng-show="vm.event.category.type === 'professional development'">Professional development</span>
-                  <span ng-show="vm.event.category.type === 'field training'">Field training</span>
-                  <span ng-show="vm.event.category.type === 'workshop'">Workshop</span>
-                  <span ng-show="vm.event.category.type === 'expedition'">Expedition</span>
-                  <span ng-show="vm.event.category.type === 'other'">{{vm.event.category.otherType}}</span>
-                </b>
                 <p ng-bind-html="vm.event.description | sanitize"></p>
                 <hr/>
             </div>
@@ -168,6 +161,19 @@
                 </ul>
             </div>
             <div class="col-sm-9">
+                <!--TIFF: I added colors and the new Type display names -- didn't change the programmed names though -- those need updated -->
+                <p ng-show="vm.event.category.type" id="eventCategory"><b>Type:</b> 
+                  <span ng-show="vm.event.category.type === 'professional development'">
+                    <i class="fa fa-circle" style="color:#795548"></i> Professional Development</span>
+                  <span ng-show="vm.event.category.type === 'field training'">
+                    <i class="fa fa-circle" style="color:#00BCD4"></i> Advanced Field Training</span>
+                  <span ng-show="vm.event.category.type === 'workshop'">
+                    <i class="fa fa-circle" style="color:#4CAF50"></i> Scientist Workshop</span>
+                  <span ng-show="vm.event.category.type === 'expedition'">
+                    <i class="fa fa-circle" style="color:#607D8B"></i> ORS Basic Training</span>
+                  <span ng-show="vm.event.category.type === 'other'">
+                    <i class="fa fa-circle" style="color:#9E9E9E"></i> {{vm.event.category.otherType}}</span>
+                </p>
                 <p ng-show="vm.event.skillsTaught"><b>Skills taught:</b> <span ng-bind-html="vm.event.skillsTaught | sanitize"></span></p>
                 <p ng-show="vm.event.cost"><b>Cost:</b> {{vm.event.cost}}</p>
             </div>

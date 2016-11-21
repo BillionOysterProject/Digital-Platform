@@ -29,7 +29,7 @@
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="subjectAreaSelection">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Subject Area(s){{(vm.filter.subjectAreaName) ? ': ' + vm.filter.subjectAreaName : ''}} <span class="caret"></span>
+                        Subject Area{{(vm.filter.subjectAreaName) ? ': ' + vm.filter.subjectAreaName : ''}} <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                       <li><a ng-click="vm.subjectAreaSelected()" ok-sel=".all">All</a></li>
