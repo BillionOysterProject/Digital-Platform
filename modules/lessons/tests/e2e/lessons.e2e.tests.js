@@ -8,6 +8,9 @@ var path = require('path'),
   assertImage = CommonExpedition.assertImage,
   uploadFile = CommonExpedition.uploadFile,
   assertFiles = CommonExpedition.assertFiles,
+  CommonCore = require('../../../core/tests/e2e/common-core.e2e.tests'),
+  select2Fillin = CommonCore.select2Fillin,
+  wysiwygFillin = CommonCore.wysiwygFillin,
   EC = protractor.ExpectedConditions;
 
 describe('Lesson E2E Tests', function() {
@@ -218,24 +221,6 @@ describe('Lesson E2E Tests', function() {
     ngssCrossCuttingConcepts: 'Phenomena may have',
     cclsMathematics: 'CCSS.MATH.CONTENT.6.G.A.1',
     cclsElaScienceTechnicalSubjects: 'CCSS.ELA-LITERACY.RI.6.4'
-  };
-
-  var select2Fillin = function(id, value) {
-    var wrapper = element(by.id(id));
-    var selector = wrapper.element(by.css('.select2-container'));
-    var options = selector.element(by.css('.select2-choices')).all(by.tagName('input'));
-
-    options.first().click();
-    options.first().sendKeys(value);
-    options.first().sendKeys(protractor.Key.ENTER);
-  };
-
-  var wysiwygFillin = function(model, value) {
-    var wysiwyg = element(by.model(model));
-    var content = wysiwyg.element(by.css('div[contenteditable="true"]'));
-
-    content.click();
-    content.sendKeys(value);
   };
 
   var fillInLesson = function(values, update) {
