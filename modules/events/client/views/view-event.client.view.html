@@ -146,7 +146,6 @@
                   <span ng-show="vm.event.category.type === 'expedition'">Expedition</span>
                   <span ng-show="vm.event.category.type === 'other'">{{vm.event.category.otherType}}</span>
                 </b>
-                <!-- <p>{{vm.event.description}}</p> -->
                 <p ng-bind-html="vm.event.description | sanitize"></p>
                 <hr/>
             </div>
@@ -169,7 +168,6 @@
                 </ul>
             </div>
             <div class="col-sm-9">
-                <!-- {{vm.event.skillsTaught}} -->
                 <p ng-show="vm.event.skillsTaught"><b>Skills taught:</b> <span ng-bind-html="vm.event.skillsTaught | sanitize"></span></p>
                 <p ng-show="vm.event.cost"><b>Cost:</b> {{vm.event.cost}}</p>
             </div>
