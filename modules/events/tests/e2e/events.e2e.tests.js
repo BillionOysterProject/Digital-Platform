@@ -11,6 +11,9 @@ var path = require('path'),
   assertImage = CommonExpedition.assertImage,
   uploadFile = CommonExpedition.uploadFile,
   assertFiles = CommonExpedition.assertFiles,
+  CommonCore = require('../../../core/tests/e2e/common-core.e2e.tests'),
+  select2Fillin = CommonCore.select2Fillin,
+  wysiwygFillin = CommonCore.wysiwygFillin,
   EC = protractor.ExpectedConditions;
 
 describe('Event E2E Tests', function () {
@@ -98,11 +101,11 @@ describe('Event E2E Tests', function () {
     skillsTaught: 'Skill 1, skill 2, skill 3',
     featuredImage: true,
     resources: {
-      resourcesLinks: [{
+      resourceLinks: [{
         name: 'Google',
         link: 'www.google.com'
       }],
-      resourcesFiles: true
+      resourceFiles: true
     }
   };
 
@@ -146,18 +149,19 @@ describe('Event E2E Tests', function () {
       element(by.model('vm.event.deadlineToRegister')).sendKeys(values.deadlineToRegister);
     }
 
-    element(by.model('vm.event.description')).clear().sendKeys(values.description);
+    wysiwygFillin('vm.event.description', values.description);
     if (values.skillsTaught) {
-      element(by.model('vm.event.skillsTaught')).clear().sendKeys(values.skillsTaught);
+      wysiwygFillin('vm.event.skillsTaught', values.skillsTaught);
     }
     if (values.featuredImage) uploadImage('event-featured-image');
     if (values.resources) {
       element(by.css('a[data-target="#modal-resources"]')).click();
-      if (values.resources.resourcesLinks) {
-        element(by.model('tempResourceLinkName')).clear().sendKeys(values.resources.resourcesLinks[0].name);
-        element(by.model('tempResourceLink')).clear().sendKeys(values.resources.resourcesLinks[0].link);
+      browser.sleep(500);
+      if (values.resources.resourceLinks) {
+        element(by.model('tempResourceLinkName')).clear().sendKeys(values.resources.resourceLinks[0].name);
+        element(by.model('tempResourceLink')).clear().sendKeys(values.resources.resourceLinks[0].link);
       }
-      if (values.resources.resourcesFiles) {
+      if (values.resources.resourceFiles) {
         element(by.css('a[href="#upload"]')).click();
         uploadFile('event-resources-file-dropzone', resource1);
         uploadFile('event-resources-file-dropzone', resource2);
@@ -259,7 +263,7 @@ describe('Event E2E Tests', function () {
       }
     }
     if (values.skillsTaught) {
-      expect(element(by.binding('vm.event.skillsTaught')).getText()).toEqual('Skills taught: ' + values.skillsTaught);
+      expect(element(by.css('p[ng-show="vm.event.skillsTaught"]')).getText()).toEqual('Skills taught: ' + values.skillsTaught);
     }
     if (values.cost) {
       expect(element(by.binding('vm.event.cost')).getText()).toEqual('Cost: ' + values.cost);

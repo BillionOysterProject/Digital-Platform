@@ -125,15 +125,19 @@
                             <div class="col-md-12">
                                 <div class="form-group" show-errors>
                                     <label class="control-label required" for="description">Description *</label>
-                                    <textarea class="form-control" name="description" id="description"
-                                    ng-model="vm.event.description" required></textarea>
+                                    <!-- <textarea class="form-control" name="description" id="description"
+                                    ng-model="vm.event.description" required></textarea> -->
+                                    <wysiwyg-editor outer-column="col-md-12" name="description" in-title="Description *"
+                                    ng-model="vm.event.description" label-class="control-label"></wysiwyg-editor>
                                     <div ng-messages="vm.form.eventForm.description.$error" role="alert">
                                       <p class="help-block error-text" ng-message="required">Description is required.</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Skills taught</label>
-                                    <textarea class="form-control" ng-model="vm.event.skillsTaught"></textarea>
+                                    <!-- <textarea class="form-control" ng-model="vm.event.skillsTaught"></textarea> -->
+                                    <wysiwyg-editor outer-column="col-md-12" name="skillsTaught" in-title="Skills taught" 
+                                    ng-model="vm.event.skillsTaught" label-class="control-label"></wysiwyg-editor>
                                 </div>
                             </div>
                         </div>
