@@ -26,10 +26,11 @@
                             <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)">
                               <i class="fa fa-calendar-times-o"></i>
                               <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and </span>
-                            <span ng-show="(calendarEvent.dates && calendarEvent.dates.length > 0) ||
-                              calendarEvent.deadlineToRegister">
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) < 0"><b>Registration is closed</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) === 0"><b>Last day to register!</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) > 0">
                               <i class="fa fa-clock-o"></i>
-                              <b>{{vm.getDaysRemaining(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> remaining</span>
+                              <b>{{vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> left to register</span>
                         </p>
                     </div>
                 </div>

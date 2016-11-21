@@ -38,6 +38,6 @@
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.getOpenSpots = EventHelper.getOpenSpots;
-    vm.getDaysRemaining = EventHelper.getDaysRemaining;
+    vm.getDaysRemainingDeadline = EventHelper.getDaysRemainingDeadline;
   }
 }());

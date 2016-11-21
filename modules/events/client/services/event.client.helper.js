@@ -59,7 +59,6 @@
 
     var getEarliestDateTimeRangeString = function(dates) {
       var earliestDate = getEarliestDate(dates);
-      console.log('earliestDate', earliestDate);
       if (earliestDate) {
         return moment(earliestDate.startDateTime).format('MMMM D, YYYY, h:mma') + '-' +
           moment(earliestDate.endDateTime).format('h:mma');
@@ -68,7 +67,7 @@
       }
     };
 
-    var getDaysRemaining = function(dates, deadlineToRegister) {
+    var getDaysRemainingDeadline = function(dates, deadlineToRegister) {
       var today = moment().endOf('day');
       if (deadlineToRegister) {
         var deadline = moment(deadlineToRegister).endOf('day');
@@ -80,6 +79,13 @@
       }
     };
 
+    var getDaysRemainingEvent = function(dates) {
+      var today = moment().endOf('day');
+      var earliestDate = getEarliestDateAsMoment(dates);
+      var earliest = (earliestDate) ? earliestDate.endOf('day') : null;
+      return (earliest) ? earliest.diff(today, 'days') : null;
+    };
+
     return {
       getEventDate: getEventDate,
       getEventMonthShort: getEventMonthShort,
@@ -87,7 +93,8 @@
       getEventYear: getEventYear,
       getEventTimeRange: getEventTimeRange,
       getOpenSpots: getOpenSpots,
-      getDaysRemaining: getDaysRemaining,
+      getDaysRemainingDeadline: getDaysRemainingDeadline,
+      getDaysRemainingEvent: getDaysRemainingEvent,
       getEarliestDate: getEarliestDate,
       getEarliestDateAsMoment: getEarliestDateAsMoment,
       getEarliestDateString: getEarliestDateString,

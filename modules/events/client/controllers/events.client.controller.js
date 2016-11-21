@@ -92,10 +92,15 @@
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
+    vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
-    vm.daysRemaining = EventHelper.getDaysRemaining(vm.event.dates, vm.event.deadlineToRegister);
-    vm.past = (vm.daysRemaining < 0) ? true : false;
+    vm.daysRemainingDeadline = EventHelper.getDaysRemainingDeadline(vm.event.dates, vm.event.deadlineToRegister);
+    vm.daysRemainingEvent = EventHelper.getDaysRemainingEvent(vm.event.dates);
+    vm.today = moment().isSame(vm.earliestDate, 'day');
+    vm.past = (vm.daysRemainingEvent < 0) ? true : false;
+
+    //vm.past = (moment)
 
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
