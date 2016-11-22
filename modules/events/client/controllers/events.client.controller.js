@@ -104,7 +104,7 @@
     vm.daysRemainingEvent = EventHelper.getDaysRemainingEvent(vm.event.dates);
     vm.today = moment().isSame(vm.earliestDate, 'day');
     vm.past = (vm.daysRemainingEvent < 0) ? true : false;
-    vm.eventType = (vm.event.category.type) ? vm.event.category.type.type : '';
+    vm.eventType = (vm.event.category && vm.event.category.type) ? vm.event.category.type.type : '';
 
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -158,11 +158,15 @@
       vm.resourceLinks.splice(index, 1);
     };
 
-    vm.changedCategory = function(type) {
-      if (type.type !== 'Other') {
+    vm.changedCategory = function() {
+      var index = lodash.findIndex(vm.eventTypes, function(c) {
+        return c._id === vm.event.category.type._id;
+      });
+      vm.eventType = (index > -1) ? vm.eventTypes[index].type : '';
+
+      if (vm.eventType !== 'Other') {
         vm.event.category.otherType = undefined;
       }
-      vm.eventType = type.type;
     };
 
     vm.registerEvent = function() {

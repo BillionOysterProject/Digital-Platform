@@ -185,7 +185,7 @@
                   <span ng-hide="vm.eventType === 'Other'">
                     <i class="fa fa-circle" style="color:{{vm.event.category.type.color}}"></i> {{vm.event.category.type.type}}</span>
                   <span ng-show="vm.eventType === 'Other'">
-                    <i class="fa fa-circle" style="color:{{vm.event.category.type.color}}"></i> Other: {{vm.event.category.otherType}}</span>
+                    <i class="fa fa-circle" style="color:{{vm.event.category.type.color}}"></i> Other - {{vm.event.category.otherType}}</span>
                 </p>
                 <p ng-show="vm.event.skillsTaught"><b>Skills taught:</b> <span ng-bind-html="vm.event.skillsTaught | sanitize"></span></p>
                 <p ng-show="vm.event.cost"><b>Cost:</b> {{vm.event.cost}}</p>

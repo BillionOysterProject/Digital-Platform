@@ -69,8 +69,8 @@ describe('Event E2E Tests', function () {
       timeRangeString: '1:00pm-5:00pm'
     }],
     category: {
-      type: 4,
-      typeText: 'other',
+      type: 5,
+      typeText: 'Other',
       otherType: 'Meeting'
     },
     description: 'This is a description for initial event',
@@ -98,8 +98,8 @@ describe('Event E2E Tests', function () {
       timeRangeString: '2:00pm-4:00pm'
     }],
     category: {
-      type: 0,
-      typeText: 'professional development',
+      type: 2,
+      typeText: 'Professional Development',
     },
     description: 'This is a description for the updated event',
     deadlineToRegister: deadline1,
@@ -136,7 +136,7 @@ describe('Event E2E Tests', function () {
     }],
     category: {
       type: 2,
-      typeText: 'Field training',
+      typeText: 'Advanced Field Training',
     },
     maximumCapacity: 2,
     description: 'This is a description for today\'s event',
@@ -155,8 +155,8 @@ describe('Event E2E Tests', function () {
       timeRangeString: '1:00pm-5:00pm'
     }],
     category: {
-      type: 3,
-      typeText: 'Workshop',
+      type: 4,
+      typeText: 'Scientist Workshop',
     },
     deadlineToRegister: deadline4,
     description: 'This is a description for today\'s event',
@@ -177,8 +177,8 @@ describe('Event E2E Tests', function () {
     if (values.cost) {
       element(by.model('vm.event.cost')).clear().sendKeys(values.cost);
     }
-    element(by.model('vm.event.category.type')).all(by.tagName('option')).get(values.category.type).click();
-    if (values.category.typeText === 'other') {
+    element(by.id('category')).all(by.tagName('option')).get(values.category.type).click();
+    if (values.category.typeText === 'Other') {
       element(by.model('vm.event.category.otherType')).clear().sendKeys(values.category.otherType);
     }
 
@@ -311,9 +311,13 @@ describe('Event E2E Tests', function () {
       }
     }
 
-    var categoryText = (values.category.typeText === 'other') ? values.category.otherType : values.category.typeText;
+    var categoryText = (values.category.typeText === 'Other') ? values.category.otherType : values.category.typeText;
     categoryText = categoryText.charAt(0).toUpperCase() + categoryText.slice(1);
-    expect(element(by.id('eventCategory')).getText()).toEqual(categoryText);
+    if (values.category.typeText === 'Other') {
+      expect(element(by.id('eventCategory')).getText()).toEqual('Type: Other - ' + categoryText);
+    } else {
+      expect(element(by.id('eventCategory')).getText()).toEqual('Type: ' + categoryText);
+    }
     expect(element(by.binding('vm.event.description')).getText()).toEqual(values.description);
 
     if (values.resources) {

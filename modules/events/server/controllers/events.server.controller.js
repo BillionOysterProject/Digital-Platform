@@ -585,7 +585,6 @@ exports.list = function(req, res) {
   var query;
   var and = [];
 
-  console.log('type', req.query.type);
   if (req.query.type) {
     and.push({ 'category.type': req.query.type });
   }
