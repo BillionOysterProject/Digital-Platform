@@ -83,14 +83,18 @@
                         (!vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity) ||
                         (vm.event.location.addressString && !vm.past && !vm.today && !vm.event.maximumCapacity)),
                       'col-sm-12': !vm.past && !vm.today && !vm.event.maximumCapacity && !vm.event.location.addressString}">
-                        <span ng-show="!vm.past && (!vm.event.deadlineToRegister || vm.openSpots > 0)" id="daysRemaining">
+                        <span ng-show="vm.daysRemainingDeadline > 0 && (!vm.event.deadlineToRegister || vm.openSpots > 0)" id="daysRemaining">
                           <i class="fa fa-clock-o"></i>
                           <b>{{vm.daysRemainingDeadline}} days</b>
                             <small>left to register</small>
                         </span>
-
+                        <span ng-show="vm.daysRemainingDeadline === 0 && (!vm.event.deadlineToRegister || vm.openSpots > 0)" id="registerToday">
+                          <i class="fa fa-clock-o"></i>
+                          <b>Last day to register!</b>
+                        </span>
                         <span ng-show="vm.event.deadlineToRegister && vm.openSpots <= 0" id="registrationClosed">
-                          <b>Registration closed</b>
+                          <i class="fa fa-clock-o"></i>
+                          <b>Registration is closed</b>
                         </span>
                     </h4>
                     <h4 ng-class="{'col-sm-3': (vm.event.location.addressString && vm.event.maximumCapacity),

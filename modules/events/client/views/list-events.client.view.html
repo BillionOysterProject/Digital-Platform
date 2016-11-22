@@ -23,12 +23,26 @@
                     </div>
                     <div class="panel-footer">
                         <p class="text-muted text-center">
-                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)">
+                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0" id="openSpots">
                               <i class="fa fa-calendar-times-o"></i>
-                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and </span>
-                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) < 0"><b>Registration is closed</b></span>
-                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) === 0"><b>Last day to register!</b></span>
-                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) > 0">
+                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and<br/></span>
+                            <span ng-show="(vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
+                            vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null)" id="noOpenSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>Event is full</b><br/></span>
+                            <span ng-show="(vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) < 0 ||
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null))" id="registrationClosed">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Registration is closed</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) === 0 &&
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registerToday">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Last day to register!</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) > 0 &&
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registrationOpen">
                               <i class="fa fa-clock-o"></i>
                               <b>{{vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> left to register</span>
                         </p>
