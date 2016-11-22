@@ -422,7 +422,11 @@ describe('Event E2E Tests', function () {
 
         var registeredModal = element(by.id('modal-event-register'));
         browser.wait(EC.visibilityOf(registeredModal), 5000);
+
         expect(registeredModal.isDisplayed()).toBe(true);
+        expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
+          fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+
         registeredModal.element(by.buttonText('Close')).click();
         browser.wait(EC.invisibilityOf(registeredModal), 5000);
         browser.sleep(500);
@@ -481,7 +485,11 @@ describe('Event E2E Tests', function () {
 
           var registeredModal = element(by.id('modal-event-register'));
           browser.wait(EC.visibilityOf(registeredModal), 5000);
+
           expect(registeredModal.isDisplayed()).toBe(true);
+          expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
+            fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+
           registeredModal.element(by.buttonText('Close')).click();
           browser.wait(EC.invisibilityOf(registeredModal), 5000);
           browser.sleep(500);
