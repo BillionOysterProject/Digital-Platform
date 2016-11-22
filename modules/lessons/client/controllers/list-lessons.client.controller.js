@@ -19,8 +19,8 @@
       vocabulary: '',
       searchString: '',
       sort: '',
-      limit: 20,
-      page: 1
+      // limit: 20,
+      // page: 1
     };
 
     vm.clearFilters = function() {
@@ -33,8 +33,8 @@
         vocabulary: '',
         searchString: '',
         sort: '',
-        limit: 20,
-        page: 1
+        // limit: 20,
+        // page: 1
       };
       vm.findLessons();
       vm.findLessons();

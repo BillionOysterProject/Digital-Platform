@@ -34,28 +34,34 @@
                                     <textarea name="cost" class="form-control" ng-model="vm.event.cost" id="cost"></textarea>
                                 </div>
                                 <div class="row">
-                                  <div ng-class="{'col-sm-12': vm.event.category.type !== 'other',
-                                    'col-sm-6': vm.event.category.type === 'other'}">
+                                  <div ng-class="{'col-sm-12': vm.eventType !== 'Other',
+                                    'col-sm-6': vm.eventType === 'Other'}">
                                     <div class="form-group" show-errors>
                                       <label class="control-label required">Type *</label>
-                                      <select class="form-control" name="category" id="category"
+                                      <select class="form-control" name="category" id="category" ng-model="vm.event.category.type._id"
+                                      ng-options="type._id as type.type for type in vm.eventTypes" ng-change="vm.changedCategory(type)"
+                                      require></select>
+
+                                      <!-- <select class="form-control" name="category" id="category"
                                       ng-model="vm.event.category.type" ng-change="vm.changedCategory()" required>
                                         <option value="professional development">Professional development</option>
                                         <option value="field training">Field training</option>
                                         <option value="workshop">Workshop</option>
                                         <!-- <option="expedition">Expedition</option> -->
-                                        <option value="other">Other</option>
-                                      </select>
+                                        <!-- <option value="other">Other</option>
+                                      </select> -->
+
+
                                       <div ng-messages="vm.form.eventForm.category.$error" role="alert">
                                         <p class="help-block error-text" ng-message="required">Type is required.</p>
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-md-6" ng-show="vm.event.category.type === 'other'">
+                                  <div class="col-md-6" ng-show="vm.eventType === 'Other'">
                                     <div class="form-group">
-                                      <label class="control-label" ng-class="{required: vm.event.category.type === 'other'}">Other type *</label>
+                                      <label class="control-label" ng-class="{required: vm.eventType === 'Other'}">Other type *</label>
                                       <input type="text" class="form-control" ng-model="vm.event.category.otherType"
-                                      ng-required="vm.event.category.type === 'other'"/>
+                                      ng-required="vm.eventType === 'Other'"/>
                                     </div>
                                   </div>
                                 </div>
@@ -133,7 +139,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Skills taught</label>
-                                    <wysiwyg-editor outer-column="col-md-12" name="skillsTaught" in-title="Skills taught" 
+                                    <wysiwyg-editor outer-column="col-md-12" name="skillsTaught" in-title="Skills taught"
                                     ng-model="vm.event.skillsTaught" label-class="control-label"></wysiwyg-editor>
                                 </div>
                             </div>

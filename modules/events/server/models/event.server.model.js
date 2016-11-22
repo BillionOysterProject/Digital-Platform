@@ -22,8 +22,10 @@ var CalendarEventSchema = new Schema({
   }],
   category: {
     type: {
-      type: String,
-      enum: ['professional development', 'field training', 'workshop', 'expedition', 'other'],
+      // type: String,
+      // enum: ['professional development', 'field training', 'workshop', 'expedition', 'other'],
+      type: Schema.ObjectId,
+      ref: 'MetaEventType',
       required: 'Please fill in Event category'
     },
     otherType: String

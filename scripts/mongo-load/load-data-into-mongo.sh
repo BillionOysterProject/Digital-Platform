@@ -40,6 +40,7 @@ mongoimport -d bop-dev -c metasubjectareas --type json --file metaSubjectAreas.j
 mongoimport -d bop-dev -c metabodiesofwater --type json --file metaBodiesOfWater.json --drop
 mongoimport -d bop-dev -c metaboroughscounties --type json --file metaBoroughsCounties.json --drop
 mongoimport -d bop-dev -c metasubjectareas --type json --file metaSubjectAreas.json --drop
+mongoimport -d bop-dev -c metaeventtypes --type json --file metaEventTypes.json --drop
 #mongoimport -d bop-dev -c glossaries --type json --file sample-data/bop-dev-glossaries.json
 #mongoimport -d bop-dev -c lessons --type json --file sample-data/bop-dev-lessons.json
 #mongoimport -d bop-dev -c units --type json --file sample-data/bop-dev-units.json

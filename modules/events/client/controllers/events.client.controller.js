@@ -7,10 +7,10 @@
     .controller('EventsController', EventsController);
 
   EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location', '$timeout',
-  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'moment', 'lodash'];
+  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'EventTypesService', 'moment', 'lodash'];
 
   function EventsController ($scope, $rootScope, $state, $window, $http, $location, $timeout,
-    Authentication, event, EventHelper, FileUploader, moment, lodash) {
+    Authentication, event, EventHelper, FileUploader, EventTypesService, moment, lodash) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -56,6 +56,11 @@
       queueLimit: 20
     });
 
+    EventTypesService.query({
+    }, function(data) {
+      vm.eventTypes = data;
+    });
+
     vm.addDate = function() {
       vm.event.dates.push({
         date: moment().startOf('day').toDate(),
@@ -99,8 +104,7 @@
     vm.daysRemainingEvent = EventHelper.getDaysRemainingEvent(vm.event.dates);
     vm.today = moment().isSame(vm.earliestDate, 'day');
     vm.past = (vm.daysRemainingEvent < 0) ? true : false;
-
-    //vm.past = (moment)
+    vm.eventType = (vm.event.category.type) ? vm.event.category.type.type : '';
 
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -154,10 +158,11 @@
       vm.resourceLinks.splice(index, 1);
     };
 
-    vm.changedCategory = function() {
-      if (vm.event.category.type !== 'other') {
-        vm.event.category.otherType = null;
+    vm.changedCategory = function(type) {
+      if (type.type !== 'Other') {
+        vm.event.category.otherType = undefined;
       }
+      vm.eventType = type.type;
     };
 
     vm.registerEvent = function() {

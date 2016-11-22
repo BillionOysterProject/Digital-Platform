@@ -8,6 +8,7 @@ mongoimport -d bop-test -c metabioaccumulations --type json --file scripts/mongo
 mongoimport -d bop-test -c metabodiesofwater --type json --file scripts/mongo-load/metaBodiesOfWater.json --drop
 mongoimport -d bop-test -c metaboroughscounties --type json --file scripts/mongo-load/metaBoroughsCounties.json --drop
 mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
+mongoimport -d bop-test -c metaeventtypes --type json --file scripts/mongo-load/metaEventTypes.json --drop
 
 mongoimport -d bop-test -c metagarbageextents --type json --file scripts/mongo-load/metaGarbageExtents.json --drop
 mongoimport -d bop-test -c metawinddirections --type json --file scripts/mongo-load/metaWindDirections.json --drop
