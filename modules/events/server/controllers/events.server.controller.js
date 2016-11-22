@@ -585,18 +585,22 @@ exports.list = function(req, res) {
   var query;
   var and = [];
 
-  if (req.query.category) {
-    and.push({ 'event.category.type': req.query.category });
+  if (req.query.type) {
+    and.push({ 'category.type': req.query.type });
   }
 
-  if (req.query.future) {
+  if (req.query.timeFrame === 'Upcoming events') {
     var today1 = moment().startOf('day').toDate();
     and.push({ 'dates.startDateTime': { '$gte': today1 } });
-  }
-
-  if (req.query.past) {
+  } else if (req.query.timeFrame === 'Past events') {
     var today2 = moment().startOf('day').toDate();
     and.push({ 'dates.startDateTime': { '$lt': today2 } });
+  }
+
+  if (req.query.availability === 'Registration open') {
+
+  } else if (req.query.availability === 'Registration closed') {
+
   }
 
   var or = [];
@@ -612,6 +616,7 @@ exports.list = function(req, res) {
 
     or.push({ 'title': searchRe });
     or.push({ 'description': searchRe });
+    or.push({ 'skillsTaught': searchRe });
 
     and.push({ $or: or });
   }
@@ -640,6 +645,7 @@ exports.list = function(req, res) {
     .populate('user', 'displayName')
     .populate('registrants.user', 'displayName email schoolOrg')
     .populate('registrants.user.schoolOrg', 'name')
+    .populate('category.type')
     .exec(function(err, events) {
       if (err) {
         return res.status(400).send({
@@ -666,6 +672,7 @@ exports.eventByID = function(req, res, next, id) {
     .populate('user', 'displayName firstName email')
     .populate('registrants.user', 'displayName email schoolOrg')
     .populate('registrants.user.schoolOrg', 'name')
+    .populate('category.type')
     .exec(function (err, calendarEvent) {
       if (err) {
         return next(err);

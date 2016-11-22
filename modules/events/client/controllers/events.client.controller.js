@@ -7,10 +7,10 @@
     .controller('EventsController', EventsController);
 
   EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location', '$timeout',
-  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'moment', 'lodash'];
+  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'EventTypesService', 'moment', 'lodash'];
 
   function EventsController ($scope, $rootScope, $state, $window, $http, $location, $timeout,
-    Authentication, event, EventHelper, FileUploader, moment, lodash) {
+    Authentication, event, EventHelper, FileUploader, EventTypesService, moment, lodash) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -56,6 +56,11 @@
       queueLimit: 20
     });
 
+    EventTypesService.query({
+    }, function(data) {
+      vm.eventTypes = data;
+    });
+
     vm.addDate = function() {
       vm.event.dates.push({
         date: moment().startOf('day').toDate(),
@@ -92,10 +97,14 @@
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
+    vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
-    vm.daysRemaining = EventHelper.getDaysRemaining(vm.event.dates, vm.event.deadlineToRegister);
-    vm.past = (vm.daysRemaining < 0) ? true : false;
+    vm.daysRemainingDeadline = EventHelper.getDaysRemainingDeadline(vm.event.dates, vm.event.deadlineToRegister);
+    vm.daysRemainingEvent = EventHelper.getDaysRemainingEvent(vm.event.dates);
+    vm.today = moment().isSame(vm.earliestDate, 'day');
+    vm.past = (vm.daysRemainingEvent < 0) ? true : false;
+    vm.eventType = (vm.event.category && vm.event.category.type) ? vm.event.category.type.type : '';
 
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -150,8 +159,13 @@
     };
 
     vm.changedCategory = function() {
-      if (vm.event.category.type !== 'other') {
-        vm.event.category.otherType = null;
+      var index = lodash.findIndex(vm.eventTypes, function(c) {
+        return c._id === vm.event.category.type._id;
+      });
+      vm.eventType = (index > -1) ? vm.eventTypes[index].type : '';
+
+      if (vm.eventType !== 'Other') {
+        vm.event.category.otherType = undefined;
       }
     };
 

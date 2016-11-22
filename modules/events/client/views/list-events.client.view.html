@@ -8,7 +8,7 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
-                placeholder="Search for an Event by name, date, description...">
+                placeholder="Search for an Event by name, description, skills taught...">
             </div>
             <div class="alert alert-danger text-center" ng-show="vm.error">
               <p ng-bind="vm.error"></p>
@@ -30,54 +30,51 @@
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="category">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Type{{(vm.filter.category) ? ': ' + vm.filter.category : ''}} <span class="caret"></span>
+                        Type{{(vm.filter.typeName) ? ': ' + vm.filter.typeName : ''}} <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                       <li><a ng-click="vm.categorySelected()" ok-sel=".all">All</a></li>
                       <li role="separator" class="divider"></li>
-                      <li>
-                        <a><i class="fa fa-circle" style="color:#607D8B"></i> ORS Basic Training</a>
-                        <a><i class="fa fa-circle" style="color:#00BCD4"></i> Advanced Field Training</a>
-                        <a><i class="fa fa-circle" style="color:#795548"></i> Professional Development</a>
-                        <a><i class="fa fa-circle" style="color:#4CAF50"></i> Scientist Workshop</a>
-                        <a><i class="fa fa-circle" style="color:#9E9E9E"></i> Other</a>
+                      <li ng-repeat="type in vm.eventTypes">
+                        <a ok-sel=".{{type._id}}" ng-click="vm.categorySelected(type)">
+                          <i class="fa fa-circle" style="color:{{type.color}}"></i> {{type.type}}
+                        </a>
                       </li>
                     </ul>
                 </li>
-                <li class="dropdown" id="date">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Date{{(vm.filter.date) ? ': ' + vm.filter.date : ''}}  <span class="caret"></span>
+                <li class="dropdown" id="timeFrame">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Date{{(vm.filter.timeFrame) ? ': ' + vm.filter.timeFrame : ''}}  <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a ng-click="vm.categorySelected()" ok-sel=".all">All</a></li>
+                      <li><a ok-sel=".all" ng-click="vm.timeFrameSelected()">All</a></li>
                       <li role="separator" class="divider"></li>
-                      <li>
-                        <a>Upcoming events</a> <!-- TIFF: Should be default -- includes day of -->
-                        <a>Past events</a>
-                      </li>
+                      <li><a ok-sel=".Upcoming" ng-click="vm.timeFrameSelected('Upcoming events')">Upcoming events</a></li>
+                      <li><a ok-sel=".Past" ng-click="vm.timeFrameSelected('Past events')">Past events</a></li>
                     </ul>
                 </li>
-                <li class="dropdown" id="date">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <!-- <li class="dropdown" id="availability">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Availability{{(vm.filter.availability) ? ': ' + vm.filter.availability : ''}}  <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a ng-click="vm.categorySelected()" ok-sel=".all">All</a></li>
+                      <li><a ok-sel=".all" ng-click="vm.categorySelected()">All</a></li>
                       <li role="separator" class="divider"></li>
-                      <li>
-                        <a>Registration open</a>
-                        <a>Registration closed</a>
-                      </li>
+                      <li><a ok-sel=".Open" ng-click="vm.availabilitySelected('Registration open')">Registration open</a></li>
+                      <li><a ok-sel=".Closed" ng-click="vm.availabilitySelected('Registration closed')">Registration closed</a></li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
         </nav>
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
             <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
-                    <div class="panel-heading" ng-style="{'background-color':'{{category.type.color}}'}">
+                    <div class="panel-heading" ng-style="{'background-color':'{{calendarEvent.category.type.color}}'}">
                         <!--TIFF: I got this to work but it's currently all lowercase? Also wire up category.type.color as panel-heading background -->
-                        <h3 class="panel-title" ng-bind="calendarEvent.category.type"></h3>
+                        <h3 ng-hide="calendarEvent.category.type.type === 'Other'" class="panel-title"
+                          ng-bind="calendarEvent.category.type.type"></h3>
+                        <h3 ng-show="calendarEvent.category.type.type === 'Other'" class="panel-title">
+                          Other: {{calendarEvent.category.otherType}}</h3>
                     </div>
                     <div class="panel-body text-center">
                         <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
@@ -88,13 +85,28 @@
                     </div>
                     <div class="panel-footer">
                         <p class="text-muted text-center small">
-                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)">
+                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0" id="openSpots">
                               <i class="fa fa-calendar-times-o"></i>
-                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and </span>
-                            <span ng-show="(calendarEvent.dates && calendarEvent.dates.length > 0) ||
-                              calendarEvent.deadlineToRegister">
+                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and<br/></span>
+                            <span ng-show="(vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
+                            vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null)" id="noOpenSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>Event is full</b><br/></span>
+                            <span ng-show="(vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) < 0 ||
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null))" id="registrationClosed">
                               <i class="fa fa-clock-o"></i>
-                              <b>{{vm.getDaysRemaining(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> remaining</span>
+                              <b>Registration is closed</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) === 0 &&
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registerToday">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Last day to register!</b></span>
+                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) > 0 &&
+                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
+                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registrationOpen">
+                              <i class="fa fa-clock-o"></i>
+                              <b>{{vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> left to register</span>
                         </p>
                     </div>
                 </div>
