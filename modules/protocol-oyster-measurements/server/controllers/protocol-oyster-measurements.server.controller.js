@@ -33,9 +33,11 @@ var checkRole = function(role, user) {
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
   var errorMessages = [];
 
-  if (!oysterMeasurement.depthOfOysterCage || !oysterMeasurement.depthOfOysterCage.submergedDepthofCageM ||
-    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
-    errorMessages.push('Submerged depth of oyster cage is required');
+  if(!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === undefined ||
+    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === null) {
+    errorMessages.push('Submerged depth of oyster cage is required and must be greater than 0');
+  } else if(oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
+    errorMessages.push('Submerged depth of oyster cage must be greater than 0');
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
