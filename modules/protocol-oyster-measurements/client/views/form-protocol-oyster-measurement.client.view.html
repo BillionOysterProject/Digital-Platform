@@ -54,7 +54,7 @@
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
                         <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
-                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
+                        <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
