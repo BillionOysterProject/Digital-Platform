@@ -40,13 +40,6 @@
       }
     };
 
-    var moveMarkerToLocation = function(location) {
-      if(mapMarker){
-        var latLng = L.latLng(location.lat, location.lng);
-        moveMarker(latLng);
-      }
-    };
-
     var zoomToLocation = function(location){
       var latlng = L.latLng(location.lat, location.lng);
       mapSelectMap.setView(latlng, settings.searchZoom, { animate: false });
@@ -79,7 +72,6 @@
       if(vm.mapControls){
         vm.mapControls.resizeMap = resizeMap;
         vm.mapControls.moveMarker = moveMarker;
-        vm.mapControls.moveMarkerToLocation = moveMarkerToLocation;
         vm.mapControls.zoomToLocation = zoomToLocation;
         vm.mapControls.zoomToLevel = zoomToLevel;
         vm.mapControls.zoomOut = zoomOut;

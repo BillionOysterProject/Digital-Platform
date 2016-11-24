@@ -19,14 +19,6 @@
         angular.element(document.querySelector('#'+vm.modalId)).on('shown.bs.modal', function(){
           $timeout(function() {
             vm.mapControls.resizeMap();
-            if(vm.latitude !== null && vm.longitude !== null) {
-              var initialLocation = {
-                lat: vm.latitude,
-                lng: vm.longitude
-              };
-              vm.mapControls.panTo(initialLocation);
-              vm.mapControls.moveMarkerToLocation(initialLocation);
-            }
           });
         });
       }
