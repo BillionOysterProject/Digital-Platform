@@ -125,7 +125,14 @@
 
     vm.signinOrRegister = function() {
       $rootScope.redirectFromLogin = $location.path();
-      $location.path('/authentication/signin');
+      angular.element('#modal-event-signin-or-signup').modal('show');
+    };
+
+    vm.signinOrRegisterClose = function(path) {
+      angular.element('#modal-event-signin-or-signup').modal('hide');
+      $timeout(function() {
+        $location.path(path);
+      }, 500);
     };
 
     vm.getRegistrationDate = function(date) {
