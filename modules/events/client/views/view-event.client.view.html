@@ -5,8 +5,8 @@
             <div class="row">
                 <div class="col-md-4 col-sm-6 box pull-right text-center">
                     <div class="row">
-                        <div class="col-xs-6" ng-class="{'col-xs-6': vm.past === false,
-                        'col-xs-12': vm.past === true}" >
+                        <div ng-class="{'col-xs-6': (vm.past === false && (vm.isAdmin || vm.isTeamLead || vm.notLoggedIn)),
+                        'col-xs-12': (vm.past === true || vm.isTeamMember)}">
                             <span ng-show="vm.event.dates && vm.event.dates.length > 1"
                               ng-repeat="date in vm.event.dates">
                               <h3><b>{{vm.getEventDate(date.startDateTime)}}</b>
@@ -68,37 +68,44 @@
             <div class="col-sm-12">
                 <hr/>
                 <div class="row text-center">
-                    <h4 class="col-sm-3 text-muted" ng-class="{'col-sm-3': (vm.event.maximumCapacity && (vm.past || vm.today)),
-                      'col-sm-4': (vm.event.maximumCapacity || (vm.past || vm.today)),
-                      'col-sm-6': (!vm.event.maximumCapacity || (!vm.past && !vm.today))}"
+                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.maximumCapacity > 0 && (vm.past || vm.today)),
+                      'col-sm-4': ((!vm.event.maximumCapacity && (vm.past || vm.today)) ||
+                        (vm.event.maximumCapacity > 0 && !vm.past && !vm.today)),
+                      'col-sm-6': (!vm.event.maximumCapacity && !vm.past && !vm.today)}"
                       ng-show="vm.event.location.addressString">
                         <a href="#" ng-click="vm.openMap()">
                             <i class="fa fa-map-marker"></i>
                             <small>{{vm.event.location.addressString}}</small>
                         </a>
                     </h4>
-                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && (vm.past || vm.today) && vm.event.maximumCapacity),
-                      'col-sm-4': (!vm.event.location.addressString || (!vm.past && !vm.today) || !vm.event.maximumCapacity),
+                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && (vm.past || vm.today) && vm.event.maximumCapacity > 0),
+                      'col-sm-4': ((!vm.event.location.addressString && (vm.past || vm.today) && vm.event.maximumCapacity > 0) ||
+                        (vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity > 0) ||
+                        (vm.event.location.addressString && (vm.past || vm.today) && !vm.event.maximumCapacity)),
                       'col-sm-6': ((!vm.event.location.addressString && (vm.past || vm.today) && !vm.event.maximumCapacity) ||
-                        (!vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity) ||
+                        (!vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity > 0) ||
                         (vm.event.location.addressString && !vm.past && !vm.today && !vm.event.maximumCapacity)),
                       'col-sm-12': (!vm.event.location.addressString && !vm.past && !vm.today && !vm.event.maximumCapacity)}">
                         <span ng-show="vm.daysRemainingDeadline > 0 && (vm.openSpots === null || vm.openSpots > 0)" id="daysRemaining">
                           <i class="fa fa-clock-o"></i>
                           <b>{{vm.daysRemainingDeadline}} days</b>
                             <small>left to register</small>
+                            <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                         <span ng-show="vm.daysRemainingDeadline === 0 && (vm.openSpots === null || vm.openSpots > 0)" id="registerToday">
                           <i class="fa fa-clock-o"></i>
                           <b>Last day to register!</b>
+                          <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                         <span ng-show="vm.daysRemainingDeadline < 0 || (vm.openSpots !== null && vm.openSpots <= 0)" id="registrationClosed">
                           <i class="fa fa-clock-o"></i>
                           <b>Registration is closed</b>
+                          <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                     </h4>
-                    <h4 ng-class="{'col-sm-3': (vm.event.location.addressString && vm.event.maximumCapacity),
-                      'col-sm-4': (vm.event.location.addressString || vm.event.maximumCapacity),
+                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && vm.event.maximumCapacity > 0),
+                      'col-sm-4': ((!vm.event.location.addressString && vm.event.maximumCapacity > 0) ||
+                        (vm.event.location.addressString && !vm.event.maximumCapacity)),
                       'col-sm-6': (!vm.event.location.addressString && !vm.event.maximumCapacity)}"
                       ng-show="vm.past || vm.today">
                         <span ng-show="vm.today" id="eventIsToday">
@@ -111,9 +118,10 @@
 
                     </h4>
                     <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && (vm.past || vm.today)),
-                      'col-sm-4': (vm.event.location.addressString || (vm.past || vm.today)),
-                      'col-sm-6': !vm.event.location.addressString || (!vm.past && !vm.today)}"
-                      ng-show="(!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity">
+                      'col-sm-4': ((!vm.event.location.addressString && (vm.past || vm.today)) ||
+                        (vm.event.location.addressString && !vm.past && !vm.today)),
+                      'col-sm-6': (!vm.event.location.addressString && !vm.past && !vm.today)}"
+                      ng-show="(!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity > 0">
                         <i class="fa fa-users"></i>
                         <b>{{vm.event.registrants.length}}/{{vm.event.maximumCapacity}} full</b>
                     </h4>

@@ -100,6 +100,7 @@
     vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
+    vm.deadline = moment(EventHelper.getDeadline(vm.event.dates, vm.event.deadlineToRegister)).format('MM/DD/YYYY');
     vm.daysRemainingDeadline = EventHelper.getDaysRemainingDeadline(vm.event.dates, vm.event.deadlineToRegister);
     vm.daysRemainingEvent = EventHelper.getDaysRemainingEvent(vm.event.dates);
     vm.today = moment().isSame(vm.earliestDate, 'day');
@@ -116,11 +117,13 @@
     if (vm.user) {
       vm.isAdmin = checkRole('admin');
       vm.isTeamLead = (checkRole('team lead') || checkRole('team lead pending')) ? true : false;
+      vm.isTeamMember = (checkRole('team member') || checkRole('team member pending')) ? true : false;
       vm.notLoggedIn = false;
     } else {
       vm.notLoggedIn = true;
       vm.isAdmin = false;
       vm.isTeamLead = false;
+      vm.isTeamMember = false;
     }
 
     vm.signinOrRegister = function() {
