@@ -88,7 +88,7 @@
                           <b>{{vm.daysRemainingDeadline}} days</b>
                             <small>left to register</small>
                         </span>
-                        <span ng-show="vm.daysRemainingDeadline === 0" id="registerToday">
+                        <span ng-show="vm.daysRemainingDeadline === 0 && (vm.openSpots === null || vm.openSpots > 0)" id="registerToday">
                           <i class="fa fa-clock-o"></i>
                           <b>Last day to register!</b>
                         </span>
