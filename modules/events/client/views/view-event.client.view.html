@@ -60,7 +60,7 @@
             <div class="col-sm-4 text-right" ng-show="vm.isAdmin && vm.event.isCurrentUserOwner">
                 <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })" id="editEvent">Edit</a>
                 <a class="btn btn-default" ng-click="vm.duplicateEvent()">Duplicate</a>
-                <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
+                <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a><!--TIFF: wire up additional features in modal email-registrants.client.view.html -->
             </div>
         </div>
 
@@ -138,6 +138,9 @@
                             <th>Teams</th>
                             <th>Email</th>
                             <th>Date Registered</th>
+                            <!--TIFF: Show on date of event:
+                            <th>Attended</th>
+                            -->
                         </tr>
                     </thead>
                     <tbody>
@@ -147,6 +150,14 @@
                             <td>{{registrant.user.teams}}</td>
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
+                            <!--TIFF: Show on date of event:
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button class="btn btn-danger"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-success"><i class="fa fa-check"></i></button>
+                                </div>
+                            </td>
+                            -->
                         </tr>
                     </tbody>
                 </table>
