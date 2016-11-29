@@ -1,4 +1,4 @@
-{"_id":{"$oid":"5706e1b9ecf01e67b1b304f0"},"order":0,"subject":"Math","color":"#607D8B"}
-{"_id":{"$oid":"5706e1b9ecf01e67b1b304ef"},"order":1,"subject":"Social Studies","color":"#00BCD4"}
-{"_id":{"$oid":"5706e1b9ecf01e67b1b304f8"},"order":2,"subject":"Science","color":"#795548"}
-{"_id":{"$oid":"5706e1b9ecf01e67b1b304f1"},"order":3,"subject":"ELA","color":"#9E9E9E"}
+{"_id":{"$oid":"5706e1b9ecf01e67b1b304f0"},"order":0,"subject":"Math","color":"#FF5722"}
+{"_id":{"$oid":"5706e1b9ecf01e67b1b304ef"},"order":1,"subject":"Social Studies","color":"#673AB7"}
+{"_id":{"$oid":"5706e1b9ecf01e67b1b304f8"},"order":2,"subject":"Science","color":"#E91E63"}
+{"_id":{"$oid":"5706e1b9ecf01e67b1b304f1"},"order":3,"subject":"ELA","color":"#00BCD4"}

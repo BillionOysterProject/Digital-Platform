@@ -1,125 +1,135 @@
-<div>
-  <div class="col-md-offset-3 col-md-6">
-    <h3 class="text-center">Sign up</h3><br/>
-    <form name="vm.userForm" ng-submit="vm.signup(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
-      <fieldset>
+<div class="row">
+    <div class="col-md-8">
+      <h2>Sign up</h2>
+      <p>Already have an account? <a ui-sref="authentication.signin" class="show-signup">Sign in</a></p>
+      <br/>
+      <form name="vm.userForm" ng-submit="vm.signup(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
+        <fieldset>
+          <div class="row">
+              <div class="form-group col-sm-6" show-errors>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName"
+                  placeholder="First Name" required>
+                <div ng-messages="vm.userForm.firstName.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">First name is required.</p>
+                </div>
+              </div>
+              <div class="form-group col-sm-6" show-errors>
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName"
+                  placeholder="Last Name" required>
+                <div ng-messages="vm.userForm.lastName.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Last name is required.</p>
+                </div>
+              </div>
+          </div>
+          <div class="form-group" show-errors>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email"
+            placeholder="email@example.com" lowercase required>
+            <div ng-messages="vm.userForm.email.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Email address is required.</p>
+              <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+            </div>
+          </div>
         <div class="row">
-            <div class="form-group col-sm-6" show-errors>
-              <label for="firstName">First Name</label>
-              <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName"
-                placeholder="First Name" required>
-              <div ng-messages="vm.userForm.firstName.$error" role="alert">
-                <p class="help-block error-text" ng-message="required">First name is required.</p>
+          <div class="form-group" show-errors
+          ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
+            <label for="role" class="control-label required">Role</label>
+            <select name="role" class="form-control" ng-model="vm.credentials.userrole" required
+            ng-change="vm.roleFieldSelected(vm.credentials.userrole)">
+              <option value="team lead pending">Team Lead</option>
+              <option value="team member pending">Team Member</option>
+            </select>
+          </div>
+          <div class="form-group" show-errors ng-show="vm.teamLeadSelected"
+          ng-class="{'col-sm-6': !vm.teamLeadSelected, 'col-sm-4': vm.teamLeadSelected}">
+            <label for="teamLeadType" class="control-label" ng-class="{required: vm.teamLeadSelected}">Team Lead Type</label>
+            <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="vm.credentials.teamLeadType"
+              ng-required="vm.teamLeadSelected">
+              <option ng-repeat="type in vm.teamLeadType" value="{{type.value}}">{{type.label}}</option>
+            </select>
+          </div>
+          <div class="form-group" show-errors
+          ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
+            <label for="schoolOrg" class="control-label required">Organization
+              <a href="#" ng-click="vm.openSchoolOrgForm()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
+            </label>
+            <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="vm.credentials.schoolOrg"
+              ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)" required>
+              <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
+            </select>
+          </div>
+          <div class="form-group" show-errors ng-show="vm.schoolOrgSelected"
+          ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
+            <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
+            <select class="form-control" name="teamLead" id="teamLead" ng-model="vm.credentials.teamLead"
+              ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads"
+              ng-required="vm.schoolOrgSelected">
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-12" show-errors>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" ng-model="vm.credentials.username"
+            placeholder="Username" lowercase required>
+            <div ng-messages="vm.userForm.username.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Username is required.</p>
+            </div>
+          </div>
+          <div class="form-group col-sm-6" show-errors>
+            <label for="password">Password</label>
+              <input type="password" id="password" name="password" class="form-control" ng-model="vm.credentials.password"
+              placeholder="Password" uib-popover="{{vm.popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+            <div ng-messages="vm.userForm.password.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Password is required.</p>
+              <div ng-repeat="passwordError in passwordErrors">
+                <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
               </div>
             </div>
-            <div class="form-group col-sm-6" show-errors>
-              <label for="lastName">Last Name</label>
-              <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName"
-                placeholder="Last Name" required>
-              <div ng-messages="vm.userForm.lastName.$error" role="alert">
-                <p class="help-block error-text" ng-message="required">Last name is required.</p>
+          </div>
+          <div class="form-group col-sm-6" show-errors>
+            <label for="retypePassword">Retype Password</label>
+              <input type="password" id="retypePassword" name="retypePassword" class="form-control"
+              ng-model="vm.credentials.retypePassword" placeholder="Password" uib-popover="{{vm.popoverMsg}}"
+              uib-popover-trigger="focus" password-validator required>
+            <div ng-messages="vm.userForm.password.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">Password is required.</p>
+              <div ng-repeat="passwordError in passwordErrors">
+                <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
               </div>
             </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email"
-          placeholder="email@example.com" lowercase required>
-          <div ng-messages="vm.userForm.email.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Email address is required.</p>
-            <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+            <div class="form-group" ng-show="!vm.userForm.password.$error.required">
+              <label>Password Requirements</label>
+              <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">
+                <span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>
+              </uib-progressbar>
+            </div>
           </div>
         </div>
-      <div class="row">
-        <div class="form-group" show-errors
-        ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
-          <label for="role" class="control-label required">Role</label>
-          <select name="role" class="form-control" ng-model="vm.credentials.userrole" required
-          ng-change="vm.roleFieldSelected(vm.credentials.userrole)">
-            <option value="team lead pending">Team Lead</option>
-            <option value="team member pending">Team Member</option>
-          </select>
-        </div>
-        <div class="form-group" show-errors ng-show="vm.teamLeadSelected"
-        ng-class="{'col-sm-6': !vm.teamLeadSelected, 'col-sm-4': vm.teamLeadSelected}">
-          <label for="teamLeadType" class="control-label" ng-class="{required: vm.teamLeadSelected}">Team Lead Type</label>
-          <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="vm.credentials.teamLeadType"
-            ng-required="vm.teamLeadSelected">
-            <option ng-repeat="type in vm.teamLeadType" value="{{type.value}}">{{type.label}}</option>
-          </select>
-        </div>
-        <div class="form-group" show-errors
-        ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
-          <label for="schoolOrg" class="control-label required">Organization
-            <a href="#" ng-click="vm.openSchoolOrgForm()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
-          </label>
-          <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="vm.credentials.schoolOrg"
-            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)" required>
-            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
-          </select>
-        </div>
-        <div class="form-group" show-errors ng-show="vm.schoolOrgSelected"
-        ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
-          <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
-          <select class="form-control" name="teamLead" id="teamLead" ng-model="vm.credentials.teamLead"
-            ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads"
-            ng-required="vm.schoolOrgSelected">
-          </select>
-        </div>
+        <div class="row">
+          <div class="col-sm-12 text-right form-group">
+              <button type="submit" class="btn btn-primary pull-right">Sign up</button>
+          </div>
+          <div class="col-sm-12">
+              <div ng-show="vm.error" class="alert alert-danger">
+                  <strong ng-bind="vm.error"></strong>
+              </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    
+    <div class="col-md-4">
+      <br/><br/><br/>
+      <div class="well">
+        <h4 class="red">Not sure what your role is?</h4>
+        <p><b>If you're a student</b>, sign up with the role of Team Member. You can then select your Organization and Team Lead to request to join a team.</p>
+        <p><b>If you're over 18</b>, sign up with the role of Team Lead. This will allow you to create teams, register for an event, view curriculum, upload data, and more.</p>
+        <p>Questions? Click the <i class="fa fa-question-circle"></i> button on the top right of your screen.</p>
       </div>
-      <div class="row">
-        <div class="form-group col-sm-4" show-errors>
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control" ng-model="vm.credentials.username"
-          placeholder="Username" lowercase required>
-          <div ng-messages="vm.userForm.username.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Username is required.</p>
-          </div>
-        </div>
-        <div class="form-group col-sm-4" show-errors>
-          <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" ng-model="vm.credentials.password"
-            placeholder="Password" uib-popover="{{vm.popoverMsg}}" uib-popover-trigger="focus" password-validator required>
-          <div ng-messages="vm.userForm.password.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Password is required.</p>
-            <div ng-repeat="passwordError in passwordErrors">
-              <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
-            </div>
-          </div>
-        </div>
-        <div class="form-group col-sm-4" show-errors>
-          <label for="retypePassword">Retype Password</label>
-            <input type="password" id="retypePassword" name="retypePassword" class="form-control"
-            ng-model="vm.credentials.retypePassword" placeholder="Password" uib-popover="{{vm.popoverMsg}}"
-            uib-popover-trigger="focus" password-validator required>
-          <div ng-messages="vm.userForm.password.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Password is required.</p>
-            <div ng-repeat="passwordError in passwordErrors">
-              <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
-            </div>
-          </div>
-          <div class="form-group" ng-show="!vm.userForm.password.$error.required">
-            <label>Password Requirements</label>
-            <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}">
-              <span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span>
-            </uib-progressbar>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 text-center form-group">
-            <button type="submit" class="btn btn-primary">Sign up</button>
-            &nbsp; or&nbsp;
-            <a ui-sref="authentication.signin" class="show-signup">Sign in</a>
-        </div>
-        <div class="col-sm-12">
-            <div ng-show="vm.error" class="alert alert-danger">
-                <strong ng-bind="vm.error"></strong>
-            </div>
-        </div>
-      </fieldset>
-    </form>
-  </div>
+    </div>
 </div>
 
 

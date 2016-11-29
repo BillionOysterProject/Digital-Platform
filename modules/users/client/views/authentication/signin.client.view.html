@@ -1,6 +1,8 @@
 <div>
   <div class="col-md-offset-3 col-md-6">
-    <h3 class="text-center">Sign in</h3><br/>
+    <h2 class="text-center">Sign in</h2>
+    <p class="text-center">Don't have an account? <a ui-sref="authentication.signup">Sign up</a></p>
+    <br/>
     <form name="vm.userForm" ng-submit="vm.signin(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
         <div class="form-group" show-errors>
@@ -22,8 +24,6 @@
         </uib-alert>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary" id="signin">Sign in</button>
-          &nbsp; or&nbsp;
-          <a ui-sref="authentication.signup">Sign up</a>
         </div>
         <div class="text-center">
           <a ui-sref="password.forgot">Forgot your password?</a>
