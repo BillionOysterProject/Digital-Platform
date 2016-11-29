@@ -522,6 +522,78 @@ exports.unregister = function(req, res) {
   }
 };
 
+exports.attended = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].attended = true;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
+exports.notAttended = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].attended = false;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
 var getRegistrantsList = function(registrants) {
   var emailArray = [];
   emailArray = emailArray.concat(_.map(registrants, 'user.email'));

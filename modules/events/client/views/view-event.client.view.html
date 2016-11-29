@@ -60,7 +60,7 @@
             <div class="col-sm-4 text-right" ng-show="vm.isAdmin && vm.event.isCurrentUserOwner">
                 <a class="btn btn-default" ui-sref="events.edit({ eventId: vm.event._id })" id="editEvent">Edit</a>
                 <a class="btn btn-default" ng-click="vm.duplicateEvent()">Duplicate</a>
-                <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a><!--TIFF: wire up additional features in modal email-registrants.client.view.html -->
+                <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
             </div>
         </div>
 
@@ -132,7 +132,6 @@
     </section>
 </section>
 
-<!-- TIFF: Show only if admin -->
 <section class="content shaded" ng-show="vm.isAdmin">
     <section class="container">
         <div class="row">
@@ -146,9 +145,7 @@
                             <th>Teams</th>
                             <th>Email</th>
                             <th>Date Registered</th>
-                            <!--TIFF: Show on date of event and beyond:
-                            <th>Attended</th>
-                            -->
+                            <th ng-show="vm.today || vm.past">Attended</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -158,14 +155,16 @@
                             <td>{{registrant.user.teams}}</td>
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
-                            <!--TIFF: Show on date of event and beyond. Buttons should be btn-danger or btn-success respectively when selected, btn-link when not selected (and both as btn-link on first load)
-                            <td>
+                            <td ng-show="vm.today || vm.past">
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-danger"><i class="fa fa-times"></i></button> 
-                                    <button class="btn btn-success"><i class="fa fa-check"></i></button>
+                                    <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null)}"
+                                      ng-click="vm.notAttendedEvent(registrant)"><i class="fa fa-times"></i></a>
+                                    <a class="btn" ng-class="{'btn-success': registrant.attended === true,
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null)}"
+                                      ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
                                 </div>
                             </td>
-                            -->
                         </tr>
                     </tbody>
                 </table>
@@ -199,7 +198,6 @@
                 </ul>
             </div>
             <div class="col-sm-9">
-                <!--TIFF: I added colors and the new Type display names -- didn't change the programmed names though -- those need updated -->
                 <p ng-show="vm.event.category.type" id="eventCategory"><b>Type:</b>
                   <span ng-hide="vm.eventType === 'Other'">
                     <i class="fa fa-circle" style="color:{{vm.event.category.type.color}}"></i> {{vm.event.category.type.type}}</span>
@@ -228,7 +226,6 @@
 
 <redirect-to-signin-modal close-function="vm.signinOrRegisterClose"></redirect-to-signin-modal>
 
-<!-- TIFF: Wire up modal (copied from another map)-->
 <div class="modal fade" id="modal-event-map">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
