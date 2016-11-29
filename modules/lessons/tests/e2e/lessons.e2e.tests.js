@@ -593,7 +593,7 @@ describe('Lesson E2E Tests', function() {
 
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(2);
-        expect(subjectAreaToggle.getText()).toEqual('Subject Area(s): ' + subjectAreaFilterName);
+        expect(subjectAreaToggle.getText()).toEqual('Subject Area: ' + subjectAreaFilterName);
 
         showAllButton.click();
       });
@@ -676,7 +676,7 @@ describe('Lesson E2E Tests', function() {
     var waitForSave = function(visibilityTimeout, invisibilityTimeout) {
       var saveModal = element(by.id('modal-saved-lesson'));
       if (visibilityTimeout > 0) browser.wait(EC.visibilityOf(saveModal), visibilityTimeout);
-      if (invisibilityTimeout > 0) browser.sleep(500);
+      browser.sleep(500);
       if (invisibilityTimeout > 0) browser.wait(EC.invisibilityOf(saveModal), invisibilityTimeout);
     };
 

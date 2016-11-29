@@ -35,6 +35,7 @@ describe('Event E2E Tests', function () {
   var date1JSON = date1.format('YYYY-MM-DD');
   var date1StringMulti = date1.format('MMM D YYYY');
   var date1StringSingle = date1.format('MMM') + '\n' + date1.format('D') + '\n' + date1.format('YYYY');
+  var deadlineString1 = date1.format('MM/DD/YYYY');
 
   var date2 = moment().add(8, 'days').startOf('day');
   var date2Field = date2.format('MM-DD-YYYY');
@@ -42,12 +43,14 @@ describe('Event E2E Tests', function () {
   var date2StringMulti = date2.format('MMM D YYYY');
   var date2StringSingle = date2.format('MMM') + '\n' + date2.format('D') + '\n' + date2.format('YYYY');
   var deadline1 = moment().add(5, 'days').startOf('day').format('MM-DD-YYYY');
+  var deadlineString2 = moment().add(5, 'days').startOf('day').format('MM/DD/YYYY');
 
   var date3 = moment().startOf('day');
   var date3Field = date3.format('MM-DD-YYYY');
   var date3JSON = date3.format('YYYY-MM-DD');
   var date3StringMulti = date3.format('MMM D YYYY');
   var date3StringSingle = date3.format('MMM') + '\n' + date3.format('D') + '\n' + date3.format('YYYY');
+  var deadlineString3 = date3.format('MM/DD/YYYY');
 
   var date4 = moment().startOf('day');
   var date4Field = date4.format('MM-DD-YYYY');
@@ -55,6 +58,7 @@ describe('Event E2E Tests', function () {
   var date4StringMulti = date4.format('MMM D YYYY');
   var date4StringSingle = date4.format('MMM') + '\n' + date4.format('D') + '\n' + date4.format('YYYY');
   var deadline4 = moment().subtract(1, 'days').startOf('day').format('MM-DD-YYYY');
+  var deadlineString4 = moment().subtract(1, 'days').startOf('day').format('MM/DD/YYYY');
 
   var initialEvent = {
     title: 'Initial Event',
@@ -74,6 +78,7 @@ describe('Event E2E Tests', function () {
       otherType: 'Meeting'
     },
     description: 'This is a description for initial event',
+    deadline: deadlineString1
   };
 
   var fullEvent = {
@@ -103,6 +108,7 @@ describe('Event E2E Tests', function () {
     },
     description: 'This is a description for the updated event',
     deadlineToRegister: deadline1,
+    deadline: deadlineString2,
     location: {
       address: 'One Pace Plaza',
       addressString: 'One Pace Plaza, New York, NY 10038, USA',
@@ -140,6 +146,7 @@ describe('Event E2E Tests', function () {
     },
     maximumCapacity: 2,
     description: 'This is a description for today\'s event',
+    deadline: deadlineString3
   };
 
   var todayDeadlineEvent = {
@@ -160,6 +167,7 @@ describe('Event E2E Tests', function () {
     },
     deadlineToRegister: deadline4,
     description: 'This is a description for today\'s event',
+    deadline: deadlineString4
   };
 
   var saveWait = 450000;
@@ -281,12 +289,12 @@ describe('Event E2E Tests', function () {
     }
 
     if (isPast || (isToday && values.deadlineToRegister) || (values.maximumCapacity && openSpots === 0)) {
-      expect(element(by.id('registrationClosed')).getText()).toEqual('Registration is closed');
+      expect(element(by.id('registrationClosed')).getText()).toEqual('Registration is closed\nRegistration deadline ' + values.deadline);
     } else if (isToday && !values.deadlineToRegister) {
-      expect(element(by.id('registerToday')).getText()).toEqual('Last day to register!');
+      expect(element(by.id('registerToday')).getText()).toEqual('Last day to register!\nRegistration deadline ' + values.deadline);
     } else {
       var daysRemaining = (values.deadlineToRegister) ? '5' : '7';
-      expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register');
+      expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register\nRegistration deadline ' + values.deadline);
     }
 
     if (values.maximumCapacity && (isAdmin || isTeamLead)) {
@@ -471,12 +479,14 @@ describe('Event E2E Tests', function () {
         browser.getCurrentUrl().then(function(currentUrl) {
           element(by.css('a[ng-click="vm.signinOrRegister()"]')).click();
           browser.sleep(500);
+          element(by.css('a[ng-click="signUp()"]')).click();
+          browser.sleep(500);
 
           //Assert that it went login page
-          expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/authentication/signin');
+          expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/authentication/signup');
 
           //Register new user
-          element(by.css('a[href="/authentication/signup"]')).click();
+          //element(by.css('a[href="/authentication/signup"]')).click();
 
           signup(newLeader);
           browser.sleep(500);
