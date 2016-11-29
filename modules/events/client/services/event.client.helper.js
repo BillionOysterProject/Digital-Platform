@@ -67,16 +67,19 @@
       }
     };
 
-    var getDaysRemainingDeadline = function(dates, deadlineToRegister) {
-      var today = moment().endOf('day');
+    var getDeadline = function(dates, deadlineToRegister) {
       if (deadlineToRegister) {
-        var deadline = moment(deadlineToRegister).endOf('day');
-        return deadline.diff(today, 'days');
+        return moment(deadlineToRegister).endOf('day');
       } else {
         var earliestDate = getEarliestDateAsMoment(dates);
-        var earliest = (earliestDate) ? earliestDate.endOf('day') : null;
-        return (earliest) ? earliest.diff(today, 'days') : null;
+        return (earliestDate) ? earliestDate.endOf('day') : null;
       }
+    };
+
+    var getDaysRemainingDeadline = function(dates, deadlineToRegister) {
+      var today = moment().endOf('day');
+      var deadline = getDeadline(dates, deadlineToRegister);
+      return (deadline) ? deadline.diff(today, 'days') : null;
     };
 
     var getDaysRemainingEvent = function(dates) {
@@ -93,6 +96,7 @@
       getEventYear: getEventYear,
       getEventTimeRange: getEventTimeRange,
       getOpenSpots: getOpenSpots,
+      getDeadline: getDeadline,
       getDaysRemainingDeadline: getDaysRemainingDeadline,
       getDaysRemainingEvent: getDaysRemainingEvent,
       getEarliestDate: getEarliestDate,

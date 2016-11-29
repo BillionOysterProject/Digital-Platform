@@ -1069,7 +1069,7 @@ describe('Expedition E2E Tests', function() {
         browser.wait(EC.presenceOf($('#edit-baseline')), 5000);
         modal.element(by.id('edit-baseline')).click();
         browser.wait(EC.visibilityOf(modal.element(by.id('source'))), 5000);
-        browser.pause();
+        //browser.pause();
         modal.element(by.id('source')).all(by.tagName('option')).get(measurementsDetails.source).click();
         if (measurementsDetails.otherSource) modal.element(by.model('baseline.otherSource')).sendKeys(measurementsDetails.otherSource);
         if (measurementsDetails.totalNumberOfLiveOystersAtBaseline) modal.element(by.model('baseline.totalNumberOfLiveOystersAtBaseline')).clear().sendKeys(measurementsDetails.totalNumberOfLiveOystersAtBaseline);
