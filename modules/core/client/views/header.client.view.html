@@ -68,10 +68,19 @@
                         <li ui-sref-active="active" ng-repeat="item in accountMenu.items" ng-if="item.shouldRender(authentication.user);">
                             <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
                         </li>
-                        <li class="divider"></li>
-                        <li><a href="#" ng-click="openFeedback()">Support</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
                         <li class="divider"></li>
+                        <li class="visible-xs">
+                            <a href="#" ng-click="openFeedback()">
+                                <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                            </a>
+                        </li>
+                        <li class="visible-xs">
+                            <a href="http://bop-ccers.tumblr.com" target="_blank">
+                                <i class="fa fa-tumblr-square"></i> Tumblr
+                            </a>
+                        </li>
+                        <li class="divider visible-xs"></li>
                         <li><a href="/api/auth/signout" target="_self">Signout</a></li>
                     </ul>
                 </li>
