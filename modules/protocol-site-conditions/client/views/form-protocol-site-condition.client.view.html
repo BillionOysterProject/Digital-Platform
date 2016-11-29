@@ -78,9 +78,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="windSpeed" class="required">Wind speed (mph) *</label>
-                            <input class="form-control" type="number" name="windSpeed"
+                            <input class="form-control" type="number" min="0" name="windSpeed"
                             ng-model="siteCondition.meteorologicalConditions.windSpeedMPH" required/>
                             <span class="help-block">Method: Anemometer</span>
+                            <div ng-show="form.siteConditionForm.windSpeed.$error.min">
+                                <p class="red">Wind speed must be a positive number.</p>
+                            </div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="windDirection" class="required">Wind direction *</label>
@@ -92,9 +95,12 @@
                     </div>
                     <div class="form-group">
                         <label for="humidity" class="required">Humidity (%) *</label>
-                        <input class="form-control" type="number" name="humidity"
+                        <input class="form-control" type="number" min="0" name="humidity"
                         ng-model="siteCondition.meteorologicalConditions.humidityPer" required/>
                         <span class="help-block">Method: Sling Psychrometer</span>
+                        <div ng-show="form.siteConditionForm.humidity.$error.min">
+                            <p class="red">Humidity must be a positive number.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
@@ -194,8 +200,11 @@
                     </div>
                     <div class="form-group">
                       <label for="surfaceCurrentSpeedMPS" class="required">Surface current speed (meters/second) *</label>
-                      <input class="form-control" type="number" name="surfaceCurrentSpeedMPS"
+                      <input class="form-control" type="number" min="0" name="surfaceCurrentSpeedMPS"
                       ng-model="siteCondition.waterConditions.surfaceCurrentSpeedMPS" required/>
+                      <div ng-show="form.siteConditionForm.surfaceCurrentSpeedMPS.$error.min">
+                          <p class="red">Surface current speed must be a positive number.</p>
+                      </div>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -401,24 +410,36 @@
                         <p class="red">Percentages must add to 100%.</p>
                     </div>
                     <div class="form-group">
-                        <label>Impervious Surface (concrete/asphalt paths, roads, buildings etc.)</label>
+                        <label class="required">Impervious Surface (concrete/asphalt paths, roads, buildings etc.) *</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer" />
+                            <input type="number" name="imperviousSurfacePer" min="0" class="form-control"
+                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer" required/>
+                        </div>
+                        <div ng-show="form.siteConditionForm.imperviousSurfacePer.$error.min">
+                            <p class="red">Impervious surface percentage must be a positive number.</p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Pervious Surface (dirt, gravel etc.)</label>
+                        <label class="required">Pervious Surface (dirt, gravel etc.) *</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer" />
+                            <input type="number" name="perviousSurfacePer" min="0" class="form-control"
+                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer" required/>
+                        </div>
+                        <div ng-show="form.siteConditionForm.perviousSurfacePer.$error.min">
+                            <p class="red">Pervious surface percentage must be a positive number.</p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Vegetated surface (grass, shrubs, trees)</label>
+                        <label class="required">Vegetated surface (grass, shrubs, trees) *</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" class="form-control" ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer" />
+                            <input type="number" name="vegSurfacePer" min="0" class="form-control"
+                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer" required/>
+                        </div>
+                        <div ng-show="form.siteConditionForm.vegSurfacePer.$error.min">
+                            <p class="red">Vegetated surface percentage must be a positive number.</p>
                         </div>
                     </div>
                     <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>

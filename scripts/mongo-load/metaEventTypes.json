@@ -1,0 +1,5 @@
+{"_id":{"$oid":"5833bfa1957940604da50cd0"},"order":1,"type":"Advanced Field Training","color":"#00BCD4"}
+{"_id":{"$oid":"5833bfa1957940604da50cd1"},"order":3,"type":"Scientist Workshop","color":"#4CAF50"}
+{"_id":{"$oid":"5833bfa1957940604da50cd2"},"order":0,"type":"ORS Basic Training","color":"#607D8B"}
+{"_id":{"$oid":"5833bfa1957940604da50cd3"},"order":4,"type":"Other","color":"#9E9E9E"}
+{"_id":{"$oid":"5833bfa1957940604da50cd4"},"order":2,"type":"Professional Development","color":"#795548"}

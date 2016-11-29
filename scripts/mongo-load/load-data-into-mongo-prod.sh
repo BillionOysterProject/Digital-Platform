@@ -21,6 +21,7 @@ mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metagarbageextents <use
 mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metawinddirections <username/password> --type json --file metaWindDirections.json --drop
 mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metatruefalses <username/password> --type json --file metaTrueFalses.json --drop
 mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metasubjectareas <username/password> --type json --file metaSubjectAreas.json --drop
+mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metaeventtypes <username/password> --type json --file metaEventTypes.json --drop
 
 mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metawatertemperaturemethods <username/password> --type json --file metaWaterTemperatureMethods.json --drop
 mongoimport -h ds021722-a0.mlab.com:21722 -d bop-prod -c metadissolvedoxygenmethods <username/password> --type json --file metaDissolvedOxygenMethods.json --drop

@@ -11,6 +11,9 @@ var path = require('path'),
   assertImage = CommonExpedition.assertImage,
   uploadFile = CommonExpedition.uploadFile,
   assertFiles = CommonExpedition.assertFiles,
+  CommonCore = require('../../../core/tests/e2e/common-core.e2e.tests'),
+  select2Fillin = CommonCore.select2Fillin,
+  wysiwygFillin = CommonCore.wysiwygFillin,
   EC = protractor.ExpectedConditions;
 
 describe('Event E2E Tests', function () {
@@ -32,6 +35,7 @@ describe('Event E2E Tests', function () {
   var date1JSON = date1.format('YYYY-MM-DD');
   var date1StringMulti = date1.format('MMM D YYYY');
   var date1StringSingle = date1.format('MMM') + '\n' + date1.format('D') + '\n' + date1.format('YYYY');
+  var deadlineString1 = date1.format('MM/DD/YYYY');
 
   var date2 = moment().add(8, 'days').startOf('day');
   var date2Field = date2.format('MM-DD-YYYY');
@@ -39,6 +43,22 @@ describe('Event E2E Tests', function () {
   var date2StringMulti = date2.format('MMM D YYYY');
   var date2StringSingle = date2.format('MMM') + '\n' + date2.format('D') + '\n' + date2.format('YYYY');
   var deadline1 = moment().add(5, 'days').startOf('day').format('MM-DD-YYYY');
+  var deadlineString2 = moment().add(5, 'days').startOf('day').format('MM/DD/YYYY');
+
+  var date3 = moment().startOf('day');
+  var date3Field = date3.format('MM-DD-YYYY');
+  var date3JSON = date3.format('YYYY-MM-DD');
+  var date3StringMulti = date3.format('MMM D YYYY');
+  var date3StringSingle = date3.format('MMM') + '\n' + date3.format('D') + '\n' + date3.format('YYYY');
+  var deadlineString3 = date3.format('MM/DD/YYYY');
+
+  var date4 = moment().startOf('day');
+  var date4Field = date4.format('MM-DD-YYYY');
+  var date4JSON = date4.format('YYYY-MM-DD');
+  var date4StringMulti = date4.format('MMM D YYYY');
+  var date4StringSingle = date4.format('MMM') + '\n' + date4.format('D') + '\n' + date4.format('YYYY');
+  var deadline4 = moment().subtract(1, 'days').startOf('day').format('MM-DD-YYYY');
+  var deadlineString4 = moment().subtract(1, 'days').startOf('day').format('MM/DD/YYYY');
 
   var initialEvent = {
     title: 'Initial Event',
@@ -53,11 +73,12 @@ describe('Event E2E Tests', function () {
       timeRangeString: '1:00pm-5:00pm'
     }],
     category: {
-      type: 4,
-      typeText: 'other',
+      type: 5,
+      typeText: 'Other',
       otherType: 'Meeting'
     },
     description: 'This is a description for initial event',
+    deadline: deadlineString1
   };
 
   var fullEvent = {
@@ -82,11 +103,12 @@ describe('Event E2E Tests', function () {
       timeRangeString: '2:00pm-4:00pm'
     }],
     category: {
-      type: 0,
-      typeText: 'professional development',
+      type: 2,
+      typeText: 'Professional Development',
     },
     description: 'This is a description for the updated event',
     deadlineToRegister: deadline1,
+    deadline: deadlineString2,
     location: {
       address: 'One Pace Plaza',
       addressString: 'One Pace Plaza, New York, NY 10038, USA',
@@ -98,12 +120,54 @@ describe('Event E2E Tests', function () {
     skillsTaught: 'Skill 1, skill 2, skill 3',
     featuredImage: true,
     resources: {
-      resourcesLinks: [{
+      resourceLinks: [{
         name: 'Google',
         link: 'www.google.com'
       }],
-      resourcesFiles: true
+      resourceFiles: true
     }
+  };
+
+  var todayNoDeadlineEvent = {
+    title: 'Today Event - No Deadline',
+    dates: [{
+      date: date3Field,
+      startTime: '01:00PM',
+      endTime: '05:00PM',
+      startDateTime: date3JSON+'T13:00:00.000Z',
+      endDateTime: date3JSON+'T17:00:00.000Z',
+      singleDateString: date3StringSingle,
+      multiDateString: date3StringMulti,
+      timeRangeString: '1:00pm-5:00pm'
+    }],
+    category: {
+      type: 2,
+      typeText: 'Advanced Field Training',
+    },
+    maximumCapacity: 2,
+    description: 'This is a description for today\'s event',
+    deadline: deadlineString3
+  };
+
+  var todayDeadlineEvent = {
+    title: 'Today Event - Deadline',
+    dates: [{
+      date: date4Field,
+      startTime: '01:00PM',
+      endTime: '05:00PM',
+      startDateTime: date4JSON+'T13:00:00.000Z',
+      endDateTime: date4JSON+'T17:00:00.000Z',
+      singleDateString: date4StringSingle,
+      multiDateString: date4StringMulti,
+      timeRangeString: '1:00pm-5:00pm'
+    }],
+    category: {
+      type: 4,
+      typeText: 'Scientist Workshop',
+    },
+    deadlineToRegister: deadline4,
+    description: 'This is a description for today\'s event',
+    deadline: deadlineString4
   };
 
   var saveWait = 450000;
@@ -121,8 +185,8 @@ describe('Event E2E Tests', function () {
     if (values.cost) {
       element(by.model('vm.event.cost')).clear().sendKeys(values.cost);
     }
-    element(by.model('vm.event.category.type')).all(by.tagName('option')).get(values.category.type).click();
-    if (values.category.typeText === 'other') {
+    element(by.id('category')).all(by.tagName('option')).get(values.category.type).click();
+    if (values.category.typeText === 'Other') {
       element(by.model('vm.event.category.otherType')).clear().sendKeys(values.category.otherType);
     }
 
@@ -146,18 +210,19 @@ describe('Event E2E Tests', function () {
       element(by.model('vm.event.deadlineToRegister')).sendKeys(values.deadlineToRegister);
     }
 
-    element(by.model('vm.event.description')).clear().sendKeys(values.description);
+    wysiwygFillin('vm.event.description', values.description);
     if (values.skillsTaught) {
-      element(by.model('vm.event.skillsTaught')).clear().sendKeys(values.skillsTaught);
+      wysiwygFillin('vm.event.skillsTaught', values.skillsTaught);
     }
     if (values.featuredImage) uploadImage('event-featured-image');
     if (values.resources) {
       element(by.css('a[data-target="#modal-resources"]')).click();
-      if (values.resources.resourcesLinks) {
-        element(by.model('tempResourceLinkName')).clear().sendKeys(values.resources.resourcesLinks[0].name);
-        element(by.model('tempResourceLink')).clear().sendKeys(values.resources.resourcesLinks[0].link);
+      browser.sleep(500);
+      if (values.resources.resourceLinks) {
+        element(by.model('tempResourceLinkName')).clear().sendKeys(values.resources.resourceLinks[0].name);
+        element(by.model('tempResourceLink')).clear().sendKeys(values.resources.resourceLinks[0].link);
       }
-      if (values.resources.resourcesFiles) {
+      if (values.resources.resourceFiles) {
         element(by.css('a[href="#upload"]')).click();
         uploadFile('event-resources-file-dropzone', resource1);
         uploadFile('event-resources-file-dropzone', resource2);
@@ -167,7 +232,7 @@ describe('Event E2E Tests', function () {
     }
   };
 
-  var assertEvent = function(values, isAdmin, isTeamLead, isRegistered, registeredCount, isPast) {
+  var assertEvent = function(values, isAdmin, isTeamLead, isRegistered, registeredCount, isPast, isToday) {
     var openSpots = 0;
     if (values.maximumCapacity) {
       openSpots = (registeredCount > 0) ? values.maximumCapacity - registeredCount : values.maximumCapacity;
@@ -210,16 +275,26 @@ describe('Event E2E Tests', function () {
       expect(element(by.css('a[ng-click="vm.duplicateEvent()"]')).isDisplayed()).toBe(false);
       expect(element(by.css('a[ng-click="vm.openEmailRegistrants()"]')).isDisplayed()).toBe(false);
     }
-    if (values.location) {
+    if (values.location && values.location.addressString) {
       expect(element(by.binding('vm.event.location.addressString')).getText()).toEqual(values.location.addressString);
     }
     if (isPast) {
       expect(element(by.id('eventIsOver')).getText()).toEqual('Event is over');
-    } else if (values.maximumCapacity && openSpots <= 0 && (isAdmin || isTeamLead)) {
+    } else if (isToday) {
+      expect(element(by.id('eventIsToday')).getText()).toEqual('Event is today');
+    }
+
+    if (values.maximumCapacity && openSpots <= 0 && (isAdmin || isTeamLead)) {
       expect(element(by.id('noOpenSpotsLeft')).getText()).toEqual('REGISTRATION IS CLOSED');
-    } else if (isAdmin || isTeamLead) {
+    }
+
+    if (isPast || (isToday && values.deadlineToRegister) || (values.maximumCapacity && openSpots === 0)) {
+      expect(element(by.id('registrationClosed')).getText()).toEqual('Registration is closed\nRegistration deadline ' + values.deadline);
+    } else if (isToday && !values.deadlineToRegister) {
+      expect(element(by.id('registerToday')).getText()).toEqual('Last day to register!\nRegistration deadline ' + values.deadline);
+    } else {
       var daysRemaining = (values.deadlineToRegister) ? '5' : '7';
-      expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register');
+      expect(element(by.id('daysRemaining')).getText()).toEqual(daysRemaining + ' days left to register\nRegistration deadline ' + values.deadline);
     }
 
     if (values.maximumCapacity && (isAdmin || isTeamLead)) {
@@ -244,9 +319,13 @@ describe('Event E2E Tests', function () {
       }
     }
 
-    var categoryText = (values.category.typeText === 'other') ? values.category.otherType : values.category.typeText;
+    var categoryText = (values.category.typeText === 'Other') ? values.category.otherType : values.category.typeText;
     categoryText = categoryText.charAt(0).toUpperCase() + categoryText.slice(1);
-    expect(element(by.id('eventCategory')).getText()).toEqual(categoryText);
+    if (values.category.typeText === 'Other') {
+      expect(element(by.id('eventCategory')).getText()).toEqual('Type: Other - ' + categoryText);
+    } else {
+      expect(element(by.id('eventCategory')).getText()).toEqual('Type: ' + categoryText);
+    }
     expect(element(by.binding('vm.event.description')).getText()).toEqual(values.description);
 
     if (values.resources) {
@@ -259,10 +338,46 @@ describe('Event E2E Tests', function () {
       }
     }
     if (values.skillsTaught) {
-      expect(element(by.binding('vm.event.skillsTaught')).getText()).toEqual('Skills taught: ' + values.skillsTaught);
+      expect(element(by.css('p[ng-show="vm.event.skillsTaught"]')).getText()).toEqual('Skills taught: ' + values.skillsTaught);
     }
     if (values.cost) {
       expect(element(by.binding('vm.event.cost')).getText()).toEqual('Cost: ' + values.cost);
+    }
+  };
+
+  var assertEventListItem = function(item, values, openSpots, isPast, isToday) {
+    var dates = item.all(by.repeater('date in calendarEvent.dates'));
+    for (var i = 0; i < values.dates.length; i++) {
+      var multiDate = dates.get(i);
+      expect(multiDate.getText()).toEqual(values.dates[i].multiDateString + '\n' + values.dates[i].timeRangeString);
+    }
+
+    expect(item.element(by.binding('calendarEvent.title')).getText()).toEqual(values.title);
+
+    if (values.location && values.location.addressString) {
+      expect(item.element(by.css('p[ng-show="calendarEvent.location.addressString"]')).getText()).toEqual(values.location.addressString);
+    }
+
+    if (openSpots > 0) {
+      expect(item.element(by.id('openSpots')).getText()).toEqual(values.maximumCapacity + ' spots and');
+      expect(item.element(by.id('openSpots')).isDisplayed()).toBe(true);
+      expect(item.element(by.id('noOpenSpots')).isDisplayed()).toBe(false);
+    } else if (openSpots === 0) {
+      expect(item.element(by.id('noOpenSpots')).getText()).toEqual('Event is full');
+      expect(item.element(by.id('noOpenSpots')).isDisplayed()).toBe(true);
+      expect(item.element(by.id('openSpots')).isDisplayed()).toBe(false);
+    } else {
+      expect(item.element(by.id('openSpots')).isDisplayed()).toBe(false);
+      expect(item.element(by.id('noOpenSpots')).isDisplayed()).toBe(false);
+    }
+
+    if (isPast || (isToday && values.deadlineToRegister) || openSpots <= 0) {
+      expect(item.element(by.id('registrationClosed')).getText()).toEqual('Registration is closed');
+    } else if (isToday && !values.deadlineToRegister) {
+      expect(item.element(by.id('registerToday')).getText()).toEqual('Last day to register!');
+    } else {
+      var daysRemaining = (values.deadlineToRegister) ? '5' : '7';
+      expect(item.element(by.id('registrationOpen')).getText()).toEqual(daysRemaining + ' days left to register');
     }
   };
 
@@ -282,7 +397,7 @@ describe('Event E2E Tests', function () {
         browser.sleep(500);
       });
       it ('should show the new event', function() {
-        assertEvent(initialEvent, true, false, false, 0, false);
+        assertEvent(initialEvent, true, false, false, 0, false, false);
       });
       it('should update event with all fields', function() {
         element(by.id('editEvent')).click();
@@ -295,7 +410,7 @@ describe('Event E2E Tests', function () {
       });
       it('should show the updated event', function() {
         browser.wait(EC.visibilityOf(element(by.id('view-event'))), 5000);
-        assertEvent(fullEvent, true, false, false, 0, false);
+        assertEvent(fullEvent, true, false, false, 0, false, false);
       });
       it('should show event to leader', function() {
         //Sign in as leader
@@ -311,7 +426,7 @@ describe('Event E2E Tests', function () {
         var events = element.all(by.repeater('calendarEvent in vm.events'));
         events.get(0).click();
 
-        assertEvent(fullEvent, false, true, false, 0, false);
+        assertEvent(fullEvent, false, true, false, 0, false, false);
       });
       it('should allow leader to register for event', function() {
         element(by.css('a[ng-click="vm.registerEvent()"]')).click();
@@ -319,12 +434,16 @@ describe('Event E2E Tests', function () {
 
         var registeredModal = element(by.id('modal-event-register'));
         browser.wait(EC.visibilityOf(registeredModal), 5000);
+
         expect(registeredModal.isDisplayed()).toBe(true);
+        expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
+          fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+
         registeredModal.element(by.buttonText('Close')).click();
         browser.wait(EC.invisibilityOf(registeredModal), 5000);
         browser.sleep(500);
 
-        assertEvent(fullEvent, false, true, true, 1, false);
+        assertEvent(fullEvent, false, true, true, 1, false, false);
       });
       it('should show the registered user to the admin', function() {
         //Sign in as admin
@@ -340,7 +459,7 @@ describe('Event E2E Tests', function () {
         var events = element.all(by.repeater('calendarEvent in vm.events'));
         events.get(0).click();
 
-        assertEvent(fullEvent, true, false, false, 1, false);
+        assertEvent(fullEvent, true, false, false, 1, false, false);
       });
       it('should show event to guest', function() {
         //Signout user
@@ -354,18 +473,20 @@ describe('Event E2E Tests', function () {
         var events = element.all(by.repeater('calendarEvent in vm.events'));
         events.get(0).click();
 
-        assertEvent(fullEvent, false, true, false, 1, false);
+        assertEvent(fullEvent, false, true, false, 1, false, false);
       });
       it('should allow guest to register for event', function() {
         browser.getCurrentUrl().then(function(currentUrl) {
           element(by.css('a[ng-click="vm.signinOrRegister()"]')).click();
           browser.sleep(500);
+          element(by.css('a[ng-click="signUp()"]')).click();
+          browser.sleep(500);
 
           //Assert that it went login page
-          expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/authentication/signin');
+          expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/authentication/signup');
 
           //Register new user
-          element(by.css('a[href="/authentication/signup"]')).click();
+          //element(by.css('a[href="/authentication/signup"]')).click();
 
           signup(newLeader);
           browser.sleep(500);
@@ -378,12 +499,16 @@ describe('Event E2E Tests', function () {
 
           var registeredModal = element(by.id('modal-event-register'));
           browser.wait(EC.visibilityOf(registeredModal), 5000);
+
           expect(registeredModal.isDisplayed()).toBe(true);
+          expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
+            fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+
           registeredModal.element(by.buttonText('Close')).click();
           browser.wait(EC.invisibilityOf(registeredModal), 5000);
           browser.sleep(500);
 
-          //assertEvent(fullEvent, false, true, true, 2, false);
+          //assertEvent(fullEvent, false, true, true, 2, false, false);
         });
       });
       it('should show the registered user to the admin', function() {
@@ -399,8 +524,68 @@ describe('Event E2E Tests', function () {
         //Click on first event
         var events = element.all(by.repeater('calendarEvent in vm.events'));
         events.get(0).click();
+        // browser.pause();
+        assertEvent(fullEvent, true, false, false, 2, false, false);
+      });
+    });
+  });
 
-        assertEvent(fullEvent, true, false, false, 2, false);
+  describe('Today Event Tests', function() {
+    describe('Create Today Test without Deadline', function() {
+      it('should create an event', function() {
+        //Sign in as admin
+        signinAs(admin);
+        //Assert that it went to the correct opening page
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        //Go to Create Event
+        browser.get('http://localhost:8081/events/create');
+
+        fillInEvent(todayNoDeadlineEvent);
+
+        element(by.buttonText('Create')).click();
+        browser.sleep(500);
+      });
+      it ('should show the new event', function() {
+        assertEvent(todayNoDeadlineEvent, true, false, false, 0, false, true);
+      });
+    });
+    describe('Create Today Test with Deadline', function() {
+      it('should create an event', function() {
+        //Sign in as admin
+        signinAs(admin);
+        //Assert that it went to the correct opening page
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        //Go to Create Event
+        browser.get('http://localhost:8081/events/create');
+
+        fillInEvent(todayDeadlineEvent);
+
+        element(by.buttonText('Create')).click();
+        browser.sleep(500);
+      });
+      it ('should show the new event', function() {
+        assertEvent(todayDeadlineEvent, true, false, false, 0, false, true);
+      });
+    });
+  });
+  describe('Event List Test', function() {
+    describe('Check event list items', function() {
+      var events;
+      it ('should get event list', function() {
+        //Go to Create Event
+        browser.get('http://localhost:8081/events');
+        browser.sleep(500);
+
+        events = element.all(by.repeater('calendarEvent in vm.events'));
+      });
+      it ('should assert today event, no deadline', function() {
+        assertEventListItem(events.get(0), todayNoDeadlineEvent, 2, false, true);
+      });
+      it ('should assert today event, deadline', function() {
+        assertEventListItem(events.get(1), todayDeadlineEvent, null, false, true);
+      });
+      it ('should assert full event', function() {
+        assertEventListItem(events.get(2), fullEvent, 0, false, false);
       });
     });
   });

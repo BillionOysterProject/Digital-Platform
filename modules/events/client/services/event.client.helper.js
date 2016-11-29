@@ -59,7 +59,6 @@
 
     var getEarliestDateTimeRangeString = function(dates) {
       var earliestDate = getEarliestDate(dates);
-      console.log('earliestDate', earliestDate);
       if (earliestDate) {
         return moment(earliestDate.startDateTime).format('MMMM D, YYYY, h:mma') + '-' +
           moment(earliestDate.endDateTime).format('h:mma');
@@ -68,16 +67,26 @@
       }
     };
 
-    var getDaysRemaining = function(dates, deadlineToRegister) {
-      var today = moment().endOf('day');
+    var getDeadline = function(dates, deadlineToRegister) {
       if (deadlineToRegister) {
-        var deadline = moment(deadlineToRegister).endOf('day');
-        return deadline.diff(today, 'days');
+        return moment(deadlineToRegister).endOf('day');
       } else {
         var earliestDate = getEarliestDateAsMoment(dates);
-        var earliest = (earliestDate) ? earliestDate.endOf('day') : null;
-        return (earliest) ? earliest.diff(today, 'days') : null;
+        return (earliestDate) ? earliestDate.endOf('day') : null;
       }
+    };
+
+    var getDaysRemainingDeadline = function(dates, deadlineToRegister) {
+      var today = moment().endOf('day');
+      var deadline = getDeadline(dates, deadlineToRegister);
+      return (deadline) ? deadline.diff(today, 'days') : null;
+    };
+
+    var getDaysRemainingEvent = function(dates) {
+      var today = moment().endOf('day');
+      var earliestDate = getEarliestDateAsMoment(dates);
+      var earliest = (earliestDate) ? earliestDate.endOf('day') : null;
+      return (earliest) ? earliest.diff(today, 'days') : null;
     };
 
     return {
@@ -87,7 +96,9 @@
       getEventYear: getEventYear,
       getEventTimeRange: getEventTimeRange,
       getOpenSpots: getOpenSpots,
-      getDaysRemaining: getDaysRemaining,
+      getDeadline: getDeadline,
+      getDaysRemainingDeadline: getDaysRemainingDeadline,
+      getDaysRemainingEvent: getDaysRemainingEvent,
       getEarliestDate: getEarliestDate,
       getEarliestDateAsMoment: getEarliestDateAsMoment,
       getEarliestDateString: getEarliestDateString,
