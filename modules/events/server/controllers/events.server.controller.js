@@ -591,6 +591,7 @@ exports.list = function(req, res) {
 
   if (req.query.timeFrame === 'Upcoming events') {
     var today1 = moment().local().startOf('day').toDate();
+    console.log('today1', today1);
     and.push({ 'dates.startDateTime': { '$gte': today1 } });
   } else if (req.query.timeFrame === 'Past events') {
     var today2 = moment().local().startOf('day').toDate();
