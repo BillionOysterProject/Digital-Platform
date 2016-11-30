@@ -197,6 +197,18 @@ var fillInRegistrantsData = function(registrants, callback) {
   });
 };
 
+var getAttendees = function(registrants) {
+  var attendees = [];
+  if (registrants) {
+    for (var i = 0; i < registrants.length; i++) {
+      if (registrants[i].attended === true) {
+        attendees.push(registrants[i]);
+      }
+    }
+  }
+  return attendees;
+};
+
 /**
  * Show the current CalendarEvent
  */
@@ -220,6 +232,7 @@ exports.read = function(req, res) {
   if (req.query.full) {
     fillInRegistrantsData(calendarEvent.registrants, function(registrants) {
       calendarEvent.registrants = registrants;
+      calendarEvent.attendees = getAttendees(calendarEvent.registrants);
       res.json(calendarEvent);
     });
   } else if (req.query.duplicate) {
@@ -541,6 +554,7 @@ exports.attended = function(req, res) {
 
           fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
             calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
 
             res.json(calendarEventJSON);
           });
@@ -577,6 +591,7 @@ exports.notAttended = function(req, res) {
 
           fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
             calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
 
             res.json(calendarEventJSON);
           });
@@ -603,6 +618,7 @@ var getRegistrantsList = function(registrants) {
 exports.emailRegistrants = function(req, res) {
   var calendarEvent = req.calendarEvent;
   var user = req.user;
+  var attendeesOnly = req.body.attendeesOnly;
   var subject = req.body.subject;
   var message = req.body.message;
   var footer = req.body.footer;
@@ -612,7 +628,8 @@ exports.emailRegistrants = function(req, res) {
     calendarEvent.dates = sortDates(calendarEvent.dates);
     var eventDate = getDateAndRange(calendarEvent.dates[0]);
 
-    var toList = getRegistrantsList(calendarEvent.registrants);
+    var emailList = (attendeesOnly) ? getAttendees(calendarEvent.registrants) : calendarEvent.registrants;
+    var toList = getRegistrantsList(emailList);
 
     email.sendEmailTemplate(toList, subject, 'event_email', {
       EventEmailSubject: subject,

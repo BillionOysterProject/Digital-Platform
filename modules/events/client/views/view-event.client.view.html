@@ -158,10 +158,12 @@
                             <td ng-show="vm.today || vm.past">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null)}"
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                                      registrant.attended === true)}"
                                       ng-click="vm.notAttendedEvent(registrant)"><i class="fa fa-times"></i></a>
                                     <a class="btn" ng-class="{'btn-success': registrant.attended === true,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null)}"
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                                      registrant.attended == false)}"
                                       ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
                                 </div>
                             </td>
@@ -221,8 +223,8 @@
 <unregister-event-modal event="vm.event" date-string="{{vm.earliestDateString}}">
   </unregister-event-modal>
 
-<email-registrants-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}">
-  </email-registrants-modal>
+<email-registrants-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}"
+  attendees="vm.event.attendees" past="vm.past"></email-registrants-modal>
 
 <redirect-to-signin-modal close-function="vm.signinOrRegisterClose"></redirect-to-signin-modal>
 

@@ -589,4 +589,40 @@ describe('Event E2E Tests', function () {
       });
     });
   });
+  describe('Event Attendance Test', function() {
+    it('should allow leader to register for todayNoDeadlineEvent', function() {
+      //Sign in as leader
+      signinAs(leader);
+      //Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+
+      //Go to events
+      browser.get('http://localhost:8081/events');
+      browser.sleep(500);
+
+      //Click on first event
+      var events = element.all(by.repeater('calendarEvent in vm.events'));
+      events.get(0).click();
+
+      element(by.css('a[ng-click="vm.registerEvent()"]')).click();
+      browser.sleep(500);
+    });
+    it('should allow newLeader to register for todayNoDeadlineEvent', function() {
+      //Sign in as leader
+      signinAs(newLeader);
+      //Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+
+      //Go to events
+      browser.get('http://localhost:8081/events');
+      browser.sleep(500);
+
+      //Click on first event
+      var events = element.all(by.repeater('calendarEvent in vm.events'));
+      events.get(0).click();
+
+      element(by.css('a[ng-click="vm.registerEvent()"]')).click();
+      browser.sleep(500);
+    });
+  });
 });
