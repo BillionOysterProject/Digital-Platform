@@ -211,6 +211,34 @@
       });
     };
 
+    vm.attendedEvent = function(registrant) {
+      $http.post('/api/events/' + vm.event._id + '/attended', {
+        registrant: registrant.user
+      }).
+      success(function(data, status, headers, config) {
+        vm.event.registrants = data.registrants;
+        vm.error = [];
+      }).
+      error(function(data, status, headers, config) {
+        vm.error = data.message;
+        console.log('vm.error', vm.error);
+      });
+    };
+
+    vm.notAttendedEvent = function(registrant) {
+      $http.post('/api/events/' + vm.event._id + '/not-attended', {
+        registrant: registrant.user
+      }).
+      success(function(data, status, headers, config) {
+        vm.event.registrants = data.registrants;
+        vm.error = [];
+      }).
+      error(function(data, status, headers, config) {
+        vm.error = data.message;
+        console.log('vm.error', vm.error);
+      });
+    };
+
     vm.duplicateEvent = function() {
       $state.go('events.duplicate', {
         eventId: vm.event._id

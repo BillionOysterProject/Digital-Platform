@@ -589,4 +589,63 @@ describe('Event E2E Tests', function () {
       });
     });
   });
+  describe('Event Attendance Test', function() {
+    it('should allow leader to register for todayNoDeadlineEvent', function() {
+      //Sign in as leader
+      signinAs(leader);
+      //Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+
+      //Go to events
+      browser.get('http://localhost:8081/events');
+      browser.sleep(500);
+
+      //Click on first event
+      var events = element.all(by.repeater('calendarEvent in vm.events'));
+      events.get(0).click();
+
+      element(by.css('a[ng-click="vm.registerEvent()"]')).click();
+      browser.sleep(500);
+    });
+    it('should allow newLeader to register for todayNoDeadlineEvent', function() {
+      //Sign in as leader
+      signinAs(newLeader);
+
+      //Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+
+      //Go to events
+      browser.get('http://localhost:8081/events');
+      browser.sleep(500);
+
+      //Click on first event
+      var events = element.all(by.repeater('calendarEvent in vm.events'));
+      events.get(0).click();
+
+      element(by.css('a[ng-click="vm.registerEvent()"]')).click();
+      browser.sleep(500);
+    });
+    it('should allow admin to mark attendance', function() {
+      //Sign in as admin
+      signinAs(admin);
+      //Assert that it went to the correct opening page
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+      //Go to Create Event
+      browser.get('http://localhost:8081/events');
+      browser.sleep(500);
+
+      //Click on first event
+      var events = element.all(by.repeater('calendarEvent in vm.events'));
+      events.get(0).click();
+
+      var registrants = element.all(by.repeater('registrant in vm.event.registrants'));
+      var registrant1 = registrants.get(0);
+      registrant1.element(by.css('a[ng-click="vm.notAttendedEvent(registrant)"]')).click();
+      expect(registrant1.element(by.css('.btn-danger')).isDisplayed()).toBe(true);
+
+      var registrant2 = registrants.get(1);
+      registrant2.element(by.css('a[ng-click="vm.attendedEvent(registrant)"]')).click();
+      expect(registrant2.element(by.css('.btn-success')).isDisplayed()).toBe(true);
+    });
+  });
 });

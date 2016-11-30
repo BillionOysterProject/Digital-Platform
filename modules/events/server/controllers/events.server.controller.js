@@ -197,6 +197,18 @@ var fillInRegistrantsData = function(registrants, callback) {
   });
 };
 
+var getAttendees = function(registrants) {
+  var attendees = [];
+  if (registrants) {
+    for (var i = 0; i < registrants.length; i++) {
+      if (registrants[i].attended === true) {
+        attendees.push(registrants[i]);
+      }
+    }
+  }
+  return attendees;
+};
+
 /**
  * Show the current CalendarEvent
  */
@@ -220,6 +232,7 @@ exports.read = function(req, res) {
   if (req.query.full) {
     fillInRegistrantsData(calendarEvent.registrants, function(registrants) {
       calendarEvent.registrants = registrants;
+      calendarEvent.attendees = getAttendees(calendarEvent.registrants);
       res.json(calendarEvent);
     });
   } else if (req.query.duplicate) {
@@ -522,6 +535,80 @@ exports.unregister = function(req, res) {
   }
 };
 
+exports.attended = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].attended = true;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
+exports.notAttended = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].attended = false;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
 var getRegistrantsList = function(registrants) {
   var emailArray = [];
   emailArray = emailArray.concat(_.map(registrants, 'user.email'));
@@ -531,6 +618,7 @@ var getRegistrantsList = function(registrants) {
 exports.emailRegistrants = function(req, res) {
   var calendarEvent = req.calendarEvent;
   var user = req.user;
+  var attendeesOnly = req.body.attendeesOnly;
   var subject = req.body.subject;
   var message = req.body.message;
   var footer = req.body.footer;
@@ -540,7 +628,8 @@ exports.emailRegistrants = function(req, res) {
     calendarEvent.dates = sortDates(calendarEvent.dates);
     var eventDate = getDateAndRange(calendarEvent.dates[0]);
 
-    var toList = getRegistrantsList(calendarEvent.registrants);
+    var emailList = (attendeesOnly) ? getAttendees(calendarEvent.registrants) : calendarEvent.registrants;
+    var toList = getRegistrantsList(emailList);
 
     email.sendEmailTemplate(toList, subject, 'event_email', {
       EventEmailSubject: subject,

@@ -71,7 +71,8 @@ var CalendarEventSchema = new Schema({
       type: Schema.ObjectId,
       ref: 'User'
     },
-    registrationDate: Date
+    registrationDate: Date,
+    attended: Boolean
   }],
   created: {
     type: Date,
