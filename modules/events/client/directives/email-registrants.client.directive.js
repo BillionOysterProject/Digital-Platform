@@ -11,10 +11,18 @@
         scope: {
           event: '=',
           dateTimeString: '@',
+          attendees: '=',
+          past: '='
         },
         replace: true,
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function () {
+            scope.attendeesOnly = 'false';
+            scope.subject = '';
+            scope.message = '';
+            scope.footer = false;
+            scope.sent = false;
+          });
         }
       };
     });
