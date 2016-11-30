@@ -51,6 +51,11 @@
                 <li ui-sref-active="active">
                     <a ui-sref="authentication.signin">Sign In</a>
                 </li>
+                <li class="visible-xs">
+                    <a ng-click="openFeedback()">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                    </a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
                 <li class="hidden-xs" ui-sref-active="active">
