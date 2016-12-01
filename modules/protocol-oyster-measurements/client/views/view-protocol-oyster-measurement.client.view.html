@@ -86,8 +86,12 @@
     <div class="row">
       <div class="col-sm-4">
         <p id="substrateMetadata{{$index}}">
-          Set at <b>{{vm.getDate(station.baselinesArray[$index].setDate)}}</b><br/>
-          Source: <b ng-show="station.baselinesArray[$index].source !== 'Other'">{{station.baselinesArray[$index].source}}</b>
+          <span ng-show="station.baselinesArray[$index].setDate !== undefined">
+            Set at <b>{{vm.getDate((station.baselinesArray[$index]) ? station.baselinesArray[$index].setDate : '')}}</b><br/>
+          </span>
+          <span ng-show="station.baselinesArray[$index].source !== undefined">
+            Source: <b ng-show="station.baselinesArray[$index].source !== 'Other'">{{station.baselinesArray[$index].source}}</b>
+          </span>
           <b ng-show="station.baselinesArray[$index].source === 'Other'">{{station.baselinesArray[$index].otherSource}}</b>
           <span ng-show="substrate.notes">Notes: {{substrate.notes}}</p></span>
         </p>

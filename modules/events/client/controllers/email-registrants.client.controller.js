@@ -8,6 +8,7 @@
   EmailRegistrantsController.$inject = ['$scope', '$http'];
 
   function EmailRegistrantsController($scope, $http) {
+    $scope.attendeesOnly = 'false';
     $scope.subject = '';
     $scope.message = '';
     $scope.footer = false;
@@ -15,6 +16,7 @@
 
     $scope.sendEmail = function() {
       $http.post('/api/events/'+$scope.event._id+'/email-registrants', {
+        attendeesOnly: ($scope.attendeesOnly === 'true') ? true : false,
         subject: $scope.subject,
         message: $scope.message,
         footer: $scope.footer

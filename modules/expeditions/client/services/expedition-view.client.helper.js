@@ -263,7 +263,11 @@
           moment(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
       },
       getDate: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('MMMM D, YYYY');
+        if(date) {
+          return moment(date).format('MMMM D, YYYY');
+        } else {
+          return '';
+        }
       },
       getShortDate: function(date) {
         return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('M/D/YY');

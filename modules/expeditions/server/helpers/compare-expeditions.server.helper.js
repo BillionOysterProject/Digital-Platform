@@ -422,7 +422,6 @@ var buildSearchQuery = function (req, callback) {
 var buildCompareQuery = function (req, callback) {
   if (req.body.expeditionIds) {
 
-
     // protocol 1: site condition
     var selectProtocol1 = [];
     if (req.body.protocol1.weatherTemperature === 'YES') {
@@ -567,7 +566,11 @@ var buildCompareQuery = function (req, callback) {
 
     var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('monitoringStartDate');
 
-    query.populate('station', 'name');
+    if (req.body.protocol2.oysterMeasurements === 'YES') {
+      query.populate('station', 'name baselines');
+    } else {
+      query.populate('station', 'name');
+    }
 
     if (selectProtocol1.length > 0) query.populate('protocols.siteCondition', selectProtocol1.join(' '));
     if (selectProtocol2.length > 0) query.populate('protocols.oysterMeasurement', selectProtocol2.join(' '));
@@ -592,7 +595,11 @@ var getExpeditionDate = function(date) {
 };
 
 var getShortDate = function(date) {
-  return moment(date).format('M/D/YY');
+  if (date) {
+    return moment(date).format('M/D/YY');
+  } else {
+    return '';
+  }
 };
 
 var getTime = function(date) {
@@ -1005,12 +1012,15 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         for (var n = 0; n < expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells.length; n++) {
           var substrateShell = expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells[n];
           var shellIndex = substrateShell.substrateShellNumber-1;
+          var baselineArray = expedition.station.baselines['substrateShell'+(n+1)];
+          var baseline = baselineArray[baselineArray.length-1];
           rows.substrateShells[shellIndex].substrateShellNumberHeader.push('');
           rows.substrateShells[shellIndex].outerSidePhoto.push(substrateShell.outerSidePhoto.path);
           rows.substrateShells[shellIndex].innerSidePhoto.push(substrateShell.innerSidePhoto.path);
-          rows.substrateShells[shellIndex].setDate.push(getShortDate(substrateShell.setDate));
-          rows.substrateShells[shellIndex].source.push((substrateShell.otherSource) ? substrateShell.otherSource : substrateShell.source);
-          rows.substrateShells[shellIndex].liveAtBaseline.push(substrateShell.totalNumberOfLiveOystersAtBaseline);
+          rows.substrateShells[shellIndex].setDate.push(getShortDate((baseline) ? baseline.setDate : ''));
+          rows.substrateShells[shellIndex].source.push((baseline) ? ((baseline.otherSource) ? baseline.otherSource : baseline.source) : '');
+          rows.substrateShells[shellIndex].liveAtBaseline.push((baseline) ? baseline.totalNumberOfLiveOystersAtBaseline : '');
+          rows.substrateShells[shellIndex].massAtBaseline.push((baseline) ? baseline.totalMassOfLiveOystersAtBaselineG : '');
           rows.substrateShells[shellIndex].liveOnShell.push(substrateShell.totalNumberOfLiveOystersOnShell);
           rows.substrateShells[shellIndex].mass.push(substrateShell.totalMassOfScrubbedSubstrateShellOystersTagG);
           rows.substrateShells[shellIndex].minSize.push(substrateShell.minimumSizeOfLiveOysters);
@@ -1576,6 +1586,7 @@ var createCsv = function(req, expeditions, callback) {
         setDate: ['Set date'],
         source: ['Source'],
         liveAtBaseline: ['Total number of live oysters at baseline'],
+        massAtBaseline: ['Total mass of live oysters at baseline (g)'],
         liveOnShell: ['Total number of live oysters on shell'],
         mass: ['Total mass of scrubbed substrate shell + oysters + tag (g)'],
         measurements: ['Measurements (mm)'],

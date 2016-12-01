@@ -32,6 +32,14 @@ module.exports = function(app) {
   app.route('/api/events/:eventId/unregister').all(eventsPolicy.isAllowed)
     .post(events.unregister);
 
+  // Mark a user as attended
+  app.route('/api/events/:eventId/attended').all(eventsPolicy.isAllowed)
+    .post(events.attended);
+
+  // Mark a user as not attended
+  app.route('/api/events/:eventId/not-attended').all(eventsPolicy.isAllowed)
+    .post(events.notAttended);
+
   // Email registrants
   app.route('/api/events/:eventId/email-registrants').all(eventsPolicy.isAllowed)
     .post(events.emailRegistrants);
