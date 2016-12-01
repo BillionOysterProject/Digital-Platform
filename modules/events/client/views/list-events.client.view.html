@@ -87,7 +87,7 @@
                         <p class="text-muted text-center small">
                             <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0" id="openSpots">
                               <i class="fa fa-calendar-times-o"></i>
-                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b> and<br/></span>
+                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b><br/></span>
                             <span ng-show="(vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
                             vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null)" id="noOpenSpots">
                               <i class="fa fa-calendar-times-o"></i>

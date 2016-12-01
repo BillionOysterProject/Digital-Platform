@@ -23,13 +23,13 @@
             focus: true,
             toolbar: [
               ['edit',['undo','redo']],
-              ['headline', ['style']],
+              //['headline', ['style']],
               ['style', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
               //['fontface', ['fontname']],
               //['textsize', ['fontsize']],
               //['fontclr', ['color']],
               ['alignment', ['ul', 'ol', 'paragraph']], //'lineheight'
-              ['height', ['height']],
+              //['height', ['height']],
               ['table', ['table']],
               ['insert', ['link','picture','video','hr']],
             ]
