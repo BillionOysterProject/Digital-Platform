@@ -1,20 +1,116 @@
 <div class="modal fade" id="modal-lesson-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" ng-hide="sent">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Send feedback to the author</h4>
         <p>Thanks for contributing input! All feedback is appreciated.</p>
       </div>
+      <!--TIFF: all new fields - needs wired up -->
       <form name="form.lessonFeedbackForm" ng-submit="send(form.lessonFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
+          <h4 class="blue">On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following.</h4>
           <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label class="control-label">Message</label>
-                <textarea class="form-control" rows="10" ng-model="message"></textarea>
-              </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">How effective is this lesson? *</label>
+                    <select class="form-control" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label>
+                    <select class="form-control" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
             </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">How effectively does this lesson support inquiry, student-led research, and/or scientific practices? *</label>
+                    <select class="form-control" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS? *</label>
+                    <select class="form-control" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h4 class="blue">Tell us all about it.</h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson. *</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Why did you teach this lesson when you did? Was it part of your regular scheduled curriculum, one-off, or prep for the field? *</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Will you teach some version of this lesson in the future? If so, what will you repeat, what will you do differently, and why? If not, why not? *</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <h4 class="blue">Please provide any additional feedback needed on specific parts of the lesson, in terms of what worked well and what did not.</h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Lesson Summary</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Lesson Objectives</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Materials and Resources</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Preparation</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Background</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Instruction Plan</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Standards</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Other</label>
+                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                </div>
+              </div>
           </div>
         </div>
         <div class="modal-footer">
