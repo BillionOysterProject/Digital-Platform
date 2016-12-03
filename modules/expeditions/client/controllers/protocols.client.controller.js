@@ -648,49 +648,8 @@
       angular.element('#modal-return-expedition').modal('show');
     };
 
-    // Return the Expedition
-    vm.return = function() {
-      vm.returning = true;
-
-      var protocols = {};
-      if(vm.viewSiteCondition && $scope.siteCondition) protocols.siteCondition = $scope.siteCondition;
-      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) protocols.oysterMeasurement = $scope.oysterMeasurement;
-      if(vm.viewMobileTrap && $scope.mobileTrap) protocols.mobileTrap = $scope.mobileTrap;
-      if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
-      if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
-
-      $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
-        protocols: protocols,
-        returnedNotes : vm.expedition.returnedNotes
-      }).
-      success(function(data, status, headers, config) {
-        vm.expedition = data;
-        $scope.siteCondition = vm.expedition.protocols.siteCondition;
-        $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-        $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-        $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-        $scope.waterQuality = vm.expedition.protocols.waterQuality;
-
-        if(vm.viewSiteCondition) $scope.siteCondition.status = 'returned';
-        if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'returned';
-        if(vm.viewMobileTrap) $scope.mobileTrap.status = 'returned';
-        if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'returned';
-        if(vm.viewWaterQuality) $scope.waterQuality.status = 'returned';
-        vm.returning = false;
-        $state.go('expeditions.view', {
-          expeditionId: vm.expedition._id
-        });
-      }).
-      error(function(data, status, headers, config) {
-        if (data && data.message) {
-          vm.siteConditionErrors = data.message.siteCondition;
-          vm.oysterMeasurementErrors = data.message.oysterMeasurement;
-          vm.mobileTrapErrors = data.message.mobileTrap;
-          vm.settlementTilesErrors = data.message.settlementTiles;
-          vm.waterQualityErrors = data.message.waterQuality;
-        }
-        vm.returning = false;
-      });
+    vm.closeReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('hide');
     };
 
     // Unpublish the Expedition
