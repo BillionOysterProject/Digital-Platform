@@ -644,6 +644,10 @@
       });
     };
 
+    vm.openReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('show');
+    };
+
     // Return the Expedition
     vm.return = function() {
       vm.returning = true;
@@ -656,7 +660,8 @@
       if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
       $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
-        protocols: protocols
+        protocols: protocols,
+        returnedNotes : vm.expedition.returnedNotes
       }).
       success(function(data, status, headers, config) {
         vm.expedition = data;
