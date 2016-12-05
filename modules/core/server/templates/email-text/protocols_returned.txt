@@ -1,6 +1,10 @@
 Hi <%=TeamName%>,
 
-Bummer, your work on the protocol(s) for <%= ExpeditionName %> was returned. Check your data to make sure everything is accurate, and then resubmit once you've corrected any errors. You can view your work at <%= LinkExpedition %>.
+Bummer, your work on the protocol(s) for <%= ExpeditionName %> was returned with the following note:
+
+<%= ExpeditionReturnedNote %>
+
+You can view your work at <%= LinkExpedition %> to edit your expedition data and resubmit at any time.
 
 Thanks!
 The Billion Oyster Project
