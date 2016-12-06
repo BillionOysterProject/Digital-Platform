@@ -645,7 +645,7 @@
     };
 
     // Return the Expedition
-    vm.return = function() {
+    $scope.return = function(returnedNotes) {
       vm.returning = true;
 
       var protocols = {};
@@ -656,7 +656,8 @@
       if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
       $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
-        protocols: protocols
+        protocols: protocols,
+        returnedNotes: returnedNotes
       }).
       success(function(data, status, headers, config) {
         vm.expedition = data;
@@ -686,6 +687,19 @@
         }
         vm.returning = false;
       });
+    };
+
+    vm.openReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('show');
+    };
+
+    vm.submitReturnModal = function(returnedNotes) {
+      angular.element('#modal-return-expedition').modal('hide');
+      $scope.return(returnedNotes);
+    };
+
+    vm.cancelReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('hide');
     };
 
     // Unpublish the Expedition

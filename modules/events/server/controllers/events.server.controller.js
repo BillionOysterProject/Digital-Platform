@@ -72,19 +72,6 @@ var getDateTime = function(date, time) {
   }
 };
 
-var getDateAndRange = function(date) {
-  if (date) {
-    var dateString = '';
-    dateString += moment(date.startDateTime).local().format('MMMM D, YYYY, ');
-    dateString += moment(date.startDateTime).local().format('h:mma');
-    dateString += '-';
-    dateString += moment(date.endDateTime).local().format('h:mma');
-    return dateString;
-  } else {
-    return '';
-  }
-};
-
 var firstIndexOfAfter = function(ordered, date) {
   var index = _.findLastIndex(ordered, function(d) {
     return moment(d.startDateTime).isBefore(moment(date));
@@ -427,6 +414,7 @@ var findUserInRegistrants = function(user, registrants) {
 exports.register = function(req, res) {
   var calendarEvent = req.calendarEvent;
   var user = req.user;
+  var eventDate = req.body.dateTimeString;
 
   if (calendarEvent) {
     var index = findUserInRegistrants(user, calendarEvent.registrants);
@@ -452,8 +440,6 @@ exports.register = function(req, res) {
             calendarEventJSON.registrants = registrants;
 
             var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-            calendarEventJSON.dates = sortDates(calendarEventJSON.dates);
-            var eventDate = getDateAndRange(calendarEventJSON.dates[0]);
 
             var sendEventFullEmail = function(callback) {
               if (calendarEventJSON.maximumCapacity === calendarEventJSON.registrants.length) {
@@ -622,11 +608,10 @@ exports.emailRegistrants = function(req, res) {
   var subject = req.body.subject;
   var message = req.body.message;
   var footer = req.body.footer;
+  var eventDate = req.body.dateTimeString;
 
   if (calendarEvent) {
     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-    calendarEvent.dates = sortDates(calendarEvent.dates);
-    var eventDate = getDateAndRange(calendarEvent.dates[0]);
 
     var emailList = (attendeesOnly) ? getAttendees(calendarEvent.registrants) : calendarEvent.registrants;
     var toList = getRegistrantsList(emailList);

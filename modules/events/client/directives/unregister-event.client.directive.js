@@ -9,7 +9,7 @@
         templateUrl: 'modules/events/client/views/unregister-event.client.view.html',
         scope: {
           event: '=',
-          dateString: '@'
+          dateTimeString: '@'
         },
         replace: true,
         link: function(scope, element, attrs) {

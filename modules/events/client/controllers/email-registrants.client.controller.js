@@ -19,7 +19,8 @@
         attendeesOnly: ($scope.attendeesOnly === 'true') ? true : false,
         subject: $scope.subject,
         message: $scope.message,
-        footer: $scope.footer
+        footer: $scope.footer,
+        dateTimeString: $scope.dateTimeString
       }).
       success(function(data, status, headers, config) {
         $scope.sent = true;

@@ -20,7 +20,7 @@
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
-                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
+                        <button class="btn btn-danger navbar-btn" ng-click="vm.openReturnModal()"
                         ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
@@ -158,3 +158,5 @@
 <!-- modals -->
 <remove-protocol-tab-modal changes="vm.disableProtocolChanges"></remove-protocol-tab-modal>
 <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
+<return-expedition-modal save-function="vm.submitReturnModal" cancel-function="vm.cancelReturnModal">
+  </return-expedition-modal>
