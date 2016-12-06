@@ -27,12 +27,16 @@
 
     vm.mapControls = {};
 
-    var checkRole = function(role) {
-      var teamLeadIndex = lodash.findIndex(vm.user.roles, function(o) {
-        return o === role;
-      });
-      return (teamLeadIndex > -1) ? true : false;
-    };
+    var checkRole = ExpeditionViewHelper.checkRole;
+    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
+    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
+    vm.checkWrite = ExpeditionViewHelper.checkWrite;
+    vm.checkStatusPending = ExpeditionViewHelper.checkStatusPending;
+    vm.checkStatusIncomplete = ExpeditionViewHelper.checkStatusIncomplete;
+    vm.checkStatusReturned = ExpeditionViewHelper.checkStatusReturned;
+    vm.isUpcoming = ExpeditionViewHelper.isUpcoming;
+    vm.displayAssignedProtocols = ExpeditionViewHelper.displayAssignedProtocols;
+    vm.expeditionLink = ExpeditionViewHelper.expeditionLink;
 
     vm.isTeamLead = checkRole('team lead');
     vm.isTeamMember = checkRole('team member');
@@ -206,80 +210,6 @@
       vm.team = team;
       if (vm.team) vm.filter.teamLeadId = (vm.team.teamLead._id) ? vm.team.teamLead._id : vm.team.teamLead;
       vm.findTeamValues();
-    };
-
-    vm.expeditionLink = function(expedition) {
-      return ((vm.isTeamLead || vm.isAdmin) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
-        expedition.status === 'unpublished')) ?
-      'expeditions.view({ expeditionId: expedition._id })' :
-      'expeditions.protocols({ expeditionId: expedition._id })';
-    };
-
-    vm.isUpcoming = function(expedition) {
-      return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
-    };
-
-    vm.getExpeditionDate = ExpeditionViewHelper.getExpeditionDate;
-    vm.getExpeditionTimeRange = ExpeditionViewHelper.getExpeditionTimeRange;
-
-    vm.checkWrite = function(teamList) {
-      if (checkRole('team lead') || checkRole('admin')) {
-        return true;
-      } else {
-        var teamListIndex = lodash.findIndex(teamList, function(m) {
-          return m.username === vm.user.username;
-        });
-        return (teamListIndex > -1) ? true : false;
-      }
-    };
-
-    vm.checkStatusIncomplete = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'incomplete' && !protocolsComplete;
-    };
-
-    vm.checkStatusPending = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'pending' || (protocolsComplete && expedition.status !== 'published');
-    };
-
-    vm.checkStatusReturned = function(expedition) {
-      var protocolsComplete = true;
-      if (vm.checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (vm.checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'returned' && !protocolsComplete;
-    };
-
-    vm.displaySubmittedProtocols = function(activity) {
-      var changed = [];
-      if (activity.protocols.siteCondition) changed.push('1');
-      if (activity.protocols.oysterMeasurement) changed.push('2');
-      if (activity.protocols.mobileTrap) changed.push('3');
-      if (activity.protocols.settlementTiles) changed.push('4');
-      if (activity.protocols.waterQuality) changed.push('5');
-      var formatted = (changed === 1) ? 'Protocol ': 'Protocols ';
-      for (var i = 0; i < changed.length; i++) {
-        formatted += changed[i];
-        if (i === changed.length - 2 && changed.length > 1) {
-          formatted += ' & ';
-        } else if (i < changed.length - 1 && changed.length > 1) {
-          formatted += ', ';
-        }
-      }
-      return formatted;
     };
 
     vm.canEditRestorationStation = function(station) {

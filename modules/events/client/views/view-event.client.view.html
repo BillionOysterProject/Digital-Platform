@@ -217,13 +217,13 @@
 <!-- MODALS -->
 
 <register-event-modal can-register="(vm.isAdmin || vm.isTeamLead) ? true : false"
-  event="vm.event" date-time-string="{{vm.earliestDateTimeString}}"
+  event="vm.event" date-time-string="{{vm.dateTimeRangeString}}"
   support-function="vm.openFeedback"></register-event-modal>
 
-<unregister-event-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}">
+<unregister-event-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}">
   </unregister-event-modal>
 
-<email-registrants-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}"
+<email-registrants-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}"
   attendees="vm.event.attendees" past="vm.past"></email-registrants-modal>
 
 <redirect-to-signin-modal close-function="vm.signinOrRegisterClose"></redirect-to-signin-modal>

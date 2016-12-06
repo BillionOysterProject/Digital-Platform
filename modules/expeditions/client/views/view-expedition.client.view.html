@@ -44,6 +44,9 @@
 <section class="content" ng-show="((vm.isTeamLead || vm.isTeamMember || vm.isAdmin) &&
   !vm.checkAllStatus('published'))">
     <section class="container">
+        <div class="alert alert-danger row" ng-show="vm.expedition.returnedNotes">The protocol(s) were returned with the following note:
+          "{{vm.expedition.returnedNotes}}"
+          You can edit your expedition data and resubmit at any time.</div>
         <h3 class="gray">Protocols</h3>
         <table class="table" ng-class="{'table-hover' : (vm.isTeamLead || vm.isAdmin ||
           (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))}">
