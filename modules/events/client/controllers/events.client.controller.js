@@ -99,6 +99,7 @@
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
     vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
+    vm.dateTimeRangeString = EventHelper.getDateTimeRangeString(vm.event.dates);
     vm.openSpots = EventHelper.getOpenSpots(vm.event.registrants, vm.event.maximumCapacity);
     vm.deadline = moment(EventHelper.getDeadline(vm.event.dates, vm.event.deadlineToRegister)).format('MM/DD/YYYY');
     vm.daysRemainingDeadline = EventHelper.getDaysRemainingDeadline(vm.event.dates, vm.event.deadlineToRegister);
@@ -182,7 +183,7 @@
     vm.registerEvent = function() {
       $http.post('/api/events/' + vm.event._id + '/register', {
         full: true,
-        dateTimeString: vm.earliestDateTimeString
+        dateTimeString: vm.dateTimeRangeString
       }).
       success(function(data, status, headers, config) {
         angular.element('#modal-event-register').modal('show');
