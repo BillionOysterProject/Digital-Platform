@@ -20,6 +20,7 @@
 
     vm.lesson = lesson;
     vm.authentication = Authentication;
+    vm.user = Authentication.user;
     vm.error = [];
     vm.form = {};
     vm.showResourceModal = false;
@@ -667,6 +668,14 @@
 
     vm.closeLessonFeedback = function() {
       angular.element('#modal-lesson-feedback').modal('hide');
+    };
+
+    vm.openLessonLog = function() {
+      angular.element('#modal-lesson-log').modal('show');
+    };
+
+    vm.closeLessonLog = function() {
+      angular.element('#modal-lesson-log').modal('hide');
     };
   }
 })();

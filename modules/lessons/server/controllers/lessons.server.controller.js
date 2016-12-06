@@ -7,6 +7,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
+  LessonTracker = mongoose.model('LessonTracker'),
+  LessonFeedback = mongoose.model('LessonFeedback'),
   SavedLesson = mongoose.model('SavedLesson'),
   Team = mongoose.model('Team'),
   Glossary = mongoose.model('Glossary'),
@@ -20,6 +22,7 @@ var path = require('path'),
   request = require('request'),
   path = require('path'),
   multer = require('multer'),
+  moment = require('moment'),
   config = require(path.resolve('./config/config'));
 
 var validateLesson = function(lesson, successCallback, errorCallback) {
@@ -429,6 +432,81 @@ exports.listFavorites = function(req, res) {
           res.json(lessons);
         }
       });
+    }
+  });
+};
+
+/**
+ * Track a lesson
+ */
+exports.trackLesson = function(req, res) {
+  var lesson = req.lesson;
+  var user = req.user;
+
+  var trackedLesson = new LessonTracker(req.body.tracker);
+  trackedLesson.taughtOn = moment(req.body.tracker.taughtOn, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  trackedLesson.user = user;
+  trackedLesson.lesson = lesson;
+
+  trackedLesson.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLesson);
+    }
+  });
+};
+
+exports.listTrackedForLessonAndUser = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonTracker.find({ lesson: lesson, user: req.user }).populate('lesson', 'title')
+  .populate('user', 'displayName email team profileImageURL').exec(function(err, trackedLessons) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLessons);
+    }
+  });
+};
+
+/**
+ * Feedback for a lesson
+ */
+exports.lessonFeedback = function(req, res) {
+  var lesson = req.lesson;
+  var user = req.user;
+
+  var lessonFeedback = new LessonFeedback(req.body.feedback);
+  lessonFeedback.user = user;
+  lessonFeedback.lesson = lesson;
+
+  lessonFeedback.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(lessonFeedback);
+    }
+  });
+};
+
+exports.listFeedbackForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonFeedback.find({ lesson: lesson }).populate('lesson', 'title')
+  .exec(function(err, feedback) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(feedback);
     }
   });
 };

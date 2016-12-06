@@ -23,7 +23,7 @@
         <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="{{vm.editLink}}">{{vm.lesson.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
         <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
         <!--TIFF: wire up -->
-        <a class="btn btn-default" view-permissions="team lead,admin" data-toggle="modal" data-target="#modal-lesson-log">Log teaching</a>
+        <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonLog()">Log teaching</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.duplicateLesson()">Duplicate</a>
         <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
       </div>
@@ -349,6 +349,7 @@
 <!-- MODALS -->
 <download-lesson-modal lesson="vm.lesson" download="vm.download" download-function="vm.downloadLesson" cancel-function="vm.closeDownloadLesson" unit-function="vm.goToUnitFromDownloadLesson"></download-lesson-modal>
 <lesson-feedback-modal lesson="vm.lesson" close-function="vm.closeLessonFeedback"></lesson-feedback-modal>
+<lesson-tracker-modal lesson="vm.lesson" user="vm.user" close-function="vm.closeLessonLog"></lesson-tracker-modal>
 <div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -370,59 +371,6 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
-    </div>
-  </div>
-</div>
-<!-- TIFF: Wire up -->
-<div class="modal fade" id="modal-lesson-log" tabindex="-1" role="dialog" aria-labelledby="modal-lesson-log">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Log teaching of this lesson</h4>
-        <p>Did you teach this lesson? We want to know! Fill this form out for each time the lesson was taught.</p>
-        <!--TIFF: If team lead has taught before, show:-->
-        <div class="alert alert-info">So far we have recorded your 00/00/0000 teaching to CLASSORSUBJECT, your 00/00/0000 teaching to CLASSORSUBJECT, and your 00/00/0000 teaching to CLASSORSUBJECT.
-        </div>
-      </div>
-      <form name="" ng-submit="" novalidate>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label class="control-label">Date lesson was taught *</label>
-                <input type="date" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label class="control-label">Name of class or subject *</label>
-                <input type="text" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label class="control-label">Grade level of students *</label>
-                <select class="form-control" required>
-                    <option> << insert grade options >> </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="control-label">Total number of students *</label>
-                <input type="number" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label class="control-label">Total number of classes/sections *</label>
-                <input type="number" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label class="control-label">How many class periods/sessions were needed to complete this lesson? *</label>
-                <input type="number" class="form-control" required />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </form>
     </div>
   </div>
 </div>
