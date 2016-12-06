@@ -83,6 +83,45 @@
     </div>
 
     <hr/>
+    
+    <!-- TIFF: needs wired up -->
+    <div class="alert alert-default">
+        <h4>This lesson has been taught <b class="blue">7</b> times by <b class="blue">4</b> teachers to a total of <b class="blue">154</b> students</h4><br/>
+        <div class="row">
+            <div class="col-sm-2">
+                <h4><b class="blue">21.5</b></h4>
+                <p class="fineprint">Average number of students</p>
+            </div>
+            <div class="col-sm-2">
+                <h4><b class="blue">3.8</b></h4>
+                <p class="fineprint">Average number of classes/sections</p>
+            </div>
+            <div class="col-sm-2">
+                <h4><b class="blue">2.1</b></h4>
+                <p class="fineprint">Average number of periods/sessions</p>
+            </div>
+            <div class="col-sm-3">
+                <p class="fineprint">Subject Areas of classes</p>
+                <ul class="list-inline"><!--TIFF: don't duplicate-->
+                  <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
+                    <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
+                  </li>
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <p class="fineprint">Grades of students</p>
+                <ul class="list-inline"><!--TIFF: don't duplicate-->
+                  <li>
+                    <span class="label label-success">7th</span>
+                    <span class="label label-success">8th</span>
+                    <span class="label label-success">9-12th</span>
+                    <span class="label label-success">9th</span>
+                    <span class="label label-success">12th</span>
+                  </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
       <div class="col-sm-3" ng-show="vm.showSidebar">
