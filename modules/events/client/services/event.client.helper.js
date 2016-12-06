@@ -67,6 +67,15 @@
       }
     };
 
+    var getDateTimeRangeString = function(dates) {
+      var dateStrings = [];
+      for (var i = 0; i < dates.length; i++) {
+        dateStrings.push(moment(dates[i].startDateTime).format('MMMM D, YYYY, h:mma') + '-' +
+          moment(dates[i].endDateTime).format('h:mma'));
+      }
+      return dateStrings.join(' | ');
+    };
+
     var getDeadline = function(dates, deadlineToRegister) {
       if (deadlineToRegister) {
         return moment(deadlineToRegister).endOf('day');
@@ -102,7 +111,8 @@
       getEarliestDate: getEarliestDate,
       getEarliestDateAsMoment: getEarliestDateAsMoment,
       getEarliestDateString: getEarliestDateString,
-      getEarliestDateTimeRangeString: getEarliestDateTimeRangeString
+      getEarliestDateTimeRangeString: getEarliestDateTimeRangeString,
+      getDateTimeRangeString: getDateTimeRangeString
     };
   }
 })();

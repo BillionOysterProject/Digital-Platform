@@ -10,7 +10,6 @@
         controller: 'ReturnExpeditionController',
         controllerAs: 'vm',
         scope: {
-          expedition: '=',
           saveFunction: '=',
           cancelFunction: '='
         }

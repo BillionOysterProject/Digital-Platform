@@ -10,7 +10,7 @@
         scope: {
           canRegister: '=',
           event: '=',
-          dateString: '@',
+          dateTimeString: '@',
           supportFunction: '='
         },
         replace: true,
