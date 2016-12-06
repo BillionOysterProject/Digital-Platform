@@ -6,13 +6,15 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
+  '$timeout', '$interval', '$location', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
   'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
+    $timeout, $interval, $location, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
     ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
+    var stopListeningForStateChangeStart;
+    var stopListeningForLocationChangeStart;
     vm.expedition = expedition;
     vm.user = Authentication.user;
     vm.activeTab = 'protocol1';
@@ -22,6 +24,65 @@
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
 
+    //if the user navigates away from protocols editing
+    var handleStateChangeStartEvent = function(event, toState, toParams, fromState, fromParams) {
+      event.preventDefault();
+
+      var wantsToLeave = confirm('Are you sure you want to leave protocol editing? Any unsaved data will be lost.');
+      if(wantsToLeave) {
+        //if they do, stop listening for both events
+        if(stopListeningForLocationChangeStart) {
+          stopListeningForLocationChangeStart();
+        }
+        if(stopListeningForStateChangeStart) {
+          stopListeningForStateChangeStart();
+        }
+
+        // they want to leave so reconfigure the location
+        $state.go(toState, toParams);
+      }
+    };
+
+    //if the user hits the back/fwd buttons during protocols editing
+    var handleLocationChangeStartEvent = function(event) {
+      event.preventDefault();
+
+      // Keep track of which location the user was about to move to.
+      var targetUrl = $location.absUrl();
+
+      var wantsToLeave = confirm('Are you sure you want to leave protocol editing? Any unsaved data will be lost.');
+      if(wantsToLeave) {
+        //if they do, stop listening for both events
+        if(stopListeningForLocationChangeStart) {
+          stopListeningForLocationChangeStart();
+        }
+        if(stopListeningForStateChangeStart) {
+          stopListeningForStateChangeStart();
+        }
+
+        // they want to leave so change the location
+        //note that setting $location.url does not work
+        window.location.href = targetUrl;
+      }
+    };
+
+    //catch window location changes like the back button
+    var listenForLocationChanges = function() {
+      if($state.is('expeditions.protocols')) {
+        stopListeningForLocationChangeStart = $scope.$on('$locationChangeStart', handleLocationChangeStartEvent);
+      }
+    };
+
+    //catch state changes like the user clicks to another area of the application
+    var listenForStateChanges = function() {
+      if($state.is('expeditions.protocols')) {
+        stopListeningForStateChangeStart = $scope.$on('$stateChangeStart', handleStateChangeStartEvent);
+      }
+    };
+
+    //set up listeners for leaving the protocols page
+    $scope.$applyAsync(listenForStateChanges);
+    $scope.$applyAsync(listenForLocationChanges);
 
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
