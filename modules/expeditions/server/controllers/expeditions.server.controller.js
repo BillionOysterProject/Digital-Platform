@@ -372,6 +372,7 @@ exports.submit = function (req, res) {
         waterQualitySaved.status === 'submitted') {
 
         expedition.status = 'pending';
+        expedition.returnedNotes = '';
 
         expedition.save(function(err) {
           if (err) {
@@ -461,6 +462,7 @@ exports.publish = function (req, res) {
         });
       } else {
         expedition.status = 'published';
+        expedition.returnedNotes = '';
         expedition.published = new Date();
 
         expedition.save(function(err) {
@@ -520,6 +522,7 @@ exports.unpublish = function (req, res) {
         });
       } else {
         expedition.status = 'pending';
+        expedition.returnedNotes = '';
 
         expedition.save(function(err) {
           if (err) {
@@ -562,6 +565,7 @@ exports.return = function (req, res) {
         });
       } else {
         expedition.status = 'returned';
+        expedition.returnedNotes = req.body.returnedNotes;
 
         expedition.save(function(err) {
           if (err) {
@@ -576,6 +580,7 @@ exports.return = function (req, res) {
             'protocols_returned', {
               TeamName: expedition.team.name,
               ExpeditionName: expedition.name,
+              ExpeditionReturnedNote: expedition.returnedNotes,
               LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
               LinkProfile: httpTransport + req.headers.host + '/settings/profile'
             },

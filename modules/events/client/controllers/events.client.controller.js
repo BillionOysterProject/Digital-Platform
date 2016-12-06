@@ -181,7 +181,8 @@
 
     vm.registerEvent = function() {
       $http.post('/api/events/' + vm.event._id + '/register', {
-        full: true
+        full: true,
+        dateTimeString: vm.earliestDateTimeString
       }).
       success(function(data, status, headers, config) {
         angular.element('#modal-event-register').modal('show');

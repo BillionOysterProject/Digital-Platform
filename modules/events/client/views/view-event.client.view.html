@@ -217,10 +217,10 @@
 <!-- MODALS -->
 
 <register-event-modal can-register="(vm.isAdmin || vm.isTeamLead) ? true : false"
-  event="vm.event" date-string="{{vm.earliestDateString}}"
+  event="vm.event" date-time-string="{{vm.earliestDateTimeString}}"
   support-function="vm.openFeedback"></register-event-modal>
 
-<unregister-event-modal event="vm.event" date-string="{{vm.earliestDateString}}">
+<unregister-event-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}">
   </unregister-event-modal>
 
 <email-registrants-modal event="vm.event" date-time-string="{{vm.earliestDateTimeString}}"
