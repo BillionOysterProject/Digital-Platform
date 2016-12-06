@@ -655,8 +655,6 @@
       if(vm.viewSettlementTiles && $scope.settlementTiles) protocols.settlementTiles = $scope.settlementTiles;
       if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
-      console.log('returnedNotes', returnedNotes);
-
       $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
         protocols: protocols,
         returnedNotes: returnedNotes
