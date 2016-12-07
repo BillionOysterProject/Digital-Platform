@@ -463,7 +463,8 @@ exports.listTrackedForLessonAndUser = function(req, res) {
   var lesson = req.lesson;
 
   LessonTracker.find({ lesson: lesson, user: req.user }).populate('lesson', 'title')
-  .populate('user', 'displayName email team profileImageURL').exec(function(err, trackedLessons) {
+  .populate('user', 'displayName email team profileImageURL')
+  .populate('classOrSubject', 'subject color').exec(function(err, trackedLessons) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -491,7 +492,26 @@ exports.lessonFeedback = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(lessonFeedback);
+      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+      var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+      var toList = [lesson.user.email, config.mailer.admin];
+
+      email.sendEmailTemplate(toList, subject,
+      'lesson_feedback', {
+        FirstName: req.body.lesson.user.firstName,
+        LessonFeedbackName: req.user.displayName,
+        LessonName: req.body.lesson.title,
+        LessonFeedbackNote: req.body.message,
+        LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+      },
+      function(response) {
+        res.json(lessonFeedback);
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
     }
   });
 };
@@ -500,7 +520,7 @@ exports.listFeedbackForLesson = function(req, res) {
   var lesson = req.lesson;
 
   LessonFeedback.find({ lesson: lesson }).populate('lesson', 'title')
-  .exec(function(err, feedback) {
+  .populate('user', 'displayName email team profileImageURL').exec(function(err, feedback) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

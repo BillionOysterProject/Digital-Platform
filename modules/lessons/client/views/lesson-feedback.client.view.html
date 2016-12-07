@@ -13,8 +13,8 @@
           <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="control-label">How effective is this lesson? *</label>
-                    <select class="form-control" required>
+                    <label for="lessonEffective" class="control-label required">How effective is this lesson? *</label>
+                    <select class="form-control" name="lessonEffective" id="lessonEffective" ng-model="feedback.lessonEffective" required>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -23,8 +23,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="control-label">How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label>
-                    <select class="form-control" required>
+                    <label for="lessonAlignWithCurriculumn" class="control-label required">How effectively does this lesson align with NY State
+                      core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label>
+                    <select class="form-control" name="lessonAlignWithCurriculumn" id="lessonAlignWithCurriculumn"
+                      ng-model="feedback.lessonAlignWithCurriculumn" required>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -35,8 +37,10 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label class="control-label">How effectively does this lesson support inquiry, student-led research, and/or scientific practices? *</label>
-                    <select class="form-control" required>
+                    <label for="lessonSupportScientificPractice" class="control-label required">How effectively does this lesson support inquiry,
+                      student-led research, and/or scientific practices? *</label>
+                    <select class="form-control" name="lessonSupportScientificPractice" id="lessonSupportScientificPractice"
+                      ng-model="feedback.lessonSupportScientificPractice" required>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -45,8 +49,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="control-label">How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS? *</label>
-                    <select class="form-control" required>
+                    <label for="lessonPreparesStudents" class="control-label required">How effectively does this lesson prepare students for
+                      environmental restoration, BOP field science, or the ORS? *</label>
+                    <select class="form-control" name="lessonPreparesStudents" id="lessonPreparesStudents"
+                      ng-model="feedback.lessonPreparesStudents" required>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -61,16 +67,19 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                  <label class="control-label">Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson. *</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                  <label for="howLessonTaught" class="control-label">Describe what you did and what your students did in this lesson. Did you modify or
+                    adapt this lesson? Give specific examples of what you and your students did in the lesson. *</label>
+                  <textarea class="form-control" name="howLessonTaught" id="howLessonTaught" rows="3" ng-model="feedback.howLessonTaught"></textarea>
                 </div>
                 <div class="form-group">
-                  <label class="control-label">Why did you teach this lesson when you did? Was it part of your regular scheduled curriculum, one-off, or prep for the field? *</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                  <label for="whyLessonTaughtNow" class="control-label">Why did you teach this lesson when you did? Was it part of your regular
+                    scheduled curriculum, one-off, or prep for the field? *</label>
+                  <textarea class="form-control" name="whyLessonTaughtNow" id="whyLessonTaughtNow" rows="3" ng-model="feedback.whyLessonTaughtNow"></textarea>
                 </div>
                 <div class="form-group">
-                  <label class="control-label">Will you teach some version of this lesson in the future? If so, what will you repeat, what will you do differently, and why? If not, why not? *</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                  <label for="willTeachLessonAgain" class="control-label">Will you teach some version of this lesson in the future? If so, what will you
+                    repeat, what will you do differently, and why? If not, why not? *</label>
+                  <textarea class="form-control" name="willTeachLessonAgain" id="willTeachLessonAgain" rows="3" ng-model="feedback.willTeachLessonAgain"></textarea>
                 </div>
             </div>
         </div>
@@ -78,37 +87,64 @@
         <h4 class="blue">Please provide any additional feedback needed on specific parts of the lesson, in terms of what worked well and what did not.</h4>
         <div class="row">
             <div class="col-sm-12">
-                <div class="form-group">
-                  <label class="control-label">Lesson Summary</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                <div class="form-group" ng-show="lesson.lessonOverview.lessonSummary">
+                  <label for="lessonSummary" class="control-label">Lesson Summary</label>
+                  <textarea class="form-control" name="lessonSummary" id="lessonSummary" rows="3"
+                    ng-model="feedback.additionalFeedback.lessonSummary"></textarea>
+                </div>
+                <div class="form-group" ng-show="lesson.lessonObjectives">
+                  <label for="lessonObjectives" class="control-label">Lesson Objectives</label>
+                  <textarea class="form-control" name="lessonObjectives" id="lessonObjectives" rows="3"
+                    ng-model="feedback.additionalFeedback.lessonObjectives"></textarea>
+                </div>
+                <div class="form-group" ng-show="(lesson.materialsResources.teacherResourcesFiles &&
+                      lesson.materialsResources.teacherResourcesFiles.length > 0) ||
+                      (lesson.materialsResources.teacherResourcesLinks &&
+                      lesson.materialsResources.teacherResourcesLinks.length > 0) ||
+                      (lesson.materialsResources.handoutsFileInput &&
+                      lesson.materialsResources.handoutsFileInput.length > 0) ||
+                      (lesson.materialsResources.stateTestQuestions &&
+                      lesson.materialsResources.stateTestQuestions.length > 0) ||
+                      (lesson.materialsResources.vocabulary && lesson.materialsResources.vocabulary.length > 0) ||
+                      lesson.materialsResources.supplies || lesson.materialsResources.teacherTips">
+                  <label for="materialsResources" class="control-label">Materials and Resources</label>
+                  <textarea class="form-control" name="materialsResources" id="materialsResources" rows="3"
+                    ng-model="feedback.additionalFeedback.materialsResources"></textarea>
+                </div>
+                <div class="form-group" ng-show="lesson.preparation">
+                  <label for="preparation" class="control-label">Preparation</label>
+                  <textarea class="form-control" name="preparation" id="preparation" rows="3"
+                    ng-model="feedback.additionalFeedback.preparation"></textarea>
+                </div>
+                <div class="form-group" ng-show="lesson.background">
+                  <label for="background" class="control-label">Background</label>
+                  <textarea class="form-control" name="background" id="background" rows="3"
+                    ng-model="feedback.additionalFeedback.background"></textarea>
+                </div>
+                <div class="form-group" ng-show="lesson.instructionPlan.engage ||
+                        lesson.instructionPlan.explore || lesson.instructionPlan.explain ||
+                        lesson.instructionPlan.elaborate || lesson.instructionPlan.evaluate">
+                  <label for="instructionPlan" class="control-label">Instruction Plan</label>
+                  <textarea class="form-control" name="instructionPlan" id="instructionPlan" rows="3"
+                    ng-model="feedback.additionalFeedback.instructionPlan"></textarea>
+                </div>
+                <div class="form-group" ng-show="(lesson.standards.nycsssUnits && lesson.standards.nycsssUnits.length > 0) ||
+                      (lesson.standards.nysssKeyIdeas && lesson.standards.nysssKeyIdeas.length > 0) ||
+                      (lesson.standards.nysssMajorUnderstandings && lesson.standards.nysssMajorUnderstandings.length > 0) ||
+                      (lesson.standards.nysssMst && lesson.standards.nysssMst.length > 0) ||
+                      (lesson.standards.ngssDisciplinaryCoreIdeas && lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
+                      (lesson.standards.ngssScienceEngineeringPractices && lesson.standards.ngssScienceEngineeringPractices.length > 0) ||
+                      (lesson.standards.ngssCrossCuttingConcepts && lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
+                      (lesson.standards.cclsMathematics && lesson.standards.cclsMathematics.length > 0) ||
+                      (lesson.standards.cclsElaScienceTechnicalSubjects && lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)">
+                  <label for="standards" class="control-label">Standards</label>
+                  <textarea class="form-control" name="standards" id="standards" rows="3"
+                    ng-model="feedback.additionalFeedback.standards"></textarea>
                 </div>
                 <div class="form-group">
-                  <label class="control-label">Lesson Objectives</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Materials and Resources</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Preparation</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Background</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Instruction Plan</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Standards</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="control-label">Other</label>
-                  <textarea class="form-control" rows="3" ng-model="message"></textarea>
+                  <label for="other" class="control-label">Other</label>
+                  <textarea class="form-control" name="other" id="other" rows="3"
+                    ng-model="feedback.additionalFeedback.other"></textarea>
                 </div>
               </div>
           </div>

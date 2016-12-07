@@ -13,21 +13,34 @@
           closeFunction: '='
         },
         replace: true,
-        controller: function($scope, $http, LessonTrackerListService, moment, lodash) {
+        controller: function($scope, $http, LessonTrackerListService, SubjectAreasService, moment, lodash) {
           $scope.tracker = {};
           $scope.today = moment().format('YYYY-MM-DD');
+
+          $scope.subjectAreasSelectConfig = {
+            mode: 'tags-id',
+            id: '_id',
+            text: 'subject',
+            textLookup: function(id) {
+              return SubjectAreasService.get({ subjectAreaId: id }).$promise;
+            },
+            options: function(searchText) {
+              return SubjectAreasService.query({
+                searchString: searchText
+              });
+            }
+          };
 
           var getLessonTrackList = function() {
             LessonTrackerListService.query({
               lessonId: $scope.lesson._id
             }, function(trackList) {
-              console.log('trackList', trackList);
               $scope.trackList = trackList;
               var trackListArray = [];
               for (var i = 0; i < trackList.length; i++) {
                 var taughtOn = moment(trackList[i].taughtOn).format('MM/DD/YYYY');
-                var classOrSubject = trackList[i].classOrSubject;
-                var tracked = 'your ' + taughtOn + ' teaching to ' + classOrSubject;
+                var classOrSubject = (trackList[i].classOrSubject) ? trackList[i].classOrSubject.subject : '';
+                var tracked = 'your ' + taughtOn + ' teaching ' + classOrSubject;
                 if (i === trackList.length-1 && trackList.length > 1) {
                   tracked = 'and ' + tracked;
                 }

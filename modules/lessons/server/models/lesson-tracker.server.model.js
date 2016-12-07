@@ -26,7 +26,8 @@ var LessonTrackerSchema = new Schema({
     required: true
   },
   classOrSubject: {
-    type: String,
+    type: Schema.ObjectId,
+    ref: 'MetaSubjectArea',
     required: true
   },
   grade: {

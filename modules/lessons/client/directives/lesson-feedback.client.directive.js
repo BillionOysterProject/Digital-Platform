@@ -14,15 +14,16 @@
         replace: true,
         controller: function($scope, $http) {
           $scope.sent = false;
+          $scope.feedback = {};
           $scope.send = function(isValid) {
             if (!isValid) {
               $scope.$broadcast('show-errors-check-validity', 'form.lessonFeedbackForm');
               return false;
             }
 
-            $http.post('/api/email/lesson-feedback', {
+            $http.post('/api/lessons/' + $scope.lesson._id + '/feedback', {
               lesson: $scope.lesson,
-              message: $scope.message
+              feedback: $scope.feedback
             })
             .success(function(data, status, headers, config) {
               $scope.sent = true;

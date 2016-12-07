@@ -18,8 +18,11 @@
                 <input type="date" class="form-control" name="taughtOn" id="taughtOn" ng-model="tracker.taughtOn" required/>
               </div>
               <div class="form-group">
-                <label for="classOrSubject" class="control-label required">Name of class or subject *</label>
-                <input type="text" class="form-control" name="classOrSubject" id="classOrSubject" ng-model="tracker.classOrSubject" required/>
+                <!-- <label for="classOrSubject" class="control-label required">Name of class or subject *</label>
+                <input type="text" class="form-control" name="classOrSubject" id="classOrSubject" ng-model="tracker.classOrSubject" required/> -->
+                <select-tags name="classOrSubject" id="classOrSubject"
+                in-title="Name of class or subject *" ng-model="tracker.classOrSubject"
+                label-class="control-label required" select-config="subjectAreasSelectConfig"></select-tags>
               </div>
               <div class="form-group">
                 <label for="grade" class="control-label required">Grade level of students *</label>
