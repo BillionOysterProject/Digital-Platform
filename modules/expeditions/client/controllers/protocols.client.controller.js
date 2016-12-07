@@ -6,11 +6,11 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-  '$timeout', '$interval', '$location', '$window', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
+  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
   'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, $location, $window, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
+    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
     ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     var stopListeningForStateChangeStart;
@@ -822,9 +822,9 @@
       //protocols editing page, then make a change somewhere and hit "refresh"
       //I am expecting the window onbeforeunload listener to get called (which it does)
       //but by the time this method is called from within there, the $scope.form.somethingForm
-      //are all undefined. In all other testing the onbeforeunload listener
-      //seems to be working and I am a little stuck on what is going on in the above scenario.
-      //I think the page has already started to "unload" but not sure what to do about it? 
+      //are all undefined. I am a little stuck on what is going on in that scenario.
+      //I think it has to do with the timing of the listener firing (the page has already started to unload?)
+      // and/or I could be adding or removing the window listener incorrectly?
       return ($scope.form.mobileTrapForm && $scope.form.mobileTrapForm.$dirty) ||
         ($scope.form.oysterMeasurementForm && $scope.form.oysterMeasurementForm.$dirty) ||
         ($scope.form.settlementTilesForm && $scope.form.settlementTilesForm.$dirty) ||
@@ -856,6 +856,7 @@
     };
 
     var handleWindowUnload = function(event) {
+      console.log("CHECKING WINDOW UNLOAD");
       if(!areProtocolFormsDirty()) {
         cleanupPageChangeListeners();
         return;
