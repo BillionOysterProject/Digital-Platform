@@ -359,7 +359,7 @@ describe('Event E2E Tests', function () {
     }
 
     if (openSpots > 0) {
-      expect(item.element(by.id('openSpots')).getText()).toEqual(values.maximumCapacity + ' spots and');
+      expect(item.element(by.id('openSpots')).getText()).toEqual(values.maximumCapacity + ' spots');
       expect(item.element(by.id('openSpots')).isDisplayed()).toBe(true);
       expect(item.element(by.id('noOpenSpots')).isDisplayed()).toBe(false);
     } else if (openSpots === 0) {
@@ -437,7 +437,8 @@ describe('Event E2E Tests', function () {
 
         expect(registeredModal.isDisplayed()).toBe(true);
         expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
-          fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+          fullEvent.title + ' on ' + date1.format('MMMM D, YYYY, ') + fullEvent.dates[0].timeRangeString + ' | ' +
+          date2.format('MMMM D, YYYY, ') + fullEvent.dates[1].timeRangeString);
 
         registeredModal.element(by.buttonText('Close')).click();
         browser.wait(EC.invisibilityOf(registeredModal), 5000);
@@ -502,7 +503,8 @@ describe('Event E2E Tests', function () {
 
           expect(registeredModal.isDisplayed()).toBe(true);
           expect(registeredModal.element(by.css('.modal-title')).getText()).toEqual('You are now registered for the ' +
-            fullEvent.title + ' on ' + date1.format('MMM D, YYYY'));
+          fullEvent.title + ' on ' + date1.format('MMMM D, YYYY, ') + fullEvent.dates[0].timeRangeString + ' | ' +
+          date2.format('MMMM D, YYYY, ') + fullEvent.dates[1].timeRangeString);
 
           registeredModal.element(by.buttonText('Close')).click();
           browser.wait(EC.invisibilityOf(registeredModal), 5000);

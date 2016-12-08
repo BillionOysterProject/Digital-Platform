@@ -219,6 +219,7 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
@@ -233,6 +234,7 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
@@ -258,6 +260,15 @@
       });
       element.modal('hide');
     };
+
+    vm.getColumnNumber = function() {
+      var columns = 1;
+      if (vm.event.location && vm.event.location.addressString) columns++;
+      if (vm.past || vm.today) columns++;
+      if ((!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity > 0) columns++;
+      return columns;
+    };
+    vm.columns = vm.getColumnNumber();
 
     // Save Event
     function save(isValid) {
