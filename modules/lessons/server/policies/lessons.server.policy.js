@@ -51,6 +51,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/tracked-list',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/:lessonId/track',
       permissions: ['*']
     }, {
@@ -105,6 +108,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/tracked-list',
       permissions: '*'
     }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId/track',
       permissions: '*'
     }, {
@@ -136,6 +142,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
       permissions: ['get']
     }, {
       resources: '/api/lessons/:lessonId/track',

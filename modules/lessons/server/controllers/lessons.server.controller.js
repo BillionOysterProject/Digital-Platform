@@ -10,6 +10,7 @@ var path = require('path'),
   LessonTracker = mongoose.model('LessonTracker'),
   LessonFeedback = mongoose.model('LessonFeedback'),
   SavedLesson = mongoose.model('SavedLesson'),
+  MetaSubjectArea = mongoose.model('MetaSubjectArea'),
   Team = mongoose.model('Team'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -471,6 +472,89 @@ exports.listTrackedForLessonAndUser = function(req, res) {
       });
     } else {
       res.json(trackedLessons);
+    }
+  });
+};
+
+exports.listTrackedForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonTracker.find({ lesson: lesson }).populate('lesson', 'title')
+  .populate('user', 'displayName email team profileImageURL')
+  .populate('classOrSubject', 'subject color').exec(function(err, trackedLessons) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLessons);
+    }
+  });
+};
+
+exports.trackedStatsForLesson = function(req, res) {
+  var lesson = req.lesson;
+  var stats = {};
+  var query = { lesson: lesson._id };
+  LessonTracker.aggregate([
+    { $match: { lesson: lesson._id } },
+    { $group: {
+      _id: null,
+      taughtCount: { $sum: 1 },
+      studentCount: { $sum: '$totalNumberOfStudents' },
+      avgStudentsPerClass: { $avg: '$totalNumberOfStudents' },
+      avgClassesOrSections: { $avg: '$totalNumberOfClassesOrSections' },
+      avgPeriodsOrSessions: { $avg: '$classPeriodsOrSessionsNeededToComplete' }
+    } }
+  ], function(err1, result) {
+    if (err1) {
+      res.status(400).send({
+        message: 'Could not retrieve averages'
+      });
+    } else {
+      LessonTracker.find(query).distinct('user', function(err2, teamLeads) {
+        if (err2) {
+          res.status(400).send({
+            message: 'Count not retrieve team lead count'
+          });
+        } else {
+          var teamLeadCount = (teamLeads) ? teamLeads.length : 0;
+          LessonTracker.find(query).distinct('grade', function(err3, grades) {
+            if (err3) {
+              res.status(400).send({
+                message: 'Could not retrieve grades'
+              });
+            } else {
+              LessonTracker.find(query).distinct('classOrSubject', function(err4, subjectIds) {
+                if (err4) {
+                  res.status(400).send({
+                    message: 'Could not retrieve subject ids'
+                  });
+                } else {
+                  MetaSubjectArea.find({ '_id' : { $in: subjectIds } }).exec(function(err5, subjects) {
+                    if (err5) {
+                      res.status(400).send({
+                        message: 'Could not retrieve subjects'
+                      });
+                    } else {
+                      res.json({
+                        taughtCount: (result[0]) ? result[0].taughtCount : 0,
+                        teamLeadCount: (teamLeadCount) ? teamLeadCount : 0,
+                        studentCount: (result[0]) ? result[0].studentCount : 0,
+                        avgStudentsPerClass: (result[0]) ? result[0].avgStudentsPerClass : 0,
+                        avgClassesOrSections: (result[0]) ? result[0].avgClassesOrSections : 0,
+                        avgPeriodsOrSessions: (result[0]) ? result[0].avgPeriodsOrSessions : 0,
+                        subjects: subjects,
+                        grades: grades
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
     }
   });
 };

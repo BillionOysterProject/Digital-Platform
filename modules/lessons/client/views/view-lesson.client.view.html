@@ -32,13 +32,8 @@
     <div class="row text-muted">
       <div class="col-sm-10">
         <h5 id="lesson-author-info">
-          <!-- TODO: Need to get images into user -->
           <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
           <b>{{vm.lesson.user.displayName}}</b><br>
-          <!-- TODO: I don't know where the team name is stored right now -->
-          <span ng-hide="!vm.lesson.user.team">{{vm.lesson.user.team.name}}
-            /
-          </span>
           <a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
         </h5>
       </div>
@@ -83,40 +78,37 @@
     </div>
 
     <hr/>
-    
-    <!-- TIFF: needs wired up -->
-    <div class="alert alert-default">
-        <h4>This lesson has been taught <b class="blue">7</b> times by <b class="blue">4</b> teachers to a total of <b class="blue">154</b> students</h4><br/>
+
+    <div class="alert alert-default" ng-show="vm.lessonStats.taughtCount > 0">
+        <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
+          times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers to a total of
+          <b class="blue">{{vm.lessonStats.studentCount}}</b> students</h4><br/>
         <div class="row">
             <div class="col-sm-2">
-                <h4><b class="blue">21.5</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.avgStudentsPerClass}}</b></h4>
                 <p class="fineprint">Average number of students</p>
             </div>
             <div class="col-sm-2">
-                <h4><b class="blue">3.8</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.avgClassesOrSections}}</b></h4>
                 <p class="fineprint">Average number of classes/sections</p>
             </div>
             <div class="col-sm-2">
-                <h4><b class="blue">2.1</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.avgPeriodsOrSessions}}</b></h4>
                 <p class="fineprint">Average number of periods/sessions</p>
             </div>
             <div class="col-sm-3">
                 <p class="fineprint">Subject Areas of classes</p>
-                <ul class="list-inline"><!--TIFF: don't duplicate-->
-                  <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
+                <ul class="list-inline">
+                  <li ng-repeat="subject in vm.lessonStats.subjects">
                     <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
                   </li>
                 </ul>
             </div>
             <div class="col-sm-3">
                 <p class="fineprint">Grades of students</p>
-                <ul class="list-inline"><!--TIFF: don't duplicate-->
-                  <li>
-                    <span class="label label-success">7th</span>
-                    <span class="label label-success">8th</span>
-                    <span class="label label-success">9-12th</span>
-                    <span class="label label-success">9th</span>
-                    <span class="label label-success">12th</span>
+                <ul class="list-inline">
+                  <li ng-repeat="grade in vm.lessonStats.grades">
+                    <span class="label label-success" ng-bind="grade"></span>
                   </li>
                 </ul>
             </div>

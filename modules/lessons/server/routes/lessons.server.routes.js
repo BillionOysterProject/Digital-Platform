@@ -59,6 +59,9 @@ module.exports = function (app) {
   app.route('/api/lessons/:lessonId/tracked-list').all(lessonsPolicy.isAllowed)
     .get(lessons.listTrackedForLessonAndUser);
 
+  app.route('/api/lessons/:lessonId/tracker-stats').all(lessonsPolicy.isAllowed)
+    .get(lessons.trackedStatsForLesson);
+
   app.route('/api/lessons/:lessonId/track').all(lessonsPolicy.isAllowed)
     .post(lessons.trackLesson);
 

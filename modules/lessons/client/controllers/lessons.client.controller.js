@@ -9,13 +9,13 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService', 'LessonsService', 'lodash'];
+  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService, LessonsService, lodash) {
+    SubjectAreasService, LessonsService, LessonTrackerStatsService, lodash) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -176,6 +176,12 @@
       published: true
     }, function(data) {
       vm.units = data;
+    });
+
+    LessonTrackerStatsService.get({
+      lessonId: vm.lesson._id
+    }, function(data) {
+      vm.lessonStats = data;
     });
 
     if (vm.lesson.user && vm.lesson.user.team) {
