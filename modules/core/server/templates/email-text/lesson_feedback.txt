@@ -2,15 +2,14 @@ Hi <%=FirstName%>,
 
 <%= LessonFeedbackName %> just gave you feedback on your lesson <%= LessonName %>:
 
-On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following.
+On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following:
 How effective is this lesson? <%= LessonEffective %>
 How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? <%= LessonAlignWithCurriculumn %>
 How effectively does this lesson support inquiry, student-led research, and/or scientific practices? <%= LessonSupportScientificPractice %>
 How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS? <%= LessonPreparesStudents %>
 
-Tell us all about it.
 <% if(HowLessonTaught !== '') { %>
-Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson.
+Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson:
 <%= HowLessonTaught %>
 <% } %>
 <% if(WhyLessonTaughtNow !== '') { %>
@@ -22,41 +21,40 @@ Will you teach some version of this lesson in the future? If so, what will you r
 <%= WillTeachLessonAgain %>
 <% } %>
 
-Please provide any additional feedback needed on specific parts of the lesson, in terms of what worked well and what did not.
 <% if(LessonSummary !== '') { %>
-Lesson Summary
+Lesson Summary:
 <%= LessonSummary %>
 <% } %>
 <% if(LessonObjectives !== '') { %>
-Lesson Objectives
+Lesson Objectives:
 <%= LessonObjectives %>
 <% } %>
 <% if(MaterialsResources !== '') { %>
-Materials and Resources
+Materials and Resources:
 <%= MaterialsResources %>
 <% } %>
 <% if(Preparation !== '') { %>
-Preparation
+Preparation:
 <%= Preparation %>
 <% } %>
 <% if(Background !== '') { %>
-Background
+Background:
 <%= Background %>
 <% } %>
 <% if(InstructionPlan !== '') { %>
-Instruction Plan
+Instruction Plan:
 <%= InstructionPlan %>
 <% } %>
 <% if(Standards !== '') { %>
-Standards
+Standards:
 <%= Standards %>
 <% } %>
 <% if(Other !== '') { %>
-Other
+Other:
 <%= Other %>
 <% } %>
 
-Visit your lesson at <%= LinkLesson %> to edit and republish at any time.
+You can visit your lesson at <%= LinkLesson %> to edit and republish at any time.
 
 Thanks!
 The Billion Oyster Project
