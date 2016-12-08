@@ -219,6 +219,7 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
@@ -233,6 +234,7 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
