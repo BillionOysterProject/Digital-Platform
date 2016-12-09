@@ -22,10 +22,9 @@
         <h6 id="status-published" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status === 'published'">Published</h6>
         <a class="btn btn-primary" ng-show="vm.lesson.isCurrentUserOwner && vm.lesson.status !== 'pending'" ui-sref="{{vm.editLink}}">{{vm.lesson.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
         <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
-        
+
         <!--TIFF: wire up -->
-        <a class="btn btn-default" data-toggle="modal" data-target="#modal-lesson-view-feedback">View feedback</a>
-        
+        <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonFeedbackView()">View feedback</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonLog()">Log teaching</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.duplicateLesson()">Duplicate</a>
         <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
@@ -384,6 +383,7 @@
 <download-lesson-modal lesson="vm.lesson" download="vm.download" download-function="vm.downloadLesson" cancel-function="vm.closeDownloadLesson" unit-function="vm.goToUnitFromDownloadLesson"></download-lesson-modal>
 <lesson-feedback-modal lesson="vm.lesson" close-function="vm.closeLessonFeedback"></lesson-feedback-modal>
 <lesson-tracker-modal lesson="vm.lesson" user="vm.user" close-function="vm.closeLessonLog"></lesson-tracker-modal>
+<lesson-feedback-view-modal lesson="vm.lesson" close-function="closeLessonFeedbackView"></lesson-feedback-view-modal>
 <div class="modal fade" id="modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-resources">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -404,185 +404,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-<!--TIFF: Wire up and move Lesson Feedback View -->
-<div class="modal fade" id="modal-lesson-view-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" ng-hide="sent">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Feedback given for the lesson <b class="red">How to find oysters</b></h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <ul class="nav nav-pills nav-stacked col-sm-3" role="tablist">
-              <li role="presentation" class="active"><a href="#effectiveness" aria-controls="effectiveness" role="tab" data-toggle="tab">Overall effectiveness</a></li>
-              <li role="presentation"><a href="#what" aria-controls="what" role="tab" data-toggle="tab">What was taught?</a></li>
-              <li role="presentation"><a href="#why" aria-controls="why" role="tab" data-toggle="tab">Why it was taught?</a></li>
-              <li role="presentation"><a href="#will" aria-controls="will" role="tab" data-toggle="tab">Will it be taught again?</a></li>
-              <li role="presentation" class="dropdown">
-                <a href="#" class="dropdown-toggle" id="sections" data-toggle="dropdown" aria-controls="sections-contents" aria-expanded="true">Individual sections <span class="caret"></span></a> 
-                <ul class="dropdown-menu"> 
-                  <li class=""><a href="#sections-summary" role="tab" data-toggle="tab" aria-controls="sections-summary" aria-expanded="false">Lesson Summary</a></li>
-                  <li class=""><a href="#sections-objectives" role="tab" data-toggle="tab" aria-controls="sections-objectives" aria-expanded="false">Lesson Objectives</a></li>
-                  <li class=""><a href="#sections-materials" role="tab" data-toggle="tab" aria-controls="sections-materials" aria-expanded="false">Materials and Resources</a></li>
-                  <li class=""><a href="#sections-preparation" role="tab" data-toggle="tab" aria-controls="sections-preparation" aria-expanded="false">Preparation</a></li>
-                  <li class=""><a href="#sections-background" role="tab" data-toggle="tab" aria-controls="sections-background" aria-expanded="false">Background</a></li>
-                  <li class=""><a href="#sections-plan" role="tab" data-toggle="tab" aria-controls="sections-plan" aria-expanded="false">Instruction Plan</a></li>
-                  <li class=""><a href="#sections-standards" role="tab" data-toggle="tab" aria-controls="sections-standards" aria-expanded="false">Standards</a></li>
-                  <li class=""><a href="#sections-other" role="tab" data-toggle="tab" aria-controls="sections-other" aria-expanded="false">Other</a></li>
-                </ul>
-              </li>
-            </ul>
-
-            <div class="tab-content col-md-9">
-              <div role="tabpanel" class="tab-pane active" id="effectiveness">
-                <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <!--TIFF: this h2 should have class="green" if over 50%, "red" if under-->
-                        <h2 class="green">99% <i class="glyphicon glyphicon-thumbs-up gray"></i></h2>
-                    </div>
-                    <div class="col-xs-9">
-                        <br/>
-                        <h4>How effective is this lesson?</h4>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <!--TIFF: this h2 should have class="green" if over 50%, "red" if under-->
-                        <h2 class="green">75% <i class="glyphicon glyphicon-thumbs-up gray"></i></h2>
-                    </div>
-                    <div class="col-xs-9">
-                        <br/>
-                        <p>How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school?</p>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <!--TIFF: this h2 should have class="green" if over 50%, "red" if under-->
-                        <h2 class="red">42% <i class="glyphicon glyphicon-thumbs-up gray"></i></h2>
-                    </div>
-                    <div class="col-xs-9">
-                        <br/>
-                        <p>How effectively does this lesson support inquiry, student-led research, and/or scientific practices?</p>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <!--TIFF: this h2 should have class="green" if over 50%, "red" if under-->
-                        <h2 class="green">87% <i class="glyphicon glyphicon-thumbs-up gray"></i></h2>
-                    </div>
-                    <div class="col-xs-9">
-                        <br/>
-                        <p>How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS?</p>
-                    </div>
-                </div>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="what">
-                <h4 class="blue">Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson.</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="why">
-                <h4 class="blue">Why did you teach this lesson when you did? Was it part of your regular scheduled curriculum, one-off, or prep for the field?</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="will">
-                <h4 class="blue">Will you teach some version of this lesson in the future? If so, what will you repeat, what will you do differently, and why? If not, why not?</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-summary">
-                <h4 class="blue">Lesson Summary</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-objectives">
-                <h4 class="blue">Lesson Objectives</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-materials">
-                <h4 class="blue">Materials and Resources</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-preparation">
-                <h4 class="blue">Preparation</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-background">
-                <h4 class="blue">Background</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-plan">
-                <h4 class="blue">Instruction Plan</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-standards">
-                <h4 class="blue">Standards</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="sections-plan">
-                <h4 class="blue">Other</h4>
-                <ul>
-                  <li><b>Bob Smith, January 5, 2016:</b> I taught it as written, but didn't use the handouts.</li>
-                  <li><b>Mary Smith, January 5, 2016:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sodales aliquam consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</li>
-                  <li><b>Joe Smith, January 5, 2016:</b> Suspendisse id cursus elit. Nunc id ligula vel justo efficitur placerat sed quis dui. In eleifend finibus elit, sed lacinia nulla finibus a.</li>
-                <ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
       </div>
     </div>
   </div>

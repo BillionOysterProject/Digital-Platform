@@ -69,7 +69,8 @@ module.exports = function (app) {
     .get(lessons.listFeedbackForLesson);
 
   app.route('/api/lessons/:lessonId/feedback').all(lessonsPolicy.isAllowed)
-    .post(lessons.lessonFeedback);
+    .post(lessons.lessonFeedback)
+    .get(lessons.feedbackForLesson);
 
   // Single lesson routes
   app.route('/api/lessons/:lessonId').all(lessonsPolicy.isAllowed)

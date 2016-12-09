@@ -630,6 +630,94 @@ exports.listFeedbackForLesson = function(req, res) {
   });
 };
 
+exports.feedbackForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonFeedback.aggregate([
+    { $match: { lesson: lesson._id } },
+    { $group: {
+      _id: null,
+      lessonEffective: { $avg: '$lessonEffective' },
+      lessonAlignWithCurriculumn: { $avg: '$lessonAlignWithCurriculumn' },
+      lessonSupportScientificPractice: { $avg: '$lessonSupportScientificPractice' },
+      lessonPreparesStudents: { $avg: '$lessonPreparesStudents' }
+    } }
+  ], function(err, result) {
+    if (err) {
+      res.status(400).send({
+        message: 'Could not retrieve averages'
+      });
+    } else {
+      LessonFeedback.find({ lesson: lesson._id }).populate('user', 'displayName').exec(function(err1, feedbackList) {
+        if (err1) {
+          res.status(400).send({
+            message: 'Could not retrieve feedback'
+          });
+        } else {
+          //Get array of feedback
+          var howLessonTaughtFeedback = [];
+          var whyLessonTaughtNowFeedback = [];
+          var willTeachLessonAgainFeedback = [];
+          var lessonSummaryFeedback = [];
+          var lessonObjectivesFeedback = [];
+          var materialsResourcesFeedback = [];
+          var preparationFeedback = [];
+          var backgroundFeedback = [];
+          var instructionPlanFeedback = [];
+          var standardsFeedback = [];
+          var otherFeedback = [];
+          for (var i = 0; i < feedbackList.length; i++) {
+            var feedback = feedbackList[i];
+            var author = feedback.user.displayName;
+            var date = moment(feedback.created).format('MMMM D, YYYY');
+
+            if (feedback.howLessonTaught) howLessonTaughtFeedback.push({ author: author, date: date,
+              feedback: feedback.howLessonTaught });
+            if (feedback.whyLessonTaughtNow) whyLessonTaughtNowFeedback.push({ author: author, date: date,
+              feedback: feedback.whyLessonTaughtNow });
+            if (feedback.willTeachLessonAgain) willTeachLessonAgainFeedback.push({ author: author, date: date,
+              feedback: feedback.willTeachLessonAgain });
+            if (feedback.additionalFeedback.lessonSummary) lessonSummaryFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.lessonSummary });
+            if (feedback.additionalFeedback.lessonObjectives) lessonObjectivesFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.lessonObjectives });
+            if (feedback.additionalFeedback.materialsResources) materialsResourcesFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.materialsResources });
+            if (feedback.additionalFeedback.preparation) preparationFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.preparation });
+            if (feedback.additionalFeedback.background) backgroundFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.background });
+            if (feedback.additionalFeedback.instructionPlan) instructionPlanFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.instructionPlan });
+            if (feedback.additionalFeedback.standards) standardsFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.standards });
+            if (feedback.additionalFeedback.other) otherFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.other });
+          }
+
+          res.json({
+            lessonEffectivePer: (result[0]) ? Math.round((result[0].lessonEffective/5) * 100) : 0,
+            lessonAlignWithCurriculumnPer: (result[0]) ? Math.round((result[0].lessonAlignWithCurriculumn/5) * 100) : 0,
+            lessonSupportScientificPracticePer: (result[0]) ? Math.round((result[0].lessonSupportScientificPractice/5) * 100) : 0,
+            lessonPreparesStudentsPer: (result[0]) ? Math.round((result[0].lessonPreparesStudents/5) * 100) : 0,
+            howLessonTaughtFeedback: howLessonTaughtFeedback,
+            whyLessonTaughtNowFeedback: whyLessonTaughtNowFeedback,
+            willTeachLessonAgainFeedback: willTeachLessonAgainFeedback,
+            lessonSummaryFeedback: lessonSummaryFeedback,
+            lessonObjectivesFeedback: lessonObjectivesFeedback,
+            materialsResourcesFeedback: materialsResourcesFeedback,
+            preparationFeedback: preparationFeedback,
+            backgroundFeedback: backgroundFeedback,
+            instructionPlanFeedback: instructionPlanFeedback,
+            standardsFeedback: standardsFeedback,
+            otherFeedback: otherFeedback
+          });
+        }
+      });
+    }
+  });
+};
+
 /**
  * Delete a lesson
  */

@@ -154,7 +154,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/lessons/:lessonId/feedback',
-      permissions: ['post']
+      permissions: ['post', 'get']
     }, {
       resources: '/api/lessons/favorites',
       permissions: ['get']

@@ -676,6 +676,14 @@
       angular.element('#modal-lesson-feedback').modal('hide');
     };
 
+    vm.openLessonFeedbackView = function() {
+      angular.element('#modal-lesson-view-feedback').modal('show');
+    };
+
+    vm.closeLessonFeedbackView = function() {
+      angular.element('#modal-lesson-view-feedback').modal('hide');
+    };
+
     vm.openLessonLog = function() {
       angular.element('#modal-lesson-log').modal('show');
     };
@@ -683,5 +691,6 @@
     vm.closeLessonLog = function() {
       angular.element('#modal-lesson-log').modal('hide');
     };
+
   }
 })();
