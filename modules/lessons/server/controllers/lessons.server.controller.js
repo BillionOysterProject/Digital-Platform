@@ -696,10 +696,10 @@ exports.feedbackForLesson = function(req, res) {
           }
 
           res.json({
-            lessonEffectivePer: (result[0]) ? Math.round((result[0].lessonEffective/5) * 100) : 0,
-            lessonAlignWithCurriculumnPer: (result[0]) ? Math.round((result[0].lessonAlignWithCurriculumn/5) * 100) : 0,
-            lessonSupportScientificPracticePer: (result[0]) ? Math.round((result[0].lessonSupportScientificPractice/5) * 100) : 0,
-            lessonPreparesStudentsPer: (result[0]) ? Math.round((result[0].lessonPreparesStudents/5) * 100) : 0,
+            lessonEffectiveAvg: (result[0]) ? result[0].lessonEffective : 0,
+            lessonAlignWithCurriculumnAvg: (result[0]) ? result[0].lessonAlignWithCurriculumn : 0,
+            lessonSupportScientificPracticeAvg: (result[0]) ? result[0].lessonSupportScientificPractice : 0,
+            lessonPreparesStudentsAvg: (result[0]) ? result[0].lessonPreparesStudents : 0,
             howLessonTaughtFeedback: howLessonTaughtFeedback,
             whyLessonTaughtNowFeedback: whyLessonTaughtNowFeedback,
             willTeachLessonAgainFeedback: willTeachLessonAgainFeedback,
