@@ -32,7 +32,7 @@
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? <b><%= LessonAlignWithCurriculumn %></b></p>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson support inquiry, student-led research, and/or scientific practices? <b><%= LessonSupportScientificPractice %></b></p>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS? <b><%= LessonPreparesStudents %></b></p>
-        
+
         <hr/>
 
         <% if(HowLessonTaught !== '') { %>
@@ -46,7 +46,8 @@
         <% } %>
 
         <hr/>
-        
+
+        <% if(LessonSummary !== '') { %>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Lesson Summary<br> <b><%= LessonSummary %></b></p>
         <% } %>
         <% if(LessonObjectives !== '') { %>

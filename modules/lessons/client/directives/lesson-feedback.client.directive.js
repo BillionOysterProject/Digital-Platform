@@ -15,11 +15,13 @@
         controller: function($scope, $http) {
           $scope.sent = false;
           $scope.feedback = {};
+
           $scope.send = function(isValid) {
             if (!isValid) {
               $scope.$broadcast('show-errors-check-validity', 'form.lessonFeedbackForm');
               return false;
             }
+            console.log('lessonEffective', $scope.feedback.lessonEffective);
 
             $http.post('/api/lessons/' + $scope.lesson._id + '/feedback', {
               lesson: $scope.lesson,
@@ -29,6 +31,7 @@
               $scope.sent = true;
             })
             .error(function(data, status, headers, config) {
+              console.log('data', data);
               $scope.error = data.message;
             });
           };

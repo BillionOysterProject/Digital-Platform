@@ -6,59 +6,32 @@
         <h4 class="modal-title">Send feedback to the author</h4>
         <p>Thanks for contributing input! All feedback is appreciated.</p>
       </div>
-      
+
       <form name="form.lessonFeedbackForm" ng-submit="send(form.lessonFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
           <h4 class="blue">On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following.</h4>
           <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="lessonEffective" class="control-label required">How effective is this lesson? *</label>
-                    <select class="form-control" name="lessonEffective" id="lessonEffective" ng-model="feedback.lessonEffective" required>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                    <label for="lessonEffective" class="control-label required">How effective is this lesson? *</label><br>
+                    <raty-fa id="starLessonEffective" score="feedback.lessonEffective" number="5"></raty-fa>
                 </div>
                 <div class="form-group">
                     <label for="lessonAlignWithCurriculumn" class="control-label required">How effectively does this lesson align with NY State
-                      core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label>
-                    <select class="form-control" name="lessonAlignWithCurriculumn" id="lessonAlignWithCurriculumn"
-                      ng-model="feedback.lessonAlignWithCurriculumn" required>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                      core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label><br>
+                    <raty-fa id="starLessonAlignWithCurriculumn" score="feedback.lessonAlignWithCurriculumn" number="5"></raty-fa>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="lessonSupportScientificPractice" class="control-label required">How effectively does this lesson support inquiry,
-                      student-led research, and/or scientific practices? *</label>
-                    <select class="form-control" name="lessonSupportScientificPractice" id="lessonSupportScientificPractice"
-                      ng-model="feedback.lessonSupportScientificPractice" required>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                      student-led research, and/or scientific practices? *</label><br>
+                    <raty-fa id="starLessonSupportScientificPractice" score="feedback.lessonSupportScientificPractice" number="5"></raty-fa>
                 </div>
                 <div class="form-group">
                     <label for="lessonPreparesStudents" class="control-label required">How effectively does this lesson prepare students for
-                      environmental restoration, BOP field science, or the ORS? *</label>
-                    <select class="form-control" name="lessonPreparesStudents" id="lessonPreparesStudents"
-                      ng-model="feedback.lessonPreparesStudents" required>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                      environmental restoration, BOP field science, or the ORS? *</label><br>
+                    <raty-fa id="starLessonPreparesStudents" score="feedback.lessonPreparesStudents" number="5"></raty-fa>
                 </div>
             </div>
         </div>

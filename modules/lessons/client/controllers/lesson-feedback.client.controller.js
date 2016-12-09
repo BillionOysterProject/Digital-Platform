@@ -12,7 +12,6 @@
       lessonId: $scope.lesson._id
     }, function(data) {
       $scope.feedback = data;
-      console.log('feedback', $scope.feedback);
     });
   }
 })();
