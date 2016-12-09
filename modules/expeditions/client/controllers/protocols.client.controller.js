@@ -540,6 +540,11 @@
                           $scope.finishedSaving = 100;
                           vm.saving = false;
                           angular.element('#modal-save-draft-progress-bar').modal('hide');
+                          $scope.form.mobileTrapForm.$setPristine();
+                          $scope.form.oysterMeasurementForm.$setPristine();
+                          $scope.form.settlementTilesForm.$setPristine();
+                          $scope.form.siteConditionForm.$setPristine();
+                          $scope.form.waterQualityForm.$setPristine();
                           if (callback) callback();
                         });
                       }, 1000);
@@ -816,15 +821,8 @@
     //Set up page change listeners to warn the user when they are leaving protocols editing
     ////
 
+    var leavingMessage = 'Are you sure you want to leave protocol editing? Any unsaved data will be lost.';
     var areProtocolFormsDirty = function() {
-      //TIFF: mostly this works fine... however, if you start on the protocols editing page
-      //then go to some other page of the app, then use the "back" button to go back to the
-      //protocols editing page, then make a change somewhere and hit "refresh"
-      //I am expecting the window onbeforeunload listener to get called (which it does)
-      //but by the time this method is called from within there, the $scope.form.somethingForm
-      //are all undefined. I am a little stuck on what is going on in that scenario.
-      //I think it has to do with the timing of the listener firing (the page has already started to unload?)
-      // and/or I could be adding or removing the window listener incorrectly?
       return ($scope.form.mobileTrapForm && $scope.form.mobileTrapForm.$dirty) ||
         ($scope.form.oysterMeasurementForm && $scope.form.oysterMeasurementForm.$dirty) ||
         ($scope.form.settlementTilesForm && $scope.form.settlementTilesForm.$dirty) ||
@@ -832,12 +830,30 @@
         ($scope.form.waterQualityForm && $scope.form.waterQualityForm.$dirty);
     };
 
+    var setProtocolFormsPristine = function() {
+      if($scope.form.mobileTrapForm) {
+        $scope.form.mobileTrapForm.$setPristine();
+      }
+      if($scope.form.oysterMeasurementForm) {
+        $scope.form.oysterMeasurementForm.$setPristine();
+      }
+      if($scope.form.settlementTilesForm) {
+        $scope.form.settlementTilesForm.$setPristine();
+      }
+      if($scope.form.siteConditionForm) {
+        $scope.form.siteConditionForm.$setPristine();
+      }
+      if($scope.form.waterQualityForm) {
+        $scope.form.waterQualityForm.$setPristine();
+      }
+    };
+
     var cleanupPageChangeListeners = function() {
       if(stopListeningForStateChangeStart) {
         stopListeningForStateChangeStart();
       }
       if(window.onbeforeunload) {
-        delete window.onbeforeunload;
+        window.onbeforeunload = null;
       }
     };
 
@@ -848,7 +864,7 @@
       }
 
       event.preventDefault();
-      var wantsToLeave = confirm('Are you sure you want to leave protocol editing? Any unsaved data will be lost.');
+      var wantsToLeave = confirm(leavingMessage);
       if(wantsToLeave) {
         cleanupPageChangeListeners();
         $state.go(toState, toParams);
@@ -856,16 +872,15 @@
     };
 
     var handleWindowUnload = function(event) {
-      console.log("CHECKING WINDOW UNLOAD");
       if(!areProtocolFormsDirty()) {
         cleanupPageChangeListeners();
-        return;
+        return undefined;
       }
       var e = event || window.event;
       if (e) {
-        e.returnValue = 'Any string';
+        e.returnValue = leavingMessage;
       }
-      return 'Any string';
+      return leavingMessage;
     };
 
     //clean up our listeners when the controller exits
@@ -873,7 +888,9 @@
     //from the window.onbeforeunload event default dialog since
     //i don't think i can get the dialog's return value (right?)
     $scope.$on('$destroy', function() {
-      cleanupPageChangeListeners();
+      if(!$state.is('expeditions.protocols')) {
+        cleanupPageChangeListeners();
+      }
     });
 
     //catch state changes like the user clicks to another area of the application
