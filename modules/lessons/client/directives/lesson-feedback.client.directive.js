@@ -21,7 +21,6 @@
               $scope.$broadcast('show-errors-check-validity', 'form.lessonFeedbackForm');
               return false;
             }
-            console.log('lessonEffective', $scope.feedback.lessonEffective);
 
             $http.post('/api/lessons/' + $scope.lesson._id + '/feedback', {
               lesson: $scope.lesson,
