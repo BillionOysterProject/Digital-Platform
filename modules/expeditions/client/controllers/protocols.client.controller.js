@@ -839,6 +839,16 @@
       }
     };
 
+    //clean up our listeners when the controller exits
+    //doing this here in the event they selected "leave page"
+    //from the window.onbeforeunload event default dialog since
+    //i don't think i can get the dialog's return value (right?)
+    $scope.$on('$destroy', function() {
+      if(!$state.is('expeditions.protocols')) {
+        cleanupPageChangeListeners();
+      }
+    });
+    
     var handleStateChangeStartEvent = function(event, toState, toParams, fromState, fromParams) {
       if(!areProtocolFormsDirty()) {
         cleanupPageChangeListeners();
@@ -864,16 +874,6 @@
       }
       return leavingMessage;
     };
-
-    //clean up our listeners when the controller exits
-    //doing this here in the event they selected "leave page"
-    //from the window.onbeforeunload event default dialog since
-    //i don't think i can get the dialog's return value (right?)
-    $scope.$on('$destroy', function() {
-      if(!$state.is('expeditions.protocols')) {
-        cleanupPageChangeListeners();
-      }
-    });
 
     //catch state changes like the user clicks to another area of the application
     var listenForStateChanges = function() {
