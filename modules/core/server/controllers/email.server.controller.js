@@ -144,19 +144,6 @@ exports.sendHelpQuestion = function(req, res) {
   exports.sendFeedback(defaultFrom, email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);
 };
 
-exports.sendLessonFeedback = function(req, res) {
-  var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-  var data = {
-    FirstName: req.body.lesson.user.firstName,
-    LessonFeedbackName: req.user.displayName,
-    LessonName: req.body.lesson.title,
-    LessonFeedbackNote: req.body.message,
-    LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-  };
-  exports.sendFeedback(req.body.lesson.user.email, req.user.email, subject, data, 'lesson_feedback', req, res);
-};
-
 exports.sendUnitFeedback = function(req, res) {
   var subject = 'Feedback from ' + req.user.displayName + ' about your unit ' + req.body.unit.title;
   var data = {

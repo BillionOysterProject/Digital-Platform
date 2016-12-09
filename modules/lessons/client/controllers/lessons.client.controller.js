@@ -9,17 +9,18 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService', 'LessonsService', 'lodash'];
+  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService, LessonsService, lodash) {
+    SubjectAreasService, LessonsService, LessonTrackerStatsService, lodash) {
     var vm = this;
 
     vm.lesson = lesson;
     vm.authentication = Authentication;
+    vm.user = Authentication.user;
     vm.error = [];
     vm.form = {};
     vm.showResourceModal = false;
@@ -175,6 +176,12 @@
       published: true
     }, function(data) {
       vm.units = data;
+    });
+
+    LessonTrackerStatsService.get({
+      lessonId: vm.lesson._id
+    }, function(data) {
+      vm.lessonStats = data;
     });
 
     if (vm.lesson.user && vm.lesson.user.team) {
@@ -668,5 +675,22 @@
     vm.closeLessonFeedback = function() {
       angular.element('#modal-lesson-feedback').modal('hide');
     };
+
+    vm.openLessonFeedbackView = function() {
+      angular.element('#modal-lesson-view-feedback').modal('show');
+    };
+
+    vm.closeLessonFeedbackView = function() {
+      angular.element('#modal-lesson-view-feedback').modal('hide');
+    };
+
+    vm.openLessonLog = function() {
+      angular.element('#modal-lesson-log').modal('show');
+    };
+
+    vm.closeLessonLog = function() {
+      angular.element('#modal-lesson-log').modal('hide');
+    };
+
   }
 })();
