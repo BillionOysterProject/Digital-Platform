@@ -830,24 +830,6 @@
         ($scope.form.waterQualityForm && $scope.form.waterQualityForm.$dirty);
     };
 
-    var setProtocolFormsPristine = function() {
-      if($scope.form.mobileTrapForm) {
-        $scope.form.mobileTrapForm.$setPristine();
-      }
-      if($scope.form.oysterMeasurementForm) {
-        $scope.form.oysterMeasurementForm.$setPristine();
-      }
-      if($scope.form.settlementTilesForm) {
-        $scope.form.settlementTilesForm.$setPristine();
-      }
-      if($scope.form.siteConditionForm) {
-        $scope.form.siteConditionForm.$setPristine();
-      }
-      if($scope.form.waterQualityForm) {
-        $scope.form.waterQualityForm.$setPristine();
-      }
-    };
-
     var cleanupPageChangeListeners = function() {
       if(stopListeningForStateChangeStart) {
         stopListeningForStateChangeStart();
