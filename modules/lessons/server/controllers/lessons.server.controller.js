@@ -503,8 +503,11 @@ exports.trackedStatsForLesson = function(req, res) {
       taughtCount: { $sum: 1 },
       studentCount: { $sum: '$totalNumberOfStudents' },
       avgStudentsPerClass: { $avg: '$totalNumberOfStudents' },
+      studentsPerClassCount: { $sum: '$totalNumberOfStudents' },
       avgClassesOrSections: { $avg: '$totalNumberOfClassesOrSections' },
-      avgPeriodsOrSessions: { $avg: '$classPeriodsOrSessionsNeededToComplete' }
+      classesOrSectionsCount: { $sum: '$totalNumberOfClassesOrSections' },
+      avgPeriodsOrSessions: { $avg: '$classPeriodsOrSessionsNeededToComplete' },
+      periodsOrSessionsCount: { $sum: '$classPeriodsOrSessionsNeededToComplete' }
     } }
   ], function(err1, result) {
     if (err1) {
@@ -542,8 +545,11 @@ exports.trackedStatsForLesson = function(req, res) {
                         teamLeadCount: (teamLeadCount) ? teamLeadCount : 0,
                         studentCount: (result[0]) ? result[0].studentCount : 0,
                         avgStudentsPerClass: (result[0]) ? result[0].avgStudentsPerClass : 0,
+                        studentsPerClassCount: (result[0]) ? result[0].studentsPerClassCount : 0,
                         avgClassesOrSections: (result[0]) ? result[0].avgClassesOrSections : 0,
+                        classesOrSectionsCount: (result[0]) ? result[0].classesOrSectionsCount : 0,
                         avgPeriodsOrSessions: (result[0]) ? result[0].avgPeriodsOrSessions : 0,
+                        periodsOrSessionsCount: (result[0]) ? result[0].periodsOrSessionsCount : 0,
                         subjects: subjects,
                         grades: grades
                       });
