@@ -48,6 +48,21 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/favorites',
       permissions: '*'
     }, {
@@ -90,6 +105,21 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/favorites',
       permissions: '*'
     }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: '*'
     }]
@@ -110,6 +140,21 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: ['post']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
+      permissions: ['post', 'get']
     }, {
       resources: '/api/lessons/favorites',
       permissions: ['get']

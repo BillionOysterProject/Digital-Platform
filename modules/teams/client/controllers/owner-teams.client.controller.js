@@ -93,7 +93,7 @@
 
     vm.openFormTeamMember = function(teamMember) {
       vm.teamMember = (teamMember) ? new TeamMembersService(teamMember) : new TeamMembersService();
-      vm.teamMember.oldTeamId = (teamMember) ? angular.copy(teamMember.team._id) : '';
+      vm.teamMember.oldTeamId = (teamMember && teamMember.team) ? angular.copy(teamMember.team._id) : '';
 
       angular.element('#modal-team-member-editadd').modal('show');
     };
