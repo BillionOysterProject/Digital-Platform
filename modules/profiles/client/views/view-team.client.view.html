@@ -47,8 +47,8 @@
     </section>
 </section>
 
-        
-        
+
+
 <!--TIFF: Team members below should only be visible to people within the team, the team leads of the current team, and admin (hide for other team leads/members) -->
 <section class="content">
     <section class="container-fluid">
@@ -61,7 +61,7 @@
                     <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
                 </div>
             </div>
-            
+
             <!--TIFF: only show buttons if team lead -->
             <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-edit">Edit team profile</a>
             <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-invite">Invite leads</a>
@@ -71,15 +71,15 @@
             <a class="btn btn-danger">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
         </nav>
         <hr/>
-        
+
         <div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
             No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
         </div>
         <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
-            You have <b>{{vm.teamRequests.length}}</b> team member requests. 
+            You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div><!--TIFF: Open modal from Settings -->
-        
+
         <div class="row" isotope-container="isotope-container">
             <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
@@ -196,7 +196,7 @@
                     </div>
                 </div>
                 <hr/>
-                
+
                 <nav class="nav nav-default text-right"><!-- TIFF: Show if admin -->
                     <h6 class="pull-left">Pending&nbsp;&nbsp;</h6><!-- ng-show="{{member.pending === true}}" -->
                     <a class="btn btn-primary pull-left" ng-click="vm.sendReminder(member, member.team.name)" ng-hide="vm.reminderSent && member._id === vm.memberReminderId"><i class="fa fa-envelope"></i> Send reminder</a><!-- ng-show="{{member.pending === true}}" -->

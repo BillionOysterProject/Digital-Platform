@@ -17,8 +17,8 @@
       .state('profiles.main', {
         url: '',
         templateUrl: 'modules/profiles/client/views/profiles.client.view.html',
-        // controller: 'EventsListController',
-        // controllerAs: 'vm',
+        controller: 'ProfileController',
+        controllerAs: 'vm',
         // data: {
         //   pageTitle: 'Events List'
         // }

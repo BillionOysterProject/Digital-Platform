@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-md-3 col-sm-4 shaded">
                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                <h3 class="text-center"><a href="#" data-toggle="modal" data-target="#modal-profile-user">Sally Smith</a></h3>
-                <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
-                <div class="text-center"><!--TIFF: show if team lead -->
-                    <a class="btn btn-success" data-toggle="modal" data-target="#modal-team-edit"><i class="fa fa-plus"></i> Create a team</a>
+                <h3 class="text-center"><a href="#" data-toggle="modal" data-target="#modal-profile-user">{{vm.user.displayName}}</a></h3>
+                <p class="text-muted text-center"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
+                <div class="text-center" ng-show="vm.isTeamLead"><!--TIFF: show if team lead -->
+                    <a class="btn btn-success" ng-click="vm.openTeamFormModal()"><i class="fa fa-plus"></i> Create a team</a>
                 </div>
                 <hr/>
-                <h6>Team</h6><!--TIFF: If more than one, say "Teams"-->
+                <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6><!--TIFF: If more than one, say "Teams"-->
                 <h4><a>Team Oyster</a><br/><!--TIFF: Only show <small> div if user profile is not the team lead of the team listed --><small><a data-toggle="modal" data-target="#modal-profile-user">Mrs. Sandra Jones</a></small></h4>
                 <hr/>
                 <h6>Organization</h6>
@@ -26,23 +26,23 @@
                 <div class="alert alert-info text-center">
                     You don't have any teams yet! Why don't you <a href="#" class="btn btn-sm btn-default">create one</a>?
                 </div>-->
-                
-                <!--TIFF: Show if any team member requests from any of the team lead's teams-->   
+
+                <!--TIFF: Show if any team member requests from any of the team lead's teams-->
                 <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
-                    You have <b>{{vm.teamRequests.length}}</b> team member requests. 
+                    You have <b>{{vm.teamRequests.length}}</b> team member requests.
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
                     <!--TIFF: Open modal from Settings -->
                 </div>
-            
+
                 <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
-                    You have <b>{{leadRequests.length}}</b> new team lead requests. 
+                    You have <b>{{leadRequests.length}}</b> new team lead requests.
                     <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a>
                     <!--TIFF: Open modal from Settings -->
                 </div>
-                
-                
+
+
                 <!--TIFF: Repeat this div for each Org the user is an Org Lead of (admin accounts shouldn't list all 200 though!)-->
-                <div>  
+                <div>
                     <div class="row">
                         <div class="col-lg-3 col-md-6">
                             <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
@@ -66,7 +66,7 @@
                             </p>
                         </div>
                     </div>
-                    <nav class="nav nav-default text-right">                        
+                    <nav class="nav nav-default text-right">
                         <!--TIFF: only show buttons if team lead -->
                         <a class="btn btn-default">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
                         <a class="btn btn-default" data-toggle="modal" data-target="#modal-org-lead-invite">Invite leads</a>
@@ -75,8 +75,8 @@
                     </nav>
                     <hr/>
                 </div>
-                
-                
+
+
                 <!--TIFF: Repeat this div for each Team the user is a Team Lead or Team Member of -->
                 <div>
                     <div class="row">
@@ -134,7 +134,7 @@
                     </nav>
                     <hr/>
                 </div>
-                
+
                 <!--TIFF: Team members below should only be visible if user only has ONE team and is NOT an Org Lead -->
                 <div class="row" isotope-container="isotope-container">
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
