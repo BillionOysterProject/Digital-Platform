@@ -4,6 +4,11 @@
 var config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: ['modules/*/tests/e2e/*.js'],
+  // capabilities: {
+  //   browserName: 'phantomjs',
+  //   version: '',
+  //   platform: 'ANY'
+  // },
   jasmineNodeOpts: {
     onComplete: null,
     isVerbose: true,

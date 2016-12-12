@@ -3,7 +3,7 @@
         <section class="container-fluid">
             <div class="row">
                 <nav class="navbar">
-                    <a href="#" ui-sref="expeditions.view({ expeditionId: vm.expedition._id })"><h6 class="navbar-text blue">{{vm.expedition.name}}</h6></a>
+                    <a href="#" ui-sref="expeditions.view({ expeditionId: vm.expedition._id })"><h6 class="navbar-text blue" id="expedition-protocol-form">{{vm.expedition.name}}</h6></a>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.team.teamLead.displayName}}</h6>
                     <h6 class="navbar-text">{{vm.getExpeditionDate(vm.expedition.monitoringStartDate)}}</h6>
                     <h6 class="navbar-text"><i class="glyphicon glyphicon-map-marker"></i> {{vm.expedition.station.name}}</h6>
@@ -20,7 +20,7 @@
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
-                        <button class="btn btn-danger navbar-btn" ng-click="vm.return()"
+                        <button class="btn btn-danger navbar-btn" ng-click="vm.openReturnModal()"
                         ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Return</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
@@ -157,3 +157,6 @@
 
 <!-- modals -->
 <remove-protocol-tab-modal changes="vm.disableProtocolChanges"></remove-protocol-tab-modal>
+<save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
+<return-expedition-modal save-function="vm.submitReturnModal" cancel-function="vm.cancelReturnModal">
+  </return-expedition-modal>

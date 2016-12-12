@@ -9,7 +9,7 @@
         templateUrl: 'modules/restoration-stations/client/views/form-restoration-station.client.view.html',
         scope: {
           station: '=',
-          teams: '=',
+          mapPoints: '=',
           saveFunction: '=',
           removeFunction: '=',
           cancelFunction: '='

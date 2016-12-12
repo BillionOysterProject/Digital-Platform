@@ -3,16 +3,18 @@
 
   angular
     .module('metrics')
-    .run(MenuConfig);
+    .run(menuConfig);
 
-  MenuConfig.$inject = ['Menus'];
+  menuConfig.$inject = ['Menus'];
 
-  function MenuConfig(Menus) {
+  function menuConfig(Menus) {
 
-    //Menus.addSubMenuItem('account', 'settings', {
+    //Menus.addMenuItem('topbar', {
     //  title: 'Metrics',
     //  state: 'metrics.dashboard',
-    //  roles: ['admin']
+    //  roles: ['admin'],
+    //  icon: 'glyphicon glyphicon-equalizer',
+    //  position: 5   
     //});
 
   }

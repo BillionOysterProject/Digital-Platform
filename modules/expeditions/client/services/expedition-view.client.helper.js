@@ -11,7 +11,7 @@
   'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
   'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
   'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService', 'AmmoniaUnitsService', 'NitrateUnitsService',
-  'lodash', 'moment'];
+  'Authentication', 'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, MobileOrganismsService, SessileOrganismsService,
@@ -19,7 +19,10 @@
     DissolvedOxygenMethodsService, SalinityMethodsService, PhMethodsService, TurbidityMethodsService,
     AmmoniaMethodsService, NitrateMethodsService, WaterTemperatureUnitsService, DissolvedOxygenUnitsService,
     SalinityUnitsService, PhUnitsService, TurbidityUnitsService, AmmoniaUnitsService, NitrateUnitsService,
-    lodash, moment) {
+    Authentication, lodash, moment) {
+
+    var user = Authentication.user;
+
     var weatherConditions = WeatherConditionsService.query();
     var waterColors = WaterColorsService.query();
     var waterFlows = WaterFlowService.query();
@@ -41,13 +44,86 @@
 
     var waterTemperatureUnits = WaterTemperatureUnitsService.query();
     var dissolvedOxygenUnits = DissolvedOxygenUnitsService.query();
-    console.log('dissolvedOxygenUnits', dissolvedOxygenUnits);
     var salinityUnits = SalinityUnitsService.query();
     var pHUnits = PhUnitsService.query();
     var turbidityUnits = TurbidityUnitsService.query();
     var ammoniaUnits = AmmoniaUnitsService.query();
     var nitratesUnits = NitrateUnitsService.query();
 
+    var checkRole = function(role) {
+      var teamLeadIndex = lodash.findIndex(user.roles, function(o) {
+        return o === role;
+      });
+      return (teamLeadIndex > -1) ? true : false;
+    };
+
+    var checkWrite = function(teamList) {
+      if (checkRole('team lead') || checkRole('admin')) {
+        return true;
+      } else {
+        var teamListIndex = lodash.findIndex(teamList, function(m) {
+          return m.username === user.username;
+        });
+        return (teamListIndex > -1) ? true : false;
+      }
+    };
+
+    var checkStatusPending = function(expedition) {
+      var protocolsComplete = true;
+      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
+      return expedition.status === 'pending' ||
+        (protocolsComplete && expedition.status !== 'published' && expedition.status !== 'incomplete' && expedition.status !== 'returned');
+    };
+
+    var checkStatusIncomplete = function(expedition) {
+      var protocolsComplete = true;
+      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
+      return expedition.status === 'incomplete' && !protocolsComplete;
+    };
+
+    var checkStatusReturned = function(expedition) {
+      var protocolsComplete = true;
+      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'returned') protocolsComplete = false;
+      return expedition.status === 'returned' && !protocolsComplete;
+    };
+
+    var displayAssignedProtocols = function(expedition) {
+      var assigned = [];
+      if (checkWrite(expedition.teamLists.siteCondition)) assigned.push('1');
+      if (checkWrite(expedition.teamLists.oysterMeasurement)) assigned.push('2');
+      if (checkWrite(expedition.teamLists.mobileTrap)) assigned.push('3');
+      if (checkWrite(expedition.teamLists.settlementTiles)) assigned.push('4');
+      if (checkWrite(expedition.teamLists.waterQuality)) assigned.push('5');
+      var formatted = (assigned.length === 1) ? 'Protocol ' : 'Protocols ';
+      for (var i = 0; i < assigned.length; i++) {
+        formatted += assigned[i];
+        if (i === assigned.length - 2 && assigned.length > 1) {
+          formatted += ' & ';
+        } else if (i < assigned.length - 1 && assigned.length > 1) {
+          formatted += ', ';
+        }
+      }
+      return formatted;
+    };
+
+    var expeditionLink = function(expedition) {
+      return ((checkRole('team lead') || checkRole('admin')) && (expedition.status === 'incomplete' || expedition.status === 'returned' ||
+        expedition.status === 'unpublished')) ?
+      'expeditions.view({ expeditionId: expedition._id })' :
+      'expeditions.protocols({ expeditionId: expedition._id })';
+    };
 
     return {
       getAllWeatherConditions: function() {
@@ -121,6 +197,17 @@
             return o._id === value;
           });
           return (index > -1) ? sessileOrganisms[index].commonName : '';
+        }
+      },
+      getSessileOrganismPhoto: function(value) {
+        if (!value) {
+          return '';
+        } else {
+          var index = lodash.findIndex(sessileOrganisms, function(o) {
+            return o._id === value;
+          });
+          return (index > -1 && sessileOrganisms[index] && sessileOrganisms[index].image) ?
+            sessileOrganisms[index].image.path : '';
         }
       },
       getAllWaterTemperatureMethods: function() {
@@ -253,7 +340,11 @@
           moment(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
       },
       getDate: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('MMMM D, YYYY');
+        if(date) {
+          return moment(date).format('MMMM D, YYYY');
+        } else {
+          return '';
+        }
       },
       getShortDate: function(date) {
         return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('M/D/YY');
@@ -263,7 +354,17 @@
       },
       getDateTime: function(date) {
         return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('MMM D, YYYY, h:mma');
-      }
+      },
+      isUpcoming: function(expedition) {
+        return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
+      },
+      checkRole: checkRole,
+      checkWrite: checkWrite,
+      checkStatusPending: checkStatusPending,
+      checkStatusIncomplete: checkStatusIncomplete,
+      checkStatusReturned: checkStatusReturned,
+      displayAssignedProtocols: displayAssignedProtocols,
+      expeditionLink: expeditionLink
     };
   }
 })();

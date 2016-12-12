@@ -4,7 +4,9 @@
  * Module dependencies
  */
 var acl = require('acl'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backed
 acl = new acl(new acl.memoryBackend());
@@ -44,6 +46,21 @@ exports.invokeRolesPolicies = function () {
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/download',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
       permissions: ['*']
     }, {
       resources: '/api/lessons/favorites',
@@ -88,6 +105,21 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/favorites',
       permissions: '*'
     }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
+      permissions: '*'
+    }, {
       resources: '/api/lessons/:lessonId',
       permissions: '*'
     }]
@@ -108,6 +140,21 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/tracker-stats',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/track',
+      permissions: ['post']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/:lessonId/feedback',
+      permissions: ['post', 'get']
     }, {
       resources: '/api/lessons/favorites',
       permissions: ['get']
@@ -139,9 +186,15 @@ exports.isAllowed = function (req, res, next) {
         // Access granted! Invoke next middleware
         return next();
       } else {
-        return res.status(403).json({
-          message: 'User is not authorized'
-        });
+        if (authHelper.isLoggedIn(roles)) {
+          return res.status(403).json({
+            message: 'User is not authorized'
+          });
+        } else {
+          return res.status(401).json({
+            message: 'User logged out'
+          });
+        }
       }
     }
   });

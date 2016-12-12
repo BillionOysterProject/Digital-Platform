@@ -1,17 +1,5 @@
 order,subject,color
-1,Art,#00BCD4
-0,Algebra,#607D8B
-3,Data Analysis,#9E9E9E
-4,Ecology,#4CAF50
-5,Economics,#795548
-6,Engineering,#FF5722
-7,English Language Arts,#673AB7
-8,Geology and Earth Science,#E91E63
-9,Graphing,#00BCD4
-2,Computer Science,#607D8B
-10,History,#9E9E9E
-11,Limnology,#4CAF50
-12,Marine Biology,#795548
-13,Music,#FF5722
-14,Oceanography,#673AB7
-15,Ratios & Proportions,#E91E63
+0,Math,#FF5722
+1,Social Studies,#673AB7
+2,Science,#E91E63
+3,ELA,#00BCD4

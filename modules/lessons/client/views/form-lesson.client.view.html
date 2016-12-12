@@ -6,7 +6,8 @@
           <div class="page-header">
             <div class="pull-right">
                 <!-- Show saving when saving -->
-                <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                <h6 class="navbar-text green" ng-show="vm.saving">
+                  <i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
 
                 <!-- Show status -->
                 <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
@@ -14,7 +15,7 @@
                 <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
                 <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
             </div>
-            <h1>{{vm.editing ? 'Edit lesson' : 'Create new lesson'}}</h1>
+            <h1 id="lesson-header">{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
           </div>
 
           <!-- Lesson -->
@@ -31,7 +32,7 @@
                     </div>
                   </div>
                   <div class="form-group" show-errors>
-                    <label for="unit" class="control-label">Unit *</label>
+                    <label for="unit" class="control-label">Unit</label>
                     <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit._id"
                     ng-options="unit._id as unit.title for unit in vm.units"></select>
                   </div>
@@ -48,7 +49,7 @@
           </div>
 
           <!-- Lesson Overview -->
-          <h4>Lesson Overview</h4>
+          <h4>Lesson Summary</h4>
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
@@ -56,7 +57,7 @@
                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group" show-errors>
-                        <label for="grade" class="control-label">Grade *</label>
+                        <label for="grade" class="control-label">Grade</label>
                         <select class="form-control" name="grade" id="grade" ng-model="vm.lesson.lessonOverview.grade">
                           <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                           <option>6-8th</option>
@@ -73,7 +74,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group" show-errors>
-                        <label for="classPeriods" class="control-label">Class Periods *</label>
+                        <label for="classPeriods" class="control-label">Class Periods</label>
                         <select class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods">
                           <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
                           <option>1</option>
@@ -90,7 +91,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group" show-errors>
-                        <label for="settings" class="control-label">Setting *</label>
+                        <label for="settings" class="control-label">Setting</label>
                         <select class="form-control" name="settings" id="settings" ng-model="vm.lesson.lessonOverview.setting">
                           <option>Classroom</option>
                           <option>Field</option>
@@ -98,32 +99,22 @@
                       </div>
                     </div>
                   </div>
-                  <!--<div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="protocolConnections" class="control-label">Protocol Connections *</label>
-                        <div aa-select2="vm.protocolConnectionsSelectConfig" name="protocolConnections"
-                        ng-model="vm.lesson.lessonOverview.protocolConnections" class="form-control"></div>
-                      </div>
-                    <!-- TODO: Items entered in this Protocol field should search an external API and autopopulate
-                      Selections should turn into "tags" using select2. Multiple selections should be able to be made.
-                      Similar to https://select2.github.io/examples.html#data-ajax except with multiples --
-                    </div>
-                  </div>-->
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group" show-errors>
-                    <label for="subjectAreas" class="control-label">Subject Area(s) *</label>
-                    <div aa-select2="vm.subjectAreasSelectConfig" name="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas"
+                  <!-- <div class="form-group" show-errors>
+                    <label for="subjectAreas" class="control-label">Subject Area(s)</label>
+                    <div aa-select2="vm.subjectAreasSelectConfig" name="subjectAreas" id="subjectAreas" ng-model="vm.lesson.lessonOverview.subjectAreas"
                     class="form-control"></div>
-                  </div>
+                  </div> -->
+                  <select-tags outer-column="col-md-12" name="subjectAreas" id="subjectAreas"
+                  in-title="Subject Area(s)" ng-model="vm.lesson.lessonOverview.subjectAreas"
+                  label-class="control-label" select-config="vm.subjectAreasSelectConfig"></select-tags>
                 </div>
               </div>
               <div class="row">
-                <!-- Switched to textarea instead of wysiwyg -- <wysiwyg-editor outer-column="col-md-12" name="lessonSummary" in-title="Lesson Summary *" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>-->
                 <div class="form-group col-sm-12" show-errors>
-                    <label for="lessonSummary" class="control-label">Lesson Summary *</label>
-                    <textarea name="lessonSummary" id="lessonSummary" class="form-control" ng-model="vm.lesson.lessonOverview.lessonSummary" rows="7"></textarea>
+                    <wysiwyg-editor name="lessonSummary"
+                    in-title="Lesson Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
                 </div>
               </div>
             </div>
@@ -135,7 +126,7 @@
             <div class="panel-body">
               <div class="row">
                 <wysiwyg-editor outer-column="col-md-12" name="lessonObjectives"
-                in-title="Objectives *" ng-model="vm.lesson.lessonObjectives" label-class="control-label"></wysiwyg-editor>
+                in-title="Objectives" ng-model="vm.lesson.lessonObjectives" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -147,27 +138,28 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group" show-errors>
-                    <label for="supplies" class="control-label">Supplies *</label>
-                    <!-- <select class="select2create form-control" name="supplies" multiple="multiple" ng-model="vm.lesson.materialsResources.supplies"></select> -->
-                    <textarea name="supplies" id="supplies" class="form-control" ng-model="vm.lesson.materialsResources.supplies"></textarea>
+                    <wysiwyg-editor name="supplies"
+                    in-title="Supplies" ng-model="vm.lesson.materialsResources.supplies" label-class="control-label"></wysiwyg-editor>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="vocabulary" class="control-label">Vocabulary *</label>
+                  <div class="form-group" id="vocabulary">
+                    <label for="vocabulary" class="control-label">Vocabulary</label>
                     <div class="input-group">
-                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
-                      class="form-control col-md-10" id="vocabulary"></div>
+                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary-select" id="vocabulary-select"
+                      ng-model="vm.lesson.materialsResources.vocabulary" class="form-control col-md-10"></div>
                       <div class="input-group-btn">
-                        <button class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></button>
+                        <a class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></a>
                       </div>
                     </div>
                   </div>
+                  <!-- <select-tags outer-column="col-md-12" name="vocabulary" id="vocabulary"
+                  in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
+                  label-class="control-label" select-config="vm.vocabularySelectConfig"></select-tags> -->
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <!-- TODO: Give location for upload files to be stored in the lesson -->
                   <div class="form-group">
                     <label for="handouts" class="control-label">Handouts</label>
                     <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"
@@ -176,7 +168,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="vocabulary" class="control-label">Teacher Resources</label>
+                        <label for="vocabulary" class="control-label">Lesson Resources</label>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
                     </div>
                     <table class="table">
@@ -200,8 +192,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="teacherTips" class="control-label">Teacher Tips</label>
-                    <textarea name="teacherTips" id="teacherTips" class="form-control" ng-model="vm.lesson.materialsResources.teacherTips" rows="7"></textarea>
+                    <wysiwyg-editor name="teacherTips"
+                    in-title="Teacher Tips" ng-model="vm.lesson.materialsResources.teacherTips" label-class="control-label"></wysiwyg-editor>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -209,9 +201,20 @@
                     <label for="stateTestQuestions" class="control-label">State Test Questions</label>
                     <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
                     <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
-                    id="lesson-state-test-questions"></multiple-file-drop-zone>
+                    id="lesson-state-test-questions-files"></multiple-file-drop-zone>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preparation -->
+          <h4>Preparation</h4>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <wysiwyg-editor outer-column="col-md-12" name="preparation" in-title="Preparation"
+                ng-model="vm.lesson.preparation" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -221,7 +224,8 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background *" ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
+                <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background"
+                ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -286,47 +290,47 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nycsssUnits"
+                <select-tags outer-column="col-md-12" name="nycsssUnits" id="nycsssUnits"
                 in-title="NYC Science Scope &amp; Sequence - Units" ng-model="vm.lesson.standards.nycsssUnits"
                 label-class="control-label" select-config="vm.nycsssUnitsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssKeyIdeas"
+                <select-tags outer-column="col-md-12" name="nysssKeyIdeas" id="nysssKeyIdeas"
                 in-title="NYS Science Standards - Key Ideas" ng-model="vm.lesson.standards.nysssKeyIdeas"
                 label-class="control-label" select-config="vm.nysssKeyIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings"
+                <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings" id="nysssMajorUnderstandings"
                 in-title="NYS Science Standards - Major Understandings" ng-model="vm.lesson.standards.nysssMajorUnderstandings"
                 label-class="control-label" select-config="vm.nysssMajorUnderstandingsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="nysssMst"
+                <select-tags outer-column="col-md-12" name="nysssMst" id="nysssMst"
                 in-title="NYS Science Standards - MST" ng-model="vm.lesson.standards.nysssMst"
                 label-class="control-label" select-config="vm.nysssMstSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas"
+                <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas" id="ngssDisciplinaryCoreIdeas"
                 in-title="NGSS - Disciplinary Core Ideas" ng-model="vm.lesson.standards.ngssDisciplinaryCoreIdeas"
                 label-class="control-label" select-config="vm.ngssDisciplinaryCoreIdeasSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices"
+                <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices" id="ngssScienceEngineeringPractices"
                 in-title="NGSS - Science and Engineering Practices" ng-model="vm.lesson.standards.ngssScienceEngineeringPractices"
                 label-class="control-label" select-config="vm.ngssScienceEngineeringPracticesSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts"
+                <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts" id="ngssCrossCuttingConcepts"
                 in-title="NGSS - Cross-Cutting Concepts" ng-model="vm.lesson.standards.ngssCrossCuttingConcepts"
                 label-class="control-label" select-config="vm.ngssCrossCuttingConceptsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="cclsMathematics"
+                <select-tags outer-column="col-md-12" name="cclsMathematics" id="cclsMathematics"
                 in-title="CCLS - Mathematics" ng-model="vm.lesson.standards.cclsMathematics"
                 label-class="control-label" select-config="vm.cclsMathematicsSelectConfig"></select-tags>
               </div>
               <div class="row">
-                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects"
+                <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects" id="cclsElaScienceTechnicalSubjects"
                 in-title="CCLS - ELA Science & Technical Subjects" ng-model="vm.lesson.standards.cclsElaScienceTechnicalSubjects"
                 label-class="control-label" select-config="vm.cclsElaScienceTechnicalSubjectsSelectConfig"></select-tags>
               </div>
@@ -343,13 +347,13 @@
             </ul>
           </div>
           <div>
-            <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-            <a href="#" class="btn btn-default" type="button" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
+            <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
+            <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
-              {{vm.editing ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 
-            <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
+            <a type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</a>
           </div>
         </div>
       </fieldset>
@@ -360,55 +364,12 @@
   <!-- MODALS -->
   <saved-lesson-modal></saved-lesson-modal>
   <updated-lesson-modal></updated-lesson-modal>
-  <div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title">Add a teacher resource</h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-12">
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                  <a href="#link" data-toggle="tab" aria-controls="link" role="tab">Link</a>
-                </li>
-                <li role="presentation">
-                  <a href="#upload" data-toggle="tab" aria-controls="upload" role="tab">Upload</a>
-                </li>
-              </ul>
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="link">
-                  <br/>
-                  <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" ng-model="vm.tempResourceLinkName"/>
-                  </div>
-                  <div class="form-group">
-                    <label>URL to video (hosted on Youtube, Vimeo, etc) or website</label>
-                    <input type="text" class="form-control" ng-model="vm.tempResourceLink"/>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="upload">
-                  <br/>
-                  <multiple-file-drop-zone uploader="vm.teacherResourceFilesUploader" files="vm.tempResourceFiles"></multiple-file-drop-zone>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.cancelTeacherResources()">Cancel</button>
-          <!-- <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="vm.deleteTeacherResources()">Delete</button> -->
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addTeacherResources()">Add</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
+  resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+  resource-dropzone-id="lesson-resources-file-dropzone"
+  close-function=""></resource-upload-modal>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
   <form-term-modal term="vm.term" save-function="vm.saveTerm" cancel-function="vm.cancelTermAdd"></form-term-modal>
+  <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
   <!--END MODALS-->
 </section>

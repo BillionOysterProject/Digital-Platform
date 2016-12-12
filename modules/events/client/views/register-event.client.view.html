@@ -1,0 +1,30 @@
+<div class="modal fade" id="modal-event-register">
+    <div class="modal-dialog" role="document">
+        <!-- TIFF: Show this modal-content if logged in as team lead/admin -->
+        <div class="modal-content" ng-show="canRegister === true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">You are now registered for the <b class="red">{{event.title}}</b> on <b class="red">{{dateTimeString}}</b></h4>
+            </div>
+            <div class="modal-body">
+                <p>Looking forward to seeing you there. We'll be in touch closer to the date!</p>
+                <p>If something changes and you can no longer make it, return to this event page to unregister and give your spot to somebody else.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <div class="modal-content" ng-show="canRegister === false">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sorry, you must be a team lead to register for events</h4>
+            </div>
+            <div class="modal-body">
+                <p>Think you have the wrong account role? <a href="" ng-click="supportFunction()">Contact us</a> and we'll get it sorted out.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="close-modal-event-register">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

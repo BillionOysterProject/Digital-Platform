@@ -5,6 +5,10 @@ mongoimport -d bop-test -c metawatercolors --type json --file scripts/mongo-load
 mongoimport -d bop-test -c metawaterflows --type json --file scripts/mongo-load/metaWaterFlows.json --drop
 mongoimport -d bop-test -c metashorelinetypes --type json --file scripts/mongo-load/metaShorelineTypes.json --drop
 mongoimport -d bop-test -c metabioaccumulations --type json --file scripts/mongo-load/metaBioaccumulations.json --drop
+mongoimport -d bop-test -c metabodiesofwater --type json --file scripts/mongo-load/metaBodiesOfWater.json --drop
+mongoimport -d bop-test -c metaboroughscounties --type json --file scripts/mongo-load/metaBoroughsCounties.json --drop
+mongoimport -d bop-test -c metasubjectareas --type json --file scripts/mongo-load/metaSubjectAreas.json --drop
+mongoimport -d bop-test -c metaeventtypes --type json --file scripts/mongo-load/metaEventTypes.json --drop
 
 mongoimport -d bop-test -c metagarbageextents --type json --file scripts/mongo-load/metaGarbageExtents.json --drop
 mongoimport -d bop-test -c metawinddirections --type json --file scripts/mongo-load/metaWindDirections.json --drop
@@ -40,8 +44,8 @@ mongoimport -d bop-test -c metanyssskeyideas --type json --file scripts/mongo-lo
 mongoimport -d bop-test -c metanysssmajorunderstandings --type json --file scripts/mongo-load/standards/metaNysssMajorUnderstandings.json --drop
 mongoimport -d bop-test -c metanysssmsts --type json --file scripts/mongo-load/standards/metaNysssMsts.json --drop
 
-mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-data-tests/bop-users.json --drop
 mongoimport -d bop-test -c schoolorgs --type json --file scripts/mongo-load/sample-data-tests/bop-school-orgs.json --drop
+mongoimport -d bop-test -c users --type json --file scripts/mongo-load/sample-data-tests/bop-users.json --drop
 mongoimport -d bop-test -c teams --type json --file scripts/mongo-load/sample-data-tests/bop-teams.json --drop
 mongoimport -d bop-test -c restorationstations --type json --file scripts/mongo-load/sample-data-tests/bop-restoration-stations.json --drop
 

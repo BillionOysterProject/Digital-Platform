@@ -1,0 +1,39 @@
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c4"},"order":3,"name":"Wallabout Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c5"},"order":9,"name":"Lower New York Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c6"},"order":10,"name":"Buttermilk Channel"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c7"},"order":11,"name":"Arthur Kill"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c8"},"order":1,"name":"Hudson River"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9c9"},"order":4,"name":"Gowanus Canal"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9ca"},"order":12,"name":"Kill Van Kull"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9cb"},"order":13,"name":"East River"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9cc"},"order":14,"name":"Harlem River"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9cd"},"order":16,"name":"Bronx Kill"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9ce"},"order":2,"name":"Erie Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9cf"},"order":6,"name":"Bay Ridge Flats"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d0"},"order":8,"name":"Upper New York Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d1"},"order":17,"name":"Flushing Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d2"},"order":5,"name":"Newtown Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d3"},"order":18,"name":"Flushing Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d4"},"order":15,"name":"Bronx River"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d5"},"order":20,"name":"Bushwick Inlet"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d6"},"order":19,"name":"Hutchinson River"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d7"},"order":7,"name":"Coney Island Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d8"},"order":22,"name":"Hammond Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9d9"},"order":21,"name":"Alley Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9da"},"order":23,"name":"Westchester Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9db"},"order":24,"name":"Wallabout Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9dc"},"order":25,"name":"Littleneck Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9dd"},"order":26,"name":"Jamaica Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9de"},"order":27,"name":"Sheepshead Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9df"},"order":29,"name":"Shellbank Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e0"},"order":28,"name":"Plumb Beach Channel"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e1"},"order":30,"name":"Mill Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e2"},"order":31,"name":"Bergen Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e3"},"order":33,"name":"Gerritsen Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e4"},"order":34,"name":"Norton Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e5"},"order":35,"name":"Motts Creek"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e6"},"order":37,"name":"Paerdergat Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e7"},"order":36,"name":"Barbados Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e8"},"order":38,"name":"Thurston Basin"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9e9"},"order":32,"name":"Head of Bay"}
+{"_id":{"$oid":"57ed6f4ecd40668ef33ac9ea"},"order":39,"name":"Hendrix Creek"}

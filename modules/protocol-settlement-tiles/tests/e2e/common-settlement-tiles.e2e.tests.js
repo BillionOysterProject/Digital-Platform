@@ -204,11 +204,10 @@ var assertSettlementTileView = function(index, tile) {
       }
     });
   };
-
   for (var i = 1; i <= tile.organisms.length; i++) {
     var expectedString = '' + i + ' ' + tile.organismsText[i-1];
     if (tile.organismsText[i-1] === 'Other (mark in notes)') {
-      expectedString = '' + i;
+      expectedString = '' + i + '\n' + tile.notes;
       expect(element(by.id('settlementTile'+index+'Grid'+i)).getText())
         .toEqual(expectedString);
     } else {
@@ -249,12 +248,12 @@ var getSettlementTileGridList = function(organisms, notes) {
   for (var i = 0; i < organisms.length; i++) {
     var commonName = organisms[i];
     if (commonName === 'Other (mark in notes)') {
-      gridList += (i+1) + ': Other ' + notes + '\n';
+      gridList += (i+1) + ': Other\n' + notes + '\n';
     } else {
-      gridList += (i+1) + ': ' + commonName + '\n';
+      gridList += (i+1) + ': ' + commonName + '\n\n';
     }
   }
-  return gridList.trim();
+  return gridList.replace(/\n$/, '');
 };
 
 var assertSettlementTileCompare = function(index, values) {
@@ -263,16 +262,16 @@ var assertSettlementTileCompare = function(index, values) {
     var tileDescription = tileDescriptionRow.get(index);
     var tileDescriptionString = '';
     if (values.settlementTile1) {
-      tileDescriptionString += 'Settlement Tile 1: ' + values.settlementTile1.description + '\n';
+      tileDescriptionString += 'Settlement Tile 1:\n\n' + values.settlementTile1.description + '\n\n';
     }
     if (values.settlementTile2) {
-      tileDescriptionString += 'Settlement Tile 2: ' + values.settlementTile2.description + '\n';
+      tileDescriptionString += 'Settlement Tile 2:\n\n' + values.settlementTile2.description + '\n\n';
     }
     if (values.settlementTile3) {
-      tileDescriptionString += 'Settlement Tile 3: ' + values.settlementTile3.description + '\n';
+      tileDescriptionString += 'Settlement Tile 3:\n\n' + values.settlementTile3.description + '\n\n';
     }
     if (values.settlementTile4) {
-      tileDescriptionString += 'Settlement Tile 4: ' + values.settlementTile4.description + '\n';
+      tileDescriptionString += 'Settlement Tile 4:\n\n' + values.settlementTile4.description + '\n\n';
     }
     expect(tileDescription.getText()).toEqual(tileDescriptionString.trim());
   }

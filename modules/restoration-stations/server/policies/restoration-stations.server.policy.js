@@ -3,7 +3,9 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backend
 acl = new acl(new acl.memoryBackend());
@@ -13,7 +15,7 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin', 'team lead'],
+    roles: ['admin', 'team lead', 'team lead pending'],
     allows: [{
       resources: '/api/restoration-stations',
       permissions: '*'
@@ -21,14 +23,20 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations/:stationId/upload-image',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/:stationId/substrate-history',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'team member', 'partner', 'team lead pending', 'team member pending'],
+    roles: ['user', 'team member', 'partner', 'team member pending'],
     allows: [{
       resources: '/api/restoration-stations',
       permissions: ['get']
+    }, {
+      resources: '/api/restoration-stations/:stationId/substrate-history',
+      permissions: '*'
     }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: ['get']
@@ -52,9 +60,15 @@ exports.isAllowed = function (req, res, next) {
         // Access granted! Invoke next middleware
         return next();
       } else {
-        return res.status(403).json({
-          message: 'User is not authorized'
-        });
+        if (authHelper.isLoggedIn(roles)) {
+          return res.status(403).json({
+            message: 'User is not authorized'
+          });
+        } else {
+          return res.status(401).json({
+            message: 'User logged out'
+          });
+        }
       }
     }
   });

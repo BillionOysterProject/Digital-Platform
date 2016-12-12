@@ -7,11 +7,11 @@
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
   '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper'];
+  'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
     $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper) {
+    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     vm.expedition = expedition;
     vm.user = Authentication.user;
@@ -210,6 +210,15 @@
         vm.viewWaterQuality = false;
         vm.disabledWaterQuality = true;
       }
+    }
+
+    $scope.station = vm.expedition.station;
+    $scope.station.baselinesArray = new Array(10);
+    // Get latest baseline history for each substrate shell
+    for (var i = 1; i <= 10; i++) {
+      var baselines = $scope.station.baselines['substrateShell'+i];
+      $scope.station.baselinesArray[i-1] = (baselines && baselines.length > 0) ?
+        baselines[baselines.length - 1] : {};
     }
 
     // Set up variables used by the tab element
@@ -430,80 +439,118 @@
 
     vm.saveDraft = function(callback) {
       vm.saving = true;
+      $scope.finishedSaving = 0;
+      $scope.savingStatus = 'Saving';
 
-      var finishedSaving = 0;
-      var allDone = function() {
-        finishedSaving++;
-        if (finishedSaving === 5) {
-          vm.saving = false;
-          if (callback) callback();
+      function saveDraftSiteCondition(saveCallback) {
+        if(vm.viewSiteCondition && $scope.siteCondition) {
+          $scope.savingStatus = 'Saving Site Condition';
+          $scope.saveSiteCondition(function() {
+            vm.tabs.protocol1.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol1.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol1.saveSuccessful = undefined;
+          saveCallback();
         }
-      };
-
-      if(vm.viewSiteCondition && $scope.siteCondition) {
-        $scope.saveSiteCondition(function() {
-          vm.tabs.protocol1.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol1.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol1.saveSuccessful = undefined;
-        allDone();
       }
 
-      if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
-        $scope.saveOysterMeasurement(function() {
-          vm.tabs.protocol2.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol2.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol2.saveSuccessful = undefined;
-        allDone();
+      function saveDraftOysterMeasurement(saveCallback) {
+        if(vm.viewOysterMeasurement && $scope.oysterMeasurement) {
+          $scope.savingStatus = 'Saving Oyster Measurement';
+          $scope.saveOysterMeasurement(function() {
+            vm.tabs.protocol2.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol2.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol2.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewMobileTrap && $scope.mobileTrap) {
-        $scope.saveMobileTrap(function() {
-          vm.tabs.protocol3.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol3.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol3.saveSuccessful = undefined;
-        allDone();
+      function saveDraftMobileTrap(saveCallback) {
+        if(vm.viewMobileTrap && $scope.mobileTrap) {
+          $scope.savingStatus = 'Saving Mobile Trap';
+          $scope.saveMobileTrap(function() {
+            vm.tabs.protocol3.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol3.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol3.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewSettlementTiles && $scope.settlementTiles) {
-        $scope.saveSettlementTile(function() {
-          vm.tabs.protocol4.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol4.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol4.saveSuccessful = undefined;
-        allDone();
+      function saveDraftSettlementTiles(saveCallback) {
+        if(vm.viewSettlementTiles && $scope.settlementTiles) {
+          $scope.savingStatus = 'Saving Settlement Tiles';
+          $scope.saveSettlementTile(function() {
+            vm.tabs.protocol4.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol4.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol4.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
 
-      if(vm.viewWaterQuality && $scope.waterQuality) {
-        $scope.saveWaterQuality(function() {
-          vm.tabs.protocol5.saveSuccessful = true;
-          allDone();
-        }, function() {
-          vm.tabs.protocol5.saveSuccessful = false;
-          allDone();
-        });
-      } else {
-        vm.tabs.protocol5.saveSuccessful = undefined;
-        allDone();
+      function saveDraftWaterQuality(saveCallback) {
+        if(vm.viewWaterQuality && $scope.waterQuality) {
+          $scope.savingStatus = 'Saving Water Quality';
+          $scope.saveWaterQuality(function() {
+            vm.tabs.protocol5.saveSuccessful = true;
+            saveCallback();
+          }, function() {
+            vm.tabs.protocol5.saveSuccessful = false;
+            saveCallback();
+          });
+        } else {
+          vm.tabs.protocol5.saveSuccessful = undefined;
+          saveCallback();
+        }
       }
+
+      angular.element('#modal-save-draft-progress-bar').modal('show');
+      $timeout(function () {
+        saveDraftSiteCondition(function () {
+          $scope.finishedSaving = 20;
+          $timeout(function() {
+            saveDraftOysterMeasurement(function() {
+              $scope.finishedSaving = 40;
+              $timeout(function () {
+                saveDraftMobileTrap(function() {
+                  $scope.finishedSaving = 60;
+                  $timeout(function () {
+                    saveDraftSettlementTiles(function() {
+                      $scope.finishedSaving = 80;
+                      $timeout(function () {
+                        saveDraftWaterQuality(function() {
+                          $scope.finishedSaving = 100;
+                          vm.saving = false;
+                          angular.element('#modal-save-draft-progress-bar').modal('hide');
+                          if (callback) callback();
+                        });
+                      }, 1000);
+                    });
+                  }, 1000);
+                });
+              }, 1000);
+            });
+          }, 1000);
+        });
+      }, 1000);
     };
 
     // Submit the protocols as a team member
@@ -598,7 +645,7 @@
     };
 
     // Return the Expedition
-    vm.return = function() {
+    $scope.return = function(returnedNotes) {
       vm.returning = true;
 
       var protocols = {};
@@ -609,7 +656,8 @@
       if(vm.viewWaterQuality && $scope.waterQuality) protocols.waterQuality = $scope.waterQuality;
 
       $http.post('/api/expeditions/' + vm.expedition._id + '/return?full=true', {
-        protocols: protocols
+        protocols: protocols,
+        returnedNotes: returnedNotes
       }).
       success(function(data, status, headers, config) {
         vm.expedition = data;
@@ -639,6 +687,19 @@
         }
         vm.returning = false;
       });
+    };
+
+    vm.openReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('show');
+    };
+
+    vm.submitReturnModal = function(returnedNotes) {
+      angular.element('#modal-return-expedition').modal('hide');
+      $scope.return(returnedNotes);
+    };
+
+    vm.cancelReturnModal = function() {
+      angular.element('#modal-return-expedition').modal('hide');
     };
 
     // Unpublish the Expedition

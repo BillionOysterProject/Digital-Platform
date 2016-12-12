@@ -13,7 +13,7 @@
       state: 'events.list',
       // state: 'events',
       // type: 'dropdown',
-      // roles: ['*'],
+      roles: ['*'],
       icon: 'glyphicon glyphicon-calendar',
       position: 3
     });
@@ -41,7 +41,6 @@
   angular
     .module('events')
     .config(function(calendarConfig) {
-      console.log(calendarConfig); //view all available config
       calendarConfig.dateFormatter = 'moment'; //use either moment or angular to format dates on the calendar. Default angular. Setting this will override any date formats you have already set.
       calendarConfig.allDateFormats.moment.date.hour = 'HH:mm'; //this will configure times on the day view to display in 24 hour format rather than the default of 12 hour
       calendarConfig.allDateFormats.moment.title.day = 'ddd D MMM'; //this will configure the day view title to be shorter

@@ -51,10 +51,10 @@ var ProtocolOysterMeasurementSchema = new Schema({
   measuringOysterGrowth: {
     substrateShells: [{
       substrateShellNumber: Number,
-      setDate: Date,
-      source: String,
-      otherSource: String,
-      totalNumberOfLiveOystersAtBaseline: Number,
+      //setDate: Date,
+      //source: String,
+      //otherSource: String,
+      //totalNumberOfLiveOystersAtBaseline: Number,
       totalNumberOfLiveOystersOnShell: Number,
       totalMassOfScrubbedSubstrateShellOystersTagG: Number,
       notes: String,

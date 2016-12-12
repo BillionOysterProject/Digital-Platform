@@ -138,6 +138,13 @@ module.exports = {
         fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
     },
+    wysiwygImageUploader: {
+      s3dest: 'uploads/forms/img/wysiwyg-images/',
+      dest: './modules/forms/client/img/wysiwyg-images/uploads/', // Wysiwyg upload destination path
+      limits: {
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
+      }
+    },
     waterConditionUpload: {
       s3dest: 'uploads/protocols/site-conditions/img/water-conditions/',
       dest: './modules/protocol-site-conditions/client/img/water-condition/uploads/', // Protocol site condition upload destination path
@@ -225,6 +232,20 @@ module.exports = {
     stationPhotoUpload: {
       s3dest: 'uploads/restoration-stations/img/station/',
       dest: './modules/restoration-stations/client/img/station/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    eventFeaturedImageUpload: {
+      s3dest: 'uploads/events/img/featured-images/',
+      dest: './modules/events/client/img/featured-image/uploads/', // Event upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    eventResourcesUpload: {
+      s3dest: 'uploads/events/files/resources/',
+      dest: './modules/events/client/files/resources/uploads/', // Event upload destination path
       limits: {
         fileSize: 20*1024*1024
       }

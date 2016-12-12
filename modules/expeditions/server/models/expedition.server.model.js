@@ -94,6 +94,9 @@ var ExpeditionSchema = new Schema({
     default: ['incomplete'],
     required: true
   },
+  returnedNotes: {
+    type: String
+  },
   published: Date
 });
 mongoose.model('Expedition', ExpeditionSchema);

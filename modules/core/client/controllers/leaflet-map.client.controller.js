@@ -14,10 +14,8 @@
     var popupScope = null;
     var addPointsGroup = new L.featureGroup();
 
-
     var settings = {
       defaults:{
-
         attribution: 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' +
         '<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, ' +
         'Imagery &copy; <a href=\"http://mapbox.com\">Mapbox</a>',
@@ -30,24 +28,30 @@
       },
       searchZoom:14,
       initialBounds: { xmin: -119.37, ymin: 23.21, xmax: -69.36, ymax: 51.98 }
-
     };
 
     var resizeMap = function() {
-
       mapSelectMap.invalidateSize();
     };
+
     var moveMarker = function(coords) {
       if(mapMarker){
         mapMarker.setLatLng(coords);
       }
-
     };
 
     var zoomToLocation = function(location){
       var latlng = L.latLng(location.lat, location.lng);
-      mapSelectMap.setView(latlng, settings.searchZoom);
+      mapSelectMap.setView(latlng, settings.searchZoom, { animate: false });
       moveMarker(latlng);
+    };
+
+    var panTo = function(location) {
+      var latlng = L.latLng(location.lat, location.lng);
+      mapSelectMap.panTo(latlng);
+      $timeout(function() {
+        mapSelectMap.invalidateSize(false);
+      });
     };
 
     var zoomToLevel = function(level){
@@ -65,7 +69,6 @@
     activate();
 
     function activate(){
-
       if(vm.mapControls){
         vm.mapControls.resizeMap = resizeMap;
         vm.mapControls.moveMarker = moveMarker;
@@ -73,11 +76,13 @@
         vm.mapControls.zoomToLevel = zoomToLevel;
         vm.mapControls.zoomOut = zoomOut;
         vm.mapControls.zoomIn = zoomIn;
+        vm.mapControls.panTo = panTo;
       }
 
       $timeout(function() {
         //timeout needed to wait for html to bind to controller so the id can be set dynamically
         mapSelectMap = L.map($scope.mapUniqueId).setView(settings.defaults.center, settings.defaults.zoom);
+        $scope.mapSelectMap = mapSelectMap;
         L.tileLayer(settings.defaults.mapUrl, {
           maxZoom: 18,
           attribution: settings.defaults.attribution,
@@ -95,10 +100,8 @@
                 vm.mapClickEvent()(e);
               }
             });
-
           });
         }
-
 
         if(vm.showMarker){
           mapMarker = L.marker([settings.defaults.center[0], settings.defaults.center[1]],{ draggable:vm.canMoveMarker || false }).addTo(mapSelectMap);
@@ -111,7 +114,6 @@
                 vm.markerDragEndEvent()(mapMarker.getLatLng());
               }
             });
-
           });
         }
 
@@ -120,9 +122,7 @@
             loadPoints();
           }
         }
-
-
-      });
+      }, 1000);
 
       $scope.$on('$destroy', function () {
         mapSelectMap.off('click');
@@ -134,31 +134,32 @@
       });
 
       $scope.$watch('vm.addPoints', function(oldValue, newValue) {
-        if(vm.addPoints && angular.isArray(vm.addPoints)){
+        if(vm.addPoints && angular.isArray(vm.addPoints) && mapSelectMap &&
+          JSON.stringify(oldValue) !== JSON.stringify(newValue)){
           if(vm.addPoints.length > 0){
             loadPoints();
           }
         }
       });
 
+      $scope.refresh = function() {
+        mapSelectMap.invalidateSize(false);
+      };
     }
 
     function loadPoints(){
-
       addPointsGroup.clearLayers();
 
       for (var i = 0; i < vm.addPoints.length; i++) {
         var marker = new L.marker([vm.addPoints[i].lat,vm.addPoints[i].lng],{ icon:L.AwesomeMarkers.icon(vm.addPoints[i].icon) });
 
         if(vm.addPoints[i].info && vm.addPoints[i].info.html){
-
           var popup = L.popup({
             minWidth:100,
             closeButton:true
           });
 
           var html = vm.addPoints[i].info.html;
-
           popupScope = $scope.$new(true);
 
           angular.forEach(vm.addPoints[i].info, definePopupScope);
@@ -170,17 +171,16 @@
           marker.bindPopup(popup);
 
           addPointsGroup.addLayer(marker);
-          
+        } else {
+          addPointsGroup.addLayer(marker);
         }
 
       }
       mapSelectMap.addLayer(addPointsGroup);
       mapSelectMap.fitBounds(addPointsGroup.getBounds());
       zoomOut();
-
-
     }
-    
+
     function definePopupScope(value,key){
       popupScope[key] = value;
     }

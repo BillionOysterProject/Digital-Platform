@@ -422,7 +422,6 @@ var buildSearchQuery = function (req, callback) {
 var buildCompareQuery = function (req, callback) {
   if (req.body.expeditionIds) {
 
-
     // protocol 1: site condition
     var selectProtocol1 = [];
     if (req.body.protocol1.weatherTemperature === 'YES') {
@@ -451,6 +450,9 @@ var buildCompareQuery = function (req, callback) {
     if (req.body.protocol1.tidalCurrent === 'YES') {
       selectProtocol1.push('tideConditions.tidalCurrent');
     }
+    if (req.body.protocol1.waterConditionPhoto === 'YES') {
+      selectProtocol1.push('waterConditions.waterConditionPhoto');
+    }
     if (req.body.protocol1.surfaceCurrentSpeed === 'YES') {
       selectProtocol1.push('waterConditions.surfaceCurrentSpeedMPS');
     }
@@ -467,6 +469,9 @@ var buildCompareQuery = function (req, callback) {
       selectProtocol1.push('waterConditions.markedCombinedSewerOverflowPipes');
       selectProtocol1.push('waterConditions.unmarkedOutfallPipes');
     }
+    if (req.body.protocol1.landConditionPhoto === 'YES') {
+      selectProtocol1.push('landConditions.landConditionPhoto');
+    }
     if (req.body.protocol1.shorelineType === 'YES') {
       selectProtocol1.push('landConditions.shoreLineType');
     }
@@ -480,6 +485,9 @@ var buildCompareQuery = function (req, callback) {
     var selectProtocol2 = [];
     if (req.body.protocol2.submergedDepth === 'YES') {
       selectProtocol2.push('depthOfOysterCage.submergedDepthofCageM');
+    }
+    if (req.body.protocol2.oysterCagePhoto === 'YES') {
+      selectProtocol2.push('conditionOfOysterCage.oysterCagePhoto');
     }
     if (req.body.protocol2.bioaccumulationOnCage === 'YES') {
       selectProtocol2.push('conditionOfOysterCage.bioaccumulationOnCage');
@@ -500,10 +508,12 @@ var buildCompareQuery = function (req, callback) {
     if (req.body.protocol3.organism === 'YES') {
       selectProtocol3.push('mobileOrganisms.organism');
       selectProtocol3.push('mobileOrganisms.count');
+      selectProtocol3.push('mobileOrganisms.sketchPhoto');
     }
     // protocol 4: settlement tiles
     var selectProtocol4 = [];
     if (req.body.protocol4.description === 'YES') {
+      selectProtocol4.push('settlementTiles.tilePhoto');
       selectProtocol4.push('settlementTiles.description');
     }
     if (req.body.protocol4.organism === 'YES') {
@@ -556,7 +566,11 @@ var buildCompareQuery = function (req, callback) {
 
     var query = Expedition.find({ '_id' : { $in : req.body.expeditionIds } }, select).sort('monitoringStartDate');
 
-    query.populate('station', 'name');
+    if (req.body.protocol2.oysterMeasurements === 'YES') {
+      query.populate('station', 'name baselines');
+    } else {
+      query.populate('station', 'name');
+    }
 
     if (selectProtocol1.length > 0) query.populate('protocols.siteCondition', selectProtocol1.join(' '));
     if (selectProtocol2.length > 0) query.populate('protocols.oysterMeasurement', selectProtocol2.join(' '));
@@ -581,7 +595,11 @@ var getExpeditionDate = function(date) {
 };
 
 var getShortDate = function(date) {
-  return moment(date).format('M/D/YY');
+  if (date) {
+    return moment(date).format('M/D/YY');
+  } else {
+    return '';
+  }
 };
 
 var getTime = function(date) {
@@ -710,26 +728,28 @@ var addGarbageExtent = function(rows, garbage, type, callback) {
   });
 };
 
-var getMobileOrganismName = function(id, callback) {
+var getMobileOrganismNameAndImage = function(id, callback) {
   MobileOrganism.findById(id).exec(function(err, organism) {
     if (err) {
-      callback(err, null);
+      callback(err, null, null);
     } else if (organism) {
-      callback(null, organism.commonName);
+      var photoPath = (organism && organism.image) ? organism.image.path : '';
+      callback(null, organism.commonName, photoPath);
     } else {
-      callback(null, '');
+      callback(null, '', '');
     }
   });
 };
 
-var getSessileOrganismName = function(id, callback) {
+var getSessileOrganismNameAndImage = function(id, callback) {
   SessileOrganism.findById(id).exec(function(err, organism) {
     if (err) {
-      callback(err, null);
+      callback(err, null, null);
     } else if (organism) {
-      callback(null, organism.commonName);
+      var photoPath = (organism && organism.image) ? organism.image.path : '';
+      callback(null, organism.commonName, photoPath);
     } else {
-      callback(null, '');
+      callback(null, '', '');
     }
   });
 };
@@ -751,7 +771,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            rows.weatherConditions.push(obj.order);
+            rows.weatherConditions.push((obj) ? obj.order : '');
             done(null);
           }
         });
@@ -768,7 +788,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           if (err) {
             done(err);
           } else {
-            rows.windDirection.push(dir.abbreviation);
+            rows.windDirection.push((dir) ? dir.abbreviation : '');
             done(null);
           }
         });
@@ -816,6 +836,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       }
       done(null);
     },
+    // Add Water condition photo
+    function (done) {
+      if (req.body.protocol1.waterConditionPhoto === 'YES') {
+        rows.waterConditionPhoto.push(expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path);
+      }
+      done(null);
+    },
     // Add Surface Current Speed
     function (done) {
       if (req.body.protocol1.surfaceCurrentSpeed === 'YES') {
@@ -828,7 +855,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       if (req.body.protocol1.waterColor === 'YES') {
         WaterColor.findOne({ value: expedition.protocols.siteCondition.waterConditions.waterColor })
         .exec(function(err, color) {
-          rows.waterColor.push(color.order);
+          rows.waterColor.push((color) ? color.order : '');
           done(null);
         });
       } else {
@@ -863,7 +890,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough })
           .exec(function(err, flow) {
             if (err) done(err);
-            rows.markedCSOVolume.push(flow.order);
+            rows.markedCSOVolume.push((flow) ? flow.order : '');
             done(null);
           });
         } else {
@@ -888,7 +915,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough })
           .exec(function(err, flow) {
             if (err) done(err);
-            rows.unmarkedPipesVolume.push(flow.order);
+            rows.unmarkedPipesVolume.push((flow) ? flow.order : '');
             done(null);
           });
         } else {
@@ -902,13 +929,20 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         done(null);
       }
     },
+    // Add Land condition photo
+    function (done) {
+      if (req.body.protocol1.landConditionPhoto === 'YES') {
+        rows.landConditionPhoto.push(expedition.protocols.siteCondition.landConditions.landConditionPhoto.path);
+      }
+      done(null);
+    },
     // Add Shoreline Type
     function (done) {
       if (req.body.protocol1.shorelineType === 'YES') {
         ShorelineType.findOne({ value: expedition.protocols.siteCondition.landConditions.shoreLineType })
         .exec(function (err, type) {
           if (err) done(err);
-          rows.shoreLineType.push(type.order);
+          rows.shoreLineType.push((type) ? type.order : '');
           done(null);
         });
       } else {
@@ -941,13 +975,19 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       }
       done(null);
     },
+    function (done) {
+      if (req.body.protocol2.oysterCagePhoto === 'YES') {
+        rows.oysterCagePhoto.push(expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
+      }
+      done(null);
+    },
     // Add Bioaccumulation on Cage
     function (done) {
       if (req.body.protocol2.bioaccumulationOnCage === 'YES') {
         Bioaccumulation.findOne({ value: expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage })
           .exec(function(err, bio) {
             if (err) done(err);
-            rows.bioaccumulationOnCage.push(bio.order);
+            rows.bioaccumulationOnCage.push((bio) ? bio.order : '');
             done(null);
           });
       } else {
@@ -972,10 +1012,15 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         for (var n = 0; n < expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells.length; n++) {
           var substrateShell = expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells[n];
           var shellIndex = substrateShell.substrateShellNumber-1;
+          var baselineArray = expedition.station.baselines['substrateShell'+(n+1)];
+          var baseline = baselineArray[baselineArray.length-1];
           rows.substrateShells[shellIndex].substrateShellNumberHeader.push('');
-          rows.substrateShells[shellIndex].setDate.push(getShortDate(substrateShell.setDate));
-          rows.substrateShells[shellIndex].source.push((substrateShell.otherSource) ? substrateShell.otherSource : substrateShell.source);
-          rows.substrateShells[shellIndex].liveAtBaseline.push(substrateShell.totalNumberOfLiveOystersAtBaseline);
+          rows.substrateShells[shellIndex].outerSidePhoto.push(substrateShell.outerSidePhoto.path);
+          rows.substrateShells[shellIndex].innerSidePhoto.push(substrateShell.innerSidePhoto.path);
+          rows.substrateShells[shellIndex].setDate.push(getShortDate((baseline) ? baseline.setDate : ''));
+          rows.substrateShells[shellIndex].source.push((baseline) ? ((baseline.otherSource) ? baseline.otherSource : baseline.source) : '');
+          rows.substrateShells[shellIndex].liveAtBaseline.push((baseline) ? baseline.totalNumberOfLiveOystersAtBaseline : '');
+          rows.substrateShells[shellIndex].massAtBaseline.push((baseline) ? baseline.totalMassOfLiveOystersAtBaselineG : '');
           rows.substrateShells[shellIndex].liveOnShell.push(substrateShell.totalNumberOfLiveOystersOnShell);
           rows.substrateShells[shellIndex].mass.push(substrateShell.totalMassOfScrubbedSubstrateShellOystersTagG);
           rows.substrateShells[shellIndex].minSize.push(substrateShell.minimumSizeOfLiveOysters);
@@ -997,9 +1042,11 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       if (req.body.protocol3.organism === 'YES') {
         var addMobileOrganism = function(index, mobileOrganisms, organisms, callback) {
           if (index < mobileOrganisms.length) {
-            getMobileOrganismName(mobileOrganisms[index].organism, function(err, commonName) {
+            getMobileOrganismNameAndImage(mobileOrganisms[index].organism, function(err, commonName, imagePath) {
               if (err) done(err);
-              organisms.push(mobileOrganisms[index].count + ' ' + commonName);
+              var image = (mobileOrganisms[index].sketchPhoto && mobileOrganisms[index].sketchPhoto.path) ?
+                mobileOrganisms[index].sketchPhoto.path : imagePath;
+              organisms.push(mobileOrganisms[index].count + ' ' + commonName + '\r\n' + image);
               addMobileOrganism(index+1, mobileOrganisms, organisms, callback);
             });
           } else {
@@ -1007,7 +1054,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
         addMobileOrganism(0, expedition.protocols.mobileTrap.mobileOrganisms, [], function(organisms) {
-          rows.mobileOrganisms.push(organisms.join(',\r\n'));
+          rows.mobileOrganisms.push(organisms.join(',\r\n\r\n'));
           done(null);
         });
       } else {
@@ -1018,6 +1065,7 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     function (done) {
       if (req.body.protocol4.description === 'YES') {
         for (var i = 0; i < expedition.protocols.settlementTiles.settlementTiles.length; i++) {
+          rows.settlementTiles[i].tilePhoto.push(expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto.path);
           rows.settlementTiles[i].description.push(expedition.protocols.settlementTiles.settlementTiles[i].description);
         }
       }
@@ -1028,9 +1076,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       if (req.body.protocol4.organism === 'YES') {
         var addSessileOrganism = function(index, tile, tileNumber, callback) {
           if (index < 26) {
-            getSessileOrganismName(tile['grid'+index].organism, function(err, commonName) {
+            getSessileOrganismNameAndImage(tile['grid'+index].organism, function(err, commonName, imagePath) {
               if (err) done (err);
               rows.settlementTiles[tileNumber]['grid'+index+'-organism'].push((commonName) ? commonName : '');
+              rows.settlementTiles[tileNumber]['grid'+index+'-photo'].push((imagePath) ? imagePath : '');
               rows.settlementTiles[tileNumber]['grid'+index+'-notes'].push((tile['grid'+index].notes) ?
                 tile['grid'+index].notes : '');
               addSessileOrganism(index+1, tile, tileNumber, callback);
@@ -1439,7 +1488,7 @@ var createCsv = function(req, expeditions, callback) {
     '5=Fog,6=Snow,7=Hail,8=Thunderstorm)'],
     windDirection: ['Wind direction'],
     windSpeedMPH: ['Wind speed (mph)'],
-    airTemperatureC: ['Air temperature in C'],
+    airTemperatureC: ['Air temperature (C)'],
     humidityPer: ['Humidity (%)'],
     recentRainfallHeader: ['Recent Rainfall'],
     rainfall24hrs: ['24 hrs rainfall\r\n'+'(1=Yes,0=No)'],
@@ -1448,10 +1497,10 @@ var createCsv = function(req, expeditions, callback) {
     tideConditionsHeader: ['Tide conditions'],
     referencePoint: ['Reference Point (location name)'],
     closestHighTide: ['Closest High Tide (date, time)'],
-    closestHighTideHeight: ['Closest High Tide Height'],
+    closestHighTideHeight: ['Closest High Tide Height (ft)'],
     closestLowTide: ['Closest Low Tide (date, time)'],
-    closestLowTideHeight: ['Closest Low Tide Height'],
-    currentSpeed: ['Current speed (feet/second)'],
+    closestLowTideHeight: ['Closest Low Tide Height (ft)'],
+    currentSpeed: ['Current speed (m/s)'],
     tidalCurrent: ['Tidal Current'],
     waterConditions: ['Water Conditions'],
     waterConditionPhoto: ['Water condition photo'],
@@ -1509,15 +1558,16 @@ var createCsv = function(req, expeditions, callback) {
     '(1=None,2=Sporadic,3=Common,4=Extensive)'],
     otherLand: ['Other/Notes'],
 
-    submergedDepth: ['Submerged depth of cage'],
+    submergedDepth: ['Submerged depth of cage (m)'],
+    oysterCagePhoto: ['Oyster cage photo'],
     bioaccumulationOnCage: ['Bioaccumulation on cage\r\n'+
     '(1=None/clean,2=Light,3=Medium,4=Heavy)'],
     cageDamage: ['Cage damage'],
-    oysterMeasurementsHeader: ['Oyster Measurements'],
+    oysterMeasurementsHeader: ['Oyster Measurements (mm)'],
     substrateShells: [],
-    minSizeOfAllOysters: ['Minimum size of all live oysters'],
-    maxSizeOfAllOysters: ['Maximum size of all live oysters'],
-    avgSizeOfAllOysters: ['Average size of all live oysters'],
+    minSizeOfAllOysters: ['Minimum size of all live oysters (mm)'],
+    maxSizeOfAllOysters: ['Maximum size of all live oysters (mm)'],
+    avgSizeOfAllOysters: ['Average size of all live oysters (mm)'],
     totalOfAllOysters: ['Total number of all live oysters'],
 
     mobileOrganisms: ['Mobile Organisms Observed'],
@@ -1531,15 +1581,18 @@ var createCsv = function(req, expeditions, callback) {
     for (var i = 1; i < 11; i++) {
       rows.substrateShells.push({
         substrateShellNumberHeader: ['Substrate Shell #'+i],
+        outerSidePhoto: ['Outer side photo'],
+        innerSidePhoto: ['Inner side photo'],
         setDate: ['Set date'],
         source: ['Source'],
         liveAtBaseline: ['Total number of live oysters at baseline'],
+        massAtBaseline: ['Total mass of live oysters at baseline (g)'],
         liveOnShell: ['Total number of live oysters on shell'],
         mass: ['Total mass of scrubbed substrate shell + oysters + tag (g)'],
-        measurements: ['Measurements'],
-        minSize: ['Minimum size of live oysters'],
-        maxSize: ['Maximum size of live oysters'],
-        avgSize: ['Average size of live oysters'],
+        measurements: ['Measurements (mm)'],
+        minSize: ['Minimum size of live oysters (mm)'],
+        maxSize: ['Maximum size of live oysters (mm)'],
+        avgSize: ['Average size of live oysters (mm)'],
       });
     }
   }
@@ -1548,11 +1601,13 @@ var createCsv = function(req, expeditions, callback) {
     for (var j = 1; j < 5; j++) {
       var tile = {
         settlementTileNumberHeader: ['Settlement Tile #'+j],
+        tilePhoto: ['Settlement Tile #' + j + ' photo'],
         description: ['Settlement Tile #' + j + ' description'],
         organismsHeader: ['Sessile organisms observed']
       };
       for (var n = 1; n < 26; n++) {
         tile['grid'+n+'-organism'] = ['Grid #' + n + ' organism'];
+        tile['grid'+n+'-photo'] = ['Grid #' + n + ' photo'];
         tile['grid'+n+'-notes'] = ['Grid #' + n + ' notes'];
       }
 
@@ -1570,7 +1625,7 @@ var createCsv = function(req, expeditions, callback) {
     for (var m = 1; m <= maxSamples; m++) {
       rows.waterSamples.push({
         sampleNumberHeader: ['Water Quality Sample #'+m],
-        depth: ['Depth'],
+        depth: ['Depth (m)'],
         location: ['Location (coordinates)'],
         waterTemperatureHeader: ['Water Temperature'],
         waterTemperatureMethod: ['Method'],

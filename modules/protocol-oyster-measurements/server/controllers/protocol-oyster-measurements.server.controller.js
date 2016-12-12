@@ -31,16 +31,13 @@ var checkRole = function(role, user) {
 };
 
 var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
-  for (var i = 0; i < oysterMeasurement.measuringOysterGrowth.substrateShells.length; i++) {
-    oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-      moment(oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate).startOf('minute').toDate();
-  }
-
   var errorMessages = [];
 
-  if (!oysterMeasurement.depthOfOysterCage || !oysterMeasurement.depthOfOysterCage.submergedDepthofCageM ||
-    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
-    errorMessages.push('Submerged depth of oyster cage is required');
+  if(!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === undefined ||
+    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === null) {
+    errorMessages.push('Submerged depth of oyster cage is required and must be greater than 0');
+  } else if(oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
+    errorMessages.push('Submerged depth of oyster cage must be greater than 0');
   }
 
   if (!oysterMeasurement.conditionOfOysterCage) {
@@ -185,7 +182,7 @@ exports.incrementalSave = function (req, res) {
     }
 
     // remove base64 text
-    var pattern = /^data:image\/jpeg;base64,/i;
+    var pattern = /^data:image\/[a-z]*;base64,/i;
     if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
     oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path &&
     pattern.test(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path)) {
@@ -256,7 +253,7 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
       oysterMeasurement.submitted = new Date();
 
       // remove base64 text
-      var pattern = /^data:image\/jpeg;base64,/i;
+      var pattern = /^data:image\/[a-z]*;base64,/i;
       if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
       oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path &&
       pattern.test(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path)) {

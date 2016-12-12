@@ -1,8 +1,10 @@
-Hi <%=FirstName%>,
+Hi,
 
 <%= EventEmailMessage %>
 
+<% if(Footer === true) { %>
 You are currently registered for <%= EventName %> on <%= EventDate %>. No longer able to attend? Visit <%= LinkEvent %> to unregister and give your spot to somebody else.
+<% } %>
 
 Thanks!
 The Billion Oyster Project

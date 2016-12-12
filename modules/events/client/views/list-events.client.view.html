@@ -2,67 +2,110 @@
     <section class="content">
         <section class="container-fluid">
           <h2>Events</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for an Event by name, description, skills taught...">
+            </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.events.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
         </section>
     </section>
 </div>
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" ui-sref="events.create"><i class="glyphicon glyphicon-plus"></i> Create an event</a>
+            <a class="btn btn-default pull-right" ui-sref="events.create" view-permissions="admin">
+                <i class="glyphicon glyphicon-plus"></i> Create an event
+            </a>
+            <ul class="nav navbar-nav">
+                <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
+                <li class="dropdown" id="category">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Type{{(vm.filter.typeName) ? ': ' + vm.filter.typeName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.categorySelected()" ok-sel=".all">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li ng-repeat="type in vm.eventTypes">
+                        <a ok-sel=".{{type._id}}" ng-click="vm.categorySelected(type)">
+                          <i class="fa fa-circle" style="color:{{type.color}}"></i> {{type.type}}
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+                <li class="dropdown" id="timeFrame">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Date{{(vm.filter.timeFrame) ? ': ' + vm.filter.timeFrame : ''}}  <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ok-sel=".all" ng-click="vm.timeFrameSelected()">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a ok-sel=".Upcoming" ng-click="vm.timeFrameSelected('Upcoming events')">Upcoming events</a></li>
+                      <li><a ok-sel=".Past" ng-click="vm.timeFrameSelected('Past events')">Past events</a></li>
+                    </ul>
+                </li>
+                <!-- <li class="dropdown" id="availability">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Availability{{(vm.filter.availability) ? ': ' + vm.filter.availability : ''}}  <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ok-sel=".all" ng-click="vm.categorySelected()">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a ok-sel=".Open" ng-click="vm.availabilitySelected('Registration open')">Registration open</a></li>
+                      <li><a ok-sel=".Closed" ng-click="vm.availabilitySelected('Registration closed')">Registration closed</a></li>
+                    </ul>
+                </li> -->
+            </ul>
         </nav>
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
+            <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+              ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
+                daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
+                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
+                    <div class="panel-heading" ng-style="{'background-color':'{{calendarEvent.category.type.color}}'}">
+                        <h3 ng-hide="calendarEvent.category.type.type === 'Other'" class="panel-title"
+                          ng-bind="calendarEvent.category.type.type"></h3>
+                        <h3 ng-show="calendarEvent.category.type.type === 'Other'" class="panel-title">
+                          Other: {{calendarEvent.category.otherType}}</h3>
+                    </div>
                     <div class="panel-body text-center">
-                        <!--TIFF: Repeat <h3> for each date (see 3rd event sample) -->
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
+                        <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
+                          {{vm.getEventYear(date.startDateTime)}}<br/>
+                          {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
+                        <h4><b class="red" ng-bind="calendarEvent.title"></b></h4>
+                        <p ng-show="calendarEvent.location.addressString"><i class="fa fa-map-marker"></i> {{calendarEvent.location.addressString}}</p>
                     </div>
                     <div class="panel-footer">
-                        <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
-                    <div class="panel-body text-center">
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" ng-repeat="event in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: event._id })">
-                    <div class="panel-body text-center">
-                        <h3 class="blue">Oct 7 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h3 class="blue">Oct 9 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h3 class="blue">Oct 11 <small>2016<br/>8:00am-5:00pm</small></h3>
-                        <h4><b class="red">BOP Restoration Station Basic Training</b></h4> <!-- ng-bind="event.name" -->
-                        <p><i class="fa fa-map-marker"></i> New York Harbor</p>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center">
-                            <i class="fa fa-calendar-times-o"></i> <b>10 spots</b> and 
-                            <i class="fa fa-clock-o"></i> <b>25 days</b> remaining
+                        <p class="text-muted text-center small">
+                            <span ng-show="(daysRemaining >= 0 && openSpots > 0)" id="openSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>{{openSpots}} spots</b><br/></span>
+                            <span ng-show="(daysRemaining >= 0 && openSpots <= 0 && openSpots !== null)" id="noOpenSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>Event is full</b><br/></span>
+                            <span ng-show="(daysRemaining < 0 || (openSpots <= 0 && openSpots !== null))" id="registrationClosed">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Registration is closed</b></span>
+                            <span ng-show="(daysRemaining === 0 && (openSpots > 0 || openSpots === null))" id="registerToday">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Last day to register!</b></span>
+                            <span ng-show="(daysRemaining > 0 && (openSpots > 0 || openSpots === null))" id="registrationOpen">
+                              <i class="fa fa-clock-o"></i>
+                              <b>{{daysRemaining}} days</b> left to register</span>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- TIFF: is vm.isAdmin correct? -->
-        <div class="alert" ng-if="vm.events.$resolved && !vm.events.length && vm.isAdmin"> 
+
+        <div class="alert" ng-if="vm.events.$resolved && !vm.events && vm.events.length === 0" view-permissions="admin">
             No events yet, why don't you <a ui-sref="events.create">create one</a>?
         </div>
     </section>

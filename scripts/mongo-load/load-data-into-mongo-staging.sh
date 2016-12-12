@@ -15,9 +15,13 @@ mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawatercolors <userna
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawaterflows <username/password> --type json --file metaWaterFlows.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metashorelinetypes <username/password> --type json --file metaShorelineTypes.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metabioaccumulations <username/password> --type json --file metaBioaccumulations.json --drop
+mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metabodiesofwater <username/password> --type json --file metaBodiesOfWater.json --drop
+mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metaboroughscounties <username/password> --type json --file metaBoroughsCounties.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metagarbageextents <username/password> --type json --file metaGarbageExtents.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawinddirections <username/password> --type json --file metaWindDirections.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metatruefalses <username/password> --type json --file metaTrueFalses.json --drop
+mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metasubjectareas <username/password> --type json --file metaSubjectAreas.json --drop
+mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metaeventtypes <username/password> --type json --file metaEventTypes.json --drop
 
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metawatertemperaturemethods <username/password> --type json --file metaWaterTemperatureMethods.json --drop
 mongoimport -h ds011419.mlab.com:11419 -d bop-staging -c metadissolvedoxygenmethods <username/password> --type json --file metaDissolvedOxygenMethods.json --drop

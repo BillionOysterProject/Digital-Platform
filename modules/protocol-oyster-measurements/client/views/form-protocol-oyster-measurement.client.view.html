@@ -1,7 +1,7 @@
 <form name="form.oysterMeasurementForm" ng-submit="save(form.oysterMeasurementForm.$valid)" novalidate ng-cloak>
     <section class="content">
         <section class="container">
-            <h2>Protocol 2 <small>Oyster Measurements</small></h2>
+            <h2 id="protocol-2-form">Protocol 2 <small>Oyster Measurements</small></h2>
             <hr />
             <div class="alert alert-danger" ng-show="oysterMeasurementErrors" ng-cloak>
                 <h4>We're still missing some information.</h4>
@@ -54,7 +54,7 @@
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
                         <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
-                        <input type="number" class="form-control" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
+                        <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                 <div class="col-md-12">
                     <h6>Measuring Oyster Growth</h6>
                     <p class="lead blue">How to count oyster totals.</p>
-                    <p>There are 10 or more tagged substrate shells in a cage (plus untagged shells).  Each tagged shell will have multiple live oysters growing on it; over time some will die due to crowding. Only live oysters will be counted and measured in this protocol. To count the total, start with the outer side of the shell, moving from the umbo to the bill then flip the shell and repeat. Be careful not to damage the oyster spat while counting and measuring. </p>
+                    <p>There are 10 or fewer tagged substrate shells in your ORS. Enter baseline info for each substrate shell on the first expedition, or whenever a replacement shell is added. This info will not change unless new oysters are added. You will add photographs of every shell (both sides) at every expedition. You will also add measurements of all live oysters on the shell at every expedition. Only live oysters should be counted and measured. To count the total, start with the outer side of the shell, moving from the umbo to the bill, then flip the shell and repeat. </p>
                 </div>
             </div>
         </section>
@@ -118,9 +118,9 @@
             <p class="lead blue" ng-show="oysterMeasurement.minimumSizeOfAllLiveOysters || oysterMeasurement.maximumSizeOfAllLiveOysters ||
             oysterMeasurement.averageSizeOfAllLiveOysters || oysterMeasurement.totalNumberOfAllLiveOysters">
             Great work! Of the total population, the
-                minimum shell size is <b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}</b>,
-                maximum size is <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}</b>,
-                average size is <b>{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}</b>, and
+                minimum shell size is <b>{{oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}} mm</b>,
+                maximum size is <b>{{oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}} mm</b>,
+                average size is <b>{{oysterMeasurement.averageSizeOfAllLiveOysters | number:2}} mm</b>, and
                 total oysters alive is <b>{{oysterMeasurement.totalNumberOfAllLiveOysters | number}}</b>.</p>
               <p ng-show="previous &&
               previous.totalNumberOfAllLiveOysters === oysterMeasurement.totalNumberOfAllLiveOysters">
@@ -142,10 +142,10 @@
 
 <!-- MODALS -->
 <form-substrate-shell ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
-substrate="substrate" max-live-oysters="liveShellCount" outer-substrate-uploader="outerUploaders[$index]"
-inner-substrate-uploader="innerUploaders[$index]" outer-substrate-url="outerSubstrateURL"
-inner-substrate-url="innerSubstrateURL" save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm"
-index="{{$index}}"></form-substrate-shell>
+substrate="substrate" baseline="station.baselinesArray[$index]" station-id="{{station._id}}" max-live-oysters="liveShellCount"
+outer-substrate-uploader="outerUploaders[$index]" inner-substrate-uploader="innerUploaders[$index]"
+outer-substrate-url="outerSubstrateURL" inner-substrate-url="innerSubstrateURL"
+save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>
 
 <div class="modal fade" id="modal-oyster-measurement-map" tabindex="-1" role="dialog">
     <map-select modal-id="modal-oyster-measurement-map" latitude="oysterMeasurement.latitude"

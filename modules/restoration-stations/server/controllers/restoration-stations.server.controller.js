@@ -12,18 +12,19 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  moment = require('moment'),
   _ = require('lodash');
 
-var getTeam = function(teamId, successCallback, errorCallback) {
-  // Get School/Organization from team
-  Team.findById(teamId).exec(function (err, team) {
-    if (err) {
-      errorCallback(errorHandler.getErrorMessage(err));
-    } else {
-      successCallback(team);
-    }
-  });
-};
+// var getTeam = function(teamId, successCallback, errorCallback) {
+//   // Get School/Organization from team
+//   Team.findById(teamId).exec(function (err, team) {
+//     if (err) {
+//       errorCallback(errorHandler.getErrorMessage(err));
+//     } else {
+//       successCallback(team);
+//     }
+//   });
+// };
 
 /**
  * Create a restoration station
@@ -31,23 +32,36 @@ var getTeam = function(teamId, successCallback, errorCallback) {
 exports.create = function (req, res) {
   var station = new RestorationStation(req.body);
 
-  getTeam(req.body.team, function(team) {
-    station.schoolOrg = team.schoolOrg;
+  // getTeam(req.body.team, function(team) {
+  station.team = null;
+  station.schoolOrg = req.user.schoolOrg;
+  station.teamLead = req.user;
 
-    station.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(station);
-      }
-    });
-  }, function(errorMessage) {
-    return res.status(400).send({
-      message: errorMessage
-    });
+  var pattern = /^data:image\/[a-z]*;base64,/i;
+  if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
+    station.photo.path = '';
+  }
+
+  station.baseline = {};
+  //set default baseline information
+  for (var i = 1; i <= 10; i++) {
+    station.baseline['substrateShell'+i] = [];
+  }
+
+  station.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(station);
+    }
   });
+  // }, function(errorMessage) {
+  //   return res.status(400).send({
+  //     message: errorMessage
+  //   });
+  // });
 };
 
 /**
@@ -56,6 +70,9 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var station = req.station ? req.station.toJSON() : {};
+
+  station.isCurrentUserOwner = req.user && station.teamLead &&
+    station.teamLead._id.toString() === req.user._id.toString();
 
   res.json(station);
 };
@@ -68,12 +85,49 @@ exports.update = function (req, res) {
 
   if (station) {
     station = _.extend(station, req.body);
-    if (!req.body.photo) {
-      delete station.photo;
+    // if (!req.body.photo) {
+    //   delete station.photo;
+    // }
+    var pattern = /^data:image\/[a-z]*;base64,/i;
+    if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
+      station.photo.path = '';
     }
 
-    getTeam(req.body.team, function(team) {
-      station.schoolOrg = team.schoolOrg;
+    // getTeam(req.body.team, function(team) {
+    station.team = null;
+    station.schoolOrg = req.user.schoolOrg;
+    station.teamLead = req.user;
+
+    station.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(station);
+      }
+    });
+    // }, function(errorMessage) {
+    //   return res.status(400).send({
+    //     message: errorMessage
+    //   });
+    // });
+  }
+};
+
+/**
+ * Add a baseline to the history
+ */
+exports.updateBaselines = function (req, res) {
+  var station = req.station;
+
+  if (station) {
+    var index = req.body.substrateShellNumber;
+    if (req.body.substrateShellNumber && station.baselines['substrateShell'+index]) {
+      var baseline = req.body;
+      baseline.entered = new Date();
+      baseline.setDate = moment(req.body.setDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate();
+      station.baselines['substrateShell'+index].push(baseline);
 
       station.save(function(err) {
         if (err) {
@@ -81,13 +135,19 @@ exports.update = function (req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(station);
+          var baselines = station.baselines['substrateShell'+index];
+          var latestBaseline = baselines[baselines.length-1];
+          res.json(latestBaseline);
         }
       });
-    }, function(errorMessage) {
+    } else {
       return res.status(400).send({
-        message: errorMessage
+        message: 'Substrate Shell #' + index + ' does not exist'
       });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
     });
   }
 };
@@ -116,8 +176,11 @@ exports.list = function (req, res) {
   var query;
   var and = [];
 
-  if (req.query.teamId) {
-    and.push({ 'team': req.query.teamId });
+  if (req.query.teamLeadId) {
+    and.push({ 'teamLeadId': req.query.teamLeadId });
+  }
+  if (req.query.teamLead) {
+    and.push({ 'teamLead': req.user._id });
   }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });
@@ -149,13 +212,22 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('team', 'name').exec(function (err, stations) {
+  query.populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, stations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(stations);
+      var stationsJSON = [];
+      for (var i = 0; i < stations.length; i++) {
+        var station = stations[i] ? stations[i].toJSON() : {};
+
+        station.isCurrentUserOwner = req.user && station.teamLead &&
+          station.teamLead._id.toString() === req.user._id.toString();
+        stationsJSON.push(station);
+      }
+
+      res.json(stationsJSON);
     }
   });
 };
@@ -171,7 +243,7 @@ exports.stationByID = function (req, res, next, id) {
     });
   }
 
-  RestorationStation.findById(id).exec(function (err, station) {
+  RestorationStation.findById(id).populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, station) {
     if (err) {
       return next(err);
     } else if (!station) {
@@ -237,7 +309,6 @@ exports.uploadStationPhoto = function (req, res) {
           }
         });
       }, function(errorMessage) {
-        console.log('errorMessage', errorMessage);
         deleteInternal(station,
         function(station) {
           return res.status(400).send({

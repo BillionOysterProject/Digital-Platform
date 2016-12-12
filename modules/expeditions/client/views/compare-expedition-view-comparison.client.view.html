@@ -23,8 +23,8 @@
               <h6>Water Quality</h6></td>
         </tr> -->
         <tr id="expedition-compare-header">
-            <td></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
+            <td width="10%"></td>
+            <td ng-repeat="expedition in vm.compareExpeditions" width="{{90/vm.compareExpeditions.length}}%">
               <a ui-sref="expedition.view({ expeditionId: expedition.id })"><h4>{{expedition.name}}</h4></a><br/>
               <p class="text-muted"><i class="fa fa-map-marker"></i> {{expedition.station.name}},
                 {{vm.getExpeditionDate(expedition.monitoringStartDate)}}</p>
@@ -124,6 +124,14 @@
               </span>&nbsp;
             </td>
         </tr>
+        <tr ng-show="vm.parameters.protocol1.waterConditionPhoto === 'YES'" id="water-condition-photo-compare">
+            <td><b>Water condition photo</b></td>
+            <td ng-repeat="expedition in vm.compareExpeditions">
+              <img id="waterConditionPhoto" class="img-rounded img-responsive"
+              ng-src="{{expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path}}"
+              ng-show="expedition.protocols.siteCondition.waterConditions.waterConditionPhoto"/>&nbsp;
+            </td>
+        </tr>
         <tr ng-show="vm.parameters.protocol1.waterColor === 'YES'" id="water-color-compare">
             <td><b>Water color</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
@@ -196,6 +204,14 @@
               </span>
             </td>
         </tr>
+        <tr ng-show="vm.parameters.protocol1.landConditionPhoto === 'YES'" id="land-condition-photo-compare">
+            <td><b>Land condition photo</b></td>
+            <td ng-repeat="expedition in vm.compareExpeditions">
+              <img id="landConditionPhoto" class="img-rounded img-responsive"
+              ng-src="{{expedition.protocols.siteCondition.landConditions.landConditionPhoto.path}}"
+              ng-show="expedition.protocols.siteCondition.landConditions.landConditionPhoto"/>&nbsp;
+            </td>
+        </tr>
         <tr ng-show="vm.parameters.protocol1.shorelineType === 'YES'" id="shoreline-type-compare">
             <td><b>Shoreline type</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
@@ -249,6 +265,14 @@
                 {{expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM}} meters</span>&nbsp;
             </td>
         </tr>
+        <tr ng-show="vm.parameters.protocol2.oysterCagePhoto === 'YES'" id="oyster-cage-photo-compare">
+            <td><b>Oyster cage photo</b></td>
+            <td ng-repeat="expedition in vm.compareExpeditions">
+              <img id="oysterCagePhoto" class="img-rounded img-responsive"
+              ng-src="{{expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path}}"
+              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto"/>&nbsp;
+            </td>
+        </tr>
         <tr ng-show="vm.parameters.protocol2.bioaccumulationOnCage === 'YES'" id="bioaccumulation-on-cage-compare">
             <td><b>Bioaccumulation on cage</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
@@ -281,26 +305,28 @@
         <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-avg-size-compare">
             <td><b>Population avg size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}mm&nbsp;
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-min-size-compare">
             <td><b>Population min size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}mm&nbsp;
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-max-size-compare">
             <td><b>Population max size</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}&nbsp;
+              {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}mm&nbsp;
             </td>
         </tr>
         <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
             <td><b>Organisms observed</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms">
-                {{organism.count}} {{vm.getMobileOrganismName(organism.organism)}}<br/>
+                <img id="organism-photo{{$index}}" class="img-rounded img-thumbnail"
+                  ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"/><br/>
+                {{organism.count}} {{vm.getMobileOrganismName(organism.organism)}}<br/><br/>
               </span>
             </td>
         </tr>
@@ -309,7 +335,10 @@
             <td ng-repeat="expedition in vm.compareExpeditions">
               <span ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles"
               ng-show="tile.description">
-                Settlement Tile {{$index+1}}: {{tile.description}}<br/>
+                Settlement Tile {{$index+1}}: <br/>
+                <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
+                  ng-src="{{tile.tilePhoto.path}}"/><br/>
+                {{tile.description}}<br/><br/>
               </span>
             </td>
         </tr>
@@ -318,13 +347,16 @@
             <td ng-repeat="expedition in vm.compareExpeditions" id="sessile-organisms-table-{{$index}}">
                 <table class="table-condensed">
                     <tr>
-                      <td ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism">
+                      <td ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism"
+                        style="vertical-align: top;" width="25%">
                         <h6>Settlement Tile #{{h+1}}</h6><br/>
                         <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
                           <span>
                             <h4 class="text-muted">{{i}}</h4>:
                             {{vm.getSessileOrganismName(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}
+                            <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
+                              ng-src="{{vm.getSessileOrganismPhoto(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}"/><br/>
                             <em>{{expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].notes}}</em><br/>
                           </span>
                         </td>

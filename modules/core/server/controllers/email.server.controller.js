@@ -113,45 +113,35 @@ exports.sendFeedback = function(to, from, subject, data, template, req, res) {
 
 exports.sendBugReport = function(req, res) {
   var data = {
-    UserName: req.user.displayName + '<' + req.user.email + '>',
+    UserName: (req.user) ? req.user.displayName + '<' + req.user.email + '>' : 'Guest',
     BrowserDetails: req.headers['user-agent'],
     Location: req.body.location,
     Issue: req.body.issue
   };
-  exports.sendFeedback('jira@fearless.jira.com', req.user.email, req.body.subject, data, 'bug_report', req, res);
+  var email = (req.user) ? req.user.email : defaultFrom;
+  exports.sendFeedback('jira@fearless.jira.com', email, req.body.subject, data, 'bug_report', req, res);
 };
 
 exports.sendGeneralFeedback = function(req, res) {
   var data = {
     FeedbackNote: req.body.message,
-    FeedbackName: req.user.displayName,
-    FeedbackEmail: req.user.email,
-    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : ''
+    FeedbackName: (req.user) ? req.user.displayName : 'Guest',
+    FeedbackEmail: (req.user) ? req.user.email : 'N/A',
+    OrgName: (req.user && req.user.schoolOrg) ? req.user.schoolOrg.name : 'N/A'
   };
-  exports.sendFeedback(defaultFrom, req.user.email, 'BOP General Feedback: ' + req.body.subject, data, 'feedback', req, res);
+  var email = (req.user) ? req.user.email : defaultFrom;
+  exports.sendFeedback(defaultFrom, email, 'BOP General Feedback: ' + req.body.subject, data, 'feedback', req, res);
 };
 
 exports.sendHelpQuestion = function(req, res) {
   var data = {
     FeedbackNote: req.body.message,
-    FeedbackName: req.user.displayName,
-    FeedbackEmail: req.user.email,
-    OrgName: (req.user.schoolOrg) ? req.user.schoolOrg.name : ''
+    FeedbackName: (req.user) ? req.user.displayName : 'Guest',
+    FeedbackEmail: (req.user) ? req.user.email : 'N/A',
+    OrgName: (req.user && req.user.schoolOrg) ? req.user.schoolOrg.name : 'N/A'
   };
-  exports.sendFeedback(defaultFrom, req.user.email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);
-};
-
-exports.sendLessonFeedback = function(req, res) {
-  var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-  var data = {
-    FirstName: req.body.lesson.user.firstName,
-    LessonFeedbackName: req.user.displayName,
-    LessonName: req.body.lesson.title,
-    LessonFeedbackNote: req.body.message,
-    LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-  };
-  exports.sendFeedback(req.body.lesson.user.email, req.user.email, subject, data, 'lesson_feedback', req, res);
+  var email = (req.user) ? req.user.email : defaultFrom;
+  exports.sendFeedback(defaultFrom, email, 'BOP Help Question: ' + req.body.subject, data, 'feedback', req, res);
 };
 
 exports.sendUnitFeedback = function(req, res) {

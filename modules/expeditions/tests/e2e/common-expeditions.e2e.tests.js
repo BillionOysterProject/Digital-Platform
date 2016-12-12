@@ -42,8 +42,8 @@ module.exports = {
 
   defaultMapCoordinates: function(target) {
     element(by.css('a[data-target="#'+target+'"]')).click();
-    element(by.id('saveMapSelectModal-'+target)).click();
     browser.sleep(1000);
+    element(by.id('saveMapSelectModal-'+target)).click();
     browser.wait(EC.invisibilityOf(element(by.id('saveMapSelectModal-'+target))), 5000);
     browser.sleep(1000);
   },
@@ -56,4 +56,21 @@ module.exports = {
     });
   },
 
+  uploadFile: function(id, filepath) {
+    var absolutePath = path.resolve(__dirname, filepath);
+    var fileUploader = element(by.id(id));
+    var input = fileUploader.element(by.css('input[type="file"]'));
+    input.sendKeys(absolutePath);
+    browser.sleep(500);
+  },
+
+  assertFiles: function(id) {
+    var fileList = element.all(by.id(id));
+    fileList.get(0).getAttribute('href').then(function(text) {
+      if (text !== null) {
+        expect(text).not.toEqual('');
+        expect(text.search('s3-us-west-1.amazonaws.com')).toBeGreaterThan(-1);
+      }
+    });
+  },
 };

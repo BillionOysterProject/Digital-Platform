@@ -117,9 +117,11 @@ module.exports.initSession = function (app, db) {
   // Express MongoDB session storage
   app.use(session({
     saveUninitialized: true,
-    resave: true,
+    resave: false, //default is true
+    rolling: true,
     secret: config.sessionSecret,
     cookie: {
+      // expires: new Date(Date.now() + config.sessionCookie.maxAge),
       maxAge: config.sessionCookie.maxAge,
       httpOnly: config.sessionCookie.httpOnly,
       secure: config.sessionCookie.secure // && config.secure.ssl

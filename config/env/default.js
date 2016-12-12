@@ -13,7 +13,7 @@ module.exports = {
   // Session Cookie settings
   sessionCookie: {
     // session expiration is set by default to 24 hours
-    maxAge: 7 * 24 * (60 * 60 * 1000),
+    maxAge: 7 * 24 * (60 * 60 * 1000), // set to 1 week
     // httpOnly flag makes sure the cookie is only accessed
     // through the HTTP protocol and not JS/browser
     httpOnly: true,
@@ -47,6 +47,13 @@ module.exports = {
     profileUpload: {
       s3dest: 'uploads/users/img/profile/',
       dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
+      limits: {
+        fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
+      }
+    },
+    wysiwygImageUploader: {
+      s3dest: 'uploads/forms/img/wysiwyg-images/',
+      dest: './modules/forms/client/img/wysiwyg-images/uploads/', // Wysiwyg upload destination path
       limits: {
         fileSize: 20*1024*1024 // Max file size in bytes (20 MB)
       }
@@ -141,6 +148,20 @@ module.exports = {
       limits: {
         fileSize: 20*1024*1024
       }
-    }
+    },
+    eventFeaturedImageUpload: {
+      s3dest: 'uploads/events/img/featured-images/',
+      dest: './modules/events/client/img/featured-image/uploads/', // Event upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    eventResourcesUpload: {
+      s3dest: 'uploads/events/files/resources/',
+      dest: './modules/events/client/files/resources/uploads/', // Event upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
   }
 };

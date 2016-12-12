@@ -14,25 +14,12 @@
             <div class="col-sm-12">
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label>ORS Name</label>
-                        <input type="text" class="form-control" ng-model="station.name" required/>
+                        <label class="required" for="name">ORS Name *</label>
+                        <input type="text" class="form-control" ng-model="station.name" name="name" id="name" required/>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label>Team</label>
-                        <select name="team" class="form-control" ng-model="teamId" required>
-                          <option disabled selected value>
-                          <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label>Body of Water</label>
-                        <input type="text" class="form-control" ng-model="station.bodyOfWater" required/>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label>Station Status</label>
-                        <select class="form-control" ng-model="station.status" required>
+                        <label class="required" for="status">Station Status *</label>
+                        <select class="form-control" ng-model="station.status" name="status" id="status" required>
                             <option value="Active">Active</option>
                             <option value="Lost">Lost</option>
                         </select>
@@ -40,26 +27,44 @@
                         <span class="help-block">Note: if your ORS is damaged or lost, please <a href="#" ng-click="openFeedback()">send us an alert immediately</a></span>-->
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="required" for="bodyOfWater">Body of Water *</label>
+                        <input type="text" ng-model="station.bodyOfWater" placeholder="Body of Water"
+                        uib-typeahead="bodyOfWater.name as bodyOfWater.name for bodyOfWater in bodiesOfWater | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="required" for="boroughCounty">Borough/County *</label>
+                        <!-- <input type="text" class="form-control" ng-model="station.boroughCounty" required/> -->
+                        <input type="text" ng-model="station.boroughCounty" placeholder="Borough/County"
+                        uib-typeahead="boroughCounty.name as boroughCounty.name for boroughCounty in boroughsCounties | filter:{name:$viewValue}"
+                        class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
+                    </div>
+                </div>
                 <google-geocode ng-if="canGeocode" place-selected="placeSelected"></google-geocode>
-                <leaflet-map map-controls="mapControls" map-click-event="mapClick"
-                marker-drag-end-event="markerDragEnd" can-click-map-to-add-marker="canClickMapToAddMarker" can-move-marker="canMoveMarker"
-                show-marker="showMarker"></leaflet-map>
+                <leaflet-map map-controls="mapControls" can-click-map-to-add-marker="canClickMapToAddMarker"
+                map-click-event="mapClick" marker-drag-end-event="markerDragEnd"
+                can-move-marker="canMoveMarker" show-marker="showMarker"
+                add-points="mapPoints"></leaflet-map>
                 <br />
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label>Latitude</label>
-                        <input type="text" class="form-control" placeholder="39.290385" ng-model="station.latitude" required/>
+                        <label class="required" for="latitude">Latitude *</label>
+                        <input type="text" class="form-control" placeholder="39.290385"
+                        ng-model="station.latitude" name="latitude" id="latitude" readonly required/>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label>Longitude</label>
-                        <input type="text" class="form-control" placeholder="-76.612189" ng-model="station.longitude" required/>
+                        <label class="required" for="longitude">Longitude *</label>
+                        <input type="text" class="form-control" placeholder="-76.612189"
+                        ng-model="station.longitude" name="longitude" id="longitude" readonly required/>
                     </div>
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-12">
                     <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
                     <single-image-drop-zone uploader="stationPhotoUploader" image-url="stationPhotoURL"
-                    image-alt="Station Photograph"></single-image-drop-zone>
+                    image-alt="Station Photograph" id="ors-image-dropzone"></single-image-drop-zone>
                   </div>
                 </div>
             </div>

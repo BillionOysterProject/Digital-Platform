@@ -3,7 +3,9 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backend
 acl = new acl(new acl.memoryBackend());
@@ -18,23 +20,59 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events',
       permissions: '*'
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-featured-image',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/upload-resources',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/attended',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/not-attended',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/email-registrants',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId',
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['team lead', 'team lead pending', 'partner'],
     allows: [{
       resources: '/api/events',
       permissions: ['get', 'post']
     }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
+    }, {
+      resources: '/api/events/:eventId/register',
+      permissions: ['post']
+    }, {
+      resources: '/api/events/:eventId/unregister',
+      permissions: ['post']
+    }, {
       resources: '/api/events/:eventId',
-      permissions: ['get']
+      permissions: ['get', 'post']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['guest', 'user', 'team member', 'team member pending'],
     allows: [{
       resources: '/api/events',
       permissions: ['get']
+    }, {
+      resources: '/api/events/download-file',
+      permissions: ['*']
     }, {
       resources: '/api/events/:eventId',
       permissions: ['get']
@@ -63,9 +101,15 @@ exports.isAllowed = function (req, res, next) {
         // Access granted! Invoke next middleware
         return next();
       } else {
-        return res.status(403).json({
-          message: 'User is not authorized'
-        });
+        if (authHelper.isLoggedIn(roles)) {
+          return res.status(403).json({
+            message: 'User is not authorized'
+          });
+        } else {
+          return res.status(401).json({
+            message: 'User logged out'
+          });
+        }
       }
     }
   });
