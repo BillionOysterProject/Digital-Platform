@@ -43,22 +43,26 @@
             <div class="tab-content col-md-9">
               <div role="tabpanel" class="tab-pane active" id="effectiveness">
                 <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <raty-fa id="star1" score="feedback.lessonEffectiveAvg" number="5" read-only="true"
+                    <div class="col-xs-3 text-center">
+                        <h3 ng-class="{'green': feedback.lessonEffectiveAvg > 3, 'yellow': feedback.lessonEffectiveAvg === 3,
+                        'red': feedback.lessonEffectiveAvg < 3}">{{feedback.lessonEffectiveAvg | number:1}}</h3>
+                        <h4><raty-fa id="star1" score="feedback.lessonEffectiveAvg" number="5" read-only="true"
                         ng-class="{'green': feedback.lessonEffectiveAvg > 3, 'yellow': feedback.lessonEffectiveAvg === 3,
-                        'red': feedback.lessonEffectiveAvg < 3}"></raty-fa>
+                        'red': feedback.lessonEffectiveAvg < 3}"></raty-fa></h4>
                     </div>
                     <div class="col-xs-9">
                         <br/>
-                        <h4>How effective is this lesson?</h4>
+                        <p>How effective is this lesson?</p>
                     </div>
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <raty-fa id="star2" score="feedback.lessonAlignWithCurriculumnAvg" number="5" read-only="true"
+                    <div class="col-xs-3 text-center">
+                        <h3 ng-class="{'green': feedback.lessonAlignWithCurriculumnAvg > 3, 'yellow': feedback.lessonAlignWithCurriculumnAvg === 3, 
+                        'red': feedback.lessonAlignWithCurriculumnAvg < 3}">{{feedback.lessonAlignWithCurriculumnAvg | number:1}}</h3>
+                        <h4><raty-fa id="star2" score="feedback.lessonAlignWithCurriculumnAvg" number="5" read-only="true"
                         ng-class="{'green': feedback.lessonAlignWithCurriculumnAvg > 3, 'yellow': feedback.lessonAlignWithCurriculumnAvg === 3,
-                        'red': feedback.lessonAlignWithCurriculumnAvg < 3}"></raty-fa>
+                        'red': feedback.lessonAlignWithCurriculumnAvg < 3}"></raty-fa></h4>
                     </div>
                     <div class="col-xs-9">
                         <br/>
@@ -67,10 +71,12 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <raty-fa id="star3" score="feedback.lessonSupportScientificPracticeAvg" number="5" read-only="true"
+                    <div class="col-xs-3 text-center">
+                        <h3 ng-class="{'green': feedback.lessonSupportScientificPracticeAvg > 3, 'yellow': feedback.lessonSupportScientificPracticeAvg === 3,
+                        'red': feedback.lessonSupportScientificPracticeAvg < 3}">{{feedback.lessonSupportScientificPracticeAvg | number:1}}</h3>
+                        <h4><raty-fa id="star3" score="feedback.lessonSupportScientificPracticeAvg" number="5" read-only="true"
                         ng-class="{'green': feedback.lessonSupportScientificPracticeAvg > 3, 'yellow': feedback.lessonSupportScientificPracticeAvg === 3,
-                        'red': feedback.lessonSupportScientificPracticeAvg < 3}"></raty-fa>
+                        'red': feedback.lessonSupportScientificPracticeAvg < 3}"></raty-fa></h4>
                     </div>
                     <div class="col-xs-9">
                         <br/>
@@ -79,10 +85,12 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-xs-3 text-right">
-                        <raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                    <div class="col-xs-3 text-center">
+                        <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                        'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                        <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
                         ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
-                        'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa>
+                        'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
                     </div>
                     <div class="col-xs-9">
                         <br/>

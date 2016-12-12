@@ -9,13 +9,13 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'lodash'];
+  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService, LessonsService, LessonTrackerStatsService, lodash) {
+    SubjectAreasService, LessonsService, LessonTrackerStatsService, LessonFeedbackService, lodash) {
     var vm = this;
 
     vm.lesson = lesson;
@@ -178,11 +178,23 @@
       vm.units = data;
     });
 
-    LessonTrackerStatsService.get({
-      lessonId: vm.lesson._id
-    }, function(data) {
-      vm.lessonStats = data;
-    });
+    var getLessonStats = function() {
+      LessonTrackerStatsService.get({
+        lessonId: vm.lesson._id
+      }, function(data) {
+        vm.lessonStats = data;
+      });
+    };
+    getLessonStats();
+
+    var getLessonFeedback = function() {
+      LessonFeedbackService.get({
+        lessonId: vm.lesson._id
+      }, function(data) {
+        vm.feedback = data;
+      });
+    };
+    getLessonFeedback();
 
     if (vm.lesson.user && vm.lesson.user.team) {
       TeamsService.get({
@@ -672,8 +684,11 @@
       angular.element('#modal-lesson-feedback').modal('show');
     };
 
-    vm.closeLessonFeedback = function() {
+    vm.closeLessonFeedback = function(reload) {
       angular.element('#modal-lesson-feedback').modal('hide');
+      if (reload) {
+        getLessonFeedback();
+      }
     };
 
     vm.openLessonFeedbackView = function() {
@@ -688,8 +703,11 @@
       angular.element('#modal-lesson-log').modal('show');
     };
 
-    vm.closeLessonLog = function() {
+    vm.closeLessonLog = function(reload) {
       angular.element('#modal-lesson-log').modal('hide');
+      if (reload) {
+        getLessonStats();
+      }
     };
 
   }

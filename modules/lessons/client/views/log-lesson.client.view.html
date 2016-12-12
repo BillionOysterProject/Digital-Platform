@@ -3,10 +3,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Log teaching of this lesson</h4>
+        <h4 class="modal-title">Log your teaching of this lesson</h4>
         <p>Did you teach this lesson? We want to know! Fill this form out for each time the lesson was taught.</p>
         <!--TIFF: If team lead has taught before, show:-->
-        <div class="alert alert-info" ng-show="trackList.length > 0">So far we have recorded {{trackedLessonString}}.
+        <div class="alert alert-info" ng-show="trackList.length > 0">You taught this lesson on {{trackedLessonString}}.
         </div>
       </div>
       <form name="form.logLessonForm" ng-submit="track(form.logLessonForm.$valid)" novalidate>
