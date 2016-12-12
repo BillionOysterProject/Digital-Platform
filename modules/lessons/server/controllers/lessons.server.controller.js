@@ -654,7 +654,7 @@ exports.feedbackForLesson = function(req, res) {
         message: 'Could not retrieve averages'
       });
     } else {
-      LessonFeedback.find({ lesson: lesson._id }).populate('user', 'displayName').exec(function(err1, feedbackList) {
+      LessonFeedback.find({ lesson: lesson._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
         if (err1) {
           res.status(400).send({
             message: 'Could not retrieve feedback'

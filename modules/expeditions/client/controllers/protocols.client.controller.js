@@ -6,15 +6,14 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-  '$timeout', '$interval', '$location', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
+  '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
   'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, $location, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
+    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
     ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     var stopListeningForStateChangeStart;
-    var stopListeningForLocationChangeStart;
     vm.expedition = expedition;
     vm.user = Authentication.user;
     vm.activeTab = 'protocol1';
@@ -23,66 +22,6 @@
     $scope.mobileTrapErrors = '';
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
-
-    //if the user navigates away from protocols editing
-    var handleStateChangeStartEvent = function(event, toState, toParams, fromState, fromParams) {
-      event.preventDefault();
-
-      var wantsToLeave = confirm('Are you sure you want to leave protocol editing? Any unsaved data will be lost.');
-      if(wantsToLeave) {
-        //if they do, stop listening for both events
-        if(stopListeningForLocationChangeStart) {
-          stopListeningForLocationChangeStart();
-        }
-        if(stopListeningForStateChangeStart) {
-          stopListeningForStateChangeStart();
-        }
-
-        // they want to leave so reconfigure the location
-        $state.go(toState, toParams);
-      }
-    };
-
-    //if the user hits the back/fwd buttons during protocols editing
-    var handleLocationChangeStartEvent = function(event) {
-      event.preventDefault();
-
-      // Keep track of which location the user was about to move to.
-      var targetUrl = $location.absUrl();
-
-      var wantsToLeave = confirm('Are you sure you want to leave protocol editing? Any unsaved data will be lost.');
-      if(wantsToLeave) {
-        //if they do, stop listening for both events
-        if(stopListeningForLocationChangeStart) {
-          stopListeningForLocationChangeStart();
-        }
-        if(stopListeningForStateChangeStart) {
-          stopListeningForStateChangeStart();
-        }
-
-        // they want to leave so change the location
-        //note that setting $location.url does not work
-        window.location.href = targetUrl;
-      }
-    };
-
-    //catch window location changes like the back button
-    var listenForLocationChanges = function() {
-      if($state.is('expeditions.protocols')) {
-        stopListeningForLocationChangeStart = $scope.$on('$locationChangeStart', handleLocationChangeStartEvent);
-      }
-    };
-
-    //catch state changes like the user clicks to another area of the application
-    var listenForStateChanges = function() {
-      if($state.is('expeditions.protocols')) {
-        stopListeningForStateChangeStart = $scope.$on('$stateChangeStart', handleStateChangeStartEvent);
-      }
-    };
-
-    //set up listeners for leaving the protocols page
-    $scope.$applyAsync(listenForStateChanges);
-    $scope.$applyAsync(listenForLocationChanges);
 
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
@@ -601,6 +540,11 @@
                           $scope.finishedSaving = 100;
                           vm.saving = false;
                           angular.element('#modal-save-draft-progress-bar').modal('hide');
+                          $scope.form.mobileTrapForm.$setPristine();
+                          $scope.form.oysterMeasurementForm.$setPristine();
+                          $scope.form.settlementTilesForm.$setPristine();
+                          $scope.form.siteConditionForm.$setPristine();
+                          $scope.form.waterQualityForm.$setPristine();
                           if (callback) callback();
                         });
                       }, 1000);
@@ -873,5 +817,80 @@
 
     // Water Quality
 
+    ////
+    //Set up page change listeners to warn the user when they are leaving protocols editing
+    ////
+
+    var leavingMessage = 'Are you sure you want to leave protocol editing? Any unsaved data will be lost.';
+    var areProtocolFormsDirty = function() {
+      return ($scope.form.mobileTrapForm && $scope.form.mobileTrapForm.$dirty) ||
+        ($scope.form.oysterMeasurementForm && $scope.form.oysterMeasurementForm.$dirty) ||
+        ($scope.form.settlementTilesForm && $scope.form.settlementTilesForm.$dirty) ||
+        ($scope.form.siteConditionForm && $scope.form.siteConditionForm.$dirty) ||
+        ($scope.form.waterQualityForm && $scope.form.waterQualityForm.$dirty);
+    };
+
+    var cleanupPageChangeListeners = function() {
+      if(stopListeningForStateChangeStart) {
+        stopListeningForStateChangeStart();
+      }
+      if(window.onbeforeunload) {
+        window.onbeforeunload = null;
+      }
+    };
+
+    //clean up our listeners when the controller exits
+    //doing this here in the event they selected "leave page"
+    //from the window.onbeforeunload event default dialog since
+    //i don't think i can get the dialog's return value (right?)
+    $scope.$on('$destroy', function() {
+      if(!$state.is('expeditions.protocols')) {
+        cleanupPageChangeListeners();
+      }
+    });
+    
+    var handleStateChangeStartEvent = function(event, toState, toParams, fromState, fromParams) {
+      if(!areProtocolFormsDirty()) {
+        cleanupPageChangeListeners();
+        return;
+      }
+
+      event.preventDefault();
+      var wantsToLeave = confirm(leavingMessage);
+      if(wantsToLeave) {
+        cleanupPageChangeListeners();
+        $state.go(toState, toParams);
+      }
+    };
+
+    var handleWindowUnload = function(event) {
+      if(!areProtocolFormsDirty()) {
+        cleanupPageChangeListeners();
+        return undefined;
+      }
+      var e = event || window.event;
+      if (e) {
+        e.returnValue = leavingMessage;
+      }
+      return leavingMessage;
+    };
+
+    //catch state changes like the user clicks to another area of the application
+    var listenForStateChanges = function() {
+      if($state.is('expeditions.protocols')) {
+        stopListeningForStateChangeStart = $scope.$on('$stateChangeStart', handleStateChangeStartEvent);
+      }
+    };
+
+    //catch the refresh button or the user entering a different URL in the browser
+    var listenForWindowUnload = function() {
+      if($state.is('expeditions.protocols')) {
+        window.onbeforeunload = handleWindowUnload;
+      }
+    };
+
+    //set up listeners for leaving the protocols page
+    $scope.$applyAsync(listenForStateChanges);
+    $scope.$applyAsync(listenForWindowUnload);
   }
 })();

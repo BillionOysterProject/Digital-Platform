@@ -14,7 +14,9 @@
         replace: true,
         controller: 'LessonFeedbackController',
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function() {
+            scope.getFeedback();
+          });
         }
       };
     });

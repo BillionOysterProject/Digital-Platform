@@ -18,7 +18,9 @@
               score: newValue,
               number: number,
               readOnly: readOnly,
+              space: false,
               halfShow: true,
+              hints: ['Very ineffective', 'Somewhat ineffective', 'Neutral', 'Somewhat effective', 'Very effective'],
               click: function(score, evt) {
                 scope.score = score;
               }

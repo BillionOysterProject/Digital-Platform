@@ -38,9 +38,10 @@
               $scope.trackList = trackList;
               var trackListArray = [];
               for (var i = 0; i < trackList.length; i++) {
+                //[date] in [subject] to [number of students]
                 var taughtOn = moment(trackList[i].taughtOn).format('MM/DD/YYYY');
                 var classOrSubject = (trackList[i].classOrSubject) ? trackList[i].classOrSubject.subject : '';
-                var tracked = 'your ' + taughtOn + ' teaching ' + classOrSubject;
+                var tracked = taughtOn + ' in ' + classOrSubject + ' to ' + trackList[i].totalNumberOfStudents + ' students';
                 if (i === trackList.length-1 && trackList.length > 1) {
                   tracked = 'and ' + tracked;
                 }
@@ -74,7 +75,7 @@
               $scope.form.logLessonForm.$setSubmitted(false);
               $scope.form.logLessonForm.$setPristine(true);
               $scope.tracker = {};
-              $scope.closeFunction();
+              $scope.closeFunction(true);
             };
           };
         },
