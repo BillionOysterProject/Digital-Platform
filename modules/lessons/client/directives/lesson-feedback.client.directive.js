@@ -40,7 +40,7 @@
             $scope.form.lessonFeedbackForm.$setPristine(true);
             $scope.sent = false;
             $scope.message = null;
-            $scope.closeFunction();
+            $scope.closeFunction(true);
           };
         },
         link: function(scope, element, attrs) {

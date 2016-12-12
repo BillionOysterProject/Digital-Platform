@@ -19,6 +19,7 @@
               number: number,
               readOnly: readOnly,
               halfShow: true,
+              size: 36,
               click: function(score, evt) {
                 scope.score = score;
               }
