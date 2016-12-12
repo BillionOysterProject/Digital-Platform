@@ -9,29 +9,29 @@
 
       <form name="form.lessonFeedbackForm" ng-submit="send(form.lessonFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
-          <h4 class="blue">On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following.</h4>
+          <h4 class="blue">Rate the following using 1-5 stars.</h4>
           <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="lessonEffective" class="control-label required">How effective is this lesson? *</label><br>
-                    <raty-fa id="starLessonEffective" score="feedback.lessonEffective" number="5"></raty-fa>
+                    <h4 class="blue"><raty-fa id="starLessonEffective" score="feedback.lessonEffective" number="5"></raty-fa></h4>
                 </div>
                 <div class="form-group">
                     <label for="lessonAlignWithCurriculumn" class="control-label required">How effectively does this lesson align with NY State
                       core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? *</label><br>
-                    <raty-fa id="starLessonAlignWithCurriculumn" score="feedback.lessonAlignWithCurriculumn" number="5"></raty-fa>
+                    <h4 class="blue"><raty-fa id="starLessonAlignWithCurriculumn" score="feedback.lessonAlignWithCurriculumn" number="5"></raty-fa></h4>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="lessonSupportScientificPractice" class="control-label required">How effectively does this lesson support inquiry,
                       student-led research, and/or scientific practices? *</label><br>
-                    <raty-fa id="starLessonSupportScientificPractice" score="feedback.lessonSupportScientificPractice" number="5"></raty-fa>
+                    <h4 class="blue"><raty-fa id="starLessonSupportScientificPractice" score="feedback.lessonSupportScientificPractice" number="5"></raty-fa></h4>
                 </div>
                 <div class="form-group">
                     <label for="lessonPreparesStudents" class="control-label required">How effectively does this lesson prepare students for
                       environmental restoration, BOP field science, or the ORS? *</label><br>
-                    <raty-fa id="starLessonPreparesStudents" score="feedback.lessonPreparesStudents" number="5"></raty-fa>
+                    <h4 class="blue"><raty-fa id="starLessonPreparesStudents" score="feedback.lessonPreparesStudents" number="5"></raty-fa></h4>
                 </div>
             </div>
         </div>
