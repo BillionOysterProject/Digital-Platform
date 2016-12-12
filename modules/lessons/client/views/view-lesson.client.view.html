@@ -84,25 +84,24 @@
     <div class="alert alert-default" ng-show="vm.lessonStats.taughtCount > 0">
         <h6>Lesson Log</h6>
         <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
-          times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers to a total of
-          <b class="blue">{{vm.lessonStats.studentCount}}</b> students</h4><br/>
+          times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers</h4><br/>
         <div class="row">
             <div class="col-sm-2">
-                <h4><b class="blue">{{studentsPerClassCount}}</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.studentCount}}</b></h4>
                 <p class="fineprint">Total number of students</p>
                 
                 <h4><b class="blue">{{vm.lessonStats.avgStudentsPerClass | number:2}}</b></h4>
                 <p class="fineprint">Average number of students</p>
             </div>
             <div class="col-sm-2">
-                <h4><b class="blue">{{classesOrSectionsCount}}</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.classesOrSectionsCount}}</b></h4>
                 <p class="fineprint">Total number of classes/sections</p>
                 
                 <h4><b class="blue">{{vm.lessonStats.avgClassesOrSections | number:2}}</b></h4>
                 <p class="fineprint">Average number of classes/sections</p>
             </div>
             <div class="col-sm-2">
-                <h4><b class="blue">{{periodsOrSessionsCount}}</b></h4>
+                <h4><b class="blue">{{vm.lessonStats.periodsOrSessionsCount}}</b></h4>
                 <p class="fineprint">Total number of periods/sessions</p>
                 
                 <h4><b class="blue">{{vm.lessonStats.avgPeriodsOrSessions | number:2}}</b></h4>
