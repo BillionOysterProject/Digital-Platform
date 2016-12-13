@@ -10,13 +10,14 @@
         scope: {
           user: '=',
           organizations: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
-        controller: 'FormAdminTeamLeadController',
+        controller: 'TeamLeadController',
         replace: true,
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function() {
+            scope.findUserAndOrganization();
+          });
         }
       };
     }]);

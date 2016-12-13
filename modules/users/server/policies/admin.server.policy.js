@@ -28,11 +28,17 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/users/:userId',
       permissions: '*'
+    }, {
+      resources: '/api/users/username',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
     allows: [{
       resources: '/api/users/teamleads',
+      permissions: ['get']
+    }, {
+      resources: '/api/users/username',
       permissions: ['get']
     }]
   }]);

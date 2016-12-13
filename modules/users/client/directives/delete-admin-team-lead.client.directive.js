@@ -9,8 +9,7 @@
         templateUrl: 'modules/users/client/views/admin/delete-admin-team-lead.client.view.html',
         scope: {
           user: '=',
-          deleteFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
         replace: true,
         link: function(scope, element, attrs) {

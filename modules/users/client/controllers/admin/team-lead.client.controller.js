@@ -3,11 +3,11 @@
 
   angular
     .module('users')
-    .controller('FormAdminTeamLeadController', FormAdminTeamLeadController);
+    .controller('TeamLeadController', TeamLeadController);
 
-  FormAdminTeamLeadController.$inject = ['$scope', '$http'];
+  TeamLeadController.$inject = ['$scope', '$http', 'Admin'];
 
-  function FormAdminTeamLeadController($scope, $http) {
+  function TeamLeadController($scope, $http, Admin) {
     $scope.teamLeadType = [
       { label: 'Teacher', value: 'teacher' },
       { label: 'Citizen Scientist', value: 'citizen scientist' },
@@ -15,6 +15,13 @@
       { label: 'Site Coordinator', value: 'site coordinator' },
       { label: 'Other', value: 'other' }
     ];
+
+    $scope.findUserAndOrganization = function() {
+      $scope.organization = $scope.user.schoolOrg;
+      $scope.user = ($scope.user) ? new Admin($scope.user) : new Admin();
+      $scope.user.schoolOrg = ($scope.organization && $scope.organization._id) ?
+        $scope.organization._id : $scope.organization;
+    };
 
     $scope.save = function(isValid) {
       if (!isValid) {
@@ -35,6 +42,16 @@
       function errorCallback(res) {
         $scope.error = res.data.message;
       }
+    };
+
+    $scope.remove = function() {
+      $scope.user.$remove(function() {
+        $scope.closeFunction();
+      });
+    };
+
+    $scope.close = function() {
+      $scope.closeFunction();
     };
   }
 })();

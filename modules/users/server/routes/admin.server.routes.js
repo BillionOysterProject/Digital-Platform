@@ -22,6 +22,9 @@ module.exports = function (app) {
   app.route('/api/users/:userId/deny')
     .post(adminPolicy.isAllowed, admin.deny);
 
+  app.route('/api/users/username')
+    .get(adminPolicy.isAllowed, admin.userByUsername);
+
   // Single user routes
   app.route('/api/users/:userId')
     .get(adminPolicy.isAllowed, admin.read)

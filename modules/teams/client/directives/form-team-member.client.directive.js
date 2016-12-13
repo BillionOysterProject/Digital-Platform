@@ -10,8 +10,7 @@
         scope: {
           teamMember: '=',
           teams: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
         controller: 'TeamMemberController',
         replace: true,

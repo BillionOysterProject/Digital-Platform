@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-4 shaded">
                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                <h3 class="text-center"><a href="#" data-toggle="modal" data-target="#modal-profile-user">{{vm.user.displayName}}</a></h3>
+                <h3 class="text-center"><a href="#" ng-click="vm.openViewUserModal()">{{vm.user.displayName}}</a></h3>
                 <p class="text-muted text-center"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
                 <div class="text-center" ng-show="vm.isTeamLead"><!--TIFF: show if team lead -->
                     <a class="btn btn-success" ng-click="vm.openTeamFormModal()"><i class="fa fa-plus"></i> Create a team</a>
@@ -144,7 +144,7 @@
                             <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
                                 <i class="glyphicon glyphicon-pencil"></i></a>
                         </div>
-                        <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                        <div class="panel" data-category="transition" ng-click="vm.openViewUserModal()">
                             <div class="panel-body text-muted text-center">
                                 <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
                                 <h3>Sally Smith</h3>
@@ -160,3 +160,6 @@
         </div>
     </section>
 </section>
+
+<view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization"
+  close-function="vm.closeViewUserModal"></view-user-modal>

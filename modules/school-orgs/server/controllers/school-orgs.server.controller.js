@@ -345,6 +345,7 @@ exports.schoolOrgByID = function (req, res, next, id) {
       });
     }
     req.schoolOrg = schoolOrg;
+    console.log('schoolOrg', schoolOrg);
     next();
   });
 };

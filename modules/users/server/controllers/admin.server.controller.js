@@ -306,6 +306,20 @@ exports.listTeamLeads = function (req, res) {
 /**
  * User middleware
  */
+exports.userByUsername = function (req, res) {
+  var username = req.query.username;
+
+  User.findOne({ 'username': username }, '-salt -password').populate('schoolOrg').exec(function (err, user) {
+    if (err) {
+      res.status(400).send({
+        message: err
+      });
+    } else {
+      res.json(user);
+    }
+  });
+};
+
 exports.userByID = function (req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
@@ -313,7 +327,7 @@ exports.userByID = function (req, res, next, id) {
     });
   }
 
-  User.findById(id, '-salt -password').exec(function (err, user) {
+  User.findById(id, '-salt -password').populate('schoolOrg').exec(function (err, user) {
     if (err) {
       return next(err);
     } else if (!user) {

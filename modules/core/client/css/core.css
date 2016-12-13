@@ -582,6 +582,10 @@ h6, .h6 {
     letter-spacing: 2px;
 }
 
+.capitalize {
+   text-transform: capitalize;
+}
+
 .break {
     word-break: break-all;
 }
