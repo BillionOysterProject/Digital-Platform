@@ -5,16 +5,16 @@
     .module('metrics')
     .controller('MetricsController', MetricsController);
 
-  MetricsController.$inject = ['$scope'];
+  MetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'MetricsService'];
 
-  function MetricsController($scope) {
-  
+  function MetricsController($scope, $rootScope, $timeout, MetricsService) {
+
     // TODO: can we get this wired up to put in BOP colors? (doesn't work)
     // MetricsController.setOptions({ colors : [ '#000', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'] });
-    
-    // TODO: says Chart is not defined 
+
+    // TODO: says Chart is not defined
     //Chart.defaults.global.responsive = true;
-    
+
     // TODO: also can this be wired up? (doesn't work)
     //Chart.defaults.global = {
     //animationSteps: 20, // to hopefully speed up animations
@@ -22,7 +22,7 @@
     //tooltipFontFamily: "'Roboto'",
     //tooltipTitleFontFamily: "'Roboto'"
     //}
-    
+
     var vm = this;
 
     vm.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -44,36 +44,50 @@
       [165, 159, 180, 181, 256, 257, 325],
       [218, 218, 220, 229, 256, 273, 358]
     ];
-    
+
     vm.pielabels = ['Team Members', 'Team Leads', 'Admin'];
     vm.piedata = [300, 500, 100];
-    
+
     vm.pieBlabels = ['6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade'];
     vm.pieBdata = [43, 24, 142, 66, 35, 52, 35];
-    
+
     vm.pieClabels = ['1 Period', '2 Periods', '3 Periods', '4 Periods', '5 Periods', '6 Periods', '7 Periods', '8 Periods', '9 Periods'];
     vm.pieCdata = [52, 35, 163, 42, 46, 52, 35, 45, 56];
-    
+
     vm.pieDlabels = ['Classroom', 'Field'];
     vm.pieDdata = [148, 100];
-    
+
     vm.pieElabels = ['Math', 'Science', 'Language Arts', 'Music', 'Environmental'];
     vm.pieEdata = [148, 100, 134, 42, 64];
-    
+
     vm.pieFlabels = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5'];
     vm.pieFdata = [24, 12, 52, 152, 89];
-    
+
     vm.pieGlabels = ['Lost Stations', 'Active Stations'];
     vm.pieGdata = [97, 248];
-    
+
     vm.pieHlabels = ['Incomplete Protocols', 'Published Protocols'];
     vm.pieHdata = [497, 1948];
-    
+
     vm.pieIlabels = ['Future Expeditions', 'Completed Expeditions'];
     vm.pieIdata = [52, 66];
-    
+
     vm.onClick = function (points, evt) {
       console.log(points, evt);
     };
+
+    vm.getPeopleMetrics = function() {
+      MetricsService.query({}, function (data) {
+        vm.peopleMetrics = data;
+        vm.error = null;
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        });
+      }, function(error) {
+        vm.error = error.data.message;
+      });
+    };
+
+    vm.getPeopleMetrics();
   }
 })();
