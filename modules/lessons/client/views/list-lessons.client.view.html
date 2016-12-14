@@ -84,6 +84,7 @@
                         <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
+                        <small ng-show="vm.lessonStats.taughtCount > 0">Taught by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers</small>
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
                                 <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
