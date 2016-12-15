@@ -1,0 +1,34 @@
+<div class="modal fade" id="modal-org-lead-invite" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Invite organization leads</h4>
+            </div>
+            <div class="modal-body">
+                <!--TIFF: wire up all org names in text/labels below -->
+                <p>You can add organization leads to help manage <b>New York Public Schools</b>. These organization leads will have all the same permissions to edit and delete the organization and organization leads - so proceed with caution.</p>
+                <hr/>
+                <p>If they already have a team lead account in the <b>New York Public Schools</b> organization, select their name below.</p>
+                <div class="form-group">
+                    <label for="">Team Leads in the <span class="red">New York Public Schools</span> organization</label>
+                    <select class="form-control"><!--TIFF: Should be a type ahead select -->
+                        <option>Team Lead</option>
+                        <option>Team Lead</option>
+                    </select>
+                </div>
+                <hr/>
+                <p>If they don't already have a team lead account in the <b>New York Public Schools</b> organization, send them an invite to join.</p>
+                <div class="form-group" show-errors>
+                    <label for="">Email address</label>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <!--TIFF: validation should only allow one or the other field -->
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" ng-click-"closeFunction()">Cancel</a>
+                <a class="btn btn-primary" ng-click="closeFunction()">Invite</a>
+            </div>
+        </div>
+    </div>
+</div>

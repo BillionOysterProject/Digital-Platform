@@ -1,0 +1,52 @@
+<div class="modal fade" id="modal-team-edit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form name="vm.form.teamProfileForm" ng-submit="vm.save(form.teamProfileForm.$valid)" novalidate>
+              <fieldset>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit the <span class="red">{{vm.team.name}}</span> profile</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" show-errors>
+                        <label for="name">Team Name</label>
+                        <input type="text" class="form-control" id="name" name="name" ng-model="vm.team.name" required />
+                        <div role="alert">
+                            <p class="help-block error-text" ng-message="required">Team name is required.</p>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label for="description">Team Description</label>
+                        <textarea class="form-control" id="description" name="description" ng-model="vm.team.description"></textarea>
+                    </div>
+                    <!--TIFF: Copied from user profile - is it easy to wait to implement a new photo on the modal Save click, or should the profile pic upload really be in a separate modal? -->
+                    <div ng-controller="ChangeProfilePictureController">
+                        <div class="text-center form-group">
+                            <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail">
+                        </div>
+                        <div class="text-center form-group" ng-hide="uploader.queue.length">
+                            <span class="btn btn-default btn-file">
+                              Select picture <input type="file" nv-file-select uploader="uploader">
+                            </span>
+                        </div>
+                        <div ng-show="success" class="text-center alert alert-success">
+                            <strong>Picture changed successfully</strong>
+                        </div>
+                        <div ng-show="error" class="text-center alert alert-danger">
+                            <strong ng-bind="error"></strong>
+                        </div>
+                        <div class="text-center form-group" ng-show="uploader.queue.length">
+                            <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
+                            <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload selected picture</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" ng-click="vm.close()">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
