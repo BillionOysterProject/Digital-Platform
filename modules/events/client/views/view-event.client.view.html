@@ -130,6 +130,7 @@
                             <th>Teams</th>
                             <th>Email</th>
                             <th>Date Registered</th>
+                            <th>Notes</th>
                             <th ng-show="vm.today || vm.past">Attended</th>
                         </tr>
                     </thead>
@@ -140,6 +141,10 @@
                             <td>{{registrant.user.teams}}</td>
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
+                            <!--Show if no note (default), link to add modal:-->
+                            <td><a href="#" data-toggle="modal" data-target="#modal-registrant-note"><i class="fa fa-comment-o"></i> Add note</a></td>
+                            <!--Show if there is a note, link to edit modal and include note text in link:
+                            <td><a href="#" data-toggle="modal" data-target="#modal-registrant-note" class="red"><i class="fa fa-comment"></i> Don't forget to get payment!</a></td>-->
                             <td ng-show="vm.today || vm.past">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
@@ -232,6 +237,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!--Tiff: wire up-->
+<div class="modal fade" id="modal-registrant-note" tabindex="-1" role="dialog" aria-labelledby="modal-registrant-note">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add a note to <span class="red">John Smith</span>'s registration</h4>
+                <!--Tiff: If editing an existing note, header should read:
+                <h4 class="modal-title">Edit the note for <span class="red">John Smith</span>'s registration</h4>
+                -->
+                <p>This note only applies to this event.</p>
+            </div>
+            <form novalidate>
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="form-group">
+                              <label class="control-label">Note</label>
+                              <textarea class="form-control" rows="4"></textarea>
+                              <!--Tiff: I think there should be a character limit?-->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <!--Tiff: Show Delete button only if editing existing note -->
+                  <button type="button" class="btn btn-danger">Delete</button>
+                  <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
         </div>
     </div>
 </div>
