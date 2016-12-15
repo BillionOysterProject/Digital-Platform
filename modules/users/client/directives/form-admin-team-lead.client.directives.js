@@ -9,7 +9,6 @@
         templateUrl: 'modules/users/client/views/admin/form-admin-team-lead.client.view.html',
         scope: {
           user: '=',
-          organizations: '=',
           closeFunction: '='
         },
         controller: 'TeamLeadController',

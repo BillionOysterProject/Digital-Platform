@@ -34,10 +34,17 @@
       .state('profiles.team', {
         url: '/team',
         templateUrl: 'modules/profiles/client/views/team.client.view.html',
+        controller: 'TeamProfileListController',
+        controllerAs: 'vm'
       })
       .state('profiles.team-view', {
         url: '/team/:teamId',
-        templateUrl: 'modules/profiles/client/views/view-team.client.view.html'
+        templateUrl: 'modules/profiles/client/views/view-team.client.view.html',
+        controller: 'TeamProfileController',
+        controllerAs: 'vm',
+        resolve: {
+          teamResolve: getTeam
+        },
       })
       .state('profiles.organization', {
         url: '/organization',
@@ -45,7 +52,9 @@
       })
       .state('profiles.organization-view', {
         url: '/organization/:schoolOrgId',
-        templateUrl: 'modules/profiles/client/views/view-organization.client.view.html'
+        templateUrl: 'modules/profiles/client/views/view-organization.client.view.html',
+        controller: 'OrganizationProfileController',
+        controllerAs: 'vm',
       })
       .state('profiles.restoration-station', {
         url: '/restoration-station',

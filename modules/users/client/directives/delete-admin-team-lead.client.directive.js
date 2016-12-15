@@ -12,6 +12,7 @@
           closeFunction: '='
         },
         replace: true,
+        controller: 'TeamLeadController',
         link: function(scope, element, attrs) {
 
         }

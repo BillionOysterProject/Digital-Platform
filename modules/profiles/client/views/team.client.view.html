@@ -8,12 +8,12 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
-                placeholder="Search for a team by name, team lead, organization...">
+                placeholder="Search for a team by name, description, team lead...">
             </div>
             <div class="alert alert-danger text-center" ng-show="vm.error">
               <p ng-bind="vm.error"></p>
             </div>
-            <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
+            <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString !== '' && !vm.error">
                 Sorry, no results found for that search term
             </div>
         </section>
@@ -23,19 +23,20 @@
     <section class="container-fluid">
         <!--TIFF: these are just copied from lessons -->
         <nav class="navbar">
-            <a class="btn btn-default pull-right" view-permissions="admin,team lead" data-toggle="modal" data-target="#modal-team-edit"><i class="glyphicon glyphicon-plus"></i> Create new team</a><!--TIFF: Open edit/create team modal currently in ViewTeam, on Submit of modal, open new ViewTeam page with that new team -->
+            <a class="btn btn-default pull-right" ng-click="vm.openTeamProfileForm()">
+              <i class="glyphicon glyphicon-plus"></i> Create new team</a><!--TIFF: Open edit/create team modal currently in ViewTeam, on Submit of modal, open new ViewTeam page with that new team -->
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
-                <li class="dropdown" id="subjectAreaSelection">
+                <li class="dropdown" id="orgSelection">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Organization{{(vm.filter.subjectAreaName) ? ': ' + vm.filter.subjectAreaName : ''}} <span class="caret"></span>
+                        Organization{{(vm.filter.organizationName) ? ': ' + vm.filter.organizationName : ''}} <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a ng-click="vm.subjectAreaSelected()" ok-sel=".all">All</a></li>
+                      <li><a ng-click="vm.organizationSelected()" ok-sel=".all">All</a></li>
                       <li role="separator" class="divider"></li>
-                      <li ng-repeat="subject in vm.subjectAreas">
-                        <a ok-sel=".{{subject._id}}" ng-click="vm.subjectAreaSelected(subject)">
-                            {{subject.subject}}
+                      <li ng-repeat="org in vm.organizations">
+                        <a ok-sel=".{{org._id}}" ng-click="vm.organizationSelected(org)">
+                            {{org.name}}
                         </a>
                       </li>
                     </ul>
@@ -44,30 +45,25 @@
         </nav>
 
         <div class="row" isotope-container="isotope-container">
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: 0000 })">
+            <div ng-repeat="team in vm.teams" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
                     <div class="panel-heading">
-                        <h3 class="panel-title">New York Public Schools</h3>
+                        <h3 class="panel-title">{{team.schoolOrg.name}}</h3>
                     </div>
                     <div class="panel-body text-center">
-                        <h4>Team Name</h4>
-                        <p class="text-muted small">We love to save oysters! Further description. We love to save oysters! Further description. We love to save oysters! Further description.</p><!--TIFF: limit to 200 -->
-                        <img class="img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" /><!--TIFF: only show if they have an image -->
+                        <h4>{{team.name}}</h4>
+                        <p class="text-muted small">{{team.description | limitTo:200}}</p><!--TIFF: limit to 200 -->
+                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" /><!--TIFF: only show if they have an image -->
                         <hr/>
                         <p>
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                                class="header-profile-image">
-                            <b>Team Lead</b>&nbsp;&nbsp;/&nbsp;&nbsp;
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                                class="header-profile-image">
-                            <b>Team Lead</b>
+                          <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
                         </p>
                     </div>
                     <div class="panel-footer text-muted">
                         <ul class="list-inline">
-                            <li><i class="fa fa-users"></i> <b>53</b> members</li>
-                            <li><i class="fa fa-map-marker"></i> <b>3</b> ORS</li>
-                            <li><i class="fa fa-flask"></i> <b>8</b> expeditions</li>
+                            <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
+                            <li><i class="fa fa-map-marker"></i> <b>{{team.expeditionCount}}</b> ORS</li>
+                            <li><i class="fa fa-flask"></i> <b>{{team.orsCount}}</b> expeditions</li>
                         </ul>
                     </div>
                 </div>
@@ -75,3 +71,5 @@
         </div>
     </section>
 </section>
+
+<form-team-profile-modal close-function="vm.closeTeamProfileForm"></form-team-profile-modal>

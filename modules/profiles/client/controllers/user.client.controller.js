@@ -6,10 +6,10 @@
     .controller('UserProfileController', UserProfileController);
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
-    'TeamsService', 'SchoolOrganizationsService', 'TeamMembersService', 'Admin', 'ExpeditionsService'];
+    'TeamMembersService', 'Admin', 'ExpeditionsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
-    TeamsService, SchoolOrganizationsService, TeamMembersService, Admin, ExpeditionsService) {
+    TeamMembersService, Admin, ExpeditionsService) {
     $scope.checkRole = ExpeditionViewHelper.checkRole;
 
     $scope.findUserRoles = function() {
@@ -48,9 +48,6 @@
       });
     };
 
-    $scope.allTeams = TeamsService.query();
-    $scope.allOrganizations = SchoolOrganizationsService.query();
-
     $scope.findExpeditions = function() {
       var byOwner, byMember;
       if ($scope.isTeamLead) {
@@ -63,49 +60,40 @@
         byOwner: byOwner,
         byMember: byMember,
       }, function(data) {
-        console.log('expeditions', data);
         $scope.expeditions = data;
       });
     };
 
     $scope.openAdminTeamLeadForm = function() {
-      $scope.closeFunction('#modal-admin-team-lead-editadd');
+      angular.element('#modal-admin-team-lead-editadd').modal('show');
+      // $scope.closeFunction('#modal-admin-team-lead-editadd');
     };
 
     $scope.closeAdminTeamLeadForm = function() {
-      $scope.formUser = {};
       angular.element('#modal-admin-team-lead-editadd').modal('hide');
     };
 
     $scope.openDeleteAdminTeamLead = function() {
-      $scope.userToDelete = ($scope.user) ? new Admin($scope.user) : new Admin();
       angular.element('#modal-delete-admin-team-lead').modal('show');
     };
 
     $scope.closeDeleteAdminTeamLead = function() {
-      $scope.userToDelete = {};
       angular.element('#modal-delete-admin-team-lead').modal('hide');
     };
 
     $scope.openFormTeamMember = function() {
-      $scope.teamMember = ($scope.user) ? new TeamMembersService($scope.user) : new TeamMembersService();
-      $scope.teamMember.oldTeamId = ($scope.user && $scope.user.team) ? angular.copy($scope.user.team._id) : '';
-
       angular.element('#modal-team-member-editadd').modal('show');
     };
 
     $scope.closeFormTeamMember = function() {
-      $scope.teamMember = {};
       angular.element('#modal-team-member-editadd').modal('hide');
     };
 
     $scope.openDeleteTeamMember = function(teamMember) {
-      $scope.teamMember = ($scope.user) ? new TeamMembersService($scope.user) : new TeamMembersService();
       angular.element('#modal-team-member-delete').modal('show');
     };
 
     $scope.closeDeleteTeamMember = function() {
-      $scope.teamMember = {};
       angular.element('#modal-team-member-delete').modal('hide');
     };
 

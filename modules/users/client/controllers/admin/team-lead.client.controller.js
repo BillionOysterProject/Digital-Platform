@@ -5,9 +5,9 @@
     .module('users')
     .controller('TeamLeadController', TeamLeadController);
 
-  TeamLeadController.$inject = ['$scope', '$http', 'Admin'];
+  TeamLeadController.$inject = ['$scope', '$http', 'Admin', 'SchoolOrganizationsService'];
 
-  function TeamLeadController($scope, $http, Admin) {
+  function TeamLeadController($scope, $http, Admin, SchoolOrganizationsService) {
     $scope.teamLeadType = [
       { label: 'Teacher', value: 'teacher' },
       { label: 'Citizen Scientist', value: 'citizen scientist' },
@@ -15,6 +15,8 @@
       { label: 'Site Coordinator', value: 'site coordinator' },
       { label: 'Other', value: 'other' }
     ];
+
+    $scope.organizations = SchoolOrganizationsService.query();
 
     $scope.findUserAndOrganization = function() {
       $scope.organization = $scope.user.schoolOrg;
@@ -36,7 +38,7 @@
       }
 
       function successCallback(res) {
-        $scope.saveFunction();
+        $scope.closeFunction();
       }
 
       function errorCallback(res) {

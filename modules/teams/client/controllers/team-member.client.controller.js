@@ -5,10 +5,20 @@
     .module('teams')
     .controller('TeamMemberController', TeamMemberController);
 
-  TeamMemberController.$inject = ['$scope', '$http', 'TeamMembersService'];
+  TeamMemberController.$inject = ['$scope', '$http', 'TeamMembersService', 'TeamsService'];
 
-  function TeamMemberController($scope, $http, TeamMembersService) {
-    $scope.teamMember = ($scope.teamMember) ? new TeamMembersService($scope.teamMember) : new TeamMembersService();
+  function TeamMemberController($scope, $http, TeamMembersService, TeamsService) {
+    $scope.findUserAndTeamIds = function() {
+      $scope.teamMember = ($scope.teamMember) ? new TeamMembersService($scope.teamMember) : new TeamMembersService();
+      $scope.teamIds = [];
+      if ($scope.teams) {
+        for (var i = 0; i < $scope.teams.length; i++) {
+          $scope.teamIds.push(($scope.teams[i] && $scope.teams[i]._id) ? $scope.teams[i]._id : $scope.teams[i]);
+        }
+      }
+    };
+
+    $scope.allTeams = TeamsService.query();
 
     $scope.save = function(isValid) {
       if (!isValid) {

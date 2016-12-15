@@ -2,30 +2,42 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-md-3 col-sm-4 shaded">
-                <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
+                <img ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}" class="img-circle img-responsive center-block" width="100" />
                 <h3 class="text-center"><a href="#" ng-click="vm.openViewUserModal()">{{vm.user.displayName}}</a></h3>
                 <p class="text-muted text-center"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
                 <div class="text-center" ng-show="vm.isTeamLead"><!--TIFF: show if team lead -->
                     <a class="btn btn-success" ng-click="vm.openTeamFormModal()"><i class="fa fa-plus"></i> Create a team</a>
                 </div>
                 <hr/>
-                <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6><!--TIFF: If more than one, say "Teams"-->
-                <h4><a>Team Oyster</a><br/><!--TIFF: Only show <small> div if user profile is not the team lead of the team listed --><small><a data-toggle="modal" data-target="#modal-profile-user">Mrs. Sandra Jones</a></small></h4>
-                <hr/>
-                <h6>Organization</h6>
-                <h4><a>New York Public Schools</a><br/><small>New York, NY</small></h4>
-                <hr/>
-                <a class="btn btn-default btn-block">Edit profile</a><!--TIFF: Open modal with fields for editing name, username, and email (take from Settings page) -->
-                <a class="btn btn-default btn-block">Change picture</a><!-- TIFF: Open modal with fields for changing profile picture (take from Settings page) -->
-                <a class="btn btn-default btn-block">Change password</a><!-- TIFF: Open password change modal from Settings page -->
+                <div ng-show="vm.teams">
+                  <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6><!--TIFF: If more than one, say "Teams"-->
+                  <h4 ng-repeat="team in vm.teams">
+                    <a>{{team.name}}</a><br/>
+                    <!--TIFF: Only show <small> div if user profile is not the team lead of the team listed -->
+                    <small ng-show="vm.user.displayName !== team.teamLead.displayName">
+                      <a data-toggle="modal" data-target="#modal-profile-user">{{team.teamLead.displayName}}</a></small>
+                  </h4>
+                  <hr/>
+                </div>
+                <div ng-show="vm.organization">
+                  <h6>Organization</h6>
+                  <h4><a>{{vm.organization.name}}</a><br/><small>{{vm.organization.city}}, {{vm.organization.state}}</small></h4>
+                  <hr/>
+                </div>
+                <a class="btn btn-default btn-block" ng-click="vm.openAdminTeamLeadForm()">Edit profile</a>
+                  <!--TIFF: Open modal with fields for editing name, username, and email (take from Settings page) -->
+                <a class="btn btn-default btn-block">Change picture</a>
+                  <!-- TIFF: Open modal with fields for changing profile picture (take from Settings page) -->
+                <a class="btn btn-default btn-block" ng-click="vm.openPasswordChanged()">Change password</a>
+                  <!-- TIFF: Open password change modal from Settings page -->
                 <hr/>
             </div>
             <div class="col-md-9 col-sm-8">
                 <br/>
-                <!--TIFF: Show if a team lead without teams --
-                <div class="alert alert-info text-center">
+                <!--TIFF: Show if a team lead without teams -->
+                <div class="alert alert-info text-center" ng-show="vm.isTeamLead && vm.teams.length === 0">
                     You don't have any teams yet! Why don't you <a href="#" class="btn btn-sm btn-default">create one</a>?
-                </div>-->
+                </div><!-- -->
 
                 <!--TIFF: Show if any team member requests from any of the team lead's teams-->
                 <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
@@ -69,8 +81,8 @@
                     <nav class="nav nav-default text-right">
                         <!--TIFF: only show buttons if team lead -->
                         <a class="btn btn-default">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
-                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-org-lead-invite">Invite leads</a>
-                        <a class="btn btn-danger" data-toggle="modal" data-target="#modal-org-lead-remove">Remove leads</a>
+                        <a class="btn btn-default" ng-click="vm.openInviteOrgLead()">Invite leads</a>
+                        <a class="btn btn-danger" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
                         <a class="btn btn-danger">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
                     </nav>
                     <hr/>
@@ -125,41 +137,26 @@
                     </div>
                     <br/>
                     <nav class="nav nav-default text-right"><!--TIFF: only show buttons if team lead -->
-                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-edit">Edit team profile</a>
-                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-invite">Invite leads</a>
+                        <a class="btn btn-default" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
+                        <a class="btn btn-default" ng-click="vm.openInviteTeamLead()">Invite leads</a>
                         <a class="btn btn-default">Add members</a><!--TIFF: Open add members modal from Settings page -->
                         <a class="btn btn-default">Import members</a><!--TIFF: Open import members modal from Settings page -->
-                        <a class="btn btn-danger" data-toggle="modal" data-target="#modal-team-lead-remove">Remove leads</a>
+                        <a class="btn btn-danger" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
                         <a class="btn btn-danger">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
                     </nav>
                     <hr/>
-                </div>
-
-                <!--TIFF: Team members below should only be visible if user only has ONE team and is NOT an Org Lead -->
-                <div class="row" isotope-container="isotope-container">
-                    <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                        <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
-                            <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
-                                <i class="glyphicon glyphicon-remove"></i></a>
-                            <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
-                                <i class="glyphicon glyphicon-pencil"></i></a>
-                        </div>
-                        <div class="panel" data-category="transition" ng-click="vm.openViewUserModal()">
-                            <div class="panel-body text-muted text-center">
-                                <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                                <h3>Sally Smith</h3>
-                                <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
-                            </div>
-                            <div class="panel-footer">
-                                <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 </section>
 
-<view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization"
-  close-function="vm.closeViewUserModal"></view-user-modal>
+<view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization" close-function="vm.closeViewUserModal"></view-user-modal>
+<form-admin-team-lead-modal user="vm.user" teams="teams" close-function="vm.closeAdminTeamLeadForm"></form-admin-team-lead-modal>
+<form-team-member-modal team-member="vm.user" close-function="vm.closeFormTeamMember"></form-team-member-modal>
+<change-password-modal callback-function="vm.passwordChanged"></change-password-modal>
+<invite-org-lead-modal close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
+<delete-org-lead-modal close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
+<form-team-profile-modal close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<invite-team-lead-modal close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
+<delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>

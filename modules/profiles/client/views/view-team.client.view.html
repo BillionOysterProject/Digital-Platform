@@ -63,11 +63,11 @@
             </div>
 
             <!--TIFF: only show buttons if team lead -->
-            <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-edit">Edit team profile</a>
-            <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-invite">Invite leads</a>
+            <a class="btn btn-default" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
+            <a class="btn btn-default" ng-click="vm.openInviteTeamLead()">Invite leads</a>
             <a class="btn btn-default">Add members</a><!--TIFF: Open add members modal from Settings page -->
             <a class="btn btn-default">Import members</a><!--TIFF: Open import members modal from Settings page -->
-            <a class="btn btn-danger" data-toggle="modal" data-target="#modal-team-lead-remove">Remove leads</a>
+            <a class="btn btn-danger" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
             <a class="btn btn-danger">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
         </nav>
         <hr/>
@@ -162,118 +162,7 @@
 
 
 <!-- MODALS -->
-
-<div class="modal fade" id="modal-team-edit" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Edit the <span class="red">Team Oyster</span> profile</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group" show-errors>
-                    <label for="">Team Name</label>
-                    <input type="text" class="form-control" required />
-                    <div role="alert">
-                        <p class="help-block error-text" ng-message="required">Team name is required.</p>
-                    </div>
-                </div>
-                <div class="form-group" show-errors>
-                    <label for="">Team Description</label>
-                    <textarea class="form-control"></textarea>
-                </div>
-                <!--TIFF: Copied from user profile - is it easy to wait to implement a new photo on the modal Save click, or should the profile pic upload really be in a separate modal? -->
-                <div ng-controller="ChangeProfilePictureController">
-                    <div class="text-center form-group">
-                        <img ng-src="{{imageURL}}" alt="{{user.displayName}}" class="img-thumbnail">
-                    </div>
-                    <div class="text-center form-group" ng-hide="uploader.queue.length">
-                        <span class="btn btn-default btn-file">
-                          Select picture <input type="file" nv-file-select uploader="uploader">
-                        </span>
-                    </div>
-                    <div ng-show="success" class="text-center alert alert-success">
-                        <strong>Picture changed successfully</strong>
-                    </div>
-                    <div ng-show="error" class="text-center alert alert-danger">
-                        <strong ng-bind="error"></strong>
-                    </div>
-                    <div class="text-center form-group" ng-show="uploader.queue.length">
-                        <button class="btn btn-default" ng-click="cancelUpload();">Cancel</button>
-                        <button class="btn btn-primary" ng-click="uploadProfilePicture();">Upload selected picture</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-default">Cancel</a>
-                <a class="btn btn-primary">Save</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="modal-team-lead-invite" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Invite team leads</h4>
-            </div>
-            <div class="modal-body">
-                <!--TIFF: wire up all team/org names in text/labels below -->
-                <p>You can add additional team leads to help manage <b>Team Oyster</b>. These team leads will have all the same permissions to edit and delete the team; add, edit and delete members and leads; and create, edit and publish expeditions - so proceed with caution.</p>
-                <hr/>
-                <p>If they already have a team lead account in the <b>New York Public Schools</b> organization, select their name below.</p>
-                <div class="form-group">
-                    <label for="">Team Leads in the <span class="red">New York Public Schools</span> organization</label>
-                    <select class="form-control"><!--TIFF: Should be a type ahead select -->
-                        <option>Team Lead</option>
-                        <option>Team Lead</option>
-                    </select>
-                </div>
-                <hr/>
-                <p>If they don't already have a team lead account in the <b>New York Public Schools</b> organization, send them an invite to join.</p>
-                <div class="form-group" show-errors>
-                    <label for="">Email address</label>
-                    <input type="text" class="form-control"></input>
-                </div>
-                <!--TIFF: validation should only allow one or the other field -->
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-default">Cancel</a>
-                <a class="btn btn-primary">Invite</a>
-                <!--TIFF: Inviting should send email to invitee "You have been invited to help manage the team __ at the Billion Oyster Project" and give option to accept -->
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="modal-team-lead-remove" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Remove team leads</h4>
-            </div>
-            <div class="modal-body">
-                <!--TIFF: wire up all team/org names in text/labels below -->
-                <p>Removing a team lead will disable all of their permissions to edit and delete the team; add, edit and delete members and leads; and create, edit and publish expeditions - so proceed with caution.</p>
-                <p>Although they will be removed from managing this team, they will still have a team lead account inside the <b>New York Public Schools</b> organization to create and manage other teams.</p>
-                <div class="form-group">
-                    <label for="">Select the team lead to remove</label>
-                    <select class="form-control">
-                        <option>Team Lead</option>
-                        <option>Team Lead</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-default">Cancel</a>
-                <a class="btn btn-danger">Remove</a>
-            </div>
-        </div>
-    </div>
-</div>
+<form-team-profile-modal close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<invite-team-lead-modal close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
+<delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <!--END OF MODALS-->

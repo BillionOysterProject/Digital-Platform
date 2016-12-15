@@ -38,8 +38,16 @@
     vm.findCurrentUserAndOrganization();
 
     vm.findTeams = function(callback) {
+      var byOwner, byMember;
+      if (vm.isTeamLead) {
+        byOwner = true;
+      } else {
+        byMember = true;
+      }
+
       TeamsService.query({
-        byOwner: true
+        byOwner: byOwner,
+        byMember: byMember
       }, function(data) {
         vm.teams = data;
         if (callback) callback();
@@ -69,8 +77,86 @@
       if (openNewModalName) {
         $timeout(function() {
           angular.element(openNewModalName).modal('show');
-        }, 500);
+        }, 1000);
       }
+    };
+
+    vm.openAdminTeamLeadForm = function() {
+      console.log('openAdminTeamLeadForm');
+      angular.element('#modal-admin-team-lead-editadd').modal('show');
+    };
+
+    vm.closeAdminTeamLeadForm = function() {
+      angular.element('#modal-admin-team-lead-editadd').modal('hide');
+    };
+
+    vm.openFormTeamMember = function() {
+      angular.element('#modal-team-member-editadd').modal('show');
+    };
+
+    vm.closeFormTeamMember = function() {
+      angular.element('#modal-team-member-editadd').modal('hide');
+    };
+
+    // vm.openUserForm = function() {
+    //   if (vm.isAdmin || vm.isTeamLead) {
+    //     vm.openAdminTeamLeadForm();
+    //   } else {
+    //     vm.openFormTeamMember();
+    //   }
+    // };
+
+    vm.openPasswordChanged = function() {
+      angular.element('#change-password-modal').modal('show');
+    };
+
+    vm.passwordChanged = function(success) {
+      angular.element('#change-password-modal').modal('hide');
+      if (success) {
+        $timeout(function() {
+          angular.element('#modal-password-change-success').modal('hide');
+        });
+      }
+    };
+
+    vm.openInviteOrgLead = function() {
+      angular.element('#modal-org-lead-invite').modal('show');
+    };
+
+    vm.closeInviteOrgLead = function() {
+      angular.element('#modal-org-lead-invite').modal('hide');
+    };
+
+    vm.openDeleteOrgLead = function() {
+      angular.element('#modal-org-lead-remove').modal('show');
+    };
+
+    vm.closeDeleteOrgLead = function() {
+      angular.element('#modal-org-lead-remove').modal('hide');
+    };
+
+    vm.openTeamProfileForm = function() {
+      angular.element('#modal-team-edit').modal('show');
+    };
+
+    vm.closeTeamProfileForm = function() {
+      angular.element('#modal-team-edit').modal('hide');
+    };
+
+    vm.openInviteTeamLead = function() {
+      angular.element('#modal-team-lead-invite').modal('show');
+    };
+
+    vm.closeInviteTeamLead = function() {
+      angular.element('#modal-team-lead-invite').modal('hide');
+    };
+
+    vm.openDeleteTeamLead = function() {
+      angular.element('#modal-team-lead-remove').modal('show');
+    };
+
+    vm.closeDeleteTeamLead = function() {
+      angular.element('#modal-team-lead-remove').modal('hide');
     };
   }
 })();

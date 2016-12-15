@@ -18,6 +18,7 @@
           element.bind('show.bs.modal', function () {
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
+            scope.findUserAndTeamIds();
           });
         }
       };

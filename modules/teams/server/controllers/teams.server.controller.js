@@ -7,6 +7,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
+  Expedition = mongoose.model('Expedition'),
+  RestorationStation = mongoose.model('RestorationStation'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -97,59 +99,178 @@ exports.delete = function (req, res) {
  * List of Teams
  */
 exports.list = function (req, res) {
-  var query;
-  var and = [];
+  var searchQuery = function(teamLeadIds) {
+    var query;
+    var and = [];
 
-  if (req.query.byOwner) {
-    and.push({ 'teamLead': req.user });
-  }
-  if (req.query.byMember) {
-    and.push({ 'teamMembers': req.user });
-  }
-  if (req.query.teamId) {
-    and.push({ '_id': req.query.teamId });
-  }
-  if (req.query.organization) {
-    and.push({ 'schoolOrg': req.query.organization });
-  }
-
-  if (and.length === 1) {
-    query = Team.find(and[0]);
-  } else if (and.length > 0) {
-    query = Team.find({ $and: and });
-  } else {
-    query = Team.find();
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'owner') {
-      query.sort({ 'teamLead': 1, 'name': 1 });
+    if (teamLeadIds && teamLeadIds) {
+      and.push({ 'teamLead': { $in: teamLeadIds } });
+    } else if (req.query.byOwner) {
+      and.push({ 'teamLead': req.user });
     }
-  } else {
-    query.sort('name');
-  }
 
-  if (req.query.limit) {
-    var limit = Number(req.query.limit);
-    if (req.query.page) {
-      var page = Number(req.query.page);
-      query.skip(limit*(page-1)).limit(limit);
+    if (req.query.byMember) {
+      and.push({ 'teamMembers': req.user });
+    }
+    if (req.query.teamId) {
+      and.push({ '_id': req.query.teamId });
+    }
+    if (req.query.organization) {
+      and.push({ 'schoolOrg': req.query.organization });
+    }
+
+    var or = [];
+    var searchRe;
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        return res.status(400).send({
+          message: 'Search string is invalid'
+        });
+      }
+
+      or.push({ 'name': searchRe });
+      or.push({ 'description': searchRe });
+
+      and.push({ $or: or });
+    }
+
+    if (and.length === 1) {
+      query = Team.find(and[0]);
+    } else if (and.length > 0) {
+      query = Team.find({ $and: and });
     } else {
-      query.limit(limit);
+      query = Team.find();
     }
-  }
 
-  query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-  .populate('teamLead', 'displayName firstName lastName username email profileImageURL')
-  .populate('schoolOrg').exec(function (err, teams) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+    if (req.query.sort) {
+      if (req.query.sort === 'owner') {
+        query.sort({ 'teamLead': 1, 'name': 1 });
+      }
     } else {
-      res.json(teams);
+      query.sort('name');
     }
-  });
+
+    if (req.query.limit) {
+      var limit = Number(req.query.limit);
+      if (req.query.page) {
+        var page = Number(req.query.page);
+        query.skip(limit*(page-1)).limit(limit);
+      } else {
+        query.limit(limit);
+      }
+    }
+
+    query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
+    .populate('teamLeads', 'displayName firstName lastName username email profileImageURL')
+    .populate('teamLead', 'displayName firstName lastName username email profileImageURL')
+    .populate('schoolOrg').exec(function (err, teams) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        if (req.query.full) {
+          var getExpeditionCount = function(team, callback) {
+            Expedition.count({ team: team }).exec(function(err, expeditionCount) {
+              if (err) {
+                callback(0);
+              } else {
+                callback(expeditionCount);
+              }
+            });
+          };
+
+          var getORSCount = function(team, callback) {
+            RestorationStation.count({ team: team }).exec(function(err, orsCount) {
+              if (err) {
+                callback(0);
+              } else {
+                callback(orsCount);
+              }
+            });
+          };
+
+          var getCounts = function(teams, index, callback) {
+            if (index < teams.length) {
+              var teamObj = teams[index];
+              var team = teamObj ? teamObj.toJSON() : {};
+              getExpeditionCount(team, function(expeditionCount) {
+                getORSCount(team, function(orsCount) {
+                  team.expeditionCount = expeditionCount;
+                  team.orsCount = orsCount;
+                  teams[index] = team;
+                  getCounts(teams, index+1, callback);
+                });
+              });
+            } else {
+              callback();
+            }
+          };
+
+          getCounts(teams, 0, function() {
+            res.json(teams);
+          });
+        } else {
+          res.json(teams);
+        }
+      }
+    });
+  };
+
+  var findTeamLeadIds = function(callback) {
+    var query;
+    var and = [];
+
+    and.push({ roles: 'team lead' });
+
+    var searchOr = [];
+    var searchRe;
+
+    if (req.query.searchString) {
+      try {
+        searchRe = new RegExp(req.query.searchString, 'i');
+      } catch(e) {
+        callback('Search string is invalid', null);
+      }
+      searchOr.push({ displayName: searchRe });
+      searchOr.push({ username: searchRe });
+      searchOr.push({ email: searchRe });
+
+      and.push({ $or: searchOr });
+    }
+
+    if (and.length === 1) {
+      query = User.find(and[0]);
+    } else if (and.length > 0) {
+      query = User.find({ $and: and });
+    } else {
+      query = User.find();
+    }
+
+    query.exec(function(err, teamLeads) {
+      if (err) {
+        callback(null, errorHandler.getErrorMessage(err));
+      } else if (teamLeads && teamLeads.length > 0) {
+        var teamLeadIds = [];
+        for (var i = 0; i < teamLeads.length; i++) {
+          teamLeadIds.push(teamLeads[i]._id);
+        }
+        callback(teamLeadIds);
+      } else {
+        callback([]);
+      }
+    });
+  };
+
+  if (req.query.searchString) {
+    findTeamLeadIds(function(teamLeadIds, error) {
+      searchQuery(teamLeadIds);
+    });
+  } else {
+    searchQuery();
+  }
 };
 
 exports.listMembers = function (req, res) {
@@ -191,7 +312,7 @@ exports.listMembers = function (req, res) {
         var searchRe;
         var or = [];
         if (req.query.searchString) {
-          
+
           try {
             searchRe = new RegExp(req.query.searchString, 'i');
           } catch(e) {

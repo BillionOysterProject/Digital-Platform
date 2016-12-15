@@ -46,7 +46,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ng-show="expeditions">
                         <dl class="dl-horizontal">
                             <dt>Expeditions</dt>
                             <dd ng-repeat="expedition in expeditions">
@@ -63,9 +63,9 @@
                         </dl>
                     </div>
                 </div>
-                <hr/>
+                <hr ng-show="isTeamLead"/>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" ng-hide="true">
                         <dl class="dl-horizontal">
                             <dt>Motivations</dt>
                             <dd>...</dd>
@@ -73,7 +73,7 @@
                             <dd>...</dd>
                         </dl>
                     </div>
-                    <div class="col-sm-6"><!-- SHOW IF TEAM LEAD: -->
+                    <div class="col-sm-6" ng-show="isTeamLead"><!-- SHOW IF TEAM LEAD: -->
                         <dl class="dl-horizontal">
                             <dt>Grade levels</dt>
                             <dd>9th-12th</dd>
@@ -85,14 +85,12 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+              <form-admin-team-lead-modal user="user" close-function="closeAdminTeamLeadForm"></form-admin-team-lead-modal>
+              <delete-admin-team-lead-modal user="user" close-function="closeDeleteAdminTeamLead"></delete-admin-team-lead-modal>
+              <form-team-member-modal team-member="user" teams="teams" close-function="closeFormTeamMember"></form-team-member-modal>
+              <delete-team-member-modal team-member="user" close-function="closeDeleteTeamMember"></delete-team-member-modal>
+            </div>
         </div>
     </div>
-    <form-admin-team-lead-modal user="user" organizations="allOrganizations"
-      close-function="closeAdminTeamLeadForm"></form-admin-team-lead-modal>
-    <delete-admin-team-lead-modal user="user"
-      close-function="closeDeleteAdminTeamLead"></delete-admin-team-lead-modal>
-    <form-team-member-modal team-member="user" teams="allTeams"
-      close-function="closeFormTeamMember"></form-team-member-modal>
-    <delete-team-member-modal team-member="user"
-      close-function="closeDeleteTeamMember"></delete-team-member-modal>
 </div>

@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-team-member-editadd" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form name="form.teamMemberForm" ng-submit="save(form.teamMemberForm.$valid)" novalidate>
         <fieldset>
@@ -28,7 +28,7 @@
                 <label for="team" class="control-label required">Team Assignment</label>
                 <select name="team" class="form-control" ng-model="teamMember.team._id" required>
                   <option disabled selected value>
-                  <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
+                  <option ng-repeat="team in allTeams" value="{{team._id}}">{{team.name}}</option>
                   <option value="-1">Create a new team</option>
                 </select>
               </div>
