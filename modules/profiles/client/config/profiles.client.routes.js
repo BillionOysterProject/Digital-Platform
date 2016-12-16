@@ -42,9 +42,6 @@
         templateUrl: 'modules/profiles/client/views/view-team.client.view.html',
         controller: 'TeamProfileController',
         controllerAs: 'vm',
-        resolve: {
-          teamResolve: getTeam
-        },
       })
       .state('profiles.organization', {
         url: '/organization',

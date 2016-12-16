@@ -8,6 +8,7 @@
         restrict: 'AE',
         templateUrl: 'modules/profiles/client/views/form-team-profile.client.view.html',
         scope: {
+          team: '=',
           closeFunction: '='
         },
         replace: true,

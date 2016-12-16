@@ -11,8 +11,11 @@ var path = require('path'),
   RestorationStation = mongoose.model('RestorationStation'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config')),
   async = require('async'),
   crypto = require('crypto');
 
@@ -52,7 +55,22 @@ exports.read = function (req, res) {
 
   // Add a custom field to the Team, for determining if the current User is the "lead".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Team model.
-  team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id && team.teamLead._id.toString() === req.user._id.toString() ? true : false;
+  team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id &&
+    team.teamLead._id.toString() === req.user._id.toString() ? true : false;
+
+  if (!team.isCurrentUserTeamLead) {
+    var indexL = _.findIndex(team.teamLeads, function(l) {
+      var leadId = (l && l._id) ? l._id : l;
+      return leadId.toString() === req.user._id.toString();
+    });
+    team.isCurrentUserTeamLead = (indexL > -1) ? true : false;
+  }
+
+  var indexM = _.findIndex(team.teamMembers, function(m) {
+    var memberId = (m && m._id) ? m._id : m;
+    return memberId.toString() === req.user._id.toString();
+  });
+  team.isCurrentUserTeamMember = (indexM > -1) ? true : false;
 
   res.json(team);
 };
@@ -163,8 +181,8 @@ exports.list = function (req, res) {
     }
 
     query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-    .populate('teamLeads', 'displayName firstName lastName username email profileImageURL')
-    .populate('teamLead', 'displayName firstName lastName username email profileImageURL')
+    // .populate('teamLead', 'displayName firstName lastName username email profileImageURL pending')
+    .populate('teamLeads', 'displayName firstName lastName username email profileImageURL pending')
     .populate('schoolOrg').exec(function (err, teams) {
       if (err) {
         return res.status(400).send({
@@ -385,8 +403,9 @@ exports.teamByID = function (req, res, next, id) {
     });
   }
 
-  Team.findById(id).populate('teamLead', 'displayName firstName lastName username email profileImageURL')
-  .populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
+  Team.findById(id).populate('teamLead', 'displayName firstName lastName username email profileImageURL roles schoolOrg')
+  .populate('teamLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
+  .populate('teamMembers', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
   .populate('schoolOrg', 'name')
   .exec(function (err, team) {
     if (err) {
@@ -419,6 +438,44 @@ exports.memberByID = function (req, res, next, id) {
     req.member = member;
     next();
   });
+};
+
+exports.uploadTeamPhoto = function (req, res) {
+  var team = req.team;
+  console.log('uploading team photo');
+  var upload = multer(config.uploads.teamPhotoUpload).single('teamPhoto');
+  var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = imageUploadFileFilter;
+
+  if (team) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.teamPhotoUpload,
+      function(fileInfo) {
+        console.log('team photo info', fileInfo);
+        team.photo = fileInfo;
+
+        team.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            console.log('saved team', team);
+            res.json(team);
+          }
+        });
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
+  } else {
+    res.status(400).send({
+      message: 'Team does not exist'
+    });
+  }
 };
 
 /**

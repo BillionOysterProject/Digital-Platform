@@ -2,27 +2,22 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-md-6">
-                <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
+                <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
             </div>
             <div class="col-lg-3 col-md-6">
-                <h2>Team Oyster</h2>
-                <h4><a href="#">New York Public Schools</a></h4>
-                <p>We love to save oysters! Further description ...</p>
+                <h2>{{vm.team.name}}</h2>
+                <h4><a href="#">{{vm.team.schoolOrg.name}}</a></h4>
+                <p>{{vm.team.description}}</p>
             </div>
             <div class="col-lg-6 col-md-12">
                 <br/>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h6><i class="fa fa-user"></i> Team Lead</h6><!--TIFF: If more than one, say "Team Leads"-->
-                        <p>
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                        <h6><i class="fa fa-user"></i> {{(vm.team.teamLeads.length > 1) ? 'Team Lead' : 'Team Leads'}}</h6>
+                        <p ng-repeat="teamLead in vm.team.teamLeads">
+                            <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
                                 class="pull-left header-profile-image">
-                            <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
-                        </p>
-                        <p>
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                                class="pull-left header-profile-image">
-                            <b><a data-toggle="modal" data-target="#modal-profile-user">Team Lead</a></b>
+                            <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
                         </p>
                     </div>
                     <div class="col-sm-4">
@@ -36,9 +31,9 @@
                     <div class="col-sm-4">
                         <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
                         <ul class="list-unstyled">
-                            <li><a>September Expedition</a></li>
-                            <li><a>October Expedition</a></li>
-                            <li><a>November Expedition</a></li>
+                            <li ng-repeat="expedition in vm.expeditions">
+                              <a>{{expedition.name}}</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -50,7 +45,7 @@
 
 
 <!--TIFF: Team members below should only be visible to people within the team, the team leads of the current team, and admin (hide for other team leads/members) -->
-<section class="content">
+<section class="content" ng-show="vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember || vm.isAdmin">
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
             <div class="form-group col-md-4">
@@ -72,7 +67,7 @@
         </nav>
         <hr/>
 
-        <div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
+        <div class="alert alert-info text-center" ng-show="vm.teamMembers.length === 0 && vm.filter.searchString === ''">
             No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
         </div>
         <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
@@ -81,8 +76,8 @@
         </div><!--TIFF: Open modal from Settings -->
 
         <div class="row" isotope-container="isotope-container">
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
+            <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay" ng-show="vm.team.isCurrentUserTeamLead || vm.isAdmin"><!--TIFF: Only show if team lead (admin?) -->
                     <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
                         <i class="glyphicon glyphicon-remove"></i></a>
                     <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
@@ -90,66 +85,12 @@
                 </div>
                 <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
                     <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                        <h3>Sally Smith</h3>
+                        <img class="img-circle img-responsive center-block" ng-src="{{member.profileImageURL}}" width="100" />
+                        <h3>{{member.displayName}}</h3>
                         <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
                     </div>
                     <div class="panel-footer">
-                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
-                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
-                        <i class="glyphicon glyphicon-remove"></i></a>
-                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
-                        <i class="glyphicon glyphicon-pencil"></i></a>
-                </div>
-                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
-                    <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                        <h3>Sally Smith</h3>
-                        <h6 class="red">Pending</h6><!-- ng-show="{{member.pending === true}}" -->
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
-                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
-                        <i class="glyphicon glyphicon-remove"></i></a>
-                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
-                        <i class="glyphicon glyphicon-pencil"></i></a>
-                </div>
-                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
-                    <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                        <h3>Sally Smith</h3>
-                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
-                    </div>
-                </div>
-            </div>
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay"><!--TIFF: Only show if team lead (admin?) -->
-                    <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
-                        <i class="glyphicon glyphicon-remove"></i></a>
-                    <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
-                        <i class="glyphicon glyphicon-pencil"></i></a>
-                </div>
-                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
-                    <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" src="http://4.bp.blogspot.com/_Ffja5A7i53k/TGByUrvTVyI/AAAAAAAAFCQ/xvrmKzmNKc0/s1600/Water+color+changing.png" width="100" />
-                        <h3>Sally Smith</h3>
-                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
-                    </div>
-                    <div class="panel-footer">
-                        <p class="text-muted text-center"><b>ssmith</b><br/>sallysmith@email.com</p>
+                        <p class="text-muted text-center"><b>{{member.username}}</b><br/>{{member.email}}</p>
                     </div>
                 </div>
             </div>
@@ -162,7 +103,8 @@
 
 
 <!-- MODALS -->
-<form-team-profile-modal close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<form-team-profile-modal team="vm.team"></form-team-profile-modal>
 <invite-team-lead-modal close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
 <delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
+<view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
 <!--END OF MODALS-->

@@ -6,11 +6,45 @@
     .controller('UserProfileController', UserProfileController);
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
-    'TeamMembersService', 'Admin', 'ExpeditionsService'];
+    'TeamMembersService', 'TeamsService', 'Admin', 'ExpeditionsService', 'SchoolOrganizationsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
-    TeamMembersService, Admin, ExpeditionsService) {
+    TeamMembersService, TeamsService, Admin, ExpeditionsService, SchoolOrganizationsService) {
     $scope.checkRole = ExpeditionViewHelper.checkRole;
+
+    $scope.findOrganization = function() {
+      if (!$scope.organization) {
+        if ($scope.user.schoolOrg) {
+          if ($scope.user.schoolOrg._id) {
+            $scope.organization = $scope.user.schoolOrg;
+          } else {
+            SchoolOrganizationsService.get({
+              schoolOrgId: $scope.user.schoolOrg
+            }, function(data) {
+              $scope.organization = data;
+            });
+          }
+        }
+      }
+    };
+
+    $scope.findTeams = function(isTeamLead) {
+      if (!$scope.teams || $scope.teams.length === 0) {
+        var byOwner, byMember;
+        if ($scope.isTeamLead) {
+          byOwner = true;
+        } else {
+          byMember = true;
+        }
+
+        TeamsService.query({
+          byOwner: byOwner,
+          byMember: byMember
+        }, function(data) {
+          $scope.teams = data;
+        });
+      }
+    };
 
     $scope.findUserRoles = function() {
       var roles = $scope.user.roles;

@@ -38,6 +38,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams',
       permissions: '*'
     }, {
+      resources: '/api/teams/:teamId/upload-image',
+      permissions: '*'
+    }, {
       resources: '/api/teams/:teamId',
       permissions: '*'
     }]

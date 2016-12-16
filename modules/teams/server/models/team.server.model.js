@@ -32,7 +32,7 @@ var TeamSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'SchoolOrg'
   },
-  teamLead: { //remove later 
+  teamLead: { //remove later
     type: Schema.ObjectId,
     ref: 'User'
   },

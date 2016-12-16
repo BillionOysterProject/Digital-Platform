@@ -36,6 +36,9 @@ module.exports = function (app) {
     .get(teams.list)
     .post(teams.create);
 
+  app.route('/api/teams/:teamId/upload-image').all(teamsPolicy.isAllowed)
+    .post(teams.uploadTeamPhoto);
+
   // Single team routes
   app.route('/api/teams/:teamId').all(teamsPolicy.isAllowed)
     .get(teams.read)
