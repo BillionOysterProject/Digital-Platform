@@ -1,14 +1,15 @@
 <div class="row">
-  <div class="row" ng-show="photoUrl">
-    <div class="col-sm-12">
-      <image ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
-    </div>
+  <div class="col-sm-12" ng-show="photoUrl">
+    <image ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <div>{{name}}<br/><span class="small text-muted">{{bodyOfWater}}<br />
-        {{teamLead}}<span ng-show="schoolOrg"> from {{schoolOrg}}</span></span>
-      </div>
-    </div>
+  <div class="col-sm-12">
+    <h4 class="blue">{{name}}</h4>
+    <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
+    <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+    <h5>{{bodyOfWater}}</h5>
+    <p class="text-muted">
+      <span ng-show="teamLead">by <b>{{teamLead}}</b> from </span>
+      <span ng-show="schoolOrg">{{schoolOrg}}</span>
+    </p>
   </div>
 </div>
