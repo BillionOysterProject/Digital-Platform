@@ -19,6 +19,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/metrics/people',
       permissions: ['*']
+    }, {
+      resources: '/api/metrics/activeUsers',
+      permissions: ['*']
     }]
   }]);
 };

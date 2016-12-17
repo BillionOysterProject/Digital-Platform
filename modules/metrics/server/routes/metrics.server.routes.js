@@ -10,4 +10,7 @@ module.exports = function(app) {
   // Metrics Routes
   app.route('/api/metrics/people').all(metricsPolicy.isAllowed)
     .get(metrics.getPeopleMetrics);
+
+  app.route('/api/metrics/activeUsers').all(metricsPolicy.isAllowed)
+    .get(metrics.getMostActiveUsers);
 };

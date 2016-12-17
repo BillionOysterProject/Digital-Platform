@@ -5,9 +5,9 @@
     .module('metrics')
     .controller('MetricsController', MetricsController);
 
-  MetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'MetricsService'];
+  MetricsController.$inject = ['$scope', '$rootScope', '$timeout'];
 
-  function MetricsController($scope, $rootScope, $timeout, MetricsService) {
+  function MetricsController($scope, $rootScope, $timeout) {
 
     // TODO: can we get this wired up to put in BOP colors? (doesn't work)
     // MetricsController.setOptions({ colors : [ '#000', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'] });
@@ -46,7 +46,7 @@
     ];
 
     vm.pielabels = ['Team Members', 'Team Leads', 'Admin'];
-    vm.piedata = [300, 500, 100];
+    //vm.piedata = [300, 500, 100];
 
     vm.pieBlabels = ['6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade'];
     vm.pieBdata = [43, 24, 142, 66, 35, 52, 35];
@@ -75,19 +75,5 @@
     vm.onClick = function (points, evt) {
       console.log(points, evt);
     };
-
-    vm.getPeopleMetrics = function() {
-      MetricsService.query({}, function (data) {
-        vm.peopleMetrics = data;
-        vm.error = null;
-        $timeout(function() {
-          $rootScope.$broadcast('iso-method', { name:null, params:null });
-        });
-      }, function(error) {
-        vm.error = error.data.message;
-      });
-    };
-
-    vm.getPeopleMetrics();
   }
 })();

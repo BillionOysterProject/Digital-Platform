@@ -4,16 +4,15 @@
 
   angular
     .module('metrics')
-    .factory('MetricsService', MetricsService);
+    .factory('MetricsUsersService', MetricsUsersService);
 
-  MetricsService.$inject = ['$resource'];
+  MetricsUsersService.$inject = ['$resource'];
 
-  function MetricsService($resource) {
+  function MetricsUsersService($resource) {
     return $resource('api/metrics/people', {
     }, {
       query: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       }
     });
   }
