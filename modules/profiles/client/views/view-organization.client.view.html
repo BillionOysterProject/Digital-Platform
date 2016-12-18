@@ -35,7 +35,7 @@
             </div>
 
             <!--TIFF: only show buttons if team lead -->
-            <a class="btn btn-default">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
+            <a class="btn btn-default" ng-click="vm.openFormOrg()">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
             <a class="btn btn-default" ng-click="vm.openInviteOrgLead()">Invite leads</a>
             <a class="btn btn-danger" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
             <a class="btn btn-danger">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
@@ -80,5 +80,6 @@
 
 <!--MODALS-->
 <invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
+<form-org-profile-modal organization="vm.organization" close-function="vm.closeFormOrg"></form-org-profile-modal>
 <delete-org-lead-modal close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
 <!--END MODALS-->

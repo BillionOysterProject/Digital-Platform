@@ -21,6 +21,26 @@
           });
           $scope.error = [];
 
+          $scope.types = [{
+            name: 'School',
+            value: 'school'
+          }, {
+            name: 'Business',
+            value: 'business'
+          }, {
+            name: 'Government',
+            value: 'government'
+          }, {
+            name: 'Property owner',
+            value: 'property owner'
+          }, {
+            name: 'Community organization',
+            value: 'community organization'
+          }, {
+            name: 'Other',
+            value: 'other'
+          }];
+
           $scope.save = function(isValid) {
             if (!isValid) {
               $scope.$broadcast('show-errors-check-validity', 'form.orgProfileForm');
@@ -55,7 +75,7 @@
                   };
 
                   $scope.orgPhotoUploader.onBeforeUploadItem = function(item) {
-                    item.url = 'api/school-org/' + orgId + '/upload-image';
+                    item.url = 'api/school-orgs/' + orgId + '/upload-image';
                   };
                   $scope.orgPhotoUploader.uploadAll();
                 } else {

@@ -75,7 +75,7 @@
           full: true
         }, function(data) {
           vm.organization = (data) ? data : new SchoolOrganizationsService();
-          vm.orgPhotoUrl = (vm.organization & vm.organization.photo && vm.organization.photo.path) ?
+          vm.orgPhotoUrl = (vm.organization && vm.organization.photo && vm.organization.photo.path) ?
             vm.organization.photo.path : '';
           findTeams();
         });
@@ -121,6 +121,15 @@
 
     vm.openFormTeam = function() {
 
+    };
+
+    vm.openFormOrg = function() {
+      angular.element('#modal-org-edit').modal('show');
+    };
+
+    vm.closeFormOrg = function() {
+      angular.element('#modal-org-edit').modal('hide');
+      findOrganization();
     };
   }
 })();
