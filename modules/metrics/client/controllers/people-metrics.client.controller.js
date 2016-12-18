@@ -8,7 +8,6 @@
   PeopleMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'MetricsUsersService', 'MetricsUserActivityService'];
 
   function PeopleMetricsController($scope, $rootScope, $timeout, MetricsUsersService, MetricsUserActivityService) {
-    console.log("IN PEOPLE METRICS CONTROLLER");
     $scope.getPeopleMetrics = function() {
       MetricsUsersService.query({},
       function (data) {
