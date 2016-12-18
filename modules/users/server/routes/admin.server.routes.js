@@ -31,6 +31,14 @@ module.exports = function (app) {
     .put(adminPolicy.isAllowed, admin.update)
     .delete(adminPolicy.isAllowed, admin.delete);
 
+
+  // Setting up the invites
+  app.route('/api/users/invites')
+    .post(adminPolicy.isAllowed, admin.createUserInvite);
+  app.route('/api/users/invites/:inviteeId/remind')
+    .post(adminPolicy.isAllowed, admin.remindInvitee);
+
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);
+  app.param('inviteeId', admin.inviteeByID);
 };

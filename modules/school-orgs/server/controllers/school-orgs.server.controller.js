@@ -10,8 +10,11 @@ var path = require('path'),
   User = mongoose.model('User'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config'));
 
 var isAdmin = function(user) {
   var index = _.findIndex(user.roles, function(r) {
@@ -45,8 +48,27 @@ exports.create = function(req, res) {
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var schoolOrg = req.schoolOrg ? req.schoolOrg.toJSON() : {};
+  if (req.query.full) {
+    var indexO = _.findIndex(schoolOrg.orgLeads, function(o) {
+      var orgId = (o && o._id) ? o._id : o;
+      return orgId.toString() === req.user._id.toString();
+    });
+    schoolOrg.isCurrentUserOrgLead = (indexO > -1) ? true : false;
 
-  res.json(schoolOrg);
+    Team.find({ $and: [{ $or: [{ 'teamLead': req.user._id },{ 'teamLeads': req.user._id }] },
+      { 'schoolOrg': schoolOrg._id }] }).exec(function(err, teamLeads) {
+        schoolOrg.isCurrentUserTeamLead = (teamLeads && teamLeads.length > 0) ? true : false;
+
+        Team.find({ $and: [{ 'teamMembers': req.user._id },{ 'schoolOrg': schoolOrg._id }] })
+          .exec(function(err, teamMembers) {
+            schoolOrg.isCurrentUserTeamMember = (teamMembers && teamMembers.length > 0) ? true : false;
+
+            res.json(schoolOrg);
+          });
+      });
+  } else {
+    res.json(schoolOrg);
+  }
 };
 
 /**
@@ -148,6 +170,10 @@ exports.list = function (req, res) {
   var query;
   var and = [];
 
+  if (req.query.type) {
+    and.push({ organizationType: req.query.type });
+  }
+
   if (req.query.pending) {
     and.push({ 'pending': true });
   } else if (req.query.approvedOnly) {
@@ -198,7 +224,9 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('creator', 'displayName').exec(function (err, schoolOrgs) {
+  query.populate('creator', 'displayName')
+  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL pending')
+  .exec(function (err, schoolOrgs) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -224,21 +252,22 @@ exports.list = function (req, res) {
           if (index < schoolOrgs.length) {
             findTeams(schoolOrgs[index], function(teams) {
               var org = schoolOrgs[index] ? schoolOrgs[index].toJSON() : {};
+              var teamLeads = [];
+              var teamMembers = [];
               if (teams && teams.length) {
-                var teamMemberCount = 0;
-                var teamLeads = [];
                 for (var i = 0; i < teams.length; i++) {
                   teamLeads.push(teams[i].teamLead);
-                  teamMemberCount += teams[i].teamMembers.length;
+                  teamLeads = teamLeads.concat(teams[i].teamLeads);
+                  teamMembers = teamMembers.concat(teams[i].teamMembers);
                 }
                 teamLeads = _.uniq(teamLeads);
-
-                org.teams = {
-                  teamLeadCount: teamLeads.length,
-                  teamCount: teams.length,
-                  teamMemberCount: teamMemberCount
-                };
+                teamMembers = _.uniq(teamMembers);
               }
+              org.teams = {
+                teamLeadCount: (teamLeads) ? teamLeads.length : 0,
+                teamCount: (teams) ? teams.length : 0,
+                teamMemberCount: (teamMembers) ? teamMembers.length : 0
+              };
               updatedSchoolOrgs.push(org);
               findTeamsForOrg(index+1, schoolOrgs, updatedSchoolOrgs, callback);
             });
@@ -262,8 +291,48 @@ exports.list = function (req, res) {
  */
 exports.teamsBySchoolOrgs = function (req, res) {
   var schoolOrg = req.schoolOrg;
+  var query;
+  var and = [];
 
-  Team.find({ schoolOrg: schoolOrg }).populate('teamLead', 'displayName').exec(function (err, teams) {
+  and.push({ schoolOrg: schoolOrg });
+
+  var or = [];
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'name': searchRe });
+    or.push({ 'description': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = Team.find(and[0]);
+  } else if (and.length > 0) {
+    query = Team.find({ $and: and });
+  } else {
+    query = Team.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'teamLead': 1, 'name': 1 });
+    }
+  } else {
+    query.sort('name');
+  }
+
+  query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
+  .populate('teamLead', 'displayName firstName lastName username email profileImageURL pending')
+  .populate('teamLeads', 'displayName firstName lastName username email profileImageURL pending')
+  .populate('schoolOrg').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -279,31 +348,106 @@ exports.teamsBySchoolOrgs = function (req, res) {
  */
 exports.teamLeadsBySchoolOrg = function (req, res) {
   var schoolOrg = req.schoolOrg;
-  // Team.find({ schoolOrg: schoolOrg }).distinct('teamLead').exec(function (err, teamLeadIds) {
-  //   if (err) {
-  //     return res.status(400).send({
-  //       message: errorHandler.getErrorMessage(err)
-  //     });
-  //   } else {
-  //     User.find({ _id: { $in: teamLeadIds } }).exec(function (teamErr, teamLeads) {
-  //       if (teamErr) {
-  //         return res.status(400).send({
-  //           message: errorHandler.getErrorMessage(teamErr)
-  //         });
-  //       } else {
-  //         res.json(teamLeads);
-  //       }
-  //     });
-  //   }
-  // });
-  User.find({ $and: [{ schoolOrg: schoolOrg }, { $or: [{ roles: 'team lead' },{ roles: 'team lead pending' }] }] })
-  .exec(function(err, teamLeads) {
+
+  var query;
+  var and = [];
+
+  and.push({ schoolOrg: schoolOrg });
+
+  if (req.query.pending) {
+    and.push({ $or: [{ roles: 'team lead' }, { roles: 'team lead pending' }] });
+  } else {
+    and.push({ roles: 'team lead' });
+  }
+
+  var searchRe;
+  var or = [];
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'displayName': searchRe });
+    or.push({ 'firstName': searchRe });
+    or.push({ 'lastName': searchRe });
+    or.push({ 'email': searchRe });
+    or.push({ 'username': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = User.find(and[0], '-salt -password');
+  } else if (and.length > 0) {
+    query = User.find({ $and: and }, '-salt -password');
+  } else {
+    query = User.find({}, '-salt -password');
+  }
+
+  query.sort({ 'firstName': 1 }).exec(function(err, teamLeads) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
       res.json(teamLeads);
+    }
+  });
+};
+
+exports.teamMembersBySchoolOrg = function (req, res) {
+  var schoolOrg = req.schoolOrg;
+
+  var query;
+  var and = [];
+
+  and.push({ schoolOrg: schoolOrg });
+
+  if (req.query.pending) {
+    and.push({ $or: [{ roles: 'team member' }, { roles: 'team member pending' }] });
+  } else {
+    and.push({ roles: 'team member' });
+  }
+
+  var searchRe;
+  var or = [];
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'displayName': searchRe });
+    or.push({ 'firstName': searchRe });
+    or.push({ 'lastName': searchRe });
+    or.push({ 'email': searchRe });
+    or.push({ 'username': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = User.find(and[0], '-salt -password');
+  } else if (and.length > 0) {
+    query = User.find({ $and: and }, '-salt -password');
+  } else {
+    query = User.find({}, '-salt -password');
+  }
+
+  query.sort({ 'firstName': 1 }).exec(function(err, teamMembers) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(teamMembers);
     }
   });
 };
@@ -336,7 +480,9 @@ exports.schoolOrgByID = function (req, res, next, id) {
     });
   }
 
-  SchoolOrg.findById(id).populate('creator', 'firstName displayName email').exec(function (err, schoolOrg) {
+  SchoolOrg.findById(id).populate('creator', 'firstName displayName email')
+  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL pending')
+  .exec(function (err, schoolOrg) {
     if (err) {
       return next(err);
     } else if (!schoolOrg) {
@@ -345,7 +491,6 @@ exports.schoolOrgByID = function (req, res, next, id) {
       });
     }
     req.schoolOrg = schoolOrg;
-    console.log('schoolOrg', schoolOrg);
     next();
   });
 };
@@ -368,4 +513,39 @@ exports.teamLeadByID = function (req, res, next, id) {
     req.teamLead = teamLead;
     next();
   });
+};
+
+exports.uploadOrgPhoto = function (req, res) {
+  var schoolOrg = req.schoolOrg;
+  var upload = multer(config.uploads.organizationPhotoUpload).single('orgPhoto');
+  var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = imageUploadFileFilter;
+
+  if (schoolOrg) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.organizationPhotoUpload,
+      function(fileInfo) {
+        schoolOrg.photo = fileInfo;
+
+        schoolOrg.save(function(saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(schoolOrg);
+          }
+        });
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
+  } else {
+    res.status(400).send({
+      message: 'Organization does not exist'
+    });
+  }
 };

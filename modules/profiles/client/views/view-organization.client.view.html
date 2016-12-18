@@ -2,31 +2,27 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-md-6">
-                <img class="img-thumbnail img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" />
+                <img class="img-thumbnail img-responsive" ng-show="vm.orgPhotoUrl" ng-src="{{vm.orgPhotoUrl}}" />
             </div>
             <div class="col-lg-6 col-md-6">
-                <h2>New York Public Schools</h2>
-                <h4 class="text-muted">Organization Type</a></h4>
-                <p>We love to save oysters! Further description ...</p>
+                <h2>{{vm.organization.name}}</h2>
+                <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
+                <p>{{vm.organization.description}}</p>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h6><i class="fa fa-user"></i> Organization Lead</h6><!--TIFF: If more than one, say "Org Leads"-->
-                <p>
-                    <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
+                <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6><!--TIFF: If more than one, say "Org Leads"-->
+                <p ng-repeat="orgLead in vm.organization.orgLeads">
+                    <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
                         class="pull-left header-profile-image">
-                    <b><a data-toggle="modal" data-target="#modal-profile-user">Org Lead</a></b>
-                </p>
-                <p>
-                    <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                        class="pull-left header-profile-image">
-                    <b><a data-toggle="modal" data-target="#modal-profile-user">Org Lead</a></b>
+                    <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
                 </p>
             </div>
         </div>
     </section>
 </section>
 
-<section class="content">
+<section class="content" ng-show="vm.organization.isCurrentUserOrgLead || vm.organization.isCurrentUserTeamLead ||
+  vm.organization.isCurrentUserTeamMember || vm.isAdmin">
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
             <div class="form-group col-md-4">
@@ -46,8 +42,8 @@
         </nav>
         <hr/>
 
-        <div class="alert alert-info text-center" ng-show="vm.members.length === 0 && vm.filter.searchString === ''">
-            No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+        <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString === ''">
+            No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
         </div>
 
         <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
@@ -57,27 +53,22 @@
         </div>
 
         <div class="row" isotope-container="isotope-container">
-            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: 0000 })">
+            <div ng-repeat="team in vm.teams" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
                     <div class="panel-body text-center">
-                        <h4>Team Name</h4>
-                        <p class="text-muted small">We love to save oysters! Further description. We love to save oysters! Further description. We love to save oysters! Further description.</p><!--TIFF: limit to 200 -->
-                        <img class="img-responsive" src="http://lh5.googleusercontent.com/8c4xemmDhwV-7T7ZmpZh2y57r6BrNu8n0dQw3GKi3GR4jckdScoY8gPiZdZVjaUILQDr6NIsYgBaOX34XI8Me1SHIQz7pkK94Kd2b6ghVVnXvlMtoD6v3q0iIw" /><!--TIFF: only show if they have an image -->
+                        <h4>{{team.name}}</h4>
+                        <p class="text-muted small">{{team.description | limitTo:200}}</p><!--TIFF: limit to 200 -->
+                        <img class="img-responsive" ng-src="{{team.photo.path}}" /><!--TIFF: only show if they have an image -->
                         <hr/>
                         <p>
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                                class="header-profile-image">
-                            <b>Team Lead</b>&nbsp;&nbsp;/&nbsp;&nbsp;
-                            <img src="https://tracker.moodle.org/secure/attachment/30912/f3.png" alt=""
-                                class="header-profile-image">
-                            <b>Team Lead</b>
+                            <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
                         </p>
                     </div>
                     <div class="panel-footer text-muted">
                         <ul class="list-inline">
-                            <li><i class="fa fa-users"></i> <b>53</b> members</li>
-                            <li><i class="fa fa-map-marker"></i> <b>3</b> ORS</li>
-                            <li><i class="fa fa-flask"></i> <b>8</b> expeditions</li>
+                            <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
+                            <li><i class="fa fa-map-marker"></i> <b>{{team.orsCount}}</b> ORS</li>
+                            <li><i class="fa fa-flask"></i> <b>{{team.expeditionCount}}</b> expeditions</li>
                         </ul>
                     </div>
                 </div>
@@ -88,6 +79,6 @@
 
 
 <!--MODALS-->
-<invite-org-lead-modal close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
+<invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
 <delete-org-lead-modal close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
 <!--END MODALS-->

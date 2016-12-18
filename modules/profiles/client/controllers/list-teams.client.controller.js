@@ -34,7 +34,7 @@
 
     vm.findTeams = function() {
       TeamsService.query({
-        schoolOrg: vm.filter.organization,
+        organization: vm.filter.organization,
         searchString: vm.filter.searchString,
         full: true
       }, function(data) {

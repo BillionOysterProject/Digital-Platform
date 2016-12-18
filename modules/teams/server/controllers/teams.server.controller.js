@@ -121,9 +121,7 @@ exports.list = function (req, res) {
     var query;
     var and = [];
 
-    if (teamLeadIds && teamLeadIds) {
-      and.push({ 'teamLead': { $in: teamLeadIds } });
-    } else if (req.query.byOwner) {
+    if (req.query.byOwner) {
       and.push({ 'teamLead': req.user });
     }
 
@@ -150,6 +148,8 @@ exports.list = function (req, res) {
 
       or.push({ 'name': searchRe });
       or.push({ 'description': searchRe });
+      or.push({ 'teamLead': { $in: teamLeadIds } });
+      or.push({ 'teamLeads': { $in: teamLeadIds } });
 
       and.push({ $or: or });
     }
@@ -181,7 +181,7 @@ exports.list = function (req, res) {
     }
 
     query.populate('teamMembers', 'displayName firstName lastName username email profileImageURL pending')
-    // .populate('teamLead', 'displayName firstName lastName username email profileImageURL pending')
+    .populate('teamLead', 'displayName firstName lastName username email profileImageURL pending')
     .populate('teamLeads', 'displayName firstName lastName username email profileImageURL pending')
     .populate('schoolOrg').exec(function (err, teams) {
       if (err) {
@@ -253,6 +253,8 @@ exports.list = function (req, res) {
         callback('Search string is invalid', null);
       }
       searchOr.push({ displayName: searchRe });
+      searchOr.push({ firstName: searchRe });
+      searchOr.push({ lastName: searchRe });
       searchOr.push({ username: searchRe });
       searchOr.push({ email: searchRe });
 
@@ -442,7 +444,6 @@ exports.memberByID = function (req, res, next, id) {
 
 exports.uploadTeamPhoto = function (req, res) {
   var team = req.team;
-  console.log('uploading team photo');
   var upload = multer(config.uploads.teamPhotoUpload).single('teamPhoto');
   var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
 
@@ -453,7 +454,6 @@ exports.uploadTeamPhoto = function (req, res) {
     var uploadRemote = new UploadRemote();
     uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.teamPhotoUpload,
       function(fileInfo) {
-        console.log('team photo info', fileInfo);
         team.photo = fileInfo;
 
         team.save(function (saveError) {
@@ -462,7 +462,6 @@ exports.uploadTeamPhoto = function (req, res) {
               message: errorHandler.getErrorMessage(saveError)
             });
           } else {
-            console.log('saved team', team);
             res.json(team);
           }
         });
@@ -642,7 +641,6 @@ exports.updateMember = function (req, res) {
   var changeTeam = function() {
     Team.findById(req.body.oldTeamId).exec(function (errDelTeam, delTeam) {
       if (errDelTeam) {
-        console.log('find old team error', errDelTeam);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(errDelTeam)
         });
@@ -653,7 +651,6 @@ exports.updateMember = function (req, res) {
 
           delTeam.save(function (delSaveErr) {
             if (delSaveErr) {
-              console.log('remove from team error', delSaveErr);
               return res.status(400).send({
                 message: errorHandler.getErrorMessage(delSaveErr)
               });
@@ -668,7 +665,6 @@ exports.updateMember = function (req, res) {
                   function(team) {
                     res.json(member);
                   }, function(err) {
-                    console.log('create team', err);
                     return res.status(400).send({
                       message: errorHandler.getErrorMessage(err)
                     });
@@ -676,7 +672,6 @@ exports.updateMember = function (req, res) {
               } else {
                 Team.findById(req.body.team._id).exec(function (errTeam, team) {
                   if (errTeam || !team) {
-                    console.log('could not find new team', errTeam);
                     return res.status(400).send({
                       message: 'Error adding member to team'
                     });
@@ -685,7 +680,6 @@ exports.updateMember = function (req, res) {
 
                     team.save(function (errSave) {
                       if (errSave) {
-                        console.log('save member to new team', errSave);
                         return res.status(400).send({
                           message: 'Error adding member to team'
                         });
@@ -699,7 +693,6 @@ exports.updateMember = function (req, res) {
             }
           });
         } else {
-          console.log('could not remove member from previous team');
           return res.status(400).send({
             message: 'Could not remove member from previous team'
           });
@@ -714,7 +707,6 @@ exports.updateMember = function (req, res) {
 
     member.save(function(err) {
       if (err) {
-        console.log('save err', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
@@ -742,7 +734,6 @@ exports.updateMember = function (req, res) {
       }
     });
   } else {
-    console.log('count not find member');
     return res.status(400).send({
       message: 'Could not find member'
     });
@@ -906,7 +897,6 @@ exports.validateMemberCsv = function (req, res) {
       var username = email.substring(0, email.indexOf('@'));
       User.find({ $or: [{ 'email': email },{ 'username': username }] }).exec(function(userErr, users) {
         if (userErr) {
-          console.log('userErr', userErr);
           return res.status(400).send({
             message: userErr
           });
@@ -921,23 +911,19 @@ exports.validateMemberCsv = function (req, res) {
             });
 
             if (nameIndex > -1 && emailIndex === -1) {
-              console.log('Email address is already in use');
               return res.status(400).send({
                 message: 'Email address is already in use'
               });
             } else if (nameIndex === -1 && emailIndex > -1) {
-              console.log('Username is already in use');
               return res.status(400).send({
                 message: 'Username is already in use'
               });
             } else {
-              console.log('Username and email address is already in use');
               return res.status(400).send({
                 message: 'Username and email address is already in use'
               });
             }
           } else {
-            console.log('member is valid');
             return res.status(200).send({
               message: 'Valid member'
             });
@@ -945,7 +931,6 @@ exports.validateMemberCsv = function (req, res) {
         }
       });
     }, function (err) {
-      console.log('convertCsvMember err', err);
       return res.status(400).send({
         message: err
       });
@@ -960,7 +945,6 @@ exports.createMemberCsv = function (req, res) {
           if (req.body.newTeamName) {
             Team.findOne({ 'name': req.body.newTeamName }, function (teamByNameErr, teamByName) {
               if (teamByNameErr) {
-                console.log('teamByNameErr', teamByNameErr);
                 return res.status(400).send({
                   message: errorHandler.getErrorMessage(teamByNameErr)
                 });
@@ -1022,7 +1006,6 @@ exports.createMemberCsv = function (req, res) {
 
                 team.save(function (errSave) {
                   if (errSave) {
-                    console.log('errSave', errSave);
                     return res.status(400).send({
                       message: 'Error adding member to team'
                     });
@@ -1043,13 +1026,11 @@ exports.createMemberCsv = function (req, res) {
             });
           }
         }, function(err) {
-          console.log('createMemberInternal err', err);
           return res.status(400).send({
             message: err
           });
         });
     }, function (err) {
-      console.log('convertCsvMember err', err);
       return res.status(400).send({
         message: err
       });

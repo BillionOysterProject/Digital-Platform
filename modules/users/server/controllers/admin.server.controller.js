@@ -11,7 +11,8 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
-  _ = require('lodash');
+  _ = require('lodash'),
+  crypto = require('crypto');
 
 /**
  * Show the current user
@@ -335,6 +336,238 @@ exports.userByID = function (req, res, next, id) {
     }
 
     req.model = user;
+    next();
+  });
+};
+
+// inviting users
+var createUserInviteInternal = function(userJSON, schoolOrg, role, successCallback, errorCallback) {
+  console.log('userJSON', userJSON);
+  User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
+    if (userErr) {
+      errorCallback(errorHandler.getErrorMessage(userErr));
+    } else if (user) {
+      successCallback(user);
+    } else {
+      console.log('no use found');
+      crypto.randomBytes(20, function (err, buffer) {
+        var token = buffer.toString('hex');
+        // create user
+        user = new User(userJSON);
+        user.provider = 'local';
+        user.displayName = user.firstName + ' ' + user.lastName;
+        user.roles = [role, 'user'];
+        user.pending = true;
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+        user.schoolOrg = schoolOrg;
+        if (!user.username) user.username = user.email.substring(0, user.email.indexOf('@'));
+
+        // Then save the user
+        user.save(function (err) {
+          if (err) {
+            console.log('save user error', err);
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(user, token);
+          }
+        });
+      });
+    }
+  });
+};
+
+var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  'member_invite', {
+    FirstName: user.firstName,
+    LeadName: leadName,
+    TeamOrOrg: teamOrOrg,
+    TeamOrOrgName: teamOrOrgName,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
+  }, function(info) {
+    successCallback(info);
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
+var sendExistingInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  'member_existing_invite', {
+    FirstName: user.firstName,
+    LeadName: leadName,
+    TeamOrOrg: teamOrOrg,
+    TeamOrOrgName: teamOrOrgName,
+    LinkLogin: httpTransport + host + '/authentication/signin'
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
+var findTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCallback, errorCallback) {
+  if (teamOrOrg === 'team') {
+    var teamId = (team && team._id) ? team._id : team;
+    Team.findById(teamId).exec(function(err, team) {
+      if (err) {
+        errorCallback(err);
+      } else {
+        if (role === 'team member pending') {
+          team.teamMembers.push(user);
+        } else if (role === 'team lead pending') {
+          team.teamLeads.push(user);
+        }
+        team.save(function(err) {
+          if (err) {
+            errorCallback(err);
+          }
+          successCallback(team, schoolOrg);
+        });
+      }
+    });
+  } else if (teamOrOrg === 'organization') {
+    role = 'team lead pending';
+    var schoolOrgId = (schoolOrg && schoolOrg._id) ? schoolOrg._id : schoolOrg;
+    SchoolOrg.findById(schoolOrgId).exec(function(err, schoolOrg) {
+      if (err) {
+        errorCallback(err);
+      } else {
+        schoolOrg.orgLeads.push(user);
+        schoolOrg.save(function(err) {
+          if (err) {
+            errorCallback(err);
+          }
+          successCallback(null, schoolOrg);
+        });
+      }
+    });
+  }
+};
+
+exports.createUserInvite = function (req, res) {
+  delete req.body.roles;
+  var teamOrOrg = req.body.teamOrOrg;
+  var role = req.body.role;
+
+  createUserInviteInternal(req.body.user, req.user.schoolOrg, role,
+    function(user, token) {
+      findTeamOrOrg (user, req.body.team, req.user.schoolOrg, role, teamOrOrg,
+        function(team, schoolOrg) {
+          var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
+          if (token) {
+            sendInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
+              function() {
+                res.json(user);
+              }, function() {
+                res.json(user);
+              });
+          } else {
+            sendExistingInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName,
+              function() {
+                res.json(user);
+              }, function() {
+                res.json(user);
+              });
+          }
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        });
+    }, function(errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
+    });
+};
+
+var sendReminderInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  email.sendEmailTemplate(user.email, 'Reminder: You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  'invite_reminder', {
+    FirstName: user.firstName,
+    LeadName: leadName,
+    TeamOrOrg: teamOrOrg,
+    TeamOrOrgName: teamOrOrgName,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
+  }, function(info) {
+    successCallback();
+  }, function(errorMessage) {
+    errorCallback('Failure sending email');
+  });
+};
+
+exports.remindInvitee = function (req, res) {
+  var user = req.member;
+  var teamOrOrg = req.body.teamOrOrg;
+  var role = req.body.role;
+
+  findTeamOrOrg (user, req.body.team, req.user.schoolOrg, role, teamOrOrg,
+    function(team, schoolOrg) {
+      var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
+      if (user.resetPasswordToken) {
+        sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, user.resetPasswordToken,
+          function() {
+            res.json(user);
+          }, function(errorMessage) {
+            res.json(user);
+          });
+      } else {
+        if (user.pending === true) {
+          crypto.randomBytes(20, function (err, buffer) {
+            var token = buffer.toString('hex');
+            // update user
+            user.resetPasswordToken = token;
+            user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+
+            // Then save the user
+            user.save(function(err) {
+              if (err) {
+                return res.status(400).send({
+                  message: errorHandler.getErrorMessage(err)
+                });
+              } else {
+                sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
+                  function() {
+                    res.json(user);
+                  }, function(errorMessage) {
+                    res.json(user);
+                  });
+              }
+            });
+          });
+        }
+      }
+    }, function(errorMessage) {
+      return res.status(400).send({
+        message: errorMessage
+      });
+    });
+};
+
+exports.inviteeByID = function (req, res, next, id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Member is invalid'
+    });
+  }
+
+  User.findById(id).exec(function (err, member) {
+    if (err) {
+      return next(err);
+    } else if (!member) {
+      return res.status(404).send({
+        message: 'No member with that identifier has been found'
+      });
+    }
+    req.member = member;
     next();
   });
 };

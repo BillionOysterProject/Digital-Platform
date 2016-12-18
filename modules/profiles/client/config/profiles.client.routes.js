@@ -46,6 +46,8 @@
       .state('profiles.organization', {
         url: '/organization',
         templateUrl: 'modules/profiles/client/views/organization.client.view.html',
+        controller: 'OrganizationProfileListController',
+        controllerAs: 'vm'
       })
       .state('profiles.organization-view', {
         url: '/organization/:schoolOrgId',

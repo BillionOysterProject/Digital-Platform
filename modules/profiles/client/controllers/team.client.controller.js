@@ -11,6 +11,7 @@
   function TeamProfileController($scope, $rootScope, $http, $stateParams, $timeout, Authentication,
       TeamsService, TeamMembersService, ExpeditionsService, ExpeditionViewHelper, FileUploader) {
     var vm = this;
+    vm.team = {};
     vm.userToOpen = {};
 
     var checkRole = ExpeditionViewHelper.checkRole;
@@ -69,79 +70,25 @@
     };
 
     var findTeam = function() {
-      TeamsService.get({
-        teamId: $stateParams.teamId,
-        full: true
-      }, function(data) {
-        vm.team = (data) ? data : new TeamsService();
-        vm.teamPhotoURL = (vm.team && vm.team.photo && vm.team.photo.path) ? vm.team.photo.path : '';
-        findExpeditions(vm.team._id);
-        findTeamMembers();
-      });
+      var teamId = ($stateParams.teamId) ? $stateParams.teamId : (vm.team && vm.team._id) ? vm.team._id : vm.team;
+      if (teamId) {
+        TeamsService.get({
+          teamId: teamId,
+          full: true
+        }, function(data) {
+          vm.team = (data) ? data : new TeamsService();
+          vm.teamPhotoURL = (vm.team && vm.team.photo && vm.team.photo.path) ? vm.team.photo.path : '';
+          findExpeditions(vm.team._id);
+          findTeamMembers();
+        });
+      } else {
+        vm.team = new TeamsService();
+      }
     };
     findTeam();
 
     vm.authentication = Authentication;
     vm.error = [];
-
-    vm.teamPhotoUploader = new FileUploader({
-      alias: 'teamPhoto'
-    });
-
-    vm.save = function(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.teamProfileForm');
-        return false;
-      }
-
-      if (vm.team.photo) {
-        if (vm.teamPhotoURL) {
-          vm.team.photo.path = vm.teamPhotoURL;
-        } else {
-          vm.team.photo = null;
-        }
-      }
-
-      if (vm.team._id) {
-        vm.team.$update(successCallback, errorCallback);
-      } else {
-        vm.team.$save(successCallback, errorCallback);
-      }
-
-      function successCallback(res) {
-        var teamId = res._id;
-
-        function uploadTeamPhoto(teamId, imageSuccessCallback, imageErrorCallback) {
-          if (vm.teamPhotoUploader.queue.length > 0) {
-            vm.teamPhotoUploader.onSuccessItem = function (fileItem, response, status, headers) {
-              vm.teamPhotoUploader.removeFromQueue(fileItem);
-              imageSuccessCallback();
-            };
-
-            vm.teamPhotoUploader.onErrorItem = function (fileItem, response, status, headers) {
-              imageErrorCallback(response.message);
-            };
-
-            vm.teamPhotoUploader.onBeforeUploadItem = function (item) {
-              item.url = 'api/teams/' + teamId + '/upload-image';
-            };
-            vm.teamPhotoUploader.uploadAll();
-          } else {
-            imageSuccessCallback();
-          }
-        }
-
-        uploadTeamPhoto(teamId, function() {
-          findTeam();
-        }, function(errorMessage) {
-          vm.error = errorMessage;
-        });
-      }
-
-      function errorCallback(res) {
-        vm.error = res.data.message;
-      }
-    };
 
     vm.remove = function(callback) {
       vm.team.$remove(function() {
@@ -155,6 +102,7 @@
 
     vm.closeTeamProfileForm = function() {
       angular.element('#modal-team-edit').modal('hide');
+      findTeam();
     };
 
     vm.openInviteTeamLead = function() {

@@ -2,7 +2,7 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-md-6">
-                <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
+                <img class="img-thumbnail img-responsive" ng-show="vm.teamPhotoURL" ng-src="{{vm.teamPhotoURL}}" />
             </div>
             <div class="col-lg-3 col-md-6">
                 <h2>{{vm.team.name}}</h2>
@@ -13,21 +13,21 @@
                 <br/>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h6><i class="fa fa-user"></i> {{(vm.team.teamLeads.length > 1) ? 'Team Lead' : 'Team Leads'}}</h6>
+                        <h6><i class="fa fa-user"></i> {{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
                         <p ng-repeat="teamLead in vm.team.teamLeads">
                             <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
                                 class="pull-left header-profile-image">
                             <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
                         </p>
                     </div>
-                    <div class="col-sm-4">
+                    <!-- <div class="col-sm-4">
                         <h6><i class="fa fa-map-marker"></i> Restoration Stations</h6>
                         <ul class="list-unstyled">
                             <li><a>Baltimore Harbor</a></li>
                             <li><a>NYC Harbor</a></li>
                             <li><a>East Side</a></li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div class="col-sm-4">
                         <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
                         <ul class="list-unstyled">
@@ -103,7 +103,7 @@
 
 
 <!-- MODALS -->
-<form-team-profile-modal team="vm.team"></form-team-profile-modal>
+<form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
 <invite-team-lead-modal close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
 <delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>

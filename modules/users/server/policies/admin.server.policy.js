@@ -31,6 +31,21 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/users/username',
       permissions: '*'
+    }, {
+      resources: '/api/users/invites',
+      permissions: '*'
+    }, {
+      resources: '/api/users/invites/:inviteeId/remind',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['team lead'],
+    allows: [{
+      resources: '/api/users/invites',
+      permissions: '*'
+    }, {
+      resources: '/api/users/invites/:inviteeId/remind',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
