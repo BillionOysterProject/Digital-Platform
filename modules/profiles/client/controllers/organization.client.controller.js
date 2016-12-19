@@ -5,10 +5,10 @@
     .module('profiles')
     .controller('OrganizationProfileController', OrganizationProfileController);
 
-  OrganizationProfileController.$inject = ['$scope', '$rootScope', '$http', '$stateParams', '$timeout', 'Authentication',
+  OrganizationProfileController.$inject = ['$scope', '$rootScope', '$http', '$stateParams', '$timeout', '$state', 'Authentication',
     'SchoolOrganizationsService', 'TeamsService', 'ExpeditionViewHelper'];
 
-  function OrganizationProfileController($scope, $rootScope, $http, $stateParams, $timeout, Authentication,
+  function OrganizationProfileController($scope, $rootScope, $http, $stateParams, $timeout, $state, Authentication,
     SchoolOrganizationsService, TeamsService, ExpeditionViewHelper) {
     var vm = this;
 
@@ -18,6 +18,7 @@
     vm.organization = {};
     vm.team = {};
     vm.userToOpen = {};
+    vm.teamToOpen = {};
 
     var checkRole = ExpeditionViewHelper.checkRole;
     vm.isAdmin = checkRole('admin');
@@ -30,7 +31,7 @@
 
     var findTeams = function() {
       TeamsService.query({
-        organizationId: vm.organization._id,
+        organization: vm.organization._id,
         searchString: vm.filter.searchString,
         sort: vm.filter.searchString,
         full: true
@@ -75,6 +76,7 @@
           full: true
         }, function(data) {
           vm.organization = (data) ? data : new SchoolOrganizationsService();
+          console.log('org', data);
           vm.orgPhotoUrl = (vm.organization && vm.organization.photo && vm.organization.photo.path) ?
             vm.organization.photo.path : '';
           findTeams();
@@ -111,16 +113,28 @@
       angular.element('#modal-org-lead-remove').modal('show');
     };
 
-    vm.closeDeleteOrgLead = function() {
+    vm.closeDeleteOrgLead = function(refresh) {
       angular.element('#modal-org-lead-remove').modal('hide');
+      if (refresh) findOrganization();
     };
 
-    vm.openViewUserModal = function() {
-
+    vm.openViewUserModal = function(user) {
+      vm.userToOpen = user;
+      angular.element('#modal-profile-user').modal('show');
     };
 
-    vm.openFormTeam = function() {
+    vm.closeViewUserModal = function() {
+      angular.element('#modal-profile-user').modal('hide');
+    };
 
+    vm.openFormTeam = function(team) {
+      vm.teamToOpen = (team) ? team : new TeamsService();
+      angular.element('#modal-team-edit').modal('show');
+    };
+
+    vm.closeFormTeam = function(refresh) {
+      angular.element('#modal-team-edit').modal('hide');
+      if (refresh) findOrganization();
     };
 
     vm.openFormOrg = function() {
@@ -130,6 +144,19 @@
     vm.closeFormOrg = function() {
       angular.element('#modal-org-edit').modal('hide');
       findOrganization();
+    };
+
+    vm.openDeleteForm = function() {
+      angular.element('#modal-org-delete').modal('show');
+    };
+
+    vm.closeDeleteForm = function(redirect) {
+      angular.element('#modal-org-delete').modal('hide');
+      if (redirect) {
+        $timeout(function() {
+          $state.go('profiles.organization');
+        }, 500);
+      }
     };
   }
 })();

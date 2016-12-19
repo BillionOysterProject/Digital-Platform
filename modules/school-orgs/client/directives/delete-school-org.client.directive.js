@@ -8,13 +8,15 @@
         restrict: 'AE',
         templateUrl: 'modules/school-orgs/client/views/delete-school-org.client.view.html',
         scope: {
-          schoolOrg: '=',
-          deleteFunction: '=',
-          cancelFunction: '='
+          organization: '=',
+          closeFunction: '='
         },
         replace: true,
+        controller: 'SchoolOrganizationDeleteController',
         link: function(scope, element, attrs) {
-
+          scope.$watch('organization', function(newValue, oldValue) {
+            scope.organization = newValue;
+          });
         }
       };
     });

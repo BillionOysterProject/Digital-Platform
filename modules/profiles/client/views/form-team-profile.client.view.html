@@ -5,7 +5,8 @@
               <fieldset>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Edit the <span class="red">{{team.name}}</span> profile</h4>
+                    <h4 class="modal-title" ng-show="team._id">Edit the <span class="red">{{team.name}}</span> profile</h4>
+                    <h4 class="modal-title" ng-hide="team._id">Add a team</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group" show-errors>
@@ -27,7 +28,7 @@
                 </div>
                 <div class="modal-footer">
                     <a class="btn btn-default" ng-click="close()">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">{{team._id ? 'Update' : 'Add'}}</button>
                 </div>
               </fieldset>
             </form>

@@ -42,31 +42,66 @@ exports.create = function(req, res) {
   });
 };
 
+var findTeamStats = function(orgToFind, callback) {
+  var findTeams = function(org, callback) {
+    Team.find({ 'schoolOrg' : org }).exec(function(err, teams) {
+      callback(teams);
+    });
+  };
+
+  findTeams(orgToFind, function(teams) {
+    var org = orgToFind ? orgToFind.toJSON() : {};
+    var teamLeads = [];
+    var teamMembers = [];
+    if (teams && teams.length) {
+      for (var i = 0; i < teams.length; i++) {
+        teamLeads.push(teams[i].teamLead);
+        teamLeads = teamLeads.concat(teams[i].teamLeads);
+        teamMembers = teamMembers.concat(teams[i].teamMembers);
+      }
+      teamLeads = _.uniq(teamLeads);
+      teamMembers = _.uniq(teamMembers);
+    }
+    org.teams = {
+      teamLeads: teamLeads,
+      teamLeadCount: (teamLeads) ? teamLeads.length : 0,
+      teamCount: (teams) ? teams.length : 0,
+      teamMembers: teamMembers,
+      teamMemberCount: (teamMembers) ? teamMembers.length : 0
+    };
+    if (callback) callback(org);
+  });
+};
+
 /**
  * Show the current school/organization
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  var schoolOrg = req.schoolOrg ? req.schoolOrg.toJSON() : {};
   if (req.query.full) {
-    var indexO = _.findIndex(schoolOrg.orgLeads, function(o) {
-      var orgId = (o && o._id) ? o._id : o;
-      return orgId.toString() === req.user._id.toString();
-    });
-    schoolOrg.isCurrentUserOrgLead = (indexO > -1) ? true : false;
-
-    Team.find({ $and: [{ $or: [{ 'teamLead': req.user._id },{ 'teamLeads': req.user._id }] },
-      { 'schoolOrg': schoolOrg._id }] }).exec(function(err, teamLeads) {
-        schoolOrg.isCurrentUserTeamLead = (teamLeads && teamLeads.length > 0) ? true : false;
-
-        Team.find({ $and: [{ 'teamMembers': req.user._id },{ 'schoolOrg': schoolOrg._id }] })
-          .exec(function(err, teamMembers) {
-            schoolOrg.isCurrentUserTeamMember = (teamMembers && teamMembers.length > 0) ? true : false;
-
-            res.json(schoolOrg);
-          });
+    findTeamStats(req.schoolOrg, function(org) {
+      var indexO = _.findIndex(org.orgLeads, function(o) {
+        var orgId = (o && o._id) ? o._id : o;
+        return orgId.toString() === req.user._id.toString();
       });
+      org.isCurrentUserOrgLead = (indexO > -1) ? true : false;
+
+      var indexL = _.findIndex(org.teamLeads, function(l) {
+        var teamLeadId = (l && l._id) ? l._id : l;
+        return teamLeadId.toString() === req.user._id.toString();
+      });
+      org.isCurrentUserTeamLead = (indexL > -1) ? true : false;
+
+      var indexM = _.findIndex(org.teamMembers, function(m) {
+        var teamMemberId = (m && m._id) ? m._id : m;
+        return teamMemberId.toString() === req.user._id.toString();
+      });
+      org.isCurrentUserTeamMember = (indexM > -1) ? true : false;
+
+      res.json(org);
+    });
   } else {
+    var schoolOrg = req.schoolOrg ? req.schoolOrg.toJSON() : {};
     res.json(schoolOrg);
   }
 };
@@ -246,32 +281,9 @@ exports.list = function (req, res) {
       }
 
       if (req.query.showTeams) {
-        var findTeams = function(org, callback) {
-          Team.find({ 'schoolOrg' : org }).exec(function(err, teams) {
-            callback(teams);
-          });
-        };
-
         var findTeamsForOrg = function(index, schoolOrgs, updatedSchoolOrgs, callback) {
           if (index < schoolOrgs.length) {
-            findTeams(schoolOrgs[index], function(teams) {
-              var org = schoolOrgs[index] ? schoolOrgs[index].toJSON() : {};
-              var teamLeads = [];
-              var teamMembers = [];
-              if (teams && teams.length) {
-                for (var i = 0; i < teams.length; i++) {
-                  teamLeads.push(teams[i].teamLead);
-                  teamLeads = teamLeads.concat(teams[i].teamLeads);
-                  teamMembers = teamMembers.concat(teams[i].teamMembers);
-                }
-                teamLeads = _.uniq(teamLeads);
-                teamMembers = _.uniq(teamMembers);
-              }
-              org.teams = {
-                teamLeadCount: (teamLeads) ? teamLeads.length : 0,
-                teamCount: (teams) ? teams.length : 0,
-                teamMemberCount: (teamMembers) ? teamMembers.length : 0
-              };
+            findTeamStats(schoolOrgs[index], function(org) {
               updatedSchoolOrgs.push(org);
               findTeamsForOrg(index+1, schoolOrgs, updatedSchoolOrgs, callback);
             });

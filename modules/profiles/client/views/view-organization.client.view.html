@@ -10,7 +10,8 @@
                 <p>{{vm.organization.description}}</p>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6><!--TIFF: If more than one, say "Org Leads"-->
+                <h6 ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"><i class="fa fa-user"></i>
+                  {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
                 <p ng-repeat="orgLead in vm.organization.orgLeads">
                     <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
                         class="pull-left header-profile-image">
@@ -38,7 +39,7 @@
             <a class="btn btn-default" ng-click="vm.openFormOrg()">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
             <a class="btn btn-default" ng-click="vm.openInviteOrgLead()">Invite leads</a>
             <a class="btn btn-danger" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
-            <a class="btn btn-danger">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
+            <a class="btn btn-danger" ng-click="vm.openDeleteForm()">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
         </nav>
         <hr/>
 
@@ -81,5 +82,9 @@
 <!--MODALS-->
 <invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
 <form-org-profile-modal organization="vm.organization" close-function="vm.closeFormOrg"></form-org-profile-modal>
-<delete-org-lead-modal close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
+<delete-school-org-modal organization="vm.organization" close-function="vm.closeDeleteForm"></delete-school-org-modal>
+<delete-org-lead-modal organization="vm.organization" close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
+
+<view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
+<form-team-profile-modal team="vm.teamToOpen" organization="vm.organization" close-function="vm.closeFormTeam"></form-team-profile-modal>
 <!--END MODALS-->

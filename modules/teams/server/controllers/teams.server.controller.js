@@ -25,6 +25,7 @@ var path = require('path'),
 var createInternal = function(teamJSON, user, successCallback, errorCallback) {
   var team = new Team(teamJSON);
   team.teamLead = user;
+  team.teamLeads = [user];
 
   team.save(function (err) {
     if (err) {

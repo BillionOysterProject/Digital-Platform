@@ -9,6 +9,7 @@
         templateUrl: 'modules/profiles/client/views/form-team-profile.client.view.html',
         scope: {
           team: '=',
+          organization: '=?',
           closeFunction: '='
         },
         replace: true,
@@ -31,6 +32,9 @@
               } else {
                 $scope.team.photo = null;
               }
+            }
+            if (!$scope.team.schoolOrg) {
+              $scope.team.schoolOrg = $scope.organization;
             }
 
             if ($scope.team._id) {
@@ -67,7 +71,7 @@
                   teamId: teamId,
                   full: true
                 }, function(data) {
-                  $scope.closeFunction();
+                  $scope.closeFunction(true);
                 });
               }, function(errorMessage) {
                 $scope.error = errorMessage;

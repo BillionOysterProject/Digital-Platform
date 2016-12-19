@@ -342,14 +342,12 @@ exports.userByID = function (req, res, next, id) {
 
 // inviting users
 var createUserInviteInternal = function(userJSON, schoolOrg, role, successCallback, errorCallback) {
-  console.log('userJSON', userJSON);
   User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
     if (userErr) {
       errorCallback(errorHandler.getErrorMessage(userErr));
     } else if (user) {
       successCallback(user);
     } else {
-      console.log('no use found');
       crypto.randomBytes(20, function (err, buffer) {
         var token = buffer.toString('hex');
         // create user
@@ -366,7 +364,6 @@ var createUserInviteInternal = function(userJSON, schoolOrg, role, successCallba
         // Then save the user
         user.save(function (err) {
           if (err) {
-            console.log('save user error', err);
             errorCallback(errorHandler.getErrorMessage(err));
           } else {
             successCallback(user, token);
@@ -411,7 +408,7 @@ var sendExistingInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOr
   });
 };
 
-var findTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCallback, errorCallback) {
+var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCallback, errorCallback) {
   if (teamOrOrg === 'team') {
     var teamId = (team && team._id) ? team._id : team;
     Team.findById(teamId).exec(function(err, team) {
@@ -451,13 +448,13 @@ var findTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCall
 };
 
 exports.createUserInvite = function (req, res) {
-  delete req.body.roles;
+  delete req.body.user.roles;
   var teamOrOrg = req.body.teamOrOrg;
   var role = req.body.role;
 
-  createUserInviteInternal(req.body.user, req.user.schoolOrg, role,
+  createUserInviteInternal(req.body.user, req.body.organization, role,
     function(user, token) {
-      findTeamOrOrg (user, req.body.team, req.user.schoolOrg, role, teamOrOrg,
+      addToTeamOrOrg (user, req.body.team, req.body.organization, role, teamOrOrg,
         function(team, schoolOrg) {
           var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
           if (token) {
@@ -508,43 +505,100 @@ exports.remindInvitee = function (req, res) {
   var user = req.member;
   var teamOrOrg = req.body.teamOrOrg;
   var role = req.body.role;
+  var team = req.body.team;
+  var schoolOrg = req.body.organization;
 
-  findTeamOrOrg (user, req.body.team, req.user.schoolOrg, role, teamOrOrg,
-    function(team, schoolOrg) {
-      var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
-      if (user.resetPasswordToken) {
-        sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, user.resetPasswordToken,
-          function() {
-            res.json(user);
-          }, function(errorMessage) {
-            res.json(user);
-          });
-      } else {
-        if (user.pending === true) {
-          crypto.randomBytes(20, function (err, buffer) {
-            var token = buffer.toString('hex');
-            // update user
-            user.resetPasswordToken = token;
-            user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
+  var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
+  if (user.resetPasswordToken) {
+    sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, user.resetPasswordToken,
+      function() {
+        res.json(user);
+      }, function(errorMessage) {
+        res.json(user);
+      });
+  } else {
+    if (user.pending === true) {
+      crypto.randomBytes(20, function (err, buffer) {
+        var token = buffer.toString('hex');
+        // update user
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + (86400000 * 30); //30 days
 
-            // Then save the user
-            user.save(function(err) {
-              if (err) {
-                return res.status(400).send({
-                  message: errorHandler.getErrorMessage(err)
-                });
-              } else {
-                sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
-                  function() {
-                    res.json(user);
-                  }, function(errorMessage) {
-                    res.json(user);
-                  });
-              }
+        // Then save the user
+        user.save(function(err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
             });
-          });
+          } else {
+            sendReminderInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
+              function() {
+                res.json(user);
+              }, function(errorMessage) {
+                res.json(user);
+              });
+          }
+        });
+      });
+    }
+  }
+};
+
+var removeFromArray = function(user, array) {
+  var index = _.findIndex(array, function(n) {
+    var id = (n && n._id) ? n._id : n;
+    return id.toString() === user._id.toString();
+  });
+  array.splice(index, 1);
+  return array;
+};
+
+var removeFromTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCallback, errorCallback) {
+  if (teamOrOrg === 'team') {
+    var teamId = (team && team._id) ? team._id : team;
+    Team.findById(teamId).exec(function(err, team) {
+      if (err) {
+        errorCallback(err);
+      } else {
+        if (role === 'team member pending' || role === 'team member') {
+          team.teamMembers = removeFromArray(user, team.teamMembers);
+        } else if (role === 'team lead pending' || role === 'team lead') {
+          team.teamLeads = removeFromArray(user, team.teamLeads);
         }
+        team.save(function(err) {
+          if (err) {
+            errorCallback(err);
+          }
+          successCallback(team, schoolOrg);
+        });
       }
+    });
+  } else if (teamOrOrg === 'organization') {
+    var schoolOrgId = (schoolOrg && schoolOrg._id) ? schoolOrg._id : schoolOrg;
+    SchoolOrg.findById(schoolOrgId).exec(function(err, schoolOrg) {
+      if (err) {
+        errorCallback(err);
+      } else {
+        schoolOrg.orgLeads = removeFromArray(user, schoolOrg.orgLeads);
+        schoolOrg.save(function(err) {
+          if (err) {
+            errorCallback(err);
+          }
+          successCallback(null, schoolOrg);
+        });
+      }
+    });
+  }
+};
+
+exports.deleteUserLeader = function (req, res) {
+  var user = req.member;
+  var teamOrOrg = req.body.teamOrOrg;
+  var role = req.body.role;
+
+  removeFromTeamOrOrg (user, req.body.team, req.body.organization, role, teamOrOrg,
+    function(team, schoolOrg) {
+      res.json(user);
     }, function(errorMessage) {
       return res.status(400).send({
         message: errorMessage
@@ -552,7 +606,7 @@ exports.remindInvitee = function (req, res) {
     });
 };
 
-exports.inviteeByID = function (req, res, next, id) {
+exports.leaderByID = function (req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Member is invalid'
