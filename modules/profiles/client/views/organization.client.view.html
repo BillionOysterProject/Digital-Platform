@@ -2,7 +2,6 @@
     <section class="content">
         <section class="container-fluid">
             <h2>Organizations</h2>
-            <!--TIFF: this is just copied from lessons -->
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -25,15 +24,15 @@
         <div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
             No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
         </div>
+        <!-- show org requests -->
         <div class="alert alert-success" ng-show="vm.orgRequests && vm.orgRequests.length > 0" role="alert">
             You have <b>{{vm.orgRequests.length}}</b> new organization requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveSchoolOrgs()">Respond</a>
-      </div>
+        </div>
+        <!-- -->
 
-        <!--TIFF: these are just copied from lessons -->
         <nav class="navbar">
-            <!--TIFF: should open Add Org modal from Settings -->
-            <a class="btn btn-default pull-right" view-permissions="admin">
+            <a class="btn btn-default pull-right" view-permissions="admin" ng-click="vm.openSchoolOrgForm()">
                 <i class="glyphicon glyphicon-plus"></i> Add organization
             </a>
             <ul class="nav navbar-nav">
@@ -64,8 +63,8 @@
                     <div class="panel-body text-center">
                         <h4>{{org.name}}</h4>
                         <p><i class="fa fa-map-marker"></i> {{org.streetAddress}}, {{org.city}}, {{org.state}}</p>
-                        <p class="text-muted small">{{org.description | limitTo:200}}</p><!--TIFF: limit to 200 -->
-                        <img class="img-responsive" ng-src="{{org.photo.path}}" /><!--TIFF: only show if they have an image -->
+                        <p class="text-muted small">{{org.description | limitTo:200}}</p>
+                        <img class="img-responsive" ng-show="org.photo.path" ng-src="{{org.photo.path}}" />
                         <hr ng-show="org.orgLeads && org.orgLeads.length > 0"/>
                         <p>
                             <org-lead-list-condensed org-leads="org.orgLeads"></org-lead-list-condensed>
@@ -83,3 +82,7 @@
         </div>
     </section>
 </section>
+
+<!-- modals -->
+<form-org-profile-modal organization="vm.newOrganization" close-function="vm.closeSchoolOrgForm"></form-org-profile-modal>
+<approve-school-org-modal org-requests="vm.orgRequests" close-function="vm.closeApproveSchoolOrgs"></approve-school-org-modal>

@@ -33,7 +33,7 @@
         finishedApprovingCount++;
         if (finishedApprovingCount === $scope.orgRequests.length) {
           spinner.stop();
-          $scope.saveFunction();
+          $scope.closeFunction(true);
         }
       };
 
@@ -102,7 +102,7 @@
 
     $scope.cancel = function() {
       $scope.reset();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
 
     $scope.getApproveCount = function() {

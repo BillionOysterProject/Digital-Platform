@@ -11,6 +11,7 @@
   function OrganizationProfileListController($scope, $rootScope, $timeout, SchoolOrganizationsService,
     ExpeditionViewHelper) {
     var vm = this;
+    vm.newOrganization = new SchoolOrganizationsService();
 
     var checkRole = ExpeditionViewHelper.checkRole;
     vm.isTeamLead = checkRole('team lead') || checkRole('team lead pending');
@@ -45,13 +46,22 @@
         vm.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
         });
       }, function(error) {
         vm.error = error.data.message;
       });
     };
-
     vm.findOrganizations();
+
+    vm.findOrgRequests = function() {
+      SchoolOrganizationsService.query({
+        pending: true
+      }, function(data) {
+        vm.orgRequests = data;
+      });
+    };
+    vm.findOrgRequests();
 
     vm.typeSelected = function(selection) {
       vm.filter.type = (selection) ? selection.value : '';
@@ -100,7 +110,25 @@
     };
 
     vm.openSchoolOrgForm = function() {
+      angular.element('#modal-org-edit').modal('show');
+    };
 
+    vm.closeSchoolOrgForm = function(refresh) {
+      angular.element('#modal-org-edit').modal('hide');
+      if (refresh) vm.findOrganizations();
+    };
+
+    vm.openApproveSchoolOrgs = function() {
+      vm.findOrgRequests();
+      angular.element('#modal-org-requests').modal('show');
+    };
+
+    vm.closeApproveSchoolOrgs = function(refresh) {
+      angular.element('#modal-org-requests').modal('hide');
+      if (refresh) {
+        vm.findOrganizations();
+        vm.findOrgRequests();
+      }
     };
   }
 })();

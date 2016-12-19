@@ -171,7 +171,11 @@ exports.list = function (req, res) {
   var and = [];
 
   if (req.query.type) {
-    and.push({ organizationType: req.query.type });
+    if (req.query.type === 'other') {
+      and.push({ $or: [{ organizationType: req.query.type },{ organizationType: { $exists: false } }] });
+    } else {
+      and.push({ organizationType: req.query.type });
+    }
   }
 
   if (req.query.pending) {
