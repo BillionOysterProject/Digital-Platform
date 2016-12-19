@@ -1,15 +1,35 @@
-<div class="row">
-  <div class="col-sm-12" ng-show="photoUrl">
-    <image ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
-  </div>
-  <div class="col-sm-12">
-    <h4 class="blue">{{name}}</h4>
-    <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
-    <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
-    <h5>{{bodyOfWater}}</h5>
-    <p class="text-muted">
-      <span ng-show="teamLead">by <b>{{teamLead}}</b> from </span>
-      <span ng-show="schoolOrg">{{schoolOrg}}</span>
-    </p>
-  </div>
+<div>
+  <image ng-show="photoUrl" ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
+  <span class="label label-success" ng-show="vm.station.status === 'Active'">Active</span>
+  <span class="label label-danger" ng-show="vm.station.status === 'Lost'">Lost</span>
+  <h4 class="blue">{{name}}</h4>
+  <p>
+    {{bodyOfWater}}<br/>
+    <span class="text-muted" ng-show="teamLead">by {{teamLead}} from </span>
+    <span class="text-muted" ng-show="schoolOrg">{{schoolOrg}}</span>
+  </p>
+  <a class="btn btn-block btn-sm btn-default" data-toggle="modal" data-target="#modal-ors">View station</a>
+</div>
+
+
+<!--MODALS-->
+<div class="modal fade" id="modal-ors" tabindex="-1" role="dialog" aria-labelledby="modal-ors">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Need help? Send us a message</h4>
+                <p>Thanks for helping us improve! All feedback is appreciated.</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
