@@ -216,6 +216,23 @@ exports.getCurriculumMetrics = function(req, res) {
       { $group: { _id: '$lessonOverview.setting', lessonCount: { $sum: 1 } } }
   ]);
 
+  var lessonsPerSubjectAreaQuery = Lesson.aggregate([
+    { $match: { status: 'published' } },
+    { $unwind: '$lessonOverview.subjectAreas' },
+    { $group: { _id: '$lessonOverview.subjectAreas', lessonCount: { $sum: 1 } } },
+    { $lookup: { from: 'metasubjectareas', localField: '_id', foreignField: '_id', as: 'subjects' } }
+  ]);
+
+  //lessons per subject area query
+  //db.getCollection('lessons').aggregate([{ $match: { status: 'published'} }, { $group: { _id: '$lessonOverview.subjectAreas', lessonCount: {$sum: 1}} }])
+
+  //avg supplies per lesson - mongo 3.4 has a split operator and we could do something like
+  //db.getCollection('lessons').aggregate([ { $match: { 'materialsResources.supplies': { $exists: true, $ne: null, $ne: ''} } }, { $project: { split: { $split: [ "$materialsResources.supplies", "\n"] } } } ])
+  //if we ever want to upgrade. without it we can't split that field for counting
+
+  // something like this but then we need to count occurrences of \n
+  //db.getCollection('lessons').aggregate([ { $match: { $and: [{'status': 'published'}, { 'materialsResources.supplies': { $exists: true, $ne: null, $ne: ''} }]} }, { $project: { supplies: '$materialsResources.supplies' } } ])
+
   unitCountQuery.exec(function(err, unitCount) {
     if (err) {
       return res.status(400).send({
@@ -306,7 +323,23 @@ exports.getCurriculumMetrics = function(req, res) {
                                         });
                                       }
                                       curriculumMetrics.lessonSettingCounts = lessonSettingCounts;
-                                      res.json(curriculumMetrics);
+                                      lessonsPerSubjectAreaQuery.exec(function(err, lessonsPerSubjectData) {
+                                        if (err) {
+                                          return res.status(400).send({
+                                            message: errorHandler.getErrorMessage(err)
+                                          });
+                                        } else {
+                                          var lessonSubjectCounts = [];
+                                          for(var i = 0; i < lessonsPerSubjectData.length; i++) {
+                                            lessonSubjectCounts.push({
+                                              subject: lessonsPerSubjectData[i].subjects[0].subject,
+                                              lessonCount: lessonsPerSubjectData[i].lessonCount
+                                            });
+                                          }
+                                          curriculumMetrics.lessonSubjectCounts = lessonSubjectCounts;
+                                          res.json(curriculumMetrics);
+                                        }
+                                      });
                                     }
                                   });
                                 }

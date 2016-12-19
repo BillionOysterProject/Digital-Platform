@@ -42,6 +42,16 @@
         }
         $scope.metrics.lessonSettingPieLabels = lessonSettingPieLabels;
         $scope.metrics.lessonSettingPieData = lessonSettingPieData;
+        var lessonSubjectPieLabels = [];
+        var lessonSubjectPieData = [];
+        if($scope.metrics.lessonSubjectCounts !== null && $scope.metrics.lessonSubjectCounts !== undefined) {
+          for(var l = 0; l < $scope.metrics.lessonSubjectCounts.length; l++) {
+            lessonSubjectPieLabels.push($scope.metrics.lessonSubjectCounts[l].subject);
+            lessonSubjectPieData.push($scope.metrics.lessonSubjectCounts[l].lessonCount);
+          }
+        }
+        $scope.metrics.lessonSubjectPieLabels = lessonSubjectPieLabels;
+        $scope.metrics.lessonSubjectPieData = lessonSubjectPieData;
 
         $scope.error = null;
         $timeout(function() {

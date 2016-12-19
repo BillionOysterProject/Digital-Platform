@@ -51,9 +51,6 @@
     vm.pieBlabels = ['6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade'];
     vm.pieBdata = [43, 24, 142, 66, 35, 52, 35];
 
-    vm.pieElabels = ['Math', 'Science', 'Language Arts', 'Music', 'Environmental'];
-    vm.pieEdata = [148, 100, 134, 42, 64];
-
     vm.pieGlabels = ['Lost Stations', 'Active Stations'];
     vm.pieGdata = [97, 248];
 
