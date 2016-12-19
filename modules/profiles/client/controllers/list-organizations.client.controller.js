@@ -5,10 +5,10 @@
     .module('profiles')
     .controller('OrganizationProfileListController', OrganizationProfileListController);
 
-  OrganizationProfileListController.$inject = ['$scope', '$rootScope', '$timeout', 'SchoolOrganizationsService',
+  OrganizationProfileListController.$inject = ['$scope', '$rootScope', '$timeout', '$state', 'SchoolOrganizationsService',
     'ExpeditionViewHelper'];
 
-  function OrganizationProfileListController($scope, $rootScope, $timeout, SchoolOrganizationsService,
+  function OrganizationProfileListController($scope, $rootScope, $timeout, $state, SchoolOrganizationsService,
     ExpeditionViewHelper) {
     var vm = this;
     vm.newOrganization = new SchoolOrganizationsService();
@@ -113,9 +113,14 @@
       angular.element('#modal-org-edit').modal('show');
     };
 
-    vm.closeSchoolOrgForm = function(refresh) {
+    vm.closeSchoolOrgForm = function(schoolOrg) {
       angular.element('#modal-org-edit').modal('hide');
-      if (refresh) vm.findOrganizations();
+      if (schoolOrg) {
+        console.log('schoolOrg', schoolOrg);
+        $timeout(function() {
+          $state.go('profiles.organization-view', { schoolOrgId: schoolOrg._id });
+        }, 500);
+      }
     };
 
     vm.openApproveSchoolOrgs = function() {

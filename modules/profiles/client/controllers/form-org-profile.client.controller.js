@@ -83,7 +83,7 @@
             schoolOrgId: orgId,
             full: true
           }, function(data) {
-            $scope.closeFunction(true);
+            $scope.closeFunction(data);
           });
         }, function(errorMessage) {
           $scope.error = errorMessage;

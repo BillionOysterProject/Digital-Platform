@@ -2,7 +2,6 @@
     <section class="content">
         <section class="container-fluid">
             <h2>Teams</h2>
-            <!--TIFF: this is just copied from lessons -->
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -21,10 +20,9 @@
 </div>
 <section class="content">
     <section class="container-fluid">
-        <!--TIFF: these are just copied from lessons -->
         <nav class="navbar">
             <a class="btn btn-default pull-right" ng-click="vm.openTeamProfileForm()">
-              <i class="glyphicon glyphicon-plus"></i> Create new team</a><!--TIFF: Open edit/create team modal currently in ViewTeam, on Submit of modal, open new ViewTeam page with that new team -->
+              <i class="glyphicon glyphicon-plus"></i> Create new team</a>
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="orgSelection">
@@ -52,8 +50,8 @@
                     </div>
                     <div class="panel-body text-center">
                         <h4>{{team.name}}</h4>
-                        <p class="text-muted small">{{team.description | limitTo:200}}</p><!--TIFF: limit to 200 -->
-                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" /><!--TIFF: only show if they have an image -->
+                        <p class="text-muted small">{{team.description | limitTo:200}}</p>
+                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" />
                         <hr/>
                         <p>
                           <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
@@ -72,4 +70,4 @@
     </section>
 </section>
 
-<form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<form-team-profile-modal team="vm.newTeam" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>

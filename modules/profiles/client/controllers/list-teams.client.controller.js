@@ -5,12 +5,13 @@
     .module('profiles')
     .controller('TeamProfileListController', TeamProfileListController);
 
-  TeamProfileListController.$inject = ['$scope', '$rootScope', '$timeout', 'TeamsService', 'SchoolOrganizationsService',
+  TeamProfileListController.$inject = ['$scope', '$rootScope', '$timeout', '$state', 'TeamsService', 'SchoolOrganizationsService',
     'ExpeditionViewHelper'];
 
-  function TeamProfileListController($scope, $rootScope, $timeout, TeamsService, SchoolOrganizationsService,
+  function TeamProfileListController($scope, $rootScope, $timeout, $state, TeamsService, SchoolOrganizationsService,
     ExpeditionViewHelper) {
     var vm = this;
+    vm.newTeam = new TeamsService();
 
     vm.checkRole = ExpeditionViewHelper.checkRole;
     vm.isTeamLead = vm.checkRole('team lead') || vm.checkRole('team lead pending');
@@ -78,8 +79,13 @@
       angular.element('#modal-team-edit').modal('show');
     };
 
-    vm.closeTeamProfileForm = function() {
+    vm.closeTeamProfileForm = function(team) {
       angular.element('#modal-team-edit').modal('hide');
+      if (team) {
+        $timeout(function() {
+          $state.go('profiles.team-view', { teamId: team._id });
+        }, 500);
+      }
     };
   }
 })();
