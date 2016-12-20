@@ -146,8 +146,10 @@
                                   <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
                                 </h3></td>
                                 <td><image ng-src="{{station.photo.path}}" class="img-thumbnail" ng-show="station.photo"></td>
-                                <td>{{station.name}}<br/><span class="small text-muted">{{station.latitude}}, {{station.longitude}}<br />
-                                  {{station.bodyOfWater}}</span>
+                                <td>{{station.name}}<br/>
+                                    <span class="small text-muted">{{station.bodyOfWater}}</span><br/>
+                                    <span class="small text-muted" ng-show="station.teamLead">by {{station.teamLead.displayName}} from </span>
+                                    <span class="small text-muted" ng-show="station.schoolOrg">{{station.schoolOrg.name}}</span>
                                 </td>
                                 <td class="text-right">
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
