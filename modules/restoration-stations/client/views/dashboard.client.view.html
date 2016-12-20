@@ -134,10 +134,12 @@
                 <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
-                        <a class="btn btn-block btn-sm btn-default" data-toggle="modal" data-target="#modal-ors">View station</a>
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
+                            <!--TODO: Change ng-click on each ORS to open profile modal #modal-station (Currently in MODAL list below, also set up click in mapmarker button to go to ORS profile)-->
+                            <!--TODO: Change list to only show all ORS user has created, then all stations user has visited on an expedition (we're removing ORS owned by teams, ORS are now owned by team leads)-->
+                            
                             <tr ng-repeat="station in vm.stations" ng-click="vm.canEditRestorationStation(station)">
                                 <td><h3>
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
@@ -217,24 +219,156 @@
 save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRestorationStation"
 cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
 
-<div class="modal fade" id="modal-ors" tabindex="-1" role="dialog" aria-labelledby="modal-ors">
-    <div class="modal-dialog" role="document">
+
+<!--TODO: needs wired up, moved elsewhere -->
+<div class="modal fade" id="modal-station" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Station #523</h4>
-                <p>Thanks for helping us improve! All feedback is appreciated.</p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2" ng-show="station.photo">
+                        <image ng-src="{{station.photo.path}}" alt="{{station.name}}" class="img-circle img-responsive" width="100" />
+                    </div>
+                    <div class="col-md-4">
+                        <h3>
+                            <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
+                            <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                            {{station.name}} &nbsp;&nbsp;
+                            <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
+                            <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+                        </h3>
+                        <h5>
+                            {{station.bodyOfWater}}<br/>
+                            <small class="text-muted">{{station.latitude}}, {{station.longitude}}</small>
+                        </h5>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <h6>Owner</h6>
+                        <h4>
+                            <a href="#">Joe Smith</a><br/><!--TODO: Link to user profile-->
+                            <small><a href="mailto:">teamlead@email.com</a></small>
+                        </h4>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <h6>Organization</h6>
+                        <h4>
+                            <a href="#">NYC Public Schools</a><br/><!--TODO: Link to org profile-->
+                            <small>New York, NY</small>
+                        </h4>
+                    </div>
+                </div>
+                <hr/>
+
+                <nav class="nav nav-default text-right">
+                    <!-- TODO: Only show Edit button if viewer is ORS author or admin -->
+                    <a class="btn btn-default" ng-click="vm.canEditRestorationStation(station)">Edit ORS</a>
+                    <a class="btn btn-primary" data-toggle="modal" data-target="#modal-station-status">Submit status update</a>
+                </nav>
             </div>
             <div class="modal-body">
+                <div class="row"><!--TODO: All charts should be from baseline to present, use the same Line Charts from Metrics-->
+                    <div class="col-md-4">
+                        <label>Mortality</label>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Change in average mass</label>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Change in average length</label>
+                        <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                            chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                            chart-click="vm.onClick()" >
+                        </canvas>
+                    </div>
+                </div>
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6"><!--TODO: ng-show="expeditions" -->
+                        <dl class="dl-horizontal">
+                            <dt>Expeditions to this ORS</dt>
+                            <dd ng-repeat="expedition in expeditions">
+                              <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
+                            </dd>
+                            <dd><a>September Expedition 2017</a></dd>
+                            <dd><a>September Expedition 2017</a></dd>
+                            <dd><a>September Expedition 2017</a></dd>
+                            <dd><a>September Expedition 2017</a></dd>
+                        </dl>
+                    </div>
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>Site Coordinator</dt>
+                            <dd><a>Mary Smith</a></dd><!--TODO: Link to user profile if in the platform, otherwise just text-->
+                            <dt>Property Owner</dt>
+                            <dd><a>Mary Smith</a></dd><!--TODO: Link to user profile if in the platform, otherwise just text-->
+                            <dt>Shoreline Type</dt>
+                            <dd>Floating Dock</dd>
+                            <dt>Notes</dt>
+                            <dd>It is a bit treacherous to get to this location. Make sure to bring boots and ponchos for easy cleanup!</dd>
+                        </dl>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
             </div>
         </div>
     </div>
 </div>
+
+<!--TODO: needs wired up (currently copied fields from ORS form), moved elsewhere 
+Form should be emailed "to the ORS owner AND to all team leads who are using that ORS for an expedition AND most importantly to our field science admin Rob Buchanan" Email to OWS owner/admin should include a link to update the status (ORS Edit modal) themselves (a user submitting the status update does not automatically change the status). Team leads who are using the ORS for an expedition should just receive an email notifying them (no link to update the status).
+-->
+<div class="modal fade" id="modal-station-status" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Submit a status update for <span class="red">Station 52</span></h4>
+            <p>The ORS owner and admin will be notified. Thanks for keeping us informed!</p>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <!--TODO: Add additional status options "Active, Damaged, Lost or Destroyed, Unknown"-->
+                <label class="required" for="status">Current status *</label>
+                <select class="form-control" ng-model="station.status" name="status" id="status" required>
+                    <option value="Active">Active</option>
+                    <option value="Lost">Lost</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
+                <single-image-drop-zone uploader="stationPhotoUploader" image-url="stationPhotoURL"
+                image-alt="Station Photograph" id="ors-image-dropzone"></single-image-drop-zone>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!--END MODALS-->
