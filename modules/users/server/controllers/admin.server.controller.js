@@ -377,7 +377,7 @@ var createUserInviteInternal = function(userJSON, schoolOrg, role, successCallba
 var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the ' + teamOrOrg + ' ' + teamOrOrgName,
   'member_invite', {
     FirstName: user.firstName,
     LeadName: leadName,
@@ -394,7 +394,7 @@ var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, t
 var sendExistingInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrg + ' ' + teamOrOrgName,
   'member_existing_invite', {
     FirstName: user.firstName,
     LeadName: leadName,
@@ -487,7 +487,7 @@ exports.createUserInvite = function (req, res) {
 var sendReminderInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'Reminder: You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrgName,
+  email.sendEmailTemplate(user.email, 'Reminder: You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrg + ' ' + teamOrOrgName,
   'invite_reminder', {
     FirstName: user.firstName,
     LeadName: leadName,

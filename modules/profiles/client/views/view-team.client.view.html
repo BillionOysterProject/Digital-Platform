@@ -12,7 +12,7 @@
             <div class="col-lg-6 col-md-12">
                 <br/>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
                         <h6><i class="fa fa-user"></i> {{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
                         <p ng-repeat="teamLead in vm.team.teamLeads">
                             <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
@@ -34,9 +34,6 @@
     </section>
 </section>
 
-
-
-<!--TIFF: Team members below should only be visible to people within the team, the team leads of the current team, and admin (hide for other team leads/members) -->
 <section class="content" ng-show="vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember || vm.isAdmin">
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
@@ -45,39 +42,42 @@
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </span>
-                    <input class="form-control col-md-4" type="text" placeholder="Search" ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+                    <input class="form-control col-md-4" type="text" placeholder="Search"
+                      ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
                 </div>
             </div>
 
             <!--TIFF: only show buttons if team lead -->
             <a class="btn btn-default" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
             <a class="btn btn-default" ng-click="vm.openInviteTeamLead()">Invite leads</a>
-            <a class="btn btn-default">Add members</a><!--TIFF: Open add members modal from Settings page -->
-            <a class="btn btn-default">Import members</a><!--TIFF: Open import members modal from Settings page -->
+            <a class="btn btn-default" ng-click="vm.openFormTeamMember()">Add members</a><!--TIFF: Open add members modal from Settings page -->
+            <a class="btn btn-default" ng-click="vm.openImportTeamMembers()">Import members</a><!--TIFF: Open import members modal from Settings page -->
             <a class="btn btn-danger" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
+            <a class="btn btn-danger" ng-click="vm.openDeleteTeam()">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
         </nav>
         <hr/>
 
-        <div class="alert alert-info text-center" ng-show="vm.teamMembers.length === 0 && vm.filter.searchString === ''">
+        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.isCurrentUserTeamLead) &&
+          vm.teamMembers.length === 0 && vm.filter.searchString === ''">
             No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
         </div>
-        <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
+        <div class="alert alert-success" role="alert" ng-show="vm.isCurrentUserTeamLead && vm.teamRequests.length > 0">
             You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div><!--TIFF: Open modal from Settings -->
 
         <div class="row" isotope-container="isotope-container">
             <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay" ng-show="vm.team.isCurrentUserTeamLead || vm.isAdmin"><!--TIFF: Only show if team lead (admin?) -->
+                <div class="panel-overlay" ng-show="vm.team.isCurrentUserTeamLead"><!--TIFF: Only show if team lead (admin?) -->
                     <a class="btn btn-sm btn-danger pull-right"><!--TIFF: Open user delete modal from Settings -->
                         <i class="glyphicon glyphicon-remove"></i></a>
                     <a class="btn btn-sm btn-default pull-right"><!--TIFF: Open user edit modal from Settings -->
                         <i class="glyphicon glyphicon-pencil"></i></a>
                 </div>
-                <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
+                <div class="panel" ng-click="vm.openViewUserModal(member)">
                     <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" ng-show="member.profileImageURL" ng-src="{{member.profileImageURL}}" width="100" />
+                        <img class="img-circle img-responsive center-block"
+                          ng-show="member.profileImageURL" ng-src="{{member.profileImageURL}}" width="100" />
                         <h3>{{member.displayName}}</h3>
                         <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
                     </div>
@@ -94,9 +94,10 @@
 
 
 
-<!-- MODALS -->
+<!--MODALS-->
 <form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
-<invite-team-lead-modal close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
+<invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
 <delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
-<!--END OF MODALS-->
+<delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
+<!--END MODALS-->

@@ -7,7 +7,6 @@
                 <h4 class="modal-title">Invite organization leads</h4>
             </div>
             <div class="modal-body">
-                <!--TIFF: wire up all org names in text/labels below -->
                 <p>You can add organization leads to help manage <b>{{organization.name}}</b>. These organization leads will have all the same permissions to edit and delete the organization and organization leads - so proceed with caution.</p>
                 <hr/>
                 <p>If they already have a team lead account in the <b>{{organization.name}}</b> organization, select their name below.</p>
@@ -35,7 +34,6 @@
                     <input type="text" class="form-control" id="email" name="email" ng-model="newTeamLead.email"
                       ng-disabled="existingTeamLead"></input>
                 </div>
-                <!--TIFF: validation should only allow one or the other field -->
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" ng-click="close()">Cancel</a>

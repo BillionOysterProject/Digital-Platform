@@ -20,13 +20,11 @@
 </div>
 <section class="content">
     <section class="container-fluid">
-    
-        <!-- show org requests -->
-        <div class="alert alert-success" ng-show="vm.orgRequests && vm.orgRequests.length > 0" role="alert">
+
+        <div class="alert alert-success" ng-show="vm.isAdmin && vm.orgRequests && vm.orgRequests.length > 0" role="alert">
             You have <b>{{vm.orgRequests.length}}</b> new organization requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveSchoolOrgs()">Respond</a>
         </div>
-        <!-- -->
 
         <nav class="navbar">
             <a class="btn btn-default pull-right" view-permissions="admin" ng-click="vm.openSchoolOrgForm()">
@@ -84,6 +82,7 @@
     </section>
 </section>
 
-<!-- modals -->
+<!--MODALS-->
 <form-org-profile-modal organization="vm.newOrganization" close-function="vm.closeSchoolOrgForm"></form-org-profile-modal>
 <approve-school-org-modal org-requests="vm.orgRequests" close-function="vm.closeApproveSchoolOrgs"></approve-school-org-modal>
+<!--END MODALS-->

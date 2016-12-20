@@ -42,10 +42,12 @@
         </nav>
         <hr/>
 
-        <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
-            You have <b>{{leadRequests.length}}</b> new team lead requests.
-            <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a>
-        </div>
+        <!-- TODO: Add back when there is a way to request to be an org lead
+        <div class="alert alert-success" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) &&
+          leadRequests && leadRequests.length > 0" role="alert">
+            You have <b>{{leadRequests.length}}</b> new org lead requests.
+            <a class="btn btn-sm btn-default" ng-click="openApproveOrgLeads()">Respond</a>
+        </div> -->
 
         <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString === ''">
             No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
@@ -57,7 +59,7 @@
                     <div class="panel-body text-center">
                         <h4>{{team.name}}</h4>
                         <p class="text-muted small">{{team.description | limitTo:200}}</p>
-                        <img class="img-responsive" ng-src="{{team.photo.path}}" /><!--TIFF: only show if they have an image -->
+                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" />
                         <hr/>
                         <p>
                             <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>

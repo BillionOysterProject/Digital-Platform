@@ -5,11 +5,11 @@
     .module('profiles')
     .controller('TeamProfileController', TeamProfileController);
 
-  TeamProfileController.$inject = ['$scope', '$rootScope', '$http', '$stateParams', '$timeout', 'Authentication',
-    'TeamsService', 'TeamMembersService', 'ExpeditionsService', 'ExpeditionViewHelper', 'FileUploader'];
+  TeamProfileController.$inject = ['$scope', '$rootScope', '$http', '$state', '$stateParams', '$timeout', 'Authentication',
+    'TeamsService', 'TeamMembersService', 'ExpeditionsService', 'Admin', 'ExpeditionViewHelper', 'FileUploader'];
 
-  function TeamProfileController($scope, $rootScope, $http, $stateParams, $timeout, Authentication,
-      TeamsService, TeamMembersService, ExpeditionsService, ExpeditionViewHelper, FileUploader) {
+  function TeamProfileController($scope, $rootScope, $http, $state, $stateParams, $timeout, Authentication,
+      TeamsService, TeamMembersService, ExpeditionsService, Admin, ExpeditionViewHelper, FileUploader) {
     var vm = this;
     vm.team = {};
     vm.userToOpen = {};
@@ -100,17 +100,34 @@
       angular.element('#modal-team-edit').modal('show');
     };
 
-    vm.closeTeamProfileForm = function() {
+    vm.closeTeamProfileForm = function(data) {
       angular.element('#modal-team-edit').modal('hide');
-      findTeam();
+      if (data) findTeam();
     };
 
     vm.openInviteTeamLead = function() {
       angular.element('#modal-team-lead-invite').modal('show');
     };
 
-    vm.closeInviteTeamLead = function() {
+    vm.closeInviteTeamLead = function(refresh) {
       angular.element('#modal-team-lead-invite').modal('hide');
+      if (refresh) findTeam();
+    };
+
+    vm.openFormTeamMember = function() {
+
+    };
+
+    vm.closeFormTeamMember = function() {
+
+    };
+
+    vm.openImportTeamMembers = function() {
+
+    };
+
+    vm.closeImportTeamMembers = function() {
+
     };
 
     vm.openDeleteTeamLead = function() {
@@ -121,13 +138,34 @@
       angular.element('#modal-team-lead-remove').modal('hide');
     };
 
+    vm.openDeleteTeam = function() {
+      angular.element('#modal-team-delete').modal('show');
+    };
+
+    vm.closeDeleteTeam = function(refresh) {
+      angular.element('#modal-team-delete').modal('hide');
+      if (refresh) {
+        $timeout(function() {
+          $state.go('profiles.team');
+        }, 500);
+      }
+    };
+
     vm.openViewUserModal = function(user) {
-      vm.userToOpen = (user) ? user : {};
+      vm.userToOpen = (user) ? user : new Admin();
       angular.element('#modal-profile-user').modal('show');
     };
 
     vm.closeViewUserModal = function(openNewModalName) {
       angular.element('#modal-profile-user').modal('hide');
+    };
+
+    vm.openApproveTeamMembers = function() {
+
+    };
+
+    vm.closeApproveTeamMembers = function() {
+
     };
   }
 })();

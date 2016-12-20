@@ -9,12 +9,14 @@
         templateUrl: 'modules/teams/client/views/delete-team.client.view.html',
         scope: {
           team: '=',
-          deleteFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
         replace: true,
+        controller: 'TeamDeleteController',
         link: function(scope, element, attrs) {
-
+          scope.$watch('team', function(newValue, oldValue) {
+            scope.team = newValue;
+          });
         }
       };
     });

@@ -3,11 +3,11 @@
 
   angular
     .module('profiles')
-    .controller('OrganizationLeadInviteController', OrganizationLeadInviteController);
+    .controller('TeamLeadInviteController', TeamLeadInviteController);
 
-  OrganizationLeadInviteController.$inject = ['$scope', '$http', 'TeamLeadBySchoolOrgsService'];
+  TeamLeadInviteController.$inject = ['$scope', '$http', 'TeamLeadBySchoolOrgsService'];
 
-  function OrganizationLeadInviteController($scope, $http, TeamLeadBySchoolOrgsService) {
+  function TeamLeadInviteController($scope, $http, TeamLeadBySchoolOrgsService) {
     $scope.error = [];
 
     $scope.existingTeamLead = '';
@@ -29,8 +29,9 @@
       $http.post('api/users/leaders', {
         user: user,
         organization: $scope.organization,
-        teamOrOrg: 'organization',
-        role: 'team lead pending' //TODO: change when new 'org lead pending' role exists
+        team: $scope.team,
+        teamOrOrg: 'team',
+        role: 'team lead pending'
       })
       .success(function(data, status, headers, config) {
         $scope.existingTeamLead = '';

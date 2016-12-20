@@ -15,6 +15,7 @@
 
     var checkRole = ExpeditionViewHelper.checkRole;
     vm.isTeamLead = checkRole('team lead') || checkRole('team lead pending');
+    vm.isAdmin = checkRole('admin');
 
     vm.filter = {
       type: '',

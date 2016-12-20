@@ -20,9 +20,9 @@
                         <label for="description" class="control-label">Team Description</label>
                         <textarea class="form-control" id="description" name="description" ng-model="team.description"></textarea>
                     </div>
-                    <div class="form-group" ng-show="isAdmin">
+                    <div class="form-group" ng-show="isAdmin && !team._id">
                         <label for="schoolOrg" ng-class="{'required': isAdmin}">Team Organization *</label>
-                        <input type="text" ng-model="organizationSelected" placeholder="Team Organization" id="schoolOrg" name="schoolOrg"
+                        <input type="text" ng-model="team.schoolOrg" placeholder="Team Organization" id="schoolOrg" name="schoolOrg"
                         uib-typeahead="org as org.name for org in organizations | filter:{name:$viewValue}"
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         ng-disabled="!isAdmin" ng-required="isAdmin">

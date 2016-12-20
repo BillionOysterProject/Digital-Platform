@@ -13,8 +13,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
-                <button type="button" class="btn btn-danger" ng-click="deleteFunction(team)">Delete</button>
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
             </div>
         </div>
         <div class="modal-content" ng-hide="team.teamMembers.length === 0">
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" ng-click="cancelFunction()">Close</button>
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
             </div>
         </div>
     </div>

@@ -42,7 +42,7 @@
             </ul>
         </nav>
 
-        <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString === ''">
+        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.isTeamLead) && vm.teams.length === 0 && vm.filter.searchString === ''">
             No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
         </div>
 
@@ -73,4 +73,6 @@
     </section>
 </section>
 
+<!--MODALS-->
 <form-team-profile-modal team="vm.newTeam" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<!--END MODALS-->
