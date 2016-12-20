@@ -41,6 +41,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/events/:eventId/not-attended',
       permissions: ['*']
     }, {
+      resources: '/api/events/:eventId/note',
+      permissions: ['*']
+    }, {
       resources: '/api/events/:eventId/email-registrants',
       permissions: ['*']
     }, {
