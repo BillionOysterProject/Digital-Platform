@@ -141,11 +141,11 @@
                             <td>{{registrant.user.teams}}</td>
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
-                            <td >
+                            <td class="col-sm-3">
                               <a href="#" ng-click="vm.openEventNote(registrant)" ng-hide="registrant.note">
                                 <i class="fa fa-comment-o"></i> Add note</a>
                               <a href="#" class="red" ng-click="vm.openEventNote(registrant)" ng-show="registrant.note">
-                                <i class="fa fa-comment"></i> {{registrant.note | limitTo: 100}}</a>
+                                <i class="fa fa-comment"></i> {{registrant.note | limitTo: 50}}</a>
                             </td>
                             <td ng-show="vm.today || vm.past">
                                 <div class="btn-group btn-group-sm" role="group">
