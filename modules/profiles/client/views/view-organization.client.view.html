@@ -1,8 +1,8 @@
 <section class="content shaded">
     <section class="container-fluid">
         <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <img class="img-thumbnail img-responsive" ng-show="vm.orgPhotoUrl" ng-src="{{vm.orgPhotoUrl}}" />
+            <div class="col-lg-3 col-md-6" ng-show="vm.orgPhotoUrl">
+                <img class="img-thumbnail img-responsive" ng-src="{{vm.orgPhotoUrl}}" />
             </div>
             <div class="col-lg-6 col-md-6">
                 <h2>{{vm.organization.name}}</h2>
@@ -35,22 +35,20 @@
                 </div>
             </div>
 
-            <!--TIFF: only show buttons if team lead -->
-            <a class="btn btn-default" ng-click="vm.openFormOrg()">Edit organization profile</a><!--TIFF: Open edit Org modal from Settings page -->
-            <a class="btn btn-default" ng-click="vm.openInviteOrgLead()">Invite leads</a>
-            <a class="btn btn-danger" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-click="vm.openDeleteForm()">Delete organization</a><!--TIFF: Copy team delete modal from Settings page-->
+            <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openFormOrg()">Edit organization profile</a>
+            <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openInviteOrgLead()">Invite leads</a>
+            <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
+            <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteForm()">Delete organization</a>
         </nav>
         <hr/>
-
-        <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString === ''">
-            No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
-        </div>
 
         <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
             You have <b>{{leadRequests.length}}</b> new team lead requests.
             <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a>
-            <!--TIFF: Open modal from Settings -->
+        </div>
+
+        <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString === ''">
+            No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
         </div>
 
         <div class="row" isotope-container="isotope-container">
@@ -58,7 +56,7 @@
                 <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
                     <div class="panel-body text-center">
                         <h4>{{team.name}}</h4>
-                        <p class="text-muted small">{{team.description | limitTo:200}}</p><!--TIFF: limit to 200 -->
+                        <p class="text-muted small">{{team.description | limitTo:200}}</p>
                         <img class="img-responsive" ng-src="{{team.photo.path}}" /><!--TIFF: only show if they have an image -->
                         <hr/>
                         <p>
@@ -66,9 +64,8 @@
                         </p>
                     </div>
                     <div class="panel-footer text-muted">
-                        <ul class="list-inline">
+                        <ul class="list-inline text-center">
                             <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
-                            <li><i class="fa fa-map-marker"></i> <b>{{team.orsCount}}</b> ORS</li>
                             <li><i class="fa fa-flask"></i> <b>{{team.expeditionCount}}</b> expeditions</li>
                         </ul>
                     </div>

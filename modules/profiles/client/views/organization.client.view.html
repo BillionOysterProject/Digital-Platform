@@ -20,10 +20,7 @@
 </div>
 <section class="content">
     <section class="container-fluid">
-
-        <div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
-            No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
-        </div>
+    
         <!-- show org requests -->
         <div class="alert alert-success" ng-show="vm.orgRequests && vm.orgRequests.length > 0" role="alert">
             You have <b>{{vm.orgRequests.length}}</b> new organization requests.
@@ -54,6 +51,10 @@
             </ul>
         </nav>
 
+        <div class="alert alert-info text-center" view-permissions="admin" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
+            No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
+        </div>
+
         <div class="row" isotope-container="isotope-container">
             <div ng-repeat="org in vm.organizations" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="profiles.organization-view({ schoolOrgId: org._id })">
@@ -71,7 +72,7 @@
                         </p>
                     </div>
                     <div class="panel-footer text-muted">
-                        <ul class="list-inline">
+                        <ul class="list-inline text-center">
                             <li><b>{{org.teams.teamMemberCount}}</b> members</li>
                             <li><b>{{org.teams.teamLeadCount}}</b> leads</li>
                             <li><b>{{org.teams.teamCount}}</b> teams</li>

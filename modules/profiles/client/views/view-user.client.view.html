@@ -65,7 +65,7 @@
                 </div>
                 <hr ng-show="isTeamLead"/>
                 <div class="row">
-                    <div class="col-sm-6" ng-hide="true">
+                    <div class="col-sm-4" ng-hide="true"><!--TIFF: should be col-sm-12" if profile is not for a team lead -->
                         <dl class="dl-horizontal">
                             <dt>Motivations</dt>
                             <dd>...</dd>
@@ -73,7 +73,7 @@
                             <dd>...</dd>
                         </dl>
                     </div>
-                    <div class="col-sm-6" ng-show="isTeamLead"><!-- SHOW IF TEAM LEAD: -->
+                    <div class="col-sm-4" ng-show="isTeamLead"><!--TIFF: This should be showing if profile is for a team lead, not if viewers role is team lead -->
                         <dl class="dl-horizontal">
                             <dt>Grade levels</dt>
                             <dd>9th-12th</dd>
@@ -83,6 +83,15 @@
                             <dd>25</dd>
                         </dl>
                     </div>
+                    <!-- TIFF: Wire up if profile is for a team lead, (not if viewer's role is team lead):
+                    <div class="col-sm-4">
+                        <dl class="dl-horizontal">
+                            <dt>Restoration Stations</dt>
+                            <dd>...</dd>
+                            <dd>...</dd>
+                            <dd>...</dd>
+                        </dl>
+                    </div> -->
                 </div>
             </div>
             <div class="modal-footer">

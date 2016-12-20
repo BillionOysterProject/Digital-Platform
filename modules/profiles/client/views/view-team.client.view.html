@@ -1,8 +1,8 @@
 <section class="content shaded">
     <section class="container-fluid">
         <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <img class="img-thumbnail img-responsive" ng-show="vm.teamPhotoURL" ng-src="{{vm.teamPhotoURL}}" />
+            <div class="col-lg-3 col-md-6" ng-show="vm.teamPhotoURL">
+                <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
             </div>
             <div class="col-lg-3 col-md-6">
                 <h2>{{vm.team.name}}</h2>
@@ -20,14 +20,6 @@
                             <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
                         </p>
                     </div>
-                    <!-- <div class="col-sm-4">
-                        <h6><i class="fa fa-map-marker"></i> Restoration Stations</h6>
-                        <ul class="list-unstyled">
-                            <li><a>Baltimore Harbor</a></li>
-                            <li><a>NYC Harbor</a></li>
-                            <li><a>East Side</a></li>
-                        </ul>
-                    </div> -->
                     <div class="col-sm-4">
                         <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
                         <ul class="list-unstyled">
@@ -85,7 +77,7 @@
                 </div>
                 <div class="panel" data-category="transition" data-toggle="modal" data-target="#modal-profile-user">
                     <div class="panel-body text-muted text-center">
-                        <img class="img-circle img-responsive center-block" ng-src="{{member.profileImageURL}}" width="100" />
+                        <img class="img-circle img-responsive center-block" ng-show="member.profileImageURL" ng-src="{{member.profileImageURL}}" width="100" />
                         <h3>{{member.displayName}}</h3>
                         <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
                     </div>

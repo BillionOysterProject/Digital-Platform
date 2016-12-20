@@ -9,19 +9,18 @@
                     <a class="btn btn-success" ng-click="vm.openTeamFormModal()"><i class="fa fa-plus"></i> Create a team</a>
                 </div>
                 <hr/>
-                <div ng-show="vm.teams">
-                  <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6><!--TIFF: If more than one, say "Teams"-->
-                  <h4 ng-repeat="team in vm.teams">
-                    <a>{{team.name}}</a><br/>
-                    <!--TIFF: Only show <small> div if user profile is not the team lead of the team listed -->
-                    <small ng-show="vm.user.displayName !== team.teamLead.displayName">
-                      <a data-toggle="modal" data-target="#modal-profile-user">{{team.teamLead.displayName}}</a></small>
-                  </h4>
-                  <hr/>
-                </div>
                 <div ng-show="vm.organization">
                   <h6>Organization</h6>
                   <h4><a>{{vm.organization.name}}</a><br/><small>{{vm.organization.city}}, {{vm.organization.state}}</small></h4>
+                  <hr/>
+                </div>
+                <div ng-show="vm.teams">
+                  <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                  <h4 ng-repeat="team in vm.teams">
+                    <a>{{team.name}}</a><br/>
+                    <small ng-show="vm.user.displayName !== team.teamLead.displayName">
+                      <a data-toggle="modal" data-target="#modal-profile-user">{{team.teamLead.displayName}}</a></small>
+                  </h4>
                   <hr/>
                 </div>
                 <a class="btn btn-default btn-block" ng-click="vm.openAdminTeamLeadForm()">Edit profile</a>
@@ -34,25 +33,22 @@
             </div>
             <div class="col-md-9 col-sm-8">
                 <br/>
-                <!--TIFF: Show if a team lead without teams -->
                 <div class="alert alert-info text-center" ng-show="vm.isTeamLead && vm.teams.length === 0">
                     You don't have any teams yet! Why don't you <a href="#" class="btn btn-sm btn-default">create one</a>?
-                </div><!-- -->
+                </div>
 
-                <!--TIFF: Show if any team member requests from any of the team lead's teams-->
                 <div class="alert alert-success" role="alert" ng-show="vm.teamRequests.length > 0">
                     You have <b>{{vm.teamRequests.length}}</b> team member requests.
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
-                    <!--TIFF: Open modal from Settings -->
                 </div>
 
                 <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
                     You have <b>{{leadRequests.length}}</b> new team lead requests.
                     <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a>
-                    <!--TIFF: Open modal from Settings -->
                 </div>
 
 
+                <h6>Organization</h6>
                 <!--TIFF: Repeat this div for each Org the user is an Org Lead of (admin accounts shouldn't list all 200 though!)-->
                 <div>
                     <div class="row">
@@ -89,6 +85,7 @@
                 </div>
 
 
+                <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                 <!--TIFF: Repeat this div for each Team the user is a Team Lead or Team Member of -->
                 <div>
                     <div class="row">
