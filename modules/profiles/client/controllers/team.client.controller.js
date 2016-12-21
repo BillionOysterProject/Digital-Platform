@@ -134,8 +134,9 @@
       angular.element('#modal-team-lead-remove').modal('show');
     };
 
-    vm.closeDeleteTeamLead = function() {
+    vm.closeDeleteTeamLead = function(refresh) {
       angular.element('#modal-team-lead-remove').modal('hide');
+      if (refresh) findTeam();
     };
 
     vm.openDeleteTeam = function() {

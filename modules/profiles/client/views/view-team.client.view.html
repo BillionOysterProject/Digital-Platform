@@ -97,7 +97,10 @@
 <!--MODALS-->
 <form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
 <invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
-<delete-team-lead-modal close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
-<view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
+
+
+<delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
+
+<view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
 <!--END MODALS-->
