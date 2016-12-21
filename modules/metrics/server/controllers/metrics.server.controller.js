@@ -178,32 +178,20 @@ exports.getCurriculumMetrics = function(req, res) {
 
   var savedLessonCountQuery = SavedLesson.count({});
 
-  var duplicatedLessonCountQuery = LessonActivity.count({
-    activity: 'duplicated'
-  });
+  var duplicatedLessonCountQuery = LessonActivity.count({ activity: 'duplicated' });
 
   var glossaryTermsCountQuery = Glossary.count({});
 
   var lessonApprovalCountQuery = Lesson.aggregate([
-    {
-      $match: {
-        $or: [{ status: 'published' }, { status: 'returned' }]
-      }
-    },
-    {
-      $group: {
-        _id: '$status',
-        statusCount: {
-          $sum: 1
-        }
-      }
-    }
+    { $match: { $or: [{ status: 'published' }, { status: 'returned' } ] } },
+    { $group: { _id: '$status', statusCount: { $sum: 1 } } }
   ]);
 
   var lessonsPerUnitQuery = Lesson.aggregate([
      { $match: { status: 'published' } },
      { $group: { _id: '$unit', lessonCount: { $sum: 1 } } },
-     { $lookup: { from: 'units', localField: '_id', foreignField: '_id', as: 'units' } }
+     { $lookup: { from: 'units', localField: '_id', foreignField: '_id', as: 'units' } },
+     { $project: { _id: 1, lessonCount: 1, unit: { $arrayElemAt: ['$units', 0] } } }
   ]);
 
   var lessonsPerPeriodsQuery = Lesson.aggregate([
@@ -220,18 +208,42 @@ exports.getCurriculumMetrics = function(req, res) {
     { $match: { status: 'published' } },
     { $unwind: '$lessonOverview.subjectAreas' },
     { $group: { _id: '$lessonOverview.subjectAreas', lessonCount: { $sum: 1 } } },
-    { $lookup: { from: 'metasubjectareas', localField: '_id', foreignField: '_id', as: 'subjects' } }
+    { $lookup: { from: 'metasubjectareas', localField: '_id', foreignField: '_id', as: 'subjects' } },
+    { $project: { _id: 1, lessonCount: 1, subject: { $arrayElemAt: ['$subjects', 0] } } }
   ]);
 
-  //lessons per subject area query
-  //db.getCollection('lessons').aggregate([{ $match: { status: 'published'} }, { $group: { _id: '$lessonOverview.subjectAreas', lessonCount: {$sum: 1}} }])
+//TODO: how do we know if it's a video to get the video average??
 
-  //avg supplies per lesson - mongo 3.4 has a split operator and we could do something like
-  //db.getCollection('lessons').aggregate([ { $match: { 'materialsResources.supplies': { $exists: true, $ne: null, $ne: ''} } }, { $project: { split: { $split: [ "$materialsResources.supplies", "\n"] } } } ])
-  //if we ever want to upgrade. without it we can't split that field for counting
+  var lessonResourcesQuery = Lesson.aggregate([
+    { $match: { status: 'published' } },
+    { $project: {
+      supplies: '$materialsResources.supplies',
+      teacherResourcesLinks: '$materialsResources.teacherResourcesLinks',
+      handouts: '$materialsResources.handoutsFileInput'
+    } }
+  ]);
 
-  // something like this but then we need to count occurrences of \n
-  //db.getCollection('lessons').aggregate([ { $match: { $and: [{'status': 'published'}, { 'materialsResources.supplies': { $exists: true, $ne: null, $ne: ''} }]} }, { $project: { supplies: '$materialsResources.supplies' } } ])
+  var mostViewedLessonsQuery = LessonActivity.aggregate([
+    { $match: { activity: 'viewed' } },
+    { $group: { _id: '$lesson', viewCount: { $sum: 1 } } },
+    { $sort: { viewCount: -1 } },
+    { $limit: 5 },
+    { $lookup: { from: 'lessons', localField: '_id', foreignField: '_id', as: 'lesson' } },
+    { $project: { _id: '$_id', viewCount: '$viewCount', lesson: { $arrayElemAt: ['$lesson', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
+    { $project: { _id: 1, viewCount: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } }
+  ]);
+
+  var mostViewedUnitsQuery = LessonActivity.aggregate([{ $match: { activity: 'viewed' } },
+    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
+    { $project: { _id: '$_id', lesson: { $arrayElemAt: ['$lesson', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
+    { $project: { _id: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+    { $group: { _id: '$unit', viewCount: { $sum: 1 } } },
+    { $sort: { viewCount: -1 } },
+    { $limit: 5 },
+    { $project: { _id: false, unit: '$_id', viewCount: 1 } }
+  ]);
 
   unitCountQuery.exec(function(err, unitCount) {
     if (err) {
@@ -290,7 +302,7 @@ exports.getCurriculumMetrics = function(req, res) {
                               var unitLessonCounts = [];
                               for(var i = 0; i < lessonsPerUnitData.length; i++) {
                                 unitLessonCounts.push({
-                                  unit: lessonsPerUnitData[i].units[0],
+                                  unit: lessonsPerUnitData[i].unit,
                                   lessonCount: lessonsPerUnitData[i].lessonCount
                                 });
                               }
@@ -332,12 +344,57 @@ exports.getCurriculumMetrics = function(req, res) {
                                           var lessonSubjectCounts = [];
                                           for(var i = 0; i < lessonsPerSubjectData.length; i++) {
                                             lessonSubjectCounts.push({
-                                              subject: lessonsPerSubjectData[i].subjects[0].subject,
+                                              subject: lessonsPerSubjectData[i].subject,
                                               lessonCount: lessonsPerSubjectData[i].lessonCount
                                             });
                                           }
                                           curriculumMetrics.lessonSubjectCounts = lessonSubjectCounts;
-                                          res.json(curriculumMetrics);
+                                          lessonResourcesQuery.exec(function(err, lessonResources) {
+                                            if (err) {
+                                              return res.status(400).send({
+                                                message: errorHandler.getErrorMessage(err)
+                                              });
+                                            } else {
+                                              var totalLessons = lessonResources.length;
+                                              var totalSupplies = 0;
+                                              var totalTeacherResourcesLinks = 0;
+                                              var totalHandouts = 0;
+                                              for(var i = 0; i < lessonResources.length; i++) {
+                                                if(lessonResources[i].supplies !== null && lessonResources[i] !== undefined) {
+                                                  totalSupplies += lessonResources[i].supplies.split('\n').length;
+                                                }
+                                                if(lessonResources[i].teacherResourcesLinks !== null && lessonResources[i].teacherResourcesLinks[i] !== undefined) {
+                                                  totalTeacherResourcesLinks += lessonResources[i].teacherResourcesLinks.length;
+                                                }
+                                                if(lessonResources[i].handouts !== null && lessonResources[i].handouts[i] !== undefined) {
+                                                  totalHandouts += lessonResources[i].handouts.length;
+                                                }
+                                              }
+                                              curriculumMetrics.lessonResources = {};
+                                              curriculumMetrics.lessonResources.suppliesAverage = (totalSupplies / totalLessons);
+                                              curriculumMetrics.lessonResources.teacherResourcesLinksAverage = (totalTeacherResourcesLinks / totalLessons);
+                                              curriculumMetrics.lessonResources.handoutsAverage = (totalHandouts / totalLessons);
+                                              mostViewedLessonsQuery.exec(function(err, lessonViewData) {
+                                                if (err) {
+                                                  return res.status(400).send({
+                                                    message: errorHandler.getErrorMessage(err)
+                                                  });
+                                                } else {
+                                                  curriculumMetrics.lessonViewData = lessonViewData;
+                                                  mostViewedUnitsQuery.exec(function(err, unitViewData) {
+                                                    if (err) {
+                                                      return res.status(400).send({
+                                                        message: errorHandler.getErrorMessage(err)
+                                                      });
+                                                    } else {
+                                                      curriculumMetrics.unitViewData = unitViewData;
+                                                      res.json(curriculumMetrics);
+                                                    }
+                                                  });
+                                                }
+                                              });
+                                            }
+                                          });
                                         }
                                       });
                                     }

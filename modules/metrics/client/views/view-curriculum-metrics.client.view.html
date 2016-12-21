@@ -86,11 +86,11 @@
                 <h4>Lesson Averages</h4>
                 <div class="row">
                     <div class="col-xs-6">
-                        <h1 class="red">4 <i class="glyphicon glyphicon-scissors gray"></i></h1>
+                        <h1 class="red">{{ metrics.lessonResources.suppliesAverage.toFixed(1) }} <i class="glyphicon glyphicon-scissors gray"></i></h1>
                         <h6># of Supplies</h6>
                     </div>
                     <div class="col-xs-6">
-                        <h1 class="red">3 <i class="glyphicon glyphicon-link gray"></i></h1>
+                        <h1 class="red">{{ metrics.lessonResources.teacherResourcesLinksAverage.toFixed(1) }} <i class="glyphicon glyphicon-link gray"></i></h1>
                         <h6># of Teacher Resource Links</h6>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                         <h6># of Teacher Resource Videos</h6>
                     </div>
                     <div class="col-xs-6">
-                        <h1 class="red">2 <i class="glyphicon glyphicon-file gray"></i></h1>
+                        <h1 class="red">{{ metrics.lessonResources.handoutsAverage.toFixed(1) }} <i class="glyphicon glyphicon-file gray"></i></h1>
                         <h6># of Handouts</h6>
                     </div>
                 </div>
@@ -108,55 +108,19 @@
             <div class="col-md-5">
                 <h4>Most Viewed Lessons</h4>
                 <table class="table">
-                    <tr>
-                        <td><h3 class="red">251</h3> <small class="text-muted">views</small></td>
-                        <td><p>How to plant a tree</p></td>
-                        <td><h6>Unit 2</h6></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">241</h3> <small class="text-muted">views</small></td>
-                        <td><p>How to water a tree</p></td>
-                        <td><h6>Unit 2</h6></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">234</h3> <small class="text-muted">views</small></td>
-                        <td><p>How to grow a tree</p></td>
-                        <td><h6>Unit 2</h6></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">222</h3> <small class="text-muted">views</small></td>
-                        <td><p>How to care for a tree</p></td>
-                        <td><h6>Unit 2</h6></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">145</h3> <small class="text-muted">views</small></td>
-                        <td><p>How to chop down a tree</p></td>
-                        <td><h6>Unit 2</h6></td>
+                    <tr ng-repeat="lessonViewItem in metrics.lessonViewData | orderBy: '-viewCount'">
+                        <td><h3 class="red">{{lessonViewItem.viewCount}}</h3> <small class="text-muted">views</small></td>
+                        <td><p>{{lessonViewItem.lesson.title}}</p></td>
+                        <td><h6>{{lessonViewItem.unit.title}}</h6></td>
                     </tr>
                 </table>
             </div>
             <div class="col-md-3">
                 <h4>Most Viewed Units</h4>
                 <table class="table">
-                    <tr>
-                        <td><h3 class="red">155</h3> <small class="text-muted">views</small></td>
-                        <td><p>Unit 2</p></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">113</h3> <small class="text-muted">views</small></td>
-                        <td><p>Unit 3</p></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">99</h3> <small class="text-muted">views</small></td>
-                        <td><p>Unit 5</p></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">78</h3> <small class="text-muted">views</small></td>
-                        <td><p>Unit 1</p></td>
-                    </tr>
-                    <tr>
-                        <td><h3 class="red">77</h3> <small class="text-muted">views</small></td>
-                        <td><p>Unit 4</p></td>
+                    <tr ng-repeat="unitViewItem in metrics.unitViewData | orderBy: '-viewCount'">
+                        <td><h3 class="red">{{unitViewItem.viewCount}}</h3> <small class="text-muted">views</small></td>
+                        <td><p>{{unitViewItem.unit.title}}</p></td>
                     </tr>
                 </table>
             </div>
