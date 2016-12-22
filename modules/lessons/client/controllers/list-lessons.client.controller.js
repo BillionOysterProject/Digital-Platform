@@ -48,10 +48,12 @@
         vocabulary: vm.filter.vocabulary,
         status: 'published',
         searchString: vm.filter.searchString,
+        stats: true
         // limit: vm.filter.limit,
         // page: vm.filter.page
       }, function(data) {
         vm.lessons = data;
+        console.log('data', data);
         vm.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });

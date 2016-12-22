@@ -1,0 +1,30 @@
+<div class="modal fade" id="modal-registrant-note" tabindex="-1" role="dialog" aria-labelledby="modal-registrant-note">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" ng-hide="registrant.note">Add a note to <span class="red">{{registrant.user.displayName}}</span>'s registration</h4>
+                <h4 class="modal-title" ng-show="registrant.note">Edit the note for <span class="red">{{registrant.user.displayName}}</span>'s registration</h4>
+                <p>This note only applies to this event.</p>
+            </div>
+            <form novalidate>
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="form-group">
+                              <label class="control-label" for="note">Note</label>
+                              <textarea class="form-control" rows="4" id="note" name="note" ng-model="note"></textarea>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <!--Tiff: Show Delete button only if editing existing note -->
+                  <button type="button" class="btn btn-danger" ng-show="registrant.note" ng-click="delete()">Delete</button>
+                  <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                  <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+              </div>
+            </form>
+        </div>
+    </div>
+</div>

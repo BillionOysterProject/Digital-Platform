@@ -68,24 +68,15 @@
             <div class="col-sm-12">
                 <hr/>
                 <div class="row text-center">
-                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.maximumCapacity > 0 && (vm.past || vm.today)),
-                      'col-sm-4': ((!vm.event.maximumCapacity && (vm.past || vm.today)) ||
-                        (vm.event.maximumCapacity > 0 && !vm.past && !vm.today)),
-                      'col-sm-6': (!vm.event.maximumCapacity && !vm.past && !vm.today)}"
-                      ng-show="vm.event.location.addressString">
+                    <h4 class="text-muted" ng-class="{'col-sm-3': vm.columns === 4, 'col-sm-4': vm.columns === 3,
+                      'col-sm-6': vm.columns === 2}" ng-show="vm.event.location.addressString">
                         <a href="#" ng-click="vm.openMap()">
                             <i class="fa fa-map-marker"></i>
                             <small>{{vm.event.location.addressString}}</small>
                         </a>
                     </h4>
-                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && (vm.past || vm.today) && vm.event.maximumCapacity > 0),
-                      'col-sm-4': ((!vm.event.location.addressString && (vm.past || vm.today) && vm.event.maximumCapacity > 0) ||
-                        (vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity > 0) ||
-                        (vm.event.location.addressString && (vm.past || vm.today) && !vm.event.maximumCapacity)),
-                      'col-sm-6': ((!vm.event.location.addressString && (vm.past || vm.today) && !vm.event.maximumCapacity) ||
-                        (!vm.event.location.addressString && !vm.past && !vm.today && vm.event.maximumCapacity > 0) ||
-                        (vm.event.location.addressString && !vm.past && !vm.today && !vm.event.maximumCapacity)),
-                      'col-sm-12': (!vm.event.location.addressString && !vm.past && !vm.today && !vm.event.maximumCapacity)}">
+                    <h4 class="text-muted" ng-class="{'col-sm-3': vm.columns === 4, 'col-sm-4': vm.columns === 3,
+                      'col-sm-6': vm.columns === 2, 'col-sm-12': vm.columns == 1}">
                         <span ng-show="vm.daysRemainingDeadline > 0 && (vm.openSpots === null || vm.openSpots > 0)" id="daysRemaining">
                           <i class="fa fa-clock-o"></i>
                           <b>{{vm.daysRemainingDeadline}} days</b>
@@ -103,11 +94,8 @@
                           <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                     </h4>
-                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && vm.event.maximumCapacity > 0),
-                      'col-sm-4': ((!vm.event.location.addressString && vm.event.maximumCapacity > 0) ||
-                        (vm.event.location.addressString && !vm.event.maximumCapacity)),
-                      'col-sm-6': (!vm.event.location.addressString && !vm.event.maximumCapacity)}"
-                      ng-show="vm.past || vm.today">
+                    <h4 class="text-muted" ng-class="{'col-sm-3': vm.columns === 4, 'col-sm-4': vm.columns === 3,
+                      'col-sm-6': vm.columns === 2}" ng-show="vm.past || vm.today">
                         <span ng-show="vm.today" id="eventIsToday">
                           <b>Event is today</b>
                         </span>
@@ -117,11 +105,8 @@
                         </span>
 
                     </h4>
-                    <h4 class="text-muted" ng-class="{'col-sm-3': (vm.event.location.addressString && (vm.past || vm.today)),
-                      'col-sm-4': ((!vm.event.location.addressString && (vm.past || vm.today)) ||
-                        (vm.event.location.addressString && !vm.past && !vm.today)),
-                      'col-sm-6': (!vm.event.location.addressString && !vm.past && !vm.today)}"
-                      ng-show="(!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity > 0">
+                    <h4 class="text-muted" ng-class="{'col-sm-3': vm.columns === 4, 'col-sm-4': vm.columns === 3,
+                      'col-sm-6': vm.columns === 2}" ng-show="(!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity > 0">
                         <i class="fa fa-users"></i>
                         <b>{{vm.event.registrants.length}}/{{vm.event.maximumCapacity}} full</b>
                     </h4>
@@ -145,6 +130,7 @@
                             <th>Teams</th>
                             <th>Email</th>
                             <th>Date Registered</th>
+                            <th>Notes</th>
                             <th ng-show="vm.today || vm.past">Attended</th>
                         </tr>
                     </thead>
@@ -155,6 +141,12 @@
                             <td>{{registrant.user.teams}}</td>
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
+                            <td class="col-sm-3">
+                              <a href="#" ng-click="vm.openEventNote(registrant)" ng-hide="registrant.note">
+                                <i class="fa fa-comment-o"></i> Add note</a>
+                              <a href="#" class="red" ng-click="vm.openEventNote(registrant)" ng-show="registrant.note">
+                                <i class="fa fa-comment"></i> {{registrant.note | limitTo: 50}}</a>
+                            </td>
                             <td ng-show="vm.today || vm.past">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
@@ -222,6 +214,8 @@
 
 <unregister-event-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}">
   </unregister-event-modal>
+
+<event-note-modal event="vm.event" registrant="vm.registrantToOpen" close-function="vm.closeEventNote"></event-note-modal>
 
 <email-registrants-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}"
   attendees="vm.event.attendees" past="vm.past"></email-registrants-modal>

@@ -40,6 +40,10 @@ module.exports = function(app) {
   app.route('/api/events/:eventId/not-attended').all(eventsPolicy.isAllowed)
     .post(events.notAttended);
 
+  // Add a note to a user
+  app.route('/api/events/:eventId/note').all(eventsPolicy.isAllowed)
+    .post(events.registrantNotes);
+
   // Email registrants
   app.route('/api/events/:eventId/email-registrants').all(eventsPolicy.isAllowed)
     .post(events.emailRegistrants);
