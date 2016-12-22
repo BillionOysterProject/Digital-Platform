@@ -81,42 +81,30 @@
 
     <hr/>
 
-    <div class="alert alert-default" ng-show="vm.lessonStats.taughtCount > 0">
-        <h6>Lesson Log</h6>
-        <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
-          times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers</h4><br/>
+    <div class="well" ng-show="vm.lessonStats.taughtCount > 0">
+       <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
+          times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers to a total of 
+          <b class="blue">{{vm.lessonStats.studentCount}}</b> students in 
+          <b class="blue">{{vm.lessonStats.classesOrSectionsCount}}</b> classes over 
+          <b class="blue">{{vm.lessonStats.periodsOrSessionsCount}}</b> sessions
+        </h4>
         <div class="row">
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.studentCount}}</b></h4>
-                <p class="fineprint">Total number of students</p>
-                
-                <h4><b class="blue">{{vm.lessonStats.avgStudentsPerClass | number:2}}</b></h4>
-                <p class="fineprint">Average number of students</p>
-            </div>
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.classesOrSectionsCount}}</b></h4>
-                <p class="fineprint">Total number of classes/sections</p>
-                
-                <h4><b class="blue">{{vm.lessonStats.avgClassesOrSections | number:2}}</b></h4>
-                <p class="fineprint">Average number of classes/sections</p>
-            </div>
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.periodsOrSessionsCount}}</b></h4>
-                <p class="fineprint">Total number of periods/sessions</p>
-                
-                <h4><b class="blue">{{vm.lessonStats.avgPeriodsOrSessions | number:2}}</b></h4>
-                <p class="fineprint">Average number of periods/sessions</p>
-            </div>
-            <div class="col-sm-3">
-                <p class="fineprint">Subject Areas of classes</p>
+            <!--
+            {{vm.lessonStats.avgStudentsPerClass | number:2}}
+            {{vm.lessonStats.avgClassesOrSections | number:2}}
+            {{vm.lessonStats.avgPeriodsOrSessions | number:2}}
+            -->
+            
+            <div class="col-sm-6">
+                <small>Subject Areas of classes</small>
                 <ul class="list-inline">
                   <li ng-repeat="subject in vm.lessonStats.subjects">
                     <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
                   </li>
                 </ul>
             </div>
-            <div class="col-sm-3">
-                <p class="fineprint">Grades of students</p>
+            <div class="col-sm-6">
+                <small>Grades of students</small>
                 <ul class="list-inline">
                   <li ng-repeat="grade in vm.lessonStats.grades">
                     <span class="label label-success" ng-bind="grade"></span>

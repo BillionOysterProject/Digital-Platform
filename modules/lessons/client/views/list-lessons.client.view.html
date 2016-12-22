@@ -84,6 +84,7 @@
                         <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
+                        <small class="pull-left" ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</small>
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
                                 <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
