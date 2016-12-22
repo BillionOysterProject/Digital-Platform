@@ -25,6 +25,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/metrics/curriculum',
       permissions: ['*']
+    }, {
+      resources: '/api/metrics/stations',
+      permissions: ['*']
     }]
   }]);
 };

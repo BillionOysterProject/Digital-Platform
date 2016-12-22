@@ -15,7 +15,8 @@
         method: 'GET',
         params: {
           startDate: '@startDate',
-          endDate: '@endDate'
+          endDate: '@endDate',
+          userRole: '@userRole'
         },
         isArray: true
       }

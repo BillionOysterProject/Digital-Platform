@@ -62,14 +62,6 @@
       });
     };
 
-    // $scope.getMostActiveUsers = function() {
-    //   MetricsUserActivityService.query({
-    //     //TODO: add startDate and endDate wire up select box
-    //   }, function(data) {
-    //
-    //   });
-    // };
-
     $scope.getCurriculumMetrics();
   }
 })();

@@ -12,7 +12,7 @@
       MetricsUsersService.query({},
       function (data) {
         $scope.metrics = data;
-        $scope.piedata = [$scope.metrics.teamMemberCount, $scope.metrics.teamLeadCount, $scope.metrics.adminCount];
+        $scope.rolesPieData = [$scope.metrics.teamMemberCount, $scope.metrics.teamLeadCount, $scope.metrics.adminCount];
         $scope.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
@@ -26,7 +26,7 @@
       MetricsUserActivityService.query({
         //TODO: add startDate and endDate wire up select box
       }, function(data) {
-
+        $scope.userActivityData = data;
       });
     };
 

@@ -24,7 +24,7 @@
               </div>
           </div>
           <!--
-          TODO: I don't think we are tracking how the roles change over time.
+          TODO: We aren't tracking how the roles change over time.
           We just have the current state of roles in the system so I couldn't go
           back and say how many people had some role at a given point in the past.
           <div class="col-md-4">
@@ -37,8 +37,8 @@
           -->
           <div class="col-md-4">
               <h4>Roles</h4>
-              <canvas id="pie" class="chart chart-pie" chart-data="piedata"
-                  chart-labels="vm.pielabels" chart-legend="true">
+              <canvas id="pie" class="chart chart-pie" chart-data="rolesPieData"
+                  chart-labels="vm.rolesPielabels" chart-legend="true">
               </canvas>
           </div>
 
@@ -54,16 +54,12 @@
                   <ul class="nav navbar-nav">
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              June <span class="caret"></span>
+                              {{vm.monthHistoryLabels[vm.monthHistoryLabels.length-1]}} <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                             <li><a>January</a></li>
-                             <li><a>February</a></li>
-                             <li><a>March</a></li>
-                             <li><a>April</a></li>
-                             <li><a>May</a></li>
-                             <li><a>June</a></li>
-                             <li><a>July</a></li>
+                             <li ng-repeat="month in vm.monthHistoryLabelsReversed">
+                               <a>{{month}}</a>
+                             </li>
                           </ul>
                       </li>
                       <li class="dropdown">
@@ -86,33 +82,12 @@
                       <th>Members</th>
                       <th>Organization</th>
                   </tr>
-                  <tr>
-                      <td><h3 class="red">89</h3> <small class="text-muted">logins</small></td>
-                      <td>Bob Smith</td>
+                  <tr ng-repeat="activeUserItem in userActivityData | orderBy: '-loginCount'">
+                      <td><h3 class="red">{{activeUserItem.loginCount}}</h3> <small class="text-muted">logins</small></td>
+                      <td>{{activeUserItem.user.displayName}}</td>
                       <td>Team 1, Team 2, Team 3</td>
                       <td><b>68</b></td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">74</h3> <small class="text-muted">logins</small></td>
-                      <td>Jane Doe</td>
-                      <td>Team 6</td>
-                      <td><b>63</b></td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">65</h3> <small class="text-muted">logins</small></td>
-                      <td>Bob Smith</td>
-                      <td>Team 1, Team 2, Team 3</td>
-                      <td><b>53</b></td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">54</h3> <small class="text-muted">logins</small></td>
-                      <td>Jane Doe</td>
-                      <td>Team 5</td>
-                      <td><b>113</b></td>
-                      <td>NYC Public Schools</td>
+                      <td>{{activeUserItem.schoolOrg.name}}</td>
                   </tr>
               </table>
           </div>
@@ -122,16 +97,12 @@
                   <ul class="nav navbar-nav">
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              June <span class="caret"></span>
+                              {{vm.monthHistoryLabels[vm.monthHistoryLabels.length-1]}}  <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                             <li><a>January</a></li>
-                             <li><a>February</a></li>
-                             <li><a>March</a></li>
-                             <li><a>April</a></li>
-                             <li><a>May</a></li>
-                             <li><a>June</a></li>
-                             <li><a>July</a></li>
+                            <li ng-repeat="month in vm.monthHistoryLabelsReversed">
+                              <a>{{month}}</a>
+                            </li>
                           </ul>
                       </li>
                   </ul>

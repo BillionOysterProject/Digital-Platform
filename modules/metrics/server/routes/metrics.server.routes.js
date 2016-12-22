@@ -16,4 +16,7 @@ module.exports = function(app) {
 
   app.route('/api/metrics/curriculum').all(metricsPolicy.isAllowed)
     .get(metrics.getCurriculumMetrics);
+
+  app.route('/api/metrics/stations').all(metricsPolicy.isAllowed)
+    .get(metrics.getStationMetrics);
 };

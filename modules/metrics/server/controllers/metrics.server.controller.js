@@ -13,6 +13,8 @@ var path = require('path'),
   SavedLesson = mongoose.model('SavedLesson'),
   LessonActivity = mongoose.model('LessonActivity'),
   Glossary = mongoose.model('Glossary'),
+  RestorationStation = mongoose.model('RestorationStation'),
+  Expedition = mongoose.model('Expedition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   request = require('request'),
@@ -104,22 +106,7 @@ exports.getPeopleMetrics = function(req, res) {
 };
 
 exports.getMostActiveUsers = function(req, res) {
-  var groupBy = {
-    $group: {
-      _id: {
-        user: '$user',
-        activity: '$activity'
-      } ,
-      loginCount: {
-        $sum: 1
-      }
-    }
-  };
-  var match = {
-    $match: {
-      activity: 'login'
-    }
-  };
+  var activityMatch = { $match: { activity: 'login' } };
   var startDate, endDate;
   if(req.query.startDate) {
     startDate = moment(req.query.startDate).toDate();
@@ -130,31 +117,45 @@ exports.getMostActiveUsers = function(req, res) {
 
   if(startDate !== null && startDate !== undefined &&
     endDate !== null && endDate !== undefined) {
-    match.$match.created = {
+    activityMatch.$match.created = {
       $gte: startDate,
       $lt: endDate
     };
   } else if(startDate !== null && startDate !== undefined) {
-    match.$match.created = {
+    activityMatch.$match.created = {
       $gte: startDate
     };
   } else if(endDate !== null && endDate !== undefined) {
-    match.$match.created = {
+    activityMatch.$match.created = {
       $lt: endDate
     };
   }
 
+  var userRolesMatch = { $match: { 'user.roles' : 'team lead' } };
+  if(req.query.userRole !== null && req.query.userRole !== undefined) {
+    //{ $match: { 'user.roles': 'team lead' } },
+    userRolesMatch = { $match: { 'user.roles': req.query.userRole } };
+  }
+
   var activeUsersQuery = UserActivity.aggregate([
-    match, groupBy
+    activityMatch,
+    { $group: { _id: { user: '$user', activity: '$activity' }, loginCount: { $sum: 1 } } },
+    { $lookup: { from: 'users', localField: '_id.user', foreignField: '_id', as: 'users' } },
+    { $project: { _id: false, user: { $arrayElemAt: ['$users', 0] }, loginCount: 1 } },
+    userRolesMatch,
+    { $sort: { loginCount: -1 } },
+    { $limit: 5 },
+    { $lookup: { from: 'schoolorgs', localField: 'user.schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+    { $project: { _id: false, loginCount: 1, user: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
+    { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamMembers', as: 'teams' } }
   ]);
+
   activeUsersQuery.exec(function(err, data) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      //TODO: figure out how to get user display name, teams (they are leads of? members of?)
-      //number of members on the team, and the organization
       res.json(data);
     }
   });
@@ -166,12 +167,7 @@ exports.getMostActiveUsers = function(req, res) {
 exports.getCurriculumMetrics = function(req, res) {
   var curriculumMetrics = {};
 
-  var unitCountQuery = Unit.count({
-    $or: [
-      { status: 'published' },
-      { status: { $exists: false } }
-    ] }
-  );
+  var unitCountQuery = Unit.count({ $or: [ { status: 'published' }, { status: { $exists: false } } ] });
 
   //TODO: should this count lessons without statuses
   var lessonCountQuery = Lesson.count({ status: 'published' });
@@ -243,6 +239,19 @@ exports.getCurriculumMetrics = function(req, res) {
     { $sort: { viewCount: -1 } },
     { $limit: 5 },
     { $project: { _id: false, unit: '$_id', viewCount: 1 } }
+  ]);
+
+//this doesn't do cumulative totals or fill in anything for months
+//where no units/lessons were created - will do this after the query
+  var createdUnitsByMonthQuery = Unit.aggregate([
+    { $sort: { created: -1 } },
+    { $group: { _id: { month: { $month: '$created' }, year: { $year: '$created' } },
+      unitCount: { $sum: 1 } } }
+  ]);
+  var createdLessonsByMonthQuery = Lesson.aggregate([
+    { $sort: { created: -1 } },
+    { $group: { _id: { month: { $month: '$created' }, year: { $year: '$created' } },
+      lessonCount: { $sum: 1 } } }
   ]);
 
   unitCountQuery.exec(function(err, unitCount) {
@@ -409,6 +418,83 @@ exports.getCurriculumMetrics = function(req, res) {
                   });
                 }
               });
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+exports.getStationMetrics = function(req, res) {
+  var stationMetrics = {};
+
+  var stationCountQuery = RestorationStation.count({});
+  var stationCountsByStatusQuery = RestorationStation.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
+  var expeditionCountQuery = Expedition.count({});
+
+  var adminCountQuery = User.count({
+    $and: [
+      { roles: 'admin' },
+      { $or: [
+        { pending: false },
+        { pending: { $exists: false } }
+      ] }
+    ] }
+  );
+
+  var teamLeadCountQuery = User.count({
+    $and: [
+      { roles: 'team lead' },
+      { $or: [
+        { pending: false },
+        { pending: { $exists: false } }
+      ] }
+    ] }
+  );
+
+  var teamMemberCountQuery = User.count({
+    $and: [
+      { roles: 'team member' },
+      { $or: [
+        { pending: false },
+        { pending: { $exists: false } }
+      ] }
+    ] }
+  );
+
+  stationCountQuery.exec(function(err, stationCount) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      stationMetrics.stationCount = stationCount;
+      stationCountsByStatusQuery.exec(function(err, statusCounts) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          stationMetrics.activeStationCount = 0;
+          stationMetrics.lostStationCount = 0;
+          for(var i = 0; i < statusCounts.length; i++) {
+            if(statusCounts[i]._id === 'Active') {
+              stationMetrics.activeStationCount = statusCounts[i].count;
+            } else if(statusCounts[i]._id === 'Lost') {
+              stationMetrics.lostStationCount = statusCounts[i].count;
+            }
+          }
+          expeditionCountQuery.exec(function(err, expeditionCount) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              stationMetrics.expeditionCount = expeditionCount;
+              res.json(stationMetrics);
             }
           });
         }
