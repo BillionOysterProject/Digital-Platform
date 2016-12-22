@@ -65,18 +65,18 @@
             })
             .success(function(data, status, headers, config) {
               getLessonTrackList();
-              $scope.close();
+              $scope.closeFunction(true);
             })
             .error(function(data, status, headers, config) {
               $scope.error = data.message;
             });
+          };
 
-            $scope.close = function() {
-              $scope.form.logLessonForm.$setSubmitted(false);
-              $scope.form.logLessonForm.$setPristine(true);
-              $scope.tracker = {};
-              $scope.closeFunction(true);
-            };
+          $scope.close = function() {
+            $scope.form.logLessonForm.$setSubmitted(false);
+            $scope.form.logLessonForm.$setPristine(true);
+            $scope.tracker = {};
+            $scope.closeFunction();
           };
         },
         link: function(scope, element, attrs) {
