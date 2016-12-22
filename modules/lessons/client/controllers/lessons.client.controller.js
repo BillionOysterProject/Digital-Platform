@@ -695,8 +695,11 @@
       angular.element('#modal-lesson-view-feedback').modal('show');
     };
 
-    vm.closeLessonFeedbackView = function() {
+    vm.closeLessonFeedbackView = function(reload) {
       angular.element('#modal-lesson-view-feedback').modal('hide');
+      if (reload) {
+        getLessonFeedback();
+      }
     };
 
     vm.openLessonLog = function() {
