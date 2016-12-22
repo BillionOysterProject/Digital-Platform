@@ -56,6 +56,22 @@ module.exports = function (app) {
   app.route('/api/lessons/favorites').all(lessonsPolicy.isAllowed)
     .get(lessons.listFavorites);
 
+  app.route('/api/lessons/:lessonId/tracked-list').all(lessonsPolicy.isAllowed)
+    .get(lessons.listTrackedForLessonAndUser);
+
+  app.route('/api/lessons/:lessonId/tracker-stats').all(lessonsPolicy.isAllowed)
+    .get(lessons.trackedStatsForLesson);
+
+  app.route('/api/lessons/:lessonId/track').all(lessonsPolicy.isAllowed)
+    .post(lessons.trackLesson);
+
+  app.route('/api/lessons/:lessonId/feedback-list').all(lessonsPolicy.isAllowed)
+    .get(lessons.listFeedbackForLesson);
+
+  app.route('/api/lessons/:lessonId/feedback').all(lessonsPolicy.isAllowed)
+    .post(lessons.lessonFeedback)
+    .get(lessons.feedbackForLesson);
+
   // Single lesson routes
   app.route('/api/lessons/:lessonId').all(lessonsPolicy.isAllowed)
     .get(lessons.read)

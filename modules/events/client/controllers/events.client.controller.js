@@ -45,6 +45,7 @@
     vm.resourceLinks = (vm.event && vm.event.resources && vm.event.resources.resourcesLinks) ?
       vm.event.resources.resourcesLinks : [];
     vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
+    vm.registrantToOpen = {};
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -219,6 +220,7 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
@@ -233,12 +235,28 @@
       }).
       success(function(data, status, headers, config) {
         vm.event.registrants = data.registrants;
+        vm.event.attendees = data.attendees;
         vm.error = [];
       }).
       error(function(data, status, headers, config) {
         vm.error = data.message;
         console.log('vm.error', vm.error);
       });
+    };
+
+    vm.openEventNote = function(registrant, note) {
+      vm.registrantToOpen = (registrant) ? registrant : {};
+      angular.element('#modal-registrant-note').modal('show');
+    };
+
+    vm.closeEventNote = function(registrants, attendees) {
+      angular.element('#modal-registrant-note').modal('hide');
+      if (registrants && attendees) {
+        $timeout(function() {
+          vm.event.registrants = registrants;
+          vm.event.attendees = attendees;
+        }, 500);
+      }
     };
 
     vm.duplicateEvent = function() {
@@ -258,6 +276,15 @@
       });
       element.modal('hide');
     };
+
+    vm.getColumnNumber = function() {
+      var columns = 1;
+      if (vm.event.location && vm.event.location.addressString) columns++;
+      if (vm.past || vm.today) columns++;
+      if ((!vm.past || (vm.past && vm.isAdmin)) && vm.event.maximumCapacity > 0) columns++;
+      return columns;
+    };
+    vm.columns = vm.getColumnNumber();
 
     // Save Event
     function save(isValid) {

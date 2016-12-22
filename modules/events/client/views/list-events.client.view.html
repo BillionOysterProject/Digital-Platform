@@ -2,7 +2,6 @@
     <section class="content">
         <section class="container-fluid">
           <h2>Events</h2>
-          <!-- TIFF: Copied from lessons - needs wired up! -->
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -25,7 +24,6 @@
             <a class="btn btn-default pull-right" ui-sref="events.create" view-permissions="admin">
                 <i class="glyphicon glyphicon-plus"></i> Create an event
             </a>
-            <!--TIFF: Copied from lessons - needs wired up! -->
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="category">
@@ -67,10 +65,11 @@
             </ul>
         </nav>
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
-            <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+            <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+              ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
+                daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
                 <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
                     <div class="panel-heading" ng-style="{'background-color':'{{calendarEvent.category.type.color}}'}">
-                        <!--TIFF: I got this to work but it's currently all lowercase? Also wire up category.type.color as panel-heading background -->
                         <h3 ng-hide="calendarEvent.category.type.type === 'Other'" class="panel-title"
                           ng-bind="calendarEvent.category.type.type"></h3>
                         <h3 ng-show="calendarEvent.category.type.type === 'Other'" class="panel-title">
@@ -85,28 +84,21 @@
                     </div>
                     <div class="panel-footer">
                         <p class="text-muted text-center small">
-                            <span ng-show="vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0" id="openSpots">
+                            <span ng-show="(daysRemaining >= 0 && openSpots > 0)" id="openSpots">
                               <i class="fa fa-calendar-times-o"></i>
-                              <b>{{vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity)}} spots</b><br/></span>
-                            <span ng-show="(vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
-                            vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null)" id="noOpenSpots">
+                              <b>{{openSpots}} spots</b><br/></span>
+                            <span ng-show="(daysRemaining >= 0 && openSpots <= 0 && openSpots !== null)" id="noOpenSpots">
                               <i class="fa fa-calendar-times-o"></i>
                               <b>Event is full</b><br/></span>
-                            <span ng-show="(vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) < 0 ||
-                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) <= 0 &&
-                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) !== null))" id="registrationClosed">
+                            <span ng-show="(daysRemaining < 0 || (openSpots <= 0 && openSpots !== null))" id="registrationClosed">
                               <i class="fa fa-clock-o"></i>
                               <b>Registration is closed</b></span>
-                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) === 0 &&
-                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
-                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registerToday">
+                            <span ng-show="(daysRemaining === 0 && (openSpots > 0 || openSpots === null))" id="registerToday">
                               <i class="fa fa-clock-o"></i>
                               <b>Last day to register!</b></span>
-                            <span ng-show="vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister) > 0 &&
-                              (vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) > 0 ||
-                              vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity) === null)" id="registrationOpen">
+                            <span ng-show="(daysRemaining > 0 && (openSpots > 0 || openSpots === null))" id="registrationOpen">
                               <i class="fa fa-clock-o"></i>
-                              <b>{{vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)}} days</b> left to register</span>
+                              <b>{{daysRemaining}} days</b> left to register</span>
                         </p>
                     </div>
                 </div>

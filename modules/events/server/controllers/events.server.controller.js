@@ -595,6 +595,44 @@ exports.notAttended = function(req, res) {
   }
 };
 
+exports.registrantNotes = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+  var note = req.body.note;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].note = note;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
 var getRegistrantsList = function(registrants) {
   var emailArray = [];
   emailArray = emailArray.concat(_.map(registrants, 'user.email'));

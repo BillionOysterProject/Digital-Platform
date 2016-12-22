@@ -27,9 +27,52 @@
 
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;"><b style="color: #ea6158;"><%= LessonFeedbackName %></b> just gave you feedback on your lesson <b style="color: #ea6158;"><%= LessonName %></b>:</p>
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;"><%= LessonFeedbackNote %></p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;"><em>On a scale of 1-5, with 5 being very effective and 1 being not effective at all, rate the following.</em></p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effective is this lesson? <b><%= LessonEffective %></b></p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson align with NY State core curriculum, NYC scope and sequence, and/or other content standards you are required to use in your school? <b><%= LessonAlignWithCurriculumn %></b></p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson support inquiry, student-led research, and/or scientific practices? <b><%= LessonSupportScientificPractice %></b></p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">How effectively does this lesson prepare students for environmental restoration, BOP field science, or the ORS? <b><%= LessonPreparesStudents %></b></p>
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Visit your lesson to edit and republish at any time.</p>
+        <hr/>
+
+        <% if(HowLessonTaught !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Describe what you did and what your students did in this lesson. Did you modify or adapt this lesson? Give specific examples of what you and your students did in the lesson.<br> <b><%= HowLessonTaught %></b></p>
+        <% } %>
+        <% if(WhyLessonTaughtNow !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Why did you teach this lesson when you did? Was it part of your regular scheduled curriculum, one-off, or prep for the field?<br> <b><%= WhyLessonTaughtNow %></b></p>
+        <% } %>
+        <% if(WillTeachLessonAgain !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Will you teach some version of this lesson in the future? If so, what will you repeat, what will you do differently, and why? If not, why not?<br> <b><%= WillTeachLessonAgain %></b></p>
+        <% } %>
+
+        <hr/>
+
+        <% if(LessonSummary !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Lesson Summary<br> <b><%= LessonSummary %></b></p>
+        <% } %>
+        <% if(LessonObjectives !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Lesson Objectives<br> <b><%= LessonObjectives %></b></p>
+        <% } %>
+        <% if(MaterialsResources !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Materials and Resources<br> <b><%= MaterialsResources %></b></p>
+        <% } %>
+        <% if(Preparation !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Preparation<br> <b><%= Preparation %></b></p>
+        <% } %>
+        <% if(Background !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Background<br> <b><%= Background %></b></p>
+        <% } %>
+        <% if(InstructionPlan !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Instruction Plan<br> <b><%= InstructionPlan %></b></p>
+        <% } %>
+        <% if(Standards !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Standards<br> <b><%= Standards %></b></p>
+        <% } %>
+        <% if(Other !== '') { %>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">Other<br> <b><%= Other %></b></p>
+        <% } %>
+
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">You can visit your lesson to edit and republish at any time.</p>
         <br/>
 
         <!-- button -->

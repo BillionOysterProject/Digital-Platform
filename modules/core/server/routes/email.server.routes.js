@@ -11,7 +11,5 @@ module.exports = function (app) {
 
   app.route('/api/email/general-feedback').post(email.sendGeneralFeedback);
 
-  app.route('/api/email/lesson-feedback').post(email.sendLessonFeedback);
-
   app.route('/api/email/unit-feedback').post(email.sendUnitFeedback);
 };

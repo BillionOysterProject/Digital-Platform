@@ -7,7 +7,10 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
+  LessonTracker = mongoose.model('LessonTracker'),
+  LessonFeedback = mongoose.model('LessonFeedback'),
   SavedLesson = mongoose.model('SavedLesson'),
+  MetaSubjectArea = mongoose.model('MetaSubjectArea'),
   Team = mongoose.model('Team'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -20,6 +23,7 @@ var path = require('path'),
   request = require('request'),
   path = require('path'),
   multer = require('multer'),
+  moment = require('moment'),
   config = require(path.resolve('./config/config'));
 
 var validateLesson = function(lesson, successCallback, errorCallback) {
@@ -434,6 +438,293 @@ exports.listFavorites = function(req, res) {
 };
 
 /**
+ * Track a lesson
+ */
+exports.trackLesson = function(req, res) {
+  var lesson = req.lesson;
+  var user = req.user;
+
+  var trackedLesson = new LessonTracker(req.body.tracker);
+  trackedLesson.taughtOn = moment(req.body.tracker.taughtOn, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
+  trackedLesson.user = user;
+  trackedLesson.lesson = lesson;
+
+  trackedLesson.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLesson);
+    }
+  });
+};
+
+exports.listTrackedForLessonAndUser = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonTracker.find({ lesson: lesson, user: req.user }).populate('lesson', 'title')
+  .populate('user', 'displayName email team profileImageURL')
+  .populate('classOrSubject', 'subject color').exec(function(err, trackedLessons) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLessons);
+    }
+  });
+};
+
+exports.listTrackedForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonTracker.find({ lesson: lesson }).populate('lesson', 'title')
+  .populate('user', 'displayName email team profileImageURL')
+  .populate('classOrSubject', 'subject color').exec(function(err, trackedLessons) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(trackedLessons);
+    }
+  });
+};
+
+exports.trackedStatsForLesson = function(req, res) {
+  var lesson = req.lesson;
+  var stats = {};
+  var query = { lesson: lesson._id };
+  LessonTracker.aggregate([
+    { $match: { lesson: lesson._id } },
+    { $group: {
+      _id: null,
+      taughtCount: { $sum: 1 },
+      studentCount: { $sum: '$totalNumberOfStudents' },
+      avgStudentsPerClass: { $avg: '$totalNumberOfStudents' },
+      studentsPerClassCount: { $sum: '$totalNumberOfStudents' },
+      avgClassesOrSections: { $avg: '$totalNumberOfClassesOrSections' },
+      classesOrSectionsCount: { $sum: '$totalNumberOfClassesOrSections' },
+      avgPeriodsOrSessions: { $avg: '$classPeriodsOrSessionsNeededToComplete' },
+      periodsOrSessionsCount: { $sum: '$classPeriodsOrSessionsNeededToComplete' }
+    } }
+  ], function(err1, result) {
+    if (err1) {
+      res.status(400).send({
+        message: 'Could not retrieve averages'
+      });
+    } else {
+      LessonTracker.find(query).distinct('user', function(err2, teamLeads) {
+        if (err2) {
+          res.status(400).send({
+            message: 'Count not retrieve team lead count'
+          });
+        } else {
+          var teamLeadCount = (teamLeads) ? teamLeads.length : 0;
+          LessonTracker.find(query).distinct('grade', function(err3, grades) {
+            if (err3) {
+              res.status(400).send({
+                message: 'Could not retrieve grades'
+              });
+            } else {
+              LessonTracker.find(query).distinct('classOrSubject', function(err4, subjectIds) {
+                if (err4) {
+                  res.status(400).send({
+                    message: 'Could not retrieve subject ids'
+                  });
+                } else {
+                  MetaSubjectArea.find({ '_id' : { $in: subjectIds } }).exec(function(err5, subjects) {
+                    if (err5) {
+                      res.status(400).send({
+                        message: 'Could not retrieve subjects'
+                      });
+                    } else {
+                      res.json({
+                        taughtCount: (result[0]) ? result[0].taughtCount : 0,
+                        teamLeadCount: (teamLeadCount) ? teamLeadCount : 0,
+                        studentCount: (result[0]) ? result[0].studentCount : 0,
+                        avgStudentsPerClass: (result[0]) ? result[0].avgStudentsPerClass : 0,
+                        studentsPerClassCount: (result[0]) ? result[0].studentsPerClassCount : 0,
+                        avgClassesOrSections: (result[0]) ? result[0].avgClassesOrSections : 0,
+                        classesOrSectionsCount: (result[0]) ? result[0].classesOrSectionsCount : 0,
+                        avgPeriodsOrSessions: (result[0]) ? result[0].avgPeriodsOrSessions : 0,
+                        periodsOrSessionsCount: (result[0]) ? result[0].periodsOrSessionsCount : 0,
+                        subjects: subjects,
+                        grades: grades
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+/**
+ * Feedback for a lesson
+ */
+exports.lessonFeedback = function(req, res) {
+  var lesson = req.lesson;
+  var user = req.user;
+
+  var lessonFeedback = new LessonFeedback(req.body.feedback);
+  lessonFeedback.user = user;
+  lessonFeedback.lesson = lesson;
+
+  lessonFeedback.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+      var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+      var toList = [lesson.user.email, config.mailer.admin];
+
+      email.sendEmailTemplate(toList, subject,
+      'lesson_feedback', {
+        FirstName: req.body.lesson.user.firstName,
+        LessonFeedbackName: req.user.displayName,
+        LessonName: req.body.lesson.title,
+        LessonFeedbackNote: req.body.message,
+        LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
+        LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
+        LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
+        LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
+        HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
+        WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
+        WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
+        LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
+        LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
+        MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
+        Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
+        Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
+        InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
+        Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
+        Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
+        LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+      },
+      function(response) {
+        res.json(lessonFeedback);
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
+    }
+  });
+};
+
+exports.listFeedbackForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonFeedback.find({ lesson: lesson }).populate('lesson', 'title')
+  .populate('user', 'displayName email team profileImageURL').exec(function(err, feedback) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(feedback);
+    }
+  });
+};
+
+exports.feedbackForLesson = function(req, res) {
+  var lesson = req.lesson;
+
+  LessonFeedback.aggregate([
+    { $match: { lesson: lesson._id } },
+    { $group: {
+      _id: null,
+      lessonEffective: { $avg: '$lessonEffective' },
+      lessonAlignWithCurriculumn: { $avg: '$lessonAlignWithCurriculumn' },
+      lessonSupportScientificPractice: { $avg: '$lessonSupportScientificPractice' },
+      lessonPreparesStudents: { $avg: '$lessonPreparesStudents' }
+    } }
+  ], function(err, result) {
+    if (err) {
+      res.status(400).send({
+        message: 'Could not retrieve averages'
+      });
+    } else {
+      LessonFeedback.find({ lesson: lesson._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
+        if (err1) {
+          res.status(400).send({
+            message: 'Could not retrieve feedback'
+          });
+        } else {
+          //Get array of feedback
+          var howLessonTaughtFeedback = [];
+          var whyLessonTaughtNowFeedback = [];
+          var willTeachLessonAgainFeedback = [];
+          var lessonSummaryFeedback = [];
+          var lessonObjectivesFeedback = [];
+          var materialsResourcesFeedback = [];
+          var preparationFeedback = [];
+          var backgroundFeedback = [];
+          var instructionPlanFeedback = [];
+          var standardsFeedback = [];
+          var otherFeedback = [];
+          for (var i = 0; i < feedbackList.length; i++) {
+            var feedback = feedbackList[i];
+            var author = feedback.user.displayName;
+            var date = moment(feedback.created).format('MMMM D, YYYY');
+
+            if (feedback.howLessonTaught) howLessonTaughtFeedback.push({ author: author, date: date,
+              feedback: feedback.howLessonTaught });
+            if (feedback.whyLessonTaughtNow) whyLessonTaughtNowFeedback.push({ author: author, date: date,
+              feedback: feedback.whyLessonTaughtNow });
+            if (feedback.willTeachLessonAgain) willTeachLessonAgainFeedback.push({ author: author, date: date,
+              feedback: feedback.willTeachLessonAgain });
+            if (feedback.additionalFeedback.lessonSummary) lessonSummaryFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.lessonSummary });
+            if (feedback.additionalFeedback.lessonObjectives) lessonObjectivesFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.lessonObjectives });
+            if (feedback.additionalFeedback.materialsResources) materialsResourcesFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.materialsResources });
+            if (feedback.additionalFeedback.preparation) preparationFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.preparation });
+            if (feedback.additionalFeedback.background) backgroundFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.background });
+            if (feedback.additionalFeedback.instructionPlan) instructionPlanFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.instructionPlan });
+            if (feedback.additionalFeedback.standards) standardsFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.standards });
+            if (feedback.additionalFeedback.other) otherFeedback.push({ author: author, date: date,
+              feedback: feedback.additionalFeedback.other });
+          }
+
+          res.json({
+            lessonEffectiveAvg: (result[0]) ? result[0].lessonEffective : 0,
+            lessonAlignWithCurriculumnAvg: (result[0]) ? result[0].lessonAlignWithCurriculumn : 0,
+            lessonSupportScientificPracticeAvg: (result[0]) ? result[0].lessonSupportScientificPractice : 0,
+            lessonPreparesStudentsAvg: (result[0]) ? result[0].lessonPreparesStudents : 0,
+            howLessonTaughtFeedback: howLessonTaughtFeedback,
+            whyLessonTaughtNowFeedback: whyLessonTaughtNowFeedback,
+            willTeachLessonAgainFeedback: willTeachLessonAgainFeedback,
+            lessonSummaryFeedback: lessonSummaryFeedback,
+            lessonObjectivesFeedback: lessonObjectivesFeedback,
+            materialsResourcesFeedback: materialsResourcesFeedback,
+            preparationFeedback: preparationFeedback,
+            backgroundFeedback: backgroundFeedback,
+            instructionPlanFeedback: instructionPlanFeedback,
+            standardsFeedback: standardsFeedback,
+            otherFeedback: otherFeedback
+          });
+        }
+      });
+    }
+  });
+};
+
+/**
  * Delete a lesson
  */
 var deleteInternal = function(lesson, successCallback, errorCallback) {
@@ -586,7 +877,30 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(lessons);
+      if (req.query.stats) {
+        var getStats = function(lessons, index, callback) {
+          if (index < lessons.length) {
+            var lesson = (lessons[index]) ? lessons[index].toJSON() : {};
+            LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err, teamLeads) {
+              if (!err) {
+                lesson.stats = {
+                  teamLeadCount: (teamLeads) ? teamLeads.length : 0
+                };
+                lessons[index] = lesson;
+              }
+              getStats(lessons, index+1, callback);
+            });
+          } else {
+            callback();
+          }
+        };
+
+        getStats(lessons, 0, function() {
+          res.json(lessons);
+        });
+      } else {
+        res.json(lessons);
+      }
     }
   });
 };
