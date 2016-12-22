@@ -44,10 +44,10 @@
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
                 </div>
 
-                <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
+                <!-- <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
                     You have <b>{{leadRequests.length}}</b> new team lead requests.
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamLeads()">Respond</a>
-                </div>
+                </div> --><!-- TODO once return -->
 
 
                 <h6>Organization</h6>
@@ -165,7 +165,9 @@
 <delete-team-modal team="vm.teamToOpen" close-function="vm.closeDeleteTeam"></delete-team-modal>
 <!-- End Team Modals -->
 
+<form-user-profile-modal close-function="vm.closeUserProfileForm"></form-user-profile-modal>
+<change-user-profile-image-modal close-function="vm.closeChangePicture"></change-user-profile-image-modal>
+
 <view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization" close-function="vm.closeViewUserModal"></view-user-modal>
-<form-admin-team-lead-modal user="vm.user" teams="vm.teams" close-function="vm.closeAdminTeamLeadForm"></form-admin-team-lead-modal>
 <change-password-modal callback-function="vm.passwordChanged"></change-password-modal>
 <!--END MODALS-->

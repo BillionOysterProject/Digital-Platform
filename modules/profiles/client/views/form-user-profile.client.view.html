@@ -1,0 +1,56 @@
+<div class="modal fade" id="modal-user-edit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form name="form.userProfileForm" ng-submit="updateUserProfile(form.userProfileForm.$valid)" novalidate>
+              <fieldset>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit your profile</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                      <div class="form-group col-sm-6" show-errors>
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" class="form-control" ng-model="user.firstName" placeholder="First Name" required>
+                        <div ng-messages="userForm.firstName.$error" role="alert">
+                          <p class="help-block error-text" ng-message="required">First name is required.</p>
+                        </div>
+                      </div>
+                      <div class="form-group col-sm-6" show-errors>
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" class="form-control" ng-model="user.lastName" placeholder="Last Name" required>
+                        <div ng-messages="userForm.lastName.$error" role="alert">
+                          <p class="help-block error-text" ng-message="required">Last name is required.</p>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-group col-sm-6" show-errors>
+                          <label for="username">Username</label>
+                          <input type="text" id="username" name="username" class="form-control" ng-model="user.username" placeholder="Username" lowercase required>
+                          <div ng-messages="userForm.username.$error" role="alert">
+                              <p class="help-block error-text" ng-message="required">Username is required.</p>
+                          </div>
+                      </div>
+                      <div class="form-group col-sm-6" show-errors>
+                          <label for="email">Email</label>
+                          <input type="email" id="email" name="email" class="form-control" ng-model="user.email" placeholder="Email" lowercase required>
+                          <div ng-messages="userForm.email.$error" role="alert">
+                              <p class="help-block error-text" ng-message="required">Email address is required.</p>
+                              <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div ng-show="error" class="text-center alert alert-danger">
+                      <strong ng-bind="error"></strong>
+                  </div>
+                  <div class="form-group text-right">
+                      <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Save information</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

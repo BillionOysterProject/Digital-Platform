@@ -140,20 +140,20 @@
     };
 
     vm.openUserProfileForm = function() {
-      console.log('openUserProfileForm');
-      angular.element('#modal-admin-team-lead-editadd').modal('show');
+      angular.element('#modal-user-edit').modal('show');
     };
 
-    vm.closeUserProfileForm = function() {
-      angular.element('#modal-admin-team-lead-editadd').modal('hide');
+    vm.closeUserProfileForm = function(refresh) {
+      angular.element('#modal-user-edit').modal('hide');
+      if (refresh) vm.findCurrentUserAndOrganization();
     };
 
     vm.openChangePicture = function() {
-
+      angular.element('#modal-user-profile-image-edit').modal('show');
     };
 
-    vm.closeChangePicture = function() {
-
+    vm.closeChangePicture = function(refresh) {
+      angular.element('#modal-user-profile-image-edit').modal('hide');
     };
 
     vm.openChangePassword = function() {
