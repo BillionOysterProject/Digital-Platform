@@ -4,14 +4,14 @@
             <div class="col-lg-3 col-md-6" ng-show="vm.orgPhotoUrl">
                 <img class="img-thumbnail img-responsive" ng-src="{{vm.orgPhotoUrl}}" />
             </div>
+            <div class="col-lg-3 col-md-6" ng-hide="vm.orgPhotoUrl"></div>
             <div class="col-lg-6 col-md-6">
                 <h2>{{vm.organization.name}}</h2>
                 <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
                 <p>{{vm.organization.description}}</p>
             </div>
-            <div class="col-lg-3 col-md-6">
-                <h6 ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"><i class="fa fa-user"></i>
-                  {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
+            <div class="col-lg-3 col-md-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
+                <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
                 <p ng-repeat="orgLead in vm.organization.orgLeads">
                     <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
                         class="pull-left header-profile-image">
@@ -23,6 +23,7 @@
                     </em>
                 </p>
             </div>
+            <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
         </div>
     </section>
 </section>
@@ -84,10 +85,11 @@
 
 
 <!--MODALS-->
-<invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
 <form-org-profile-modal organization="vm.organization" close-function="vm.closeFormOrg"></form-org-profile-modal>
-<delete-school-org-modal organization="vm.organization" close-function="vm.closeDeleteForm"></delete-school-org-modal>
+<invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
 <delete-org-lead-modal organization="vm.organization" close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
+<delete-school-org-modal organization="vm.organization" close-function="vm.closeDeleteForm"></delete-school-org-modal>
+
 
 <view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
 <form-team-profile-modal team="vm.teamToOpen" organization="vm.organization" close-function="vm.closeFormTeam"></form-team-profile-modal>

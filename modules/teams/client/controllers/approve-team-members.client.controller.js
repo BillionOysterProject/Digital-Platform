@@ -5,13 +5,25 @@
     .module('teams')
     .controller('TeamApprovalController', TeamApprovalController);
 
-  TeamApprovalController.$inject = ['$scope', '$http'];
+  TeamApprovalController.$inject = ['$scope', '$http', 'TeamsService'];
 
-  function TeamApprovalController($scope, $http) {
+  function TeamApprovalController($scope, $http, TeamsService) {
     $scope.team = {
       teamId: null,
       newTeamName: null
     };
+
+    var findTeams = function() {
+      TeamsService.query({
+        full: true
+      }, function(data) {
+        $scope.teams = data;
+        $scope.error = null;
+      }, function(error) {
+        $scope.error = error.data.message;
+      });
+    };
+    findTeams();
 
     $scope.save = function(isValid) {
       var allRequestsResolved = true;
@@ -38,7 +50,7 @@
         finishedApprovingCount++;
         if (finishedApprovingCount === $scope.teamRequests.length) {
           spinner.stop();
-          $scope.saveFunction();
+          $scope.closeFunction(true);
         }
       };
 
@@ -110,7 +122,7 @@
 
     $scope.cancel = function() {
       $scope.reset();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
 
     $scope.getApproveCount = function() {

@@ -7,11 +7,11 @@
 
   TeamProfileController.$inject = ['$scope', '$rootScope', '$http', '$state', '$stateParams', '$timeout', 'Authentication',
     'TeamsService', 'TeamMembersService', 'ExpeditionsService', 'LeaderMemberService', 'Admin', 'ExpeditionViewHelper',
-    'FileUploader'];
+    'TeamRequestsService', 'FileUploader'];
 
   function TeamProfileController($scope, $rootScope, $http, $state, $stateParams, $timeout, Authentication,
       TeamsService, TeamMembersService, ExpeditionsService, LeaderMemberService, Admin, ExpeditionViewHelper,
-      FileUploader) {
+      TeamRequestsService, FileUploader) {
     var vm = this;
     vm.team = {};
     vm.userToOpen = {};
@@ -88,6 +88,15 @@
       }
     };
     findTeam();
+
+    vm.findTeamRequests = function() {
+      TeamRequestsService.query({
+        byOwner: true
+      }, function(data) {
+        vm.teamRequests = data;
+      });
+    };
+    vm.findTeamRequests();
 
     vm.authentication = Authentication;
     vm.error = [];

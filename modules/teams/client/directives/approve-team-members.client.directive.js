@@ -9,9 +9,7 @@
         templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
         scope: {
           teamRequests: '=',
-          teams: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
         replace: true,
         controller: 'TeamApprovalController',

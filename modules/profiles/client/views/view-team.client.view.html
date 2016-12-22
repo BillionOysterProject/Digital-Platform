@@ -4,6 +4,7 @@
             <div class="col-lg-3 col-md-6" ng-show="vm.teamPhotoURL">
                 <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
             </div>
+            <div class="col-lg-3 col-md-6" ng-hide="vm.teamPhotoURL"></div>
             <div class="col-lg-3 col-md-6">
                 <h2>{{vm.team.name}}</h2>
                 <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
@@ -26,7 +27,8 @@
                             </em>
                         </p>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" ng-hide="vm.team.teamLeads && vm.team.teamLeads.length > 0"></div>
+                    <div class="col-sm-4" ng-show="vm.expeditions && vm.expeditions.length > 0">
                         <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
                         <ul class="list-unstyled">
                             <li ng-repeat="expedition in vm.expeditions">
@@ -34,6 +36,7 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="col-sm-4" ng-hide="vm.expeditions && vm.expeditions.length > 0"></div>
                 </div>
             </div>
         </div>
@@ -54,12 +57,12 @@
             </div>
 
             <!--TIFF: only show buttons if team lead -->
-            <a class="btn btn-default" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
-            <a class="btn btn-default" ng-click="vm.openInviteTeamLead()">Invite leads</a>
-            <a class="btn btn-default" ng-click="vm.openFormTeamMember()">Add members</a><!--TIFF: Open add members modal from Settings page -->
-            <a class="btn btn-default" ng-click="vm.openImportTeamMembers()">Import members</a><!--TIFF: Open import members modal from Settings page -->
-            <a class="btn btn-danger" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-click="vm.openDeleteTeam()">Delete team</a><!--TIFF: Open team delete modal from Settings page-->
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openInviteTeamLead()">Invite leads</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openDeleteTeam()">Delete team</a>
         </nav>
         <hr/>
 
