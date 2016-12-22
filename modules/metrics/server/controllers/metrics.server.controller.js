@@ -15,6 +15,11 @@ var path = require('path'),
   Glossary = mongoose.model('Glossary'),
   RestorationStation = mongoose.model('RestorationStation'),
   Expedition = mongoose.model('Expedition'),
+  ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
+  ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
+  ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
+  ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash'),
   request = require('request'),
@@ -435,35 +440,23 @@ exports.getStationMetrics = function(req, res) {
   ]);
   var expeditionCountQuery = Expedition.count({});
 
-  var adminCountQuery = User.count({
-    $and: [
-      { roles: 'admin' },
-      { $or: [
-        { pending: false },
-        { pending: { $exists: false } }
-      ] }
-    ] }
-  );
+  var protocolMobileTrapStatusQuery = ProtocolMobileTrap.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
+  var protocolOysterMeasurementStatusQuery = ProtocolOysterMeasurement.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
+  var protocolSettlementTileStatusQuery = ProtocolSettlementTile.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
+  var protocolSiteConditionStatusQuery = ProtocolSiteCondition.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
+  var protocolWaterQualityStatusQuery = ProtocolWaterQuality.aggregate([
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ]);
 
-  var teamLeadCountQuery = User.count({
-    $and: [
-      { roles: 'team lead' },
-      { $or: [
-        { pending: false },
-        { pending: { $exists: false } }
-      ] }
-    ] }
-  );
-
-  var teamMemberCountQuery = User.count({
-    $and: [
-      { roles: 'team member' },
-      { $or: [
-        { pending: false },
-        { pending: { $exists: false } }
-      ] }
-    ] }
-  );
+  stationMetrics.protocolStatuses = { incomplete: 0, submitted: 0, returned: 0, published: 0, unpublished: 0 };
 
   stationCountQuery.exec(function(err, stationCount) {
     if (err) {
@@ -494,7 +487,71 @@ exports.getStationMetrics = function(req, res) {
               });
             } else {
               stationMetrics.expeditionCount = expeditionCount;
-              res.json(stationMetrics);
+              protocolMobileTrapStatusQuery.exec(function(err, protocolStatusCount) {
+                if (err) {
+                  return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                  });
+                } else {
+                  for(var i = 0; i < protocolStatusCount.length; i++) {
+                    stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
+                      stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                  }
+                  protocolOysterMeasurementStatusQuery.exec(function(err, protocolStatusCount) {
+                    if (err) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                      });
+                    } else {
+
+                      for(var i = 0; i < protocolStatusCount.length; i++) {
+                        stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
+                          stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                      }
+                      protocolSettlementTileStatusQuery.exec(function(err, protocolStatusCount) {
+                        if (err) {
+                          return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                          });
+                        } else {
+
+                          for(var i = 0; i < protocolStatusCount.length; i++) {
+                            stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
+                              stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                          }
+                          protocolSiteConditionStatusQuery.exec(function(err, protocolStatusCount) {
+                            if (err) {
+                              return res.status(400).send({
+                                message: errorHandler.getErrorMessage(err)
+                              });
+                            } else {
+
+                              for(var i = 0; i < protocolStatusCount.length; i++) {
+                                stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
+                                  stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                              }
+                              protocolWaterQualityStatusQuery.exec(function(err, protocolStatusCount) {
+                                if (err) {
+                                  return res.status(400).send({
+                                    message: errorHandler.getErrorMessage(err)
+                                  });
+                                } else {
+
+                                  for(var i = 0; i < protocolStatusCount.length; i++) {
+                                    stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
+                                      stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                                  }
+                                  res.json(stationMetrics);
+                                }
+                              });
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
             }
           });
         }
