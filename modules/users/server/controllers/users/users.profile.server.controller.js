@@ -71,14 +71,12 @@ exports.changeProfilePicture = function (req, res) {
 
       user.save(function (saveError) {
         if (saveError) {
-          console.log('saveError', saveError);
           return res.status(400).send({
             message: errorHandler.getErrorMessage(saveError)
           });
         } else {
           req.login(user, function (err) {
             if (err) {
-              console.log('err', err);
               res.status(400).send(err);
             } else {
               res.json(user);
@@ -87,13 +85,11 @@ exports.changeProfilePicture = function (req, res) {
         }
       });
     }, function (errorMessage) {
-      console.log('errorMessage', errorMessage);
       return res.status(400).send({
         message: errorMessage
       });
     });
   } else {
-    console.log('User is not signed in');
     res.status(400).send({
       message: 'User is not signed in'
     });

@@ -24,16 +24,31 @@
 
       $scope.user.profileImageURL = $scope.userPhotoUrl;
 
-      $http.post('api/users/picture', $scope.user)
-      .success(function(data, status, headers, config) {
-        $scope.$broadcast('show-errors-reset', 'form.userProfileImageForm');
+      function uploadUserPhoto(userId, imageSuccessCallback, imageErrorCallback) {
+        if ($scope.userPhotoUploader.queue.length > 0) {
+          $scope.userPhotoUploader.onSuccessItem = function(fileItem, response, status, headers) {
+            $scope.userPhotoUploader.removeFromQueue(fileItem);
+            imageSuccessCallback(response);
+          };
 
-        $scope.success = true;
-        Authentication.user = data;
+          $scope.userPhotoUploader.onErrorItem = function(fileItem, response, status, headers) {
+            imageErrorCallback(response.message);
+          };
+
+          $scope.userPhotoUploader.onBeforeUploadItem = function(item) {
+            item.url = 'api/users/picture';
+          };
+          $scope.userPhotoUploader.uploadAll();
+        } else {
+          imageSuccessCallback();
+        }
+      }
+
+      uploadUserPhoto($scope.user._id, function(response) {
+        Authentication.user = response;
         $scope.closeFunction(true);
-      })
-      .error(function(data, status, headers, config) {
-        $scope.error = data.message;
+      }, function(errorMessage) {
+        $scope.error = errorMessage;
       });
     };
 

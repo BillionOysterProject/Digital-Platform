@@ -154,6 +154,9 @@
 
     vm.closeChangePicture = function(refresh) {
       angular.element('#modal-user-profile-image-edit').modal('hide');
+      if (refresh) vm.findCurrentUserAndOrganization(function() {
+        vm.findTeams();
+      });
     };
 
     vm.openChangePassword = function() {
