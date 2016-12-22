@@ -16,6 +16,11 @@
                     <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
                         class="pull-left header-profile-image">
                     <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
+                    <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
+                      <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
+                      <span class="green ng-hide" ng-show="orgLead.reminderSent">
+                        <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                    </em>
                 </p>
             </div>
         </div>

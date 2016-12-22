@@ -101,6 +101,21 @@
       });
     };
 
+    vm.sendReminder = function(lead) {
+      $http.post('api/users/leaders/' + lead._id + '/remind', {
+        user: lead,
+        organization: vm.organization,
+        teamOrOrg: 'organization',
+        role: 'team lead pending' //TODO chance to 'org lead pending' when that role exists
+      })
+      .success(function(data, status, headers, config) {
+        lead.reminderSent = true;
+      })
+      .error(function(data, status, headers, config) {
+        vm.error = data;
+      });
+    };
+
     vm.openInviteOrgLead = function() {
       angular.element('#modal-org-lead-invite').modal('show');
     };

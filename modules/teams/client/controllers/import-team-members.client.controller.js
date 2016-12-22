@@ -58,7 +58,7 @@
     };
 
     $scope.downloadExample = function() {
-      $http({ method: 'GET', url: '/api/teams/members/csv' }).
+      $http({ method: 'GET', url: '/api/users/leaders/csv' }).
         success(function(data, status, headers, config) {
           var anchor = angular.element('<a/>');
           anchor.attr({
@@ -104,7 +104,7 @@
               errorMessages.push('Email is required');
             }
 
-            $http.post('/api/teams/members/validate/csv', { member: member })
+            $http.post('/api/users/leaders/validate/csv', { member: member })
             .success(function(data, status, headers, config) {
               member.valid = true;
               $scope.validCsv.push(member);
@@ -147,7 +147,7 @@
         if (finishedAddingCount === $scope.validCsv.length) {
           spinner.stop();
           $scope.reset();
-          $scope.saveFunction();
+          $scope.closeFunction(true);
         }
       };
       $scope.successfullyAdded = 0;
@@ -155,12 +155,14 @@
       var uploadMember = function(currMember, validCsv, callback) {
         if (currMember < validCsv.length) {
           var toAdd = {
-            member: validCsv[currMember],
-            teamId: $scope.team.teamId,
-            newTeamName: $scope.team.newTeamName
+            user: validCsv[currMember],
+            role: 'team member pending',
+            teamOrOrg: 'team',
+            team: $scope.team,
+            organization: $scope.organization
           };
 
-          $http.post('/api/teams/members/csv', toAdd).
+          $http.post('/api/users/leaders/csv', toAdd).
           success(function(data, status, headers, config) {
             $scope.successfullyAdded++;
             done();
@@ -183,7 +185,7 @@
 
     $scope.cancel = function() {
       $scope.reset();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
   }
 })();

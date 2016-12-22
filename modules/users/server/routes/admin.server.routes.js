@@ -34,14 +34,22 @@ module.exports = function (app) {
 
   // Setting up the invites
   app.route('/api/users/leaders')
-    .post(adminPolicy.isAllowed, admin.createUserInvite);
-  app.route('/api/users/leaders/:leaderId/remind')
+    .post(adminPolicy.isAllowed, admin.createUser);
+  app.route('/api/users/leaders/:userId/remind')
     .post(adminPolicy.isAllowed, admin.remindInvitee);
 
-  app.route('/api/users/leaders/:leaderId/delete')
-    .post(adminPolicy.isAllowed, admin.deleteUserLeader);
+  app.route('/api/users/leaders/:userId')
+    .put(adminPolicy.isAllowed, admin.updateUser)
+    .delete(adminPolicy.isAllowed, admin.deleteUser);
+
+  // csv collection routes
+  app.route('/api/users/leaders/csv')
+    .get(adminPolicy.isAllowed, admin.downloadMemberBulkFile)
+    .post(adminPolicy.isAllowed, admin.createMemberCsv);
+
+  app.route('/api/users/leaders/validate/csv')
+    .post(adminPolicy.isAllowed, admin.validateMemberCsv);
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);
-  app.param('leaderId', admin.leaderByID);
 };

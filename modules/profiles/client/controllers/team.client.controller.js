@@ -6,10 +6,12 @@
     .controller('TeamProfileController', TeamProfileController);
 
   TeamProfileController.$inject = ['$scope', '$rootScope', '$http', '$state', '$stateParams', '$timeout', 'Authentication',
-    'TeamsService', 'TeamMembersService', 'ExpeditionsService', 'Admin', 'ExpeditionViewHelper', 'FileUploader'];
+    'TeamsService', 'TeamMembersService', 'ExpeditionsService', 'LeaderMemberService', 'Admin', 'ExpeditionViewHelper',
+    'FileUploader'];
 
   function TeamProfileController($scope, $rootScope, $http, $state, $stateParams, $timeout, Authentication,
-      TeamsService, TeamMembersService, ExpeditionsService, Admin, ExpeditionViewHelper, FileUploader) {
+      TeamsService, TeamMembersService, ExpeditionsService, LeaderMemberService, Admin, ExpeditionViewHelper,
+      FileUploader) {
     var vm = this;
     vm.team = {};
     vm.userToOpen = {};
@@ -96,6 +98,22 @@
       });
     };
 
+    vm.sendReminder = function(lead) {
+      $http.post('api/users/leaders/' + lead._id + '/remind', {
+        user: lead,
+        organization: vm.team.schoolOrg,
+        team: vm.team,
+        teamOrOrg: 'team',
+        role: 'team lead pending'
+      })
+      .success(function(data, status, headers, config) {
+        lead.reminderSent = true;
+      })
+      .error(function(data, status, headers, config) {
+        vm.error = data;
+      });
+    };
+
     vm.openTeamProfileForm = function() {
       angular.element('#modal-team-edit').modal('show');
     };
@@ -114,20 +132,32 @@
       if (refresh) findTeam();
     };
 
-    vm.openFormTeamMember = function() {
-
+    vm.openFormTeamMember = function(member) {
+      vm.userToOpen = member;
+      angular.element('#modal-team-member-editadd').modal('show');
     };
 
-    vm.closeFormTeamMember = function() {
+    vm.closeFormTeamMember = function(refresh) {
+      angular.element('#modal-team-member-editadd').modal('hide');
+      if (refresh) findTeam();
+    };
 
+    vm.openDeleteTeamMember = function(member) {
+      vm.userToOpen = member;
+      angular.element('#modal-team-member-delete').modal('show');
+    };
+
+    vm.closeDeleteTeamMember = function(refresh) {
+      angular.element('#modal-team-member-delete').modal('hide');
+      if (refresh) findTeam();
     };
 
     vm.openImportTeamMembers = function() {
-
+      angular.element('#modal-import-team-members').modal('show');
     };
 
     vm.closeImportTeamMembers = function() {
-
+      angular.element('#modal-import-team-members').modal('hide');
     };
 
     vm.openDeleteTeamLead = function() {

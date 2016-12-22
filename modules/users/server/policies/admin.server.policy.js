@@ -35,10 +35,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users/leaders',
       permissions: '*'
     }, {
-      resources: '/api/users/leaders/:leaderId/remind',
+      resources: '/api/users/leaders/:userId/remind',
       permissions: '*'
     }, {
-      resources: '/api/users/leaders/:leaderId/delete',
+      resources: '/api/users/leaders/:userId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/validate/csv',
       permissions: '*'
     }]
   }, {
@@ -47,10 +53,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users/leaders',
       permissions: '*'
     }, {
-      resources: '/api/users/leaders/:leaderId/remind',
+      resources: '/api/users/leaders/:userId/remind',
       permissions: '*'
     }, {
-      resources: '/api/users/leaders/:leaderId/delete',
+      resources: '/api/users/leaders/:userId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/validate/csv',
       permissions: '*'
     }]
   }, {

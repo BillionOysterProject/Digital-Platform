@@ -24,19 +24,12 @@
                 <input type="text" name="email" class="form-control" ng-model="teamMember.email"
                   required ng-readonly="teamMember._id && teamMember.pending === false" required>
               </div>
-              <div class="form-group col-sm-6" show-errors>
-                <label for="team" class="control-label required">Team Assignment</label>
-                <select name="team" class="form-control" ng-model="teamMember.team._id" required>
+              <div class="form-group col-sm-12" show-errors ng-show="teamMember._id">
+                <label for="team" class="control-label" ng-class="{'required': teamMember._id}">Team</label>
+                <select name="team" class="form-control" ng-model="newTeam" ng-required="teamMember._id">
                   <option disabled selected value>
                   <option ng-repeat="team in allTeams" value="{{team._id}}">{{team.name}}</option>
-                  <option value="-1">Create a new team</option>
                 </select>
-              </div>
-              <div class="form-group col-sm-6" show-errors ng-show="teamMember.team._id === '-1'">
-                <label for="newTeam" class="control-label" ng-class="{required: teamMember.team._id === '-1'}">
-                  Create a new team</label>
-                <input type="text" name="newTeam" class="form-control" ng-model="teamMember.newTeamName"
-                  ng-required="teamMember.team._id === '-1'"/>
               </div>
             </div>
           </div>

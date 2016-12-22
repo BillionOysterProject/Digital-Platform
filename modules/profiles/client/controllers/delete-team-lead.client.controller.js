@@ -13,7 +13,7 @@
     $scope.teamLead = '';
 
     $scope.delete = function() {
-      $http.post('api/users/leaders/' + $scope.teamLead._id + '/delete', {
+      $http.delete('api/users/leaders/' + $scope.teamLead._id, {
         user: $scope.teamLead,
         role: 'team lead',
         team: $scope.team,

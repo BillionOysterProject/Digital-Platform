@@ -17,22 +17,7 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin', 'team lead'],
     allows: [{
-      resources: '/api/teams/members/csv',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/validate/csv',
-      permissions: '*'
-    }, {
       resources: '/api/teams/members',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/:memberId/remind',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
       permissions: '*'
     }, {
       resources: '/api/teams',
@@ -50,12 +35,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams/members',
       permissions: ['get']
     }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: ['get']
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
-      permissions: ['get']
-    }, {
       resources: '/api/teams',
       permissions: ['get']
     }, {
@@ -66,12 +45,6 @@ exports.invokeRolesPolicies = function () {
     roles: ['user', 'partner', 'team lead pending', 'team member pending'],
     allows: [{
       resources: '/api/teams/members',
-      permissions: ['get']
-    }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: ['get']
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
       permissions: ['get']
     }, {
       resources: '/api/teams',

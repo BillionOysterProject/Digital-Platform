@@ -9,7 +9,8 @@
         templateUrl: 'modules/teams/client/views/form-team-member.client.view.html',
         scope: {
           teamMember: '=',
-          teams: '=',
+          team: '=',
+          organization: '=',
           closeFunction: '='
         },
         controller: 'TeamMemberController',
@@ -18,7 +19,16 @@
           element.bind('show.bs.modal', function () {
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
-            scope.findUserAndTeamIds();
+          });
+          scope.$watch('team', function(newValue, oldValue) {
+            scope.team = newValue;
+            scope.newTeam = (newValue && newValue._id) ? newValue._id : newValue;
+          });
+          scope.$watch('organization', function(newValue, oldValue) {
+            scope.organization = newValue;
+          });
+          scope.$watch('teamMember', function(newValue, oldValue) {
+            scope.teamMember = newValue;
           });
         }
       };

@@ -13,7 +13,7 @@
     $scope.orgLead = '';
 
     $scope.delete = function() {
-      $http.post('api/users/leaders/' + $scope.orgLead._id + '/delete', {
+      $http.delete('api/users/leaders/' + $scope.orgLead._id, {
         user: $scope.orgLead,
         role: 'team lead pending', //TODO: change when new 'org lead pending' role exists
         organization: $scope.organization,
