@@ -27,6 +27,7 @@ module.exports = {
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/iconset/iconset-fontawesome-4.2.0.min.js',
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js',
         'public/lib/summernote/dist/summernote.min.js',
+        'public/lib/raty-fa/lib/jquery.raty-fa.js',
         'public/lib/angular/angular.min.js',
         'public/lib/angular-resource/angular-resource.min.js',
         'public/lib/angular-animate/angular-animate.min.js',
