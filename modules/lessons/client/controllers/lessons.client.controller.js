@@ -17,7 +17,6 @@
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
     SubjectAreasService, LessonsService, LessonTrackerStatsService, LessonFeedbackService, lodash) {
     var vm = this;
-
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.user = Authentication.user;
@@ -230,6 +229,13 @@
         }
       }]
     });
+
+    vm.checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
 
     // Remove existing Lesson
     vm.remove = function() {
