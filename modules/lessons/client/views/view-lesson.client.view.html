@@ -24,8 +24,8 @@
         <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
 
         <!--TIFF: wire up -->
-        <a class="btn btn-default" ng-show="vm.lesson.isCurrentUserOwner && vm.feedback &&
-          vm.feedback.lessonAlignWithCurriculumnAvg && vm.feedback.lessonEffectiveAvg && 
+        <a class="btn btn-default" ng-show="(vm.checkRole('admin') || vm.lesson.isCurrentUserOwner) && vm.feedback &&
+          vm.feedback.lessonAlignWithCurriculumnAvg && vm.feedback.lessonEffectiveAvg &&
           vm.feedback.lessonPreparesStudentsAvg && vm.feedback.lessonSupportScientificPracticeAvg"
           ng-click="vm.openLessonFeedbackView()">View feedback</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonLog()">Log teaching</a>
