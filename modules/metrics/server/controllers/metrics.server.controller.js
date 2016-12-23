@@ -455,6 +455,17 @@ exports.getStationMetrics = function(req, res) {
   var protocolWaterQualityStatusQuery = ProtocolWaterQuality.aggregate([
     { $group: { _id: '$status', count: { $sum: 1 } } }
   ]);
+  var expeditionsCompleteQuery = Expedition.aggregate([
+    { $group: { _id: { $gt: [ '$monitoringStartDate', new Date()] }, count: { $sum: 1 } } },
+    { $project: { _id: false, future: '$_id', count: 1 } }
+  ]);
+  var mostVisitedStationsQuery = Expedition.aggregate([
+    { $group: { _id: '$station', expeditionCount: { $sum: 1 } } },
+    { $sort: { expeditionCount: -1 } },
+    { $limit: 5 },
+    { $lookup: { from: 'restorationstations', localField: '_id', foreignField: '_id', as: 'stations' } },
+    { $project: { _id: false, expeditionCount: 1, station: { $arrayElemAt: ['$stations', 0] } } }
+  ]);
 
   stationMetrics.protocolStatuses = { incomplete: 0, submitted: 0, returned: 0, published: 0, unpublished: 0 };
 
@@ -486,7 +497,12 @@ exports.getStationMetrics = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
               });
             } else {
-              stationMetrics.expeditionCount = expeditionCount;
+              stationMetrics.expeditions = {
+                totalCount: 0,
+                futureCount: 0,
+                completedCount: 0
+              };
+              stationMetrics.expeditions.totalCount = expeditionCount;
               protocolMobileTrapStatusQuery.exec(function(err, protocolStatusCount) {
                 if (err) {
                   return res.status(400).send({
@@ -541,7 +557,31 @@ exports.getStationMetrics = function(req, res) {
                                     stationMetrics.protocolStatuses[protocolStatusCount[i]._id] =
                                       stationMetrics.protocolStatuses[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
                                   }
-                                  res.json(stationMetrics);
+                                  expeditionsCompleteQuery.exec(function(err, expeditionData) {
+                                    if (err) {
+                                      return res.status(400).send({
+                                        message: errorHandler.getErrorMessage(err)
+                                      });
+                                    } else {
+                                      for(var i = 0; i < expeditionData.length; i++) {
+                                        if(expeditionData[i].future === false) {
+                                          stationMetrics.expeditions.completedCount = expeditionData[i].count;
+                                        } else if(expeditionData[i].future === true) {
+                                          stationMetrics.expeditions.futureCount = expeditionData[i].count;
+                                        }
+                                      }
+                                      mostVisitedStationsQuery.exec(function(err, stationVisitCountData) {
+                                        if (err) {
+                                          return res.status(400).send({
+                                            message: errorHandler.getErrorMessage(err)
+                                          });
+                                        } else {
+                                          stationMetrics.stationVisitCounts = stationVisitCountData;
+                                          res.json(stationMetrics);
+                                        }
+                                      });
+                                    }
+                                  });
                                 }
                               });
                             }

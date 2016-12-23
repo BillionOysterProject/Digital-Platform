@@ -63,9 +63,6 @@
     vm.pieBlabels = ['6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade'];
     vm.pieBdata = [43, 24, 142, 66, 35, 52, 35];
 
-    vm.pieIlabels = ['Future Expeditions', 'Completed Expeditions'];
-    vm.pieIdata = [52, 66];
-
     vm.onClick = function (points, evt) {
       console.log(points, evt);
     };
