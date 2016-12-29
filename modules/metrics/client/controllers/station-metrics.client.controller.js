@@ -16,20 +16,20 @@
       function (data) {
         $scope.metrics = data;
         $scope.stationStatusPieData = [];
-        $scope.stationStatusPieData.push(data.lostStationCount);
-        $scope.stationStatusPieData.push(data.activeStationCount);
+        $scope.stationStatusPieData.push(data.stationCounts.lost);
+        $scope.stationStatusPieData.push(data.stationCounts.active);
         $scope.protocolStatusPieData = [];
         $scope.protocolStatusPieLabels = [];
-        var statusNames = Object.keys(data.protocolStatuses);
+        var statusNames = Object.keys(data.protocolStatusCounts);
         for(var i = 0; i < statusNames.length; i++) {
           var prettyStatusName = statusNames[i];
           prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Protocols';
           $scope.protocolStatusPieLabels.push(prettyStatusName);
-          $scope.protocolStatusPieData.push(data.protocolStatuses[statusNames[i]]);
+          $scope.protocolStatusPieData.push(data.protocolStatusCounts[statusNames[i]]);
         }
         $scope.expeditionStatusPieData = [];
-        $scope.expeditionStatusPieData.push(data.expeditions.futureCount);
-        $scope.expeditionStatusPieData.push(data.expeditions.completedCount);
+        $scope.expeditionStatusPieData.push(data.expeditionStatusCounts.future);
+        $scope.expeditionStatusPieData.push(data.expeditionStatusCounts.completed);
 
         $scope.error = null;
         $timeout(function() {
