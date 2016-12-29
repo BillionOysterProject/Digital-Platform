@@ -5,13 +5,25 @@
     .module('metrics')
     .controller('CurriculumMetricsController', CurriculumMetricsController);
 
-  CurriculumMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'MetricsCurriculumService'];
+  CurriculumMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment',
+    'MetricsCurriculumService', 'MetricsUnitActivityService', 'MetricsLessonActivityService'];
 
-  function CurriculumMetricsController($scope, $rootScope, $timeout, MetricsCurriculumService) {
+  function CurriculumMetricsController($scope, $rootScope, $timeout, moment,
+      MetricsCurriculumService, MetricsUnitActivityService, MetricsLessonActivityService) {
     $scope.getCurriculumMetrics = function() {
       MetricsCurriculumService.query({},
       function (data) {
         $scope.metrics = data;
+
+        var lessonsPerGradePieLabels = [];
+        var lessonsPerGradePieData = [];
+        for(var key in data.lessonsPerGrade) {
+          lessonsPerGradePieLabels.push(key + ' Grade');
+          lessonsPerGradePieData.push(data.lessonsPerGrade[key]);
+        }
+        $scope.lessonsPerGradePieLabels = lessonsPerGradePieLabels;
+        $scope.lessonsPerGradePieData = lessonsPerGradePieData;
+
         var lessonsPerUnitPieLabels = [];
         var lessonsPerUnitPieData = [];
         if($scope.metrics.unitLessonCounts !== null && $scope.metrics.unitLessonCounts !== undefined) {
@@ -46,7 +58,7 @@
         var lessonSubjectPieData = [];
         if($scope.metrics.lessonSubjectCounts !== null && $scope.metrics.lessonSubjectCounts !== undefined) {
           for(var l = 0; l < $scope.metrics.lessonSubjectCounts.length; l++) {
-            lessonSubjectPieLabels.push($scope.metrics.lessonSubjectCounts[l].subject);
+            lessonSubjectPieLabels.push($scope.metrics.lessonSubjectCounts[l].subject.subject);
             lessonSubjectPieData.push($scope.metrics.lessonSubjectCounts[l].lessonCount);
           }
         }
@@ -62,6 +74,38 @@
       });
     };
 
+    //
+    $scope.getMonthlyActivity = function() {
+      var numMonthsToCount = $scope.monthHistoryLabels.length;
+      MetricsUnitActivityService.query({
+        months: numMonthsToCount
+      },
+      function (unitData) {
+        $scope.monthlyCountLineData.push(unitData);
+
+        MetricsLessonActivityService.query({
+          months: numMonthsToCount
+        },
+        function (lessonData) {
+          $scope.monthlyCountLineData.push(lessonData);
+        });
+      });
+    };
+
+    //month labels on timeline line charts are
+    //a rolling window of the previous 7 months + current month
+    $scope.monthHistoryLabels = [];
+    var labelMonthDate = moment().subtract(7, 'months');
+    var nextMonth = moment().add(1, 'months').get('month');
+    while(labelMonthDate.get('month') !== nextMonth) {
+      $scope.monthHistoryLabels.push(labelMonthDate.format('MMMM'));
+      labelMonthDate = labelMonthDate.add(1, 'months');
+    }
+
+    $scope.monthlyCountLineLabels = ['Units', 'Lessons'];
+    $scope.monthlyCountLineData = [];
+
+    $scope.getMonthlyActivity();
     $scope.getCurriculumMetrics();
   }
 })();

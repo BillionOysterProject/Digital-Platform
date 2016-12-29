@@ -26,7 +26,19 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/metrics/curriculum',
       permissions: ['*']
     }, {
+      resources: '/api/metrics/curriculum/units/monthlyTotals',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/curriculum/lessons/monthlyTotals',
+      permissions: ['*']
+    }, {
       resources: '/api/metrics/stations',
+      permissions: ['*']
+    }, {
+      resources: '/api/metrics/stations/monthlyTotals',
+      permissions: ['*']
+    }, {
+      resources: '/api/metrics/expeditions/monthlyTotals',
       permissions: ['*']
     }]
   }]);

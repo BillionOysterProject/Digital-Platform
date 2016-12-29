@@ -166,16 +166,71 @@ exports.getMostActiveUsers = function(req, res) {
   });
 };
 
+//TODO: I think the grades should be stored as an array of numbers rather than
+//strings that are tied directly to the UI.
+var calculateLessonsPerGrade = function(lessonList) {
+  var lessonsPerGrade = {
+    '6th': 0, '7th': 0, '8th': 0, '9th': 0, '10th': 0, '11th': 0, '12th': 0
+  };
+  for(var i = 0; i < lessonList.length; i++) {
+    var lesson = lessonList[i];
+    if(lesson.lessonOverview !== null && lesson.lessonOverview !== undefined &&
+      lesson.lessonOverview.grade !== null && lesson.lessonOverview.grade !== undefined) {
+      var grade = lesson.lessonOverview.grade.trim();
+      //grade could be a single value like '6th' or a range like '9th - 12th'
+      //even worse, it's '9th - 12th' but '6 - 8th'. Ugh!
+      if(grade.indexOf('-') < 0) {
+        if(grade.indexOf('th') < 0) {
+          grade = grade + 'th';
+        }
+        lessonsPerGrade[grade] += 1;
+      } else {
+        var gradeArr = grade.split('-');
+        var firstGrade = gradeArr[0].trim();
+        var firstGradeNum = 0;
+        if(firstGrade.indexOf('th') >= 0) {
+          firstGradeNum = firstGrade.substr(0, firstGrade.indexOf('th')).trim();
+        } else {
+          firstGradeNum = firstGrade;
+        }
+        var lastGrade = gradeArr[1].trim();
+        var lastGradeNum = 0;
+        if(lastGrade.indexOf('th') >= 0) {
+          lastGradeNum = lastGrade.substr(0, lastGrade.indexOf('th')).trim();
+        } else {
+          lastGradeNum = lastGrade;
+        }
+        if(firstGradeNum < lastGradeNum) {
+          while(firstGradeNum <= lastGradeNum) {
+            lessonsPerGrade[firstGradeNum+'th'] += 1;
+            firstGradeNum++;
+          }
+        } else {
+          lessonsPerGrade[firstGradeNum+'th'] += 1;
+        }
+      }
+    }
+  }
+  return lessonsPerGrade;
+};
+
 /**
  * Calculate metrics about lessons and units on the system
  */
 exports.getCurriculumMetrics = function(req, res) {
   var curriculumMetrics = {};
 
-  var unitCountQuery = Unit.count({ $or: [ { status: 'published' }, { status: { $exists: false } } ] });
+  var unitCountQuery = Unit.aggregate([
+    //not matching on status exists because some old units in the local db have no status
+    { $group: { _id: '$status', statusCount: { $sum: 1 } } },
+    { $project: { _id: false, status: '$_id', count: '$statusCount' } }
+  ]);
 
-  //TODO: should this count lessons without statuses
-  var lessonCountQuery = Lesson.count({ status: 'published' });
+  var lessonsQuery = Lesson.aggregate([
+    { $match: { status: { $exists: true } } },
+    { $group: { _id: '$status', statusCount: { $sum: 1 } } },
+    { $project: { _id: false, status: '$_id', count: '$statusCount' } }
+  ]);
 
   var savedLessonCountQuery = SavedLesson.count({});
 
@@ -183,10 +238,9 @@ exports.getCurriculumMetrics = function(req, res) {
 
   var glossaryTermsCountQuery = Glossary.count({});
 
-  var lessonApprovalCountQuery = Lesson.aggregate([
-    { $match: { $or: [{ status: 'published' }, { status: 'returned' } ] } },
-    { $group: { _id: '$status', statusCount: { $sum: 1 } } }
-  ]);
+  //can't make a good query to calculate the grades so getting all published lessons
+  //and doing the rest in the controller
+  var lessonsPerGradeQuery = Lesson.find({ status: 'published' });
 
   var lessonsPerUnitQuery = Lesson.aggregate([
      { $match: { status: 'published' } },
@@ -212,8 +266,6 @@ exports.getCurriculumMetrics = function(req, res) {
     { $lookup: { from: 'metasubjectareas', localField: '_id', foreignField: '_id', as: 'subjects' } },
     { $project: { _id: 1, lessonCount: 1, subject: { $arrayElemAt: ['$subjects', 0] } } }
   ]);
-
-//TODO: how do we know if it's a video to get the video average??
 
   var lessonResourcesQuery = Lesson.aggregate([
     { $match: { status: 'published' } },
@@ -246,47 +298,54 @@ exports.getCurriculumMetrics = function(req, res) {
     { $project: { _id: false, unit: '$_id', viewCount: 1 } }
   ]);
 
-//this doesn't do cumulative totals or fill in anything for months
-//where no units/lessons were created - will do this after the query
-  var createdUnitsByMonthQuery = Unit.aggregate([
-    { $sort: { created: -1 } },
-    { $group: { _id: { month: { $month: '$created' }, year: { $year: '$created' } },
-      unitCount: { $sum: 1 } } }
-  ]);
-  var createdLessonsByMonthQuery = Lesson.aggregate([
-    { $sort: { created: -1 } },
-    { $group: { _id: { month: { $month: '$created' }, year: { $year: '$created' } },
-      lessonCount: { $sum: 1 } } }
-  ]);
-
-  unitCountQuery.exec(function(err, unitCount) {
+  unitCountQuery.exec(function(err, unitCounts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      curriculumMetrics.unitCount = unitCount;
-      lessonCountQuery.exec(function(err, lessonCount) {
+      curriculumMetrics.unitCounts = {
+        draft: 0,
+        published: 0
+      };
+      for(var i = 0; i < unitCounts.length; i++) {
+        if(unitCounts[i].status === null) {
+          curriculumMetrics.unitCounts.published += unitCounts[i].count;
+        } else {
+          curriculumMetrics.unitCounts[unitCounts[i].status] += unitCounts[i].count;
+        }
+      }
+      lessonsQuery.exec(function(err, lessonCounts) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          curriculumMetrics.lessonCount = lessonCount;
+          curriculumMetrics.lessonCounts = {
+            draft: 0,
+            returned: 0,
+            pending: 0,
+            published: 0,
+            duplicated: 0,
+            saved: 0
+          };
+          for(var i = 0; i < lessonCounts.length; i++) {
+            curriculumMetrics.lessonCounts[lessonCounts[i].status] = lessonCounts[i].count;
+          }
           savedLessonCountQuery.exec(function(err, savedLessonCount) {
             if (err) {
               return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
               });
             } else {
-              curriculumMetrics.savedLessonCount = savedLessonCount;
+              curriculumMetrics.lessonCounts.saved = savedLessonCount;
               duplicatedLessonCountQuery.exec(function(err, duplicatedLessonCount) {
                 if (err) {
                   return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                   });
                 } else {
-                  curriculumMetrics.duplicatedLessonCount = duplicatedLessonCount;
+                  curriculumMetrics.lessonCounts.duplicated = duplicatedLessonCount;
                   glossaryTermsCountQuery.exec(function(err, glossaryTermsCount) {
                     if (err) {
                       return res.status(400).send({
@@ -294,19 +353,14 @@ exports.getCurriculumMetrics = function(req, res) {
                       });
                     } else {
                       curriculumMetrics.glossaryTermsCount = glossaryTermsCount;
-                      lessonApprovalCountQuery.exec(function(err, lessonApprovalData) {
+                      lessonsPerGradeQuery.exec(function(err, lessonData) {
                         if (err) {
                           return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)
                           });
                         } else {
-                          for(var i = 0; i < lessonApprovalData.length; i++) {
-                            if(lessonApprovalData[i]._id === 'returned') {
-                              curriculumMetrics.lessonsReturnedCount = lessonApprovalData[i].statusCount;
-                            } else if(lessonApprovalData[i]._id === 'published') {
-                              curriculumMetrics.lessonsPublishedCount = lessonApprovalData[i].statusCount;
-                            }
-                          }
+                          //figure out the grade breakdown
+                          curriculumMetrics.lessonsPerGrade = calculateLessonsPerGrade(lessonData);
                           lessonsPerUnitQuery.exec(function(err, lessonsPerUnitData) {
                             if (err) {
                               return res.status(400).send({
@@ -598,4 +652,151 @@ exports.getStationMetrics = function(req, res) {
       });
     }
   });
+};
+
+var calculateMonthTimeIntervals = function(numMonths) {
+  var monthTimeIntervals = [];
+  var prevMonth = moment().subtract(numMonths-1, 'months').startOf('month');
+  var nextMonth = moment().add(1, 'months').startOf('month');
+  while(prevMonth.get('month') !== nextMonth.get('month') ||
+        prevMonth.get('year') !== nextMonth.get('year')) {
+    monthTimeIntervals.push({
+      start: prevMonth.startOf('month').toDate(),
+      end: prevMonth.endOf('month').toDate()
+    });
+    prevMonth = prevMonth.add(1, 'months');
+  }
+  return monthTimeIntervals;
+};
+
+exports.getMonthlyUnitCounts = function(req, res) {
+  var monthTimeIntervals = calculateMonthTimeIntervals(req.query.months ? req.query.months : 12);
+  function queryByTimeInterval(metrics, timeIntervalArray, currIndex) {
+    if(currIndex === timeIntervalArray.length) {
+      res.json(metrics);
+      return;
+    }
+    var unitCountsByTimeInterval = Unit.count({
+      $and: [
+        { created: { $lte: timeIntervalArray[currIndex].end } },
+        { $or: [ { status: 'published' }, { status: { $exists: false } } ] }
+      ]
+    });
+    unitCountsByTimeInterval.exec(function(err, unitCount) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        metrics.push(unitCount);
+        queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
+      }
+    });
+  }
+
+  var metricsResults = [];
+  queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
+};
+
+exports.getMonthlyLessonCounts = function(req, res) {
+  var monthTimeIntervals = calculateMonthTimeIntervals(req.query.months ? req.query.months : 12);
+
+  function queryByTimeInterval(metrics, timeIntervalArray, currIndex) {
+    if(currIndex === timeIntervalArray.length) {
+      res.json(metrics);
+      return;
+    }
+    //TODO: should this count lessons without statuses
+    var lessonCountsByTimeInterval = Lesson.count({
+      $and: [
+        { created: { $lte: timeIntervalArray[currIndex].end } },
+        { status: 'published' }
+      ]
+    });
+    lessonCountsByTimeInterval.exec(function(err, lessonCount) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        metrics.push(lessonCount);
+        queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
+      }
+    });
+  }
+
+  var metricsResults = [];
+  queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
+};
+
+/**
+gets the number of active stations per month for the last N months
+**/
+exports.getMonthlyStationCounts = function(req, res) {
+  var monthTimeIntervals = calculateMonthTimeIntervals(req.query.months ? req.query.months : 12);
+
+  function queryByTimeInterval(metrics, timeIntervalArray, currIndex) {
+    if(currIndex === timeIntervalArray.length) {
+      res.json(metrics);
+      return;
+    }
+    var stationCountsByTimeInterval = RestorationStation.count({
+      $and: [
+        { created: { $lte: timeIntervalArray[currIndex].end } },
+        { status: 'Active' }
+      ]
+    });
+    stationCountsByTimeInterval.exec(function(err, activeStations) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        metrics.push(activeStations);
+        queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
+      }
+    });
+  }
+
+  var metricsResults = [];
+  queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
+};
+
+/**
+gets the number of expeditions that occur each month for the last N months
+**/
+exports.getMonthlyExpeditionCounts = function(req, res) {
+  var monthTimeIntervals = calculateMonthTimeIntervals(req.query.months ? req.query.months : 12);
+
+  function queryByTimeInterval(metrics, timeIntervalArray, currIndex) {
+    if(currIndex === timeIntervalArray.length) {
+      res.json(metrics);
+      return;
+    }
+    var expeditionCountsByTimeInterval = Expedition.count({
+      $or: [
+        { $and: [
+          { monitoringStartDate: { $gte: timeIntervalArray[currIndex].start } },
+          { monitoringStartDate: { $lte: timeIntervalArray[currIndex].end } }
+        ] },
+        { $and: [
+          { monitoringEndDate: { $gte: timeIntervalArray[currIndex].start } },
+          { monitoringEndDate: { $lte: timeIntervalArray[currIndex].end } }
+        ] }
+      ]
+    });
+    expeditionCountsByTimeInterval.exec(function(err, expeditionCount) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        metrics.push(expeditionCount);
+        queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
+      }
+    });
+  }
+
+  var metricsResults = [];
+  queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
 };

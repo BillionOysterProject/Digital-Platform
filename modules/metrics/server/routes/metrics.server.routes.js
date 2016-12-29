@@ -17,6 +17,18 @@ module.exports = function(app) {
   app.route('/api/metrics/curriculum').all(metricsPolicy.isAllowed)
     .get(metrics.getCurriculumMetrics);
 
+  app.route('/api/metrics/curriculum/units/monthlyTotals').all(metricsPolicy.isAllowed)
+    .get(metrics.getMonthlyUnitCounts);
+
+  app.route('/api/metrics/curriculum/lessons/monthlyTotals').all(metricsPolicy.isAllowed)
+    .get(metrics.getMonthlyLessonCounts);
+
   app.route('/api/metrics/stations').all(metricsPolicy.isAllowed)
     .get(metrics.getStationMetrics);
+
+  app.route('/api/metrics/stations/monthlyTotals').all(metricsPolicy.isAllowed)
+    .get(metrics.getMonthlyStationCounts);
+
+  app.route('/api/metrics/expeditions/monthlyTotals').all(metricsPolicy.isAllowed)
+    .get(metrics.getMonthlyExpeditionCounts);
 };
