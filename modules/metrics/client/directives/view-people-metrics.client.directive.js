@@ -7,7 +7,7 @@
       return {
         restrict: 'AE',
         templateUrl: 'modules/metrics/client/views/view-people-metrics.client.view.html',
-        scope: true,
+        scope: 'true',
         controller: 'PeopleMetricsController'
       };
     });

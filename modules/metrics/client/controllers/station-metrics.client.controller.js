@@ -66,7 +66,7 @@
     var nextMonth = moment().add(1, 'months').get('month');
     while(labelMonthDate.get('month') !== nextMonth) {
       $scope.monthHistoryLabels.push(labelMonthDate.format('MMMM'));
-      labelMonthDate = labelMonthDate.add(1, 'months');
+      labelMonthDate.add(1, 'months');
     }
 
     $scope.stationStatusPieLabels = ['Lost Stations', 'Active Stations'];

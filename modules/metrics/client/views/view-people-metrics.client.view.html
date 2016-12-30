@@ -23,18 +23,6 @@
                   </div>
               </div>
           </div>
-          <!--
-          TODO: We aren't tracking how the roles change over time.
-          We just have the current state of roles in the system so I couldn't go
-          back and say how many people had some role at a given point in the past.
-          <div class="col-md-4">
-              <h4>Timeline</h4>
-              <canvas id="line" class="chart chart-line" chart-data="vm.data"
-                  chart-labels="vm.labels" chart-legend="true" chart-series="vm.series"
-                  chart-click="vm.onClick()" >
-              </canvas>
-          </div>
-          -->
           <div class="col-md-4">
               <h4>Roles</h4>
               <canvas id="pie" class="chart chart-pie" chart-data="rolesPieData"
@@ -54,23 +42,28 @@
                   <ul class="nav navbar-nav">
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              {{monthHistoryLabels[monthHistoryLabels.length-1]}} <span class="caret"></span>
+                              {{monthHistoryLabelsReversed[monthHistoryLabelsReversed.indexOf(userActivityFilter.month)].name}} <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
                              <li ng-repeat="month in monthHistoryLabelsReversed">
-                               <a>{{month}}</a>
+                               <a ng-click="userActivityMonthSelected(month)">
+                                 {{month.name}}
+                               </a>
                              </li>
                           </ul>
                       </li>
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              Team Leads <span class="caret"></span>
+                              {{userRoleOptions[userRoleOptions.indexOf(userActivityFilter.userRole)].name}} <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                             <li><a>Team Leads</a></li>
-                             <li><a>Team Members</a></li>
-                             <li><a>Admin</a></li>
+                            <li ng-repeat="role in userRoleOptions">
+                              <a ok-sel=".{{role.value}}" ng-click="userActivityRoleSelected(role)">
+                                  {{role.name}}
+                              </a>
+                            </li>
                           </ul>
+
                       </li>
                   </ul>
               </nav>
@@ -78,35 +71,21 @@
                   <tr>
                       <th></th>
                       <th>Name</th>
-                      <th>Team(s)</th>
-                      <th>Members</th>
-                      <th>Organization</th>
+                      <th ng-hide="isAdminSelected()">Team(s)</th>
+                      <th ng-hide="isAdminSelected()">Members</th>
+                      <th ng-hide="isAdminSelected()">Organization</th>
                   </tr>
                   <tr ng-repeat="activeUserItem in userActivityData | orderBy: '-loginCount'">
                       <td><h3 class="red">{{activeUserItem.loginCount}}</h3> <small class="text-muted">logins</small></td>
                       <td>{{activeUserItem.user.displayName}}</td>
-                      <td>Team 1, Team 2, Team 3</td>
-                      <td><b>68</b></td>
-                      <td>{{activeUserItem.schoolOrg.name}}</td>
+                      <td ng-hide="isAdminSelected()"><span ng-repeat="team in activeUserItem.teams">{{team.name}}{{$last ? '' : ', '}}</span></td>
+                      <td ng-hide="isAdminSelected()"><b>{{calculateTotalTeamMembers(activeUserItem)}}</b></td>
+                      <td ng-hide="isAdminSelected()">{{activeUserItem.schoolOrg.name}}</td>
                   </tr>
               </table>
           </div>
           <div class="col-md-6">
-              <nav class="navbar">
-                  <h4 class="navbar-text">Largest Teams</h4>
-                  <ul class="nav navbar-nav">
-                      <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              {{monthHistoryLabels[monthHistoryLabels.length-1]}}  <span class="caret"></span>
-                          </a>
-                          <ul class="dropdown-menu">
-                            <li ng-repeat="month in monthHistoryLabelsReversed">
-                              <a>{{month}}</a>
-                            </li>
-                          </ul>
-                      </li>
-                  </ul>
-              </nav>
+              <h4 class="navbar-text">Largest Teams</h4>
               <table class="table">
                   <tr>
                       <th></th>
@@ -114,29 +93,11 @@
                       <th>Team Lead</th>
                       <th>Organization</th>
                   </tr>
-                  <tr>
-                      <td><h3 class="red">125</h3> <small class="text-muted">team members</small></td>
-                      <td>Team 2</td>
-                      <td>Bob Smith</td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">115</h3> <small class="text-muted">team members</small></td>
-                      <td>Team 3</td>
-                      <td>Jane Doe</td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">113</h3> <small class="text-muted">team members</small></td>
-                      <td>Team 1</td>
-                      <td>Bob Smith</td>
-                      <td>NYC Public Schools</td>
-                  </tr>
-                  <tr>
-                      <td><h3 class="red">108</h3> <small class="text-muted">team members</small></td>
-                      <td>Team 4</td>
-                      <td>Jane Doe</td>
-                      <td>NYC Public Schools</td>
+                  <tr ng-repeat="teamItem in metrics.largestTeams | orderBy: '-teamMemberCount'">
+                      <td><h3 class="red">{{teamItem.teamMemberCount}}</h3> <small class="text-muted">team members</small></td>
+                      <td>{{teamItem.name}}</td>
+                      <td>{{teamItem.teamLead.displayName}}</td>
+                      <td>{{teamItem.schoolOrg.name}}</td>
                   </tr>
               </table>
           </div>

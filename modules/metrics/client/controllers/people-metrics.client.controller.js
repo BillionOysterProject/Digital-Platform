@@ -26,26 +26,71 @@
 
     $scope.getMostActiveUsers = function() {
       MetricsUserActivityService.query({
-        //TODO: add startDate and endDate wire up select box
-      }, function(data) {
+        startDate: $scope.userActivityFilter.month.start,
+        endDate: $scope.userActivityFilter.month.end,
+        userRole: $scope.userActivityFilter.userRole.value
+      },
+      function(data) {
         $scope.userActivityData = data;
       });
     };
 
+    $scope.calculateTotalTeamMembers = function(activeUserItem) {
+      var total = 0;
+      if(activeUserItem.teams !== null && activeUserItem.teams !== undefined) {
+        for(var i = 0; i < activeUserItem.teams.length; i++) {
+          total += activeUserItem.teams[i].teamMembers.length;
+        }
+      }
+      return total;
+    };
+
+    $scope.userActivityRoleSelected = function(roleObj) {
+      $scope.userActivityFilter.userRole = roleObj;
+      $scope.getMostActiveUsers();
+    };
+
+    $scope.userActivityMonthSelected = function(monthObj) {
+      $scope.userActivityFilter.month = monthObj;
+      $scope.getMostActiveUsers();
+    };
+
+    $scope.isAdminSelected = function() {
+        return $scope.userActivityFilter.userRole.value === 'admin';
+    };
+
+    var calculateMonthTimeIntervals = function(numMonths) {
+      var monthTimeIntervals = [];
+      var prevMonth = moment().subtract(numMonths-1, 'months').startOf('month');
+      var nextMonth = moment().add(1, 'months').startOf('month');
+      while(prevMonth.get('month') !== nextMonth.get('month') ||
+            prevMonth.get('year') !== nextMonth.get('year')) {
+        monthTimeIntervals.push({
+          start: moment(prevMonth).startOf('month').toDate(),
+          end: moment(prevMonth).endOf('month').toDate(),
+          name: prevMonth.format('MMMM')
+        });
+        prevMonth.add(1, 'months');
+      }
+      return monthTimeIntervals;
+    };
+
     //month labels on timeline line charts are
     //a rolling window of the previous 7 months + current month
-    $scope.monthHistoryLabels = [];
-    var labelMonthDate = moment().subtract(7, 'months');
-    var nextMonth = moment().add(1, 'months').get('month');
-    while(labelMonthDate.get('month') !== nextMonth) {
-      $scope.monthHistoryLabels.push(labelMonthDate.format('MMMM'));
-      labelMonthDate = labelMonthDate.add(1, 'months');
-    }
-
+    $scope.monthHistoryLabels = calculateMonthTimeIntervals(8);
     //create a new array reverse order of the months array for dropdowns
     //so the most recent month shows up at the top of the dropdown
     $scope.monthHistoryLabelsReversed = $scope.monthHistoryLabels.slice().reverse();
 
+    $scope.userRoleOptions = [
+      { name: 'Team Leads', value: 'team lead' },
+      { name: 'Team Members', value: 'team member' },
+      { name: 'Admin', value: 'admin' }
+    ];
+    $scope.userActivityFilter = {
+      month: $scope.monthHistoryLabelsReversed[0],
+      userRole: $scope.userRoleOptions[0]
+    };
     $scope.rolesPielabels = ['Team Members', 'Team Leads', 'Admin'];
     $scope.getPeopleMetrics();
     $scope.getMostActiveUsers();
