@@ -87,15 +87,15 @@
                 <div class="row">
                     <div class="col-xs-4">
                         <h1 class="red">{{ metrics.lessonResources.suppliesAverage.toFixed(1) }} <i class="glyphicon glyphicon-scissors gray"></i></h1>
-                        <h6># of Supplies</h6>
+                        <h6>Supplies</h6>
                     </div>
                     <div class="col-xs-4">
                         <h1 class="red">{{ metrics.lessonResources.teacherResourcesLinksAverage.toFixed(1) }} <i class="glyphicon glyphicon-link gray"></i></h1>
-                        <h6># of Teacher Resource Links</h6>
+                        <h6>Resources</h6>
                     </div>
                     <div class="col-xs-4">
                         <h1 class="red">{{ metrics.lessonResources.handoutsAverage.toFixed(1) }} <i class="glyphicon glyphicon-file gray"></i></h1>
-                        <h6># of Handouts</h6>
+                        <h6>Handouts</h6>
                     </div>
                 </div>
             </div>
@@ -103,8 +103,8 @@
                 <h4>Most Viewed Lessons</h4>
                 <table class="table">
                     <tr ng-repeat="lessonViewItem in metrics.lessonViewData | orderBy: '-viewCount'">
-                        <td><h3 class="red">{{lessonViewItem.viewCount}}</h3> <small class="text-muted">views</small></td>
-                        <td><p>{{lessonViewItem.lesson.title}}</p></td>
+                        <td><p><b>{{lessonViewItem.lesson.title}}</b></p></td>
+                        <td><p class="text-muted"><b class="red">{{lessonViewItem.viewCount}}</b> views</p></td>
                         <td><h6>{{lessonViewItem.unit.title}}</h6></td>
                     </tr>
                 </table>
@@ -113,8 +113,8 @@
                 <h4>Most Viewed Units</h4>
                 <table class="table">
                     <tr ng-repeat="unitViewItem in metrics.unitViewData | orderBy: '-viewCount'">
-                        <td><h3 class="red">{{unitViewItem.viewCount}}</h3> <small class="text-muted">views</small></td>
-                        <td><p>{{unitViewItem.unit.title}}</p></td>
+                        <td><p><b>{{unitViewItem.unit.title}}</b></p></td>
+                        <td><p class="text-muted"><b class="red">{{unitViewItem.viewCount}}</b> views</p></td>
                     </tr>
                 </table>
             </div>

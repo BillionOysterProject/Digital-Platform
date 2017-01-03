@@ -56,7 +56,7 @@
     };
 
     $scope.isAdminSelected = function() {
-        return $scope.userActivityFilter.userRole.value === 'admin';
+      return $scope.userActivityFilter.userRole.value === 'admin';
     };
 
     var calculateMonthTimeIntervals = function(numMonths) {

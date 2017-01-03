@@ -14,13 +14,23 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <h3 class="red">{{metrics.stationCounts.active}}</h3>
+                        <h3 class="red">{{metrics.stationCounts.active}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
                         <h6>Active Stations</h6>
                     </div>
                     <div class="col-xs-6">
-                        <h3 class="red">{{metrics.stationCounts.lost}}</h3>
-                        <h6>Lost Stations</h6>
+                        <h3 class="red">{{metrics.stationCounts.lost}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
+                        <h6>Lost or Destroyed Stations</h6>
                     </div>
+                    <!-- Needs wired up as soon as we add these status options: (switch above columns to col-xs-3)
+                    <div class="col-xs-3">
+                        <h3 class="red">{{metrics.stationCounts.damaged}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
+                        <h6>Damaged</h6>
+                    </div>
+                    <div class="col-xs-3">
+                        <h3 class="red">{{metrics.stationCounts.unknown}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
+                        <h6>Unknown</h6>
+                    </div>
+                    -->
                 </div>
             </div>
             <div class="col-md-4">
@@ -43,11 +53,11 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <h4>Top Stations for Expeditions</h4>
+                <h4>Top Stations visited by Expeditions</h4>
                 <table class="table">
                     <tr ng-repeat="visitData in metrics.stationVisitCounts | orderBy: '-expeditionCount'">
-                        <td><h3 class="red">{{visitData.expeditionCount}}</h3> <small class="text-muted">expeditions</small></td>
-                        <td>{{visitData.station.name}}</td>
+                        <td><p><i class="glyphicon glyphicon-map-marker"></i> <b>{{visitData.station.name}}</b></p></td>
+                        <td><p class="text-muted"><b class="red">{{visitData.expeditionCount}}</b> expeditions</p></td>
                         <td><h6>{{visitData.station.latitude.toFixed(4)}}, {{visitData.station.longitude.toFixed(4)}}</h6></td>
                     </tr>
                 </table>
