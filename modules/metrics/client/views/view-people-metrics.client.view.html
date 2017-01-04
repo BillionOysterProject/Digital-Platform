@@ -69,15 +69,15 @@
               </nav>
               <table class="table">
                   <tr>
-                      <th></th>
                       <th>Name</th>
+                      <th>Logins</th>
                       <th ng-hide="isAdminSelected()">Team(s)</th>
                       <th ng-hide="isAdminSelected()">Members</th>
                       <th ng-hide="isAdminSelected()">Organization</th>
                   </tr>
                   <tr ng-repeat="activeUserItem in userActivityData | orderBy: '-loginCount'">
-                      <td><h3 class="red">{{activeUserItem.loginCount}}</h3> <small class="text-muted">logins</small></td>
-                      <td>{{activeUserItem.user.displayName}}</td>
+                      <td><b>{{activeUserItem.user.displayName}}</b></td>
+                      <td><p class="text-muted"><b class="red">{{activeUserItem.loginCount}}</b> logins</p></td>
                       <td ng-hide="isAdminSelected()"><span ng-repeat="team in activeUserItem.teams">{{team.name}}{{$last ? '' : ', '}}</span></td>
                       <td ng-hide="isAdminSelected()"><b>{{calculateTotalTeamMembers(activeUserItem)}}</b></td>
                       <td ng-hide="isAdminSelected()">{{activeUserItem.schoolOrg.name}}</td>
@@ -91,14 +91,14 @@
                 lazy-load="true" filename="largest-teams.csv">Download</button>
               <table class="table">
                   <tr>
-                      <th></th>
                       <th>Team Name</th>
+                      <th>Members</th>
                       <th>Team Lead</th>
                       <th>Organization</th>
                   </tr>
                   <tr ng-repeat="teamItem in metrics.largestTeams | orderBy: '-teamMemberCount' | limitTo:5">
-                      <td><h3 class="red">{{teamItem.teamMemberCount}}</h3> <small class="text-muted">team members</small></td>
-                      <td>{{teamItem.name}}</td>
+                      <td><b>{{teamItem.name}}</b></td>
+                      <td><p class="text-muted"><b class="red">{{teamItem.teamMemberCount}}</b> team members</p></td>
                       <td>{{teamItem.teamLead.displayName}}</td>
                       <td>{{teamItem.schoolOrg.name}}</td>
                   </tr>
