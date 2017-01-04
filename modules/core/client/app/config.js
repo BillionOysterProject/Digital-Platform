@@ -24,7 +24,9 @@ var ApplicationConfiguration = (function () {
     'ngLodash',
     'colorpicker.module',
     'angularMoment',
-    'mwl.calendar'];
+    'mwl.calendar',
+    'ngSanitize',
+    'ngCsv'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

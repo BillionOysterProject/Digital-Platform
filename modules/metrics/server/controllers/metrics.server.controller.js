@@ -77,10 +77,10 @@ exports.getPeopleMetrics = function(req, res) {
   var largestTeamsQuery = Team.aggregate([
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
     { $sort: { teamMemberCount: -1 } },
-    { $limit: 5 },
+    //{ $limit: 5 }, -- limit in the UI so we have all the data available for CSV download
     { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
     { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
-    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
+    { $lookup: { from: 'usewrs', localField: 'teamLead', foreignField: '_id', as: 'users' } },
     { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
   ]);
 

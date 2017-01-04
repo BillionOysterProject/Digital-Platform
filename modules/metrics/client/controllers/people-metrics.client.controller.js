@@ -59,6 +59,27 @@
       return $scope.userActivityFilter.userRole.value === 'admin';
     };
 
+    $scope.downloadLargestTeams = function() {
+      var result = [];
+      if($scope.metrics !== null && $scope.metrics !== undefined &&
+        $scope.metrics.largestTeams !== null && $scope.metrics.largestTeams !== undefined) {
+        for(var i = 0; i < $scope.metrics.largestTeams.length; i++) {
+          var currTeam = $scope.metrics.largestTeams[i];
+          var csvObj = {
+            teamName: currTeam.name,
+            teamMemberCount: currTeam.teamMemberCount,
+            org: (currTeam.schoolOrg !== undefined ? currTeam.schoolOrg.name : 'Unknown Org')
+          };
+          result.push(csvObj);
+        }
+      }
+      return result;
+    };
+
+    $scope.getLargestTeamsCsvHeader = function() {
+      return ['Team Name', 'Size', 'Org'];
+    };
+
     var calculateMonthTimeIntervals = function(numMonths) {
       var monthTimeIntervals = [];
       var prevMonth = moment().subtract(numMonths-1, 'months').startOf('month');
