@@ -555,7 +555,7 @@ exports.getStationMetrics = function(req, res) {
     { $group: { _id: '$status', count: { $sum: 1 } } }
   ]);
   var expeditionsCompleteQuery = Expedition.aggregate([
-    { $match: { status: 'published' } },
+    //{ $match: { status: 'published' } }, -- supposed to include all statuses
     { $group: { _id: { $gt: [ '$monitoringStartDate', new Date()] }, count: { $sum: 1 } } },
     { $project: { _id: false, future: '$_id', count: 1 } }
   ]);
