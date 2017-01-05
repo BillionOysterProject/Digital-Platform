@@ -21,7 +21,7 @@
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" ng-click="vm.openTeamProfileForm()">
+            <a class="btn btn-default pull-right" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openTeamProfileForm()">
               <i class="glyphicon glyphicon-plus"></i> Create new team</a>
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
@@ -64,7 +64,7 @@
                     <div class="panel-footer text-muted">
                         <ul class="list-inline text-center">
                             <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
-                            <li><i class="fa fa-flask"></i> <b>{{team.orsCount}}</b> expeditions</li>
+                            <li><i class="fa fa-flag"></i> <b>{{team.orsCount}}</b> expeditions</li>
                         </ul>
                     </div>
                 </div>

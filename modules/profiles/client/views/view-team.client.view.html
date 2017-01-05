@@ -4,7 +4,9 @@
             <div class="col-lg-3 col-md-6" ng-show="vm.teamPhotoURL">
                 <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
             </div>
-            <div class="col-lg-3 col-md-6" ng-hide="vm.teamPhotoURL"></div>
+            <div class="col-lg-3 col-md-6" ng-hide="vm.teamPhotoURL">
+                <div class="well text-center"><i class="fa fa-5x fa-users gray"></i></div>
+            </div>
             <div class="col-lg-3 col-md-6">
                 <h2>{{vm.team.name}}</h2>
                 <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
@@ -29,7 +31,7 @@
                     </div>
                     <div class="col-sm-4" ng-hide="vm.team.teamLeads && vm.team.teamLeads.length > 0"></div>
                     <div class="col-sm-4" ng-show="vm.expeditions && vm.expeditions.length > 0">
-                        <h6><i class="fa fa-flask"></i> Published Expeditions</h6>
+                        <h6><i class="fa fa-flag"></i> Published Expeditions</h6>
                         <ul class="list-unstyled">
                             <li ng-repeat="expedition in vm.expeditions">
                               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
