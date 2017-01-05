@@ -10,7 +10,8 @@
         scope: {
           user: '=',
           deleteFunction: '=',
-          cancelFunction: '='
+          cancelFunction: '=',
+          canBeDeletedFunction: '='
         },
         replace: true,
         link: function(scope, element, attrs) {

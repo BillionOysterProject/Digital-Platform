@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal-delete-admin-team-lead" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" ng-show="!user.teams || user.teams.length === 0">
+        <div class="modal-content" ng-show="canBeDeletedFunction(user)">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Are you sure you want to delete <span class="red">{{user.displayName}}</span>?</h4>
@@ -17,10 +17,10 @@
                 <button type="button" class="btn btn-danger" ng-click="deleteFunction(teamMember)">Delete</button>
             </div>
         </div>
-        <div class="modal-content" ng-show="user.teams && user.teams.length > 0">
+        <div class="modal-content" ng-show="!canBeDeletedFunction(user)">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><span class="red">{{user.name}}</span> cannot be deleted</h4>
+                <h4 class="modal-title"><span class="red">{{user.displayName}}</span> cannot be deleted</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
