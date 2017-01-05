@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'Admin', 'SchoolOrganizationsService',
-  function ($scope, $filter, Admin, SchoolOrganizationsService) {
+angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'lodash',
+'Admin', 'SchoolOrganizationsService',
+  function ($scope, $filter, lodash,
+    Admin, SchoolOrganizationsService) {
     $scope.filter = {
       organizationId: '',
       role: '',
@@ -164,6 +166,34 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     $scope.closeAdminTeam = function(team) {
       $scope.team = {};
       angular.element('#modal-admin-team').modal('hide');
+    };
+
+    $scope.canBeDeleted = function(user) {
+      if(user === undefined || user === null) { return false; }
+      if($scope.hasRole(user, 'team lead') ||
+        $scope.hasRole(user, 'admin') ||
+        $scope.hasRole(user, 'team lead pending')) {
+
+        //if the user has one of the above roles AND is associated with a team
+        //that has a nonzero list of members, they should not be able to be deleted
+        if(user.teams !== undefined && user.teams !== null && user.teams.length > 0) {
+          for(var i = 0; i < user.teams.length; i++) {
+            var team = user.teams[i];
+            if(team.teamMembers !== null && team.teamMembers !== undefined && team.teamMembers.length > 0) {
+              return false;
+            }
+          }
+        }
+      }
+      //team members and anyone else who isn't associated with teams can be deleted
+      return true;
+    };
+
+    $scope.hasRole = function(user, role) {
+      var index = lodash.findIndex(user.roles, function(r) {
+        return r === role;
+      });
+      return (index > -1) ? true : false;
     };
   }
 ]);
