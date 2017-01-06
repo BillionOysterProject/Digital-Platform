@@ -22,12 +22,14 @@ var path = require('path'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  archiver = require('archiver'),
   _ = require('lodash'),
   request = require('request'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
   moment = require('moment'),
-  lodash = require('lodash');
+  lodash = require('lodash'),
+  json2csv = require('json2csv');
 
 /**
  * Calculate metrics related to people using the system
@@ -77,10 +79,10 @@ exports.getPeopleMetrics = function(req, res) {
   var largestTeamsQuery = Team.aggregate([
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
     { $sort: { teamMemberCount: -1 } },
-    //{ $limit: 5 }, -- limit in the UI so we have all the data available for CSV download
+    { $limit: 5 },
     { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
     { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
-    { $lookup: { from: 'usewrs', localField: 'teamLead', foreignField: '_id', as: 'users' } },
+    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
     { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
   ]);
 
@@ -842,4 +844,227 @@ exports.getMonthlyExpeditionCounts = function(req, res) {
 
   var metricsResults = [];
   queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
+};
+
+exports.downloadZip = function(req, res) {
+  var archive = archiver('zip');
+
+  var lessonDocxFilepath = '';
+
+  archive.on('error', function(err) {
+    return res.status(500).send({
+      message: err.message
+    });
+  });
+
+  //on stream closed we can end the request
+  archive.on('end', function() {
+    if (lessonDocxFilepath && lessonDocxFilepath !== '') {
+      fs.exists(lessonDocxFilepath, function(exists) {
+        if (exists) {
+          fs.unlink(lessonDocxFilepath);
+        }
+      });
+    }
+    console.log('Archive wrote %d bytes', archive.pointer());
+  });
+
+  //set the archive name
+  res.attachment('metrics.zip');
+  res.setHeader('Content-Type', 'application/zip, application/octet-stream');
+
+  //this is the streaming magic
+  archive.pipe(res);
+
+  var __dirname = path.resolve('./modules/metrics/server');
+
+  //TODO: change teamLead to teamLeads when new user profile
+  //stuff is integrated
+  var teamSizesQuery = Team.aggregate([
+    { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
+    { $sort: { teamMemberCount: -1 } },
+    { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+    { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
+    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
+    { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
+  ]);
+
+  var userLoginReportQuery = UserActivity.aggregate([
+    { $group: { _id: { user: '$user', activity: '$activity' }, loginCount: { $sum: 1 } } },
+    { $lookup: { from: 'users', localField: '_id.user', foreignField: '_id', as: 'users' } },
+    { $project: { _id: false, user: { $arrayElemAt: ['$users', 0] }, loginCount: 1 } },
+    { $sort: { loginCount: -1 } },
+    { $lookup: { from: 'schoolorgs', localField: 'user.schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+    { $project: { _id: false, loginCount: 1, user: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } }
+  ]);
+
+  var lessonViewsQuery = LessonActivity.aggregate([{ $match: { activity: 'viewed' } },
+    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
+    { $project: { _id: '$_id', created: 1, lesson: { $arrayElemAt: ['$lesson', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
+    { $project: { _id: 1, created: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+    { $sort: { created: -1 } }
+  ]);
+
+  var lessonDownloadsQuery = LessonActivity.aggregate([{ $match: { activity: 'downloaded' } },
+    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
+    { $project: { _id: '$_id', created: 1, lesson: { $arrayElemAt: ['$lesson', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
+    { $project: { _id: 1, created: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+    { $sort: { created: -1 } }
+  ]);
+
+  var stationExpeditionsQuery = Expedition.aggregate([
+    { $lookup: { from: 'restorationstations', localField: 'station', foreignField: '_id', as: 'stations' } },
+    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'teamLeads' } },
+    { $lookup: { from: 'teams', localField: 'team', foreignField: '_id', as: 'teams' } },
+    { $project: { _id: 1, name: 1, monitoringStartDate: 1, monitoringEndDate: 1,
+        teamLead: { $arrayElemAt: ['$teamLeads', 0] },
+        team: { $arrayElemAt: ['$teams', 0] },
+        station: { $arrayElemAt: ['$stations', 0] }
+    } },
+    { $sort: { monitoringStartDate: 1 } }
+  ]);
+
+  teamSizesQuery.exec(function(err, teamSizeData) {
+    if (!err) {
+      var csvFields = [
+        {
+          label: "Team Name",
+          value: "name",
+          default: "Unknown Team Name"
+        }, {
+          label: "Member Count",
+          value: "teamMemberCount",
+          default: "-1"
+        }, {
+          label: "Organization",
+          value: "schoolOrg.name",
+          default: "Unknown Organization Name"
+        }
+      ];
+      var teamSizeCsvData = json2csv({ data: teamSizeData, fields: csvFields });
+      var teamSizeFile = path.join(__dirname, 'team-sizes.csv');
+      fs.writeFileSync(teamSizeFile, teamSizeCsvData);
+      archive.file(teamSizeFile, { name: 'team-sizes.csv' });
+    }
+
+    userLoginReportQuery.exec(function(err, userLoginData) {
+      if(!err) {
+        var csvFields = [
+          {
+            label: "Username",
+            value: "user.username",
+            default: "Unknown Username"
+          }, {
+            label: "User Display Name",
+            value: "user.displayName",
+            default: ""
+          }, {
+            label: "User Email",
+            value: "user.email",
+            default: ""
+          },{
+            label: "Number of Logins",
+            value: "loginCount",
+            default: "none"
+          }
+        ];
+        var userLoginsCsvData = json2csv({ data: userLoginData, fields: csvFields });
+        var userLoginsFile = path.join(__dirname, 'user-logins.csv');
+        fs.writeFileSync(userLoginsFile, userLoginsCsvData);
+        archive.file(userLoginsFile, { name: 'user-logins.csv' });
+      }
+      lessonViewsQuery.exec(function(err, lessonViewsData) {
+        if(!err) {
+          var csvFields = [
+            {
+              label: "Lesson",
+              value: "lesson.title",
+              default: "Unknown Lesson"
+            }, {
+              label: "Unit",
+              value: "unit.title",
+              default: "Unknown Unit"
+            },{
+              label: "Viewed",
+              value: function(row, field, data) {
+                return moment(row.created).format('YYYY-MM-DD HH:mm');
+              },
+              default: ""
+            }
+          ];
+          var lessonViewsCsvData = json2csv({ data: lessonViewsData, fields: csvFields });
+          var lessonViewsFile = path.join(__dirname, 'lesson-views.csv');
+          fs.writeFileSync(lessonViewsFile, lessonViewsCsvData);
+          archive.file(lessonViewsFile, { name: 'lesson-views.csv' });
+        }
+        lessonDownloadsQuery.exec(function(err, lessonDownloadData) {
+          if(!err) {
+            var csvFields = [
+              {
+                label: "Lesson",
+                value: "lesson.title",
+                default: "Unknown Lesson"
+              }, {
+                label: "Unit",
+                value: "unit.title",
+                default: "Unknown Unit"
+              },{
+                label: "Downloaded",
+                value: function(row, field, data) {
+                  return moment(row.created).format('YYYY-MM-DD HH:mm');
+                },
+                default: ""
+              }
+            ];
+            var lessonDownloadsCsvData = json2csv({ data: lessonDownloadData, fields: csvFields });
+            var lessonDownloadFile = path.join(__dirname, 'lesson-downloads.csv');
+            fs.writeFileSync(lessonDownloadFile, lessonDownloadsCsvData);
+            archive.file(lessonDownloadFile, { name: 'lesson-downloads.csv' });
+          }
+          stationExpeditionsQuery.exec(function(err, stationExpeditionsData) {
+            if(!err) {
+              var csvFields = [
+                {
+                  label: "Station",
+                  value: "station.name",
+                  default: "Unknown Station"
+                },{
+                  label: "Expedition",
+                  value: "name",
+                  default: ""
+                },{
+                  label: "Team",
+                  value: "team.name",
+                  default: ""
+                },{
+                  label: "Team Lead",
+                  value: "teamLead.displayName",
+                  default: ""
+                },{
+                  label: "Start Date",
+                  value: function(row, field, data) {
+                    return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
+                  },
+                  default: ""
+                },{
+                  label: "End Date",
+                  value: function(row, field, data) {
+                    return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
+                  },
+                  default: ""
+                }
+              ];
+              var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });
+              var stationExpeditionsFile = path.join(__dirname, 'station-expeditions.csv');
+              fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
+              archive.file(stationExpeditionsFile, { name: 'station-expeditions.csv' });
+            }
+            archive.finalize();
+          });
+        });
+      });
+    });
+  });
 };

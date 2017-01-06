@@ -56,9 +56,7 @@ module.exports = {
         'public/lib/angular-moment/angular-moment.min.js',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
         'public/lib/angular-isotope/dist/angular-isotope.js',
-        'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js',
-        'public/lib/angular-sanitize/angular-sanitize.js',
-        'public/lib/ng-csv/build/ng-csv.js'
+        'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

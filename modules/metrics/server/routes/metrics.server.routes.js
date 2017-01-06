@@ -8,6 +8,9 @@ var metricsPolicy = require('../policies/metrics.server.policy'),
 
 module.exports = function(app) {
   // Metrics Routes
+  app.route('/api/metrics/download').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadZip);
+
   app.route('/api/metrics/people').all(metricsPolicy.isAllowed)
     .get(metrics.getPeopleMetrics);
 
