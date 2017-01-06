@@ -15,9 +15,6 @@
                     </div>
                     <!-- <div class="col-md-3 text-muted">
                         <h6><span class="red">2</span> Expeditions</h6>
-                    </div>
-                    <div class="col-md-3 text-muted">
-                        <h6><span class="red">10</span> ORS</h6>
                     </div> -->
                 </div>
             </div>
@@ -30,14 +27,8 @@
                                 <td><b>{{member.displayName}}</b></td>
                                 <td class="text-muted">{{member.username}}</td>
                                 <td class="text-muted">{{member.email}}</td>
-                                <!-- <td class="text-right">
-                                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-team-lead-editadd">
-                                      <i class="glyphicon glyphicon-edit"></i>
-                                    </a>
-                                    <a class="btn btn-danger" data-toggle="modal" data-target="#modal-user-delete">
-                                      <i class="glyphicon glyphicon-trash"></i>
-                                    </a>
-                                </td> -->
+                                <!-- TODO: Wire up delete button for each member (can open modal on top of modal if that's easiest). First popup "are you sure" modal
+                                <td class="text-right"><a class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a></td> -->
                             </tr>
                         </table>
 
@@ -46,6 +37,8 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <!--TODO: Wire up delete team button (show modal "are you sure" if empty -OR- modal "can't delete" if team still has members)
+                <button type="button" class="btn btn-danger">Delete team</button>-->
                 <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
             </div>
         </div>
