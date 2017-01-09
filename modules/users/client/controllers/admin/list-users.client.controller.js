@@ -153,9 +153,11 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       teamMemberToDelete.$remove(function(obj) {
         //reload user list since the user may be deleted
         $scope.findUsers();
-        //relead the team list so the members list refreshes
-        $scope.team = TeamsService.get({
+        //reload the team list so the members list refreshes
+        TeamsService.get({
           teamId: team._id
+        }, function(team) {
+          $scope.team = team;
         });
       }, function(err) {
         $scope.deleteTeamMemberError = err.data.message;
