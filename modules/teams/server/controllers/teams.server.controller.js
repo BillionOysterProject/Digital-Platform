@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
+  Expedition = mongoose.model('Expedition'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -76,12 +77,7 @@ exports.update = function (req, res) {
   }
 };
 
-/**
- * Delete a team
- */
-exports.delete = function (req, res) {
-  var team = req.team;
-
+var deleteTeamInternal = function(team, res) {
   team.remove(function (err) {
     if (err) {
       return res.status(400).send({
@@ -89,6 +85,38 @@ exports.delete = function (req, res) {
       });
     } else {
       res.json(team);
+    }
+  });
+};
+
+/**
+ * Delete a team
+ */
+exports.delete = function (req, res) {
+  var team = req.team;
+
+  if(team.teamMembers !== undefined && team.teamMembers !== null &&
+    team.teamMembers.length > 0) {
+    return res.status(400).send({
+      message: 'The team ' + team.name + ' cannot be deleted because it still has members.'
+    });  
+  }
+
+  //does the team have expeditions? if so don't let it be deleted
+  Expedition.find({ 'team': team._id }).exec(function(err, expeditions) {
+    if (err) {
+      return res.status(400).send({
+        message: 'Could not find expeditions associated with team ' + team.name +
+          '. Error is: ' + errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if(expeditions !== null && expeditions !== undefined && expeditions.length > 0) {
+        return res.status(400).send({
+          message: 'Team ' + team.name + ' cannot be deleted because there are expeditions associated with it.'
+        });
+      } else {
+        deleteTeamInternal(team, res);
+      }
     }
   });
 };
@@ -191,7 +219,7 @@ exports.listMembers = function (req, res) {
         var searchRe;
         var or = [];
         if (req.query.searchString) {
-          
+
           try {
             searchRe = new RegExp(req.query.searchString, 'i');
           } catch(e) {

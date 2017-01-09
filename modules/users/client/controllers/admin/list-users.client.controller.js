@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'lodash',
-'Admin', 'SchoolOrganizationsService',
+'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService',
   function ($scope, $filter, lodash,
-    Admin, SchoolOrganizationsService) {
+    Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService) {
     $scope.filter = {
       organizationId: '',
       role: '',
@@ -28,6 +28,7 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.findUsers = function() {
+      $scope.isSearchingUsers = true;
       Admin.query({
         organizationId: $scope.filter.organizationId,
         role: $scope.filter.role,
@@ -41,8 +42,10 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.error = null;
         $scope.buildPager();
         $scope.findLeadRequests();
+        $scope.isSearchingUsers = false;
       }, function(error) {
         $scope.error = error.data.message;
+        $scope.isSearchingUsers = false;
       });
     };
     $scope.findUsers();
@@ -105,23 +108,70 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       angular.element('#modal-admin-team-lead-editadd').modal('hide');
     };
 
-    $scope.openDeleteAdminTeamLead = function(user) {
+    $scope.openDeleteUser = function(user) {
       $scope.userToDelete = (user) ? new Admin(user) : new Admin();
-      angular.element('#modal-delete-admin-team-lead').modal('show');
+      angular.element('#modal-delete-user').modal('show');
     };
 
-    $scope.deleteAdminTeamLead = function() {
+    $scope.deleteUser = function() {
       $scope.userToDelete.$remove(function() {
         $scope.findUsers();
       });
 
       $scope.userToDelete = {};
-      angular.element('#modal-delete-admin-team-lead').modal('hide');
+      angular.element('#modal-delete-user').modal('hide');
     };
 
-    $scope.cancelDeleteAdminTeamLead = function() {
+    $scope.cancelDeleteUser = function() {
       $scope.userToDelete = {};
-      angular.element('#modal-delete-admin-team-lead').modal('hide');
+      angular.element('#modal-delete-user').modal('hide');
+    };
+
+    $scope.openDeleteTeamMember = function(member, team) {
+      $scope.memberToDelete = member;
+      $scope.memberToDeleteTeam = team;
+      var result = confirm('Are you sure you want to remove ' + member.displayName + '? The action cannot be undone.');
+      if(result) {
+        $scope.deleteTeamMember(member, team);
+      }
+      //angular.element('#modal-delete-team-member').modal('show');
+    };
+
+    // $scope.cancelDeleteTeamMember = function() {
+    //   $scope.memberToDelete = {};
+    //   $scope.memberToDeleteTeam = {};
+    //   angular.element('#modal-delete-team-member').modal('hide');
+    // };
+
+    $scope.deleteTeamMember = function(teamMember, team) {
+      teamMember.team = team;
+      var teamMemberToDelete = (teamMember) ? new TeamMembersDeleteService(teamMember) : new TeamMembersDeleteService();
+      teamMemberToDelete.$remove(function(obj) {
+        //reload user list since the user may be deleted
+        $scope.findUsers();
+        //relead the team list so the members list refreshes
+        $scope.team = TeamsService.get({
+          teamId: team._id
+        });
+      });
+    };
+
+    $scope.openDeleteTeam = function(team) {
+      $scope.teamToDelete = team;
+      var result = confirm('Are you sure you want to remove ' + team.name + '? The action cannot be undone.');
+      if(result) {
+        $scope.deleteTeam(team);
+      }
+    };
+
+    $scope.deleteTeam = function(team) {
+      var teamToDelete = (team) ? new TeamsService(team) : new TeamsService();
+      team.$remove(function(obj) {
+        $scope.closeAdminTeam();
+        //reload user list since the user may be deleted
+        $scope.findUsers();
+
+      });
     };
 
     $scope.findLeadRequests = function() {
@@ -174,18 +224,15 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.hasRole(user, 'admin') ||
         $scope.hasRole(user, 'team lead pending')) {
 
-        //if the user has one of the above roles AND is associated with a team
-        //that has a nonzero list of members, they should not be able to be deleted
+        //if the user has one of the above roles and is associated with a team
+        //then they should not be able to be deleted. even if the team has no members
+        //it could be associated with expeditions and stations - there would need to be
+        //a way of transferring ownership of those items to an existing team.
         if(user.teams !== undefined && user.teams !== null && user.teams.length > 0) {
-          for(var i = 0; i < user.teams.length; i++) {
-            var team = user.teams[i];
-            if(team.teamMembers !== null && team.teamMembers !== undefined && team.teamMembers.length > 0) {
-              return false;
-            }
-          }
+          return false;
         }
       }
-      //team members and anyone else who isn't associated with teams can be deleted
+      //team members and anyone else who can't own a team can be deleted
       return true;
     };
 

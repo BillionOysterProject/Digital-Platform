@@ -9,6 +9,8 @@
         templateUrl: 'modules/users/client/views/admin/view-admin-team.client.view.html',
         scope: {
           team: '=',
+          deleteTeamFunction: '=',
+          deleteTeamMemberFunction: '=',
           closeFunction: '='
         },
         replace: true,
