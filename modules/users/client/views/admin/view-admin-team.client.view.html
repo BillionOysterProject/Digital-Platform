@@ -19,28 +19,36 @@
                 </div>
             </div>
             <div class="modal-body">
+              <div class="alert alert-danger text-center" ng-show="deleteTeamError || deleteTeamMemberError">
+                <p ng-bind="deleteTeamMemberError"></p>
+                <p ng-bind="deleteTeamError"></p>
+              </div>
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-verticalalign table-responsive">
-                            <tr ng-repeat="member in team.teamMembers">
+                            <tr ng-repeat="member in pagedItems">
                                 <td><img ng-src="{{member.profileImageURL}}" class="header-profile-image">
                                 <td><b>{{member.displayName}}</b></td>
                                 <td class="text-muted">{{member.username}}</td>
                                 <td class="text-muted">{{member.email}}</td>
-                                <!-- TODO: Wire up delete button for each member (can open modal on top of modal if that's easiest). First popup "are you sure" modal
-                                <td class="text-right"><a class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a></td> -->
+                                <td class="text-right">
+                                  <a class="btn btn-danger" ng-click="deleteTeamMemberFunction(member, team)">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                  </a>
+                                </td>
                             </tr>
                         </table>
 
-                        <uib-pagination boundary-links="true" max-size="7" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+                        <uib-pagination boundary-links="true" max-size="7" items-per-page="itemsPerPage" total-items="team.teamMembers.length" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <!--TODO: Wire up delete team button (show modal "are you sure" if empty -OR- modal "can't delete" if team still has members)
-                <button type="button" class="btn btn-danger">Delete team</button>-->
+                <button type="button" class="btn btn-danger"
+                  ng-disabled="team.teamMembers.length > 0" ng-click="deleteTeamFunction(team)">Delete team</button>
                 <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
             </div>
         </div>
     </div>
+    <!--remove-team-member-modal user="memberToDelete" team="memberToDeleteTeam" delete-function="deleteTeamMember" cancel-function="cancelDeleteTeamMember"></remove-team-member-modal-->
 </div>
