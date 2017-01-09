@@ -26,7 +26,8 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input class="form-control col-md-4" type="text" placeholder="Search"
-                ng-model="filter.searchString" ng-change="searchChange()" />
+                ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
+                ng-change="searchChange()" />
             </div>
         </div>
     </div>
@@ -86,5 +87,7 @@
 <form-admin-team-lead-modal user="formUser" organizations="organizations" save-function="saveAdminTeamLeadForm" cancel-function="cancelAdminTeamLeadForm"></form-admin-team-lead-modal>
 <delete-user-modal user="userToDelete" can-be-deleted-function="canBeDeleted" delete-function="deleteUser" cancel-function="cancelDeleteUser"></delete-user-modal>
 <approve-team-leads-modal lead-requests="leadRequests" save-function="saveApproveTeamLeads" cancel-function="closeApproveTeamLeads"></approve-team-leads-modal>
-<view-admin-team-modal team="team" delete-team-function="openDeleteTeam" delete-team-member-function="openDeleteTeamMember" close-function="closeAdminTeam"></view-admin-team-modal>
+<view-admin-team-modal team="team" delete-team-function="openDeleteTeam" delete-team-error="deleteTeamError"
+  delete-team-member-function="openDeleteTeamMember" delete-team-member-error="deleteTeamMemberError"
+  close-function="closeAdminTeam"></view-admin-team-modal>
 <!-- END MODALS -->

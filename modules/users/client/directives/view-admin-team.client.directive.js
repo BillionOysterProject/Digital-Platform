@@ -10,7 +10,9 @@
         scope: {
           team: '=',
           deleteTeamFunction: '=',
+          deleteTeamError: '=',
           deleteTeamMemberFunction: '=',
+          deleteTeamMemberError: '=',
           closeFunction: '='
         },
         replace: true,

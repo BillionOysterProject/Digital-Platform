@@ -14,6 +14,8 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.organizations = SchoolOrganizationsService.query();
+    $scope.deleteTeamMemberError = null;
+    $scope.deleteTeamError = null;
 
     $scope.fieldChanged = function(selection) {
       $scope.findUsers();
@@ -144,6 +146,8 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     // };
 
     $scope.deleteTeamMember = function(teamMember, team) {
+      $scope.deleteTeamMemberError = null;
+      $scope.deleteTeamError = null;
       teamMember.team = team;
       var teamMemberToDelete = (teamMember) ? new TeamMembersDeleteService(teamMember) : new TeamMembersDeleteService();
       teamMemberToDelete.$remove(function(obj) {
@@ -153,6 +157,8 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
         $scope.team = TeamsService.get({
           teamId: team._id
         });
+      }, function(err) {
+        $scope.deleteTeamMemberError = err.data.message;
       });
     };
 
@@ -165,12 +171,17 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.deleteTeam = function(team) {
+      $scope.deleteTeamMemberError = null;
+      $scope.deleteTeamError = null;
+
       var teamToDelete = (team) ? new TeamsService(team) : new TeamsService();
       team.$remove(function(obj) {
         $scope.closeAdminTeam();
         //reload user list since the user may be deleted
         $scope.findUsers();
 
+      }, function(err) {
+        $scope.deleteTeamError = 'Error deleting team: ' + err.data.message;
       });
     };
 
@@ -210,11 +221,15 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
 
     $scope.openAdminTeam = function(team) {
       $scope.team = team;
+      $scope.deleteTeamError = null;
+      $scope.deleteTeamMemberError = null;
       angular.element('#modal-admin-team').modal('show');
     };
 
     $scope.closeAdminTeam = function(team) {
       $scope.team = {};
+      $scope.deleteTeamError = null;
+      $scope.deleteTeamMemberError = null;
       angular.element('#modal-admin-team').modal('hide');
     };
 

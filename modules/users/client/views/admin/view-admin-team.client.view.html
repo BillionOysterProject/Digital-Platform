@@ -19,6 +19,10 @@
                 </div>
             </div>
             <div class="modal-body">
+              <div class="alert alert-danger text-center" ng-show="deleteTeamError || deleteTeamMemberError">
+                <p ng-bind="deleteTeamMemberError"></p>
+                <p ng-bind="deleteTeamError"></p>
+              </div>
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-verticalalign table-responsive">
@@ -35,7 +39,7 @@
                             </tr>
                         </table>
 
-                        <uib-pagination boundary-links="true" max-size="7" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+                        <!--uib-pagination boundary-links="true" max-size="7" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination-->
                     </div>
                 </div>
             </div>
@@ -46,5 +50,5 @@
             </div>
         </div>
     </div>
-    <remove-team-member-modal user="memberToDelete" team="memberToDeleteTeam" delete-function="deleteTeamMember" cancel-function="cancelDeleteTeamMember"></remove-team-member-modal>
+    <!--remove-team-member-modal user="memberToDelete" team="memberToDeleteTeam" delete-function="deleteTeamMember" cancel-function="cancelDeleteTeamMember"></remove-team-member-modal-->
 </div>
