@@ -99,7 +99,7 @@ exports.delete = function (req, res) {
     team.teamMembers.length > 0) {
     return res.status(400).send({
       message: 'The team ' + team.name + ' cannot be deleted because it still has members.'
-    });  
+    });
   }
 
   //does the team have expeditions? if so don't let it be deleted
@@ -271,8 +271,32 @@ exports.listMembers = function (req, res) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
-          } else {
-            res.json(members);
+          } else if(members && members.length > 0) {
+            var findTeams = function(user, callback) {
+              var queryTeam = Team.find({ 'teamMembers': user });
+              queryTeam.exec(function(err, teams) {
+                callback(teams);
+              });
+            };
+
+            var findTeamsForUsers = function(index, users, usersWithTeam, callback) {
+              if (index < users.length) {
+                findTeams(users[index], function(teams) {
+                  var user = users[index] ? users[index].toJSON() : {};
+                  if (teams && teams.length) {
+                    user.team = teams[0];
+                  }
+                  usersWithTeam.push(user);
+                  findTeamsForUsers(index+1, users, usersWithTeam, callback);
+                });
+              } else {
+                callback(usersWithTeam);
+              }
+            };
+
+            findTeamsForUsers(0, members, [], function(usersWithTeam) {
+              res.json(usersWithTeam);
+            });
           }
         });
       } else {
