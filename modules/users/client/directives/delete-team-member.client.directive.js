@@ -3,12 +3,13 @@
 
   angular
     .module('teams')
-    .directive('deleteAdminTeamLeadModal', function() {
+    .directive('removeTeamMemberModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/users/client/views/admin/delete-admin-team-lead.client.view.html',
+        templateUrl: 'modules/users/client/views/admin/delete-team-member.client.view.html',
         scope: {
           user: '=',
+          team: '=',
           deleteFunction: '=',
           cancelFunction: '='
         },
