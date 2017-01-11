@@ -10,25 +10,23 @@
                         <label for="name" required>Name your expedition *</label>
                         <input type="text" class="form-control" name="name" ng-model="vm.expedition.name" required/>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="team" required>Select a team *</label>
-                            <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
-                            ng-options="team._id as team.name for team in vm.teams" name="team" id="team" required>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="station" required>Select an ORS *</label>
-                            <select class="form-control" ng-model="vm.stationId" name="station" id="station"
-                              ng-options="station._id as station.name for station in vm.stations" required>
-                            </select>
-                            <a ng-click="vm.openFormRestorationStation()" id="register-first-ORS">Register an ORS</a>
-                        </div>
+                    <div class="form-group">
+                        <label for="team" required>Select a team *</label>
+                        <select class="form-control" ng-model="vm.teamId" ng-change="vm.fieldChanged(team)"
+                        ng-options="team._id as team.name for team in vm.teams" name="team" id="team" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="station" required>Select an ORS *</label>
+                        <select class="form-control" ng-model="vm.stationId" name="station" id="station"
+                          ng-options="station._id as station.name for station in vm.stations" required>
+                        </select>
+                        <a ng-click="vm.openFormRestorationStation()" id="register-first-ORS">Register an ORS</a>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <div class="row">
-                        <div class="form-group">
+                        <div class="form-group col-sm-6">
                             <label for="startTime" required>Start time *</label>
                             <input type="datetime-local" class="form-control" name="startTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
@@ -40,9 +38,7 @@
                                 <p class="red">Start time must not be more than a year in the future.</p>
                             </div>
                         </div>
-                      </div>
-                      <div class="row">
-                        <div class="form-group">
+                        <div class="form-group col-sm-6">
                             <label for="endTime" required>Stop time *</label>
                             <input type="datetime-local" class="form-control" name="endTime"
                             placeholder="yyyy-MM-ddTHH:mm:ss" min="{{vm.dateTime.min}}" max="{{vm.dateTime.max}}"
@@ -55,20 +51,63 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="notes">Special Instructions</label>
-                    <textarea class="form-control" rows="5" name="notes" ng-model="vm.expedition.notes"></textarea>
+                    <div class="form-group">
+                        <label for="notes">Special Instructions</label>
+                        <textarea class="form-control" rows="5" name="notes" ng-model="vm.expedition.notes"></textarea>
+                    </div>
                 </div>
         </section>
     </section>
     <section class="content">
         <section class="container">
-            <div class="form-group">
-                <label>Assign members to protocols *</label>
-                <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()" id="autoassign">Auto Assign</button>
-                <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
+            <!--TODO: Wire up code. All should be selected on default. Unselecting checkboxes should instantly remove the corresponding "assign to protocol" columns
+            
+            Other places that should also be updated with the less-than-5 protocol feature:
+              - Expedition View
+              - Protocol Tabs in Expedition Protocol Form
+              - Expedition List page?
+              - Saving draft modal progress bar text
+              - Published Expedition View
+              ... anywhere else all 5 protocols are listed
+              
+              
+            <h4>Select protocols to include:</h4>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label><input type="checkbox" checked> <b>Protocol 1:</b> Site Conditions</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label><input type="checkbox" checked> <b>Protocol 2:</b> Oyster Measurements</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label><input type="checkbox" checked> <b>Protocol 3:</b> Mobile Trap</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label><input type="checkbox" checked> <b>Protocol 4:</b> Settlement Tiles</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label><input type="checkbox" checked> <b>Protocol 5:</b> Water Quality</label>
+                    </div>
+                </div>
             </div>
+            <hr/>
+            -->
+            
+            <h4>Assign members to protocols * 
+                <!--TODO: Doesn't seem like this button should be distributing the team lead's name.. -->
+                <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()" id="autoassign">Auto Assign</button>
+            </h4>
+            <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
+
             <div class="row">
               <div class="col-md-2" dnd-list="vm.memberLists.members"
               dnd-drop="vm.onDrop(vm.memberLists.members, item)">
