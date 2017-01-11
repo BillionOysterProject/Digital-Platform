@@ -34,4 +34,10 @@ module.exports = function(app) {
 
   app.route('/api/metrics/expeditions/monthlyTotals').all(metricsPolicy.isAllowed)
     .get(metrics.getMonthlyExpeditionCounts);
+
+  app.route('/api/metrics/events').all(metricsPolicy.isAllowed)
+    .get(metrics.getEventMetrics);
+
+  app.route('/api/metrics/events/monthlyTotals').all(metricsPolicy.isAllowed)
+    .get(metrics.getMonthlyEventCounts);
 };

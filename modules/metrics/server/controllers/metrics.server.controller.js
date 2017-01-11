@@ -21,6 +21,8 @@ var path = require('path'),
   ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
+  CalendarEvent = mongoose.model('CalendarEvent'),
+  MetaEventType = mongoose.model('MetaEventType'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   archiver = require('archiver'),
   _ = require('lodash'),
@@ -699,6 +701,126 @@ exports.getStationMetrics = function(req, res) {
   });
 };
 
+exports.getEventMetrics = function(req, res) {
+  var eventMetrics = {};
+
+  var futureEventsQuery = CalendarEvent.count({
+    'dates.startDateTime': { '$gte': new Date() }
+  });
+
+  var pastEventsQuery = CalendarEvent.count({
+    'dates.startDateTime': { '$lt': new Date() }
+  });
+
+  var eventTypesQuery = MetaEventType.find({});
+
+  var eventsPerTypeQuery = CalendarEvent.aggregate([
+    { $unwind: '$category.type' },
+    { $group: { _id: '$category.type', eventTypeCount: { $sum: 1 } } },
+    { $lookup: { from: 'metaeventtypes', localField: '_id', foreignField: '_id', as: 'eventtypes' } },
+    { $project: { _id: 1, eventTypeCount: 1, eventType: { $arrayElemAt: ['$eventtypes', 0] } } }
+  ]);
+
+  var avgRegistrationRateQuery = CalendarEvent.aggregate([
+    { $match: { 'dates.startDateTime': { '$lte': new Date() } } }, //only past events
+    { $project: { _id: false, registrants: 1, maximumCapacity: 1, registrationCount: { $size: '$registrants' } } },
+    { $project: { registrationRate: { $divide: [ '$registrationCount', '$maximumCapacity' ] } } },
+    { $group: { _id: true, avgRegistrationRate: { $avg: '$registrationRate' } } }
+  ]);
+
+  var avgAttendanceRateQuery = CalendarEvent.aggregate([
+    { $match: { 'dates.startDateTime': { '$lte': new Date() } } }, // only past events
+    { $project: { _id: 1, registrants: 1, registrantCount: { $size: '$registrants' } } },
+    { $match: { 'registrantCount': { '$gt': 0 } } },
+    { $project: { _id: 1, registrants: 1, registrantCount: 1,
+        registrantsAttended: {
+          $filter: {
+            input: '$registrants',
+            as: 'registrant',
+            cond: '$$registrant.attended'
+          }
+        }
+    } },
+    { $project: { _id: 1, registrants: 1, registrantCount: 1, attendedCount: { $size: '$registrantsAttended' } } },
+   { $project: { _id: 1, attendanceRate: { $divide: [ '$attendedCount', '$registrantCount' ] } } },
+   { $group: { _id: true, avgAttendanceRate: { $avg: '$attendanceRate' } } }
+  ]);
+
+  var eventCounts = { future: 0, past: 0 };
+
+  futureEventsQuery.exec(function(err, futureEventsCount) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      eventCounts.future = futureEventsCount;
+      pastEventsQuery.exec(function(err, pastEventsCount) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          eventCounts.past = pastEventsCount;
+          eventMetrics.eventCounts = eventCounts;
+          avgRegistrationRateQuery.exec(function(err, avgRegistrationData) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              if(avgRegistrationData !== undefined && avgRegistrationData.length === 1) {
+                eventMetrics.avgRegistrationRate = avgRegistrationData[0].avgRegistrationRate;
+              } else {
+                eventMetrics.avgRegistrationRate = 0;
+              }
+              avgAttendanceRateQuery.exec(function(err, avgAttendanceData) {
+                if (err) {
+                  return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                  });
+                } else {
+                  if(avgAttendanceData !== undefined && avgAttendanceData.length === 1) {
+                    eventMetrics.avgAttendanceRate = avgAttendanceData[0].avgAttendanceRate;
+                  } else {
+                    eventMetrics.avgAttendanceRate = 0;
+                  }
+                  eventTypesQuery.exec(function(err, eventTypesData) {
+                    if (err) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                      });
+                    } else {
+                      eventMetrics.eventTypes = eventTypesData;
+                      eventsPerTypeQuery.exec(function(err, eventsPerTypeData) {
+                        if (err) {
+                          return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                          });
+                        } else {
+                          var eventTypeCounts = [];
+                          for(var i = 0; i < eventsPerTypeData.length; i++) {
+                            eventTypeCounts.push({
+                              eventType: eventsPerTypeData[i].eventType.type,
+                              count: eventsPerTypeData[i].eventTypeCount
+                            });
+                          }
+                          eventMetrics.eventTypeCounts = eventTypeCounts;
+                          res.json(eventMetrics);
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
 var calculateMonthTimeIntervals = function(numMonths) {
   var monthTimeIntervals = [];
   var prevMonth = moment().subtract(numMonths-1, 'months').startOf('month');
@@ -837,6 +959,39 @@ exports.getMonthlyExpeditionCounts = function(req, res) {
         });
       } else {
         metrics.push(expeditionCount);
+        queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
+      }
+    });
+  }
+
+  var metricsResults = [];
+  queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
+};
+
+exports.getMonthlyEventCounts = function(req, res) {
+  var monthTimeIntervals = calculateMonthTimeIntervals(req.query.months ? req.query.months : 12);
+  function queryByTimeInterval(metrics, timeIntervalArray, currIndex) {
+    if(currIndex === timeIntervalArray.length) {
+      res.json(metrics);
+      return;
+    }
+    var eventCountsByTimeInterval = CalendarEvent.count({ $or: [
+      { $and: [
+        { 'dates.startDateTime': { $gte: timeIntervalArray[currIndex].start } },
+        { 'dates.startDateTime': { $lte: timeIntervalArray[currIndex].end } }
+      ] },
+      { $and: [
+        { 'dates.endDateTime': { $gte: timeIntervalArray[currIndex].start } },
+        { 'dates.endDateTime': { $lte: timeIntervalArray[currIndex].end } }
+      ] }
+    ] });
+    eventCountsByTimeInterval.exec(function(err, eventCount) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        metrics.push(eventCount);
         queryByTimeInterval(metrics, timeIntervalArray, currIndex+1);
       }
     });

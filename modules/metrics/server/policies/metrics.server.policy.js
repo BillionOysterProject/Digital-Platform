@@ -43,6 +43,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/metrics/expeditions/monthlyTotals',
       permissions: ['*']
+    }, {
+      resources: '/api/metrics/events',
+      permissions: ['*']
+    }, {
+      resources: '/api/metrics/events/monthlyTotals',
+      permissions: ['*']
     }]
   }]);
 };
