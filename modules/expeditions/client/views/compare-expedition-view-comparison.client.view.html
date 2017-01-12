@@ -1,13 +1,13 @@
-<section>
-    <div class="row">
-        <div class="col-md-12">
-            <h3 id="step3-header">
-                3. Here's the results of these <span class="red">{{vm.dataPointCount()}} data points</span> across
-                <span class="red">{{vm.expeditions.length}} expeditions</span>
-                <a class="btn btn-primary" ng-click="vm.download()">Download all data</a>
-            </h3>
-        </div>
-    </div>
+<div>
+<section class="content shaded">
+  <section class="container-fluid">
+    <h4 id="step3-header" class="blue">3. View or download data. Below you can view the <b>{{vm.dataPointCount()}}</b> {{vm.dataPointCount() > 1 ? 'parameters' : 'parameter'}} you selected across <b>{{vm.expeditions.length}}</b> {{vm.expeditions.length > 1 ? 'expeditions' : 'expedition'}}.</h4>
+    <p>You can continue to adjust filters and checkboxes above. When you have the data you want, click the button below to download.</p>
+    <a class="btn btn-primary" ng-click="vm.download()">Download results</a>
+  </section>
+</section>
+<section class="content">
+  <section class="container-fluid">
     <table class="table table-responsive">
         <!-- <tr>
             <td></td>
@@ -22,14 +22,16 @@
             <td ng-show="vm.dataPointProtocol5Count() > 0" colspan="{{vm.protocol5paramCount}}" class="text-center">
               <h6>Water Quality</h6></td>
         </tr> -->
+        <thead>
         <tr id="expedition-compare-header">
-            <td width="10%"></td>
-            <td ng-repeat="expedition in vm.compareExpeditions" width="{{90/vm.compareExpeditions.length}}%">
+            <th width="10%"></th>
+            <th ng-repeat="expedition in vm.compareExpeditions" width="{{90/vm.compareExpeditions.length}}%">
               <a ui-sref="expedition.view({ expeditionId: expedition.id })"><h4>{{expedition.name}}</h4></a><br/>
               <p class="text-muted"><i class="fa fa-map-marker"></i> {{expedition.station.name}},
                 {{vm.getExpeditionDate(expedition.monitoringStartDate)}}</p>
-            </td>
+            </th>
         </tr>
+        </thead>
         <tr ng-show="vm.parameters.protocol1.weatherTemperature === 'YES'" id="weather-temperature-compare">
             <td><b>Weather/temperature</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
@@ -446,4 +448,6 @@
             </td>
         </tr>
     </table>
+  </section>
 </section>
+</div>

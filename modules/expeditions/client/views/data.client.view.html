@@ -7,18 +7,20 @@
 </div>
 <section class="content">
   <section class="container-fluid">
-    <div>
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
-                <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Search</a></li>
-            <li role="presentation" ng-class="{active: vm.activeTab === 'compareexpeditions'}" ng-click="vm.switchTabs()">
-                <a href="#compareexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Compare</a></li>
-        </ul>
-        <div class="tab-content">
-        <br />
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ng-class="{active: vm.activeTab === 'pubexpeditions'}" ng-click="vm.switchTabs()">
+            <a href="#pubexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Search</a></li>
+        <li role="presentation" ng-class="{active: vm.activeTab === 'compareexpeditions'}" ng-click="vm.switchTabs()">
+            <a href="#compareexpeditions" aria-controls="grid" role="tab" data-toggle="tab">Download</a></li>
+    </ul>
+  </section>
+</section>
+<div class="tab-content">
 
-            <!-- PUBLISHED EXPEDITIONS -->
-            <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
+    <!-- PUBLISHED EXPEDITIONS -->
+    <div role="tabpanel" class="tab-pane" id="pubexpeditions" ng-class="{active: vm.activeTab === 'pubexpeditions'}">
+        <section class="content">
+          <section class="container-fluid">
                 <filter-expeditions></filter-expeditions>
                 <hr/>
                 <div class="row" isotope-container="isotope-container">
@@ -43,11 +45,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
-              <compare-expedition-wizard ></compare-expedition-wizard>
-            </div>
-        </div>
+          </section>
+        </section>
     </div>
-  </section>
-</section>
+    
+    <!-- COMPARE/DOWNLOAD EXPEDITIONS -->
+    <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
+      <compare-expedition-wizard ></compare-expedition-wizard>
+    </div>
+</div>
