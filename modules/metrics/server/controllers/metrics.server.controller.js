@@ -91,34 +91,34 @@ exports.getPeopleMetrics = function(req, res) {
   userCountQuery.exec(function(err, userCount) {
     if (err) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: 'Error getting user counts:' + errorHandler.getErrorMessage(err)
       });
     } else {
       peopleMetrics.userCount = userCount;
       adminCountQuery.exec(function(err, adminCount) {
         if (err) {
           return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+            message: 'Error getting admin counts:' + errorHandler.getErrorMessage(err)
           });
         } else {
           peopleMetrics.adminCount = adminCount;
           teamLeadCountQuery.exec(function(err, teamLeadCount) {
             if (err) {
               return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+                message: 'Error getting team lead counts:' + errorHandler.getErrorMessage(err)
               });
             } else {
               peopleMetrics.teamLeadCount = teamLeadCount;
               teamMemberCountQuery.exec(function(err, teamMemberCount) {
                 if (err) {
-                  return res.status(400).send({
+                  return 'Error getting team member counts:' + res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                   });
                 } else {
                   peopleMetrics.teamMemberCount = teamMemberCount;
                   largestTeamsQuery.exec(function(err, largestTeams) {
                     if (err) {
-                      return res.status(400).send({
+                      return 'Error getting largest teams:' + res.status(400).send({
                         message: errorHandler.getErrorMessage(err)
                       });
                     } else {
@@ -203,7 +203,7 @@ exports.getMostActiveUsers = function(req, res) {
   activeUsersQuery.exec(function(err, data) {
     if (err) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: 'Error getting active users: ' + errorHandler.getErrorMessage(err)
       });
     } else {
       res.json(data);
@@ -746,6 +746,14 @@ exports.getEventMetrics = function(req, res) {
    { $group: { _id: true, avgAttendanceRate: { $avg: '$attendanceRate' } } }
   ]);
 
+  var yearsWithEventsQuery = CalendarEvent.aggregate([
+    { $unwind: '$dates' },
+    { $project: { _id: 1, startDateTime: '$dates.startDateTime' } },
+    { $project: { _id: 1, year: { $year: '$startDateTime' } } },
+    { $group: { _id: '$year' } },
+    { $sort: { _id: -1 } }
+  ]);
+
   var eventCounts = { future: 0, past: 0 };
 
   futureEventsQuery.exec(function(err, futureEventsCount) {
@@ -806,7 +814,22 @@ exports.getEventMetrics = function(req, res) {
                             });
                           }
                           eventMetrics.eventTypeCounts = eventTypeCounts;
-                          res.json(eventMetrics);
+                          yearsWithEventsQuery.exec(function(err, yearData) {
+                            if (err) {
+                              return res.status(400).send({
+                                message: errorHandler.getErrorMessage(err)
+                              });
+                            } else {
+                              var yearsWithEvents = [];
+                              if(yearData !== undefined && yearData.length > 0) {
+                                for(var i = 0; i < yearData.length; i++) {
+                                  yearsWithEvents.push(yearData[i]._id);
+                                }
+                              }
+                              eventMetrics.yearsWithEvents = yearsWithEvents;
+                              res.json(eventMetrics);
+                            }
+                          });
                         }
                       });
                     }
@@ -820,6 +843,86 @@ exports.getEventMetrics = function(req, res) {
     }
   });
 };
+
+exports.getEventActivity = function(req, res) {
+  var activityMatch = null;
+  var startDate, endDate;
+  if(req.query.startDate) {
+    startDate = moment(req.query.startDate).toDate();
+  }
+  if(req.query.endDate) {
+    endDate = moment(req.query.endDate).toDate();
+  }
+
+  if(startDate !== null && startDate !== undefined &&
+    endDate !== null && endDate !== undefined) {
+    activityMatch = { $match: { $and: [
+      { startDate: { $gte: new Date(startDate) } },
+      { endDate: { $lt: new Date(endDate) } }
+    ] } };
+  } else if(startDate !== null && startDate !== undefined) {
+    activityMatch = {
+      $match: { startDate: { $gte: new Date(startDate) } }
+    };
+  } else if(endDate !== null && endDate !== undefined) {
+    activityMatch = {
+      $match: { startDate: { $lt: new Date(endDate) } }
+    };
+  }
+
+  var sort = null;
+  if(req.query.sort === 'registrants') {
+    sort = { $sort: { 'registrantCount': -1 } };
+  } else if(req.query.sort === 'attendees') {
+    sort = { $sort: { 'attendedCount': -1 } };
+  } else if(req.query.sort === 'capacityRate') {
+    sort = { $sort: { 'registrationRate': -1 } };
+  } else if(req.query.sort === 'attendanceRate') {
+    sort = { $sort: { 'attendanceRate': -1 } };
+  }
+
+  var eventActivityQuery = CalendarEvent.aggregate([
+    { $unwind: '$dates' },
+    { $project: {
+      _id: 1, title: 1, registrants: 1, registrantCount: { $size: '$registrants' }, deadlineToRegister: 1,
+      maximumCapacity: 1, startDate: '$dates.startDateTime', endDate: '$dates.endDateTime'
+    } },
+    activityMatch,
+    { $project: { _id: 1, title: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1,
+      maximumCapacity: 1, startDate: 1, endDate: 1,
+      registrantsAttended: {
+        $filter: {
+          input: '$registrants',
+          as: 'registrant',
+          cond: '$$registrant.attended'
+        }
+      }
+    } },
+    { $project: { _id: 1, title: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
+      startDate: 1, endDate: 1, registrantsAttended: 1, attendedCount: { $size: '$registrantsAttended' } } },
+    { $project: { _id: 1, title: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
+       startDate: 1, endDate: 1, registrantsAttended: 1, attendedCount: 1,
+    attendanceRate: {
+      $cond: { if: { $gt: [ '$registrantCount', 0] }, then: { $divide: [ '$attendedCount', '$registrantCount' ] }, else: 0 }
+    },
+    registrationRate: {
+      $cond: { if: { $gt: [ '$maximumCapacity', 0] }, then: { $divide: [ '$registrantCount', '$maximumCapacity' ] }, else: 0 }
+    } } },
+    sort
+  ]);
+
+  eventActivityQuery.exec(function(err, data) {
+    if (err) {
+      return res.status(400).send({
+        message: 'Error running event statistics query;' + errorHandler.getErrorMessage(err)
+      });
+    } else {
+      console.log('Ran query!');
+      res.json(data);
+    }
+  });
+};
+
 
 var calculateMonthTimeIntervals = function(numMonths) {
   var monthTimeIntervals = [];
@@ -1085,17 +1188,17 @@ exports.downloadZip = function(req, res) {
     if (!err) {
       var csvFields = [
         {
-          label: "Team Name",
-          value: "name",
-          default: "Unknown Team Name"
+          label: 'Team Name',
+          value: 'name',
+          default: 'Unknown Team Name'
         }, {
-          label: "Member Count",
-          value: "teamMemberCount",
-          default: "-1"
+          label: 'Member Count',
+          value: 'teamMemberCount',
+          default: '-1'
         }, {
-          label: "Organization",
-          value: "schoolOrg.name",
-          default: "Unknown Organization Name"
+          label: 'Organization',
+          value: 'schoolOrg.name',
+          default: 'Unknown Organization Name'
         }
       ];
       var teamSizeCsvData = json2csv({ data: teamSizeData, fields: csvFields });
@@ -1108,21 +1211,21 @@ exports.downloadZip = function(req, res) {
       if(!err) {
         var csvFields = [
           {
-            label: "Username",
-            value: "user.username",
-            default: "Unknown Username"
+            label: 'Username',
+            value: 'user.username',
+            default: 'Unknown Username'
           }, {
-            label: "User Display Name",
-            value: "user.displayName",
-            default: ""
+            label: 'User Display Name',
+            value: 'user.displayName',
+            default: ''
           }, {
-            label: "User Email",
-            value: "user.email",
-            default: ""
+            label: 'User Email',
+            value: 'user.email',
+            default: ''
           },{
-            label: "Number of Logins",
-            value: "loginCount",
-            default: "none"
+            label: 'Number of Logins',
+            value: 'loginCount',
+            default: 'none'
           }
         ];
         var userLoginsCsvData = json2csv({ data: userLoginData, fields: csvFields });
@@ -1134,19 +1237,19 @@ exports.downloadZip = function(req, res) {
         if(!err) {
           var csvFields = [
             {
-              label: "Lesson",
-              value: "lesson.title",
-              default: "Unknown Lesson"
+              label: 'Lesson',
+              value: 'lesson.title',
+              default: 'Unknown Lesson'
             }, {
-              label: "Unit",
-              value: "unit.title",
-              default: "Unknown Unit"
+              label: 'Unit',
+              value: 'unit.title',
+              default: 'Unknown Unit'
             },{
-              label: "Viewed",
+              label: 'Viewed',
               value: function(row, field, data) {
                 return moment(row.created).format('YYYY-MM-DD HH:mm');
               },
-              default: ""
+              default: ''
             }
           ];
           var lessonViewsCsvData = json2csv({ data: lessonViewsData, fields: csvFields });
@@ -1158,19 +1261,19 @@ exports.downloadZip = function(req, res) {
           if(!err) {
             var csvFields = [
               {
-                label: "Lesson",
-                value: "lesson.title",
-                default: "Unknown Lesson"
+                label: 'Lesson',
+                value: 'lesson.title',
+                default: 'Unknown Lesson'
               }, {
-                label: "Unit",
-                value: "unit.title",
-                default: "Unknown Unit"
+                label: 'Unit',
+                value: 'unit.title',
+                default: 'Unknown Unit'
               },{
-                label: "Downloaded",
+                label: 'Downloaded',
                 value: function(row, field, data) {
                   return moment(row.created).format('YYYY-MM-DD HH:mm');
                 },
-                default: ""
+                default: ''
               }
             ];
             var lessonDownloadsCsvData = json2csv({ data: lessonDownloadData, fields: csvFields });
@@ -1182,33 +1285,33 @@ exports.downloadZip = function(req, res) {
             if(!err) {
               var csvFields = [
                 {
-                  label: "Station",
-                  value: "station.name",
-                  default: "Unknown Station"
+                  label: 'Station',
+                  value: 'station.name',
+                  default: 'Unknown Station'
                 },{
-                  label: "Expedition",
-                  value: "name",
-                  default: ""
+                  label: 'Expedition',
+                  value: 'name',
+                  default: ''
                 },{
-                  label: "Team",
-                  value: "team.name",
-                  default: ""
+                  label: 'Team',
+                  value: 'team.name',
+                  default: ''
                 },{
-                  label: "Team Lead",
-                  value: "teamLead.displayName",
-                  default: ""
+                  label: 'Team Lead',
+                  value: 'teamLead.displayName',
+                  default: ''
                 },{
-                  label: "Start Date",
+                  label: 'Start Date',
                   value: function(row, field, data) {
                     return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
                   },
-                  default: ""
+                  default: ''
                 },{
-                  label: "End Date",
+                  label: 'End Date',
                   value: function(row, field, data) {
                     return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
                   },
-                  default: ""
+                  default: ''
                 }
               ];
               var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });

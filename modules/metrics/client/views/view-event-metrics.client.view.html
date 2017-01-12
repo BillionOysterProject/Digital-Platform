@@ -53,24 +53,25 @@
                       <!--TODO: New filter: default is to show top 10 events by number of registrants -->
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              by Registrants <span class="caret"></span>
+                            {{eventActivityOptions[eventActivityOptions.indexOf(eventActivityFilter.activityType)].name}} <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                             <li><a>by Registrants</a></li>
-                             <li><a>by Attendees</a></li>
-                             <li><a>by Capacity Rate</a></li>
-                             <li><a>by Attendance Rate</a></li>
+                            <li ng-repeat="eventActivity in eventActivityOptions">
+                              <a ok-sel=".{{eventActivity.value}}" ng-click="eventActivityOptionSelected(eventActivity)">
+                                  {{eventActivity.name}}
+                              </a>
+                            </li>
                           </ul>
                       </li>
-                      <!--TODO: This filter should be by year of Event Date (2016, 2017, etc) instead of by month (maybe eventually we'll switch once month is applicable) and also have an ALL option as default -->
+                      <!--This filter should be by year of Event Date (2016, 2017, etc) instead of by month (maybe eventually we'll switch once month is applicable) and also have an ALL option as default -->
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                              {{monthHistoryLabelsReversed[monthHistoryLabelsReversed.indexOf(userActivityFilter.month)].name}} <span class="caret"></span>
+                              {{yearsWithEvents[yearsWithEvents.indexOf(eventActivityFilter.year)]}} <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu">
-                             <li ng-repeat="month in monthHistoryLabelsReversed">
-                               <a ng-click="userActivityMonthSelected(month)">
-                                 {{month.name}}
+                             <li ng-repeat="year in yearsWithEvents">
+                               <a ng-click="eventActivityYearSelected(year)">
+                                 {{year}}
                                </a>
                              </li>
                           </ul>
@@ -88,15 +89,21 @@
                       <th>Event Date</th>
                       <th>Registration Deadline</th>
                   </tr>
-                  <tr>
-                      <td><b>Annual Conference</b></td>
-                      <td><p class="text-muted"><b class="red">30</b> registrants</p></td>
-                      <td><p class="text-muted"><b class="red">24</b> attendees</p></td>
-                      <td><p class="text-muted"><b class="red">87</b> max capacity</p></td>
-                      <td><p class="text-muted"><b class="red">56%</b> capacity</p></td>
-                      <td><p class="text-muted"><b class="red">65%</b> attendance rate</p></td>
-                      <td>Sept 25, 2016</td>
-                      <td><b>5</b> days before event</td><!--TODO: If this is too hard to show, just show registration deadline date -->
+                  <tr ng-repeat="eventStat in eventStatisticsData">
+                      <td><b>{{eventStat.title}}</b></td>
+                      <td><p class="text-muted"><b class="red">{{eventStat.registrantCount}}</b> registrants</p></td>
+                      <td><p class="text-muted"><b class="red">{{eventStat.attendedCount}}</b> attendees</p></td>
+                      <td><p class="text-muted"><b class="red">{{eventStat.maximumCapacity}}</b> max capacity</p></td>
+                      <td><p class="text-muted"><b class="red">{{(eventStat.registrationRate*100).toFixed(0)}}%</b> capacity</p></td>
+                      <td><p class="text-muted"><b class="red">{{(eventStat.attendanceRate*100).toFixed(0)}}%</b> attendance rate</p></td>
+                      <td>{{formatEventDate(eventStat.startDate)}}</td>
+                      <td ng-if="eventStat.deadlineToRegister">
+                        <b>{{formatEventRegistrationDate(eventStat.deadlineToRegister, eventStat.startDate)}}</b>
+                        day(s) before event
+                      </td>
+                      <td ng-if="!eventStat.deadlineToRegister">
+                        None
+                      </td>
                   </tr>
               </table>
           </div>

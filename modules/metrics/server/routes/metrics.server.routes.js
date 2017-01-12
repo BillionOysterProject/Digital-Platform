@@ -40,4 +40,7 @@ module.exports = function(app) {
 
   app.route('/api/metrics/events/monthlyTotals').all(metricsPolicy.isAllowed)
     .get(metrics.getMonthlyEventCounts);
+
+  app.route('/api/metrics/events/statistics').all(metricsPolicy.isAllowed)
+    .get(metrics.getEventActivity);
 };
