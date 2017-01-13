@@ -79,6 +79,7 @@ exports.getPeopleMetrics = function(req, res) {
   //TODO: change teamLead to teamLeads when new user profile
   //stuff is integrated
   var largestTeamsQuery = Team.aggregate([
+    { $match: { teamMembers: { $exists: true } } }, 
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
     { $sort: { teamMemberCount: -1 } },
     { $limit: 5 },
@@ -111,15 +112,15 @@ exports.getPeopleMetrics = function(req, res) {
               peopleMetrics.teamLeadCount = teamLeadCount;
               teamMemberCountQuery.exec(function(err, teamMemberCount) {
                 if (err) {
-                  return 'Error getting team member counts:' + res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
+                  return res.status(400).send({
+                    message: 'Error getting team member counts:' + errorHandler.getErrorMessage(err)
                   });
                 } else {
                   peopleMetrics.teamMemberCount = teamMemberCount;
                   largestTeamsQuery.exec(function(err, largestTeams) {
                     if (err) {
-                      return 'Error getting largest teams:' + res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                      return res.status(400).send({
+                        message: 'Error getting largest teams:' + errorHandler.getErrorMessage(err)
                       });
                     } else {
                       peopleMetrics.largestTeams = largestTeams;
@@ -393,23 +394,23 @@ exports.getCurriculumMetrics = function(req, res) {
                   curriculumMetrics.lessonCounts.duplicated = duplicatedLessonCount;
                   glossaryTermsCountQuery.exec(function(err, glossaryTermsCount) {
                     if (err) {
-                      return 'Error getting glossary terms count: ' + res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                      return res.status(400).send({
+                        message: 'Error getting glossary terms count: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
                       curriculumMetrics.glossaryTermsCount = glossaryTermsCount;
                       lessonsPerGradeQuery.exec(function(err, lessonData) {
                         if (err) {
-                          return 'Error getting lessons per grade: ' + res.status(400).send({
-                            message: errorHandler.getErrorMessage(err)
+                          return res.status(400).send({
+                            message: 'Error getting lessons per grade: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
                           //figure out the grade breakdown
                           curriculumMetrics.lessonsPerGrade = calculateLessonsPerGrade(lessonData);
                           lessonsPerUnitQuery.exec(function(err, lessonsPerUnitData) {
                             if (err) {
-                              return 'Error getting lessons per unit: ' + res.status(400).send({
-                                message: errorHandler.getErrorMessage(err)
+                              return res.status(400).send({
+                                message: 'Error getting lessons per unit: ' + errorHandler.getErrorMessage(err)
                               });
                             } else {
                               var unitLessonCounts = [];
@@ -422,8 +423,8 @@ exports.getCurriculumMetrics = function(req, res) {
                               curriculumMetrics.unitLessonCounts = unitLessonCounts;
                               lessonsPerPeriodsQuery.exec(function(err, lessonPerPeriodsData) {
                                 if (err) {
-                                  return 'Error getting lessons per period: ' + res.status(400).send({
-                                    message: errorHandler.getErrorMessage(err)
+                                  return res.status(400).send({
+                                    message: 'Error getting lessons per period: ' + errorHandler.getErrorMessage(err)
                                   });
                                 } else {
                                   var lessonPeriodCounts = [];
@@ -436,8 +437,8 @@ exports.getCurriculumMetrics = function(req, res) {
                                   curriculumMetrics.lessonPeriodCounts = lessonPeriodCounts;
                                   lessonsPerSettingQuery.exec(function(err, lessonsPerSettingData) {
                                     if (err) {
-                                      return 'Error getting lessons per setting: ' + res.status(400).send({
-                                        message: errorHandler.getErrorMessage(err)
+                                      return res.status(400).send({
+                                        message: 'Error getting lessons per setting: ' + errorHandler.getErrorMessage(err)
                                       });
                                     } else {
                                       var lessonSettingCounts = [];
@@ -450,8 +451,8 @@ exports.getCurriculumMetrics = function(req, res) {
                                       curriculumMetrics.lessonSettingCounts = lessonSettingCounts;
                                       lessonsPerSubjectAreaQuery.exec(function(err, lessonsPerSubjectData) {
                                         if (err) {
-                                          return 'Error getting lessons per subject: ' + res.status(400).send({
-                                            message: errorHandler.getErrorMessage(err)
+                                          return res.status(400).send({
+                                            message: 'Error getting lessons per subject: ' + errorHandler.getErrorMessage(err)
                                           });
                                         } else {
                                           var lessonSubjectCounts = [];
@@ -464,8 +465,8 @@ exports.getCurriculumMetrics = function(req, res) {
                                           curriculumMetrics.lessonSubjectCounts = lessonSubjectCounts;
                                           lessonResourcesQuery.exec(function(err, lessonResources) {
                                             if (err) {
-                                              return 'Error getting lesson resources: ' + res.status(400).send({
-                                                message: errorHandler.getErrorMessage(err)
+                                              return res.status(400).send({
+                                                message: 'Error getting lesson resources: ' + errorHandler.getErrorMessage(err)
                                               });
                                             } else {
                                               var totalLessons = lessonResources.length;
@@ -489,15 +490,15 @@ exports.getCurriculumMetrics = function(req, res) {
                                               curriculumMetrics.lessonResources.handoutsAverage = (totalHandouts / totalLessons);
                                               mostViewedLessonsQuery.exec(function(err, lessonViewData) {
                                                 if (err) {
-                                                  return 'Error getting most viewed lessons: ' + res.status(400).send({
-                                                    message: errorHandler.getErrorMessage(err)
+                                                  return res.status(400).send({
+                                                    message: 'Error getting most viewed lessons: ' + errorHandler.getErrorMessage(err)
                                                   });
                                                 } else {
                                                   curriculumMetrics.lessonViewData = lessonViewData;
                                                   mostViewedUnitsQuery.exec(function(err, unitViewData) {
                                                     if (err) {
-                                                      return 'Error getting most viewed units: ' + res.status(400).send({
-                                                        message: errorHandler.getErrorMessage(err)
+                                                      return res.status(400).send({
+                                                        message: 'Error getting most viewed units: ' + errorHandler.getErrorMessage(err)
                                                       });
                                                     } else {
                                                       curriculumMetrics.unitViewData = unitViewData;
@@ -577,15 +578,15 @@ exports.getStationMetrics = function(req, res) {
 
   stationCountQuery.exec(function(err, stationCount) {
     if (err) {
-      return 'Error getting station count: ' + res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+      return res.status(400).send({
+        message: 'Error getting station count: ' + errorHandler.getErrorMessage(err)
       });
     } else {
       stationMetrics.stationCounts.total = stationCount;
       stationCountsByStatusQuery.exec(function(err, statusCounts) {
         if (err) {
-          return 'Error getting station counts by status: ' + res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+          return res.status(400).send({
+            message: 'Error getting station counts by status: ' + errorHandler.getErrorMessage(err)
           });
         } else {
           for(var i = 0; i < statusCounts.length; i++) {
@@ -593,8 +594,8 @@ exports.getStationMetrics = function(req, res) {
           }
           expeditionCountQuery.exec(function(err, expeditionCounts) {
             if (err) {
-              return 'Error getting expedition count: ' + res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+              return res.status(400).send({
+                message: 'Error getting expedition count: ' +errorHandler.getErrorMessage(err)
               });
             } else {
               for(var i = 0; i < expeditionCounts.length; i++) {
@@ -602,8 +603,8 @@ exports.getStationMetrics = function(req, res) {
               }
               protocolMobileTrapStatusQuery.exec(function(err, protocolStatusCount) {
                 if (err) {
-                  return 'Error geting protocol mobile trap status: ' + res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
+                  return res.status(400).send({
+                    message: 'Error geting protocol mobile trap status: ' + errorHandler.getErrorMessage(err)
                   });
                 } else {
                   for(var i = 0; i < protocolStatusCount.length; i++) {
@@ -612,8 +613,8 @@ exports.getStationMetrics = function(req, res) {
                   }
                   protocolOysterMeasurementStatusQuery.exec(function(err, protocolStatusCount) {
                     if (err) {
-                      return 'Error getting protocol oyster measurement status: ' + res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                      return res.status(400).send({
+                        message: 'Error getting protocol oyster measurement status: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
 
@@ -623,8 +624,8 @@ exports.getStationMetrics = function(req, res) {
                       }
                       protocolSettlementTileStatusQuery.exec(function(err, protocolStatusCount) {
                         if (err) {
-                          return 'Error getting protocol settlement tiles status: ' + res.status(400).send({
-                            message: errorHandler.getErrorMessage(err)
+                          return res.status(400).send({
+                            message: 'Error getting protocol settlement tiles status: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
 
@@ -634,8 +635,8 @@ exports.getStationMetrics = function(req, res) {
                           }
                           protocolSiteConditionStatusQuery.exec(function(err, protocolStatusCount) {
                             if (err) {
-                              return 'Error getting protocol site condition status: ' + res.status(400).send({
-                                message: errorHandler.getErrorMessage(err)
+                              return res.status(400).send({
+                                message: 'Error getting protocol site condition status: ' + errorHandler.getErrorMessage(err)
                               });
                             } else {
 
@@ -645,8 +646,8 @@ exports.getStationMetrics = function(req, res) {
                               }
                               protocolWaterQualityStatusQuery.exec(function(err, protocolStatusCount) {
                                 if (err) {
-                                  return 'Error getting protocol water quality status: ' + res.status(400).send({
-                                    message: errorHandler.getErrorMessage(err)
+                                  return res.status(400).send({
+                                    message: 'Error getting protocol water quality status: ' + errorHandler.getErrorMessage(err)
                                   });
                                 } else {
 
@@ -656,8 +657,8 @@ exports.getStationMetrics = function(req, res) {
                                   }
                                   expeditionsCompleteQuery.exec(function(err, expeditionData) {
                                     if (err) {
-                                      return 'Error getting expeditions complete: ' + res.status(400).send({
-                                        message: errorHandler.getErrorMessage(err)
+                                      return res.status(400).send({
+                                        message: 'Error getting expeditions complete: ' + errorHandler.getErrorMessage(err)
                                       });
                                     } else {
                                       stationMetrics.expeditionStatusCounts = {
@@ -673,8 +674,8 @@ exports.getStationMetrics = function(req, res) {
                                       }
                                       mostVisitedStationsQuery.exec(function(err, stationVisitCountData) {
                                         if (err) {
-                                          return 'Error getting most visited stations: ' + res.status(400).send({
-                                            message: errorHandler.getErrorMessage(err)
+                                          return res.status(400).send({
+                                            message: 'Error getting most visited stations: ' + errorHandler.getErrorMessage(err)
                                           });
                                         } else {
                                           stationMetrics.stationVisitCounts = stationVisitCountData;
@@ -758,23 +759,23 @@ exports.getEventMetrics = function(req, res) {
 
   futureEventsQuery.exec(function(err, futureEventsCount) {
     if (err) {
-      return 'Error getting future events: ' + res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+      return res.status(400).send({
+        message: 'Error getting future events: ' + errorHandler.getErrorMessage(err)
       });
     } else {
       eventCounts.future = futureEventsCount;
       pastEventsQuery.exec(function(err, pastEventsCount) {
         if (err) {
-          return 'Error getting past events: ' + res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+          return res.status(400).send({
+            message: 'Error getting past events: ' + errorHandler.getErrorMessage(err)
           });
         } else {
           eventCounts.past = pastEventsCount;
           eventMetrics.eventCounts = eventCounts;
           avgRegistrationRateQuery.exec(function(err, avgRegistrationData) {
             if (err) {
-              return 'Error getting avg registration rate: ' + res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+              return res.status(400).send({
+                message: 'Error getting avg registration rate: ' + errorHandler.getErrorMessage(err)
               });
             } else {
               if(avgRegistrationData !== undefined && avgRegistrationData.length === 1) {
@@ -784,8 +785,8 @@ exports.getEventMetrics = function(req, res) {
               }
               avgAttendanceRateQuery.exec(function(err, avgAttendanceData) {
                 if (err) {
-                  return 'Error getting average attendance rate: ' + res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
+                  return res.status(400).send({
+                    message: 'Error getting average attendance rate: ' + errorHandler.getErrorMessage(err)
                   });
                 } else {
                   if(avgAttendanceData !== undefined && avgAttendanceData.length === 1) {
@@ -795,15 +796,15 @@ exports.getEventMetrics = function(req, res) {
                   }
                   eventTypesQuery.exec(function(err, eventTypesData) {
                     if (err) {
-                      return 'Error getting event types: ' + res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
+                      return res.status(400).send({
+                        message: 'Error getting event types: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
                       eventMetrics.eventTypes = eventTypesData;
                       eventsPerTypeQuery.exec(function(err, eventsPerTypeData) {
                         if (err) {
-                          return 'ERror getting events per type: ' + res.status(400).send({
-                            message: errorHandler.getErrorMessage(err)
+                          return res.status(400).send({
+                            message: 'Error getting events per type: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
                           var eventTypeCounts = [];
@@ -816,8 +817,8 @@ exports.getEventMetrics = function(req, res) {
                           eventMetrics.eventTypeCounts = eventTypeCounts;
                           yearsWithEventsQuery.exec(function(err, yearData) {
                             if (err) {
-                              return 'ERror getting years with events: ' + res.status(400).send({
-                                message: errorHandler.getErrorMessage(err)
+                              return res.status(400).send({
+                                message: 'Error getting years with events: ' + errorHandler.getErrorMessage(err)
                               });
                             } else {
                               var yearsWithEvents = [];
@@ -913,11 +914,10 @@ exports.getEventActivity = function(req, res) {
 
   eventActivityQuery.exec(function(err, data) {
     if (err) {
-      return 'ERror getting event yearly activity: ' + res.status(400).send({
-        message: 'Error running event statistics query;' + errorHandler.getErrorMessage(err)
+      return res.status(400).send({
+        message: 'Error running event yearly statistics query;' + errorHandler.getErrorMessage(err)
       });
     } else {
-      console.log('Ran query!');
       res.json(data);
     }
   });
@@ -954,8 +954,8 @@ exports.getMonthlyUnitCounts = function(req, res) {
     });
     unitCountsByTimeInterval.exec(function(err, unitCount) {
       if (err) {
-        return 'Error getting monthly unit counts: ' + res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+        return res.status(400).send({
+          message: 'Error getting monthly unit counts: ' + errorHandler.getErrorMessage(err)
         });
       } else {
         metrics.push(unitCount);
@@ -985,8 +985,8 @@ exports.getMonthlyLessonCounts = function(req, res) {
     });
     lessonCountsByTimeInterval.exec(function(err, lessonCount) {
       if (err) {
-        return 'ERror getting monthly lesson counts: ' + res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+        return res.status(400).send({
+          message: 'Error getting monthly lesson counts: ' + errorHandler.getErrorMessage(err)
         });
       } else {
         metrics.push(lessonCount);
@@ -1018,8 +1018,8 @@ exports.getMonthlyStationCounts = function(req, res) {
     });
     stationCountsByTimeInterval.exec(function(err, activeStations) {
       if (err) {
-        return 'Error getting monthly station counts: ' + res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+        return res.status(400).send({
+          message: 'Error getting monthly station counts: ' + errorHandler.getErrorMessage(err)
         });
       } else {
         metrics.push(activeStations);
@@ -1057,8 +1057,8 @@ exports.getMonthlyExpeditionCounts = function(req, res) {
     });
     expeditionCountsByTimeInterval.exec(function(err, expeditionCount) {
       if (err) {
-        return 'ERror getting monthly expedition counts: ' + res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+        return res.status(400).send({
+          message: 'Error getting monthly expedition counts: ' + errorHandler.getErrorMessage(err)
         });
       } else {
         metrics.push(expeditionCount);
@@ -1090,8 +1090,8 @@ exports.getMonthlyEventCounts = function(req, res) {
     ] });
     eventCountsByTimeInterval.exec(function(err, eventCount) {
       if (err) {
-        return 'Error getting monthly event counts: ' + res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+        return res.status(400).send({
+          message: 'Error getting monthly event counts: ' + errorHandler.getErrorMessage(err)
         });
       } else {
         metrics.push(eventCount);
