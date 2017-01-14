@@ -1189,7 +1189,7 @@ exports.downloadZip = function(req, res) {
     { $project: { _id: false, user: { $arrayElemAt: ['$users', 0] }, loginCount: 1 } },
     { $sort: { loginCount: -1 } },
     { $lookup: { from: 'schoolorgs', localField: 'user.schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
-    { $match: { 'schoolorgs.0': { $exists: true } } },
+    { $match: { 'schoolOrgs.0': { $exists: true } } },
     { $project: { _id: false, loginCount: 1, user: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } }
   ]);
 
