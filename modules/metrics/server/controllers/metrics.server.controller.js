@@ -79,7 +79,7 @@ exports.getPeopleMetrics = function(req, res) {
   //TODO: change teamLead to teamLeads when new user profile
   //stuff is integrated
   var largestTeamsQuery = Team.aggregate([
-    { $match: { teamMembers: { $exists: true } } }, 
+    { $match: { teamMembers: { $exists: true } } },
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
     { $sort: { teamMemberCount: -1 } },
     { $limit: 5 },
@@ -292,6 +292,7 @@ exports.getCurriculumMetrics = function(req, res) {
      { $match: { status: 'published' } },
      { $group: { _id: '$unit', lessonCount: { $sum: 1 } } },
      { $lookup: { from: 'units', localField: '_id', foreignField: '_id', as: 'units' } },
+     { $match: { 'units.0': { $exists: true } } },
      { $project: { _id: 1, lessonCount: 1, unit: { $arrayElemAt: ['$units', 0] } } }
   ]);
 
@@ -310,6 +311,7 @@ exports.getCurriculumMetrics = function(req, res) {
     { $unwind: '$lessonOverview.subjectAreas' },
     { $group: { _id: '$lessonOverview.subjectAreas', lessonCount: { $sum: 1 } } },
     { $lookup: { from: 'metasubjectareas', localField: '_id', foreignField: '_id', as: 'subjects' } },
+    { $match: { 'subjects.0': { $exists: true } } },
     { $project: { _id: 1, lessonCount: 1, subject: { $arrayElemAt: ['$subjects', 0] } } }
   ]);
 
@@ -325,19 +327,22 @@ exports.getCurriculumMetrics = function(req, res) {
   var mostViewedLessonsQuery = LessonActivity.aggregate([
     { $match: { activity: 'viewed' } },
     { $group: { _id: '$lesson', viewCount: { $sum: 1 } } },
-    { $sort: { viewCount: -1 } },
-    { $limit: 5 },
-    { $lookup: { from: 'lessons', localField: '_id', foreignField: '_id', as: 'lesson' } },
-    { $project: { _id: '$_id', viewCount: '$viewCount', lesson: { $arrayElemAt: ['$lesson', 0] } } },
+    { $lookup: { from: 'lessons', localField: '_id', foreignField: '_id', as: 'lessons' } },
+    { $match: { 'lessons.0': { $exists: true } } },
+    { $project: { _id: '$_id', viewCount: '$viewCount', lesson: { $arrayElemAt: ['$lessons', 0] } } },
     { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
-    { $project: { _id: 1, viewCount: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } }
+    { $project: { _id: 1, viewCount: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+    { $sort: { viewCount: -1 } },
+    { $limit: 5 }
   ]);
 
   var mostViewedUnitsQuery = LessonActivity.aggregate([{ $match: { activity: 'viewed' } },
-    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
-    { $project: { _id: '$_id', lesson: { $arrayElemAt: ['$lesson', 0] } } },
-    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
-    { $project: { _id: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lessons' } },
+    { $match: { 'lessons.0': { $exists: true } } },
+    { $project: { _id: '$_id', lesson: { $arrayElemAt: ['$lessons', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'units' } },
+    { $match: { 'units.0': { $exists: true } } },
+    { $project: { _id: 1, lesson: 1, unit: { $arrayElemAt: ['$units', 0] } } },
     { $group: { _id: '$unit', viewCount: { $sum: 1 } } },
     { $sort: { viewCount: -1 } },
     { $limit: 5 },
@@ -566,10 +571,11 @@ exports.getStationMetrics = function(req, res) {
   ]);
   var mostVisitedStationsQuery = Expedition.aggregate([
     { $group: { _id: '$station', expeditionCount: { $sum: 1 } } },
-    { $sort: { expeditionCount: -1 } },
-    { $limit: 5 },
     { $lookup: { from: 'restorationstations', localField: '_id', foreignField: '_id', as: 'stations' } },
-    { $project: { _id: false, expeditionCount: 1, station: { $arrayElemAt: ['$stations', 0] } } }
+    { $match: { 'stations.0': { $exists: true } } },
+    { $project: { _id: false, expeditionCount: 1, station: { $arrayElemAt: ['$stations', 0] } } },
+    { $sort: { expeditionCount: -1 } },
+    { $limit: 5 }
   ]);
 
   stationMetrics.protocolStatusCounts = { incomplete: 0, submitted: 0, returned: 0, published: 0, unpublished: 0 };
@@ -719,6 +725,7 @@ exports.getEventMetrics = function(req, res) {
     { $unwind: '$category.type' },
     { $group: { _id: '$category.type', eventTypeCount: { $sum: 1 } } },
     { $lookup: { from: 'metaeventtypes', localField: '_id', foreignField: '_id', as: 'eventtypes' } },
+    { $match: { 'eventtypes.0': { $exists: true } } },
     { $project: { _id: 1, eventTypeCount: 1, eventType: { $arrayElemAt: ['$eventtypes', 0] } } }
   ]);
 
@@ -1104,10 +1111,34 @@ exports.getMonthlyEventCounts = function(req, res) {
   queryByTimeInterval(metricsResults, monthTimeIntervals, 0);
 };
 
+//To delete the download folder with all csv data
+var deleteNonemptyFolder = function(path) {
+  if(fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function(file) {
+      var curPath = path + "/" + file;
+      if(fs.statSync(curPath).isDirectory()) { // recurse
+        deleteNonemptyFolder(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+
 exports.downloadZip = function(req, res) {
   var archive = archiver('zip');
+  var csvFilepath = path.resolve('./modules/metrics/server/downloads');
 
-  var lessonDocxFilepath = '';
+  try {
+    fs.mkdirSync(csvFilepath, '0755');
+  } catch(e) {
+    if(e.code !== 'EEXIST') {
+      return res.status(500).send({
+        message: 'Error creating /downloads directory for archive ' + e.code
+      });
+    }
+  }
 
   archive.on('error', function(err) {
     return res.status(500).send({
@@ -1117,10 +1148,13 @@ exports.downloadZip = function(req, res) {
 
   //on stream closed we can end the request
   archive.on('end', function() {
-    if (lessonDocxFilepath && lessonDocxFilepath !== '') {
-      fs.exists(lessonDocxFilepath, function(exists) {
+    console.log('called archive onEnd with filepath ' + csvFilepath);
+    if (csvFilepath && csvFilepath !== '') {
+      fs.exists(csvFilepath, function(exists) {
         if (exists) {
-          fs.unlink(lessonDocxFilepath);
+          console.log('\tDeleting ' + csvFilepath);
+          deleteNonemptyFolder(csvFilepath);
+        //  fs.unlink(csvFilepath);
         }
       });
     }
@@ -1134,48 +1168,47 @@ exports.downloadZip = function(req, res) {
   //this is the streaming magic
   archive.pipe(res);
 
-  var __dirname = path.resolve('./modules/metrics/server');
-
   //TODO: change teamLead to teamLeads when new user profile
   //stuff is integrated
   var teamSizesQuery = Team.aggregate([
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
     { $sort: { teamMemberCount: -1 } },
     { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+    { $match: { 'schoolorgs.0': { $exists: true } } },
     { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
     { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
+    { $match: { 'users.0': { $exists: true } } },
     { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
   ]);
 
   var userLoginReportQuery = UserActivity.aggregate([
     { $group: { _id: { user: '$user', activity: '$activity' }, loginCount: { $sum: 1 } } },
     { $lookup: { from: 'users', localField: '_id.user', foreignField: '_id', as: 'users' } },
+    { $match: { 'users.0': { $exists: true } } },
     { $project: { _id: false, user: { $arrayElemAt: ['$users', 0] }, loginCount: 1 } },
     { $sort: { loginCount: -1 } },
     { $lookup: { from: 'schoolorgs', localField: 'user.schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+    { $match: { 'schoolorgs.0': { $exists: true } } },
     { $project: { _id: false, loginCount: 1, user: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } }
   ]);
 
-  var lessonViewsQuery = LessonActivity.aggregate([{ $match: { activity: 'viewed' } },
-    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
-    { $project: { _id: '$_id', created: 1, lesson: { $arrayElemAt: ['$lesson', 0] } } },
-    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
-    { $project: { _id: 1, created: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
-    { $sort: { created: -1 } }
-  ]);
-
-  var lessonDownloadsQuery = LessonActivity.aggregate([{ $match: { activity: 'downloaded' } },
-    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lesson' } },
-    { $project: { _id: '$_id', created: 1, lesson: { $arrayElemAt: ['$lesson', 0] } } },
-    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'unit' } },
-    { $project: { _id: 1, created: 1, lesson: 1, unit: { $arrayElemAt: ['$unit', 0] } } },
+  var lessonActivityQuery = LessonActivity.aggregate([
+    { $lookup: { from: 'lessons', localField: 'lesson', foreignField: '_id', as: 'lessons' } },
+    { $match: { 'lessons.0': { $exists: true } } },
+    { $project: { _id: '$_id', created: 1, activity: 1, lesson: { $arrayElemAt: ['$lessons', 0] } } },
+    { $lookup: { from: 'units', localField: 'lesson.unit', foreignField: '_id', as: 'units' } },
+    { $match: { 'units.0': { $exists: true } } },
+    { $project: { _id: 1, created: 1, lesson: 1, activity: 1, unit: { $arrayElemAt: ['$units', 0] } } },
     { $sort: { created: -1 } }
   ]);
 
   var stationExpeditionsQuery = Expedition.aggregate([
     { $lookup: { from: 'restorationstations', localField: 'station', foreignField: '_id', as: 'stations' } },
+    { $match: { 'stations.0': { $exists: true } } },
     { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'teamLeads' } },
+    { $match: { 'teamLeads.0': { $exists: true } } },
     { $lookup: { from: 'teams', localField: 'team', foreignField: '_id', as: 'teams' } },
+    { $match: { 'teams.0': { $exists: true } } },
     { $project: { _id: 1, name: 1, monitoringStartDate: 1, monitoringEndDate: 1,
         teamLead: { $arrayElemAt: ['$teamLeads', 0] },
         team: { $arrayElemAt: ['$teams', 0] },
@@ -1234,7 +1267,7 @@ exports.downloadZip = function(req, res) {
         }
       ];
       var teamSizeCsvData = json2csv({ data: teamSizeData, fields: csvFields });
-      var teamSizeFile = path.join(__dirname, 'team-sizes.csv');
+      var teamSizeFile = path.join(csvFilepath, 'team-sizes.csv');
       fs.writeFileSync(teamSizeFile, teamSizeCsvData);
       archive.file(teamSizeFile, { name: 'team-sizes.csv' });
     }
@@ -1261,11 +1294,11 @@ exports.downloadZip = function(req, res) {
           }
         ];
         var userLoginsCsvData = json2csv({ data: userLoginData, fields: csvFields });
-        var userLoginsFile = path.join(__dirname, 'user-logins.csv');
+        var userLoginsFile = path.join(csvFilepath, 'user-logins.csv');
         fs.writeFileSync(userLoginsFile, userLoginsCsvData);
         archive.file(userLoginsFile, { name: 'user-logins.csv' });
       }
-      lessonViewsQuery.exec(function(err, lessonViewsData) {
+      lessonActivityQuery.exec(function(err, lessonActivityData) {
         if(!err) {
           var csvFields = [
             {
@@ -1277,137 +1310,116 @@ exports.downloadZip = function(req, res) {
               value: 'unit.title',
               default: 'Unknown Unit'
             },{
-              label: 'Viewed',
+              label: 'Activity',
+              value: 'activity',
+              default: 'Unknown Activity'
+            },{
+              label: 'Activity Date',
               value: function(row, field, data) {
                 return moment(row.created).format('YYYY-MM-DD HH:mm');
               },
               default: ''
             }
           ];
-          var lessonViewsCsvData = json2csv({ data: lessonViewsData, fields: csvFields });
-          var lessonViewsFile = path.join(__dirname, 'lesson-views.csv');
-          fs.writeFileSync(lessonViewsFile, lessonViewsCsvData);
-          archive.file(lessonViewsFile, { name: 'lesson-views.csv' });
+          var lessonActivityCsvData = json2csv({ data: lessonActivityData, fields: csvFields });
+          var lessonActivityFile = path.join(csvFilepath, 'lesson-activity.csv');
+          fs.writeFileSync(lessonActivityFile, lessonActivityCsvData);
+          archive.file(lessonActivityFile, { name: 'lesson-activity.csv' });
         }
-        lessonDownloadsQuery.exec(function(err, lessonDownloadData) {
+        stationExpeditionsQuery.exec(function(err, stationExpeditionsData) {
           if(!err) {
             var csvFields = [
               {
-                label: 'Lesson',
-                value: 'lesson.title',
-                default: 'Unknown Lesson'
-              }, {
-                label: 'Unit',
-                value: 'unit.title',
-                default: 'Unknown Unit'
+                label: 'Station',
+                value: 'station.name',
+                default: 'Unknown Station'
               },{
-                label: 'Downloaded',
+                label: 'Expedition',
+                value: 'name',
+                default: ''
+              },{
+                label: 'Team',
+                value: 'team.name',
+                default: ''
+              },{
+                label: 'Team Lead',
+                value: 'teamLead.displayName',
+                default: ''
+              },{
+                label: 'Start Date',
                 value: function(row, field, data) {
-                  return moment(row.created).format('YYYY-MM-DD HH:mm');
+                  return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
+                },
+                default: ''
+              },{
+                label: 'End Date',
+                value: function(row, field, data) {
+                  return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
                 },
                 default: ''
               }
             ];
-            var lessonDownloadsCsvData = json2csv({ data: lessonDownloadData, fields: csvFields });
-            var lessonDownloadFile = path.join(__dirname, 'lesson-downloads.csv');
-            fs.writeFileSync(lessonDownloadFile, lessonDownloadsCsvData);
-            archive.file(lessonDownloadFile, { name: 'lesson-downloads.csv' });
+            var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });
+            var stationExpeditionsFile = path.join(csvFilepath, 'expeditions.csv');
+            fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
+            archive.file(stationExpeditionsFile, { name: 'expeditions.csv' });
           }
-          stationExpeditionsQuery.exec(function(err, stationExpeditionsData) {
+          eventsQuery.exec(function(err, eventsData) {
             if(!err) {
               var csvFields = [
                 {
-                  label: 'Station',
-                  value: 'station.name',
-                  default: 'Unknown Station'
+                  label: 'Title',
+                  value: 'title',
+                  default: 'No Title'
                 },{
-                  label: 'Expedition',
-                  value: 'name',
+                  label: 'Description',
+                  value: 'description',
                   default: ''
                 },{
-                  label: 'Team',
-                  value: 'team.name',
-                  default: ''
-                },{
-                  label: 'Team Lead',
-                  value: 'teamLead.displayName',
+                  label: 'Created By',
+                  value: 'user',
                   default: ''
                 },{
                   label: 'Start Date',
                   value: function(row, field, data) {
-                    return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
+                    return moment(row.startDate).format('YYYY-MM-DD HH:mm');
                   },
                   default: ''
                 },{
                   label: 'End Date',
                   value: function(row, field, data) {
-                    return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
+                    return moment(row.endDate).format('YYYY-MM-DD HH:mm');
                   },
+                  default: ''
+                },{
+                  label: 'Registration Deadline',
+                  value: function(row, field, data) {
+                    if(row.deadlineToRegister === undefined || row.deadlineToRegister === null) {
+                      return '';
+                    }
+                    return moment(row.deadlineToRegister).format('YYYY-MM-DD HH:mm');
+                  },
+                  default: ''
+                },{
+                  label: 'Capacity',
+                  value: 'maximumCapacity',
+                  default: ''
+                },{
+                  label: '# Registered',
+                  value: 'registrantCount',
+                  default: ''
+                },{
+                  label: '# Attended',
+                  value: 'attendedCount',
                   default: ''
                 }
               ];
-              var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });
-              var stationExpeditionsFile = path.join(__dirname, 'station-expeditions.csv');
-              fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
-              archive.file(stationExpeditionsFile, { name: 'station-expeditions.csv' });
+              var eventCsvData = json2csv({ data: eventsData, fields: csvFields });
+              var eventCsvFile = path.join(csvFilepath, 'events.csv');
+              fs.writeFileSync(eventCsvFile, eventCsvData);
+              archive.file(eventCsvFile, { name: 'events.csv' });
             }
-            eventsQuery.exec(function(err, eventsData) {
-              if(!err) {
-                var csvFields = [
-                  {
-                    label: 'Title',
-                    value: 'title',
-                    default: 'No Title'
-                  },{
-                    label: 'Description',
-                    value: 'description',
-                    default: ''
-                  },{
-                    label: 'Created By',
-                    value: 'user',
-                    default: ''
-                  },{
-                    label: 'Start Date',
-                    value: function(row, field, data) {
-                      return moment(row.startDate).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'End Date',
-                    value: function(row, field, data) {
-                      return moment(row.endDate).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'Registration Deadline',
-                    value: function(row, field, data) {
-                      if(row.deadlineToRegister === undefined || row.deadlineToRegister === null) {
-                        return '';
-                      }
-                      return moment(row.deadlineToRegister).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'Capacity',
-                    value: 'maximumCapacity',
-                    default: ''
-                  },{
-                    label: '# Registered',
-                    value: 'registrantCount',
-                    default: ''
-                  },{
-                    label: '# Attended',
-                    value: 'attendedCount',
-                    default: ''
-                  }
-                ];
-                var eventCsvData = json2csv({ data: eventsData, fields: csvFields });
-                var eventCsvFile = path.join(__dirname, 'events.csv');
-                fs.writeFileSync(eventCsvFile, eventCsvData);
-                archive.file(eventCsvFile, { name: 'events.csv' });
-              }
-              archive.finalize();
-            });
+            archive.finalize();
           });
         });
       });
