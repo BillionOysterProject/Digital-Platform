@@ -916,7 +916,8 @@ exports.getEventActivity = function(req, res) {
     registrationRate: {
       $cond: { if: { $gt: [ '$maximumCapacity', 0] }, then: { $divide: [ '$registrantCount', '$maximumCapacity' ] }, else: 0 }
     } } },
-    sort
+    sort,
+    { $limit: 10 }
   ]);
 
   eventActivityQuery.exec(function(err, data) {
