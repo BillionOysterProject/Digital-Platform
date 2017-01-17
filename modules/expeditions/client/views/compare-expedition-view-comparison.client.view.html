@@ -1,6 +1,14 @@
 <div>
 <section class="content shaded">
   <section class="container-fluid">
+    <!--TODO: Show entire section on page load (currently this entire compare-expedition-view-comparision is hidden until checkboxes are selected), but if no expeditions/parameters are selected, show this text instead of the following:
+    
+    <h4 class="blue">3. View or download data.</h4>
+    <p>To view data, you must first select Expeditions and Parameters using the filters and checkboxes above.</p>
+    -->
+        
+    
+    <!--TODO: Show the following only if expeditions/parameters are selected-->
     <h4 id="step3-header" class="blue">3. View or download data. Below you can view the <b>{{vm.dataPointCount()}}</b> {{vm.dataPointCount() > 1 ? 'parameters' : 'parameter'}} you selected across <b>{{vm.expeditions.length}}</b> {{vm.expeditions.length > 1 ? 'expeditions' : 'expedition'}}.</h4>
     <p>You can continue to adjust filters and checkboxes above. When you have the data you want, click the button below to download.</p>
     <a class="btn btn-primary" ng-click="vm.download()">Download results</a>
