@@ -103,7 +103,7 @@
                 <h4>Most Viewed Lessons</h4>
                 <table class="table">
                     <tr ng-repeat="lessonViewItem in metrics.lessonViewData | orderBy: '-viewCount'">
-                        <td><p><b>{{lessonViewItem.lesson.title}}</b></p></td>
+                        <td><a ui-sref="lessons.view({ lessonId: lessonViewItem.lesson._id })"><b>{{lessonViewItem.lesson.title}}</b></a></td>
                         <td><p class="text-muted"><b class="red">{{lessonViewItem.viewCount}}</b> views</p></td>
                         <td><h6>{{lessonViewItem.unit.title}}</h6></td>
                     </tr>
@@ -113,7 +113,7 @@
                 <h4>Most Viewed Units</h4>
                 <table class="table">
                     <tr ng-repeat="unitViewItem in metrics.unitViewData | orderBy: '-viewCount'">
-                        <td><p><b>{{unitViewItem.unit.title}}</b></p></td>
+                        <td><a ui-sref="units.view({ unitId: unitViewItem.unit._id })"><b>{{unitViewItem.unit.title}}</b></a></td>
                         <td><p class="text-muted"><b class="red">{{unitViewItem.viewCount}}</b> views</p></td>
                     </tr>
                 </table>
