@@ -10,7 +10,6 @@
         scope: {
           teamRequests: '=',
           teams: '=',
-          saveFunction: '=',
           cancelFunction: '='
         },
         replace: true,
