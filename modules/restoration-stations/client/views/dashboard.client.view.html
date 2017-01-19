@@ -32,6 +32,9 @@
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMember)">
                   Sorry, you aren't on a team yet! As soon as your team lead adds you to a team, you'll see data here.
                 </div>
+                <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMemberPending)">
+                  Sorry, your team membership is still pending! As soon as your team lead adds you to a team, you'll see data here.
+                </div>
             </div>
         </div>
         <div class="row">
