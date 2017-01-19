@@ -11,6 +11,8 @@
                         </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
+                      <!-- BETHANY: Should this be a btn-* class? Shows hand cursor on hover but 
+                      no onclick action -->
                         <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
                     </div>
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
@@ -26,13 +28,13 @@
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
                   You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
                 </div>
-                <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLeadPending">
-                  Sorry, you don't have any teams yet! You will be able to add members and teams as soon as your account is approved.
+                <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
+                  Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
                 </div>
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMember)">
                   Sorry, you aren't on a team yet! As soon as your team lead adds you to a team, you'll see data here.
                 </div>
-                <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMemberPending)">
+                <div class="alert alert-info text-center" ng-show="vm.isTeamMemberPending">
                   Sorry, your team membership is still pending! As soon as your team lead adds you to a team, you'll see data here.
                 </div>
             </div>
@@ -77,7 +79,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead && vm.team">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
@@ -97,7 +99,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
+                        <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activitiesCount}}</span></h4>
                             </div>
@@ -134,7 +136,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isAdmin)">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
                     </div>
@@ -164,7 +166,7 @@
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember) && vm.team">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
