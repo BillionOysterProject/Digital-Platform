@@ -211,11 +211,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       angular.element('#modal-team-lead-requests').modal('show');
     };
 
-    $scope.saveApproveTeamLeads = function() {
-      $scope.findUsers();
-      angular.element('#modal-team-lead-requests').modal('hide');
-    };
-
     $scope.closeApproveTeamLeads = function() {
       $scope.findUsers();
       angular.element('#modal-team-lead-requests').modal('hide');
