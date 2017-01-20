@@ -1126,7 +1126,7 @@ exports.getMonthlyEventCounts = function(req, res) {
 var deleteNonemptyFolder = function(path) {
   if(fs.existsSync(path)) {
     fs.readdirSync(path).forEach(function(file) {
-      var curPath = path + "/" + file;
+      var curPath = path + '/' + file;
       if(fs.statSync(curPath).isDirectory()) { // recurse
         deleteNonemptyFolder(curPath);
       } else { // delete file
