@@ -11,13 +11,13 @@
   </section>
 </section>
 <section class="content">
-  <section class="container-fluid">    
+  <section class="container-fluid">
     <filter-expeditions></filter-expeditions>
     <hr/>
     <p class="red" ng-hide="vm.expeditions.length === 0">
         <b>Your current filters result in the following {{vm.expeditions.length}} {{vm.expeditions.length > 1 ? 'expeditions' : 'expedition'}}:</b>
         <span ng-repeat="expedition in vm.expeditions">
-            <a ui-sref="expedition.view({ expeditionId: expedition.id })">{{expedition.name}}</a>
+            <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
              {{vm.expeditions.length > 1 ? ',' : ' '}}
         </span>
     </p>
