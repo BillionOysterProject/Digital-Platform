@@ -8,16 +8,8 @@
                         <h6>Oyster Restoration Stations</h6>
                     </div>
                     <div class="col-xs-6">
-                        <!--TODO: Can we change this to just "Expeditions" and have a total count of all Expeditions (all statuses)? -->
-                        <h1 class="red">{{metrics.expeditionCounts.published}} <i class="glyphicon glyphicon-flag gray"></i></h1>
-                        <h6>Published Expeditions</h6>
-                        
-                        <!--
-                        {{metrics.expeditionCounts.incomplete}}
-                        {{metrics.expeditionCounts.pending}}
-                        {{metrics.expeditionCounts.returned}}
-                        {{metrics.expeditionCounts.unpublished}}
-                        -->
+                        <h1 class="red">{{metrics.expeditionCounts.total}} <i class="glyphicon glyphicon-flag gray"></i></h1>
+                        <h6>Expeditions</h6>
                     </div>
                 </div>
             </div>
@@ -33,11 +25,6 @@
                 <canvas id="pie" class="chart chart-pie" chart-data="stationStatusPieData"
                     chart-labels="stationStatusPieLabels" chart-legend="true">
                 </canvas>
-                
-                <!--
-                {{metrics.stationCounts.lost}}
-                {{metrics.stationCounts.active}} 
-                -->
             </div>
         </div>
     </section>
@@ -56,14 +43,16 @@
                 </table>
             </div>
             <div class="col-md-3">
-                <!--TODO: Can we remove "Null" from this list?-->
+                <!--TODO: Can we remove "Null" from this list?
+                BETHANY: I don't see null in my local or dev. Put in a change
+                that I hope will remove it but I can't test.
+                -->
                 <h4>Protocol Status</h4>
                 <canvas id="pie" class="chart chart-pie" chart-data="protocolStatusPieData"
                     chart-labels="protocolStatusPieLabels" chart-legend="true">
                 </canvas>
             </div>
             <div class="col-md-3">
-                <!--TODO: This should be the Expeditions statuses (Incomplete, Pending, Returned, Published, Unpublished -- or if easier, just Published and Unpublished (anything in other statuses than Published) -->
                 <h4>Expedition Status</h4>
                 <canvas id="pie" class="chart chart-pie" chart-data="expeditionStatusPieData"
                     chart-labels="expeditionStatusPieLabels" chart-legend="true">
