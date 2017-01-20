@@ -82,7 +82,7 @@
       labelMonthDate.add(1, 'months');
     }
 
-    $scope.stationStatusPieColors = ['#F00000', '#00FF00'];
+    $scope.stationStatusPieColors = ['#ea6158', '#4CAF50'];
     $scope.monthlyCountLineLabels = ['Stations', 'Expeditions'];
     $scope.monthlyCountLineData = [];
     $scope.getStationMetrics();
