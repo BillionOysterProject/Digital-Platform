@@ -65,11 +65,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
             return (teamLeadIndex > -1) ? true : false;
           };
 
-          var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
-            'lessons.list' : 'restoration-stations.dashboard';
+          //var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
+          //  'lessons.list' : 'restoration-stations.dashboard';
 
-          $state.go($state.previous.state.name || dashboard, $state.previous.params);
-          //$state.go(dashboard);
+          //$state.go($state.previous.state.name || dashboard, $state.previous.params);
+          $state.go('restoration-stations.dashboard');
         }
       }).error(function (response) {
         vm.error = response.message;
