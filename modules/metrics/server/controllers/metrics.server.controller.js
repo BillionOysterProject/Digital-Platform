@@ -542,7 +542,8 @@ exports.getStationMetrics = function(req, res) {
     { $group: { _id: '$status', count: { $sum: 1 } } },
     { $project: { _id: false, status: { $toLower: '$_id' }, count: 1 } }
   ]);
-  var expeditionCountQuery = Expedition.aggregate([
+  var expeditionCountQuery = Expedition.count({});
+  var expeditionCountByStatusQuery = Expedition.aggregate([
     { $group: { _id: '$status', count: { $sum: 1 } } },
     { $project: { _id: false, status: '$_id', count: 1 } }
   ]);
@@ -578,7 +579,7 @@ exports.getStationMetrics = function(req, res) {
 
   stationMetrics.protocolStatusCounts = { incomplete: 0, submitted: 0, returned: 0, published: 0, unpublished: 0 };
   stationMetrics.stationCounts = { total: 0, lost: 0, active: 0 };
-  stationMetrics.expeditionCounts = { incomplete: 0, pending: 0, returned: 0, published: 0, unpublished: 0 };
+  stationMetrics.expeditionCounts = { total: 0, incomplete: 0, pending: 0, returned: 0, published: 0, unpublished: 0 };
 
   stationCountQuery.exec(function(err, stationCount) {
     if (err) {
@@ -596,40 +597,38 @@ exports.getStationMetrics = function(req, res) {
           for(var i = 0; i < statusCounts.length; i++) {
             stationMetrics.stationCounts[statusCounts[i].status] = statusCounts[i].count;
           }
-          expeditionCountQuery.exec(function(err, expeditionCounts) {
-            if (err) {
+          expeditionCountQuery.exec(function(err, expeditionCount) {
+            if(err) {
               return res.status(400).send({
-                message: 'Error getting expedition count: ' +errorHandler.getErrorMessage(err)
+                message: 'Error getting expedition total count: ' + errorHandler.getErrorMessage(err)
               });
             } else {
-              for(var i = 0; i < expeditionCounts.length; i++) {
-                stationMetrics.expeditionCounts[expeditionCounts[i].status] = expeditionCounts[i].count;
-              }
-              protocolMobileTrapStatusQuery.exec(function(err, protocolStatusCount) {
+              stationMetrics.expeditionCounts.total = expeditionCount;
+              expeditionCountByStatusQuery.exec(function(err, expeditionCountsByStatus) {
                 if (err) {
                   return res.status(400).send({
-                    message: 'Error geting protocol mobile trap status: ' + errorHandler.getErrorMessage(err)
+                    message: 'Error getting expedition count: ' +errorHandler.getErrorMessage(err)
                   });
                 } else {
-                  for(var i = 0; i < protocolStatusCount.length; i++) {
-                    stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
-                      stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                  for(var i = 0; i < expeditionCountsByStatus.length; i++) {
+                    stationMetrics.expeditionCounts[expeditionCountsByStatus[i].status] = expeditionCountsByStatus[i].count;
                   }
-                  protocolOysterMeasurementStatusQuery.exec(function(err, protocolStatusCount) {
+                  protocolMobileTrapStatusQuery.exec(function(err, protocolStatusCount) {
                     if (err) {
                       return res.status(400).send({
-                        message: 'Error getting protocol oyster measurement status: ' + errorHandler.getErrorMessage(err)
+                        message: 'Error geting protocol mobile trap status: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
-
                       for(var i = 0; i < protocolStatusCount.length; i++) {
-                        stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
-                          stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                        if(protocolStatusCount[i]._id !== null && protocolStatusCount[i]._id !== undefined) {
+                          stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
+                            stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
+                        }
                       }
-                      protocolSettlementTileStatusQuery.exec(function(err, protocolStatusCount) {
+                      protocolOysterMeasurementStatusQuery.exec(function(err, protocolStatusCount) {
                         if (err) {
                           return res.status(400).send({
-                            message: 'Error getting protocol settlement tiles status: ' + errorHandler.getErrorMessage(err)
+                            message: 'Error getting protocol oyster measurement status: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
 
@@ -637,10 +636,10 @@ exports.getStationMetrics = function(req, res) {
                             stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
                               stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
                           }
-                          protocolSiteConditionStatusQuery.exec(function(err, protocolStatusCount) {
+                          protocolSettlementTileStatusQuery.exec(function(err, protocolStatusCount) {
                             if (err) {
                               return res.status(400).send({
-                                message: 'Error getting protocol site condition status: ' + errorHandler.getErrorMessage(err)
+                                message: 'Error getting protocol settlement tiles status: ' + errorHandler.getErrorMessage(err)
                               });
                             } else {
 
@@ -648,10 +647,10 @@ exports.getStationMetrics = function(req, res) {
                                 stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
                                   stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
                               }
-                              protocolWaterQualityStatusQuery.exec(function(err, protocolStatusCount) {
+                              protocolSiteConditionStatusQuery.exec(function(err, protocolStatusCount) {
                                 if (err) {
                                   return res.status(400).send({
-                                    message: 'Error getting protocol water quality status: ' + errorHandler.getErrorMessage(err)
+                                    message: 'Error getting protocol site condition status: ' + errorHandler.getErrorMessage(err)
                                   });
                                 } else {
 
@@ -659,31 +658,44 @@ exports.getStationMetrics = function(req, res) {
                                     stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
                                       stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
                                   }
-                                  expeditionsCompleteQuery.exec(function(err, expeditionData) {
+                                  protocolWaterQualityStatusQuery.exec(function(err, protocolStatusCount) {
                                     if (err) {
                                       return res.status(400).send({
-                                        message: 'Error getting expeditions complete: ' + errorHandler.getErrorMessage(err)
+                                        message: 'Error getting protocol water quality status: ' + errorHandler.getErrorMessage(err)
                                       });
                                     } else {
-                                      stationMetrics.expeditionStatusCounts = {
-                                        future: 0,
-                                        completed: 0
-                                      };
-                                      for(var i = 0; i < expeditionData.length; i++) {
-                                        if(expeditionData[i].future === false) {
-                                          stationMetrics.expeditionStatusCounts.completed = expeditionData[i].count;
-                                        } else if(expeditionData[i].future === true) {
-                                          stationMetrics.expeditionStatusCounts.future = expeditionData[i].count;
-                                        }
+
+                                      for(var i = 0; i < protocolStatusCount.length; i++) {
+                                        stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] =
+                                          stationMetrics.protocolStatusCounts[protocolStatusCount[i]._id] + protocolStatusCount[i].count;
                                       }
-                                      mostVisitedStationsQuery.exec(function(err, stationVisitCountData) {
+                                      expeditionsCompleteQuery.exec(function(err, expeditionData) {
                                         if (err) {
                                           return res.status(400).send({
-                                            message: 'Error getting most visited stations: ' + errorHandler.getErrorMessage(err)
+                                            message: 'Error getting expeditions complete: ' + errorHandler.getErrorMessage(err)
                                           });
                                         } else {
-                                          stationMetrics.stationVisitCounts = stationVisitCountData;
-                                          res.json(stationMetrics);
+                                          stationMetrics.expeditionStatusCounts = {
+                                            future: 0,
+                                            completed: 0
+                                          };
+                                          for(var i = 0; i < expeditionData.length; i++) {
+                                            if(expeditionData[i].future === false) {
+                                              stationMetrics.expeditionStatusCounts.completed = expeditionData[i].count;
+                                            } else if(expeditionData[i].future === true) {
+                                              stationMetrics.expeditionStatusCounts.future = expeditionData[i].count;
+                                            }
+                                          }
+                                          mostVisitedStationsQuery.exec(function(err, stationVisitCountData) {
+                                            if (err) {
+                                              return res.status(400).send({
+                                                message: 'Error getting most visited stations: ' + errorHandler.getErrorMessage(err)
+                                              });
+                                            } else {
+                                              stationMetrics.stationVisitCounts = stationVisitCountData;
+                                              res.json(stationMetrics);
+                                            }
+                                          });
                                         }
                                       });
                                     }
@@ -761,6 +773,7 @@ exports.getEventMetrics = function(req, res) {
   ]);
 
   var eventCounts = { future: 0, past: 0 };
+  var eventTypeCounts = {};
 
   futureEventsQuery.exec(function(err, futureEventsCount) {
     if (err) {
@@ -805,19 +818,17 @@ exports.getEventMetrics = function(req, res) {
                         message: 'Error getting event types: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
-                      eventMetrics.eventTypes = eventTypesData;
+                      for(var i = 0; i < eventTypesData.length; i++) {
+                        eventTypeCounts[eventTypesData[i].type] = 0;
+                      }
                       eventsPerTypeQuery.exec(function(err, eventsPerTypeData) {
                         if (err) {
                           return res.status(400).send({
                             message: 'Error getting events per type: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
-                          var eventTypeCounts = [];
                           for(var i = 0; i < eventsPerTypeData.length; i++) {
-                            eventTypeCounts.push({
-                              eventType: eventsPerTypeData[i].eventType.type,
-                              count: eventsPerTypeData[i].eventTypeCount
-                            });
+                            eventTypeCounts[eventsPerTypeData[i].eventType.type] = eventsPerTypeData[i].eventTypeCount;
                           }
                           eventMetrics.eventTypeCounts = eventTypeCounts;
                           yearsWithEventsQuery.exec(function(err, yearData) {
@@ -1114,7 +1125,7 @@ exports.getMonthlyEventCounts = function(req, res) {
 var deleteNonemptyFolder = function(path) {
   if(fs.existsSync(path)) {
     fs.readdirSync(path).forEach(function(file) {
-      var curPath = path + "/" + file;
+      var curPath = path + '/' + file;
       if(fs.statSync(curPath).isDirectory()) { // recurse
         deleteNonemptyFolder(curPath);
       } else { // delete file

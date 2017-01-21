@@ -145,15 +145,15 @@
       });
     };
 
-    // vm.findTeamRequests = function() {
-    //   TeamRequestsService.query({
-    //     byMember: true
-    //   }, function(data) {
-    //     if (data.length > 0) {
-    //       vm.findSchoolOrgRestorationStations();
-    //     }
-    //   });
-    // };
+    vm.findTeamRequests = function() {
+      TeamRequestsService.query({
+        byMember: true
+      }, function(data) {
+        if (data.length > 0) {
+          vm.findSchoolOrgRestorationStations();
+        }
+      });
+    };
 
     vm.findTeamValues = function() {
       TeamMembersService.query({

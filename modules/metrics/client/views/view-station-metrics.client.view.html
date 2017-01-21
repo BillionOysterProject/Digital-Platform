@@ -8,49 +8,9 @@
                         <h6>Oyster Restoration Stations</h6>
                     </div>
                     <div class="col-xs-6">
-                        <h1 class="red">{{metrics.expeditionCounts.published}} <i class="glyphicon glyphicon-flag gray"></i></h1>
-                        <h6>Published Expeditions</h6>
+                        <h1 class="red">{{metrics.expeditionCounts.total}} <i class="glyphicon glyphicon-flag gray"></i></h1>
+                        <h6>Expeditions</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <h1 class="red">{{metrics.expeditionCounts.incomplete}} <i class="glyphicon glyphicon-map-marker gray"></i></h1>
-                        <h6>Incomplete Expeditions</h6>
-                    </div>
-                    <div class="col-xs-6">
-                        <h1 class="red">{{metrics.expeditionCounts.pending}} <i class="glyphicon glyphicon-flag gray"></i></h1>
-                        <h6>Pending Expeditions</h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <h1 class="red">{{metrics.expeditionCounts.returned}} <i class="glyphicon glyphicon-map-marker gray"></i></h1>
-                        <h6>Returned Expeditions</h6>
-                    </div>
-                    <div class="col-xs-6">
-                        <h1 class="red">{{metrics.expeditionCounts.unpublished}} <i class="glyphicon glyphicon-flag gray"></i></h1>
-                        <h6>Unpublished Expeditions</h6>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <h3 class="red">{{metrics.stationCounts.active}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
-                        <h6>Active Stations</h6>
-                    </div>
-                    <div class="col-xs-6">
-                        <h3 class="red">{{metrics.stationCounts.lost}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
-                        <h6>Lost or Destroyed Stations</h6>
-                    </div>
-                    <!-- Needs wired up as soon as we add these status options: (switch above columns to col-xs-3)
-                    <div class="col-xs-3">
-                        <h3 class="red">{{metrics.stationCounts.damaged}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
-                        <h6>Damaged</h6>
-                    </div>
-                    <div class="col-xs-3">
-                        <h3 class="red">{{metrics.stationCounts.unknown}} <i class="glyphicon glyphicon-map-marker gray"></i></h3>
-                        <h6>Unknown</h6>
-                    </div>
-                    -->
                 </div>
             </div>
             <div class="col-md-4">
@@ -61,9 +21,10 @@
                 </canvas>
             </div>
             <div class="col-md-4">
-                <h4>Station Status</h4>
+                <h4>ORS Status</h4>
                 <canvas id="pie" class="chart chart-pie" chart-data="stationStatusPieData"
-                    chart-labels="stationStatusPieLabels" chart-legend="false">
+                    chart-labels="stationStatusPieLabels" chart-legend="true"
+                    chart-colours="stationStatusPieColors">
                 </canvas>
             </div>
         </div>
@@ -73,7 +34,7 @@
     <section class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <h4>Top Stations visited by Expeditions</h4>
+                <h4>Most Visited ORS</h4>
                 <table class="table">
                     <tr ng-repeat="visitData in metrics.stationVisitCounts | orderBy: '-expeditionCount'">
                         <td><p><i class="glyphicon glyphicon-map-marker"></i> <b>{{visitData.station.name}}</b></p></td>
@@ -83,15 +44,19 @@
                 </table>
             </div>
             <div class="col-md-3">
+                <!--TODO: Can we remove "Null" from this list?
+                BETHANY: I don't see null in my local or dev. Put in a change
+                that I hope will remove it but I can't test.
+                -->
                 <h4>Protocol Status</h4>
                 <canvas id="pie" class="chart chart-pie" chart-data="protocolStatusPieData"
-                    chart-labels="protocolStatusPieLabels" chart-legend="false">
+                    chart-labels="protocolStatusPieLabels" chart-legend="true">
                 </canvas>
             </div>
             <div class="col-md-3">
                 <h4>Expedition Status</h4>
                 <canvas id="pie" class="chart chart-pie" chart-data="expeditionStatusPieData"
-                    chart-labels="expeditionStatusPieLabels" chart-legend="false">
+                    chart-labels="expeditionStatusPieLabels" chart-legend="true">
                 </canvas>
             </div>
         </div>

@@ -5,11 +5,11 @@
     .module('metrics')
     .controller('StationMetricsController', StationMetricsController);
 
-  StationMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment',
+  StationMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment', 'ChartJs',
   'MetricsStationService', 'MetricsStationActivityService', 'MetricsExpeditionActivityService'];
 
-  function StationMetricsController($scope, $rootScope, $timeout, moment, MetricsStationService,
-    MetricsStationActivityService, MetricsExpeditionActivityService) {
+  function StationMetricsController($scope, $rootScope, $timeout, moment, ChartJsProvider,
+    MetricsStationService, MetricsStationActivityService, MetricsExpeditionActivityService) {
 
     $scope.getStationMetrics = function() {
       MetricsStationService.query({},
@@ -18,18 +18,31 @@
         $scope.stationStatusPieData = [];
         $scope.stationStatusPieData.push(data.stationCounts.lost);
         $scope.stationStatusPieData.push(data.stationCounts.active);
+        $scope.stationStatusPieLabels = [];
+        $scope.stationStatusPieLabels.push(data.stationCounts.lost + ' Lost Stations');
+        $scope.stationStatusPieLabels.push(data.stationCounts.active + ' Active Stations');
         $scope.protocolStatusPieData = [];
         $scope.protocolStatusPieLabels = [];
+        var prettyStatusName = '';
         var statusNames = Object.keys(data.protocolStatusCounts);
         for(var i = 0; i < statusNames.length; i++) {
-          var prettyStatusName = statusNames[i];
+          prettyStatusName = statusNames[i];
           prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Protocols';
-          $scope.protocolStatusPieLabels.push(prettyStatusName);
+          $scope.protocolStatusPieLabels.push(data.protocolStatusCounts[statusNames[i]] + ' ' + prettyStatusName);
           $scope.protocolStatusPieData.push(data.protocolStatusCounts[statusNames[i]]);
         }
+
+        $scope.expeditionStatusPieLabels = [];
         $scope.expeditionStatusPieData = [];
-        $scope.expeditionStatusPieData.push(data.expeditionStatusCounts.future);
-        $scope.expeditionStatusPieData.push(data.expeditionStatusCounts.completed);
+        var expeditionStatusNames = Object.keys(data.expeditionCounts);
+        for(i = 0; i < expeditionStatusNames.length; i++) {
+          if(expeditionStatusNames[i] !== 'total') {
+            prettyStatusName = expeditionStatusNames[i];
+            prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Expeditions';
+            $scope.expeditionStatusPieLabels.push(data.expeditionCounts[expeditionStatusNames[i]] + ' ' + prettyStatusName);
+            $scope.expeditionStatusPieData.push(data.expeditionCounts[expeditionStatusNames[i]]);
+          }
+        }
 
         $scope.error = null;
         $timeout(function() {
@@ -69,8 +82,7 @@
       labelMonthDate.add(1, 'months');
     }
 
-    $scope.stationStatusPieLabels = ['Lost Stations', 'Active Stations'];
-    $scope.expeditionStatusPieLabels = ['Future Expeditions', 'Completed Expeditions'];
+    $scope.stationStatusPieColors = ['#ea6158', '#4CAF50'];
     $scope.monthlyCountLineLabels = ['Stations', 'Expeditions'];
     $scope.monthlyCountLineData = [];
     $scope.getStationMetrics();
