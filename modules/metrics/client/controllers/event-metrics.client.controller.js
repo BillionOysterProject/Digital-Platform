@@ -15,27 +15,14 @@
       MetricsEventService.query({},
       function (data) {
         $scope.metrics = data;
-        var eventTypePieLabels = [];
-        if($scope.metrics.eventTypes !== undefined && $scope.metrics.eventTypes.length > 0) {
-          for(var i = 0; i < $scope.metrics.eventTypes.length; i++) {
-            eventTypePieLabels.push($scope.metrics.eventTypes[i].type);
-          }
+
+        $scope.eventTypePieLabels = [];
+        $scope.eventTypePieData = [];
+        var eventTypeNames = Object.keys(data.eventTypeCounts);
+        for(var i = 0; i < eventTypeNames.length; i++) {
+            $scope.eventTypePieLabels.push(data.eventTypeCounts[eventTypeNames[i]] + ' ' + eventTypeNames[i]);
+            $scope.eventTypePieData.push(data.eventTypeCounts[eventTypeNames[i]]);
         }
-        $scope.eventTypePieLabels = eventTypePieLabels;
-        var eventTypePieData = [];
-        if($scope.metrics.eventTypeCounts !== null && $scope.metrics.eventTypeCounts !== undefined) {
-          for(var typeIndex = 0; typeIndex < $scope.eventTypePieLabels.length; typeIndex++) {
-            var currType = $scope.eventTypePieLabels[typeIndex];
-            var count = 0;
-            for(var countIndex = 0; countIndex < $scope.metrics.eventTypeCounts.length; countIndex++) {
-              if($scope.metrics.eventTypeCounts[countIndex].eventType === currType) {
-                count = $scope.metrics.eventTypeCounts[countIndex].count;
-              }
-            }
-            eventTypePieData.push(count);
-          }
-        }
-        $scope.eventTypePieData = eventTypePieData;
 
         $scope.yearsWithEvents = $scope.metrics.yearsWithEvents;
         if($scope.yearsWithEvents !== undefined && $scope.yearsWithEvents.length > 0) {
