@@ -15,7 +15,6 @@
                   <img ng-src="{{request.requester.profileImageURL}}" class="profile-image">
                   <h4>{{request.requester.displayName}}</h4>
                   <p class="text-muted small">{{request.requester.email}}</p>
-                  <!--TODO: Wire up copied code to work on an individual basis, remove save button (and next screen) so it is automatic, show error if user tries to approve Member without first selecting a team for them -->
                   <div class="form-group" show-errors>
                       <label for="{{'team' + $index}}" class="control-label" ng-class="{'required': request.approve !== undefined && request.approve === true}">Add to a current team</label>
                       <select name="{{'team' + $index}}" class="form-control" ng-model="teamRequestsTeams[request._id]" ng-required="request.approve !== undefined && request.approve === true"
