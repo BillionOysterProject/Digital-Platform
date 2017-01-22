@@ -5,8 +5,8 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Team Member Requests</h4>
       </div>
-      <form name="form.approveTeamRequestsForm" ng-submit="save(form.approveTeamRequestsForm.$valid)" novalidate>
-        <div class="modal-body"> <!-- ng-show="teamRequests.length > 0" -->
+      <form name="form.approveTeamRequestsForm" novalidate>
+        <div class="modal-body">
           <p>Before clicking to automatically approve each member, select an existing team for the member to join. Accepted team members will immediately gain full access to the platform. Rejected team members will be removed from the list and their pending account will be deleted.</p>
           <div class="row">
             <div class="col-sm-6 col-md-4" ng-repeat="request in teamRequests">
@@ -17,49 +17,35 @@
                   <p class="text-muted small">{{request.requester.email}}</p>
                   <!--TODO: Wire up copied code to work on an individual basis, remove save button (and next screen) so it is automatic, show error if user tries to approve Member without first selecting a team for them -->
                   <div class="form-group" show-errors>
-                    <label for="team" class="control-label" ng-class="{required: getApproveCount() > 0}">Add to a current team</label>
-                    <select name="team" class="form-control" ng-model="team.teamId" ng-required="getApproveCount() > 0">
-                        <option disabled selected value>
-                        <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
-                    </select>
+                      <label for="{{'team' + $index}}" class="control-label" ng-class="{'required': request.approve !== undefined && request.approve === true}">Add to a current team</label>
+                      <select name="{{'team' + $index}}" class="form-control" ng-model="teamRequestsTeams[request._id]" ng-required="request.approve !== undefined && request.approve === true"
+                          ng-change="onTeamSelectionChange($index)">
+                          <option disabled selected value>
+                          <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
+                      </select>
                   </div>
-                  <div class="btn-group">
+                  <div class="btn-group" name="{{'approval' + $index}}">
                     <a class="btn btn-success" title="Accept" ng-model="request.approve"
-                      uib-btn-radio="true" ng-click="approve()">
+                      uib-btn-radio="true" ng-change="checkValidityAndConfirm(request, $index, true)">
                       <i class="glyphicon glyphicon-ok"></i> <span class="hidden">Approve</span></a>
                     <a class="btn btn-danger" title="Reject" ng-model="request.approve"
-                      uib-btn-radio="false" ng-click="deny()">
+                      uib-btn-radio="false" ng-change="checkValidityAndConfirm(request, $index, false)">
                       <i class="glyphicon glyphicon-remove"></i> <span class="hidden">Reject</span></a>
                   </div>
-                  <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">
+                  <div ng-show="request.error" class="text-danger">
                     <strong ng-bind="request.error"></strong>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <hr/>
-          <div class="row" ng-show="getApproveCount() > 0">
-            <div class="form-group col-sm-6" show-errors>
-              <label for="team" class="control-label" ng-class="{required: getApproveCount() > 0}">Add to a current team</label>
-              <select name="team" class="form-control" ng-model="team.teamId" ng-required="getApproveCount() > 0">
-                <option disabled selected value>
-                <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
-                <option value="-1">Create a new team</option>
-              </select>
-            </div>
-            <div class="form-group col-sm-6" show-errors ng-show="team.teamId === '-1'">
-              <label for="newTeam" class="control-label" ng-class="{required: team.teamId === '-1'}">Create a new team</label>
-              <input type="text" name="newTeam" class="form-control" ng-model="team.newTeamName" ng-require="team.teamId === '-1'"/>
-            </div>
-          </div>
+
           <div class="text-danger row" ng-show="error">
             <strong ng-bind="error"></strong>
           </div>
         </div>
         <div class="modal-footer" ng-show="teamRequests.length > 0">
           <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>

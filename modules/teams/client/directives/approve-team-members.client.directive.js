@@ -15,7 +15,6 @@
         replace: true,
         controller: 'TeamApprovalController',
         link: function(scope, element, attrs) {
-
         }
       };
     });

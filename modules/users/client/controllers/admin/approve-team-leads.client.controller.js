@@ -13,7 +13,7 @@
       for (var i = 0; i < $scope.leadRequests.length; i++) {
         delete $scope.leadRequests.approve;
       }
-      
+
       $scope.team = {
         teamId: null,
         newTeamName: null
@@ -58,7 +58,7 @@
       }).
       error(function(data, status, headers, config) {
         if(data === null || data === undefined || data.message === null || data.message === undefined) {
-          $scope.error = "An unknown error occurred.";
+          $scope.error = 'An unknown error occurred.';
         } else {
           $scope.error = data.message;
         }
