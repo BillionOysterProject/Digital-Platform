@@ -20,8 +20,8 @@
         $scope.eventTypePieData = [];
         var eventTypeNames = Object.keys(data.eventTypeCounts);
         for(var i = 0; i < eventTypeNames.length; i++) {
-            $scope.eventTypePieLabels.push(data.eventTypeCounts[eventTypeNames[i]] + ' ' + eventTypeNames[i]);
-            $scope.eventTypePieData.push(data.eventTypeCounts[eventTypeNames[i]]);
+          $scope.eventTypePieLabels.push(data.eventTypeCounts[eventTypeNames[i]] + ' ' + eventTypeNames[i]);
+          $scope.eventTypePieData.push(data.eventTypeCounts[eventTypeNames[i]]);
         }
 
         $scope.yearsWithEvents = $scope.metrics.yearsWithEvents;
