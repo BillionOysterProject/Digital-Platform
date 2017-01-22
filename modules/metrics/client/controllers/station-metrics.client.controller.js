@@ -28,7 +28,7 @@
         for(var i = 0; i < statusNames.length; i++) {
           prettyStatusName = statusNames[i];
           prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Protocols';
-          $scope.protocolStatusPieLabels.push(prettyStatusName);
+          $scope.protocolStatusPieLabels.push(data.protocolStatusCounts[statusNames[i]] + ' ' + prettyStatusName);
           $scope.protocolStatusPieData.push(data.protocolStatusCounts[statusNames[i]]);
         }
 
@@ -39,7 +39,7 @@
           if(expeditionStatusNames[i] !== 'total') {
             prettyStatusName = expeditionStatusNames[i];
             prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Expeditions';
-            $scope.expeditionStatusPieLabels.push(prettyStatusName);
+            $scope.expeditionStatusPieLabels.push(data.expeditionCounts[expeditionStatusNames[i]] + ' ' + prettyStatusName);
             $scope.expeditionStatusPieData.push(data.expeditionCounts[expeditionStatusNames[i]]);
           }
         }

@@ -773,6 +773,7 @@ exports.getEventMetrics = function(req, res) {
   ]);
 
   var eventCounts = { future: 0, past: 0 };
+  var eventTypeCounts = {};
 
   futureEventsQuery.exec(function(err, futureEventsCount) {
     if (err) {
@@ -817,19 +818,17 @@ exports.getEventMetrics = function(req, res) {
                         message: 'Error getting event types: ' + errorHandler.getErrorMessage(err)
                       });
                     } else {
-                      eventMetrics.eventTypes = eventTypesData;
+                      for(var i = 0; i < eventTypesData.length; i++) {
+                        eventTypeCounts[eventTypesData[i].type] = 0;
+                      }
                       eventsPerTypeQuery.exec(function(err, eventsPerTypeData) {
                         if (err) {
                           return res.status(400).send({
                             message: 'Error getting events per type: ' + errorHandler.getErrorMessage(err)
                           });
                         } else {
-                          var eventTypeCounts = [];
                           for(var i = 0; i < eventsPerTypeData.length; i++) {
-                            eventTypeCounts.push({
-                              eventType: eventsPerTypeData[i].eventType.type,
-                              count: eventsPerTypeData[i].eventTypeCount
-                            });
+                            eventTypeCounts[eventsPerTypeData[i].eventType.type] = eventsPerTypeData[i].eventTypeCount;
                           }
                           eventMetrics.eventTypeCounts = eventTypeCounts;
                           yearsWithEventsQuery.exec(function(err, yearData) {
