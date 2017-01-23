@@ -150,7 +150,7 @@
         byMember: true
       }, function(data) {
         if (data.length > 0) {
-          vm.findSchoolOrgRestorationStations();
+          findSchoolOrgRestorationStations();
         }
       });
     };
