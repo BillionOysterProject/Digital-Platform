@@ -14,6 +14,7 @@
     $scope.getStationMetrics = function() {
       MetricsStationService.query({},
       function (data) {
+        var statusName, prettyStatusName, colorIdx;
         $scope.metrics = data;
         $scope.stationStatusPieData = [];
         $scope.stationStatusPieData.push(data.stationCounts.lost);
@@ -21,24 +22,35 @@
         $scope.stationStatusPieLabels = [];
         $scope.stationStatusPieLabels.push(data.stationCounts.lost + ' Lost Stations');
         $scope.stationStatusPieLabels.push(data.stationCounts.active + ' Active Stations');
+        $scope.protocolStatusPieColors = [];
         $scope.protocolStatusPieData = [];
         $scope.protocolStatusPieLabels = [];
-        var prettyStatusName = '';
         var statusNames = Object.keys(data.protocolStatusCounts);
         for(var i = 0; i < statusNames.length; i++) {
-          prettyStatusName = statusNames[i];
-          prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Protocols';
+          statusName = statusNames[i];
+          prettyStatusName = statusName[0].toUpperCase() + statusName.substr(1) + ' Protocols';
+          for(colorIdx = 0; colorIdx < $scope.protocolStatusPieColorMap.length; colorIdx++) {
+            if($scope.protocolStatusPieColorMap[colorIdx].status === statusName) {
+              $scope.protocolStatusPieColors.push($scope.protocolStatusPieColorMap[colorIdx].color);
+            }
+          }
           $scope.protocolStatusPieLabels.push(data.protocolStatusCounts[statusNames[i]] + ' ' + prettyStatusName);
           $scope.protocolStatusPieData.push(data.protocolStatusCounts[statusNames[i]]);
         }
 
+        $scope.expeditionStatusPieColors = [];
         $scope.expeditionStatusPieLabels = [];
         $scope.expeditionStatusPieData = [];
         var expeditionStatusNames = Object.keys(data.expeditionCounts);
         for(i = 0; i < expeditionStatusNames.length; i++) {
           if(expeditionStatusNames[i] !== 'total') {
-            prettyStatusName = expeditionStatusNames[i];
-            prettyStatusName = prettyStatusName[0].toUpperCase() + prettyStatusName.substr(1) + ' Expeditions';
+            statusName = expeditionStatusNames[i];
+            prettyStatusName = statusName[0].toUpperCase() + statusName.substr(1) + ' Expeditions';
+            for(colorIdx = 0; colorIdx < $scope.expeditionStatusPieColorMap.length; colorIdx++) {
+              if($scope.expeditionStatusPieColorMap[colorIdx].status === statusName) {
+                $scope.expeditionStatusPieColors.push($scope.expeditionStatusPieColorMap[colorIdx].color);
+              }
+            }
             $scope.expeditionStatusPieLabels.push(data.expeditionCounts[expeditionStatusNames[i]] + ' ' + prettyStatusName);
             $scope.expeditionStatusPieData.push(data.expeditionCounts[expeditionStatusNames[i]]);
           }
@@ -83,8 +95,31 @@
     }
 
     $scope.stationStatusPieColors = ['#ea6158', '#4CAF50'];
+    $scope.protocolStatusPieColorMap = [
+      { status: 'incomplete', color: '#ea6158' },
+      { status: 'submitted', color: '#4CAF50' },
+      { status: 'returned', color: '#0000FF' },
+      { status: 'published', color: '#00FF00' },
+      { status: 'unpublished', color: '#FF0000' }
+    ];
+    $scope.expeditionStatusPieColorMap = [
+      { status: 'incomplete', color: '#ea6158' },
+      { status: 'pending', color: '#4CAF50' },
+      { status: 'returned', color: '#0000FF' },
+      { status: 'published', color: '#00FF00' },
+      { status: 'unpublished', color: '#FF0000' }
+    ];
     $scope.monthlyCountLineLabels = ['Stations', 'Expeditions'];
     $scope.monthlyCountLineData = [];
+
+    //use this for the tooltips on charts
+    //where we are setting the labels to be "value things"
+    $scope.chart_options = {
+      tooltipTemplate: function(label) {
+        return label.label;
+      }
+    };
+
     $scope.getStationMetrics();
     $scope.getMonthlyActivity();
   }
