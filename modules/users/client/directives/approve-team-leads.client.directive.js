@@ -9,7 +9,6 @@
         templateUrl: 'modules/users/client/views/admin/approve-team-leads.client.view.html',
         scope: {
           leadRequests: '=',
-          saveFunction: '=',
           cancelFunction: '='
         },
         replace: true,

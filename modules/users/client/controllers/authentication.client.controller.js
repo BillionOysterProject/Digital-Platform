@@ -34,7 +34,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           $location.path($rootScope.redirectFromLogin);
         } else {
           // And redirect to the previous or home page
-          $state.go($state.previous.state.name || 'home', $state.previous.params);
+          var toGoState = $state.previous.state.name;
+          if(toGoState === undefined || toGoState === null || toGoState === 'home') {
+            toGoState = 'restoration-stations.dashboard';
+          }
+          $state.go(toGoState, $state.previous.params);
         }
       }).error(function (response) {
         vm.error = response.message;

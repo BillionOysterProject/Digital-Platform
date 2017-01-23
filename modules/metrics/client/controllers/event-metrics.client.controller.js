@@ -108,6 +108,15 @@
     $scope.yearsWithEvents = [];
     $scope.monthlyCountLineLabels = ['Events'];
     $scope.monthlyCountLineData = [];
+
+    //use this for the tooltips on charts
+    //where we are setting the labels to be "value things"
+    $scope.chart_options = {
+      tooltipTemplate: function(label) {
+        return label.label;
+      }
+    };
+    
     $scope.getEventMetrics();
     $scope.getMonthlyEventActivity();
   }
