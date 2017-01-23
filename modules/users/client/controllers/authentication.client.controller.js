@@ -34,6 +34,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           $location.path($rootScope.redirectFromLogin);
         } else {
           // And redirect to the previous or home page
+          //TODO: REDIRECT TO DASHBOARD????
           $state.go($state.previous.state.name || 'home', $state.previous.params);
         }
       }).error(function (response) {

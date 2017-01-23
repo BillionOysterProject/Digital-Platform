@@ -105,7 +105,8 @@ exports.delete = function (req, res) {
         }
       }
     });
-  } else if(hasRole(user, 'team member')) {
+  } else if(hasRole(user, 'team member') || hasRole(user, 'team member pending')) {
+    console.log("TEAM MEMBER");
     //if the user is a team member, delete the reference to them from the
     //teamMembers list in the Team model
     Team.find({ 'teamMembers': user._id }).exec(function(err, teams) {
@@ -132,12 +133,17 @@ exports.delete = function (req, res) {
             }
           });
         };
-        for(var i = 0; i < teams.length; i++) {
-          var team = teams[i];
-          var index = memberIndex(user, team);
-          if(index > -1) {
-            team.teamMembers.splice(index, 1);
-            delTeamMember(user, team);
+        console.log("got " + teams.length + " teams for user " + user._id);
+        if(teams === null || teams === undefined || teams.length === 0) {
+          deleteUserInternal(user, res);
+        } else {
+          for(var i = 0; i < teams.length; i++) {
+            var team = teams[i];
+            var index = memberIndex(user, team);
+            if(index > -1) {
+              team.teamMembers.splice(index, 1);
+              delTeamMember(user, team);
+            }
           }
         }
       }
