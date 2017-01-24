@@ -8,6 +8,7 @@ var path = require('path'),
   User = mongoose.model('User'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   Team = mongoose.model('Team'),
+  TeamRequest = mongoose.model('TeamRequest'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -106,44 +107,70 @@ exports.delete = function (req, res) {
       }
     });
   } else if(hasRole(user, 'team member') || hasRole(user, 'team member pending')) {
-    //if the user is a team member, delete the reference to them from the
-    //teamMembers list in the Team model
-    Team.find({ 'teamMembers': user._id }).exec(function(err, teams) {
-      if (err) {
+    //delete any team requests for this user
+    TeamRequest.find({ 'requester': user._id }).exec(function(err, teamRequests) {
+      if(err) {
         return res.status(400).send({
-          message: 'Could not find teams associated with user ' + user.displayName +
+          message: 'Could not find team requests associated with user ' + user.displayName +
             '. Error is: ' + errorHandler.getErrorMessage(err)
         });
       } else {
-        var memberIndex = function(member, team) {
-          var index = _.findIndex(team.teamMembers, function(m) {
-            return m.toString() === member._id.toString();
-          });
-          return index;
-        };
-        var delTeamMember = function(user, team) {
-          team.save(function (delSaveErr) {
-            if (delSaveErr) {
-              return res.status(400).send({
-                message: 'Could not delete user as member from team ' + team.name + '. Error is: ' + delSaveErr
-              });
-            } else {
-              deleteUserInternal(user, res);
-            }
-          });
-        };
-        if(teams === null || teams === undefined || teams.length === 0) {
-          deleteUserInternal(user, res);
-        } else {
-          for(var i = 0; i < teams.length; i++) {
-            var team = teams[i];
-            var index = memberIndex(user, team);
-            if(index > -1) {
-              team.teamMembers.splice(index, 1);
-              delTeamMember(user, team);
-            }
+        if(teamRequests !== undefined && teamRequests !== null && teamRequests.length > 0) {
+          var removeTeamRequest = function(teamRequest) {
+            teamRequest.remove(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: 'Error deleting team request for user ' + user.displayName +
+                    '. Error was: ' + errorHandler.getErrorMessage(err)
+                });
+              }
+            });
+          };
+          for(var i = 0; i < teamRequests.length; i++) {
+            removeTeamRequest(teamRequests[i]);
           }
         }
+
+        //if the user is a team member, delete the reference to them from the
+        //teamMembers list in the Team model
+        Team.find({ 'teamMembers': user._id }).exec(function(err, teams) {
+          if (err) {
+            return res.status(400).send({
+              message: 'Could not find teams associated with user ' + user.displayName +
+                '. Error is: ' + errorHandler.getErrorMessage(err)
+            });
+          } else {
+            var memberIndex = function(member, team) {
+              var index = _.findIndex(team.teamMembers, function(m) {
+                return m.toString() === member._id.toString();
+              });
+              return index;
+            };
+            var delTeamMember = function(user, team) {
+              team.save(function (delSaveErr) {
+                if (delSaveErr) {
+                  return res.status(400).send({
+                    message: 'Could not delete user as member from team ' + team.name + '. Error is: ' + delSaveErr
+                  });
+                } else {
+                  deleteUserInternal(user, res);
+                }
+              });
+            };
+            if(teams === null || teams === undefined || teams.length === 0) {
+              deleteUserInternal(user, res);
+            } else {
+              for(var i = 0; i < teams.length; i++) {
+                var team = teams[i];
+                var index = memberIndex(user, team);
+                if(index > -1) {
+                  team.teamMembers.splice(index, 1);
+                  delTeamMember(user, team);
+                }
+              }
+            }
+          }
+        });
       }
     });
   }
