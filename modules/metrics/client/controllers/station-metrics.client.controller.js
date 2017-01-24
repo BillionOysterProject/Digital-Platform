@@ -97,17 +97,17 @@
     $scope.stationStatusPieColors = ['#ea6158', '#4CAF50'];
     $scope.protocolStatusPieColorMap = [
       { status: 'incomplete', color: '#ea6158' },
-      { status: 'submitted', color: '#4CAF50' },
-      { status: 'returned', color: '#0000FF' },
-      { status: 'published', color: '#00FF00' },
-      { status: 'unpublished', color: '#FF0000' }
+      { status: 'submitted', color: '#6ec071' },
+      { status: 'returned', color: '#f08c85' },
+      { status: 'published', color: '#4CAF50' },
+      { status: 'unpublished', color: '#cccccc' }
     ];
     $scope.expeditionStatusPieColorMap = [
       { status: 'incomplete', color: '#ea6158' },
-      { status: 'pending', color: '#4CAF50' },
-      { status: 'returned', color: '#0000FF' },
-      { status: 'published', color: '#00FF00' },
-      { status: 'unpublished', color: '#FF0000' }
+      { status: 'pending', color: '#6ec071' },
+      { status: 'returned', color: '#f08c85' },
+      { status: 'published', color: '#4CAF50' },
+      { status: 'unpublished', color: '#cccccc' }
     ];
     $scope.monthlyCountLineLabels = ['Stations', 'Expeditions'];
     $scope.monthlyCountLineData = [];
