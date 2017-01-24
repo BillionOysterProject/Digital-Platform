@@ -11,9 +11,7 @@
                         </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
-                      <!-- BETHANY: Should this be a btn-* class? Shows hand cursor on hover but 
-                      no onclick action -->
-                        <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
+                        <h4><span class="label label-success">{{vm.team.name}}</span></h4>
                     </div>
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
@@ -40,7 +38,7 @@
             </div>
         </div>
         <div class="row">
-            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin || vm.isTeamLeadPending), 'col-md-12': vm.isTeamMemberPending }">
+            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamMemberPending || vm.isTeamLeadPending) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>Oyster Restoration Stations</h4>
@@ -74,8 +72,7 @@
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-default" ui-sref="expeditions.data({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
-                        <!-- TIFFANY: Wire up compare modal (currently living on Expeditions list page) -->
-                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-compare-expedition-data">Compare data</a> -->
+                        <a class="btn btn-default" ui-sref="expeditions.data({ active: 'compareexpeditions' })" id="compareexpeditions">Compare data</a>
                     </div>
                 </div>
                 <div class="row">
@@ -120,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': vm.team, 'col-lg-12': !vm.team }">
+                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': ((vm.isTeamLead || vm.isAdmin) && vm.team), 'col-lg-12': (!vm.team || (vm.isTeamLeadPending && vm.team)) }">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
