@@ -13,7 +13,7 @@
       </a>
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" view-permissions="admin,team lead" ng-class="{active: vm.createdLessons.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Lessons</a></li>
-        <li role="presentation" view-permissions="admin,team lead,team lead pending,partner" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Saved Lessons</a></li>
+        <li role="presentation" view-permissions="admin,team lead,team lead pending,partner" ng-class="{active: vm.createdLessons.length === 0}"><a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Starred Lessons</a></li>
         <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Lessons</a></li>
       </ul>
       <div class="tab-content">

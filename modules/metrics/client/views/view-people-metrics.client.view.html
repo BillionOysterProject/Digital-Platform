@@ -1,0 +1,106 @@
+<section class="content">
+  <section class="container-fluid">
+      <div class="row">
+          <div class="col-md-4 text-center">
+              <div class="row">
+                  <div class="col-xs-6">
+                      <h1 class="red">{{metrics.userCount}} <i class="glyphicon glyphicon-user gray"></i></h1>
+                      <h6>Total Users</h6>
+                  </div>
+                  <div class="col-xs-6">
+                      <h2 class="red">{{metrics.adminCount}}</h2>
+                      <h6>Admin</h6>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-xs-6">
+                      <h2 class="red">{{metrics.teamLeadCount}}</h2>
+                      <h6>Team Leads</h6>
+                  </div>
+                  <div class="col-xs-6">
+                      <h2 class="red">{{metrics.teamMemberCount}}</h2>
+                      <h6>Team Members</h6>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <h4>Roles</h4>
+              <canvas id="pie" class="chart chart-pie" chart-data="rolesPieData"
+                  chart-labels="rolesPielabels" chart-legend="true">
+              </canvas>
+          </div>
+
+      </div>
+  </section>
+</section>
+<section class="content shaded">
+  <section class="container-fluid">
+      <div class="row">
+          <div class="col-md-6">
+              <nav class="navbar">
+                  <h4 class="navbar-text">Most Active Users</h4>
+                  <ul class="nav navbar-nav">
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              {{monthHistoryLabelsReversed[monthHistoryLabelsReversed.indexOf(userActivityFilter.month)].name}} <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                             <li ng-repeat="month in monthHistoryLabelsReversed">
+                               <a ng-click="userActivityMonthSelected(month)">
+                                 {{month.name}}
+                               </a>
+                             </li>
+                          </ul>
+                      </li>
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              {{userRoleOptions[userRoleOptions.indexOf(userActivityFilter.userRole)].name}} <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li ng-repeat="role in userRoleOptions">
+                              <a ok-sel=".{{role.value}}" ng-click="userActivityRoleSelected(role)">
+                                  {{role.name}}
+                              </a>
+                            </li>
+                          </ul>
+
+                      </li>
+                  </ul>
+              </nav>
+              <table class="table">
+                  <tr>
+                      <th>Name</th>
+                      <th>Logins</th>
+                      <th ng-hide="isAdminSelected()">Team(s)</th>
+                      <th ng-hide="isAdminSelected()">Members</th>
+                      <th ng-hide="isAdminSelected()">Organization</th>
+                  </tr>
+                  <tr ng-repeat="activeUserItem in userActivityData | orderBy: '-loginCount'">
+                      <td><b>{{activeUserItem.user.displayName}}</b></td>
+                      <td><p class="text-muted"><b class="red">{{activeUserItem.loginCount}}</b> logins</p></td>
+                      <td ng-hide="isAdminSelected()"><span ng-repeat="team in activeUserItem.teams">{{team.name}}{{$last ? '' : ', '}}</span></td>
+                      <td ng-hide="isAdminSelected()"><b>{{calculateTotalTeamMembers(activeUserItem)}}</b></td>
+                      <td ng-hide="isAdminSelected()">{{activeUserItem.schoolOrg.name}}</td>
+                  </tr>
+              </table>
+          </div>
+          <div class="col-md-6">
+              <h4 class="navbar-text">Largest Teams</h4>
+              <table class="table">
+                  <tr>
+                      <th>Team Name</th>
+                      <th>Members</th>
+                      <th>Team Lead</th>
+                      <th>Organization</th>
+                  </tr>
+                  <tr ng-repeat="teamItem in metrics.largestTeams | orderBy: '-teamMemberCount' | limitTo:5">
+                      <td><b>{{teamItem.name}}</b></td>
+                      <td><p class="text-muted"><b class="red">{{teamItem.teamMemberCount}}</b> team members</p></td>
+                      <td>{{teamItem.teamLead.displayName}}</td>
+                      <td>{{teamItem.schoolOrg.name}}</td>
+                  </tr>
+              </table>
+          </div>
+      </div>
+  </section>
+</section>

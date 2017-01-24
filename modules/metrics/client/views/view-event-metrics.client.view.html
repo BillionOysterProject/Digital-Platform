@@ -1,0 +1,116 @@
+<section class="content">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.eventCounts.future}} <i class="fa fa-calendar gray"></i></h1>
+                        <h6>Future Events</h6>
+                    </div>
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.eventCounts.past}} <i class="fa fa-calendar-times-o gray"></i></h1>
+                        <h6>Past Events</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h3 class="red">{{(metrics.avgRegistrationRate*100).toFixed(0)}}% <i class="fa fa-users gray"></i></h3>
+                        <h6>Capacity Rate</h6>
+                        <small class="text-muted">Of the available registration spots, how many were filled?</small>
+                    </div>
+                    <div class="col-xs-6">
+                        <h3 class="red">{{(metrics.avgAttendanceRate*100).toFixed(0)}}% <i class="fa fa-check gray"></i></h3>
+                        <h6>Attendance Rate</h6>
+                        <small class="text-muted">Of those who registered, how many attended?</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4>Timeline</h4><!-- Show how many events are scheduled per month by Event Date, past and future -->
+                <canvas id="line" class="chart chart-line" chart-data="monthlyCountLineData"
+                    chart-labels="monthHistoryLabels" chart-legend="true" chart-series="monthlyCountLineLabels"
+                    chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+            <div class="col-md-4">
+                <h4>Event Type</h4> <!-- Show breakdown of types: ORS Basic Training, Advanced Field Training, Professional Development, Scientist Workshop, Other -->
+                <canvas id="pie" class="chart chart-pie" chart-data="eventTypePieData"
+                    chart-labels="eventTypePieLabels" chart-legend="true"
+                    chart-options="chart_options">
+                </canvas>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="content shaded">
+  <section class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <!--TODO: Show top 10 events by filter (registrants as default) -- table copied from another page, replace with Event data -->
+              <nav class="navbar">
+                  <h4 class="navbar-text">Top Events</h4>
+                  <ul class="nav navbar-nav">
+                      <!--TODO: New filter: default is to show top 10 events by number of registrants -->
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            {{eventActivityOptions[eventActivityOptions.indexOf(eventActivityFilter.activityType)].name}} <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li ng-repeat="eventActivity in eventActivityOptions">
+                              <a ok-sel=".{{eventActivity.value}}" ng-click="eventActivityOptionSelected(eventActivity)">
+                                  {{eventActivity.name}}
+                              </a>
+                            </li>
+                          </ul>
+                      </li>
+                      <!--This filter should be by year of Event Date (2016, 2017, etc) instead of by month (maybe eventually we'll switch once month is applicable) and also have an ALL option as default -->
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                              {{yearsWithEvents[yearsWithEvents.indexOf(eventActivityFilter.year)]}} <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                             <li ng-repeat="year in yearsWithEvents">
+                               <a ng-click="eventActivityYearSelected(year)">
+                                 {{year}}
+                               </a>
+                             </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </nav>
+              <table class="table">
+                  <tr>
+                      <th>Event Name</th>
+                      <th>Registrants</th>
+                      <th>Attendees</th>
+                      <th>Max Capacity</th>
+                      <th>Capacity Rate</th>
+                      <th>Attendance Rate</th>
+                      <th>Event Date</th>
+                      <th>Registration Deadline</th>
+                  </tr>
+                  <tr ng-repeat="eventStat in eventStatisticsData">
+                      <td><a ui-sref="events.view({ eventId: eventStat._id })"><b>{{eventStat.title}}</b></a></td>
+                      <td><p class="text-muted"><b class="red">{{eventStat.registrantCount}}</b> registrants</p></td>
+                      <td><p class="text-muted"><b class="red">{{eventStat.attendedCount}}</b> attendees</p></td>
+                      <td ng-if="eventStat.maximumCapacity">
+                        <p class="text-muted"><b class="red">{{eventStat.maximumCapacity}}</b> max capacity</p>
+                      </td>
+                      <td ng-if="!eventStat.maximumCapacity">None</td>
+                      <td><p class="text-muted"><b class="red">{{(eventStat.registrationRate*100).toFixed(0)}}%</b> capacity</p></td>
+                      <td><p class="text-muted"><b class="red">{{(eventStat.attendanceRate*100).toFixed(0)}}%</b> attendance rate</p></td>
+                      <td>{{formatEventDate(eventStat.startDate)}}</td>
+                      <td ng-if="eventStat.deadlineToRegister">
+                        <b>{{formatEventRegistrationDate(eventStat.deadlineToRegister, eventStat.startDate)}}</b>
+                        day(s) before event
+                      </td>
+                      <td ng-if="!eventStat.deadlineToRegister">
+                        None
+                      </td>
+                  </tr>
+              </table>
+          </div>
+      </div>
+  </section>
+</section>

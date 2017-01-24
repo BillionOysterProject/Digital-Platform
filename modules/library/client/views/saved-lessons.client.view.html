@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <small ng-show="saved.lessonOverview.setting">{{saved.lessonOverview.setting}}</small>
                 <h4>{{saved.title}}</h4>
-                <p ng-bind-html="saved.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                <p ng-bind-html="saved.lessonOverview.lessonSummary | sanitize | limitTo:200"></p>
                 <img ng-show="saved.featuredImage" ng-src="{{saved.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
@@ -27,5 +27,5 @@
     </div>
 </div>
 <div class="alert alert-info text-center" ng-show="sv.savedLessons.length === 0">
-    No saved lessons yet! When viewing a lesson, click the star in the title to save your favorites here.
+    No starred lessons yet! When viewing a lesson, click the star in the title to save your favorites here.
 </div>

@@ -22,6 +22,7 @@ module.exports = {
         'public/lib/jquery/dist/jquery.min.js',
         'public/lib/select2/select2.min.js',
         'public/lib/Chart.js/Chart.min.js',
+        'public/lib/imagesloaded/imagesloaded.pkgd.min.js',
         'public/lib/isotope/dist/isotope.pkgd.min.js',
         'public/lib/bootstrap/dist/js/bootstrap.min.js',
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/iconset/iconset-fontawesome-4.2.0.min.js',

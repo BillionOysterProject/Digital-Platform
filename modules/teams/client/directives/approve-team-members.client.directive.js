@@ -10,13 +10,11 @@
         scope: {
           teamRequests: '=',
           teams: '=',
-          saveFunction: '=',
           cancelFunction: '='
         },
         replace: true,
         controller: 'TeamApprovalController',
         link: function(scope, element, attrs) {
-
         }
       };
     });

@@ -1,0 +1,66 @@
+<section class="content">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.stationCounts.total}} <i class="glyphicon glyphicon-map-marker gray"></i></h1>
+                        <h6>Oyster Restoration Stations</h6>
+                    </div>
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.expeditionCounts.total}} <i class="glyphicon glyphicon-flag gray"></i></h1>
+                        <h6>Expeditions</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4>Timeline</h4>
+                <canvas id="line" class="chart chart-line" chart-data="monthlyCountLineData"
+                    chart-labels="monthHistoryLabels" chart-legend="true"
+                    chart-series="monthlyCountLineLabels" chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+            <div class="col-md-4">
+                <h4>ORS Status</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="stationStatusPieData"
+                    chart-labels="stationStatusPieLabels" chart-legend="true"
+                    chart-colours="stationStatusPieColors" chart-options="chart_options">
+                </canvas>
+            </div>
+        </div>
+    </section>
+</section>
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Most Visited ORS</h4>
+                <table class="table">
+                    <tr ng-repeat="visitData in metrics.stationVisitCounts | orderBy: '-expeditionCount'">
+                        <td><p><i class="glyphicon glyphicon-map-marker"></i> <b>{{visitData.station.name}}</b></p></td>
+                        <td><p class="text-muted"><b class="red">{{visitData.expeditionCount}}</b> expeditions</p></td>
+                        <td><h6>{{visitData.station.latitude.toFixed(4)}}, {{visitData.station.longitude.toFixed(4)}}</h6></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-3">
+                <!--TODO: Can we remove "Null" from this list?
+                BETHANY: I don't see null in my local or dev. Put in a change
+                that I hope will remove it but I can't test.
+                -->
+                <h4>Protocol Status</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="protocolStatusPieData"
+                    chart-labels="protocolStatusPieLabels" chart-legend="true"
+                    chart-colours="protocolStatusPieColors" chart-options="chart_options">
+                </canvas>
+            </div>
+            <div class="col-md-3">
+                <h4>Expedition Status</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="expeditionStatusPieData"
+                    chart-labels="expeditionStatusPieLabels" chart-legend="true"
+                    chart-colours="expeditionStatusPieColors" chart-options="chart_options">
+                </canvas>
+            </div>
+        </div>
+    </section>
+</section>
