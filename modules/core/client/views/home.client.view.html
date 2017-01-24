@@ -1,13 +1,214 @@
-<div class="jumbotron" ng-controller="HomeController">
+<!--KATY: In addition to the wiring up throughout the page below, can you expose these numbers in this comment in case we decide to use them?
+
+Total # of Team leads
+# of Teachers
+# of Team members
+# of lessons taught by # of teachers to # of students
+# of Current events
+-->
+
+
+<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
     <section class="content">
-        <section class="container-fluid">
-            <div class="row text-center">
-                <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.png" />
-                <img alt="CCERS" src="modules/core/client/img/brand/ccers.png" />
+        <section class="container container-ribbon text-center">
+            <div class="ribbon-text">
+                <span class="text-script">We need your help to</span>
+                <h1 class="text-caps">restore our harbor</h1>
             </div>
+            
+            <p>As part of our BOP Schools and Citizen Science program, middle school teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
+            <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the Billion Oyster Project <i class="fa fa-angle-right"></i></a>
+            <br/><br/>
+            
+            <!--KATY: Expose data / wire up numbers -->
             <div class="row text-center">
-                <h3>Schools and Citizen Science</h3>
+                <div class="col-sm-4">
+                    <h2 class="white"><i class="fa fa-user"></i></h2>
+                    <h6 class="white">People</h6>
+                    <hr/>
+                    <h1 class="text-caps">531</h1><!--{{metrics.userCount}}-->
+                </div>
+                <div class="col-sm-4">
+                    <h2 class="white"><i class="fa fa-users"></i></h2>
+                    <h6 class="white">Teams</h6>
+                    <hr/>
+                    <h1 class="text-caps">233</h1>
+                </div>
+                <div class="col-sm-4">
+                    <h2 class="white"><i class="fa fa-building"></i></h2>
+                    <h6 class="white">Organizations</h6>
+                    <hr/>
+                    <h1 class="text-caps">68</h1>
+                </div>
             </div>
         </section>
     </section>
 </div>
+
+<section class="content">
+    <section class="container text-center">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <span class="text-script">Attend one of our</span>
+                <h1 class="text-caps">upcoming events</h1>
+                <!--KATY: Expose data / wire up numbers -->
+                <p>Join the {{totalcountofallregistrants}} registrants who have attended over {{pastevents}} events. To be accepted for a team lead account, you must first attend a BOP basic training.</p>
+                <!--KATY: wire up button to go to events page-->
+                <a class="btn btn-primary">See all events <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <!--KATY: Show top (3?) upcoming events-->
+            <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
+              ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
+                daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
+                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
+                    <div class="panel-heading" ng-style="{'background-color':'{{calendarEvent.category.type.color}}'}">
+                        <h3 ng-hide="calendarEvent.category.type.type === 'Other'" class="panel-title"
+                          ng-bind="calendarEvent.category.type.type"></h3>
+                        <h3 ng-show="calendarEvent.category.type.type === 'Other'" class="panel-title">
+                          Other: {{calendarEvent.category.otherType}}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
+                          {{vm.getEventYear(date.startDateTime)}}<br/>
+                          {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
+                        <h4><b class="red" ng-bind="calendarEvent.title"></b></h4>
+                        <p ng-show="calendarEvent.location.addressString"><i class="fa fa-map-marker"></i> {{calendarEvent.location.addressString}}</p>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center small">
+                            <span ng-show="(daysRemaining >= 0 && openSpots > 0)" id="openSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>{{openSpots}} spots</b><br/></span>
+                            <span ng-show="(daysRemaining >= 0 && openSpots <= 0 && openSpots !== null)" id="noOpenSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>Event is full</b><br/></span>
+                            <span ng-show="(daysRemaining < 0 || (openSpots <= 0 && openSpots !== null))" id="registrationClosed">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Registration is closed</b></span>
+                            <span ng-show="(daysRemaining === 0 && (openSpots > 0 || openSpots === null))" id="registerToday">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Last day to register!</b></span>
+                            <span ng-show="(daysRemaining > 0 && (openSpots > 0 || openSpots === null))" id="registrationOpen">
+                              <i class="fa fa-clock-o"></i>
+                              <b>{{daysRemaining}} days</b> left to register</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
+    <section class="content">
+        <section class="container">
+            
+            <!--KATY: Expose data / wire up numbers -->
+            <div class="row text-center blue">
+                <div class="col-sm-4">
+                    <div class="panel panel-default transparent">
+                        <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                        <h6>Launched expeditions</h6>
+                        <hr/>
+                        <h1 class="text-caps">94</h1>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default transparent">
+                        <h2><i class="fa fa-2x fa-map-marker blue"></i></h2>
+                        <h6>Active Oyster Restoration Stations</h6>
+                        <hr/>
+                        <h1 class="text-caps">31</h1>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default transparent">
+                        <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                        <h6>Published expeditions</h6>
+                        <hr/>
+                        <h1 class="text-caps">44</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+
+<section class="content">
+    <section class="container container-ribbon text-center">
+        <div class="ribbon-text">
+            <span class="text-script">Contribute to the</span>
+            <h1 class="text-caps">curriculum</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <p>Create a team lead account to access and contribute to the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools. We've already started.</p>
+                <a class="btn btn-primary" ui-sref="authentication.signup">Join the Billion Oyster Project <i class="fa fa-angle-right"></i></a>
+                <br/><br/>
+            </div>
+        </div>
+        
+        <!--KATY: Expose data / wire up numbers -->
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <h6>Units</h6>
+                <hr/>
+                <h1 class="text-caps">6</h1>
+            </div>
+            <div class="col-sm-4">
+                <h6>Lessons</h6>
+                <hr/>
+                <h1 class="text-caps">87</h1>
+            </div>
+            <div class="col-sm-4">
+                <h6>Students taught</h6>
+                <hr/>
+                <h1 class="text-caps">688</h1>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/dock-bg.png);">
+    <section class="content">
+        <section class="container text-center white">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <span class="text-script">Still have</span>
+                    <h1 class="text-caps">questions?</h1>
+                    <p>Take a look at the user guide to better understand the BOP platform and how you can use it to make an impact.</p>
+                    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-userguide">Read the User Guide <i class="fa fa-angle-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+
+<section class="content shaded text-center">
+    <section class="container">
+        <br/><br/>
+        <div class="row">
+            <div class="col-xs-6 col-sm-1 col-sm-offset-5">
+                <img class="img-responsive" alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.png" />
+            </div>
+            <div class="col-xs-6 col-sm-1">
+                <img class="img-responsive" alt="CCERS" src="modules/core/client/img/brand/ccers.png" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <span class="text-script">About the</span>
+                <h1 class="text-caps">Billion Oyster Project</h1>
+                <p>BOP, an initiative of the New York Harbor Foundation, is an ecosystem restoration and education project aimed at restoring one billion live oysters to New York Harbor and engaging hundreds of thousands of school children through restoration based STEM education programs.</p>
+                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-about">Learn more <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+    </section>
+</section>
