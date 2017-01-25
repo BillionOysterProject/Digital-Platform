@@ -41,7 +41,6 @@
       //to only occur when they click one of those buttons.
       for (var i = 0; i < $scope.teamRequests.length; i++) {
         if(i === index) {
-          console.log("remove approved from teamRequests[" + i + "]");
           delete $scope.teamRequests[i].approve;
         }
       }

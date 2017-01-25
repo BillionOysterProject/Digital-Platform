@@ -4,10 +4,13 @@
  * Module dependencies
  */
 var metricsPolicy = require('../policies/metrics.server.policy'),
-  metrics = require('../controllers/metrics.server.controller');
+  metrics = require('../controllers/metrics.server.controller'),
+  basicMetrics = require('../controllers/metrics-basic.server.controller');
 
 module.exports = function(app) {
   // Metrics Routes
+  app.route('/api/metrics/basic').get(basicMetrics.getBasicMetrics);
+
   app.route('/api/metrics/download').all(metricsPolicy.isAllowed)
     .get(metrics.downloadZip);
 
