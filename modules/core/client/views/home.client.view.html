@@ -8,55 +8,56 @@
 -->
 
 
-<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
-    <section class="content">
-        <section class="container container-ribbon text-center">
-            <div class="ribbon-text">
-                <span class="text-script">We need your help to</span>
-                <h1 class="text-caps">restore our harbor</h1>
-            </div>
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
+    <section class="container container-ribbon text-center">
+        <div class="ribbon-text">
+            <span class="text-script">we need your help to</span>
+            <h1 class="text-caps">restore our harbor</h1>
+        </div>
 
-            <p>As part of our BOP Schools and Citizen Science program, teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
-            <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the BOP Schools and Citizen Science program <i class="fa fa-angle-right"></i></a>
-            <br/><br/>
-
-            <div class="row text-center">
-                <div class="col-sm-4">
-                    <h2 class="white"><i class="fa fa-user"></i></h2>
-                    <h6 class="white">People</h6>
-                    <hr/>
-                    <h1 class="text-caps">{{vm.metrics.userCount}}</h1>
-                </div>
-                <div class="col-sm-4">
-                    <h2 class="white"><i class="fa fa-users"></i></h2>
-                    <h6 class="white">Teams</h6>
-                    <hr/>
-                    <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
-                </div>
-                <div class="col-sm-4">
-                    <h2 class="white"><i class="fa fa-building"></i></h2>
-                    <h6 class="white">Organizations</h6>
-                    <hr/>
-                    <h1 class="text-caps">{{vm.metrics.orgCount}}</h1>
-                </div>
-            </div>
-        </section>
-    </section>
-</div>
-
-<section class="content">
-    <section class="container text-center">
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
-                <span class="text-script">Attend one of our</span>
-                <h1 class="text-caps">upcoming events</h1>
-                <p>Join the {{vm.metrics.eventRegistrantTotal}} registrants who have attended over {{vm.metrics.pastEventCount}} events. To be accepted for a team lead account, you must first attend a BOP basic training.</p>
-                <a class="btn btn-primary" ui-sref="events.list">See all events <i class="fa fa-angle-right"></i></a>
+                <p class="lead">As part of our BOP Schools and Citizen Science program, teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
+                <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the BOP Schools and Citizen Science program <i class="fa fa-angle-right"></i></a>
                 <br/><br/>
             </div>
         </div>
+
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <h2 class="white"><i class="fa fa-user"></i></h2>
+                <h6 class="white">People</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.userCount}}</h1>
+            </div>
+            <div class="col-sm-4">
+                <h2 class="white"><i class="fa fa-users"></i></h2>
+                <h6 class="white">Teams</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
+            </div>
+            <div class="col-sm-4">
+                <h2 class="white"><i class="fa fa-building"></i></h2>
+                <h6 class="white">Organizations</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.orgCount}}</h1>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<section class="content content-jumbotron">
+    <section class="container text-center">
         <div class="row">
-            <div ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 library-item"
+            <div class="col-sm-8 col-sm-offset-2">
+                <span class="text-script">attend one of our</span>
+                <h1 class="text-caps">upcoming events</h1>
+                <p class="lead">Attend a BOP basic training to receive an Oyster Restoration Station and be approved for a team lead account. Join the {{vm.metrics.eventRegistrantTotal}} registrants who have attended over {{vm.metrics.pastEventCount}} events.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div ng-repeat="calendarEvent in vm.events" class="col-sm-12 col-md-4 library-item"
               ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
                 daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
                 <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
@@ -95,55 +96,52 @@
                 </div>
             </div>
         </div>
+        <a class="btn btn-danger" ui-sref="events.list">See all events <i class="fa fa-angle-right"></i></a>
+        <br/><br/>
     </section>
 </section>
 
 
-<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
-    <section class="content">
-        <section class="container">
-
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
+    <section class="container">
+        <br/><br/><br/>
+        <div class="panel panel-default transparent">
             <div class="row text-center blue">
                 <div class="col-sm-4">
-                    <div class="panel panel-default transparent">
-                        <h2><i class="fa fa-2x fa-flag gray"></i></h2>
-                        <h6>Launched expeditions</h6>
-                        <hr/>
-                        <h1 class="text-caps">{{vm.metrics.expeditionCount}}</h1>
-                    </div>
+                    <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                    <h6>Launched expeditions</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.expeditionCount}}</h1>
                 </div>
                 <div class="col-sm-4">
-                    <div class="panel panel-default transparent">
-                        <h2><i class="fa fa-2x fa-map-marker blue"></i></h2>
-                        <h6>Active Oyster Restoration Stations</h6>
-                        <hr/>
-                        <h1 class="text-caps">{{vm.metrics.activeStationCount}}</h1>
-                    </div>
+                    <h2><i class="fa fa-2x fa-map-marker blue"></i></h2>
+                    <h6>Active Oyster Restoration Stations</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.activeStationCount}}</h1>
                 </div>
                 <div class="col-sm-4">
-                    <div class="panel panel-default transparent">
-                        <h2><i class="fa fa-2x fa-flag gray"></i></h2>
-                        <h6>Published expeditions</h6>
-                        <hr/>
-                        <h1 class="text-caps">{{vm.metrics.publishedExpeditionCount}}</h1>
-                    </div>
+                    <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                    <h6>Published expeditions</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.publishedExpeditionCount}}</h1>
                 </div>
             </div>
-        </section>
+        </div>
+        <br/><br/><br/>
     </section>
-</div>
+</section>
 
 
-<section class="content">
+<section class="content content-jumbotron">
     <section class="container container-ribbon text-center">
         <div class="ribbon-text">
-            <span class="text-script">Contribute to the</span>
+            <span class="text-script">contribute to the</span>
             <h1 class="text-caps">curriculum</h1>
         </div>
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
-                <p>Create a team lead account to access and contribute to the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools. We've already started.</p>
-                <a class="btn btn-primary" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
+                <p class="lead">Create a team lead account to access and contribute to the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools. We've already started.</p>
+                <a class="btn btn-danger" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
                 <br/><br/>
             </div>
         </div>
@@ -169,40 +167,38 @@
 </section>
 
 
-<div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/dock-bg.png);">
-    <section class="content">
-        <section class="container text-center white">
-            <div class="row">
-                <div class="col-sm-8 col-sm-offset-2">
-                    <span class="text-script">Still have</span>
-                    <h1 class="text-caps">questions?</h1>
-                    <p>Take a look at the user guide to better understand the BOP platform and how you can use it to make an impact.</p>
-                    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-userguide">Read the User Guide <i class="fa fa-angle-right"></i></a>
-                </div>
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
+    <section class="container text-center">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <span class="text-script">still have</span>
+                <h1 class="text-caps">questions?</h1>
+                <p class="lead">Take a look at the user guide to better understand the BOP platform and how you can use it to make an impact.</p>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#modal-userguide">Read the User Guide <i class="fa fa-angle-right"></i></a>
             </div>
-        </section>
+        </div>
+            
+        <br/><br/><hr/><br/><br/>
+        
+        <div class="row white">
+            <div class="col-sm-8 col-sm-offset-2">
+                <h3>About the Billion Oyster Project</h1>
+                <p>BOP, an initiative of the New York Harbor Foundation, is an ecosystem restoration and education project aimed at restoring one billion live oysters to New York Harbor and engaging hundreds of thousands of school children through restoration based STEM education programs.</p>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#modal-about">Learn more <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
     </section>
-</div>
+</section>
 
 
-<section class="content shaded text-center">
-    <section class="container">
-        <br/><br/>
+<section class="content content-jumbotron">
+    <section class="container text-center">
         <div class="row">
             <div class="col-xs-6 col-sm-1 col-sm-offset-5">
                 <img class="img-responsive" alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.png" />
             </div>
             <div class="col-xs-6 col-sm-1">
                 <img class="img-responsive" alt="CCERS" src="modules/core/client/img/brand/ccers.png" />
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-sm-10 col-sm-offset-1">
-                <span class="text-script">About the</span>
-                <h1 class="text-caps">Billion Oyster Project</h1>
-                <p>BOP, an initiative of the New York Harbor Foundation, is an ecosystem restoration and education project aimed at restoring one billion live oysters to New York Harbor and engaging hundreds of thousands of school children through restoration based STEM education programs.</p>
-                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modal-about">Learn more <i class="fa fa-angle-right"></i></a>
             </div>
         </div>
     </section>
