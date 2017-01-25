@@ -1,8 +1,8 @@
 <!--KATY: In addition to the wiring up throughout the page below, can you expose these numbers in this comment in case we decide to use them?
 
-Total # of Team leads
-# of Teachers
-# of Team members
+Total # of Team leads: vm.metrics.teamLeadCount
+# of Teachers: vm.metrics.teacherCount
+# of Team members: vm.metrics.teamMemberCount
 # of lessons taught by # of teachers to # of students
 # of Current events
 -->
@@ -15,30 +15,30 @@ Total # of Team leads
                 <span class="text-script">We need your help to</span>
                 <h1 class="text-caps">restore our harbor</h1>
             </div>
-            
+
             <p>As part of our BOP Schools and Citizen Science program, middle school teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
             <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the Billion Oyster Project <i class="fa fa-angle-right"></i></a>
             <br/><br/>
-            
+
             <!--KATY: Expose data / wire up numbers -->
             <div class="row text-center">
                 <div class="col-sm-4">
                     <h2 class="white"><i class="fa fa-user"></i></h2>
                     <h6 class="white">People</h6>
                     <hr/>
-                    <h1 class="text-caps">531</h1><!--{{metrics.userCount}}-->
+                    <h1 class="text-caps">{{vm.metrics.userCount}}</h1>
                 </div>
                 <div class="col-sm-4">
                     <h2 class="white"><i class="fa fa-users"></i></h2>
                     <h6 class="white">Teams</h6>
                     <hr/>
-                    <h1 class="text-caps">233</h1>
+                    <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
                 </div>
                 <div class="col-sm-4">
                     <h2 class="white"><i class="fa fa-building"></i></h2>
                     <h6 class="white">Organizations</h6>
                     <hr/>
-                    <h1 class="text-caps">68</h1>
+                    <h1 class="text-caps">{{vm.metrics.orgCount}}</h1>
                 </div>
             </div>
         </section>
@@ -52,9 +52,8 @@ Total # of Team leads
                 <span class="text-script">Attend one of our</span>
                 <h1 class="text-caps">upcoming events</h1>
                 <!--KATY: Expose data / wire up numbers -->
-                <p>Join the {{totalcountofallregistrants}} registrants who have attended over {{pastevents}} events. To be accepted for a team lead account, you must first attend a BOP basic training.</p>
-                <!--KATY: wire up button to go to events page-->
-                <a class="btn btn-primary">See all events <i class="fa fa-angle-right"></i></a>
+                <p>Join the {{vm.metrics.eventRegistrantTotal}} registrants who have attended over {{vm.metrics.pastEventCount}} events. To be accepted for a team lead account, you must first attend a BOP basic training.</p>
+                <a class="btn btn-primary" ui-sref="events.list">See all events <i class="fa fa-angle-right"></i></a>
             </div>
         </div>
         <div class="row">
@@ -105,15 +104,14 @@ Total # of Team leads
 <div class="jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
     <section class="content">
         <section class="container">
-            
-            <!--KATY: Expose data / wire up numbers -->
+
             <div class="row text-center blue">
                 <div class="col-sm-4">
                     <div class="panel panel-default transparent">
                         <h2><i class="fa fa-2x fa-flag gray"></i></h2>
                         <h6>Launched expeditions</h6>
                         <hr/>
-                        <h1 class="text-caps">94</h1>
+                        <h1 class="text-caps">{{vm.metrics.expeditionCount}}</h1>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -121,7 +119,7 @@ Total # of Team leads
                         <h2><i class="fa fa-2x fa-map-marker blue"></i></h2>
                         <h6>Active Oyster Restoration Stations</h6>
                         <hr/>
-                        <h1 class="text-caps">31</h1>
+                        <h1 class="text-caps">{{vm.metrics.activeStationCount}}</h1>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -129,7 +127,7 @@ Total # of Team leads
                         <h2><i class="fa fa-2x fa-flag gray"></i></h2>
                         <h6>Published expeditions</h6>
                         <hr/>
-                        <h1 class="text-caps">44</h1>
+                        <h1 class="text-caps">{{vm.metrics.publishedExpeditionCount}}</h1>
                     </div>
                 </div>
             </div>
@@ -151,23 +149,22 @@ Total # of Team leads
                 <br/><br/>
             </div>
         </div>
-        
-        <!--KATY: Expose data / wire up numbers -->
+
         <div class="row text-center">
             <div class="col-sm-4">
                 <h6>Units</h6>
                 <hr/>
-                <h1 class="text-caps">6</h1>
+                <h1 class="text-caps">{{vm.metrics.unitCount}}</h1>
             </div>
             <div class="col-sm-4">
                 <h6>Lessons</h6>
                 <hr/>
-                <h1 class="text-caps">87</h1>
+                <h1 class="text-caps">{{vm.metrics.lessonCount}}</h1>
             </div>
             <div class="col-sm-4">
                 <h6>Students taught</h6>
                 <hr/>
-                <h1 class="text-caps">688</h1>
+                <h1 class="text-caps">{{vm.metrics.taughtStudentCount}}</h1>
             </div>
         </div>
     </section>

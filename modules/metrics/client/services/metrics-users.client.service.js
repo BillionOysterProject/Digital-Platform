@@ -16,4 +16,25 @@
       }
     });
   }
+
+  angular
+    .module('metrics')
+    .factory('MetricsUserActivityService', MetricsUserActivityService);
+
+  MetricsUserActivityService.$inject = ['$resource'];
+
+  function MetricsUserActivityService($resource) {
+    return $resource('api/metrics/activeUsers', {
+    }, {
+      query: {
+        method: 'GET',
+        params: {
+          startDate: '@startDate',
+          endDate: '@endDate',
+          userRole: '@userRole'
+        },
+        isArray: true
+      }
+    });
+  }
 }());
