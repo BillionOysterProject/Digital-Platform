@@ -42,6 +42,10 @@ exports.getBasicMetrics = function(req, res) {
     'dates.startDateTime': { '$lt': new Date() }
   });
 
+  var futureEventCountQuery = CalendarEvent.count({
+    'dates.startDateTime': { '$gte': new Date() }
+  });
+
   var pastEventRegistrationCountQuery = CalendarEvent.aggregate([
     { $match: { 'dates.startDateTime': { '$lte': new Date() } } }, //only past events
     { $project: { _id: 1, registrants: 1, registrationCount: { $size: '$registrants' } } },
@@ -153,7 +157,16 @@ exports.getBasicMetrics = function(req, res) {
                                                             registrantTotals.length > 0) {
                                                             metrics.eventRegistrantTotal = registrantTotals[0].total;
                                                           }
-                                                          res.json(metrics);
+                                                          futureEventCountQuery.exec(function(err, futureEventCount) {
+                                                            if (err) {
+                                                              return res.status(400).send({
+                                                                message: 'Error getting future event count:' + errorHandler.getErrorMessage(err)
+                                                              });
+                                                            } else {
+                                                              metrics.currentEventCount = futureEventCount;
+                                                              res.json(metrics);
+                                                            }
+                                                          });
                                                         }
                                                       });
                                                     }

@@ -4,7 +4,7 @@ Total # of Team leads: vm.metrics.teamLeadCount
 # of Teachers: vm.metrics.teacherCount
 # of Team members: vm.metrics.teamMemberCount
 # of lessons taught by # of teachers to # of students
-# of Current events
+# of Current events: vm.metrics.currentEventCount
 -->
 
 
@@ -20,7 +20,6 @@ Total # of Team leads: vm.metrics.teamLeadCount
             <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the Billion Oyster Project <i class="fa fa-angle-right"></i></a>
             <br/><br/>
 
-            <!--KATY: Expose data / wire up numbers -->
             <div class="row text-center">
                 <div class="col-sm-4">
                     <h2 class="white"><i class="fa fa-user"></i></h2>
@@ -51,12 +50,11 @@ Total # of Team leads: vm.metrics.teamLeadCount
             <div class="col-sm-8 col-sm-offset-2">
                 <span class="text-script">Attend one of our</span>
                 <h1 class="text-caps">upcoming events</h1>
-                <!--KATY: Expose data / wire up numbers -->
                 <p>Join the {{vm.metrics.eventRegistrantTotal}} registrants who have attended over {{vm.metrics.pastEventCount}} events. To be accepted for a team lead account, you must first attend a BOP basic training.</p>
                 <a class="btn btn-primary" ui-sref="events.list">See all events <i class="fa fa-angle-right"></i></a>
             </div>
         </div>
-        <div class="row">
+        <div class="row" isotope-container="isotope-container">
             <!--KATY: Show top (3?) upcoming events-->
             <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
               ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);

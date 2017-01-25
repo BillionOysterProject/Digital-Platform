@@ -754,7 +754,9 @@ exports.list = function(req, res) {
     query = CalendarEvent.find();
   }
 
-  query.sort('dates.startDateTime')
+  var limit = req.query.limit ? parseInt(req.query.limit, 10) : 0;
+  query.sort({ 'dates.startDateTime': 1 })
+    .limit(limit)
     .populate('user', 'displayName')
     .populate('registrants.user', 'displayName email schoolOrg')
     .populate('registrants.user.schoolOrg', 'name')
