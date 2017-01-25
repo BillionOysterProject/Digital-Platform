@@ -12,7 +12,7 @@
       .state('units', {
         abstract: true,
         url: '/units',
-        template: '<ui-view/>'
+        template: '<ui-view autoscroll="true"/>'
       })
       .state('units.list', {
         url: '',
