@@ -55,6 +55,14 @@ body {
         padding-top: 50px;
         padding-bottom: 50px;
     }
+    
+        @media (max-width: 768px) {
+            .content-jumbotron .btn {
+                display: block;
+                width: 100%;
+                white-space: normal;
+            }
+        }
 
     .jumbotron.dark {
         background: #aaa;
@@ -1051,14 +1059,14 @@ form.ng-submitted .ng-invalid {
 }
 
     .container-ribbon .ribbon-text {
-        padding: 45px 0;
-        min-height: 260px;
+        padding: 30px 0;
+        min-height: 218px;
         color: #fff;
         text-align: center;
     }
 
 .text-script {
-    margin: 0 0 10px 0;
+    margin: 0;
     font-size: 1.75em;
     line-height: 1;
     font-family: 'Lobster', 'corner-store', cursive, serif;
@@ -1071,12 +1079,11 @@ form.ng-submitted .ng-invalid {
 }
 
 .text-caps {
-    font-size: 2em;
-    line-height: 1.125;
+    margin: 5px 0 10px 0;
     text-transform: uppercase;
     font-family: 'Oswald', 'alternate-gothic-no-2-d', sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 3.75em;
+    font-size: 3em;
     line-height: 1;
 }

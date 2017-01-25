@@ -15,7 +15,7 @@
             <h1 class="text-caps">restore our harbor</h1>
         </div>
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
+            <div class="col-sm-10 col-sm-offset-1">
                 <p class="lead">As part of our BOP Schools and Citizen Science program, teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
                 <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the BOP Schools and Citizen Science program <i class="fa fa-angle-right"></i></a>
                 <br/><br/>
@@ -28,12 +28,14 @@
                 <h6 class="white">People</h6>
                 <hr/>
                 <h1 class="text-caps">{{vm.metrics.userCount}}</h1>
+                <br/>
             </div>
             <div class="col-sm-4">
                 <h2 class="white"><i class="fa fa-users"></i></h2>
                 <h6 class="white">Teams</h6>
                 <hr/>
                 <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
+                <br/>
             </div>
             <div class="col-sm-4">
                 <h2 class="white"><i class="fa fa-building"></i></h2>
@@ -107,37 +109,39 @@
             <span class="text-script">take an</span>
             <h1 class="text-caps">expedition</h1>
         </div>
-        <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-                <p class="lead">Data collection can be split up among team members for each expedition to your Oyster Restoration Station. Join the community of teams tracking, publishing and analyzing the combined data.</p>
-                <a class="btn btn-danger" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
-                <br/><br/>
-            </div>
-        </div>
-        <br/><br/><br/>
         <div class="panel panel-default transparent">
-            <div class="row text-center blue">
+        <br/><br/>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <p class="lead">Data collection can be split up among team members for each expedition to your Oyster Restoration Station. Join the community of teams tracking, publishing and analyzing the combined data.</p>
+                    <a class="btn btn-danger" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
+                    <br/><br/>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-4">
-                    <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                    <h2><i class="fa fa-2x fa-flag lightblue"></i></h2>
                     <h6>Launched expeditions</h6>
                     <hr/>
                     <h1 class="text-caps">{{vm.metrics.expeditionCount}}</h1>
+                    <br/>
                 </div>
                 <div class="col-sm-4">
-                    <h2><i class="fa fa-2x fa-map-marker blue"></i></h2>
+                    <h2><i class="fa fa-2x fa-map-marker lightblue"></i></h2>
                     <h6>Active Oyster Restoration Stations</h6>
                     <hr/>
                     <h1 class="text-caps">{{vm.metrics.activeStationCount}}</h1>
+                    <br/>
                 </div>
                 <div class="col-sm-4">
-                    <h2><i class="fa fa-2x fa-flag gray"></i></h2>
+                    <h2><i class="fa fa-2x fa-flag lightblue"></i></h2>
                     <h6>Published expeditions</h6>
                     <hr/>
                     <h1 class="text-caps">{{vm.metrics.publishedExpeditionCount}}</h1>
+                    <br/>
                 </div>
             </div>
         </div>
-        <br/><br/><br/>
     </section>
 </section>
 
@@ -158,17 +162,19 @@
             <div class="col-sm-4">
                 <h6>Units</h6>
                 <hr/>
-                <h1 class="text-caps">{{vm.metrics.unitCount}}</h1>
+                <h1 class="text-caps blue">{{vm.metrics.unitCount}}</h1>
+                <br/>
             </div>
             <div class="col-sm-4">
                 <h6>Lessons</h6>
                 <hr/>
-                <h1 class="text-caps">{{vm.metrics.lessonCount}}</h1>
+                <h1 class="text-caps blue">{{vm.metrics.lessonCount}}</h1>
+                <br/>
             </div>
             <div class="col-sm-4">
                 <h6>Students taught</h6>
                 <hr/>
-                <h1 class="text-caps">{{vm.metrics.taughtStudentCount}}</h1>
+                <h1 class="text-caps blue">{{vm.metrics.taughtStudentCount}}</h1>
             </div>
         </div>
     </section>
