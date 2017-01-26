@@ -5,18 +5,29 @@
                 <h2 id="expedition-view">{{vm.expedition.name}}</h2>
             </div>
             <div class="col col-sm-6 text-right" ng-show="(vm.isTeamLead || vm.isTeamMember || vm.isAdmin)">
-                <h6 ng-show="vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned'">Incomplete</h6>
-                <h6 ng-show="vm.expedition.status === 'pending'">Submitted</h6>
-                <h6 ng-show="vm.expedition.status === 'published'" class="green">Published</h6>
-                <h6 ng-show="vm.expedition.status === 'unpublished'">Unpublished</h6>
-                <a class="btn btn-primary" ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })"
+                <h6 ng-show="vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned'">Protocols Incomplete</h6>
+                <!--<h6 ng-show="vm.expedition.status === 'pending'">Protocols Submitted</h6>-->
+        
+                <!-- Show if team lead: -->
+                <h6 ng-show="vm.expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin)">Protocols Need Review</h6>
+                <!-- Show if team member: -->
+                <h6 ng-show="vm.expedition.status === 'pending' && vm.isTeamMember && !vm.isTeamLead">Protocols Submitted</h6>
+                        
+                                
+                <a class="btn btn-default" ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })"
                   ng-show="((vm.isTeamLead || vm.isAdmin) && vm.expedition.status !== 'published' &&
-                  !vm.checkAllStatus('published'))">Edit details</a>
-                <a class="btn btn-success" ng-click="vm.publish()" 
-                  ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Publish</button>
+                  !vm.checkAllStatus('published'))">Edit expedition details</a>
+                <a class="btn btn-primary" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })" 
+                  ng-show="((vm.isTeamLead || vm.isAdmin) && vm.expedition.status !== 'published' &&
+                  !vm.checkAllStatus('published'))">Review protocols</button>
                 <a class="btn btn-danger" ng-click="vm.unpublish()"
                   ng-show="((vm.isTeamLead || vm.isAdmin) && vm.expedition.status === 'published' &&
                   vm.checkAllStatus('published'))">Unpublish</a>
+                  
+                  
+                <h6 ng-show="vm.expedition.status === 'published'" class="green">Expedition Published</h6>
+                <!--<h6 ng-show="vm.expedition.status === 'unpublished'">Expedition Unpublished</h6>-->
+                <h6 ng-show="vm.expedition.status !== 'published'">Expedition Unpublished</h6>
             </div>
         </div>
         <hr/>
