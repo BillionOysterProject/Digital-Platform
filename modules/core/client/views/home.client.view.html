@@ -1,11 +1,29 @@
+<div class="jumbotron" ng-controller="HomeController">
+    <section class="content">
+        <section class="container-fluid">
+            <div class="row text-center">
+                <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.png" />
+                <img alt="CCERS" src="modules/core/client/img/brand/ccers.png" />
+            </div>
+            <div class="row text-center">
+                <h3>Schools and Citizen Science</h3>
+            </div>
+        </section>
+    </section>
+</div>
+
+
+
 <!--
+Extra metrics:
 # of Team leads: vm.metrics.teamLeadCount
 # of Teachers: vm.metrics.teacherCount
 # of Team members: vm.metrics.teamMemberCount
 # of Current events: vm.metrics.currentEventCount
+# of Users: vm.metrics.userCount
 
 # of Lessons taught by # of teachers to # of students: ___
--->
+
 
 
 <section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
@@ -21,23 +39,29 @@
                 <br/><br/>
             </div>
         </div>
-
         <div class="row text-center">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <h2 class="white"><i class="fa fa-user"></i></h2>
-                <h6 class="white">People</h6>
+                <h6 class="white">Team Members</h6>
                 <hr/>
-                <h1 class="text-caps">{{vm.metrics.userCount}}</h1>
+                <h1 class="text-caps">{{vm.metrics.teamMemberCount}}</h1>
                 <br/>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
+                <h2 class="white"><i class="fa fa-user"></i></h2>
+                <h6 class="white">Team Leads</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.teamLeadCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-3">
                 <h2 class="white"><i class="fa fa-users"></i></h2>
                 <h6 class="white">Teams</h6>
                 <hr/>
                 <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
                 <br/>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <h2 class="white"><i class="fa fa-building"></i></h2>
                 <h6 class="white">Organizations</h6>
                 <hr/>
@@ -54,7 +78,8 @@
             <div class="col-sm-8 col-sm-offset-2">
                 <span class="text-script">attend one of our</span>
                 <h1 class="text-caps">upcoming events</h1>
-                <p class="lead">Attend a BOP basic training to receive an Oyster Restoration Station and be approved for a team lead account. Join the {{vm.metrics.eventRegistrantTotal}} registrants who have attended over {{vm.metrics.pastEventCount}} events.</p>
+                <p class="lead">We offer hands-on trainings, workshops and special events throughout the year for team leads and teachers to build their knowledge of restoration science and inquiry-based curriculum. The first step is to attend one of ORS basic trainings which are held once per month from March to October.</p>
+                <p class="lead">Interested in attending a BOP training? Join the {{vm.metrics.eventRegistrantTotal}} team leads who have attended over {{vm.metrics.pastEventCount}} events.</p>
             </div>
         </div>
         <div class="row">
@@ -106,16 +131,14 @@
 <section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
     <section class="container container-ribbon text-center">
         <div class="ribbon-text">
-            <span class="text-script">take an</span>
+            <span class="text-script">launch your</span>
             <h1 class="text-caps">expedition</h1>
         </div>
         <div class="panel panel-default transparent">
         <br/><br/>
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <p class="lead">Data collection can be split up among team members for each expedition to your Oyster Restoration Station. Join the community of teams tracking, publishing and analyzing the combined data.</p>
-                    <a class="btn btn-danger" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
-                    <br/><br/>
+                    <p class="lead">Join the community of students, teachers, and citizen scientists monitoring oyster restoration stations and collecting data from across New York Harbor. The digital platform is designed for students to lead the process of ORS monitoring and research in collaboration with their peers. Team leads are responsible for checking and publishing students data so that everyone gets accurate and reliable data on the system. Here's a snapshot of what's available right now:</p>
                 </div>
             </div>
             <div class="row">
@@ -209,3 +232,5 @@
         </div>
     </section>
 </section>
+
+-->
