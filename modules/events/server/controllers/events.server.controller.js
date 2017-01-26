@@ -120,10 +120,12 @@ exports.create = function(req, res) {
   function(eventJSON) {
     var calendarEvent = new CalendarEvent(eventJSON);
     for (var i = 0; i < req.body.dates.length; i++) {
-      calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-        req.body.dates[i].startTime);
-      calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-        req.body.dates[i].endTime);
+      //calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
+      //  req.body.dates[i].startTime);
+      //calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
+      //  req.body.dates[i].endTime);
+      calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+      calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
     }
     calendarEvent.dates = sortDates(calendarEvent.dates);
     calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
@@ -151,6 +153,20 @@ exports.create = function(req, res) {
       } else {
         res.json(calendarEvent);
       }
+    });
+  }, function(errorMessages) {
+    var msgConcat = 'Error validating event data';
+    if(errorMessages !== undefined && errorMessages !== null && errorMessages.length > 0) {
+      msgConcat += ': ';
+      for(var i = 0; i < errorMessages.length; i++) {
+        msgConcat += errorMessages[i];
+        if(i < errorMessages.length-1) {
+          msgConcat += '; ';
+        }
+      }
+    }
+    return res.status(400).send({
+      message: msgConcat
     });
   });
 };
@@ -247,10 +263,12 @@ exports.update = function(req, res) {
     if (calendarEvent) {
       calendarEvent = _.extend(calendarEvent, eventJSON);
       for (var i = 0; i < req.body.dates.length; i++) {
-        calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-          req.body.dates[i].startTime);
-        calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-          req.body.dates[i].endTime);
+        //calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
+        //  req.body.dates[i].startTime);
+        //calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
+        //  req.body.dates[i].endTime);
+        calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+        calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
       }
       calendarEvent.dates = sortDates(calendarEvent.dates);
 

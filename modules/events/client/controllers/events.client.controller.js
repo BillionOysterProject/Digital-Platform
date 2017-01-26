@@ -286,6 +286,28 @@
     };
     vm.columns = vm.getColumnNumber();
 
+    vm.setEventDatesToGmt = function() {
+      if(vm.event.dates === null || vm.event.dates === undefined || vm.event.dates.length === 0) {
+        return;
+      }
+      for(var i = 0; i < vm.event.dates.length; i++) {
+        var currEventDate = vm.event.dates[i];
+        var year = moment(currEventDate.date).get('year');
+        var month = moment(currEventDate.date).get('month');
+        var day = moment(currEventDate.date).get('date');
+        var startHour = moment(currEventDate.startTime).get('hour');
+        var startMinute = moment(currEventDate.startTime).get('minute');
+        var endHour = moment(currEventDate.endTime).get('hour');
+        var endMinute = moment(currEventDate.endTime).get('minute');
+        var startDateTime = moment().set({ year: year, month: month, date: day, hour: startHour, minute: startMinute, second: 0, millisecond: 0 });
+        var endDateTime = moment().set({ year: year, month: month, date: day, hour: endHour, minute: endMinute, second: 0, millisecond: 0 });
+        var startDateTimeStr = startDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        var endDateTimeStr = endDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        vm.event.dates[i].startDateTime = startDateTimeStr;
+        vm.event.dates[i].endDateTime = endDateTimeStr;
+      }
+    };
+
     // Save Event
     function save(isValid) {
       vm.error = [];
@@ -323,8 +345,10 @@
 
       // TODO: move create/update logic to service
       if (vm.event._id) {
+        vm.setEventDatesToGmt();
         vm.event.$update(successCallback, errorCallback);
       } else {
+        vm.setEventDatesToGmt();
         vm.event.$save(successCallback, errorCallback);
       }
 
