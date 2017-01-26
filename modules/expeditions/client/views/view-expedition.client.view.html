@@ -6,13 +6,11 @@
             </div>
             <div class="col col-sm-6 text-right" ng-show="(vm.isTeamLead || vm.isTeamMember || vm.isAdmin)">
                 <h6 ng-show="vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned'">Protocols Incomplete</h6>
-                <!--<h6 ng-show="vm.expedition.status === 'pending'">Protocols Submitted</h6>-->
-        
                 <!-- Show if team lead: -->
                 <h6 ng-show="vm.expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin)">Protocols Need Review</h6>
                 <!-- Show if team member: -->
                 <h6 ng-show="vm.expedition.status === 'pending' && vm.isTeamMember && !vm.isTeamLead">Protocols Submitted</h6>
-                        
+                <h6 ng-show="vm.expedition.status === 'published'" class="green">Expedition Published</h6>
                                 
                 <a class="btn btn-default" ui-sref="expeditions.edit({ expeditionId: vm.expedition._id })"
                   ng-show="((vm.isTeamLead || vm.isAdmin) && vm.expedition.status !== 'published' &&
@@ -25,7 +23,6 @@
                   vm.checkAllStatus('published'))">Unpublish</a>
                   
                   
-                <h6 ng-show="vm.expedition.status === 'published'" class="green">Expedition Published</h6>
                 <!--<h6 ng-show="vm.expedition.status === 'unpublished'">Expedition Unpublished</h6>-->
                 <h6 ng-show="vm.expedition.status !== 'published'">Expedition Unpublished</h6>
             </div>
