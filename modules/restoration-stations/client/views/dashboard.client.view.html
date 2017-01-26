@@ -179,8 +179,8 @@
                                 <td class="text-right">
                                     <!--<span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>-->
                                     <span class="label label-danger"ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Protocols Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                                    <span class="label label-default" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
-                                    <span class="label label-default" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
+                                    <span class="label label-info" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
+                                    <span class="label label-info" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
                                     <span class="label label-success" ng-show="expedition.status === 'published'">Expedition Published</span>
                                 </td>
                             </tr>
