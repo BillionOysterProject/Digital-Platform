@@ -306,6 +306,15 @@
         vm.event.dates[i].startDateTime = startDateTimeStr;
         vm.event.dates[i].endDateTime = endDateTimeStr;
       }
+
+      if(vm.event.deadlineToRegister !== null && vm.event.deadlineToRegister !== undefined) {
+        var deadlineYear = moment(vm.event.deadlineToRegister).get('year');
+        var deadlineMonth = moment(vm.event.deadlineToRegister).get('month');
+        var deadlineDay = moment(vm.event.deadlineToRegister).get('date');
+        var deadlineToRegister = moment().set({ year: deadlineYear, month: deadlineMonth, date: deadlineDay, hour: 0, minute: 0, second: 0, millisecond: 0 });
+        var deadlineToRegisterStr = deadlineToRegister.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        vm.event.deadlineToRegister = deadlineToRegisterStr;
+      }
     };
 
     // Save Event
