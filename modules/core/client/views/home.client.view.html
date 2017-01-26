@@ -11,3 +11,226 @@
         </section>
     </section>
 </div>
+
+
+
+<!--
+Extra metrics:
+# of Team leads: vm.metrics.teamLeadCount
+# of Teachers: vm.metrics.teacherCount
+# of Team members: vm.metrics.teamMemberCount
+# of Current events: vm.metrics.currentEventCount
+# of Users: vm.metrics.userCount
+
+# of Lessons taught by # of teachers to # of students: ___
+
+
+
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg2.png);">
+    <section class="container container-ribbon text-center">
+        <div class="ribbon-text">
+            <span class="text-script">we need your help to</span>
+            <h1 class="text-caps">restore our harbor</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <p class="lead">As part of our BOP Schools and Citizen Science program, teams adopt and install an Oyster Restoration Station and then take monthly trips to the site to measure oyster growth, water quality, and biodiversity of the harbor. The data is shared with schools and scientists around the region to help improve our local knowledge of restoration.</p>
+                <a class="btn btn-lg btn-danger" ui-sref="authentication.signup">Join the BOP Schools and Citizen Science program <i class="fa fa-angle-right"></i></a>
+                <br/><br/>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-sm-3">
+                <h2 class="white"><i class="fa fa-user"></i></h2>
+                <h6 class="white">Team Members</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.teamMemberCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-3">
+                <h2 class="white"><i class="fa fa-user"></i></h2>
+                <h6 class="white">Team Leads</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.teamLeadCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-3">
+                <h2 class="white"><i class="fa fa-users"></i></h2>
+                <h6 class="white">Teams</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.teamCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-3">
+                <h2 class="white"><i class="fa fa-building"></i></h2>
+                <h6 class="white">Organizations</h6>
+                <hr/>
+                <h1 class="text-caps">{{vm.metrics.orgCount}}</h1>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<section class="content content-jumbotron">
+    <section class="container text-center">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <span class="text-script">attend one of our</span>
+                <h1 class="text-caps">upcoming events</h1>
+                <p class="lead">We offer hands-on trainings, workshops and special events throughout the year for team leads and teachers to build their knowledge of restoration science and inquiry-based curriculum. The first step is to attend one of ORS basic trainings which are held once per month from March to October.</p>
+                <p class="lead">Interested in attending a BOP training? Join the {{vm.metrics.eventRegistrantTotal}} team leads who have attended over {{vm.metrics.pastEventCount}} events.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div ng-repeat="calendarEvent in vm.events" class="col-sm-12 col-md-4 library-item"
+              ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
+                daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
+                <div class="panel" data-category="transition" ui-sref="events.view({ eventId: calendarEvent._id })">
+                    <div class="panel-heading" ng-style="{'background-color':'{{calendarEvent.category.type.color}}'}">
+                        <h3 ng-hide="calendarEvent.category.type.type === 'Other'" class="panel-title"
+                          ng-bind="calendarEvent.category.type.type"></h3>
+                        <h3 ng-show="calendarEvent.category.type.type === 'Other'" class="panel-title">
+                          Other: {{calendarEvent.category.otherType}}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
+                          {{vm.getEventYear(date.startDateTime)}}<br/>
+                          {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
+                        <h4><b class="red" ng-bind="calendarEvent.title"></b></h4>
+                        <p ng-show="calendarEvent.location.addressString"><i class="fa fa-map-marker"></i> {{calendarEvent.location.addressString}}</p>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center small">
+                            <span ng-show="(daysRemaining >= 0 && openSpots > 0)" id="openSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>{{openSpots}} spots</b><br/></span>
+                            <span ng-show="(daysRemaining >= 0 && openSpots <= 0 && openSpots !== null)" id="noOpenSpots">
+                              <i class="fa fa-calendar-times-o"></i>
+                              <b>Event is full</b><br/></span>
+                            <span ng-show="(daysRemaining < 0 || (openSpots <= 0 && openSpots !== null))" id="registrationClosed">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Registration is closed</b></span>
+                            <span ng-show="(daysRemaining === 0 && (openSpots > 0 || openSpots === null))" id="registerToday">
+                              <i class="fa fa-clock-o"></i>
+                              <b>Last day to register!</b></span>
+                            <span ng-show="(daysRemaining > 0 && (openSpots > 0 || openSpots === null))" id="registrationOpen">
+                              <i class="fa fa-clock-o"></i>
+                              <b>{{daysRemaining}} days</b> left to register</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-danger" ui-sref="events.list">See all events <i class="fa fa-angle-right"></i></a>
+        <br/><br/>
+    </section>
+</section>
+
+
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/field-bg.jpg);">
+    <section class="container container-ribbon text-center">
+        <div class="ribbon-text">
+            <span class="text-script">launch your</span>
+            <h1 class="text-caps">expedition</h1>
+        </div>
+        <div class="panel panel-default transparent">
+        <br/><br/>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <p class="lead">Join the community of students, teachers, and citizen scientists monitoring oyster restoration stations and collecting data from across New York Harbor. The digital platform is designed for students to lead the process of ORS monitoring and research in collaboration with their peers. Team leads are responsible for checking and publishing students data so that everyone gets accurate and reliable data on the system. Here's a snapshot of what's available right now:</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h2><i class="fa fa-2x fa-flag lightblue"></i></h2>
+                    <h6>Launched expeditions</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.expeditionCount}}</h1>
+                    <br/>
+                </div>
+                <div class="col-sm-4">
+                    <h2><i class="fa fa-2x fa-map-marker lightblue"></i></h2>
+                    <h6>Active Oyster Restoration Stations</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.activeStationCount}}</h1>
+                    <br/>
+                </div>
+                <div class="col-sm-4">
+                    <h2><i class="fa fa-2x fa-flag lightblue"></i></h2>
+                    <h6>Published expeditions</h6>
+                    <hr/>
+                    <h1 class="text-caps">{{vm.metrics.publishedExpeditionCount}}</h1>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<section class="content content-jumbotron">
+    <section class="container text-center">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <span class="text-script">contribute to the</span>
+                <h1 class="text-caps">curriculum</h1>
+                <p class="lead">Create a team lead account to access and contribute to the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools. We've already started.</p>
+                <a class="btn btn-danger" ui-sref="authentication.signup">Sign up for an account <i class="fa fa-angle-right"></i></a>
+                <br/><br/>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-sm-4">
+                <h6>Units</h6>
+                <hr/>
+                <h1 class="text-caps blue">{{vm.metrics.unitCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-4">
+                <h6>Lessons</h6>
+                <hr/>
+                <h1 class="text-caps blue">{{vm.metrics.lessonCount}}</h1>
+                <br/>
+            </div>
+            <div class="col-sm-4">
+                <h6>Students taught</h6>
+                <hr/>
+                <h1 class="text-caps blue">{{vm.metrics.taughtStudentCount}}</h1>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+<section class="content content-jumbotron" style="background-image: url(modules/core/client/img/backgrounds/water-bg.png);">
+    <section class="container container-ribbon text-center white">
+        <div class="ribbon-text">
+            <span class="text-script">still have</span>
+            <h1 class="text-caps">questions?</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <p class="lead">Take a look at the user guide to better understand the BOP platform and how you can use it to make an impact.</p>
+                <a class="btn btn-danger" href="#">Read the User Guide <i class="fa fa-angle-right"></i></a>
+                
+                <br/><br/><br/><hr/><br/><br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <p>
+                    <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo-w-sm.png" />&nbsp;&nbsp;
+                    <img alt="CCERS" src="modules/core/client/img/brand/ccers_whiteout.png" />
+                </p>
+                <br/>
+                <p class="lead">About the Billion Oyster Project</p>
+                <p>BOP, an initiative of the New York Harbor Foundation, is an ecosystem restoration and education project aimed at restoring one billion live oysters to New York Harbor and engaging hundreds of thousands of school children through restoration based STEM education programs.</p>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#modal-about">Learn more <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+    </section>
+</section>
+
+-->

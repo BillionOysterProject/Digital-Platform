@@ -175,14 +175,10 @@
       angular.element('#modal-team-member-requests').modal('show');
     };
 
-    vm.saveApproveTeamMembers = function() {
+    vm.closeApproveTeamMembers = function() {
       vm.findTeamMembers();
       vm.findTeams();
       vm.findTeamRequests();
-      angular.element('#modal-team-member-requests').modal('hide');
-    };
-
-    vm.closeApproveTeamMembers = function() {
       angular.element('#modal-team-member-requests').modal('hide');
     };
 

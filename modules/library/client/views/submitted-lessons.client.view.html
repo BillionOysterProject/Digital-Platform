@@ -20,7 +20,7 @@
             <div class="panel-body">
                 <small ng-show="submitted.lessonOverview.setting">{{submitted.lessonOverview.setting}}</small>
                 <h4>{{submitted.title}}</h4>
-                <p ng-bind-html="submitted.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                <p ng-bind-html="submitted.lessonOverview.lessonSummary | sanitize | limitTo:200 "></p>
                 <img ng-show="submitted.featuredImage" ng-src="{{submitted.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">

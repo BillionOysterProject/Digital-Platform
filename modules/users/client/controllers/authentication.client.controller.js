@@ -34,7 +34,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           $location.path($rootScope.redirectFromLogin);
         } else {
           // And redirect to the previous or home page
-          $state.go($state.previous.state.name || 'home', $state.previous.params);
+          var toGoState = $state.previous.state.name;
+          if(toGoState === undefined || toGoState === null || toGoState === 'home') {
+            toGoState = 'restoration-stations.dashboard';
+          }
+          $state.go(toGoState, $state.previous.params);
         }
       }).error(function (response) {
         vm.error = response.message;
@@ -65,11 +69,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
             return (teamLeadIndex > -1) ? true : false;
           };
 
-          var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
-            'lessons.list' : 'restoration-stations.dashboard';
+          //var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
+          //  'lessons.list' : 'restoration-stations.dashboard';
 
-          $state.go($state.previous.state.name || dashboard, $state.previous.params);
-          //$state.go(dashboard);
+          //$state.go($state.previous.state.name || dashboard, $state.previous.params);
+          $state.go('restoration-stations.dashboard');
         }
       }).error(function (response) {
         vm.error = response.message;

@@ -1,24 +1,26 @@
-<div class="modal fade" id="modal-org-requests" tabindex="-1" role="dialog"><!-- TODO: Form copied from member requests -- needs updated wiring -->
+<div class="modal fade" id="modal-org-requests" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Organization Requests</h4>
       </div>
-      <form name="form.approveSchoolOrgRequestsForm" ng-submit="save(form.approveSchoolOrgRequestsForm.$valid)" novalidate>
+      <form name="form.approveSchoolOrgRequestsForm" novalidate>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" ng-repeat="request in orgRequests">
               <div class="panel panel-default">
-                <div class="panel-body text-center" ng-repeat="request in orgRequests">
+                <div class="panel-body text-center">
                   <h4>{{request.name}}</h4>
                   <p class="text-muted small">{{request.streetAddress}}, {{request.city}} {{request.state}}<br/>Requested by {{request.creator.displayName}}</p>
                   <p class="small">{{request.description}}</p>
                   <div class="btn-group">
                     <a class="btn btn-success btn-sm" title="Accept" ng-model="request.approve"
-                      uib-btn-radio="true"><i class="glyphicon glyphicon-ok" ng-click="approve()"></i></a>
+                      ng-change="approve(request)" uib-btn-radio="true">
+                      <i class="glyphicon glyphicon-ok"></i></a>
                     <a class="btn btn-danger btn-sm" title="Reject" ng-model="request.approve"
-                      uib-btn-radio="false"><i class="glyphicon glyphicon-remove" ng-click="deny()"></i></a>
+                      ng-change="deny(request)" uib-btn-radio="false">
+                      <i class="glyphicon glyphicon-remove"></i></a>
                   </div>
                   <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">
                     <strong ng-bind="request.error"></strong>
@@ -33,7 +35,6 @@
         </div>
         <div class="modal-footer" ng-show="orgRequests.length > 0">
           <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>

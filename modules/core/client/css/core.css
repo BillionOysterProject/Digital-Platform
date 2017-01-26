@@ -40,7 +40,7 @@ body {
     }
 }
 
-.jumbotron {
+.jumbotron, .content-jumbotron {
     background-color: #f4f7f8;
     background-position: center center;
     background-repeat: no-repeat;
@@ -49,6 +49,20 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+     .content-jumbotron { 
+        background-color: #fff; 
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    
+        @media (max-width: 768px) {
+            .content-jumbotron .btn {
+                display: block;
+                width: 100%;
+                white-space: normal;
+            }
+        }
 
     .jumbotron.dark {
         background: #aaa;
@@ -343,7 +357,10 @@ body {
 .crimson { color: #943234; }
 .green { color: #4CAF50; }
 .gray { color: #ccc; }
+.white { color: #fff; }
 .shaded { background-color: #f4f7f8; }
+.transparent { background-color: rgba(255,255,255,.9); }
+.transparent-d { background-color: rgba(0,0,0,.5); }
 
 /* LINK COLORS */
 
@@ -1027,4 +1044,46 @@ form.ng-submitted .ng-invalid {
 
 .col-2point4 {
     width: 20%;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+      HOMEPAGE (MARKETING SITE)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.container-ribbon {
+    background: url(../img/backgrounds/redribbon-bg.png) center top no-repeat transparent;
+    margin-top: -50px;
+}
+
+    .container-ribbon .ribbon-text {
+        padding: 30px 0;
+        min-height: 218px;
+        color: #fff;
+        text-align: center;
+    }
+
+.text-script {
+    margin: 0;
+    font-size: 1.75em;
+    line-height: 1;
+    font-family: 'Lobster', 'corner-store', cursive, serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+}
+
+.text-script:before, .text-script:after {
+    content: '\00a0\2014\00a0';
+}
+
+.text-caps {
+    margin: 5px 0 10px 0;
+    text-transform: uppercase;
+    font-family: 'Oswald', 'alternate-gothic-no-2-d', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 3em;
+    line-height: 1;
 }

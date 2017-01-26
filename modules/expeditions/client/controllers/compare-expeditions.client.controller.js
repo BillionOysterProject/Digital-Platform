@@ -63,7 +63,7 @@
       searchString: ''
     };
 
-    vm.findCompareExpeditions = function() {
+    vm.findCompareExpeditions = function(callback) {
       ExpeditionsService.query({
         published: true,
         sort: 'startDate',
@@ -78,11 +78,11 @@
         vm.expeditions = data;
         if (vm.filtered) vm.compare();
         vm.error = null;
+        callback();
       }, function(error) {
         vm.error = error.data.message;
       });
     };
-    vm.findCompareExpeditions();
 
     vm.resetFilters = function() {
       vm.filtered = false;
@@ -482,16 +482,10 @@
     };
 
     vm.cancelFunction = function() {
-      console.log('cancel');
     };
 
     vm.compare = function() {
-      console.log('compare');
       vm.filtered = true;
-      $location.hash('view-comparison-section');
-      $anchorScroll.yOffset = 100;
-      $anchorScroll();
-      //$window.scrollTo(0, document.getElementById('view-comparison').offsetTop);
       var expeditionIds = [];
       for (var i = 0; i < vm.expeditions.length; i++) {
         expeditionIds.push(vm.expeditions[i]._id);
@@ -628,6 +622,9 @@
         console.log('error', data);
       });
     };
+
+    //initialize the expeditions chosen and fill in the comparison view
+    vm.findCompareExpeditions(vm.compare);
 
     vm.download = function() {
       var expeditionIds = [];

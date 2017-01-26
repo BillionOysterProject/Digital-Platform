@@ -22,7 +22,7 @@
             <div class="panel-body">
                 <small ng-show="created.lessonOverview.setting">{{created.lessonOverview.setting}}</small>
                 <h4>{{created.title}}</h4>
-                <p ng-bind-html="created.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                <p ng-bind-html="created.lessonOverview.lessonSummary | sanitize | limitTo:200 "></p>
                 <img ng-show="created.featuredImage" ng-src="{{created.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">

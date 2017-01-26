@@ -177,7 +177,7 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       $scope.deleteTeamError = null;
 
       var teamToDelete = (team) ? new TeamsService(team) : new TeamsService();
-      team.$remove(function(obj) {
+      teamToDelete.$remove(function(obj) {
         $scope.closeAdminTeam();
         //reload user list since the user may be deleted
         $scope.findUsers();
@@ -209,11 +209,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     $scope.openApproveTeamLeads = function() {
       $scope.findUsers();
       angular.element('#modal-team-lead-requests').modal('show');
-    };
-
-    $scope.saveApproveTeamLeads = function() {
-      $scope.findUsers();
-      angular.element('#modal-team-lead-requests').modal('hide');
     };
 
     $scope.closeApproveTeamLeads = function() {
