@@ -8,9 +8,9 @@
       <form name="form.approveSchoolOrgRequestsForm" novalidate>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" ng-repeat="request in orgRequests">
               <div class="panel panel-default">
-                <div class="panel-body text-center" ng-repeat="request in orgRequests">
+                <div class="panel-body text-center">
                   <h4>{{request.name}}</h4>
                   <p class="text-muted small">{{request.streetAddress}}, {{request.city}} {{request.state}}<br/>Requested by {{request.creator.displayName}}</p>
                   <p class="small">{{request.description}}</p>
