@@ -120,16 +120,13 @@ exports.create = function(req, res) {
   function(eventJSON) {
     var calendarEvent = new CalendarEvent(eventJSON);
     for (var i = 0; i < req.body.dates.length; i++) {
-      //calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-      //  req.body.dates[i].startTime);
-      //calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-      //  req.body.dates[i].endTime);
       calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
       calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
     }
     calendarEvent.dates = sortDates(calendarEvent.dates);
-    calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
-      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
+    calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ?
+      moment(req.body.deadlineToRegister,'YYYY-MM-DDTHH:mm:ss.SSSZ') : '';
+      
     if (!calendarEvent.resources) {
       calendarEvent.resources = {
         resourcesFiles: []
@@ -263,17 +260,13 @@ exports.update = function(req, res) {
     if (calendarEvent) {
       calendarEvent = _.extend(calendarEvent, eventJSON);
       for (var i = 0; i < req.body.dates.length; i++) {
-        //calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-        //  req.body.dates[i].startTime);
-        //calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-        //  req.body.dates[i].endTime);
         calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
         calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
       }
       calendarEvent.dates = sortDates(calendarEvent.dates);
 
-      calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
+      calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ?
+        moment(req.body.deadlineToRegister,'YYYY-MM-DDTHH:mm:ss.SSSZ') : '';
 
       if (!calendarEvent.resources) {
         calendarEvent.resources = {
