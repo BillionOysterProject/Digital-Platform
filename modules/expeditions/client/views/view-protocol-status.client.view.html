@@ -1,10 +1,8 @@
 <span class="label label-danger" ng-show="status === 'incomplete'">Protocol Incomplete</span>
-<span class="label label-info" ng-show="status === 'submitted'">Protocol Submitted</span>
+<!--span class="label label-info" ng-show="status === 'submitted'">Protocol Submitted</span-->
 
-<!--TODO: Wire up these in place of above "Submitted" label:
-<span class="label label-info" ng-show="status === 'submitted' && vm.isTeamMember && !vm.isTeamLead">Protocol Submitted</span>
-<span class="label label-info" ng-show="status === 'submitted' && (vm.isTeamLead || vm.isAdmin)">Protocol Needs Review</span>
--->
+<span class="label label-info" ng-show="status === 'submitted' && isTeamMember && !isTeamLead">Protocol Submitted</span>
+<span class="label label-info" ng-show="status === 'submitted' && (isTeamLead || isAdmin)">Protocol Needs Review</span>
 
 <span class="label label-danger" ng-show="status === 'returned'">Protocol Returned</span>
 <span class="label label-success" ng-show="status === 'published'">Expedition Published</span>

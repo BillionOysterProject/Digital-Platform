@@ -477,7 +477,7 @@ exports.getCurriculumMetrics = function(req, res) {
                                               var totalTeacherResourcesLinks = 0;
                                               var totalHandouts = 0;
                                               for(var i = 0; i < lessonResources.length; i++) {
-                                                if(lessonResources[i].supplies !== null && lessonResources[i] !== undefined) {
+                                                if(lessonResources[i].supplies !== null && lessonResources[i].supplies !== undefined) {
                                                   totalSupplies += lessonResources[i].supplies.split('\n').length;
                                                 }
                                                 if(lessonResources[i].teacherResourcesLinks !== null && lessonResources[i].teacherResourcesLinks[i] !== undefined) {
