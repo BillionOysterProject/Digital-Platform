@@ -8,7 +8,10 @@
         restrict: 'AE',
         templateUrl: 'modules/expeditions/client/views/view-protocol-status.client.view.html',
         scope: {
-          status: '@'
+          status: '@',
+          isTeamLead: '@',
+          isTeamMember: '@',
+          isAdmin: '@'
         }
       };
     });
