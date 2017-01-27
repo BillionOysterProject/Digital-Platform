@@ -9,13 +9,13 @@
 
   function menuConfig(Menus) {
 
-    // Menus.addMenuItem('topbar', {
-    //   title: 'Metrics',
-    //   state: 'metrics.dashboard',
-    //   roles: ['admin'],
-    //   icon: 'glyphicon glyphicon-equalizer',
-    //   position: 5
-    // });
+    Menus.addMenuItem('topbar', {
+      title: 'Metrics',
+      state: 'metrics.dashboard',
+      roles: ['admin'],
+      icon: 'glyphicon glyphicon-equalizer',
+      position: 5
+    });
 
   }
 })();
