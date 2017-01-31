@@ -32,6 +32,12 @@ var SchoolOrgSchema = new Schema({
     trim: true,
     required: 'Description cannot be blank'
   },
+  photo: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
+  },
   streetAddress: {
     type: String,
     default: '',
@@ -63,7 +69,11 @@ var SchoolOrgSchema = new Schema({
   creator: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  orgLeads: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }]
 });
 
 mongoose.model('SchoolOrg', SchoolOrgSchema);

@@ -9,14 +9,14 @@
         templateUrl: 'modules/users/client/views/admin/form-admin-team-lead.client.view.html',
         scope: {
           user: '=',
-          organizations: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
-        controller: 'FormAdminTeamLeadController',
+        controller: 'TeamLeadController',
         replace: true,
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function() {
+            scope.findUserAndOrganization();
+          });
         }
       };
     }]);

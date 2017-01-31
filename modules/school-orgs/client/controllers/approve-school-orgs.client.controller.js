@@ -25,7 +25,7 @@
 
     $scope.cancel = function() {
       $scope.reset();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
 
     $scope.approve = function(pendingOrgRequest) {

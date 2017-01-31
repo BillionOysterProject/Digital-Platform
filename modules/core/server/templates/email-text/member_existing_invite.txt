@@ -1,6 +1,6 @@
 Hi <%= FirstName %>,
 
-Welcome, you've been invited by <%= TeamLeadName %> to join the team <%= TeamName %> at the Billion Oyster Project.
+Welcome, you've been invited by <%= LeadName %> to join the <%= TeamOrOrg %> <%= TeamOrOrgName %> at the Billion Oyster Project.
 
 Visit <%= LinkLogin %> to login.
 

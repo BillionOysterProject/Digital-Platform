@@ -1,0 +1,45 @@
+<div class="modal fade" id="modal-team-lead-invite" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form name="form.inviteTeamLead" ng-submit="send(form.inviteTeamLead.$valid)" novalidate>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Invite team leads</h4>
+            </div>
+            <div class="modal-body">
+                <p>You can add additional team leads to help manage <b>{{team.name}}</b>. These team leads will have all the same permissions to edit and delete the team; add, edit and delete members and leads; and create, edit and publish expeditions - so proceed with caution.</p>
+                <hr/>
+                <p>If they already have a team lead account in the <b>{{organization.name}}</b> organization, select their name below.</p>
+                <div class="form-group">
+                  <label for="teamLead">Team Leads in the <span class="red">{{organization.name}}</span> organization</label>
+                  <input type="text" ng-model="existingTeamLead" placeholder="Team Leads" id="teamLead" name="teamLead"
+                  uib-typeahead="teamLead as teamLead.displayName for teamLead in teamLeads | filter:{displayName:$viewValue}"
+                  class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+                    ng-disabled="newTeamLead.firstName || newTeamLead.lastName || newTeamLead.email">
+                </div>
+                <hr/>
+                <p>If they don't already have a team lead account in the <b>{{organization.name}}</b> organization, send them an invite to join.</p>
+                <div class="form-group" show-errors>
+                    <label for="firstName" class="control-label">First name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" ng-model="newTeamLead.firstName"
+                      ng-disabled="existingTeamLead"></input>
+                </div>
+                <div class="form-group" show-errors>
+                    <label for="lastName" class="control-label">Last name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" ng-model="newTeamLead.lastName"
+                      ng-disabled="existingTeamLead"></input>
+                </div>
+                <div class="form-group" show-errors>
+                    <label for="email" class="control-label">Email address</label>
+                    <input type="text" class="form-control" id="email" name="email" ng-model="newTeamLead.email"
+                      ng-disabled="existingTeamLead"></input>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" ng-click="close()">Cancel</a>
+                <button class="btn btn-primary" type="submit">Invite</button>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>

@@ -28,11 +28,50 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/users/:userId',
       permissions: '*'
+    }, {
+      resources: '/api/users/username',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/remind',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/validate/csv',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['team lead'],
+    allows: [{
+      resources: '/api/users/leaders',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/remind',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/validate/csv',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
     allows: [{
       resources: '/api/users/teamleads',
+      permissions: ['get']
+    }, {
+      resources: '/api/users/username',
       permissions: ['get']
     }]
   }]);

@@ -15,6 +15,7 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
+.content-flush { padding: 0 0 0 80px; }
 .content-fixed { position: fixed; z-index: 1; }
 .content-fixed + div { padding-top: 125px; }
 
@@ -596,6 +597,10 @@ h6, .h6 {
     color: #aaa;
     font-weight: bold;
     letter-spacing: 2px;
+}
+
+.capitalize {
+   text-transform: capitalize;
 }
 
 .break {

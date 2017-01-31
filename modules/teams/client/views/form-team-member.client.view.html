@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-team-member-editadd" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form name="form.teamMemberForm" ng-submit="save(form.teamMemberForm.$valid)" novalidate>
         <fieldset>
@@ -11,32 +11,30 @@
             <div class="row">
               <div class="form-group col-md-6" show-errors>
                 <label for="firstName" class="control-label required">First Name</label>
-                <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
+                <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName"
+                  required ng-readonly="teamMember._id && teamMember.pending === false" required>
               </div>
               <div class="form-group col-md-6" show-errors>
                 <label for="lastName" class="control-label required">Last Name</label>
-                <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName" required ng-readonly="teamMember._id && teamMember.pending === false" required>
+                <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName"
+                  required ng-readonly="teamMember._id && teamMember.pending === false" required>
               </div>
               <div class="form-group col-md-12" show-errors>
                 <label for="email" class="control-label required">Email</label>
-                <input type="text" name="email" class="form-control" ng-model="teamMember.email" required ng-readonly="teamMember._id && teamMember.pending === false" required>
+                <input type="text" name="email" class="form-control" ng-model="teamMember.email"
+                  required ng-readonly="teamMember._id && teamMember.pending === false" required>
               </div>
-              <div class="form-group col-sm-6" show-errors>
-                <label for="team" class="control-label required">Team Assignment</label>
-                <select name="team" class="form-control" ng-model="teamMember.team._id" required>
+              <div class="form-group col-sm-12" show-errors ng-show="teamMember._id">
+                <label for="team" class="control-label" ng-class="{'required': teamMember._id}">Team</label>
+                <select name="team" class="form-control" ng-model="newTeam" ng-required="teamMember._id">
                   <option disabled selected value>
-                  <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option>
-                  <option value="-1">Create a new team</option>
+                  <option ng-repeat="team in allTeams" value="{{team._id}}">{{team.name}}</option>
                 </select>
-              </div>
-              <div class="form-group col-sm-6" show-errors ng-show="teamMember.team._id === '-1'">
-                <label for="newTeam" class="control-label" ng-class="{required: teamMember.team._id === '-1'}">Create a new team</label>
-                <input type="text" name="newTeam" class="form-control" ng-model="teamMember.newTeamName" ng-required="teamMember.team._id === '-1'"/>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="cancelFunction()">Cancel</button>
+            <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
             <button type="submit" class="btn btn-primary">{{teamMember._id ? 'Update' : 'Send Invite'}}</button>
           </div>
           <div ng-show="error" class="alert alert-danger">

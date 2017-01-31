@@ -1,0 +1,78 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Teams</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for a team by name, description, team lead...">
+            </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.teams.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <nav class="navbar">
+            <a class="btn btn-default pull-right" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openTeamProfileForm()">
+              <i class="glyphicon glyphicon-plus"></i> Create new team</a>
+            <ul class="nav navbar-nav">
+                <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
+                <li class="dropdown" id="orgSelection">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Organization{{(vm.filter.organizationName) ? ': ' + vm.filter.organizationName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.organizationSelected()" ok-sel=".all">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li ng-repeat="org in vm.organizations">
+                        <a ok-sel=".{{org._id}}" ng-click="vm.organizationSelected(org)">
+                            {{org.name}}
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.isTeamLead) && vm.teams.length === 0 && vm.filter.searchString === ''">
+            No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
+        </div>
+
+        <div class="row" isotope-container="isotope-container">
+            <div ng-repeat="team in vm.teams" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{team.schoolOrg.name}}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>{{team.name}}</h4>
+                        <p class="text-muted small">{{team.description | limitTo:200}}</p>
+                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" />
+                        <hr/>
+                        <p>
+                          <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
+                        </p>
+                    </div>
+                    <div class="panel-footer text-muted">
+                        <ul class="list-inline text-center">
+                            <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
+                            <li><i class="fa fa-flag"></i> <b>{{team.orsCount}}</b> expeditions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--MODALS-->
+<form-team-profile-modal team="vm.newTeam" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<!--END MODALS-->

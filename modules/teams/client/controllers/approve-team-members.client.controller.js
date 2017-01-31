@@ -5,11 +5,12 @@
     .module('teams')
     .controller('TeamApprovalController', TeamApprovalController);
 
-  TeamApprovalController.$inject = ['$scope', '$http'];
+  TeamApprovalController.$inject = ['$scope', '$http', 'TeamsService'];
 
   function TeamApprovalController($scope, $http) {
     $scope.error = null;
     $scope.teamRequestsTeams = [];
+    
     $scope.reset = function() {
       for (var i = 0; i < $scope.teamRequests.length; i++) {
         delete $scope.teamRequests[i].approve;
@@ -25,7 +26,7 @@
 
     $scope.cancel = function() {
       $scope.reset();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
 
     $scope.closeIfLast = function() {
