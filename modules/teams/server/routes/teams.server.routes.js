@@ -26,6 +26,9 @@ module.exports = function (app) {
     .put(teams.update)
     .delete(teams.delete);
 
+  app.route('/api/teams/:teamId/members/:memberId').all(teamsPolicy.isAllowed)
+    .delete(teams.deleteMember);
+        
   // Finish by binding the team middleware
   app.param('teamId', teams.teamByID);
 };

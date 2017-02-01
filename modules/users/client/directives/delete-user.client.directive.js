@@ -10,7 +10,7 @@
         scope: {
           user: '=',
           deleteFunction: '=',
-          cancelFunction: '=',
+          closeFunction: '=',
           canBeDeletedFunction: '='
         },
         replace: true,

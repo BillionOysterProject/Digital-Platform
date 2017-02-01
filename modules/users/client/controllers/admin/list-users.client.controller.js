@@ -93,20 +93,48 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
       }
     };
 
-    $scope.openAdminTeamLeadForm = function(user) {
-      $scope.formUser = (user) ? new Admin(angular.copy(user)) : new Admin();
+    $scope.teamLeadType = [
+      { label: 'Teacher', value: 'teacher' },
+      { label: 'Citizen Scientist', value: 'citizen scientist' },
+      { label: 'Professional Scientist', value: 'professional scientist' },
+      { label: 'Site Coordinator', value: 'site coordinator' },
+      { label: 'Other', value: 'other' }
+    ];
 
+    $scope.openAdminTeamLeadForm = function(user) {
+      $scope.editUserError = null;
+      $scope.formUser = (user) ? new Admin(angular.copy(user)) : new Admin();
       $scope.formUser.schoolOrg = (user.schoolOrg && user.schoolOrg._id) ? user.schoolOrg._id : user.schoolOrg;
       angular.element('#modal-admin-team-lead-editadd').modal('show');
     };
 
-    $scope.saveAdminTeamLeadForm = function() {
-      $scope.findUsers();
+    $scope.saveAdminTeamLeadForm = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.adminTeamLeadForm');
+        return false;
+      }
+
+      if ($scope.formUser._id) {
+        $scope.formUser.$update(successCallback, errorCallback);
+      } else {
+        $scope.formUser.$update(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        $scope.findUsers();
+        $scope.cancelAdminTeamLeadForm();
+      }
+
+      function errorCallback(res) {
+        $scope.editUserError = res.data.message;
+      }
 
       angular.element('#modal-admin-team-lead-editadd').modal('hide');
     };
 
     $scope.cancelAdminTeamLeadForm = function() {
+      $scope.formUser = null;
+      $scope.editUserError = null;
       angular.element('#modal-admin-team-lead-editadd').modal('hide');
     };
 
@@ -130,26 +158,17 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.openDeleteTeamMember = function(member, team) {
-      $scope.memberToDelete = member;
-      $scope.memberToDeleteTeam = team;
       var result = confirm('Are you sure you want to remove ' + member.displayName + '? The action cannot be undone.');
       if(result) {
         $scope.deleteTeamMember(member, team);
       }
-      //angular.element('#modal-delete-team-member').modal('show');
     };
 
-    // $scope.cancelDeleteTeamMember = function() {
-    //   $scope.memberToDelete = {};
-    //   $scope.memberToDeleteTeam = {};
-    //   angular.element('#modal-delete-team-member').modal('hide');
-    // };
-
-    $scope.deleteTeamMember = function(teamMember, team) {
+    $scope.deleteTeamMember = function(member, team) {
       $scope.deleteTeamMemberError = null;
       $scope.deleteTeamError = null;
-      teamMember.team = team;
-      var teamMemberToDelete = (teamMember) ? new TeamMembersDeleteService(teamMember) : new TeamMembersDeleteService();
+      member.team = team;
+      var teamMemberToDelete = (member) ? new TeamMembersDeleteService(member) : new TeamMembersDeleteService();
       teamMemberToDelete.$remove(function(obj) {
         //reload user list since the user may be deleted
         $scope.findUsers();
@@ -165,7 +184,6 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     };
 
     $scope.openDeleteTeam = function(team) {
-      $scope.teamToDelete = team;
       var result = confirm('Are you sure you want to remove ' + team.name + '? The action cannot be undone.');
       if(result) {
         $scope.deleteTeam(team);
