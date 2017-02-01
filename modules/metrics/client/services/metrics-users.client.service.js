@@ -19,6 +19,21 @@
 
   angular
     .module('metrics')
+    .factory('MetricsUsersAdminService', MetricsUsersAdminService);
+
+  MetricsUsersAdminService.$inject = ['$resource'];
+
+  function MetricsUsersAdminService($resource) {
+    return $resource('api/metrics/people-with-admin', {
+    }, {
+      query: {
+        method: 'GET'
+      }
+    });
+  }
+
+  angular
+    .module('metrics')
     .factory('MetricsUserActivityService', MetricsUserActivityService);
 
   MetricsUserActivityService.$inject = ['$resource'];
