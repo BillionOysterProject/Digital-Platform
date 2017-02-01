@@ -5,23 +5,37 @@
     .module('metrics')
     .controller('PeopleMetricsController', PeopleMetricsController);
 
-  PeopleMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment',
-    'MetricsUsersService', 'MetricsUserActivityService'];
+  PeopleMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment', 'lodash',
+    'Authentication', 'MetricsUsersService', 'MetricsUsersAdminService', 'MetricsUserActivityService'];
 
-  function PeopleMetricsController($scope, $rootScope, $timeout, moment,
-    MetricsUsersService, MetricsUserActivityService) {
+  function PeopleMetricsController($scope, $rootScope, $timeout, moment, lodash,
+    Authentication, MetricsUsersService, MetricsUsersAdminService, MetricsUserActivityService) {
     $scope.getPeopleMetrics = function() {
-      MetricsUsersService.query({},
-      function (data) {
-        $scope.metrics = data;
-        $scope.rolesPieData = [$scope.metrics.teamMemberCount, $scope.metrics.teamLeadCount, $scope.metrics.adminCount];
-        $scope.error = null;
-        $timeout(function() {
-          $rootScope.$broadcast('iso-method', { name:null, params:null });
+      if(!$scope.isAdmin) {
+        MetricsUsersService.query({},
+        function (data) {
+          $scope.metrics = data;
+          $scope.rolesPieData = [$scope.metrics.userCounts.teamMember, $scope.metrics.userCounts.teamLead];
+          $scope.error = null;
+          $timeout(function() {
+            $rootScope.$broadcast('iso-method', { name:null, params:null });
+          });
+        }, function(error) {
+          $scope.error = error.data.message;
         });
-      }, function(error) {
-        $scope.error = error.data.message;
-      });
+      } else {
+        MetricsUsersAdminService.query({},
+        function (data) {
+          $scope.metrics = data;
+          $scope.rolesPieData = [$scope.metrics.userCounts.teamMember, $scope.metrics.userCounts.teamLead, $scope.metrics.userCounts.admin];
+          $scope.error = null;
+          $timeout(function() {
+            $rootScope.$broadcast('iso-method', { name:null, params:null });
+          });
+        }, function(error) {
+          $scope.error = error.data.message;
+        });
+      }
     };
 
     $scope.getMostActiveUsers = function() {
@@ -59,6 +73,23 @@
       return $scope.userActivityFilter.userRole.value === 'admin';
     };
 
+    //initialization code
+    $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
+
+    var checkRole = function(role) {
+      var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
+
+    if($scope.user) {
+      $scope.isAdmin = checkRole('admin');
+    } else {
+      $scope.isAdmin = false;
+    }
+
     var calculateMonthTimeIntervals = function(numMonths) {
       var monthTimeIntervals = [];
       var prevMonth = moment().subtract(numMonths-1, 'months').startOf('month');
@@ -87,11 +118,15 @@
       { name: 'Team Members', value: 'team member' },
       { name: 'Admin', value: 'admin' }
     ];
+
     $scope.userActivityFilter = {
       month: $scope.monthHistoryLabelsReversed[0],
-      userRole: $scope.userRoleOptions[0]
+      userRole: $scope.userRoleOptions[0] //Team Leads is first so it works for admin and team lead roles
     };
-    $scope.rolesPielabels = ['Team Members', 'Team Leads', 'Admin'];
+    $scope.rolesPielabels = ['Team Members', 'Team Leads'];
+    if($scope.isAdmin) {
+      $scope.rolesPielabels.push('Admin');
+    }
     $scope.getPeopleMetrics();
     $scope.getMostActiveUsers();
   }
