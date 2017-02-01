@@ -83,7 +83,6 @@ exports.read = function (req, res) {
   unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true : false;
 
   Lesson.find({ unit: unit }).exec(function(err, lessons) {
-    console.log('lessons', lessons);
     unit.hasLessons = (lessons && lessons.length > 0) ? true : false;
 
     if (!unit.isCurrentUserOwner) {
