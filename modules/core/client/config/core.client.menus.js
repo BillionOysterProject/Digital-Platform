@@ -15,8 +15,14 @@
 
     Menus.addMenuItem('account', {
       title: '',
-      state: 'settings',
+      state: 'profile',
       type: 'dropdown'
+    });
+
+    Menus.addSubMenuItem('account', 'profile', {
+      title: 'Profile',
+      state: 'profiles.main',
+      roles: ['user']
     });
   }
 
