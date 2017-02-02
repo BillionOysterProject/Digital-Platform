@@ -87,7 +87,7 @@
 
     // Check if the user is allows to write to the given protocol
     vm.checkWrite = function(teamList, protocol) {
-      if (checkRole('admin') && !checkRole('team lead') && !checkRole('team member')) {
+      if (checkRole('admin')) {
         return true;
       } else {
         if (checkRole('team lead') && (protocol.status !== 'incomplete' && protocol.status !== 'returned')) {

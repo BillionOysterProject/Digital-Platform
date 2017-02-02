@@ -654,7 +654,7 @@ exports.feedbackForLesson = function(req, res) {
         message: 'Could not retrieve averages'
       });
     } else {
-      LessonFeedback.find({ lesson: lesson._id }).populate('user', 'displayName').exec(function(err1, feedbackList) {
+      LessonFeedback.find({ lesson: lesson._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
         if (err1) {
           res.status(400).send({
             message: 'Could not retrieve feedback'
@@ -877,7 +877,30 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(lessons);
+      if (req.query.stats) {
+        var getStats = function(lessons, index, callback) {
+          if (index < lessons.length) {
+            var lesson = (lessons[index]) ? lessons[index].toJSON() : {};
+            LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err, teamLeads) {
+              if (!err) {
+                lesson.stats = {
+                  teamLeadCount: (teamLeads) ? teamLeads.length : 0
+                };
+                lessons[index] = lesson;
+              }
+              getStats(lessons, index+1, callback);
+            });
+          } else {
+            callback();
+          }
+        };
+
+        getStats(lessons, 0, function() {
+          res.json(lessons);
+        });
+      } else {
+        res.json(lessons);
+      }
     }
   });
 };

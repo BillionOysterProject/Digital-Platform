@@ -97,12 +97,7 @@ exports.update = function (req, res) {
   }
 };
 
-/**
- * Delete a team
- */
-exports.delete = function (req, res) {
-  var team = req.team;
-
+var deleteTeamInternal = function(team, res) {
   team.remove(function (err) {
     if (err) {
       return res.status(400).send({
@@ -112,6 +107,124 @@ exports.delete = function (req, res) {
       res.json(team);
     }
   });
+};
+
+/**
+ * Delete a team
+ */
+exports.delete = function (req, res) {
+  var team = req.team;
+
+  if(team.teamMembers !== undefined && team.teamMembers !== null &&
+    team.teamMembers.length > 0) {
+    return res.status(400).send({
+      message: 'The team ' + team.name + ' cannot be deleted because it still has members.'
+    });
+  }
+
+  //does the team have expeditions? if so don't let it be deleted
+  Expedition.find({ 'team': team._id }).exec(function(err, expeditions) {
+    if (err) {
+      return res.status(400).send({
+        message: 'Could not find expeditions associated with team ' + team.name +
+          '. Error is: ' + errorHandler.getErrorMessage(err)
+      });
+    } else {
+      if(expeditions !== null && expeditions !== undefined && expeditions.length > 0) {
+        return res.status(400).send({
+          message: 'Team ' + team.name + ' cannot be deleted because there are expeditions associated with it.'
+        });
+      } else {
+        deleteTeamInternal(team, res);
+      }
+    }
+  });
+};
+
+exports.deleteMember = function (req, res) {
+  var member = req.member;
+  var team = req.team;
+
+  var deleteUser = function() {
+    member.remove(function (errDelUser) {
+      if (errDelUser) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(errDelUser)
+        });
+      } else {
+        res.json(member);
+      }
+    });
+  };
+
+  var memberIndex = function(member, team) {
+    var index = _.findIndex(team.teamMembers, function(m) {
+      return m._id.toString() === member._id.toString();
+    });
+    return index;
+  };
+
+  var removeMemberFromTeam = function(team, index, callback) {
+    team.teamMembers.splice(index, 1);
+
+    team.save(function (delSaveErr) {
+      if (delSaveErr) {
+        callback(delSaveErr);
+      } else {
+        if (member.pending === true) {
+          member.remove(function (errDelUser) {
+            if (errDelUser) {
+              callback(errDelUser);
+            } else {
+              callback();
+            }
+          });
+        } else {
+          callback();
+        }
+      }
+    });
+  };
+
+  if(team === undefined || team === null) {
+    return res.status(400).send({
+      message: 'Team was not specified'
+    });
+  }
+
+  if(member === undefined || member === null) {
+    return res.status(400).send({
+      message: 'Member was not specified'
+    });
+  }
+
+  // Remove the user from the team
+  var mIndex = memberIndex(member, team);
+  if (mIndex > -1) {
+    removeMemberFromTeam(team, mIndex, function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLead': member }] }).exec(function(err, teams) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else if (teams && teams.length > 0) {
+            res.json(member);
+          } else {
+            deleteUser();
+          }
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Member was not found in team'
+    });
+  }
 };
 
 /**
@@ -385,8 +498,32 @@ exports.listMembers = function (req, res) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
-          } else {
-            res.json(members);
+          } else if(members && members.length > 0) {
+            var findTeams = function(user, callback) {
+              var queryTeam = Team.find({ 'teamMembers': user });
+              queryTeam.exec(function(err, teams) {
+                callback(teams);
+              });
+            };
+
+            var findTeamsForUsers = function(index, users, usersWithTeam, callback) {
+              if (index < users.length) {
+                findTeams(users[index], function(teams) {
+                  var user = users[index] ? users[index].toJSON() : {};
+                  if (teams && teams.length) {
+                    user.team = teams[0];
+                  }
+                  usersWithTeam.push(user);
+                  findTeamsForUsers(index+1, users, usersWithTeam, callback);
+                });
+              } else {
+                callback(usersWithTeam);
+              }
+            };
+
+            findTeamsForUsers(0, members, [], function(usersWithTeam) {
+              res.json(usersWithTeam);
+            });
           }
         });
       } else {

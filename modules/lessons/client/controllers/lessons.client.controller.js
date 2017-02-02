@@ -9,15 +9,14 @@
   'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
   'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
   'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'lodash'];
+  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
-    SubjectAreasService, LessonsService, LessonTrackerStatsService, lodash) {
+    SubjectAreasService, LessonsService, LessonTrackerStatsService, LessonFeedbackService, lodash) {
     var vm = this;
-
     vm.lesson = lesson;
     vm.authentication = Authentication;
     vm.user = Authentication.user;
@@ -178,11 +177,23 @@
       vm.units = data;
     });
 
-    LessonTrackerStatsService.get({
-      lessonId: vm.lesson._id
-    }, function(data) {
-      vm.lessonStats = data;
-    });
+    var getLessonStats = function() {
+      LessonTrackerStatsService.get({
+        lessonId: vm.lesson._id
+      }, function(data) {
+        vm.lessonStats = data;
+      });
+    };
+    getLessonStats();
+
+    var getLessonFeedback = function() {
+      LessonFeedbackService.get({
+        lessonId: vm.lesson._id
+      }, function(data) {
+        vm.feedback = data;
+      });
+    };
+    getLessonFeedback();
 
     if (vm.lesson.user && vm.lesson.user.team) {
       TeamsService.get({
@@ -218,6 +229,13 @@
         }
       }]
     });
+
+    vm.checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
 
     // Remove existing Lesson
     vm.remove = function() {
@@ -672,24 +690,33 @@
       angular.element('#modal-lesson-feedback').modal('show');
     };
 
-    vm.closeLessonFeedback = function() {
+    vm.closeLessonFeedback = function(reload) {
       angular.element('#modal-lesson-feedback').modal('hide');
+      if (reload) {
+        getLessonFeedback();
+      }
     };
 
     vm.openLessonFeedbackView = function() {
       angular.element('#modal-lesson-view-feedback').modal('show');
     };
 
-    vm.closeLessonFeedbackView = function() {
+    vm.closeLessonFeedbackView = function(reload) {
       angular.element('#modal-lesson-view-feedback').modal('hide');
+      if (reload) {
+        getLessonFeedback();
+      }
     };
 
     vm.openLessonLog = function() {
       angular.element('#modal-lesson-log').modal('show');
     };
 
-    vm.closeLessonLog = function() {
+    vm.closeLessonLog = function(reload) {
       angular.element('#modal-lesson-log').modal('hide');
+      if (reload) {
+        getLessonStats();
+      }
     };
 
   }

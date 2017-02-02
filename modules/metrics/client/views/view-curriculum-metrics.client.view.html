@@ -1,0 +1,125 @@
+<section class="content">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.unitCounts.published}}<i class="glyphicon glyphicon-book gray"></i></h1>
+                        <h6>Units</h6>
+                    </div>
+                    <div class="col-xs-6">
+                        <h1 class="red">{{metrics.lessonCounts.published}} <i class="glyphicon glyphicon-list-alt gray"></i></h1>
+                        <h6>Lessons</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <h3 class="red">{{metrics.lessonCounts.saved}} <i class="glyphicon glyphicon-star gray"></i></h3>
+                        <h6>Starred Lessons</h6>
+                    </div>
+                    <div class="col-xs-4">
+                        <h3 class="red">{{metrics.lessonCounts.duplicated}} <i class="glyphicon glyphicon-duplicate gray"></i></h3>
+                        <h6>Duplicated Lessons</h6>
+                    </div>
+                    <!--how many submitted lessons end up being published - not a useful metric right now since admins are the only lesson authors:
+                    <div class="col-xs-4">
+                        <h3 class="red">{{ ((metrics.lessonCounts.published/(metrics.lessonCounts.published + metrics.lessonCounts.returned))*100).toFixed(1) }}% <i class="glyphicon glyphicon-thumbs-up gray"></i></h3>
+                        <h6>Lesson Aproval Rating</h6>
+                    </div>
+                    -->
+                    <div class="col-xs-4">
+                        <h3 class="red">{{metrics.glossaryTermsCount}} <i class="glyphicon glyphicon-comment gray"></i></h3>
+                        <h6>Glossary Terms</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4>Timeline</h4>
+                <canvas id="line" class="chart chart-line" chart-data="monthlyCountLineData"
+                    chart-labels="monthHistoryLabels" chart-legend="true" chart-series="monthlyCountLineLabels"
+                    chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+            <div class="col-md-4">
+                <h4>Lessons per Unit</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="metrics.lessonsPerUnitPieData"
+                    chart-labels="metrics.lessonsPerUnitPieLabels" chart-legend="true">
+                </canvas>
+            </div>
+        </div>
+    </section>
+</section>
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>Grade</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="lessonsPerGradePieData"
+                    chart-labels="lessonsPerGradePieLabels" chart-legend="false">
+                </canvas>
+            </div>
+            <div class="col-md-3">
+                <h4>Periods</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="metrics.lessonPeriodPieData"
+                    chart-labels="metrics.lessonPeriodPieLabels" chart-legend="false">
+                </canvas>
+            </div>
+            <div class="col-md-3">
+                <h4>Setting</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="metrics.lessonSettingPieData"
+                    chart-labels="metrics.lessonSettingPieLabels" chart-legend="false">
+                </canvas>
+            </div>
+            <div class="col-md-3">
+                <h4>Subject Areas</h4>
+                <canvas id="pie" class="chart chart-pie" chart-data="metrics.lessonSubjectPieData"
+                    chart-labels="metrics.lessonSubjectPieLabels" chart-legend="false">
+                </canvas>
+            </div>
+        </div>
+    </section>
+</section>
+<section class="content">
+    <section class="container-fluid">
+        <div class="row">
+            <!--average number of things in a lesson. not useful since we can't divide out exact numbers from the wyiswyg forms:
+            <div class="col-md-4">
+                <h4>Lesson Averages</h4>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <h1 class="red">{{ metrics.lessonResources.suppliesAverage.toFixed(1) }} <i class="glyphicon glyphicon-scissors gray"></i></h1>
+                        <h6>Supplies</h6>
+                    </div>
+                    <div class="col-xs-4">
+                        <h1 class="red">{{ metrics.lessonResources.teacherResourcesLinksAverage.toFixed(1) }} <i class="glyphicon glyphicon-link gray"></i></h1>
+                        <h6>Resources</h6>
+                    </div>
+                    <div class="col-xs-4">
+                        <h1 class="red">{{ metrics.lessonResources.handoutsAverage.toFixed(1) }} <i class="glyphicon glyphicon-file gray"></i></h1>
+                        <h6>Handouts</h6>
+                    </div>
+                </div>
+            </div>
+            -->
+            <div class="col-md-6">
+                <h4>Most Viewed Lessons</h4>
+                <table class="table">
+                    <tr ng-repeat="lessonViewItem in metrics.lessonViewData | orderBy: '-viewCount'">
+                        <td><a ui-sref="lessons.view({ lessonId: lessonViewItem.lesson._id })"><b>{{lessonViewItem.lesson.title}}</b></a></td>
+                        <td><p class="text-muted"><b class="red">{{lessonViewItem.viewCount}}</b> views</p></td>
+                        <td><h6>{{lessonViewItem.unit.title}}</h6></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h4>Most Viewed Units</h4>
+                <table class="table">
+                    <tr ng-repeat="unitViewItem in metrics.unitViewData | orderBy: '-viewCount'">
+                        <td><a ui-sref="units.view({ unitId: unitViewItem.unit._id })"><b>{{unitViewItem.unit.title}}</b></a></td>
+                        <td><p class="text-muted"><b class="red">{{unitViewItem.viewCount}}</b> views</p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>

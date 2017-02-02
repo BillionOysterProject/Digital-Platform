@@ -19,35 +19,7 @@
           roles: ['user', 'admin']
         }
       })
-      .state('settings.profile', {
-        url: '/profile',
-        templateUrl: 'modules/users/client/views/settings/edit-profile.client.view.html',
-        data: {
-          pageTitle: 'Settings'
-        }
-      })
-      .state('settings.password', {
-        url: '/password',
-        templateUrl: 'modules/users/client/views/settings/change-password.client.view.html',
-        data: {
-          pageTitle: 'Settings password'
-        }
-      })
-      .state('settings.accounts', {
-        url: '/accounts',
-        templateUrl: 'modules/users/client/views/settings/manage-social-accounts.client.view.html',
-        data: {
-          pageTitle: 'Settings accounts'
-        }
-      })
-      .state('settings.picture', {
-        url: '/picture',
-        templateUrl: 'modules/users/client/views/settings/change-profile-picture.client.view.html',
-        data: {
-          pageTitle: 'Settings picture'
-        }
-      })
-      .state('settings.admin-users', {
+      .state('admin-users', {
         url: '/users',
         templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
         controller: 'UserListController',
@@ -98,19 +70,6 @@
           roles: ['admin']
         }
       })
-      .state('settings.admin-team-create', {
-        url: '/teams/create',
-        templateUrl: 'modules/teams/client/views/form-team.client.view.html',
-        controller: 'TeamsController',
-        controllerAs: 'vm',
-        resolve: {
-          teamResolve: newTeam
-        },
-        data: {
-          pageTitle: 'Team Create',
-          roles: ['admin']
-        }
-      })
       .state('settings.admin-team', {
         url: '/teams/:teamId',
         templateUrl: 'modules/teams/client/views/view-team.client.view.html',
@@ -121,39 +80,6 @@
         },
         data: {
           pageTitle: 'Team {{ teamResolve.name }}',
-          roles: ['admin']
-        }
-      })
-      .state('settings.admin-team-edit', {
-        url: '/teams/:teamId/edit',
-        templateUrl: 'modules/teams/client/views/form-team.client.view.html',
-        controller: 'TeamsController',
-        controllerAs: 'vm',
-        resolve: {
-          teamResolve: getTeam
-        },
-        data: {
-          pageTitle: 'Edit {{ teamResolve.name }}',
-          roles: ['admin']
-        }
-      })
-      .state('settings.admin-team-owner', {
-        url: '/members',
-        templateUrl: 'modules/teams/client/views/owner-teams.client.view.html',
-        controller: 'TeamsOwnerController',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Teams',
-          roles: ['team lead']
-        }
-      })
-      .state('settings.admin-organizations', {
-        url: '/organizations',
-        templateUrl: 'modules/school-orgs/client/views/list-school-orgs.client.view.html',
-        controller: 'SchoolOrganizationsControllers',
-        controllerAs: 'vm',
-        data: {
-          pageTitle: 'Schools/Organizations',
           roles: ['admin']
         }
       })

@@ -120,14 +120,13 @@ exports.create = function(req, res) {
   function(eventJSON) {
     var calendarEvent = new CalendarEvent(eventJSON);
     for (var i = 0; i < req.body.dates.length; i++) {
-      calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-        req.body.dates[i].startTime);
-      calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-        req.body.dates[i].endTime);
+      calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+      calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
     }
     calendarEvent.dates = sortDates(calendarEvent.dates);
-    calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
-      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
+    calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ?
+      moment(req.body.deadlineToRegister,'YYYY-MM-DDTHH:mm:ss.SSSZ') : '';
+      
     if (!calendarEvent.resources) {
       calendarEvent.resources = {
         resourcesFiles: []
@@ -151,6 +150,20 @@ exports.create = function(req, res) {
       } else {
         res.json(calendarEvent);
       }
+    });
+  }, function(errorMessages) {
+    var msgConcat = 'Error validating event data';
+    if(errorMessages !== undefined && errorMessages !== null && errorMessages.length > 0) {
+      msgConcat += ': ';
+      for(var i = 0; i < errorMessages.length; i++) {
+        msgConcat += errorMessages[i];
+        if(i < errorMessages.length-1) {
+          msgConcat += '; ';
+        }
+      }
+    }
+    return res.status(400).send({
+      message: msgConcat
     });
   });
 };
@@ -247,15 +260,13 @@ exports.update = function(req, res) {
     if (calendarEvent) {
       calendarEvent = _.extend(calendarEvent, eventJSON);
       for (var i = 0; i < req.body.dates.length; i++) {
-        calendarEvent.dates[i].startDateTime = getDateTime(req.body.dates[i].date,
-          req.body.dates[i].startTime);
-        calendarEvent.dates[i].endDateTime = getDateTime(req.body.dates[i].date,
-          req.body.dates[i].endTime);
+        calendarEvent.dates[i].startDateTime = moment(req.body.dates[i].startDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+        calendarEvent.dates[i].endDateTime = moment(req.body.dates[i].endDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
       }
       calendarEvent.dates = sortDates(calendarEvent.dates);
 
-      calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ? moment(req.body.deadlineToRegister,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('day').toDate() : '';
+      calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ?
+        moment(req.body.deadlineToRegister,'YYYY-MM-DDTHH:mm:ss.SSSZ') : '';
 
       if (!calendarEvent.resources) {
         calendarEvent.resources = {
@@ -595,6 +606,44 @@ exports.notAttended = function(req, res) {
   }
 };
 
+exports.registrantNotes = function(req, res) {
+  var calendarEvent = req.calendarEvent;
+  var user = req.body.registrant;
+  var note = req.body.note;
+
+  if (calendarEvent) {
+    var index = findUserInRegistrants(user, calendarEvent.registrants);
+    if (index > -1) {
+      calendarEvent.registrants[index].note = note;
+
+      calendarEvent.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          var calendarEventJSON = calendarEvent ? calendarEvent.toJSON() : {};
+
+          fillInRegistrantsData(calendarEventJSON.registrants, function(registrants) {
+            calendarEventJSON.registrants = registrants;
+            calendarEventJSON.attendees = getAttendees(calendarEventJSON.registrants);
+
+            res.json(calendarEventJSON);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'User is not registered for event'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'Could not find event'
+    });
+  }
+};
+
 var getRegistrantsList = function(registrants) {
   var emailArray = [];
   emailArray = emailArray.concat(_.map(registrants, 'user.email'));
@@ -716,7 +765,9 @@ exports.list = function(req, res) {
     query = CalendarEvent.find();
   }
 
-  query.sort('dates.startDateTime')
+  var limit = req.query.limit ? parseInt(req.query.limit, 10) : 0;
+  query.sort({ 'dates.startDateTime': 1 })
+    .limit(limit)
     .populate('user', 'displayName')
     .populate('registrants.user', 'displayName email schoolOrg')
     .populate('registrants.user.schoolOrg', 'name')

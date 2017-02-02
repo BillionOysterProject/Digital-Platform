@@ -45,15 +45,21 @@
     vm.findCurrentUserAndOrganization();
 
     vm.findOrganization = function(callback) {
-      SchoolOrganizationsService.get({
-        schoolOrgId: vm.user.schoolOrg._id,
-        full: true
-      }, function(orgData) {
-        vm.organization = orgData;
-        vm.orgPhotoUrl = (vm.organization.photo && vm.organization.photo.path) ?
-          vm.organization.photo.path : '';
-        if (callback) callback();
-      });
+      if(vm.user.schoolOrg === null || vm.user.schoolOrg === undefined) {
+        //some users like admin may not have an org
+        if(callback) callback();
+      } else {
+        //get the org
+        SchoolOrganizationsService.get({
+          schoolOrgId: vm.user.schoolOrg._id,
+          full: true
+        }, function(orgData) {
+          vm.organization = orgData;
+          vm.orgPhotoUrl = (vm.organization.photo && vm.organization.photo.path) ?
+            vm.organization.photo.path : '';
+          if (callback) callback();
+        });
+      }
     };
 
     vm.findTeams = function(callback) {

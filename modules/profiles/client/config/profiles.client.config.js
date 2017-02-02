@@ -32,11 +32,10 @@
       state: 'profiles.organization'
     });
 
-    //TIFF: This should go to the accounts page, but without the old Settings header/tabs. Only viewable to Admin
-    //Menus.addSubMenuItem('topbar', 'profiles', {
-    //  title: 'Accounts',
-    //  state: 'settings.admin-users',
-    //  roles: ['admin']
-    //});
+    Menus.addSubMenuItem('topbar', 'profiles', {
+      title: 'Accounts',
+      state: 'admin-users',
+      roles: ['admin']
+    });
   }
 }());

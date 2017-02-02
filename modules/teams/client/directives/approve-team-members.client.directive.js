@@ -9,12 +9,12 @@
         templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
         scope: {
           teamRequests: '=',
-          closeFunction: '='
+          teams: '=',
+          cancelFunction: '='
         },
         replace: true,
         controller: 'TeamApprovalController',
         link: function(scope, element, attrs) {
-
         }
       };
     });

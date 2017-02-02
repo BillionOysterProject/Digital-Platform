@@ -9,7 +9,7 @@
         templateUrl: 'modules/school-orgs/client/views/approve-school-orgs.client.view.html',
         scope: {
           orgRequests: '=',
-          closeFunction: '='
+          cancelFunction: '='
         },
         replace: true,
         controller: 'SchoolOrganizationsApprovalController',

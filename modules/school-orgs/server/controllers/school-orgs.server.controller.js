@@ -131,6 +131,12 @@ exports.approve = function (req, res) {
   var schoolOrg = req.schoolOrg;
 
   if (schoolOrg && isAdmin(req.user)) {
+    if(schoolOrg.creator === null || schoolOrg.creator === undefined) {
+      return res.status(400).send({
+        message: 'Error approving organization. Creator is null.'
+      });
+    }
+    
     schoolOrg.pending = false;
 
     schoolOrg.save(function(err) {

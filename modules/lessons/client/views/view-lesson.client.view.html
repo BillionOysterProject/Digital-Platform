@@ -24,7 +24,10 @@
         <a class="btn btn-default" ng-click="vm.openLessonFeedback()" ng-hide="vm.lesson.isCurrentUserOwner">Send feedback</a>
 
         <!--TIFF: wire up -->
-        <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonFeedbackView()">View feedback</a>
+        <a class="btn btn-default" ng-show="(vm.checkRole('admin') || vm.lesson.isCurrentUserOwner) && vm.feedback &&
+          vm.feedback.lessonAlignWithCurriculumnAvg && vm.feedback.lessonEffectiveAvg &&
+          vm.feedback.lessonPreparesStudentsAvg && vm.feedback.lessonSupportScientificPracticeAvg"
+          ng-click="vm.openLessonFeedbackView()">View feedback</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonLog()">Log teaching</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.duplicateLesson()">Duplicate</a>
         <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>
@@ -81,36 +84,30 @@
 
     <hr/>
 
-    <div class="alert alert-default" ng-show="vm.lessonStats.taughtCount > 0">
-        <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
+    <div class="well" ng-show="vm.lessonStats.taughtCount > 0">
+       <h4>This lesson has been taught <b class="blue">{{vm.lessonStats.taughtCount}}</b>
           times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers to a total of
-          <b class="blue">{{vm.lessonStats.studentCount}}</b> students</h4><br/>
+          <b class="blue">{{vm.lessonStats.studentCount}}</b> students in
+          <b class="blue">{{vm.lessonStats.classesOrSectionsCount}}</b> classes over
+          <b class="blue">{{vm.lessonStats.periodsOrSessionsCount}}</b> sessions
+        </h4>
         <div class="row">
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.avgStudentsPerClass}}</b></h4>
-                <!-- {{studentsPerClassCount}} -->
-                <p class="fineprint">Average number of students</p>
-            </div>
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.avgClassesOrSections}}</b></h4>
-                <!-- {{classesOrSectionsCount}} -->
-                <p class="fineprint">Average number of classes/sections</p>
-            </div>
-            <div class="col-sm-2">
-                <h4><b class="blue">{{vm.lessonStats.avgPeriodsOrSessions}}</b></h4>
-                <!-- {{periodsOrSessionsCount}} -->
-                <p class="fineprint">Average number of periods/sessions</p>
-            </div>
-            <div class="col-sm-3">
-                <p class="fineprint">Subject Areas of classes</p>
+            <!--
+            {{vm.lessonStats.avgStudentsPerClass | number:2}}
+            {{vm.lessonStats.avgClassesOrSections | number:2}}
+            {{vm.lessonStats.avgPeriodsOrSessions | number:2}}
+            -->
+
+            <div class="col-sm-6">
+                <small>Subject Areas of classes</small>
                 <ul class="list-inline">
                   <li ng-repeat="subject in vm.lessonStats.subjects">
                     <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
                   </li>
                 </ul>
             </div>
-            <div class="col-sm-3">
-                <p class="fineprint">Grades of students</p>
+            <div class="col-sm-6">
+                <small>Grades of students</small>
                 <ul class="list-inline">
                   <li ng-repeat="grade in vm.lessonStats.grades">
                     <span class="label label-success" ng-bind="grade"></span>

@@ -12,7 +12,7 @@
       .state('events', {
         abstract: true,
         url: '/events',
-        template: '<ui-view/>'
+        template: '<ui-view autoscroll="true"/>'
       })
       .state('events.list', {
         url: '',

@@ -8,6 +8,7 @@ var path = require('path'),
   User = mongoose.model('User'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   Team = mongoose.model('Team'),
+  TeamRequest = mongoose.model('TeamRequest'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -46,12 +47,20 @@ exports.update = function (req, res) {
   });
 };
 
-/**
- * Delete a user
- */
-exports.delete = function (req, res) {
-  var user = req.model;
+var hasRole = function(user, role) {
+  var index = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (index > -1) ? true : false;
+};
 
+var isAdmin = function(user) {
+  return hasRole(user, 'admin');
+};
+
+//call this when appropriate references to the user have been deleted
+//and it's safe to remove the object from the user table
+var deleteUserInternal = function(user, res) {
   user.remove(function (err) {
     if (err) {
       return res.status(400).send({
@@ -63,15 +72,109 @@ exports.delete = function (req, res) {
   });
 };
 
-var hasRole = function(user, role) {
-  var index = _.findIndex(user.roles, function(r) {
-    return r === role;
-  });
-  return (index > -1) ? true : false;
-};
+/**
+ * Delete a user
+ */
+exports.delete = function (req, res) {
+  var user = req.model;
 
-var isAdmin = function(user) {
-  return hasRole(user, 'admin');
+  //TODO: should we be deleting everything in the db that the user did???
+  //like useractivities, expeditions, protocols, expeditionactivities, glosarries,
+  //lessons, event registration/attendance???
+
+  //check if the user is a team lead or team member
+  if(hasRole(user, 'team lead') || hasRole(user, 'team lead pending') || hasRole(user, 'admin')) {
+    //if the user is a team lead and they are associated with any teams,
+    //throw an error that we cannot delete them. The team must be
+    //deleted or assigned to another user as teamLead before we could delete this user.
+
+    //TODO: this will have to change when teams can have multiple leads
+    Team.find({ 'teamLead': user._id }).exec(function(err, team) {
+      if (err) {
+        return res.status(400).send({
+          message: 'Could not find teams associated with team lead ' + user.displayName +
+            '. Error is: ' + errorHandler.getErrorMessage(err)
+        });
+      } else {
+        if(team !== null && team !== undefined && team.length > 0) {
+          return res.status(400).send({
+            message: 'User ' + user.displayName + ' is a team lead for ' + team.name + '. ' +
+            'The team must be deleted or re-assigned to a different team lead before this ' +
+            'user can be deleted.'
+          });
+        } else {
+          deleteUserInternal(user, res);
+        }
+      }
+    });
+  } else if(hasRole(user, 'team member') || hasRole(user, 'team member pending')) {
+    //delete any team requests for this user
+    TeamRequest.find({ 'requester': user._id }).exec(function(err, teamRequests) {
+      if(err) {
+        return res.status(400).send({
+          message: 'Could not find team requests associated with user ' + user.displayName +
+            '. Error is: ' + errorHandler.getErrorMessage(err)
+        });
+      } else {
+        if(teamRequests !== undefined && teamRequests !== null && teamRequests.length > 0) {
+          var removeTeamRequest = function(teamRequest) {
+            teamRequest.remove(function (err) {
+              if (err) {
+                return res.status(400).send({
+                  message: 'Error deleting team request for user ' + user.displayName +
+                    '. Error was: ' + errorHandler.getErrorMessage(err)
+                });
+              }
+            });
+          };
+          for(var i = 0; i < teamRequests.length; i++) {
+            removeTeamRequest(teamRequests[i]);
+          }
+        }
+
+        //if the user is a team member, delete the reference to them from the
+        //teamMembers list in the Team model
+        Team.find({ 'teamMembers': user._id }).exec(function(err, teams) {
+          if (err) {
+            return res.status(400).send({
+              message: 'Could not find teams associated with user ' + user.displayName +
+                '. Error is: ' + errorHandler.getErrorMessage(err)
+            });
+          } else {
+            var memberIndex = function(member, team) {
+              var index = _.findIndex(team.teamMembers, function(m) {
+                return m.toString() === member._id.toString();
+              });
+              return index;
+            };
+            var delTeamMember = function(user, team) {
+              team.save(function (delSaveErr) {
+                if (delSaveErr) {
+                  return res.status(400).send({
+                    message: 'Could not delete user as member from team ' + team.name + '. Error is: ' + delSaveErr
+                  });
+                } else {
+                  deleteUserInternal(user, res);
+                }
+              });
+            };
+            if(teams === null || teams === undefined || teams.length === 0) {
+              deleteUserInternal(user, res);
+            } else {
+              for(var i = 0; i < teams.length; i++) {
+                var team = teams[i];
+                var index = memberIndex(user, team);
+                if(index > -1) {
+                  team.teamMembers.splice(index, 1);
+                  delTeamMember(user, team);
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  }
 };
 
 exports.approve = function (req, res) {
@@ -142,11 +245,9 @@ exports.list = function (req, res) {
 
   if (req.query.role && req.query.role !== undefined && req.query.role !== null && req.query.role !== '') {
     and.push({ 'roles': req.query.role });
-  } else if (req.query.searchString) {
+  } else {
     and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' },
     { 'roles': 'team member' }, { 'roles': 'team member pending' }, { 'roles': 'partner' }] });
-  } else {
-    and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' }] });
   }
 
   if (req.query.organizationId) {

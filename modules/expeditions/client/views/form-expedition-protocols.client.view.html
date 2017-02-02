@@ -16,41 +16,39 @@
                         <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusIncomplete() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-incomplete">Submit</button>
+                        ng-show="vm.checkStatusIncomplete() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-incomplete">Submit Protocols</button>
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.openReturnModal()"
-                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Return</button>
+                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Return Protocols</button>
                         <!-- Show if team lead: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.publish()"
-                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Publish</button>
+                        ng-show="vm.checkAllSubmitted() && (vm.isTeamLead || vm.isAdmin)">Publish Expedition</button>
 
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusReturned() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-returned">Submit</button>
+                        ng-show="vm.checkStatusReturned() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-returned">Submit Protocols</button>
 
                         <!-- If published by team lead (Status: Published) -->
                         <!-- Show if team lead: -->
                         <!-- Show if team lead: -->
                         <button class="btn btn-danger navbar-btn" ng-click="vm.unpublish()"
-                        ng-show="vm.checkAllStatus('published') && (vm.isTeamLead || vm.isAdmin)">Unpublish</button>
+                        ng-show="vm.checkAllStatus('published') && (vm.isTeamLead || vm.isAdmin)">Unpublish Expedition</button>
 
                         <!-- Show saving when saving -->
                         <h6 class="navbar-text green" id="saving-exp-spinner" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-                        <h6 class="navbar-text green" id="submitting-exp-spinner" ng-show="vm.submitting"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Submitting</h6>
-                        <h6 class="navbar-text green" id="returning-exp-spinner" ng-show="vm.returning"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Returning</h6>
-                        <h6 class="navbar-text green" id="publishing-exp-spinner" ng-show="vm.publishing"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Publishing</h6>
-                        <h6 class="navbar-text green" id="unpublishing-exp-spinner" ng-show="vm.unpublishing"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Unpublishing</h6>
+                        <h6 class="navbar-text green" id="submitting-exp-spinner" ng-show="vm.submitting"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Submitting protocols</h6>
+                        <h6 class="navbar-text green" id="returning-exp-spinner" ng-show="vm.returning"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Returning protocols</h6>
+                        <h6 class="navbar-text green" id="publishing-exp-spinner" ng-show="vm.publishing"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Publishing expedition</h6>
+                        <h6 class="navbar-text green" id="unpublishing-exp-spinner" ng-show="vm.unpublishing"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Unpublishing expedition</h6>
 
                         <!-- If submitted by team member -->
                         <!-- Show if team lead: -->
-                        <h6 class="navbar-text"
-                        ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Needs Review</h6>
+                        <h6 class="navbar-text" ng-show="vm.checkStatusPending() && (vm.isTeamLead || vm.isAdmin)">Needs Review</h6>
                         <!-- Show if team member: -->
-                        <h6 class="navbar-text"
-                        ng-show="vm.checkStatusPending() && vm.isTeamMember && !vm.isTeamLead">Under Review</h6>
+                        <h6 class="navbar-text" ng-show="vm.checkStatusPending() && vm.isTeamMember && !vm.isTeamLead">Submitted</h6>
 
                         <!-- If returned by team lead -->
                         <!-- Show if team lead: -->

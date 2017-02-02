@@ -1,12 +1,29 @@
-<section>
-    <h3 id="step1-header">1. Refine the <span class="red">expeditions</span> to compare</h3>
-    <filter-expeditions></filter-expeditions>
-    <div class="alert" ng-hide="vm.expeditions.length === 0">
-        Your current filters result in <b>{{vm.expeditions.length}} expeditions:</b>
-        <span ng-repeat="expedition in vm.expeditions"><a ui-sref="expedition.view({ expeditionId: expedition.id })">{{expedition.name}}</a>, </span>
-    </div>
-    <div class="alert" ng-show="vm.expeditions.length === 0">
-        No expeditions found. Try expanding your filters.
-    </div>
-    <hr/>
+<div>
+<section class="content">
+  <section class="container-fluid">
+    <h4 class="text-muted">To view, download, or compare expedition data, follow the 3 steps below.</h4>
+  </section>
 </section>
+<section class="content shaded">
+  <section class="container-fluid">
+    <h4 id="step1-header" class="blue">1. Filter the expeditions</h4>
+    <p>Adjust the filters to select a set of published expeditions by time, keyword, ORS, organization, team, or lead.</p>
+  </section>
+</section>
+<section class="content">
+  <section class="container-fluid">
+    <filter-expeditions></filter-expeditions>
+    <hr/>
+    <p class="red" ng-hide="vm.expeditions.length === 0">
+        <b>Your current filters result in the following {{vm.expeditions.length}} {{vm.expeditions.length > 1 ? 'expeditions' : 'expedition'}}:</b>
+        <span ng-repeat="expedition in vm.expeditions">
+            <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
+             {{vm.expeditions.length > 1 ? ',' : ' '}}
+        </span>
+    </p>
+    <p class="red" ng-show="vm.expeditions.length === 0">
+        <b>Sorry, no expeditions were found. Try expanding your filters.</b>
+    </p>
+  </section>
+</section>
+</div>
