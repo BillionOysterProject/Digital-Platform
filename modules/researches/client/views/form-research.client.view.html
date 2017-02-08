@@ -1,0 +1,24 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.research._id ? 'Edit Research' : 'New Research'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.researchForm" class="form-horizontal" ng-submit="vm.save(vm.form.researchForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.research.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.researchForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Research name is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.research._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
