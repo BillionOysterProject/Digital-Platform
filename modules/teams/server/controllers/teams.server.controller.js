@@ -527,7 +527,7 @@ exports.listMembers = function (req, res) {
           }
         });
       } else {
-        res.json({});
+        res.json([]);
       }
     }
   });

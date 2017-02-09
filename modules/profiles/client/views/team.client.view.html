@@ -46,7 +46,7 @@
             No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
         </div>
 
-        <div class="row" isotope-container="isotope-container">
+        <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="team in vm.teams" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
                     <div class="panel-heading">
