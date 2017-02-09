@@ -1054,7 +1054,7 @@ form.ng-submitted .ng-invalid {
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 .container-ribbon {
-    background: url(../img/backgrounds/redribbon-bg.png) center top no-repeat transparent;
+    background: url(backgrounds/redribbon-bg.png) center top no-repeat transparent;
     margin-top: -50px;
 }
 
