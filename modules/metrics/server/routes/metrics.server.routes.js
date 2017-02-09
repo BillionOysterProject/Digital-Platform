@@ -17,6 +17,9 @@ module.exports = function(app) {
   app.route('/api/metrics/people').all(metricsPolicy.isAllowed)
     .get(metrics.getPeopleMetrics);
 
+  app.route('/api/metrics/people-with-admin').all(metricsPolicy.isAllowed)
+    .get(metrics.getPeopleMetricsAdmin);
+
   app.route('/api/metrics/activeUsers').all(metricsPolicy.isAllowed)
     .get(metrics.getMostActiveUsers);
 

@@ -34,19 +34,83 @@ var path = require('path'),
   lodash = require('lodash'),
   json2csv = require('json2csv');
 
-/**
- * Calculate metrics related to people using the system
- */
+var userCountQuery = User.count({
+  $or: [ { pending: false }, { pending: { $exists: false } } ] }
+);
+
+var teamLeadCountQuery = User.count({
+  $and: [
+    { roles: 'team lead' },
+    { $or: [ { pending: false }, { pending: { $exists: false } } ] }
+  ] }
+);
+
+var teamMemberCountQuery = User.count({
+  $and: [
+    { roles: 'team member' },
+    { $or: [ { pending: false }, { pending: { $exists: false } } ] }
+  ] }
+);
+
+//TODO: change teamLead to teamLeads when new user profile
+//stuff is integrated
+var largestTeamsQuery = Team.aggregate([
+  { $match: { teamMembers: { $exists: true } } },
+  { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
+  { $sort: { teamMemberCount: -1 } },
+  { $limit: 5 },
+  { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
+  { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
+  { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
+  { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
+]);
+
 exports.getPeopleMetrics = function(req, res) {
   var peopleMetrics = {};
+  var userCounts = { total: 0, teamLead: 0, teamMember: 0 };
 
-  var userCountQuery = User.count({
-    $or: [
-      { pending: false },
-      { pending: { $exists: false } }
-    ] }
-  );
+  userCountQuery.exec(function(err, userCount) {
+    if (err) {
+      return res.status(400).send({
+        message: 'Error getting user counts:' + errorHandler.getErrorMessage(err)
+      });
+    } else {
+      userCounts.total = userCount;
+      teamLeadCountQuery.exec(function(err, teamLeadCount) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Error getting team lead counts:' + errorHandler.getErrorMessage(err)
+          });
+        } else {
+          userCounts.teamLead = teamLeadCount;
+          teamMemberCountQuery.exec(function(err, teamMemberCount) {
+            if (err) {
+              return res.status(400).send({
+                message: 'Error getting team member counts:' + errorHandler.getErrorMessage(err)
+              });
+            } else {
+              userCounts.teamMember = teamMemberCount;
+              peopleMetrics.userCounts = userCounts;
+              largestTeamsQuery.exec(function(err, largestTeams) {
+                if (err) {
+                  return res.status(400).send({
+                    message: 'Error getting largest teams:' + errorHandler.getErrorMessage(err)
+                  });
+                } else {
+                  peopleMetrics.largestTeams = largestTeams;
+                  res.json(peopleMetrics);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+};
 
+exports.getPeopleMetricsAdmin = function(req, res) {
+  var peopleMetrics = {};
   var adminCountQuery = User.count({
     $and: [
       { roles: 'admin' },
@@ -57,38 +121,7 @@ exports.getPeopleMetrics = function(req, res) {
     ] }
   );
 
-  var teamLeadCountQuery = User.count({
-    $and: [
-      { roles: 'team lead' },
-      { $or: [
-        { pending: false },
-        { pending: { $exists: false } }
-      ] }
-    ] }
-  );
-
-  var teamMemberCountQuery = User.count({
-    $and: [
-      { roles: 'team member' },
-      { $or: [
-        { pending: false },
-        { pending: { $exists: false } }
-      ] }
-    ] }
-  );
-
-  //TODO: change teamLead to teamLeads when new user profile
-  //stuff is integrated
-  var largestTeamsQuery = Team.aggregate([
-    { $match: { teamMembers: { $exists: true } } },
-    { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
-    { $sort: { teamMemberCount: -1 } },
-    { $limit: 5 },
-    { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
-    { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
-    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
-    { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
-  ]);
+  var userCounts = { total: 0, teamLead: 0, teamMember: 0, admin: 0 };
 
   userCountQuery.exec(function(err, userCount) {
     if (err) {
@@ -96,35 +129,36 @@ exports.getPeopleMetrics = function(req, res) {
         message: 'Error getting user counts:' + errorHandler.getErrorMessage(err)
       });
     } else {
-      peopleMetrics.userCount = userCount;
-      adminCountQuery.exec(function(err, adminCount) {
+      userCounts.total = userCount;
+      teamLeadCountQuery.exec(function(err, teamLeadCount) {
         if (err) {
           return res.status(400).send({
-            message: 'Error getting admin counts:' + errorHandler.getErrorMessage(err)
+            message: 'Error getting team lead counts:' + errorHandler.getErrorMessage(err)
           });
         } else {
-          peopleMetrics.adminCount = adminCount;
-          teamLeadCountQuery.exec(function(err, teamLeadCount) {
+          userCounts.teamLead = teamLeadCount;
+          teamMemberCountQuery.exec(function(err, teamMemberCount) {
             if (err) {
               return res.status(400).send({
-                message: 'Error getting team lead counts:' + errorHandler.getErrorMessage(err)
+                message: 'Error getting team member counts:' + errorHandler.getErrorMessage(err)
               });
             } else {
-              peopleMetrics.teamLeadCount = teamLeadCount;
-              teamMemberCountQuery.exec(function(err, teamMemberCount) {
+              userCounts.teamMember = teamMemberCount;
+              peopleMetrics.userCounts = userCounts;
+              largestTeamsQuery.exec(function(err, largestTeams) {
                 if (err) {
                   return res.status(400).send({
-                    message: 'Error getting team member counts:' + errorHandler.getErrorMessage(err)
+                    message: 'Error getting largest teams:' + errorHandler.getErrorMessage(err)
                   });
                 } else {
-                  peopleMetrics.teamMemberCount = teamMemberCount;
-                  largestTeamsQuery.exec(function(err, largestTeams) {
+                  peopleMetrics.largestTeams = largestTeams;
+                  adminCountQuery.exec(function(err, adminCount) {
                     if (err) {
                       return res.status(400).send({
-                        message: 'Error getting largest teams:' + errorHandler.getErrorMessage(err)
+                        message: 'Error getting admin user count:' + errorHandler.getErrorMessage(err)
                       });
                     } else {
-                      peopleMetrics.largestTeams = largestTeams;
+                      peopleMetrics.userCounts.admin = adminCount;
                       res.json(peopleMetrics);
                     }
                   });

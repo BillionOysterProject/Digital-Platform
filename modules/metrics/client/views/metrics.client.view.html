@@ -5,7 +5,7 @@
 </section>
 <section class="content shaded content-unpadded" ng-controller="SettingsController">
     <section class="container-fluid">
-        <a class="btn btn-default pull-right" ng-href="api/metrics/download" target="_blank"><i class="fa fa-download"></i> Download all</a>
+        <a class="btn btn-default pull-right" ng-href="api/metrics/download" target="_blank" ng-show="vm.isAdmin"><i class="fa fa-download"></i> Download all</a>
         <ul class="nav nav-tabs">
             <li role="presentation" class="active">
                 <a href="#people" data-toggle="tab" aria-controls="people" role="tab">People</a>
