@@ -12,7 +12,7 @@
       title: 'People',
       state: 'profiles',
       type: 'dropdown',
-      roles: ['*'],
+      roles: ['user'],
       icon: 'fa fa-users',
       position: 4
     });
