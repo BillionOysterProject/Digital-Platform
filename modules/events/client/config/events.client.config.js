@@ -15,7 +15,7 @@
       // type: 'dropdown',
       roles: ['*'],
       icon: 'glyphicon glyphicon-calendar',
-      position: 3
+      position: 5
     });
 
     // Add the dropdown list item

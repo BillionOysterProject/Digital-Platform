@@ -13,20 +13,22 @@
       title: 'Research',
       state: 'researches',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['*'],
+      icon: 'fa fa-file-text',
+      position: 3
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'researches', {
-      title: 'List Research',
+      title: 'Posters',
       state: 'researches.list'
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'researches', {
-      title: 'Create Research',
-      state: 'researches.create',
-      roles: ['user']
-    });
+    //Menus.addSubMenuItem('topbar', 'researches', {
+    //  title: 'Create Research',
+    //  state: 'researches.create',
+    //  roles: ['user']
+    //});
   }
 }());

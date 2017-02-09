@@ -1,22 +1,160 @@
-<section>
-  <div class="page-header">
-    <h1>Researches</h1>
-  </div>
-  <div class="list-group">
-    <a ng-repeat="research in vm.researches"
-       ui-sref="researches.view({ researchId: research._id })"
-       class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="research.created | date:'mediumDate'"></span>
-        by
-        <span ng-if="research.user" ng-bind="research.user.displayName"></span>
-        <span ng-if="!research.user">Deleted User</span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="research.name"></h4>
-    </a>
-  </div>
-  <div class="alert alert-warning text-center" ng-if="vm.researches.$resolved && !vm.researches.length">
-    No Researches yet, why don't you <a ui-sref="researches.create">create one</a>?
-  </div>
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Posters</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for research posters by title, keyword, team, organization...">
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <nav class="navbar">
+            <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="admin,team lead,team member">
+                <i class="glyphicon glyphicon-plus"></i> Create new poster
+            </a>
+        </nav>
+
+        <div class="alert alert-danger text-center" ng-show="vm.error">
+          <p ng-bind="vm.error"></p>
+        </div>
+        <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
+            Sorry, no results found for that search term
+        </div>
+        <div class="alert alert-info text-center" ng-if="vm.researches.$resolved && !vm.researches.length" view-permissions="admin,team lead,team member">
+            No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
+        </div>
+        
+        <div class="row" isotope-container="isotope-container" id="research-list-isotope-container" images-loaded>
+            <div ng-repeat="research in vm.researches track by research._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" ng-show="research.user">{{research.user.displayName}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <small ng-bind="research.created | date:'mediumDate'"></small>
+                        <h4>{{research.name}}</h4>
+                        <p ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                        <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </section>
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-lesson-settings" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Admin Settings</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#lessons" data-toggle="tab" aria-controls="link" role="tab">Lessons</a></li>
+                            <li role="presentation"><a href="#units" data-toggle="tab" aria-controls="upload" role="tab">Units</a></li>
+                            <li role="presentation"><a href="#protocols" data-toggle="tab" aria-controls="upload" role="tab">Protocols</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="lessons">
+                                <br />
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Grade Options</label>
+                                        <input type="text" value="6th, 7th, 8th, 6-8th, 9th, 10th, 11th, 12th, 9-12th" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Number of Class Period Options</label>
+                                        <input type="number" value="9" class="form-control" />
+                                    </div>
+                                </div>
+                                <label>Subject Area Options</label>
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <th class="col-sm-4">Name</th>
+                                        <th class="col-sm-2">Color</th>
+                                        <th class="col-sm-4">Name</th>
+                                        <th class="col-sm-2">Color</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Ecology" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Geology and Earth Science" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Limnology" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Marine Biology" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Oceanography" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Computer Science" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Engineering" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Data Analysis" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Graphing" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Ratios & Proportions" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Algebra" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="History" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Economics" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="English Language Arts" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="form-control" value="Music" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                        <td><input type="text" class="form-control" value="Art" /></td>
+                                        <td><input type="text" class="form-control" value="#f4f7f8" /></td>
+                                    </tr>
+                                </table>
+                                <a class="btn btn-default">Add subject area</a>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="units">
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="protocols">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END OF MODALS-->
