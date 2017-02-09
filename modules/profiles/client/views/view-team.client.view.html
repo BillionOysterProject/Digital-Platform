@@ -77,7 +77,7 @@
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div><!--TIFF: Open modal from Settings -->
 
-        <div class="row" isotope-container="isotope-container">
+        <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel-overlay" ng-show="vm.team.isCurrentUserTeamLead">
                     <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openDeleteTeamMember(member)">
