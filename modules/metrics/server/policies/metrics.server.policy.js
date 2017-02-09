@@ -19,7 +19,14 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/metrics/download',
       permissions: ['*']
-    }, {
+    },{
+      resources: '/api/metrics/people-with-admin',
+      permissions: ['*']
+    }]
+  },
+  {
+    roles: ['admin', 'team lead'],
+    allows: [{
       resources: '/api/metrics/people',
       permissions: ['*']
     }, {

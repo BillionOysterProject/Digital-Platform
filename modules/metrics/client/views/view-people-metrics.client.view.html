@@ -1,24 +1,40 @@
 <section class="content">
   <section class="container-fluid">
       <div class="row">
-          <div class="col-md-4 text-center">
+          <div class="col-md-4 text-center" ng-show="isAdmin">
               <div class="row">
                   <div class="col-xs-6">
-                      <h1 class="red">{{metrics.userCount}} <i class="glyphicon glyphicon-user gray"></i></h1>
+                      <h1 class="red">{{metrics.userCounts.total}} <i class="glyphicon glyphicon-user gray"></i></h1>
                       <h6>Total Users</h6>
                   </div>
                   <div class="col-xs-6">
-                      <h2 class="red">{{metrics.adminCount}}</h2>
+                      <h2 class="red">{{metrics.userCounts.admin}}</h2>
                       <h6>Admin</h6>
                   </div>
               </div>
               <div class="row">
                   <div class="col-xs-6">
-                      <h2 class="red">{{metrics.teamLeadCount}}</h2>
+                      <h2 class="red">{{metrics.userCounts.teamLead}}</h2>
                       <h6>Team Leads</h6>
                   </div>
                   <div class="col-xs-6">
-                      <h2 class="red">{{metrics.teamMemberCount}}</h2>
+                      <h2 class="red">{{metrics.userCounts.teamMember}}</h2>
+                      <h6>Team Members</h6>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 text-center" ng-show="!isAdmin">
+              <div class="row">
+                  <div class="col-xs-4">
+                      <h1 class="red">{{metrics.userCounts.total}} <i class="glyphicon glyphicon-user gray"></i></h1>
+                      <h6>Total Users</h6>
+                  </div>
+                  <div class="col-xs-4">
+                      <h2 class="red">{{metrics.userCounts.teamLead}}</h2>
+                      <h6>Team Leads</h6>
+                  </div>
+                  <div class="col-xs-4">
+                      <h2 class="red">{{metrics.userCounts.teamMember}}</h2>
                       <h6>Team Members</h6>
                   </div>
               </div>
@@ -38,7 +54,7 @@
       <div class="row">
           <div class="col-md-6">
               <nav class="navbar">
-                  <h4 class="navbar-text">Most Active Users</h4>
+                  <h4 class="navbar-text">Most Active <span ng-if="isAdmin">Users</span><span ng-if="!isAdmin">Team Leads</span></h4>
                   <ul class="nav navbar-nav">
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -52,7 +68,7 @@
                              </li>
                           </ul>
                       </li>
-                      <li class="dropdown">
+                      <li class="dropdown" ng-show="isAdmin">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                               {{userRoleOptions[userRoleOptions.indexOf(userActivityFilter.userRole)].name}} <span class="caret"></span>
                           </a>
@@ -63,7 +79,6 @@
                               </a>
                             </li>
                           </ul>
-
                       </li>
                   </ul>
               </nav>

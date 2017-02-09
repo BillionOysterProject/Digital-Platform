@@ -5,7 +5,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
-
+    vm.isSubmitting = false;
     vm.authentication = Authentication;
     vm.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -26,7 +26,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
         return false;
       }
 
+      vm.isSubmitting = true;
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
+        vm.isSubmitting = false;
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
 
@@ -41,6 +43,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           $state.go(toGoState, $state.previous.params);
         }
       }).error(function (response) {
+        vm.isSubmitting = false;
         vm.error = response.message;
       });
     };
