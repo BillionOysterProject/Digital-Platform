@@ -50,12 +50,12 @@ body {
     padding-bottom: 20px;
 }
 
-     .content-jumbotron { 
-        background-color: #fff; 
+     .content-jumbotron {
+        background-color: #fff;
         padding-top: 50px;
         padding-bottom: 50px;
     }
-    
+
         @media (max-width: 768px) {
             .content-jumbotron .btn {
                 display: block;
@@ -1086,4 +1086,15 @@ form.ng-submitted .ng-invalid {
     font-weight: 400;
     font-size: 3em;
     line-height: 1;
+}
+
+.loading-dialog {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba( 0, 0, 0, .2 ) url('img/loader.gif') 50% 50% no-repeat;
 }
