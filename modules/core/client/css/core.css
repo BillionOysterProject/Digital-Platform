@@ -51,12 +51,12 @@ body {
     padding-bottom: 20px;
 }
 
-     .content-jumbotron { 
-        background-color: #fff; 
+     .content-jumbotron {
+        background-color: #fff;
         padding-top: 50px;
         padding-bottom: 50px;
     }
-    
+
         @media (max-width: 768px) {
             .content-jumbotron .btn {
                 display: block;
