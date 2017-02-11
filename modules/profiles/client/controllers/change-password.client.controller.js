@@ -20,10 +20,9 @@ angular.module('users').controller('ChangePasswordController', ['$scope', '$http
         $scope.$broadcast('show-errors-reset', 'passwordForm');
         $scope.success = true;
         $scope.passwordDetails = null;
-        if ($scope.callbackFunction) $scope.callbackFunction($scope.success);
+        if ($scope.closeFunction) $scope.closeFunction($scope.success);
       }).error(function (response) {
         $scope.error = response.message;
-        console.log('error message', response.message);
       });
     };
   }

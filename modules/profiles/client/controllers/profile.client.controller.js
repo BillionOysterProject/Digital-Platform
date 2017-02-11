@@ -112,6 +112,27 @@
     };
     vm.findTeamRequests();
 
+    vm.findLeadRequests = function() {
+      Admin.query({
+        role: 'team lead pending',
+        //showTeams: true
+      }, function (data) {
+        vm.leadRequests = [];
+        vm.leadRequestsOrgPending = [];
+
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].schoolOrg && data[i].schoolOrg.pending) {
+            vm.leadRequestsOrgPending.push(data[i]);
+          } else {
+            vm.leadRequests.push(data[i]);
+          }
+        }
+      });
+    };
+    if(vm.isAdmin) {
+      vm.findLeadRequests();
+    }
+
     vm.sendReminder = function(lead) {
       $http.post('api/users/leaders/' + lead._id + '/remind', {
         user: lead,
@@ -179,19 +200,23 @@
     };
 
     vm.openApproveTeamMembers = function() {
-
+      vm.findTeamRequests();
+      vm.findTeams();
+      angular.element('#modal-team-member-requests').modal('show');
     };
 
     vm.closeApproveTeamMembers = function() {
-
+      vm.findTeams();
+      vm.findTeamRequests();
+      angular.element('#modal-team-member-requests').modal('hide');
     };
 
     vm.openApproveTeamLeads = function() {
-
+      angular.element('#modal-team-lead-requests').modal('show');
     };
 
     vm.closeApproveTeamLeads = function() {
-
+      angular.element('#modal-team-lead-requests').modal('hide');
     };
 
     // Organization modals

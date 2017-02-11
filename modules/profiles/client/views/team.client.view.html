@@ -7,7 +7,8 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </span>
                 <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
-                placeholder="Search for a team by name, description, team lead...">
+                placeholder="Search for a team by name, description, team lead..."
+                ng-model-options='{ debounce: 400 }'>
             </div>
             <div class="alert alert-danger text-center" ng-show="vm.error">
               <p ng-bind="vm.error"></p>

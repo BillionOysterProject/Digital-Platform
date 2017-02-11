@@ -51,12 +51,12 @@ body {
     padding-bottom: 20px;
 }
 
-     .content-jumbotron { 
-        background-color: #fff; 
+     .content-jumbotron {
+        background-color: #fff;
         padding-top: 50px;
         padding-bottom: 50px;
     }
-    
+
         @media (max-width: 768px) {
             .content-jumbotron .btn {
                 display: block;
@@ -1059,7 +1059,7 @@ form.ng-submitted .ng-invalid {
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 .container-ribbon {
-    background: url(../img/backgrounds/redribbon-bg.png) center top no-repeat transparent;
+    background: url(img/redribbon-bg.png) center top no-repeat transparent;
     margin-top: -50px;
 }
 

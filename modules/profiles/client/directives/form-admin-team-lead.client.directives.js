@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('users')
+    .module('profiles')
     .directive('formAdminTeamLeadModal', ['$http', function($http) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/users/client/views/admin/form-admin-team-lead.client.view.html',
+        templateUrl: 'modules/profiles/client/views/form-admin-team-lead.client.view.html',
         scope: {
           user: '=',
           organizations: '=',

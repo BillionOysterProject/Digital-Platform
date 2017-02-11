@@ -19,15 +19,15 @@
           roles: ['user', 'admin']
         }
       })
-      .state('admin-users', {
-        url: '/users',
-        templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
-        controller: 'UserListController',
-        data: {
-          pageTitle: 'Users List',
-          roles: ['admin']
-        }
-      })
+      // .state('admin-users', {
+      //   url: '/users',
+      //   templateUrl: 'modules/users/client/views/admin/list-users.client.view.html',
+      //   controller: 'UserListController',
+      //   data: {
+      //     pageTitle: 'Users List',
+      //     roles: ['admin']
+      //   }
+      // })
       .state('settings.admin-user', {
         url: '/users/:userId',
         templateUrl: 'modules/users/client/views/admin/view-user.client.view.html',

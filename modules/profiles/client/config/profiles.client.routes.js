@@ -31,6 +31,15 @@
         url: '/user/:userId',
         templateUrl: 'modules/profiles/client/views/view-user.client.view.html'
       })
+      .state('profiles.admin-users', {
+        url: '/users',
+        templateUrl: 'modules/profiles/client/views/list-users.client.view.html',
+        controller: 'UserListController',
+        data: {
+          pageTitle: 'Users List',
+          roles: ['admin']
+        }
+      })
       .state('profiles.team', {
         url: '/team',
         templateUrl: 'modules/profiles/client/views/team.client.view.html',
