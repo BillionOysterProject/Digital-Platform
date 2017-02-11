@@ -9,7 +9,7 @@
                     <a class="btn btn-success" ng-click="vm.openTeamProfileForm()"><i class="fa fa-plus"></i> Create a team</a>
                 </div>
                 <hr/>
-                <div ng-show="vm.organization">
+                <div ng-show="vm.organization && vm.organization._id">
                   <h6>Organization</h6>
                   <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a><br/>
                     <small>{{vm.organization.city}}, {{vm.organization.state}}</small></h4>
@@ -48,44 +48,45 @@
                 </div>
 
 
-                <h6>Organization</h6>
-                <div>
-                    <div class="row">
-                        <div class="col-lg-3 col-md-6" ng-show="vm.orgPhotoUrl">
-                            <img class="img-thumbnail img-responsive" ng-src="{{vm.orgPhotoUrl}}" />
-                        </div>
-                        <div class="col-lg-3 col-md-6" ng-hide="vm.orgPhotoUrl">
-                            <div class="well text-center"><i class="fa fa-5x fa-building-o gray"></i></div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <h2><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a></h2>
-                            <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
-                            <p>{{vm.organization.description}}</p>
-                        </div>
-                        <div class="col-lg-3 col-md-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
-                          <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
-                          <p ng-repeat="orgLead in vm.organization.orgLeads">
-                              <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
-                                  class="pull-left header-profile-image">
-                              <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
-                              <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
-                                <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
-                                <span class="green ng-hide" ng-show="orgLead.reminderSent">
-                                  <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
-                              </em>
-                          </p>
-                        </div>
-                        <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
-                    </div>
-                    <nav class="nav nav-default text-right">
-                      <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openFormOrg()">Edit organization profile</a>
-                      <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openInviteOrgLead()">Invite leads</a>
-                      <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
-                      <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteForm()">Delete organization</a>
-                    </nav>
-                    <hr/>
+                <div ng-show="vm.organization && vm.organization._id">
+                  <h6>Organization</h6>
+                  <div>
+                      <div class="row">
+                          <div class="col-lg-3 col-md-6" ng-show="vm.orgPhotoUrl">
+                              <img class="img-thumbnail img-responsive" ng-src="{{vm.orgPhotoUrl}}" />
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-hide="vm.orgPhotoUrl">
+                              <div class="well text-center"><i class="fa fa-5x fa-building-o gray"></i></div>
+                          </div>
+                          <div class="col-lg-6 col-md-6">
+                              <h2><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a></h2>
+                              <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
+                              <p>{{vm.organization.description}}</p>
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
+                            <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
+                            <p ng-repeat="orgLead in vm.organization.orgLeads">
+                                <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
+                                    class="pull-left header-profile-image">
+                                <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
+                                <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
+                                  <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
+                                  <span class="green ng-hide" ng-show="orgLead.reminderSent">
+                                    <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                                </em>
+                            </p>
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
+                      </div>
+                      <nav class="nav nav-default text-right">
+                        <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openFormOrg()">Edit organization profile</a>
+                        <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openInviteOrgLead()">Invite leads</a>
+                        <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
+                        <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteForm()">Delete organization</a>
+                      </nav>
+                      <hr/>
+                  </div>
                 </div>
-
 
                 <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                 <div ng-repeat="team in vm.teams">
