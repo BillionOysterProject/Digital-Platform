@@ -14,6 +14,7 @@
       TeamRequestsService, FileUploader) {
     var vm = this;
     vm.team = {};
+    vm.teams = [];
     vm.userToOpen = {};
 
     var checkRole = ExpeditionViewHelper.checkRole;
@@ -100,6 +101,15 @@
 
     vm.authentication = Authentication;
     vm.error = [];
+
+    var findTeams = function() {
+      TeamsService.query({
+        byOwner: true
+      }, function(data) {
+        vm.teams = data;
+      });
+    };
+    findTeams();
 
     vm.remove = function(callback) {
       vm.team.$remove(function() {
@@ -205,7 +215,7 @@
     };
 
     vm.closeApproveTeamMembers = function() {
-      vm.findTeam();
+      findTeam();
       vm.findTeamRequests();
       angular.element('#modal-team-member-requests').modal('hide');
     };

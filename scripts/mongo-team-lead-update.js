@@ -1,9 +1,8 @@
 //TO RUN:
 //copy the below code into a Robomongo window.
-//I'm sure it can also be run from the commandline.
 
 //This function adds a "teamLeads" field to all teams that is an array
-//of id values. it adds one element to the array that is the value of 
+//of id values. it adds one element to the array that is the value of
 //the current "teamLead" field. It leaves "teamLead" for now.
 db.system.js.save({
   _id: "teamLeadUpdateFunction",
