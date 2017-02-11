@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('formTeamMemberModal', ['$http', function($http) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/teams/client/views/form-team-member.client.view.html',
+        templateUrl: 'modules/profiles/client/views/form-team-member.client.view.html',
         scope: {
           teamMember: '=',
           team: '=',

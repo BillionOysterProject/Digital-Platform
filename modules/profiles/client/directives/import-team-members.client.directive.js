@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('importTeamMembersModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/teams/client/views/import-team-members.client.view.html',
+        templateUrl: 'modules/profiles/client/views/import-team-members.client.view.html',
         scope: {
           team: '=',
           organization: '=',

@@ -102,6 +102,8 @@
 </section>
 
 <!--MODALS-->
+<delete-team-member-modal team-member="vm.userToOpen" team="vm.team" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
+
 <form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
 <invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
 <form-team-member-modal team-member="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
@@ -112,6 +114,5 @@
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
 
 <view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
-<delete-team-member-modal team-member="vm.userToOpen" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
 <approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
 <!--END MODALS-->

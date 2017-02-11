@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('deleteTeamModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/teams/client/views/delete-team.client.view.html',
+        templateUrl: 'modules/profiles/client/views/delete-team.client.view.html',
         scope: {
           team: '=',
           closeFunction: '='

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .controller('TeamApprovalController', TeamApprovalController);
 
   TeamApprovalController.$inject = ['$scope', '$http', 'TeamsService'];
@@ -10,7 +10,7 @@
   function TeamApprovalController($scope, $http) {
     $scope.error = null;
     $scope.teamRequestsTeams = [];
-    
+
     $scope.reset = function() {
       for (var i = 0; i < $scope.teamRequests.length; i++) {
         delete $scope.teamRequests[i].approve;

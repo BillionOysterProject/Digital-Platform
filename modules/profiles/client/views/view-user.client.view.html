@@ -44,9 +44,10 @@
                     <hr/>
                 </nav>
             </div>
-            
+
             <!-- TODO: Wire up entire MODAL-BODY to show if Profile is a Team Member Profile, (not if viewer's role is team member)-->
             <div class="modal-body">
+              <div ng-show="true">
                 <div class="row">
                     <!--TODO: Change to only be published expeditions -->
                     <div class="col-sm-6" ng-show="expeditions">
@@ -60,7 +61,7 @@
                               -->
                         </dl>
                     </div>
-                    
+
                     <!--To be wired up once we build out the Research section
                     <div class="col-sm-6" ng-hide="true">
                         <dl class="dl-horizontal">
@@ -72,86 +73,87 @@
                     -->
                 </div>
             </div>
-            
+
             <!-- TODO: Wire up entire MODAL-BODY to show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
-            <div class="modal-body">
-                <div class="row">
-                    <!--TODO: Change to only be published expeditions -->
-                    <div class="col-sm-6">
-                        <dl class="dl-horizontal">
-                            <dt>Expeditions</dt>
-                            <dd ng-repeat="expedition in expeditions">
-                              <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
-                                {{expedition.name}}</a></dd>
-                            <!--TODO: Show if not a part of any Expeditions 
-                            <dd><em>none</em></dd>
-                            -->
-                        </dl>
-                    </div>
-                    
-                    <!--TODO: Wire up to show ORS that the Profile has created -->
-                    <div class="col-sm-6">
-                        <dl class="dl-horizontal">
-                            <dt>ORS</dt>
-                            <dd><a>ORS 1</a></dd>
-                            <dd><a>ORS 2</a></dd>
-                            <dd><a>ORS 3</a></dd>
-                        </dl>
-                    </div>
-                </div>
-                <hr/>
-                <div class="row">
-                    <!--TODO: Wire up to show events the Profile registered for, add <i>s if the Profile was marked as attended -->
-                    <div class="col-sm-6">
-                        <dl class="dl-horizontal">
-                            <dt>Events <i class="fa fa-question-circle gray" title="A green check mark beside the event name shows that the user was marked in attendance"></i></dt>
-                            <dd><i class="fa fa-check green"></i> <a>Event 1</a></dd> 
-                            <dd><a>Event 2</a></dd>
-                            <dd><a>Event 3</a></dd>
-                            <dd><em>none</em></dd><!--TODO: Show if none -->
-                        </dl>
-                    </div>
-                    
-                    <!--TODO: Wire up to show lessons that the Profile has marked that they taught in the Lesson Taught form -->
-                    <div class="col-sm-6">
-                        <dl class="dl-horizontal">
-                            <dt>Lessons Taught</dt>
-                            <dd><a>Lesson #1</a></dd>
-                            <dd><a>Lesson #2</a></dd>
-                            <dd><a>Lesson #3</a></dd>
-                            <dd><em>none</em></dd><!--TODO: Show if none -->
-                        </dl>
-                    </div>
-                    
-                    <!--Wire up once we figure out where this data comes from --
-                    <div class="col-sm-4">
-                        <dl class="dl-horizontal">
-                            <dt>Grade levels</dt>
-                            <dd>9th-12th</dd><!--not sure where this should come from --
-                            
-                            <dt>Subjects</dt>
-                            <dd>English, Science</dd><!--not sure where this should come from --
-                            
-                            <dt>Students</dt>
-                            <dd>25</dd><!--sum total of all their teams--
-                        </dl>
-                    </div>
-                    -->
-                </div>
-                <hr/>
-                <div class="row">
-                    <!--TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin -->
-                    <div class="col-sm-12" ng-show="isAdmin">
-                        <dl class="dl-horizontal">
-                            <dt>Motivations</dt>
-                            <dd>...</dd>
-                            <dd>...</dd>
-                            <dd>...</dd>
-                        </dl>
-                    </div>
-                </div>
+            <div ng-show="false">
+              <div class="row">
+                  <!--TODO: Change to only be published expeditions -->
+                  <div class="col-sm-6">
+                      <dl class="dl-horizontal">
+                          <dt>Expeditions</dt>
+                          <dd ng-repeat="expedition in expeditions">
+                            <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                              {{expedition.name}}</a></dd>
+                          <!--TODO: Show if not a part of any Expeditions
+                          <dd><em>none</em></dd>
+                          -->
+                      </dl>
+                  </div>
+
+                  <!--TODO: Wire up to show ORS that the Profile has created -->
+                  <div class="col-sm-6">
+                      <dl class="dl-horizontal">
+                          <dt>ORS</dt>
+                          <dd><a>ORS 1</a></dd>
+                          <dd><a>ORS 2</a></dd>
+                          <dd><a>ORS 3</a></dd>
+                      </dl>
+                  </div>
+              </div>
+              <hr/>
+              <div class="row">
+                  <!--TODO: Wire up to show events the Profile registered for, add <i>s if the Profile was marked as attended -->
+                  <div class="col-sm-6">
+                      <dl class="dl-horizontal">
+                          <dt>Events <i class="fa fa-question-circle gray" title="A green check mark beside the event name shows that the user was marked in attendance"></i></dt>
+                          <dd><i class="fa fa-check green"></i> <a>Event 1</a></dd>
+                          <dd><a>Event 2</a></dd>
+                          <dd><a>Event 3</a></dd>
+                          <dd><em>none</em></dd><!--TODO: Show if none -->
+                      </dl>
+                  </div>
+
+                  <!--TODO: Wire up to show lessons that the Profile has marked that they taught in the Lesson Taught form -->
+                  <div class="col-sm-6">
+                      <dl class="dl-horizontal">
+                          <dt>Lessons Taught</dt>
+                          <dd><a>Lesson #1</a></dd>
+                          <dd><a>Lesson #2</a></dd>
+                          <dd><a>Lesson #3</a></dd>
+                          <dd><em>none</em></dd><!--TODO: Show if none -->
+                      </dl>
+                  </div>
+
+                  <!--Wire up once we figure out where this data comes from --
+                  <div class="col-sm-4">
+                      <dl class="dl-horizontal">
+                          <dt>Grade levels</dt>
+                          <dd>9th-12th</dd><!--not sure where this should come from --
+
+                          <dt>Subjects</dt>
+                          <dd>English, Science</dd><!--not sure where this should come from --
+
+                          <dt>Students</dt>
+                          <dd>25</dd><!--sum total of all their teams--
+                      </dl>
+                  </div>
+                  -->
+              </div>
+              <hr/>
+              <div class="row">
+                  <!--TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin -->
+                  <div class="col-sm-12" ng-show="isAdmin">
+                      <dl class="dl-horizontal">
+                          <dt>Motivations</dt>
+                          <dd>...</dd>
+                          <dd>...</dd>
+                          <dd>...</dd>
+                      </dl>
+                  </div>
+              </div>
             </div>
-            
+          </div>
+
             <form-admin-team-lead-modal user="user" close-function="closeAdminTeamLeadForm"></form-admin-team-lead-modal>
             <delete-admin-team-lead-modal user="user" close-function="closeDeleteAdminTeamLead"></delete-admin-team-lead-modal>
             <form-team-member-modal team-member="user" teams="teams" close-function="closeFormTeamMember"></form-team-member-modal>

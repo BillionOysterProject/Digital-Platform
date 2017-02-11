@@ -2,31 +2,22 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .controller('TeamMemberDeleteController', TeamMemberDeleteController);
 
   TeamMemberDeleteController.$inject = ['$scope', '$http', 'TeamMembersService', 'TeamsService', 'LeaderMemberService'];
 
   function TeamMemberDeleteController($scope, $http, TeamMembersService, TeamsService, LeaderMemberService) {
-    TeamsService.query({
-      byOwner: true
-    }, function(data) {
-      $scope.allTeams = data;
-    });
 
     $scope.remove = function() {
-      $http.delete('api/users/leaders/' + $scope.teamMember._id, {
-        user: $scope.teamMember,
-        team: $scope.team,
-        organization: $scope.organization,
-        teamOrOrg: 'team',
-        role: 'team member pending'
-      })
-      .successCallback(function(data, status, headers, config) {
-        $scope.closeFunction(true);
-      })
-      .errorCallback(function(data, status, headers, config) {
-        $scope.error = data.message;
+      $scope.teamMember.team = $scope.team;
+      $scope.teamMember.$remove(function(err) {
+        if(err) {
+          console.log(err);
+          errorCallback(err);
+        } else {
+          successCallback();
+        }
       });
     };
 

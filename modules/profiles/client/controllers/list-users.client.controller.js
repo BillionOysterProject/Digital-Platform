@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('users.admin').controller('UserListController', ['$scope', '$filter', 'lodash',
+angular.module('profiles').controller('UserListController', ['$scope', '$filter', 'lodash',
 'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService',
   function ($scope, $filter, lodash,
     Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService) {

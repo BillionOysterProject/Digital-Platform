@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .controller('TeamLeadApprovalController', TeamLeadApprovalController);
 
   TeamLeadApprovalController.$inject = ['$scope', '$http'];
