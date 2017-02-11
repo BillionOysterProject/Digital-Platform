@@ -78,10 +78,10 @@
                         <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
                     </div>
                     <nav class="nav nav-default text-right">
-                      <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openFormOrg()">Edit organization profile</a>
-                      <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openInviteOrgLead()">Invite leads</a>
-                      <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
-                      <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteForm()">Delete organization</a>
+                      <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openFormOrg()">Edit organization profile</a>
+                      <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openInviteOrgLead()">Invite leads</a>
+                      <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
+                      <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteForm()">Delete organization</a>
                     </nav>
                     <hr/>
                 </div>
