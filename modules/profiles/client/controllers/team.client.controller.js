@@ -201,11 +201,13 @@
     };
 
     vm.openApproveTeamMembers = function() {
-
+      angular.element('#modal-team-member-requests').modal('show');
     };
 
     vm.closeApproveTeamMembers = function() {
-
+      vm.findTeam();
+      vm.findTeamRequests();
+      angular.element('#modal-team-member-requests').modal('hide');
     };
   }
 })();

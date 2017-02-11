@@ -59,20 +59,20 @@
             </div>
 
             <!--TIFF: only show buttons if team lead -->
-            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
-            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openInviteTeamLead()">Invite leads</a>
-            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
-            <a class="btn btn-default" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
-            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isCurrentUserTeamLead" ng-click="vm.openDeleteTeam()">Delete team</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openInviteTeamLead()">Invite leads</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeam()">Delete team</a>
         </nav>
         <hr/>
 
-        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.isCurrentUserTeamLead) &&
+        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.team.isCurrentUserTeamLead) &&
           vm.teamMembers.length === 0 && vm.filter.searchString === ''">
             No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
         </div>
-        <div class="alert alert-success" role="alert" ng-show="vm.isCurrentUserTeamLead && vm.teamRequests.length > 0">
+        <div class="alert alert-success" role="alert" ng-show="vm.team.isCurrentUserTeamLead && vm.teamRequests.length > 0">
             You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div><!--TIFF: Open modal from Settings -->
@@ -113,4 +113,5 @@
 
 <view-user-modal user="vm.userToOpen" close-function="vm.closeViewUserModal"></view-user-modal>
 <delete-team-member-modal team-member="vm.userToOpen" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
 <!--END MODALS-->

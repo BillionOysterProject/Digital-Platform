@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('removeTeamMemberModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/users/client/views/admin/delete-team-member.client.view.html',
+        templateUrl: 'modules/profiles/client/views/delete-team-member.client.view.html',
         scope: {
           user: '=',
           team: '=',
@@ -14,7 +14,7 @@
           cancelFunction: '='
         },
         replace: true,
-        controller: 'TeamLeadController',
+        controller: 'TeamMemberDeleteController',
         link: function(scope, element, attrs) {
 
         }

@@ -17,38 +17,34 @@
 
     vm.remove = function() {
       if (confirm('Are you sure you want to delete?')) {
-        vm.team.$remove($state.go('settings.admin-teams'));
+        vm.team.$remove($state.go('profiles.team'));
       }
     };
 
     vm.save = function(isValid) {
       if (!isValid) {
-        console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'vm.form.teamForm');
         return false;
       }
 
       if (vm.team._id) {
-        console.log('updating team');
         vm.team.$update(successCallback, errorCallback);
       } else {
-        console.log('saving new team');
         vm.team.$save(successCallback, errorCallback);
       }
 
       function successCallback(res) {
         var teamId = res._id;
-        $state.go('settings.admin-team');
+        $state.go('profiles.team');
       }
 
       function errorCallback(res) {
-        console.log('error: ' + res.data.message);
         vm.error = res.data.message;
       }
     };
 
     vm.cancel = function() {
-      $state.go('settings.admin-team');
+      $state.go('profiles.team');
     };
   }
 })();

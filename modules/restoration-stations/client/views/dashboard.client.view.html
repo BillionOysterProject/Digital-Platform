@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
-                  You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                  You don't have any teams yet! <a class="btn btn-default" ui-sref="profiles.team">Add members</a>
                 </div>
                 <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
                   Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
@@ -84,12 +84,12 @@
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
-                                  <a ui-sref="settings.admin-team-owner" ng-class="{ 'disabled': vm.isTeamLeadPending }"
+                                  <a ui-sref="profiles.team" ng-class="{ 'disabled': vm.isTeamLeadPending }"
                                   ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner"
+                                <a class="btn btn-primary" ui-sref="profiles.team"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
