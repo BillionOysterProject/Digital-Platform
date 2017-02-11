@@ -19,7 +19,8 @@
                   <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                   <h4 ng-repeat="team in vm.teams">
                     <a ui-sref="profiles.team-view({ teamId: team._id })">{{team.name}}</a><br/>
-                    <small ng-show="vm.user.displayName !== team.teamLead.displayName">
+                    <!-- compare on ID below in case the current user changes their sid -->
+                    <small ng-show="vm.user._id !== team.teamLead._id">
                       <a data-toggle="modal" data-target="#modal-profile-user">{{team.teamLead.displayName}}</a></small>
                   </h4>
                   <hr/>
@@ -41,10 +42,10 @@
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
                 </div>
 
-                <!-- <div class="alert alert-success" ng-show="leadRequests && leadRequests.length > 0" role="alert">
-                    You have <b>{{leadRequests.length}}</b> new team lead requests.
+                <div class="alert alert-success" ng-show="vm.leadRequests && vm.leadRequests.length > 0" role="alert">
+                    You have <b>{{vm.leadRequests.length}}</b> new team lead requests.
                     <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamLeads()">Respond</a>
-                </div> --><!-- TODO once return -->
+                </div>
 
 
                 <h6>Organization</h6>
@@ -160,6 +161,8 @@
   close-function="vm.closeFormTeamMember"></form-team-member-modal>
 <import-team-members-modal team="vm.teamToOpen" organization="vm.organization"
   close-function="vm.closeImportTeamMembers"></import-team-members-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
+<approve-team-leads-modal lead-requests="vm.leadRequests" cancel-function="vm.closeApproveTeamLeads"></approve-team-leads-modal>
 <delete-team-lead-modal team="vm.teamToOpen" organization="vm.organization" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.teamToOpen" close-function="vm.closeDeleteTeam"></delete-team-modal>
 <!-- End Team Modals -->
@@ -168,5 +171,5 @@
 <change-user-profile-image-modal close-function="vm.closeChangePicture"></change-user-profile-image-modal>
 
 <view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization" close-function="vm.closeViewUserModal"></view-user-modal>
-<change-password-modal callback-function="vm.passwordChanged"></change-password-modal>
+<change-password-modal close-function="vm.closeChangePassword"></change-password-modal>
 <!--END MODALS-->

@@ -52,6 +52,7 @@
       if ($scope.organization._id) {
         $scope.organization.$update(successCallback, errorCallback);
       } else {
+        //TODO: $save doesn't exist if the user is an admin and has no org
         $scope.organization.$save(successCallback, errorCallback);
       }
 

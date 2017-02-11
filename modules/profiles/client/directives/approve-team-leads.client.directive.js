@@ -2,11 +2,11 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('approveTeamLeadsModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/users/client/views/admin/approve-team-leads.client.view.html',
+        templateUrl: 'modules/profiles/client/views/approve-team-leads.client.view.html',
         scope: {
           leadRequests: '=',
           cancelFunction: '='

@@ -2,15 +2,15 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('approveTeamMembersModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/teams/client/views/approve-team-members.client.view.html',
+        templateUrl: 'modules/profiles/client/views/approve-team-members.client.view.html',
         scope: {
           teamRequests: '=',
           teams: '=',
-          cancelFunction: '='
+          closeFunction: '='
         },
         replace: true,
         controller: 'TeamApprovalController',

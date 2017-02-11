@@ -2,12 +2,12 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .directive('viewAdminTeamModal', ['$http', '$filter',
     function($http, $filter) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/users/client/views/admin/view-admin-team.client.view.html',
+        templateUrl: 'modules/profiles/client/views/view-admin-team.client.view.html',
         scope: {
           team: '=',
           deleteTeamFunction: '=',
