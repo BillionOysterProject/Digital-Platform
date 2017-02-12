@@ -443,7 +443,7 @@ exports.listMembers = function (req, res) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
+    } else if(teams !== undefined && teams !== null && teams.length > 0){
       var memberIds = [];
       for (var i = 0; i < teams.length; i++) {
         memberIds = memberIds.concat(teams[i].teamMembers);
@@ -537,6 +537,8 @@ exports.listMembers = function (req, res) {
             findTeamsForUsers(0, members, [], function(usersWithTeam) {
               res.json(usersWithTeam);
             });
+          } else {
+            res.json([]);
           }
         });
       } else {
@@ -569,6 +571,26 @@ exports.teamByID = function (req, res, next, id) {
       });
     }
     req.team = team;
+    next();
+  });
+};
+
+exports.memberByID = function (req, res, next, id) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'Member is invalid'
+    });
+  }
+
+  User.findById(id).exec(function (err, member) {
+    if (err) {
+      return next(err);
+    } else if (!member) {
+      return res.status(404).send({
+        message: 'No member with that identifier has been found'
+      });
+    }
+    req.member = member;
     next();
   });
 };

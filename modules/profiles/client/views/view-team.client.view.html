@@ -56,6 +56,9 @@
                     <input class="form-control col-md-4" type="text" placeholder="Search"
                       ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
                 </div>
+                <div class="alert alert-info text-center" ng-show="vm.teamMembers.length === 0 && vm.filter.searchString !== ''">
+                  No team members match the search filter.
+                </div>
             </div>
 
             <!--TIFF: only show buttons if team lead -->
@@ -79,7 +82,7 @@
 
         <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel-overlay" ng-show="vm.team.isCurrentUserTeamLead">
+                <div class="panel-overlay" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead">
                     <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openDeleteTeamMember(member)">
                         <i class="glyphicon glyphicon-remove"></i></a>
                     <a class="btn btn-sm btn-default pull-right" ng-click="vm.openFormTeamMember(member)">
@@ -113,7 +116,7 @@
 I think there is a missing html tag somewhere but can't find it -->
 <import-team-members-modal team="vm.team" organization="vm.team.schoolOrg"
   close-function="vm.closeImportTeamMembers"></import-team-members-modal>
-  
+
 <delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
 
