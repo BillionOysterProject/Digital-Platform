@@ -9,8 +9,9 @@
 
   function TeamMemberDeleteController($scope, $http, TeamMembersDeleteService) {
     $scope.remove = function() {
+      //$scope.teamMember.member = $scope.teamMember;
       var teamMemberToDelete = new TeamMembersDeleteService($scope.teamMember);
-
+      console.log(teamMemberToDelete);
       teamMemberToDelete.$remove(function(err) {
         if(err) {
           errorCallback(err);

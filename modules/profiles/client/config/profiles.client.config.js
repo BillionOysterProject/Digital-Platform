@@ -19,17 +19,20 @@
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Profile',
-      state: 'profiles.main'
+      state: 'profiles.main',
+      roles: ['user']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Teams',
-      state: 'profiles.team'
+      state: 'profiles.team',
+      roles: ['team lead', 'team member', 'admin']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Organizations',
-      state: 'profiles.organization'
+      state: 'profiles.organization',
+      roles: ['team lead', 'team member', 'admin']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
