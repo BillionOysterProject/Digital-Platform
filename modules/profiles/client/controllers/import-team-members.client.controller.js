@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .controller('TeamsImportController', TeamsImportController);
 
   TeamsImportController.$inject = ['$scope', '$http'];

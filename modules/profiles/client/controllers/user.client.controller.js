@@ -61,6 +61,13 @@
       return (teamLeadIndex > -1) ? true : false;
     };
 
+    $scope.checkViewedUserRole = function(role) {
+      var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+        return o === (role);
+      });
+      return (roleIndex > -1) ? true : false;
+    };
+
     $scope.sendReminder = function(teamName) {
       $scope.reminderSent = true;
 

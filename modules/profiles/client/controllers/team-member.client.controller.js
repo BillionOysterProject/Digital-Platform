@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('teams')
+    .module('profiles')
     .controller('TeamMemberController', TeamMemberController);
 
   TeamMemberController.$inject = ['$scope', '$http', 'TeamMembersService', 'TeamsService', 'LeaderMemberService'];
