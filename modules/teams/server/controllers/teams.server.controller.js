@@ -207,7 +207,7 @@ exports.deleteMember = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLead': member }] }).exec(function(err, teams) {
+        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLeads': member }] }).exec(function(err, teams) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
@@ -236,7 +236,12 @@ exports.list = function (req, res) {
     var and = [];
 
     if (req.query.byOwner) {
-      and.push({ 'teamLead': req.user });
+      and.push({
+        $or: [
+          { 'teamLead': req.user },
+          { 'teamLeads': req.user }
+        ]
+      });
     }
 
     if (req.query.byMember) {
@@ -412,7 +417,13 @@ exports.listMembers = function (req, res) {
   var andTeam = [];
 
   if (req.query.byOwner) {
-    andTeam.push({ 'teamLead': req.user });
+    andTeam.push({
+      $or: [
+        { 'teamLead': req.user },
+        { 'teamLeads': req.user }
+      ]
+    });
+
   }
   if (req.query.teamId) {
     andTeam.push({ '_id': req.query.teamId });
@@ -426,7 +437,8 @@ exports.listMembers = function (req, res) {
     queryTeam = Team.find();
   }
 
-  queryTeam.populate('teamLead', 'displayName').exec(function (err, teams) {
+  queryTeam.populate('teamLead', 'displayName')
+  .populate('teamLeads', 'displayName').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -493,7 +505,8 @@ exports.listMembers = function (req, res) {
           query.limit(limit2);
         }
 
-        query.populate('teamLead', 'displayName').exec(function (err, members) {
+        query.populate('teamLead', 'displayName')
+        .populate('teamLeads', 'displayName').exec(function (err, members) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)

@@ -108,8 +108,12 @@
 <invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
 <form-team-member-modal team-member="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
   close-function="vm.closeFormTeamMember"></form-team-member-modal>
+
+<!-- TODO: when the import modal is closed the whole pages goes blank.
+I think there is a missing html tag somewhere but can't find it -->
 <import-team-members-modal team="vm.team" organization="vm.team.schoolOrg"
   close-function="vm.closeImportTeamMembers"></import-team-members-modal>
+  
 <delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
 

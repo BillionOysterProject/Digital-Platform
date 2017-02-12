@@ -45,9 +45,9 @@
                 </nav>
             </div>
 
-            <!-- TODO: Wire up entire MODAL-BODY to show if Profile is a Team Member Profile, (not if viewer's role is team member)-->
+            <!-- Show if profile is a Team Member Profile, (not if viewer's role is team member)-->
             <div class="modal-body">
-              <div ng-show="true">
+              <div ng-show="isUserTeamMember">
                 <div class="row">
                     <!--TODO: Change to only be published expeditions -->
                     <div class="col-sm-6" ng-show="expeditions">
@@ -74,8 +74,8 @@
                 </div>
             </div>
 
-            <!-- TODO: Wire up entire MODAL-BODY to show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
-            <div ng-show="false">
+            <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
+            <div ng-show="isUserTeamLead">
               <div class="row">
                   <!--TODO: Change to only be published expeditions -->
                   <div class="col-sm-6">

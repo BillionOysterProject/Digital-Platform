@@ -23,6 +23,8 @@
               scope.isAdmin = scope.checkRole('admin');
               scope.isTeamLead = scope.checkRole('team lead') || scope.checkRole('team lead pending');
               scope.isUserPending = scope.checkUserPending();
+              scope.isUserTeamMember = scope.checkViewedUserRole('team member');
+              scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
               scope.findExpeditions();
               scope.findOrganization();
               scope.findTeams();
