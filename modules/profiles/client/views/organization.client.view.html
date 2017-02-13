@@ -30,6 +30,12 @@
             <a class="btn btn-default pull-right" view-permissions="admin" ng-click="vm.openSchoolOrgForm()">
                 <i class="glyphicon glyphicon-plus"></i> Add organization
             </a>
+            <!--TODO: Wire up to show a duplicate of the org request modal from sign up page, auto request at submit
+            Only team leads that aren't admin should see this button:
+            <a class="btn btn-default pull-right">
+                <i class="glyphicon glyphicon-plus"></i> Request an organization
+            </a>
+            -->
             <ul class="nav navbar-nav">
                 <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
                 <li class="dropdown" id="typeSelection">
