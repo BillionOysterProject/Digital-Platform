@@ -9,28 +9,6 @@
 
   function TeamsImportController($scope, $http) {
 
-    $scope.csv = {
-      content: null,
-      header: true,
-      separator: ',',
-      result: null,
-      headersValid: false,
-      filename: ''
-    };
-
-    $scope.bulkFileUploaded = false;
-
-    $scope.totalValidating = 0;
-    $scope.validCsv = [];
-    $scope.invalidCsv = [];
-    $scope.finishedValidation = false;
-    $scope.uploadingCsv = false;
-
-    $scope.team = {
-      teamId: null,
-      newTeamName: null
-    };
-
     $scope.reset = function() {
       //$scope.csv = {};
       $scope.csv = {
@@ -57,6 +35,8 @@
       };
     };
 
+    $scope.reset();
+
     $scope.downloadExample = function() {
       $http({ method: 'GET', url: '/api/users/leaders/csv' }).
         success(function(data, status, headers, config) {
@@ -72,8 +52,14 @@
         });
     };
 
-    $scope.validate = function() {
+    $scope.validate = function() {      
       var csvMembers = $scope.csv.result;
+      if(!csvMembers) {
+        $scope.headersInvalid = true;
+        $scope.finishedValidation = true;
+        return;
+      }
+
       $scope.totalValidating = csvMembers.length;
       $scope.bulkFileUploaded = true;
 

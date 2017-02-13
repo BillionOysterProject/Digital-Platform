@@ -45,7 +45,7 @@
     </section>
 </section>
 
-<section class="content" ng-show="vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember || vm.isAdmin">
+<section class="content">
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
             <div class="form-group col-md-4">
@@ -75,7 +75,7 @@
           vm.teamMembers.length === 0 && vm.filter.searchString === ''">
             No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
         </div>
-        <div class="alert alert-success" role="alert" ng-show="vm.team.isCurrentUserTeamLead && vm.teamRequests.length > 0">
+        <div class="alert alert-success" role="alert" ng-show="(vm.isAdmin || vm.team.isCurrentUserTeamLead) && vm.teamRequests.length > 0">
             You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div><!--TIFF: Open modal from Settings -->
@@ -114,7 +114,7 @@
 
 <!-- TODO: when the import modal is closed the whole pages goes blank.
 I think there is a missing html tag somewhere but can't find it -->
-<import-team-members-modal team="vm.team" organization="vm.team.schoolOrg"
+<import-team-members-modal team="vm.teamToImport" organization="vm.team.schoolOrg"
   close-function="vm.closeImportTeamMembers"></import-team-members-modal>
 
 <delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>

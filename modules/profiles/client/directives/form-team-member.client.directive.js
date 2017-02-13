@@ -19,6 +19,7 @@
           element.bind('show.bs.modal', function () {
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
+            scope.error = null;
           });
           scope.$watch('team', function(newValue, oldValue) {
             scope.team = newValue;
