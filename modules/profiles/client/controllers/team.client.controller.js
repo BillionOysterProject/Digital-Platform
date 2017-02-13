@@ -172,10 +172,12 @@
     };
 
     vm.openImportTeamMembers = function() {
+      vm.teamToImport = vm.team;
       angular.element('#modal-import-team-members').modal('show');
     };
 
     vm.closeImportTeamMembers = function() {
+      vm.teamToImport = {};
       angular.element('#modal-import-team-members').modal('hide');
     };
 

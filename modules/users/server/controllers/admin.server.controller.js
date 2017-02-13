@@ -536,17 +536,28 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
       if (err) {
         errorCallback(err);
       } else {
-        if (role === 'team member pending') {
-          team.teamMembers.push(user);
-        } else if (role === 'team lead pending') {
-          team.teamLeads.push(user);
-        }
-        team.save(function(err) {
-          if (err) {
-            errorCallback(err);
+        var memberIndex = function(member, team) {
+          var index = _.findIndex(team.teamMembers, function(m) {
+            return m.toString() === member._id.toString();
+          });
+          return index;
+        };
+
+        if(memberIndex(user, team) >= 0) {
+          errorCallback('The user ' + user.username + ' already exists in the team ' + team.name);
+        } else {
+          if (role === 'team member pending') {
+            team.teamMembers.push(user);
+          } else if (role === 'team lead pending') {
+            team.teamLeads.push(user);
           }
-          successCallback(team, schoolOrg);
-        });
+          team.save(function(err) {
+            if (err) {
+              errorCallback(err);
+            }
+            successCallback(team, schoolOrg);
+          });
+        }
       }
     });
   } else if (teamOrOrg === 'organization') {
