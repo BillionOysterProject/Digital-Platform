@@ -39,8 +39,11 @@
 <div class="alert alert-danger text-center" ng-show="error">
   <p ng-bind="error"></p>
 </div>
-<div class="alert alert-info text-center" ng-show="isSearchingUsers === true">
-  <p>Loading Users...</p>
+<div class="alert text-center" ng-show="isSearchingUsers === true">
+  <br/><br/>
+  <h1><i class="fa fa-spin fa-circle-o-notch blue"></i></h1>
+  <p>Loading users</p>
+  <br/><br/>
 </div>
 <div class="alert alert-info text-center" ng-show="(pagedItems.length === 0 && !error)">
     Sorry, no results found for that search term
