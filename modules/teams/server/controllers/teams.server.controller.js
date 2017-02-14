@@ -47,15 +47,9 @@ exports.create = function (req, res) {
     });
 };
 
-/**
- * Show the current team
- */
-exports.read = function (req, res) {
-  // convert mongoose document to JSON
-  var team = req.team ? req.team.toJSON() : {};
-
-  // Add a custom field to the Team, for determining if the current User is the "lead".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Team model.
+// Add a custom field to the Team, for determining if the current User is the "lead".
+// NOTE: This field is NOT persisted to the database, since it doesn't exist in the Team model.
+var addTeamPermissionsForCurrentUser = function(req, team) {
   team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id &&
     team.teamLead._id.toString() === req.user._id.toString() ? true : false;
 
@@ -72,7 +66,15 @@ exports.read = function (req, res) {
     return memberId.toString() === req.user._id.toString();
   });
   team.isCurrentUserTeamMember = (indexM > -1) ? true : false;
+};
 
+/**
+ * Show the current team
+ */
+exports.read = function (req, res) {
+  // convert mongoose document to JSON
+  var team = req.team ? req.team.toJSON() : {};
+  addTeamPermissionsForCurrentUser(req, team);
   res.json(team);
 };
 
@@ -308,6 +310,10 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        if(teams === null || teams === undefined) {
+          res.json([]);
+        }
+
         if (req.query.full) {
           var getExpeditionCount = function(team, callback) {
             Expedition.count({ team: team }).exec(function(err, expeditionCount) {
@@ -347,9 +353,16 @@ exports.list = function (req, res) {
           };
 
           getCounts(teams, 0, function() {
+            for(var i = 0; i < teams.length; i++) {
+              addTeamPermissionsForCurrentUser(req, teams[i]);
+            }
             res.json(teams);
           });
         } else {
+          for(var i = 0; i < teams.length; i++) {
+            //addTeamPermissionsForCurrentUser(req, teams[i]);
+            teams[i].isCurrentUserTeamLead = true;
+          }
           res.json(teams);
         }
       }
