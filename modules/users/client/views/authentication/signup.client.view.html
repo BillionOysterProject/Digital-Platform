@@ -109,6 +109,16 @@
             </div>
           </div>
         </div>
+        <!--TODO: Wire up Terms of Use checkbox- make this required for signing up -->
+        <div class="row">
+          <div class="col-sm-12 text-right">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"> I agree to the <a href="#" data-toggle="modal" data-target="#modal-termsofuse">Terms of Use</a>
+                </label>
+              </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-sm-12 text-right form-group">
               <button type="submit" class="btn btn-primary pull-right" ng-show="!vm.isSubmitting">Sign up</button>
@@ -140,4 +150,72 @@
 <!-- MODALS -->
 <form-school-org-modal school-org="vm.newSchoolOrg" save-school-org="false" save-function="vm.saveSchoolOrgForm"
 cancel-function="vm.cancelSchoolOrgForm"></form-school-org-modal>
+
+<div class="modal fade" id="modal-termsofuse" tabindex="-1" role="dialog" aria-labelledby="modal-termsofuse">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Terms of Use Agreement</h4>
+                <h4>BOP Schools and Citizen Science Digital Platform</h4>
+            </div>
+            <div class="modal-body">            
+                <h4><b>ACCEPTANCE OF TERMS</b></h4>
+                <p>This Agreement contains the complete terms and conditions that apply to your participation in the BOP Schools and Citizen Science Digital Platform, <a href="http://platform.bop.nyc/" target="_blank">www.platform.bop.nyc</a> (herein: "The Platform"). If you wish to use The Platform including its tools and services please read these terms of use carefully. By accessing the URL <a href="http://platform.bop.nyc/" target="_blank">www.platform.bop.nyc</a> or using any part of The Platform or any content or services hereof, you agree to become bound by these terms and conditions. If you do not agree to all the terms and conditions, then you may not access The Platform or use the content or any services in The Platform.</p>
+
+                <h4><b>MODIFICATIONS OF TERMS OF USE</b></h4>
+                <p>Amendments to this agreement can be made and effected by us from time to time without specific notice to your end. Agreement posted on The Platform reflects the latest agreement and you should carefully review the same before you use The Platform.</p>
+
+                <h4><b>USE OF THE PLATFORM</b></h4>
+                <p>The sole purpose of The Platform is to support teacher and student learning in the context of ecosystem restoration science and stewardship. The Platform allows users (students, teachers, and others) to upload, publish, and download data; upload, publish, and download curriculum; create and publish research; communicate within the network; register for events; and other forthcoming uses. Any use of The Platform that does not explicitly meet the sole purpose of The Platform (defined as supporting teachers and students learning in the context of ecosystem restoration science and stewardship) is prohibited. Furthermore, you are strictly prohibited from doing the following acts, to wit: (a) using The Platform, including its services, tools, and resources if you are not able to form legally binding contracts, are under the age of 12 and have not obtained parent/guardian consent, or are temporarily or indefinitely suspended from using The Platform, its services, or tools; (b) posting items defined as inappropriate; (c) collecting information about users' personal information; (d) manipulating the content of any item such that it interferes with other uses or other user experiences of The Platform; (f) posting false, inaccurate, misleading, defamatory, or libelous content; (g) broadcasting, publishing, or distributing any content you have accessed from The Platform outside of The Platform; (h) using any of the content you have accessed from The Platform in any setting or context that is not clearly educational-scientific in nature; (i) using or manipulating The Platform, including its services, tools, and resources, for any purpose that may be deemed revenue generating or commercial in nature.</p>
+                 
+                <h5><b>Registration Information</b></h5>
+                <p>For you to complete the sign-up process in The Platform, you must provide your full legal name, a valid email address, member name and any other information needed in order to complete the signup process. If you are signing up with the role of team lead you must qualify that you are 12 years or older and must be responsible for keeping your password secure and be responsible for all activities and contents that are uploaded under your account. You must not transmit any worms or viruses or any code of a destructive nature. Any information provided by you or gathered by The Platform or third parties during any visit to The Platform shall be subject to the terms of Billion Oyster Project's Privacy Policy.</p>
+
+                <h5><b>Term</b></h5>
+                <p>This Agreement will remain in full force and effect while you use The Platform. You may terminate your membership at any time for any reason by following the instructions on the "TERMINATION OF ACCOUNT" in the setting page. We may terminate your membership for any reason at any time. If you are using a paid version of the Service and we terminate your membership in the Service because you have breached this Agreement, you will not be entitled to any refund of unused subscription fees. Even after your membership is terminated, certain sections of this Agreement will remain in effect.</p>
+
+                <h4><b>NON-COMMERCIAL USE BY MEMBERS.</b></h4>
+                <p>Registered users of The Platform are prohibited from using the services of The Platform in connection with any commercial endeavors or ventures. This includes  (a) broadcasting, publishing, or distributing any content you have accessed from The Platform outside of The Platform; (b) using any of the content you have accessed from The Platform in any setting or context that is not clearly educational-scientific in nature;  or (c) using or manipulating The Platform, including its services, tools, and resources, for any purpose that may be deemed revenue generating or commercial in nature. Juridical persons or entities including but not limited to organizations, companies, and/or businesses may not register as users on The Platform and should not use The Platform for any purpose.</p>
+
+                <h4><b>LINKS & FRAMINGS</b></h4>
+                <p>Illegal and/or unauthorized uses of the Services, including unauthorized framing of or linking to The Platform will be investigated, and appropriate legal action may be taken. Some links, however, are welcome to The Platform and you are allowed to establish links to The Platform provided that you do so in a way that is fair and legal and does not damage the construct or reputation of The Platform.  You must not establish a link in such a way as to suggest any form of association, approval, or endorsement on behalf of The Platform where none exists.  You must not establish a link from any website or service that is not owned by you.  You may not establish a link to any part of The Platform other than the homepage or frame content from The Platform on any other website or service without express written permission from the New York Harbor Foundation.</p>
+
+                <h4><b>WARRANTY DISCLAIMER AND EXCLUSIONS / LIMITATIONS OF LIABILITY</b></h4>
+                <p>We make no express or implied warranties or representations with respect to the Platform or any resources available through the Platform. In addition, we make no representation that the operation of The Platform will be uninterrupted or error-free, and we will not be liable for the consequences of any interruptions or errors. We may change, restrict access to, suspend or discontinued The Platform or any part of it at anytime. The information, content and services on The Platform are provided on an "as is" basis. When you use The Platform and or participate therein, you understand and agree that you participate at your own risk.</p>
+
+                <h4><b>INTELLECTUAL PROPERTY RIGHTS</b></h4>
+                <p>The Platform, which includes, but is not limited to, text, content photographs, video, audio, graphics, and look and feel, is protected by copyrights, trademarks, service marks and other proprietary rights and laws of the U.S. and other countries (the "Intellectual Property Rights"). The Platform is protected as a collective work or compilation under U.S. copyright and other laws and treaties. </p>
+
+                <p>You hereby acknowledge that all rights, titles and interests, including but not limited to rights covered by the Intellectual Property Rights, in and to The Platform, and that You will not acquire any right, title, or interest in or to The Platform except as expressly set forth in this Agreement. You will not modify, adapt, translate, prepare derivative works from, decompile, reverse engineer, disassemble or otherwise attempt to derive source code from any of our services, software, or documentation, or create or attempt to create a substitute or similar service or product through use of or access to the Program or proprietary information related thereto.</p>
+
+                <p>You agree to only use The Platform for nonprofit educational purposes only. To the extent that you must reproduce copies of the materials made available to you for nonprofit educational purposes through The Platform, You agree to limit the number of reproductions to one copy per student. </p>
+
+                <p>The Intellectual Property Rights embodied in and by The Platform are  further governed by stipulations of the National Science Foundation found at <a href="https://www.nsf.gov/pubs/2002/nsf02151/gpm7.jsp#730" target="_blank">https://www.nsf.gov/pubs/2002/nsf02151/gpm7.jsp#730</a></p>
+
+                <h5><b>Confidentiality</b></h5>
+                <p>You agree not to disclose information you obtain from us and or from our clients, advertisers, suppliers and forum members. All information submitted to by an end-user customer pursuant to a Program is proprietary information of Billion Oyster Project. Such customer information is confidential and may not be disclosed. Publisher agrees not to reproduce, disseminate, sell, distribute or commercially exploit any such proprietary information in any manner.</p>
+
+                <h4><b>NON-ASSIGNMENT OF RIGHTS</b></h4>
+                <p>Your rights of whatever nature cannot be assigned nor transferred to anybody, and any such attempt may result in termination of this Agreement, without liability to us. However, we may assign this Agreement to any person at any time without notice.</p>
+
+                <h5><b>Waiver</b></h5>
+                <p>Failure of the Billion Oyster Project to insist upon strict performance of any of the terms, conditions and covenants hereof shall not be deemed a relinquishment or waiver of any rights or remedy that the we may have, nor shall it be construed as a waiver of any subsequent breach of the terms, conditions or covenants hereof, which terms, conditions and covenants shall continue to be in full force and effect.</p>
+
+                <h5><b>and Severability of Terms.</b></h5>
+                <p>In the event that any provision of these Terms and Conditions is found invalid or unenforceable pursuant to any judicial decree or decision, such provision shall be deemed to apply only to the maximum extent permitted by law, and the remainder of these Terms and Conditions shall remain valid and enforceable according to its terms.</p>
+
+                <h5><b>Entire Agreement</b></h5>
+                <p>This Agreement shall be governed by and construed in accordance with the substantive laws of New York, without any reference to conflict-of-laws principles. The Agreement describes and encompasses the entire agreement between us and you, and supersedes all prior or contemporaneous agreements, representations, warranties and understandings with respect to The Platform, the contents and materials provided by or through The Platform, and the subject matter of this Agreement.</p>
+
+                <h5><b>Choice of Law; Jurisdiction; Forum</b></h5>
+                <p>Any dispute, controversy or difference which may arise between the parties out of, in relation to or in connection with this Agreement is hereby irrevocably submitted to the exclusive jurisdiction of the courts of New York, to the exclusion of any other courts without giving effect to its conflict of laws provisions or your actual state or country of residence.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--END MODALS-->
