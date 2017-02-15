@@ -75,7 +75,6 @@
         byMember: byMember,
       }, function(data) {
         vm.teams = data;
-        console.log(vm.teams);
         var expeditionsForTeams = function(teams, index, addedCallback) {
           if (index < teams.length) {
             var team = teams[index];

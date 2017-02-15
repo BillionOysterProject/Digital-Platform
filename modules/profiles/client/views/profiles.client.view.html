@@ -88,7 +88,8 @@
                   </div>
                 </div>
 
-                <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                <h6 ng-show="!vm.teams || vm.teams.length === 0">No Teams</h6>
+                <h6 ng-show="vm.teams.length > 0">{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                 <div ng-repeat="team in vm.teams">
                     <div class="row">
                         <div class="col-lg-3 col-md-6" ng-show="team.photo && team.photo.path">

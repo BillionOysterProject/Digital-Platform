@@ -360,8 +360,9 @@ exports.list = function (req, res) {
           });
         } else {
           for(var i = 0; i < teams.length; i++) {
-            //addTeamPermissionsForCurrentUser(req, teams[i]);
-            teams[i].isCurrentUserTeamLead = true;
+            var team = teams[i] ? teams[i].toJSON() : {};
+            addTeamPermissionsForCurrentUser(req, team);
+            teams[i] = team;
           }
           res.json(teams);
         }
