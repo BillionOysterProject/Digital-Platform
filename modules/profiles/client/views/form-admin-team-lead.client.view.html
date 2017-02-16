@@ -21,35 +21,38 @@
                 <label for="email" class="control-label required">Email</label>
                 <input type="text" name="email" class="form-control" ng-model="user.email" required ng-readonly="user._id" required>
               </div>
-              <div class="form-group col-sm-6" show-errors>
+              <div class="form-group col-sm-12" show-errors>
                 <label for="org" class="control-label required">Organization</label>
-                <select name="org" class="form-control" ng-model="user.schoolOrg" required>
+                <select name="org" class="form-control" ng-model="user.schoolOrg"
+                  ng-change="orgChanged()" required>
                   <option disabled selected value>
                   <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
                 </select>
               </div>
-              <div class="form-group col-sm-6" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
-                <label class="control-label required">Role</label>
-                <select class="form-control" required>
-                  <option value="team lead">Team Lead</option>
-                  <!-- <option>Team Member</option><!--TODO: Only show if EDITING current user (not creating new) --> -->
-                  <option value="admin">Admin</option>
+              <div class="form-group col-sm-6" show-errors>
+                <label for="role" class="control-label required">Role</label>
+                <select name="role" class="form-control" ng-model="selectedRole"
+                  ng-options="i.value as (i.name) for i in roles"
+                  ng-change="selectedRoleChanged()"
+                  required>
+                  <option disabled selected value>
                 </select>
               </div>
-              <div class="form-group col-sm-6" show-errors><!--TODO: If Editing, and "Team Member" is selected, change to col-sm-6 -->
+
+              <!-- team lead options -->
+              <div class="form-group col-sm-4" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
                 <label class="control-label required">Team Lead Type</label>
-                <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="user.teamLeadType">
+                <select class="form-control" name="teamLeadType" id="teamLeadType"
+                  ng-model="user.teamLeadType">
                   <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
                 </select>
               </div>
-              <!--TODO: Only show if Editing, and "Team Member" is selected --
-              <div class="form-group col-sm-6" show-errors>
-                <label for="team" class="control-label required">Team Assignment</label>
-                <select name="team" class="form-control" ng-model="teamMember.team._id" required>
-                  <option disabled selected value>
-                  <option ng-repeat="team in teams" value="{{team._id}}">{{team.name}}</option><!--TODO: Show all teams in above-selected Org--
-                </select>
-              </div>-->
+              <div class="form-group col-sm-2" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
+                <div class="checkbox">
+                  <label><input type="checkbox" value="isAdmin" ng-model="isAdmin" ng-change="isAdminChanged()">Admin?</label>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="modal-footer">
