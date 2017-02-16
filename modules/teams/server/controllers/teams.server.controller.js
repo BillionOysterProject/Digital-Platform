@@ -252,6 +252,11 @@ exports.list = function (req, res) {
     if (req.query.teamId) {
       and.push({ '_id': req.query.teamId });
     }
+
+    if(req.query.orgId) {
+        and.push({ 'schoolOrg': req.query.orgId });
+    }
+
     if (req.query.organization) {
       and.push({ 'schoolOrg': req.query.organization });
     }

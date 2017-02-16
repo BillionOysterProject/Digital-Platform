@@ -23,6 +23,7 @@
           byOwner: '@byOwner',
           byMember: '@byMember',
           teamId: '@teamId',
+          orgId: '@orgId',
           sort: '@sort',
           limit: '@limit',
           page: '@page'
