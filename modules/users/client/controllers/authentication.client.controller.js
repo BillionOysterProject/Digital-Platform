@@ -6,6 +6,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
     vm.isSubmitting = false;
+    vm.hasAcceptedTermsOfUse = false;
     vm.authentication = Authentication;
     vm.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -18,7 +19,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
     }
 
     vm.signup = function (isValid) {
-      vm.error = null;
+      if(!vm.hasAcceptedTermsOfUse) {
+        vm.error = 'Please read and agree to the Terms of Use before completing sign up.';
+        isValid = false;
+      } else {
+        vm.error = null;
+      }
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
