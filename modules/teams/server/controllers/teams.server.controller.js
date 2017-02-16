@@ -254,7 +254,7 @@ exports.list = function (req, res) {
     }
 
     if(req.query.orgId) {
-        and.push({ 'schoolOrg': req.query.orgId });
+      and.push({ 'schoolOrg': req.query.orgId });
     }
 
     if (req.query.organization) {
