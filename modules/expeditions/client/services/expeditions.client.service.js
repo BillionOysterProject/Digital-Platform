@@ -22,6 +22,9 @@
           station: '@station',
           organization: '@organization',
           dateRange: '@dateRange',
+          byOwner: '@byOwner',
+          byMember: '@byMember',
+          userId: '@userId',
           sort: '@sort',
           limit: '@limit',
           page: '@page'

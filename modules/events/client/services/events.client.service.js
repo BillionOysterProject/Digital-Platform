@@ -18,6 +18,8 @@
       query: {
         method: 'GET',
         params: {
+          byRegistrants: '@byRegistrants',
+          userId: '@userId',
           category: '@category',
           searchString: '@searchString',
           startDate: '@startDate',
