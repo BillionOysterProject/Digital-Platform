@@ -22,6 +22,7 @@
         params: {
           byOwner: '@byOwner',
           byMember: '@byMember',
+          userId: '@userId',
           teamId: '@teamId',
           orgId: '@orgId',
           sort: '@sort',

@@ -6,44 +6,43 @@
     .controller('UserProfileController', UserProfileController);
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
-    'TeamMembersService', 'TeamsService', 'Admin', 'ExpeditionsService', 'SchoolOrganizationsService'];
+    'TeamMembersService', 'TeamsService', 'Admin', 'ExpeditionsService', 'UserLessonsListService',
+    'SchoolOrganizationsService', 'RestorationStationsService', 'EventsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
-    TeamMembersService, TeamsService, Admin, ExpeditionsService, SchoolOrganizationsService) {
+    TeamMembersService, TeamsService, Admin, ExpeditionsService, UserLessonsListService,
+    SchoolOrganizationsService, RestorationStationsService, EventsService) {
     $scope.checkRole = ExpeditionViewHelper.checkRole;
 
     $scope.findOrganization = function() {
-      if (!$scope.organization) {
-        if ($scope.user.schoolOrg) {
-          if ($scope.user.schoolOrg._id) {
-            $scope.organization = $scope.user.schoolOrg;
-          } else {
-            SchoolOrganizationsService.get({
-              schoolOrgId: $scope.user.schoolOrg
-            }, function(data) {
-              $scope.organization = data;
-            });
-          }
+      if ($scope.user.schoolOrg) {
+        if ($scope.user.schoolOrg._id) {
+          $scope.organization = $scope.user.schoolOrg;
+        } else {
+          SchoolOrganizationsService.get({
+            schoolOrgId: $scope.user.schoolOrg
+          }, function(data) {
+            $scope.organization = data;
+          });
         }
       }
     };
 
     $scope.findTeams = function(isTeamLead) {
-      if (!$scope.teams || $scope.teams.length === 0) {
-        var byOwner, byMember;
-        if ($scope.isTeamLead) {
-          byOwner = true;
-        } else {
-          byMember = true;
-        }
-
-        TeamsService.query({
-          byOwner: byOwner,
-          byMember: byMember
-        }, function(data) {
-          $scope.teams = data;
-        });
+      var byOwner, byMember;
+      if ($scope.isTeamLead) {
+        byOwner = true;
+      } else {
+        byMember = true;
       }
+
+      TeamsService.query({
+        byOwner: byOwner,
+        byMember: byMember,
+        userId: $scope.user._id
+      }, function(data) {
+        $scope.teams = data;
+      });
     };
 
     $scope.findUserRoles = function() {
@@ -54,18 +53,17 @@
       return roles.join(', ');
     };
 
-    $scope.checkUserPending = function() {
-      var teamLeadIndex = lodash.findIndex($scope.user.roles, function(o) {
-        return o === ('team lead pending' || 'team member pending');
-      });
-      return (teamLeadIndex > -1) ? true : false;
-    };
-
     $scope.checkViewedUserRole = function(role) {
       var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
         return o === (role);
       });
       return (roleIndex > -1) ? true : false;
+    };
+
+    $scope.checkUserPending = function() {
+      return $scope.user.pending ||
+        $scope.checkViewedUserRole('team lead pending') ||
+        $scope.checkViewedUserRole('team member pending');
     };
 
     $scope.sendReminder = function(teamName) {
@@ -100,8 +98,36 @@
       ExpeditionsService.query({
         byOwner: byOwner,
         byMember: byMember,
+        userId : $scope.user._id,
+        published: true
       }, function(data) {
         $scope.expeditions = data;
+      });
+    };
+
+    $scope.findRestorationStations = function() {
+      RestorationStationsService.query({
+        userId: $scope.user._id,
+        teamLead: true
+      }, function(data) {
+        $scope.stations = data;
+      });
+    };
+
+    $scope.findEvents = function() {
+      EventsService.query({
+        byRegistrants: true,
+        userId: $scope.user._id
+      }, function(data) {
+        $scope.events = data;
+      });
+    };
+
+    $scope.findLessonsTaught = function() {
+      UserLessonsListService.query({
+        userId: $scope.user._id
+      }, function(data) {
+        $scope.lessonsTaught = data;
       });
     };
 

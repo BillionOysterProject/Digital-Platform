@@ -15,30 +15,37 @@
                     <div class="col-md-4">
                         <h3>{{user.displayName}}</h3>
                         <h6>{{roles}}</h6>
-                        <p class="text-muted"><b>{{user.username}}</b><br/><a href="mailto:">{{user.email}}</a></p>
+                        <p class="text-muted"><b>{{user.username}}</b><br/><a href="mailto:{{user.email}}">{{user.email}}</a></p>
                     </div>
                     <div class="col-md-3">
                         <br/>
                         <h6>{{teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                         <h4 ng-repeat="team in teams">
-                            <a>{{team.name}}</a><br/>
-                            <small ng-show="user.displayName !== team.teamLead.displayName"><a>{{team.teamLead.displayName}}</a></small>
+                          <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
+                          <br/>
+                          <small ng-show="user.displayName !== team.teamLead.displayName">
+                            <a ui-sref="profiles.user-vew({ userId: team.teamLead._id })">{{team.teamLead.displayName}}</a>
+                          </small>
                         </h4>
                     </div>
                     <div class="col-md-3">
                         <br/>
                         <h6>Organization</h6>
-                        <h4><a>{{organization.name}}</a><br/><small>{{organization.city}}, {{organization.state}}</small></h4>
+                        <h4>
+                          <a ui-sref="profiles.organization-view({ schoolOrgId: organization._id })">
+                            {{organization.name}}
+                          </a>
+                          <br/><small>{{organization.city}}, {{organization.state}}</small></h4>
                     </div>
                 </div>
                 <hr/>
 
-                <nav class="nav nav-default text-right" ng-show="isAdmin">
-                    <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6><!-- ng-show="{{member.pending === true}}" -->
+                <nav class="nav nav-default text-right" ng-show="isCurrentUserAdmin">
+                    <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6>
                     <a class="btn btn-primary pull-left" ng-show="isUserPending && !reminderSent"
-                      ng-click="sendReminder()"><i class="fa fa-envelope"></i> Send reminder</a><!-- ng-show="{{member.pending === true}}" -->
+                      ng-click="sendReminder()"><i class="fa fa-envelope"></i> Send reminder</a>
                     <h6 class="green pull-left" ng-show="reminderSent">
-                      <i class="fa fa-check"></i> Reminder sent</h6><!-- ng-show="{{member.pending === true}}" -->
+                      <i class="fa fa-check"></i> Reminder sent</h6>
                     <a class="btn btn-default" ng-click="openUserForm()">Edit profile</a>
                     <a class="btn btn-danger" ng-click="openUserDelete()">Delete</a>
                     <hr/>
@@ -49,8 +56,8 @@
             <div class="modal-body">
               <div ng-show="isUserTeamMember">
                 <div class="row">
-                    <!--TODO: Change to only be published expeditions -->
-                    <div class="col-sm-6" ng-show="expeditions">
+                  <!-- this is only showing published expeditions -->
+                    <div class="col-sm-6" ng-show="expeditions && expeditions.length > 0">
                         <dl class="dl-horizontal">
                             <dt>Expeditions</dt>
                             <dd ng-repeat="expedition in expeditions">
@@ -77,50 +84,59 @@
             <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
             <div ng-show="isUserTeamLead">
               <div class="row">
-                  <!--TODO: Change to only be published expeditions -->
                   <div class="col-sm-6">
                       <dl class="dl-horizontal">
                           <dt>Expeditions</dt>
                           <dd ng-repeat="expedition in expeditions">
                             <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
-                              {{expedition.name}}</a></dd>
-                          <!--TODO: Show if not a part of any Expeditions
-                          <dd><em>none</em></dd>
-                          -->
+                              {{expedition.name}}</a>
+                          </dd>
+                          <dd ng-show="!expeditions || expeditions.length === 0">
+                            <em>none</em>
+                          </dd>
                       </dl>
                   </div>
 
-                  <!--TODO: Wire up to show ORS that the Profile has created -->
                   <div class="col-sm-6">
                       <dl class="dl-horizontal">
                           <dt>ORS</dt>
-                          <dd><a>ORS 1</a></dd>
-                          <dd><a>ORS 2</a></dd>
-                          <dd><a>ORS 3</a></dd>
+                          <dd ng-repeat="station in stations">
+                            <a ui-sref="restoration-stations.list()">
+                              {{station.name}}</a></dd>
+                          <dd ng-show="!stations || stations.length === 0">
+                            <em>none</em>
+                          </dd>
                       </dl>
                   </div>
               </div>
               <hr/>
               <div class="row">
-                  <!--TODO: Wire up to show events the Profile registered for, add <i>s if the Profile was marked as attended -->
                   <div class="col-sm-6">
                       <dl class="dl-horizontal">
                           <dt>Events <i class="fa fa-question-circle gray" title="A green check mark beside the event name shows that the user was marked in attendance"></i></dt>
-                          <dd><i class="fa fa-check green"></i> <a>Event 1</a></dd>
-                          <dd><a>Event 2</a></dd>
-                          <dd><a>Event 3</a></dd>
-                          <dd><em>none</em></dd><!--TODO: Show if none -->
+                          <dd ng-repeat="event in events">
+                            <!-- TODO: only show this if the user in the profile attended the event -->
+                            <i ng-show="false" class="fa fa-check green"></i>
+                            <a ui-sref="events.view({ eventId: event._id })">
+                              {{event.title}}</a>
+                          </dd>
+                          <dd ng-show="!events || events.length === 0">
+                            <em>none</em>
+                          </dd>
                       </dl>
                   </div>
 
-                  <!--TODO: Wire up to show lessons that the Profile has marked that they taught in the Lesson Taught form -->
+                  <!--Show lessons that the Profile has marked that they taught in the Lesson Taught form -->
                   <div class="col-sm-6">
                       <dl class="dl-horizontal">
                           <dt>Lessons Taught</dt>
-                          <dd><a>Lesson #1</a></dd>
-                          <dd><a>Lesson #2</a></dd>
-                          <dd><a>Lesson #3</a></dd>
-                          <dd><em>none</em></dd><!--TODO: Show if none -->
+                          <dd ng-repeat="lesson in lessonsTaught">
+                            <a ui-sref="lessons.view({ lessonId: lesson._id })">
+                              {{lesson.title}}</a>
+                          </dd>
+                          <dd ng-show="!lessonsTaught || lessonsTaught.length === 0">
+                            <em>none</em>
+                          </dd>
                       </dl>
                   </div>
 
@@ -139,9 +155,11 @@
                   </div>
                   -->
               </div>
+
+              <!-- commenting this section out until we have motivations
               <hr/>
               <div class="row">
-                  <!--TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin -->
+                  TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin
                   <div class="col-sm-12" ng-show="isAdmin">
                       <dl class="dl-horizontal">
                           <dt>Motivations</dt>
@@ -151,6 +169,7 @@
                       </dl>
                   </div>
               </div>
+            -->
             </div>
           </div>
 

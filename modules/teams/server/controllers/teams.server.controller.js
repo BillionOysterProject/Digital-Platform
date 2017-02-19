@@ -235,19 +235,20 @@ exports.deleteMember = function (req, res) {
 exports.list = function (req, res) {
   var searchQuery = function(teamLeadIds) {
     var query;
+    var userId = (req.query.userId ? req.query.userId : req.user);
     var and = [];
 
     if (req.query.byOwner) {
       and.push({
         $or: [
-          { 'teamLead': req.user },
-          { 'teamLeads': req.user }
+          { 'teamLead': userId },
+          { 'teamLeads': userId }
         ]
       });
     }
 
     if (req.query.byMember) {
-      and.push({ 'teamMembers': req.user });
+      and.push({ 'teamMembers': userId });
     }
     if (req.query.teamId) {
       and.push({ '_id': req.query.teamId });

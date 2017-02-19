@@ -20,14 +20,19 @@
             scope.$watch('user', function(newValue, oldValue) {
               scope.user = newValue;
               scope.roles = scope.findUserRoles();
-              scope.isAdmin = scope.checkRole('admin');
-              scope.isTeamLead = scope.checkRole('team lead') || scope.checkRole('team lead pending');
+              scope.isCurrentUserAdmin = scope.checkRole('admin');
+
+              scope.isAdmin = scope.checkViewedUserRole('admin');
+              scope.isTeamLead = scope.checkViewedUserRole('team lead') || scope.checkViewedUserRole('team lead pending');
               scope.isUserPending = scope.checkUserPending();
               scope.isUserTeamMember = scope.checkViewedUserRole('team member');
               scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
               scope.findExpeditions();
               scope.findOrganization();
               scope.findTeams();
+              scope.findRestorationStations();
+              scope.findEvents();
+              scope.findLessonsTaught();
             });
           });
         }
