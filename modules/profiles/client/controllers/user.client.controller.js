@@ -123,6 +123,23 @@
       });
     };
 
+    $scope.didProfileUserAttendEvent = function(event) {
+      if(!event || !event.registrants || event.registrants.length === 0 ||
+      !$scope.user || !$scope.user._id) {
+        return false;
+      }
+      for(var i = 0; i < event.registrants.length; i++) {
+        if(event.registrants[i].user &&
+          event.registrants[i].user._id === $scope.user._id) {
+          if(event.registrants[i].attended) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    };
+
     $scope.findLessonsTaught = function() {
       UserLessonsListService.query({
         userId: $scope.user._id
