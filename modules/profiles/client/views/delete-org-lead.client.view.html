@@ -16,6 +16,9 @@
                     uib-typeahead="orgLead as orgLead.displayName for orgLead in organization.orgLeads | filter:{displayName:$viewValue}"
                     class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
                 </div>
+                <div ng-show="error" class="alert alert-danger">
+                  <p ng-bind="error"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" ng-click="close()">Cancel</a>

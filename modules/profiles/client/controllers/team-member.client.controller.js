@@ -45,22 +45,23 @@
       }
     };
 
-    $scope.remove = function() {
-      console.log('remove');
-      $http.delete('api/users/leaders/' + $scope.teamMember._id, {
-        user: $scope.teamMember,
-        team: $scope.team,
-        organization: $scope.organization,
-        teamOrOrg: 'team',
-        role: 'team member pending'
-      })
-      .successCallback(function(data, status, headers, config) {
-        $scope.closeFunction(true);
-      })
-      .errorCallback(function(data, status, headers, config) {
-        $scope.error = data.message;
-      });
-    };
+    //i don't think this is getting called?? and if so should members be
+    //getting removed from the /leaders service?
+    // $scope.remove = function() {
+    //   $http.delete('api/users/leaders/' + $scope.teamMember._id, {
+    //     user: $scope.teamMember,
+    //     team: $scope.team,
+    //     organization: $scope.organization,
+    //     teamOrOrg: 'team',
+    //     role: 'team member pending'
+    //   })
+    //   .successCallback(function(data, status, headers, config) {
+    //     $scope.closeFunction(true);
+    //   })
+    //   .errorCallback(function(data, status, headers, config) {
+    //     $scope.error = data.message;
+    //   });
+    // };
 
     function successCallback(data, status, headers, config) {
       $scope.closeFunction(true);

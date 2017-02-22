@@ -8,7 +8,7 @@
   TeamLeadInviteController.$inject = ['$scope', '$http', 'TeamLeadBySchoolOrgsService'];
 
   function TeamLeadInviteController($scope, $http, TeamLeadBySchoolOrgsService) {
-    $scope.error = [];
+    $scope.error = null;
 
     $scope.existingTeamLead = '';
     $scope.newTeamLead = {};
@@ -40,7 +40,7 @@
         $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {
-        $scope.error = data;
+        $scope.error = data.message;
       });
     };
 

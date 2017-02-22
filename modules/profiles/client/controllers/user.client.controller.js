@@ -182,7 +182,7 @@
     };
 
     $scope.openUserForm = function() {
-      if ($scope.isAdmin) {
+      if ($scope.isAdmin || $scope.isUserTeamLead) {
         $scope.openAdminTeamLeadForm();
       } else {
         $scope.openFormTeamMember();

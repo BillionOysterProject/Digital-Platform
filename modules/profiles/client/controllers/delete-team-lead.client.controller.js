@@ -8,25 +8,20 @@
   TeamLeadDeleteController.$inject = ['$scope', '$http', 'TeamLeadBySchoolOrgsService'];
 
   function TeamLeadDeleteController($scope, $http, TeamLeadBySchoolOrgsService) {
-    $scope.error = [];
+    $scope.error = null;
 
     $scope.teamLead = '';
 
     $scope.delete = function() {
-      $http.delete('api/users/leaders/' + $scope.teamLead._id, {
-        user: $scope.teamLead,
-        role: 'team lead',
-        team: $scope.team,
-        organization: $scope.organization,
-        teamOrOrg: 'team'
-      })
+      $http.delete('api/users/leaders/' + $scope.teamLead._id + '/team/' + $scope.team._id,
+      {})
       .success(function(data, status, headers, config) {
         $scope.teamLead = '';
-
+        $scope.error = null;
         $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {
-        $scope.error = data;
+        $scope.error = data.message;
       });
     };
 

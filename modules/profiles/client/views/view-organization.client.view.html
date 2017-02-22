@@ -49,12 +49,11 @@
         </nav>
         <hr/>
 
-        <!-- TODO: Add back when there is a way to request to be an org lead
         <div class="alert alert-success" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) &&
           leadRequests && leadRequests.length > 0" role="alert">
             You have <b>{{leadRequests.length}}</b> new org lead requests.
-            <a class="btn btn-sm btn-default" ng-click="openApproveOrgLeads()">Respond</a>
-        </div> -->
+            <a class="btn btn-sm btn-default" ng-click="vm.openApproveOrgLeads()">Respond</a>
+        </div>
 
         <div class="alert alert-info text-center" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && vm.teams.length === 0 && vm.filter.searchString === ''">
             No teams yet! Why don't you <a href="#" ng-click="vm.openFormTeam()">add some</a>?
