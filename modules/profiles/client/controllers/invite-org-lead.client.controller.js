@@ -8,7 +8,7 @@
   OrganizationLeadInviteController.$inject = ['$scope', '$http', 'TeamLeadBySchoolOrgsService'];
 
   function OrganizationLeadInviteController($scope, $http, TeamLeadBySchoolOrgsService) {
-    $scope.error = [];
+    $scope.error = null;
 
     $scope.existingTeamLead = '';
     $scope.newTeamLead = {};
@@ -30,7 +30,7 @@
         user: user,
         organization: $scope.organization,
         teamOrOrg: 'organization',
-        role: 'team lead pending' //TODO: change when new 'org lead pending' role exists
+        role: 'org lead pending'
       })
       .success(function(data, status, headers, config) {
         $scope.existingTeamLead = '';
@@ -39,7 +39,7 @@
         $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {
-        $scope.error = data;
+        $scope.error = data.message;
       });
     };
 

@@ -34,6 +34,9 @@
                     <input type="text" class="form-control" id="email" name="email" ng-model="newTeamLead.email"
                       ng-disabled="existingTeamLead"></input>
                 </div>
+                <div ng-show="error" class="alert alert-danger">
+                  <p ng-bind="error"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" ng-click="close()">Cancel</a>

@@ -4,7 +4,9 @@
  * Module dependencies
  */
 var adminPolicy = require('../policies/admin.server.policy'),
-  admin = require('../controllers/admin.server.controller');
+  admin = require('../controllers/admin.server.controller'),
+  teams = require('../../../teams/server/controllers/teams.server.controller'),
+  schoolOrgs = require('../../../school-orgs/server/controllers/school-orgs.server.controller');
 
 module.exports = function (app) {
   // User route registration first. Ref: #713
@@ -39,8 +41,13 @@ module.exports = function (app) {
     .post(adminPolicy.isAllowed, admin.remindInvitee);
 
   app.route('/api/users/leaders/:userId')
-    .put(adminPolicy.isAllowed, admin.updateUser)
-    .delete(adminPolicy.isAllowed, admin.deleteUser);
+    .put(adminPolicy.isAllowed, admin.updateUser);
+
+  app.route('/api/users/leaders/:userId/organization/:orgId')
+    .delete(adminPolicy.isAllowed, admin.deleteOrgLead);
+
+  app.route('/api/users/leaders/:userId/team/:teamId')
+    .delete(adminPolicy.isAllowed, admin.deleteTeamLead);
 
   // csv collection routes
   app.route('/api/users/leaders/csv')
@@ -52,4 +59,6 @@ module.exports = function (app) {
 
   // Finish by binding the user middleware
   app.param('userId', admin.userByID);
+  app.param('orgId', schoolOrgs.schoolOrgByID);
+  app.param('teamId', teams.teamByID);
 };

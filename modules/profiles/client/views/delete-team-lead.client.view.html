@@ -15,6 +15,9 @@
                     uib-typeahead="teamLead as teamLead.displayName for teamLead in team.teamLeads | filter:{displayName:$viewValue}"
                     class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
                 </div>
+                <div ng-show="error" class="alert alert-danger">
+                  <p ng-bind="error"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" ng-click="close()">Cancel</a>

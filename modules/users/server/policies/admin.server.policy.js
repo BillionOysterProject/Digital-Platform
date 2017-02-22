@@ -35,6 +35,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users/leaders',
       permissions: '*'
     }, {
+      resources: '/api/users/leaders/:userId/organization/:orgId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/team/:teamId',
+      permissions: '*'
+    }, {
       resources: '/api/users/leaders/:userId/remind',
       permissions: '*'
     }, {
@@ -51,6 +57,30 @@ exports.invokeRolesPolicies = function () {
     roles: ['team lead'],
     allows: [{
       resources: '/api/users/leaders',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/team/:teamId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/remind',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/csv',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/validate/csv',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['org lead'],
+    allows: [{
+      resources: '/api/users/leaders',
+      permissions: '*'
+    }, {
+      resources: '/api/users/leaders/:userId/organization/:orgId',
       permissions: '*'
     }, {
       resources: '/api/users/leaders/:userId/remind',

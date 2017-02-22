@@ -17,7 +17,7 @@
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function() {
             scope.teamLead = '';
-
+            scope.error = null;
             scope.form.deleteTeamLead.$setPristine();
           });
           scope.$watch('team', function(newValue, oldValue) {

@@ -16,7 +16,7 @@
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function() {
             scope.orgLead = '';
-
+            scope.error = null;
             scope.form.deleteOrgLead.$setPristine();
           });
           scope.$watch('organization', function(newValue, oldValue) {

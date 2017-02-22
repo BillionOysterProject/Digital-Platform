@@ -790,80 +790,48 @@ exports.remindInvitee = function (req, res) {
   }
 };
 
-exports.deleteUser = function (req, res) {
+exports.deleteTeamLead = function (req, res) {
   var user = req.model;
-  var teamOrOrg = req.body.teamOrOrg;
-  var role = req.body.role;
+  var team = req.team;
 
-  var getTeamIdsLeads = function(callback) {
-    Team.find({ $or: [{ 'teamLead': user },{ 'teamLeads': user }] }).exec(function(err, teams) {
-      callback(teams);
+  if(team.teamLeads !== null && team.teamLeads !== undefined &&
+    team.teamLeads.length === 1) {
+    return res.status(400).send({
+      message: 'There are no other team leads for ' + team.name + '.' +
+        ' Please assign an additional team lead before deleting ' + user.username
     });
-  };
+  }
 
-  var getTeamIdsMembers = function(callback) {
-    Team.find({ 'teamMembers': user }).exec(function(err, teams) {
-      callback(teams);
-    });
-  };
-
-  var getOrgIdsLeads = function(callback) {
-    SchoolOrg.find({ 'orgLeads': user }).exec(function(err, orgs) {
-      callback(orgs);
-    });
-  };
-
-  var removeFromTeamList = function(teams, index, role, callback) {
-    if (index < teams.length) {
-      var team = teams[index];
-      removeFromTeamOrOrg(user, team, req.body.organization, role, 'team',
-        function(team, schoolOrg) {
-          removeFromTeamList(teams, index+1, role, callback);
-        }, function(errorMessage) {
-          removeFromTeamList(teams, index+1, role, callback);
-        });
-    } else {
-      callback();
-    }
-  };
-
-  var removeFromOrgList = function(orgs, index, role, callback) {
-    if (index < orgs.length) {
-      var org = orgs[index];
-      removeFromTeamOrOrg(user, req.body.team, org, role, 'organization',
-        function(team, schoolOrg) {
-          removeFromOrgList(orgs, index+1, role, callback);
-        }, function(errorMessage) {
-          removeFromOrgList(orgs, index+1, role, callback);
-        });
-    } else {
-      callback();
-    }
-  };
-
-  var removeUserFromOrgsTeams = function(callback) {
-    getTeamIdsMembers(function(teams) {
-      removeFromTeamList(teams, 0, 'team member', function() {
-        getTeamIdsLeads(function(teams) {
-          removeFromTeamList(teams, 0, 'team lead', function() {
-            getOrgIdsLeads(function(orgs) {
-              removeFromOrgList(orgs, 0, 'team lead', function() {
-                user.remove(function (err) {
-                  if (err) {
-                    return res.status(400).send({
-                      message: errorHandler.getErrorMessage(err)
-                    });
-                  }
-
-                  res.json(user);
-                });
-              });
-            });
-          });
-        });
+  removeFromTeamOrOrg(user, team, null, 'team lead', 'team',
+    function(team, schoolOrg) {
+      res.json(team);
+    }, function(err) {
+      return res.status(400).send({
+        message: 'Error removing team lead: ' + errorHandler.getErrorMessage(err)
       });
     });
-  };
+};
+
+exports.deleteOrgLead = function (req, res) {
+  var user = req.model;
+  var org = req.org;
+
+  if(org.orgLeads !== null && org.orgLeads !== undefined &&
+    org.orgLeads.length === 1) {
+    return res.status(400).send({
+      message: 'There are no other org leads for ' + org.name + '.' +
+        ' Please assign an additional org lead before deleting ' + user.username
+    });
+  }
+
+  removeFromTeamOrOrg(user, null, org, 'org lead', 'organization',
+    function(team, schoolOrg) {
+      res.json(schoolOrg);
+    }, function(err) {
+      return res.status(400).send({
+        message: 'Error removing org lead: ' + errorHandler.getErrorMessage(err)
+      });
+    });
 };
 
 exports.downloadMemberBulkFile = function(req, res) {
