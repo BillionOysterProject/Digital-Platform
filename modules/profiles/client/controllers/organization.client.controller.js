@@ -76,7 +76,6 @@
           full: true
         }, function(data) {
           vm.organization = (data) ? data : new SchoolOrganizationsService();
-          console.log('org', data);
           vm.orgPhotoUrl = (vm.organization && vm.organization.photo && vm.organization.photo.path) ?
             vm.organization.photo.path : '';
           findTeams();
@@ -122,6 +121,7 @@
 
     vm.closeInviteOrgLead = function() {
       angular.element('#modal-org-lead-invite').modal('hide');
+      if (refresh) findOrganization();
     };
 
     vm.openDeleteOrgLead = function() {

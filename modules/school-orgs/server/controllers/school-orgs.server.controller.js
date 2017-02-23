@@ -136,7 +136,7 @@ exports.approve = function (req, res) {
         message: 'Error approving organization. Creator is null.'
       });
     }
-    
+
     schoolOrg.pending = false;
 
     schoolOrg.save(function(err) {
@@ -503,7 +503,7 @@ exports.schoolOrgByID = function (req, res, next, id) {
   }
 
   SchoolOrg.findById(id).populate('creator', 'firstName displayName email')
-  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL pending')
+  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
   .exec(function (err, schoolOrg) {
     if (err) {
       return next(err);
