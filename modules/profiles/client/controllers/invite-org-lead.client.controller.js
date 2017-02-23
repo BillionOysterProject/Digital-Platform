@@ -30,12 +30,12 @@
         user: user,
         organization: $scope.organization,
         teamOrOrg: 'organization',
-        role: 'org lead pending'
+        role: (user._id !== null && user._id !== undefined) ? 'org lead' : 'org lead pending'
       })
       .success(function(data, status, headers, config) {
         $scope.existingTeamLead = '';
         $scope.newTeamLead = {};
-
+        $scope.error = null;
         $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {

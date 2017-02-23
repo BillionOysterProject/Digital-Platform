@@ -17,7 +17,7 @@
           element.bind('show.bs.modal', function() {
             scope.existingTeamLead = '';
             scope.newTeamLead = {};
-
+            scope.error = null;
             scope.form.inviteOrgLead.$setPristine();
           });
           scope.$watch('organization', function(newValue, oldValue) {

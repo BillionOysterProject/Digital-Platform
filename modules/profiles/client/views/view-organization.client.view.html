@@ -45,7 +45,7 @@
             <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openFormOrg()">Edit organization profile</a>
             <a class="btn btn-default" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openInviteOrgLead()">Invite leads</a>
             <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-show="vm.organization.isCurrentUserOrgLead || vm.isAdmin" ng-click="vm.openDeleteForm()">Delete organization</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin" ng-click="vm.openDeleteForm()">Delete organization</a>
         </nav>
         <hr/>
 

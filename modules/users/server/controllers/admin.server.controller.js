@@ -447,7 +447,27 @@ var createUserInternal = function(userJSON, schoolOrg, role, successCallback, er
     if (userErr) {
       errorCallback(errorHandler.getErrorMessage(userErr));
     } else if (user) {
-      successCallback(user);
+      //if the user doesn't have the role specified, add it
+      var roleIndex = function(user, role) {
+        var index = _.findIndex(user.roles, function(r) {
+          return r.toString() === role.toString();
+        });
+        return index;
+      };
+
+      if(roleIndex(user, role) >= 0) {
+        successCallback(user);
+      } else {
+        //the user doesn't have the role - add it
+        user.roles.push(role);
+        user.save(function (err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(user);
+          }
+        });
+      }
     } else {
       crypto.randomBytes(20, function (err, buffer) {
         var token = buffer.toString('hex');
@@ -814,17 +834,17 @@ exports.deleteTeamLead = function (req, res) {
 
 exports.deleteOrgLead = function (req, res) {
   var user = req.model;
-  var org = req.org;
+  var schoolOrg = req.schoolOrg;
 
-  if(org.orgLeads !== null && org.orgLeads !== undefined &&
-    org.orgLeads.length === 1) {
+  if(schoolOrg.orgLeads !== null && schoolOrg.orgLeads !== undefined &&
+    schoolOrg.orgLeads.length === 1) {
     return res.status(400).send({
-      message: 'There are no other org leads for ' + org.name + '.' +
+      message: 'There are no other org leads for ' + schoolOrg.name + '.' +
         ' Please assign an additional org lead before deleting ' + user.username
     });
   }
 
-  removeFromTeamOrOrg(user, null, org, 'org lead', 'organization',
+  removeFromTeamOrOrg(user, null, schoolOrg, 'org lead', 'organization',
     function(team, schoolOrg) {
       res.json(schoolOrg);
     }, function(err) {
