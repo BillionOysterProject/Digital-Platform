@@ -33,7 +33,7 @@ exports.invokeRolesPolicies = function () {
       permissions: 'get'
     }]
   }, {
-    roles: ['admin'],
+    roles: ['admin', 'org lead'],
     allows: [{
       resources: '/api/school-orgs/:schoolOrgId/teams',
       permissions: '*'
@@ -60,7 +60,7 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['team lead'],
+    roles: ['team lead', 'org lead'],
     allows: [{
       resources: '/api/school-orgs/:schoolOrgId/teams',
       permissions: 'get'
