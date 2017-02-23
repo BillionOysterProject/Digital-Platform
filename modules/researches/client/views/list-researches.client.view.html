@@ -26,26 +26,43 @@
         <div class="alert alert-info text-center" ng-show="vm.lessons.length === 0 && vm.filter.searchString !== '' && !vm.error">
             Sorry, no results found for that search term
         </div>
+        <!--Uncomment when page is wired up:
         <div class="alert alert-info text-center" ng-if="vm.researches.$resolved && !vm.researches.length" view-permissions="admin,team lead,team member">
             No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
-        </div>
+        </div>-->
         
         <div class="row" isotope-container="isotope-container" id="research-list-isotope-container" images-loaded>
-            <div ng-repeat="research in vm.researches track by research._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+            
+            <!--Just for mockups-->
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" ng-show="research.user">{{research.user.displayName}}</h3>
-                    </div>
                     <div class="panel-body">
-                        <small ng-bind="research.created | date:'mediumDate'"></small>
-                        <h4>{{research.name}}</h4>
-                        <p ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
-                        <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
                     </div>
                     <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> jsmith
+                        <br/><small>Oyster Team,  Fearless Org</small>
                     </div>
                 </div>
             </div>
+            
+            <!--Delete static panel above and wire up below:
+            <div ng-repeat="research in vm.researches track by research._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p ng-bind="research.created | date:'mediumDate'"></p>
+                        <h4>{{research.name}}</h4>
+                        <small ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> {{research.user.displayName}}
+                        <br/><small>Oyster Team,  Fearless Org</small>
+                    </div>
+                </div>
+            </div>
+            -->
         </div>
     </section>
 </section>

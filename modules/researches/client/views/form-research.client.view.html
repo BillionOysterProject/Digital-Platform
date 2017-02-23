@@ -20,46 +20,56 @@
 
           <div class="panel panel-default">
             <div class="panel-body">
-              <label>Select a layout</label>
               <div class="row">
-                <div class="col-md-2">
-                  <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 
-                    <img class="img-thumbnail" alt="Layout 1" src="modules/core/client/img/icons/poster-layout1.png" />
-                    Layout 1
-                  </label>
-                </div>
-                <div class="col-md-2">
-                  <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 
-                    <img class="img-thumbnail" alt="Layout 2" src="modules/core/client/img/icons/poster-layout2.png" />
-                    Layout 2
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group" show-errors>
-                    <label for="researchTitle" class="control-label required">Poster Title *</label>
-                    <input class="form-control" name="researchTitle" id="researchTitle" ng-model="vm.researchForm.title"
-                    required/>
-                    <div ng-messages="vm.form.researchForm.researchFormTitle.$error" role="alert">
-                      <p class="help-block error-text" ng-message="required">Poster title is required.</p>
+                <div class="col-md-6">
+                  <label>Layout *</label>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 
+                        <img class="img-thumbnail" alt="Layout 1" src="modules/core/client/img/icons/poster-layout1.png" />
+                        Layout 1
+                      </label>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <img class="img-thumbnail" alt="Layout 2" src="modules/core/client/img/icons/poster-layout2.png" />
+                        Layout 2
+                      </label>
                     </div>
                   </div>
                 </div>
-                <!--<div class="col-md-4">
+
+                <div class="col-md-6">
                   <div class="form-group" show-errors>
-                    <label for="image" class="control-label">Featured Image</label>
-                    <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
-                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
+                    <label for="researchTitle" class="control-label required">Title *</label>
+                    <input class="form-control" name="researchTitle" id="researchTitle" ng-model="vm.researchForm.title"
+                    required/>
+                    <div ng-messages="vm.form.researchForm.researchFormTitle.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Title is required.</p>
+                    </div>
                   </div>
-                </div>-->
+                  <div class="form-group" show-errors>
+                    <label for="color" class="control-label required">Color *</label>
+                    <input colorpicker colorpicker-size="200" type="text" class="form-control"
+                    placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
+                    <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
+                        <p class="help-block error-text" ng-message="required">Color is required.</p>
+                    </div>
+                  </div>
+                  <div class="form-group" show-errors>
+                    <label for="font" class="control-label required">Font *</label>
+                    <select class="form-control" required>
+                      <option></option>
+                      <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
+                    </select>
+                    <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
+                        <p class="help-block error-text" ng-message="required">Color is required.</p>
+                    </div>
+                  </div>
+                </div>
+              
               </div>
             </div>
           </div>

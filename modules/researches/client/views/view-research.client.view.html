@@ -1,4 +1,4 @@
-<section>
+<!--<section>
   <div class="page-header">
     <h1 ng-bind="vm.research.name"></h1>
   </div>
@@ -24,6 +24,47 @@
   </small>
   <p class="lead" ng-bind="vm.research.content"></p>
 </section>
+-->
+
+
+
+
+<section ng-cloak>
+    <section class="content shaded content-unpadded content-fixed">
+        <section class="container-fluid">
+            <div class="row">
+                <nav class="navbar">
+                    <a href="#" ui-sref="expeditions.view({ expeditionId: vm.expedition._id })"><h6 class="navbar-text blue">Poster Title</h6></a>
+                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> username</h6>
+                    <h6 class="navbar-text">September 2, 2016</h6>
+                    <div class="pull-right">
+                        <!--Only show if author:
+                        <h6 class="navbar-text" ng-show="vm.checkAllStatus('published')">Published</h6>
+                        -->
+                        <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
+                        <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
+                        <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>
+                        <!--Only show if author:
+                        <a class="btn btn-primary">Edit</a>
+                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-view-feedback">View Feedback</a>
+                        -->
+                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-feedback">Give Feedback</a>
+                        <a class="btn btn-default">Save as PDF</a>
+                    </div>
+                </nav>
+            </div>
+        </section>
+    </section>
+    <section class="content">
+        <section class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <img class="img-responsive" alt="Layout 1" src="modules/core/client/img/icons/poster-layout1.png" />
+                </div>
+            </div>
+        </section>
+    </section>
+</section>
 
 
 
@@ -33,10 +74,7 @@
 
 
 
-
-
-
-<div class="modal fade" id="modal-lesson-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
+<div class="modal fade" id="modal-research-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-feedback">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" ng-hide="sent">
       <div class="modal-header">
@@ -49,7 +87,7 @@
         <div class="modal-body">
           <h4 class="blue">Rate the following using 1-5 stars.</h4>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label for="researchAbstract" class="control-label required">Poster Abstract *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
@@ -58,16 +96,18 @@
                     <label for="researchIntro" class="control-label required">Poster Intro *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.researchIntro" number="5"></raty-fa></h4>
                 </div>
+            </div>
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label for="researchMethods" class="control-label required">Poster Methods *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchMethods" score="feedback.researchMethods" number="5"></raty-fa></h4>
                 </div>
-            </div>
-            <div class="col-sm-6">
                 <div class="form-group">
                     <label for="researchResults" class="control-label required">Poster Results *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.researchResults" number="5"></raty-fa></h4>
                 </div>
+            </div>
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label for="researchDiscussion" class="control-label required">Poster Discussion *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.researchDiscussion" number="5"></raty-fa></h4>
@@ -77,18 +117,15 @@
                     <h4 class="blue"><raty-fa id="starResearchConclusion" score="feedback.researchConclusion" number="5"></raty-fa></h4>
                 </div>
             </div>
-        </div>
-        <hr/>
-        <h4 class="blue">Tell us all about it.</h4>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="howLessonTaught" class="control-label">Describe what you did and what your students did in this lesson. Did you modify or
-                    adapt this lesson? Give specific examples of what you and your students did in the lesson. *</label>
+          </div>
+          <div class="row">
+          	<div class="col-sm-12">
+                <hr/><h4 class="blue">General comments</h4>
+              	<div class="form-group">
                   <textarea class="form-control"></textarea>
                 </div>
             </div>
-        </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
@@ -113,7 +150,7 @@
 
 
 
-<div class="modal fade" id="modal-lesson-view-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-feedback">
+<div class="modal fade" id="modal-research-view-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-view-feedback">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" ng-hide="sent">
       <div class="modal-header">

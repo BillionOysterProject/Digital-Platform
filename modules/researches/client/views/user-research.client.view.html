@@ -1,26 +1,29 @@
-<section>
-  <div class="page-header">
-    <h1 ng-bind="vm.research.name"></h1>
-  </div>
-  <div class="pull-right"
-       ng-show="vm.research.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       ui-sref="researches.edit({ researchId: vm.research._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.research.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.research.user"
-            ng-bind="vm.research.user.displayName"></span>
-      <span ng-if="!vm.research.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.research.content"></p>
+<div class="jumbotron text-center">
+  <section class="content">
+    <section class="container-fluid">
+      <h2>My Collection</h2>
+    </section>
+  </section>
+</div>
+<section class="content">
+  <section class="container-fluid">
+    <div>
+      <a class="btn btn-default pull-right" ui-sref="researches.create">
+        <i class="glyphicon glyphicon-plus"></i> Create new poster
+      </a>
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ng-class="{active: vm.createdResearches.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Posters</a></li>
+        <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Posters</a></li>
+      </ul>
+      <div class="tab-content">
+        <br />
+        <div role="tabpanel" class="tab-pane" id="created" ng-class="{active: vm.createdResearches.length > 0}">
+          <!--<created-researches ng-show="vm.active === 'created' || !vm.active"></created-researches>-->
+        </div>
+        <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin">
+          <!--<submitted-researches ng-show="vm.active === 'submitted'"></submitted-researches>-->
+        </div>
+      </div>
+    </div>
+  </section>
 </section>
