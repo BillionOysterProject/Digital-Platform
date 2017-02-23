@@ -85,10 +85,13 @@ body {
     box-shadow: none;
 }
 
-    .navbar-default a.icon {
+    .navbar-default .icon {
         font-size: 20px;
         padding: 0 5px;
         line-height: 50px;
+    }
+    
+    .navbar-default a.icon {
         color: #ccc !important;
     }
 
@@ -1087,3 +1090,33 @@ form.ng-submitted .ng-invalid {
     font-size: 3em;
     line-height: 1;
 }
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+          LOADING OVERLAY
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+.loading-dialog {
+    display: none;
+    position: fixed;
+    z-index: 1020;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,.5);
+}
+
+    .loading-dialog i {
+        margin-top: 300px;
+        margin-left: 80px;
+    }
+*/
+
+li.loading-dialog {
+    margin-right: 30px;
+}
+
