@@ -119,7 +119,7 @@
       angular.element('#modal-org-lead-invite').modal('show');
     };
 
-    vm.closeInviteOrgLead = function() {
+    vm.closeInviteOrgLead = function(refresh) {
       angular.element('#modal-org-lead-invite').modal('hide');
       if (refresh) findOrganization();
     };

@@ -111,7 +111,7 @@
                   <tr ng-repeat="teamItem in metrics.largestTeams | orderBy: '-teamMemberCount' | limitTo:5">
                       <td><b>{{teamItem.name}}</b></td>
                       <td><p class="text-muted"><b class="red">{{teamItem.teamMemberCount}}</b> team members</p></td>
-                      <td>{{teamItem.teamLead.displayName}}</td>
+                      <td><span ng-repeat="teamLeadItem in teamItem.teamLeads">{{teamLeadItem.displayName}}{{$last ? '' : ', '}}</span></td>
                       <td>{{teamItem.schoolOrg.name}}</td>
                   </tr>
               </table>
