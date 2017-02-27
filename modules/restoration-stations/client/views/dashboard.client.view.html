@@ -16,7 +16,11 @@
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
-                        <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                        <span class="text-muted">
+                          <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                            {{vm.team.schoolOrg.name}}
+                          </a>
+                        </span>
                     </p>
                 </div>
             </div>

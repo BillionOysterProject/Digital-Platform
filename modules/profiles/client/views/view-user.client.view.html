@@ -1,5 +1,4 @@
 <div class="modal fade" id="modal-profile-user" tabindex="-1" role="dialog">
-    <!--TODO: Finish wiring up view, about half done -->
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,9 +22,12 @@
                         <h4 ng-repeat="team in teams">
                           <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
                           <br/>
-                          <small ng-show="user.displayName !== team.teamLead.displayName">
-                            <a ui-sref="profiles.user-vew({ userId: team.teamLead._id })">{{team.teamLead.displayName}}</a>
-                          </small>
+                          <div ng-repeat="teamLead in team.teamLeads">
+                            <small ng-show="user._id !== teamLead._id">
+                              <!-- the ui-sref here wasn't working -->
+                              {{teamLead.displayName}}
+                            </small>
+                          </div>
                         </h4>
                     </div>
                     <div class="col-md-3">
