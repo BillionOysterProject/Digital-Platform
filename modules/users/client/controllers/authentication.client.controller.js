@@ -43,7 +43,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
         } else {
           // And redirect to the previous or home page
           var toGoState = $state.previous.state.name;
-          if(toGoState === undefined || toGoState === null || toGoState === 'home') {
+          if(!toGoState || toGoState === 'home') {
             toGoState = 'restoration-stations.dashboard';
           }
           $state.go(toGoState, $state.previous.params);
