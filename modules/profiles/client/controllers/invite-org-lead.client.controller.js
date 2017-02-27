@@ -26,7 +26,7 @@
 
     $scope.send = function() {
       $scope.error = null;
-      
+
       //it's too easy for the user to just type in a string (or for chrome to autofill a string and hide the typeahead list with its own saved usernames)
       if($scope.existingTeamLead && !$scope.existingTeamLead._id) {
         $scope.error = 'Please make sure you select an existing team lead from the list that appears as you begin to type their name.';

@@ -79,7 +79,7 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
         console.log('err', err);
         errorCallback(err.message);
       } else {
-        console.log('info', info);
+        //console.log('info', info);
         successCallback(info);
       }
     });

@@ -24,6 +24,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams',
       permissions: '*'
     }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: '*'
+    }, {
       resources: '/api/teams/:teamId/upload-image',
       permissions: '*'
     }, {
@@ -42,6 +45,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams',
       permissions: ['get']
     }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: ['get']
+    }, {
       resources: '/api/teams/:teamId',
       permissions: ['get']
     }]
@@ -52,6 +58,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/teams',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/members/:memberId',
       permissions: ['get']
     }, {
       resources: '/api/teams/:teamId',

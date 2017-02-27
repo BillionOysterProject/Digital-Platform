@@ -563,7 +563,14 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
           return index;
         };
 
-        if(memberIndex(user, team) >= 0) {
+        var leadIndex = function(lead, team) {
+          var index = _.findIndex(team.teamLeads, function(l) {
+            return l.toString() === lead._id.toString();
+          });
+          return index;
+        };
+
+        if(memberIndex(user, team) >= 0 || leadIndex(user, team) >= 0) {
           errorCallback('The user ' + user.username + ' already exists in the team ' + team.name);
         } else {
           if (role === 'team member pending') {
@@ -581,19 +588,29 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
       }
     });
   } else if (teamOrOrg === 'organization') {
-    role = 'team lead pending';
     var schoolOrgId = (schoolOrg && schoolOrg._id) ? schoolOrg._id : schoolOrg;
     SchoolOrg.findById(schoolOrgId).exec(function(err, schoolOrg) {
       if (err) {
         errorCallback(err);
       } else {
-        schoolOrg.orgLeads.push(user);
-        schoolOrg.save(function(err) {
-          if (err) {
-            errorCallback(err);
-          }
-          successCallback(null, schoolOrg);
-        });
+        var leadIndex = function(user, org) {
+          var index = _.findIndex(org.orgLeads, function(l) {
+            return l.toString() === user._id.toString();
+          });
+          return index;
+        };
+
+        if(leadIndex(user, schoolOrg) >= 0) {
+          errorCallback('The user ' + user.username + ' already exists in the organization ' + schoolOrg.name);
+        } else {
+          schoolOrg.orgLeads.push(user);
+          schoolOrg.save(function(err) {
+            if (err) {
+              errorCallback(err);
+            }
+            successCallback(null, schoolOrg);
+          });
+        }
       }
     });
   }
