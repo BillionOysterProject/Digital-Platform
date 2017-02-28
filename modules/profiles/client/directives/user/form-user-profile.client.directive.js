@@ -3,18 +3,17 @@
 
   angular
     .module('profiles')
-    .directive('approveTeamMembersModal', function() {
+    .directive('formUserProfileModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/approve-team-members.client.view.html',
+        templateUrl: 'modules/profiles/client/views/user/form-user-profile.client.view.html',
         scope: {
-          teamRequests: '=',
-          teams: '=',
           closeFunction: '='
         },
         replace: true,
-        controller: 'TeamApprovalController',
+        controller: 'UserFormController',
         link: function(scope, element, attrs) {
+
         }
       };
     });

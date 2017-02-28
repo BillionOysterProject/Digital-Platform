@@ -7,7 +7,7 @@
     function($http, $filter) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/view-admin-team.client.view.html',
+        templateUrl: 'modules/profiles/client/views/team/view-admin-team.client.view.html',
         scope: {
           team: '=',
           deleteTeamFunction: '=',

@@ -3,30 +3,24 @@
 
   angular
     .module('profiles')
-    .directive('inviteTeamLeadModal', function() {
+    .directive('formOrgProfileModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/invite-team-lead.client.view.html',
+        templateUrl: 'modules/profiles/client/views/organization/form-org-profile.client.view.html',
         scope: {
-          team: '=',
           organization: '=',
           closeFunction: '='
         },
         replace: true,
-        controller: 'TeamLeadInviteController',
+        controller: 'SchoolOrganizationFormController',
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function() {
-            scope.existingTeamLead = '';
-            scope.newTeamLead = {};
-
-            scope.form.inviteTeamLead.$setPristine();
-          });
-          scope.$watch('team', function(newValue, oldValue) {
-            scope.team = newValue;
+            scope.form.orgProfileForm.$setPristine();
           });
           scope.$watch('organization', function(newValue, oldValue) {
             scope.organization = newValue;
-            scope.findTeamLeads();
+            scope.orgPhotoUrl = (scope.organization && scope.organization.photo && scope.organization.photo.path) ?
+              scope.organization.photo.path : '';
           });
         }
       };

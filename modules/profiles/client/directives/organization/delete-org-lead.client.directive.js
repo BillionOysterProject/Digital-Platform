@@ -3,25 +3,21 @@
 
   angular
     .module('profiles')
-    .directive('deleteTeamLeadModal', function() {
+    .directive('deleteOrgLeadModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/delete-team-lead.client.view.html',
+        templateUrl: 'modules/profiles/client/views/organization/delete-org-lead.client.view.html',
         scope: {
-          team: '=',
           organization: '=',
           closeFunction: '='
         },
         replace: true,
-        controller: 'TeamLeadDeleteController',
+        controller: 'OrganizationLeadDeleteController',
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function() {
-            scope.teamLead = '';
+            scope.orgLead = '';
             scope.error = null;
-            scope.form.deleteTeamLead.$setPristine();
-          });
-          scope.$watch('team', function(newValue, oldValue) {
-            scope.team = newValue;
+            scope.form.deleteOrgLead.$setPristine();
           });
           scope.$watch('organization', function(newValue, oldValue) {
             scope.organization = newValue;

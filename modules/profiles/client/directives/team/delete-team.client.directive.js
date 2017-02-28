@@ -6,7 +6,7 @@
     .directive('deleteTeamModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/delete-team.client.view.html',
+        templateUrl: 'modules/profiles/client/views/team/delete-team.client.view.html',
         scope: {
           team: '=',
           closeFunction: '='

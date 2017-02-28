@@ -6,7 +6,7 @@
     .directive('viewUserModal', function($state) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/view-user.client.view.html',
+        templateUrl: 'modules/profiles/client/views/user/view-user.client.view.html',
         scope: {
           user: '=',
           teams: '=?',

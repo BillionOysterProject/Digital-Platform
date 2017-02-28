@@ -6,7 +6,7 @@
     .directive('changePasswordModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/change-password.client.view.html',
+        templateUrl: 'modules/profiles/client/views/user/change-password.client.view.html',
         scope: {
           closeFunction: '='
         },

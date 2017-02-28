@@ -6,7 +6,7 @@
     .directive('formTeamMemberModal', ['$http', function($http) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/form-team-member.client.view.html',
+        templateUrl: 'modules/profiles/client/views/team-member/form-team-member.client.view.html',
         scope: {
           teamMember: '=',
           team: '=',

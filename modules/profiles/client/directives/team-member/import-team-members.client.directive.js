@@ -6,7 +6,7 @@
     .directive('importTeamMembersModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/import-team-members.client.view.html',
+        templateUrl: 'modules/profiles/client/views/team-member/import-team-members.client.view.html',
         scope: {
           team: '=',
           organization: '=',

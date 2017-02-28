@@ -6,7 +6,7 @@
     .directive('changeUserProfileImageModal', function() {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/change-user-profile-image.client.view.html',
+        templateUrl: 'modules/profiles/client/views/user/change-user-profile-image.client.view.html',
         scope: {
           closeFunction: '='
         },

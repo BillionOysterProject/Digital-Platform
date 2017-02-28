@@ -7,7 +7,7 @@
     function($http, lodash) {
       return {
         restrict: 'AE',
-        templateUrl: 'modules/profiles/client/views/form-admin-team-lead.client.view.html',
+        templateUrl: 'modules/profiles/client/views/team-lead/form-admin-team-lead.client.view.html',
         scope: {
           user: '=',
           organizations: '=',
