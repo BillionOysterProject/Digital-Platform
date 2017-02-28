@@ -43,14 +43,6 @@
 
                 <div class="col-md-6">
                   <div class="form-group" show-errors>
-                    <label for="researchTitle" class="control-label required">Title *</label>
-                    <input class="form-control" name="researchTitle" id="researchTitle" ng-model="vm.researchForm.title"
-                    required/>
-                    <div ng-messages="vm.form.researchForm.researchFormTitle.$error" role="alert">
-                      <p class="help-block error-text" ng-message="required">Title is required.</p>
-                    </div>
-                  </div>
-                  <div class="form-group" show-errors>
                     <label for="color" class="control-label required">Color *</label>
                     <input colorpicker colorpicker-size="200" type="text" class="form-control"
                     placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
@@ -73,69 +65,137 @@
               </div>
             </div>
           </div>
-
-          <!-- Abstract -->
-          <h4>Abstract</h4>
+          
+          <!-- Title -->
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="abstract" in-title=""
-                ng-model="vm.research.abstract" label-class="control-label"></wysiwyg-editor>
+                <div class="col-md-6">
+                  <h3 class="blue">Title</h3>
+                  <p>State the focus of your research as a question or problem. Be creative and succinct. The purpose of the title is to grab your audience's attention as they are walking by your poster and immediately make them think, "wow that's an interesting idea, I want to learn more!"</p>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group" show-errors>
+                    <label for="researchTitle" class="control-label required">Title *</label>
+                    <input class="form-control" name="researchTitle" id="researchTitle" ng-model="vm.researchForm.title"
+                    required/>
+                    <div ng-messages="vm.form.researchForm.researchFormTitle.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Title is required.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Intro -->
-          <h4>Intro</h4>
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="intro" in-title=""
+                <div class="col-md-4">
+                  <h3 class="blue">Introduction</h3>
+                  <p>The purpose of the introduction is to "hook" your audience into the core idea of your research. Provide background (tell a brief story) on how you arrived at your research question. Get your viewer interested in the issue/problem. Then place your issue in the context of other similar research. Briefly cite at least three sources of published, primary literature that relates to your research. Pitch your hypothesis! Include at least one interesting photograph or visual that shows your research in action. Do not include a data chart in your intro - save this for the results section.</p>
+                  <em>[approximately 200 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="intro" in-title=""
                 ng-model="vm.research.intro" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
 
-          <!-- Methods -->
-          <h4>Methods</h4>
+          <!-- Materials & Methods -->
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="methods" in-title=""
+                <div class="col-md-4">
+                  <h3 class="blue">Materials & Methods</h3>
+                  <p>Briefly describe the experimental approach you used to test your hypothesis. Explain why you decided to conduct your research in the way you did. Describe your procedure, the steps, and the equipment you used. Use process diagrams or flowcharts to illustrate your experimental design. Include photographs or labeled drawings of equipment or organisms involved in the experiment. Describe exactly how you analyzed the data and how that analysis helped (or didn't help) answer your hypothesis.</p>
+                  <em>[approximately 250 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="methods" in-title=""
                 ng-model="vm.research.methods" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
 
           <!-- Results -->
-          <h4>Results</h4>
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="results" in-title=""
+                <div class="col-md-4">
+                  <h3 class="blue">Results</h3>
+                  <p>First, state whether your experimental procedure actually worked or not. State whether you experienced any unexpected changes or important surprises in the research. Give the audience a descriptive (qualitative) overview of your results.  Then dive into quantitative analysis of your data. Include at least one chart or figure that clearly summarizes your data results. Refer to the chart(s) in your writing. Your charts/figures should have simple and easy to read keys or legends, so that the audience can easily understand what they are saying without needing to read an explanation. This is always the largest section of the poster (except if you have no data).</p>
+                  <em>[approximately 300 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="results" in-title=""
                 ng-model="vm.research.results" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
 
-          <!-- Discussion -->
-          <h4>Discussion</h4>
+          <!-- Discussion & Conclusions -->
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="discussion" in-title=""
+                <div class="col-md-4">
+                  <h3 class="blue">Discussion & Conclusions</h3>
+                  <p>Explain your results. Did the experiment work? Are the results of your data analysis statistically significant? Are the results of your research scientifically important? If yes, what are the important lessons or conclusions to be drawn from your research? If not, was there a problem with your experiment or your approach, or with your materials and methods, or something else?  Whether your results are statistically significant or not, try to convince the audience that the outcome of your research is interesting and important.  In particular, why is your research important to the ecology of New York Harbor? To oysters or other organisms? To people and the city? Lastly, explain to the audience any next steps you plan to take in continuing your research and make suggestions for what other researchers and scientists might do based on your results. Connect your findings to other published work and cite references as needed.</p>
+                  <em>[approximately 300 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="discussion" in-title=""
                 ng-model="vm.research.discussion" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
 
-          <!-- Conclusion -->
-          <h4>Conclusion</h4>
+          <!-- Literature cited -->
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="conclusion" in-title=""
-                ng-model="vm.research.conclusion" label-class="control-label"></wysiwyg-editor>
+                <div class="col-md-4">
+                  <h3 class="blue">Literature cited</h3>
+                  <p>All BOP research should follow <a href="http://www.bibme.org/citation-guide/apa/" target="_blank">APA format</a>. APA format requires you to write (author’s last name, year of publication) in parenthesis within the text and then list the full citation in alphabetical order in the bibliography.</p>
+                  <em>[at least 3 citations]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="cited" in-title=""
+                ng-model="vm.research.cited" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acknowledgments -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Acknowledgments</h3>
+                  <p>Here you can thank anyone who supported or assisted your research such as teachers, mentors, peers, parents, community members or others. You can also thank people or organizations who donated supplies or money to your research.  Be formal and concise.</p>
+                  <em>[approximately 50 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="acknowledgments" in-title=""
+                ng-model="vm.research.acknowledgments" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Other -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Other</h3>
+                  <p>This is an optional section for you to add anything else that is not included above.</p>
+                  <div class="form-group" show-errors>
+                    <label for="researchOtherTitle" class="control-label required">Heading</label>
+                    <input class="form-control" name="researchOtherTitle" id="researchOtherTitle" ng-model="vm.researchForm.otherTitle"
+                    required/>
+                    <div ng-messages="vm.form.researchForm.researchOtherTitle.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Title is required.</p>
+                    </div>
+                  </div>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="cited" in-title=""
+                ng-model="vm.research.cited" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
