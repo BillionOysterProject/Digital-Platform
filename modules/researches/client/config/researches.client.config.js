@@ -24,11 +24,10 @@
       state: 'researches.list'
     });
 
-    // Add the dropdown create item
-    //Menus.addSubMenuItem('topbar', 'researches', {
-    //  title: 'Create Research',
-    //  state: 'researches.create',
-    //  roles: ['user']
-    //});
+    // Add the dropdown list item
+    Menus.addSubMenuItem('topbar', 'researches', {
+      title: 'My Collection',
+      state: 'researches.user'
+    });
   }
 }());
