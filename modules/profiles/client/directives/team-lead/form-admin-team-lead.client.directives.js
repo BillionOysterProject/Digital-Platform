@@ -19,12 +19,14 @@
         controller: 'FormAdminUserController',
         link: function(scope, element, attrs) {
           scope.$watch('user', function(newValue, oldValue) {
-            scope.selectedRole = null;
-            if(newValue && newValue.roles && newValue.roles.length) {
-              for(var i = 0; i < newValue.roles.length || scope.selectedRole === null; i++) {
+            scope.selectedRole = 'guest';
+            if(newValue && newValue.roles && newValue.roles.length > 0) {
+              for(var i = 0; i < newValue.roles.length; i++) {
+                var newRole = newValue.roles[i];
                 for(var j = 0; j < scope.roles.length; j++) {
-                  if(newValue.roles[i].toLowerCase() === scope.roles[j].value.toLowerCase()) {
-                    scope.selectedRole = scope.roles[j].value;
+                  var userRole = scope.roles[j].value;
+                  if(newRole.toLowerCase() === userRole.toLowerCase()) {
+                    scope.selectedRole = userRole;
                   }
                 }
               }
@@ -37,6 +39,8 @@
               };
 
               scope.isAdmin = checkRole(newValue, 'admin');
+            } else {
+              scope.isAdmin = false;
             }
           });
         }
