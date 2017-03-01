@@ -23,6 +23,18 @@
           pageTitle: 'Researches List'
         }
       })
+      .state('researches.user', {
+        url: '/user',
+        templateUrl: 'modules/researches/client/views/user-research.client.view.html',
+        controller: 'ResearchesController',
+        controllerAs: 'vm'
+      })
+      .state('researches.view', {
+        url: '/view',
+        templateUrl: 'modules/researches/client/views/view-research.client.view.html',
+        controller: 'ResearchesController',
+        controllerAs: 'vm'
+      })
       .state('researches.create', {
         url: '/create',
         templateUrl: 'modules/researches/client/views/form-research.client.view.html',
@@ -49,18 +61,19 @@
           pageTitle: 'Edit Research {{ researchResolve.name }}'
         }
       })
-      .state('researches.view', {
-        url: '/:researchId',
-        templateUrl: 'modules/researches/client/views/view-research.client.view.html',
-        controller: 'ResearchesController',
-        controllerAs: 'vm',
-        resolve: {
-          researchResolve: getResearch
-        },
-        data: {
-          pageTitle: 'Research {{ researchResolve.name }}'
-        }
-      });
+      // .state('researches.view', {
+      //   url: '/:researchId',
+      //   templateUrl: 'modules/researches/client/views/view-research.client.view.html',
+      //   controller: 'ResearchesController',
+      //   controllerAs: 'vm',
+      //   resolve: {
+      //     researchResolve: getResearch
+      //   },
+      //   data: {
+      //     pageTitle: 'Research {{ researchResolve.name }}'
+      //   }
+      // })
+      ;
   }
 
   getResearch.$inject = ['$stateParams', 'ResearchesService'];

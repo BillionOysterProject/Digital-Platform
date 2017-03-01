@@ -10,6 +10,6 @@
   function ResearchesListController(ResearchesService) {
     var vm = this;
 
-    vm.researches = ResearchesService.query();
+    //vm.researches = ResearchesService.query();
   }
 }());

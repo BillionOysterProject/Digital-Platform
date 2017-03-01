@@ -6,13 +6,12 @@
     .module('researches')
     .controller('ResearchesController', ResearchesController);
 
-  ResearchesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'researchResolve'];
+  ResearchesController.$inject = ['$scope', '$state', '$window', 'Authentication'];
 
-  function ResearchesController ($scope, $state, $window, Authentication, research) {
+  function ResearchesController ($scope, $state, $window, Authentication) {
     var vm = this;
 
     vm.authentication = Authentication;
-    vm.research = research;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;

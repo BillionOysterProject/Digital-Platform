@@ -12,6 +12,10 @@
     return $resource('api/researches/:researchId', {
       researchId: '@_id'
     }, {
+      query: {
+        method: 'GET',
+        isArray: true
+      },
       update: {
         method: 'PUT'
       }
