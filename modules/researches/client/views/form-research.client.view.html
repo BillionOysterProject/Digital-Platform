@@ -21,7 +21,7 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label>Layout *</label>
                   <div class="row">
                     <div class="col-sm-6">
@@ -41,21 +41,39 @@
                   </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group" show-errors>
-                    <label for="color" class="control-label required">Color *</label>
+                    <label for="color" class="control-label required">Color *</label><br/>
+                    
+                    <!--TODO: Can each of the below icons, when clicked, fill in the colorpicker input with their hex number? (Trying to give standard color options, but also let the user select their own color using the input). If this is too complicated, we can do something else. -->
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <a><i class="fa fa-circle fa-3x red"></i></a>&nbsp;&nbsp;<!-- #ea6158 -->
+                        <a><i class="fa fa-circle fa-3x crimson"></i></a>&nbsp;&nbsp;<!-- #943234 -->
+                        <a><i class="fa fa-circle fa-3x lightyellow"></i></a>&nbsp;&nbsp;<!-- #fbe8ac -->
+                        <a><i class="fa fa-circle fa-3x lightblue"></i></a>&nbsp;&nbsp;<!-- #a0d0cb -->
+                        <a><i class="fa fa-circle fa-3x blue"></i></a>&nbsp;&nbsp;<!-- #426ca9 -->
+                        <a><i class="fa fa-circle fa-3x darkblue"></i></a><!-- #2c3c56 -->
+                      </div>
+                    </div><br/>
+                    
                     <input colorpicker colorpicker-size="200" type="text" class="form-control"
                     placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
+                    <span class="help-block">Choose from one of the colors above, or click the input field to pick any color. This color will be used to customize the layout you chose.</span>
                     <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
                   </div>
+                </div>
+
+                <div class="col-md-4">
                   <div class="form-group" show-errors>
                     <label for="font" class="control-label required">Font *</label>
                     <select class="form-control" required>
                       <option></option>
                       <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
                     </select>
+                    <span class="help-block">This font will be used for headings/etc throughout your poster.</span>
                     <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
