@@ -6,14 +6,17 @@
     .controller('FormAdminUserController', FormAdminUserController);
 
   FormAdminUserController.$inject = ['$scope', '$http', 'lodash', 'Authentication',
-    'Users', 'TeamsService'];
+    'Users', 'TeamsService', 'SchoolOrganizationsService'];
 
-  function FormAdminUserController($scope, $http, lodash, Authentication, Users, TeamsService) {
+  function FormAdminUserController($scope, $http, lodash, Authentication, 
+    Users, TeamsService, SchoolOrganizationsService) {
     $scope.user = Authentication.user;
     $scope.roles = [
       { name: 'Team Lead', value: 'team lead' },
       { name: 'Team Member', value: 'team member' }
     ];
+
+    if (!$scope.organizations) $scope.organizations = SchoolOrganizationsService.query();
 
     $scope.isAdminChanged = function() {
       var newAdminValue = this.isAdmin;

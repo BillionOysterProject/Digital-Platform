@@ -12,13 +12,7 @@
           team: '=',
           closeFunction: '='
         },
-        replace: true,
-        controller: 'TeamMemberDeleteController',
-        link: function(scope, element, attrs) {
-          scope.$watch('teamMember', function(newValue, oldValue) {
-            scope.teamMember = newValue;
-          });
-        }
+        replace: true
       };
     });
 })();

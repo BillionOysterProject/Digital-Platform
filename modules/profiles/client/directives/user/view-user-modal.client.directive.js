@@ -14,7 +14,6 @@
           closeFunction: '='
         },
         replace: true,
-        controller: 'UserProfileController',
         link: function(scope, element, attrs) {
           var toGoState = null;
           var toGoParams = null;
@@ -38,26 +37,98 @@
             }
           });
 
-          element.bind('show.bs.modal', function() {
-            scope.$watch('user', function(newValue, oldValue) {
-              scope.user = newValue;
-              scope.roles = scope.findUserRoles();
-              scope.isCurrentUserAdmin = scope.checkRole('admin');
+          scope.$watch('user', function(newValue, oldValue) {
+            scope.user = newValue;
+            // scope.roles = scope.findUserRoles();
+            scope.isCurrentUserAdmin = scope.checkRole('admin');
 
-              scope.isAdmin = scope.checkViewedUserRole('admin');
-              scope.isTeamLead = scope.checkViewedUserRole('team lead') || scope.checkViewedUserRole('team lead pending');
-              scope.isUserPending = scope.checkUserPending();
-              scope.isUserTeamMember = scope.checkViewedUserRole('team member');
-              scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
-              scope.findExpeditions();
-              scope.findOrganization();
-              scope.findTeams();
-              scope.findRestorationStations();
-              scope.findEvents();
-              scope.findLessonsTaught();
-            });
+            scope.isAdmin = scope.checkViewedUserRole('admin');
+            scope.isTeamLead = scope.checkViewedUserRole('team lead') || scope.checkViewedUserRole('team lead pending');
+            // scope.isUserPending = scope.checkUserPending();
+            // scope.isUserTeamMember = scope.checkViewedUserRole('team member');
+            // scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
+            // scope.findExpeditions();
+            scope.findOrganization();
+            // scope.findTeams();
+            // scope.findRestorationStations();
+            // scope.findEvents();
+            // scope.findLessonsTaught();
           });
-        }
+        },
+        controller: ['$scope', 'lodash', 'ExpeditionViewHelper', 'SchoolOrganizationsService',
+        function ($scope, lodash, ExpeditionViewHelper, SchoolOrganizationsService) {
+          $scope.content = 'userView';
+          $scope.checkRole = ExpeditionViewHelper.checkRole;
+
+          $scope.checkViewedUserRole = function(role) {
+            var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+              return o === (role);
+            });
+            return (roleIndex > -1) ? true : false;
+          };
+
+          $scope.findOrganization = function() {
+            if ($scope.user.schoolOrg) {
+              if ($scope.user.schoolOrg._id) {
+                $scope.organization = $scope.user.schoolOrg;
+              } else {
+                SchoolOrganizationsService.get({
+                  schoolOrgId: $scope.user.schoolOrg
+                }, function(data) {
+                  $scope.organization = data;
+                });
+              }
+            }
+          };
+
+          $scope.openAdminTeamLeadForm = function() {
+            $scope.content = 'formTeamLead';
+          };
+
+          $scope.closeAdminTeamLeadForm = function() {
+            $scope.content = 'userView';
+          };
+
+          $scope.openDeleteAdminTeamLead = function() {
+            $scope.content = 'deleteTeamLead';
+          };
+
+          $scope.closeDeleteAdminTeamLead = function() {
+            $scope.content = 'userView';
+          };
+
+          $scope.openFormTeamMember = function() {
+            $scope.content = 'formTeamMember';
+          };
+
+          $scope.closeFormTeamMember = function() {
+            $scope.content = 'userView';
+          };
+
+          $scope.openDeleteTeamMember = function(teamMember) {
+            $scope.content = 'deleteTeamMember';
+          };
+
+          $scope.closeDeleteTeamMember = function() {
+            $scope.content = 'userView';
+          };
+
+          $scope.openUserForm = function() {
+            if ($scope.isAdmin || $scope.isUserTeamLead) {
+              $scope.openAdminTeamLeadForm();
+            } else {
+              $scope.openFormTeamMember();
+            }
+          };
+
+          $scope.openUserDelete = function() {
+            if ($scope.isAdmin) {
+              $scope.openDeleteAdminTeamLead();
+            } else {
+              $scope.openDeleteTeamMember();
+            }
+          };
+        }],
       };
     });
 })();

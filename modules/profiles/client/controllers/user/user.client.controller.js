@@ -50,7 +50,7 @@
       lodash.remove(roles, function(n) {
         return n === 'user';
       });
-      return roles.join(', ');
+      return (roles && roles.length > 0) ? roles.join(', ') : '';
     };
 
     $scope.checkViewedUserRole = function(role) {
@@ -148,53 +148,5 @@
       });
     };
 
-    $scope.openAdminTeamLeadForm = function() {
-      angular.element('#modal-admin-team-lead-editadd').modal('show');
-      // $scope.closeFunction('#modal-admin-team-lead-editadd');
-    };
-
-    $scope.closeAdminTeamLeadForm = function() {
-      angular.element('#modal-admin-team-lead-editadd').modal('hide');
-    };
-
-    $scope.openDeleteAdminTeamLead = function() {
-      angular.element('#modal-delete-admin-team-lead').modal('show');
-    };
-
-    $scope.closeDeleteAdminTeamLead = function() {
-      angular.element('#modal-delete-admin-team-lead').modal('hide');
-    };
-
-    $scope.openFormTeamMember = function() {
-      angular.element('#modal-team-member-editadd').modal('show');
-    };
-
-    $scope.closeFormTeamMember = function() {
-      angular.element('#modal-team-member-editadd').modal('hide');
-    };
-
-    $scope.openDeleteTeamMember = function(teamMember) {
-      angular.element('#modal-team-member-delete').modal('show');
-    };
-
-    $scope.closeDeleteTeamMember = function() {
-      angular.element('#modal-team-member-delete').modal('hide');
-    };
-
-    $scope.openUserForm = function() {
-      if ($scope.isAdmin || $scope.isUserTeamLead) {
-        $scope.openAdminTeamLeadForm();
-      } else {
-        $scope.openFormTeamMember();
-      }
-    };
-
-    $scope.openUserDelete = function() {
-      if ($scope.isAdmin) {
-        $scope.openDeleteAdminTeamLead();
-      } else {
-        $scope.openDeleteTeamMember();
-      }
-    };
   }
 })();
