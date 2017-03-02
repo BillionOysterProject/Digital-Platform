@@ -15,7 +15,7 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
-.content-fixed { position: fixed; z-index: 1; }
+.content-fixed { position: fixed; z-index: 1; width: 100% }
 .content-fixed + div { padding-top: 125px; }
 
 .popover {

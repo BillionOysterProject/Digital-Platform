@@ -232,9 +232,9 @@
             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
-            <a class="btn btn-default">Preview</a>
+            <a class="btn btn-default">Save draft and preview</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.researchForm.$valid">
-              {{vm.research._id ? 'Update poster' : 'Publish poster'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.research._id ? 'Update published poster' : 'Publish poster'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
           </div>
@@ -243,3 +243,13 @@
     </form>
   </section>
 </section>
+
+
+
+<!--MODALS (wire up! I just copied from lessons and updated text)-->
+  <saved-research-modal></saved-research-modal>
+  <updated-research-modal></updated-research-modal>
+  <delete-research-modal callback-function="vm.confirmDeleteResearch"></delete-research-modal>
+  <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
+  
+  
