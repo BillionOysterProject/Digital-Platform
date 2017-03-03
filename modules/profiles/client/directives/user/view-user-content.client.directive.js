@@ -9,6 +9,7 @@
         templateUrl: 'modules/profiles/client/views/user/view-user-content.client.view.html',
         scope: {
           user: '=',
+          team: '=?',
           teams: '=?',
           organization: '=?',
           openUserForm: '=',

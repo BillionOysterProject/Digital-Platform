@@ -12,7 +12,7 @@
       title: 'People',
       state: 'profiles',
       type: 'dropdown',
-      roles: ['user'],
+      roles: ['user', 'team lead', 'team member', 'admin'],
       icon: 'fa fa-users',
       position: 4
     });
@@ -20,7 +20,7 @@
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Profile',
       state: 'profiles.main',
-      roles: ['user']
+      roles: ['user', 'team lead', 'team member', 'admin']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {

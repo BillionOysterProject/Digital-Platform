@@ -67,24 +67,41 @@
     };
 
     $scope.sendReminder = function(teamName) {
-      $scope.reminderSent = true;
+      $scope.reminderSent = false;
 
-      $http.post('/api/teams/members/' + $scope.user._id + '/remind', {
-        team: {
-          name: teamName
-        }
-      }).
-      success(function(data, status, headers, config) {
-        $timeout(function() {
-          $scope.reminderSent = false;
-        }, 15000);
-      }).
-      error(function(data, status, headers, config) {
-        $scope.error = data.res.message;
-        $timeout(function() {
-          $scope.reminderSent = false;
-        }, 15000);
+      // if ($scope.isAdmin || $scope.isTeamLead) {
+      $http.post('api/users/leaders/' + $scope.user._id + '/remind', {
+        user: $scope.user,
+        organization: $scope.organization,
+        team: $scope.team,
+        teamOrOrg: 'team',
+        role: 'team lead pending'
+      })
+      .success(function(data, status, headers, config) {
+        $scope.reminderSent = true;
+      })
+      .error(function(data, status, headers, config) {
+        $scope.error = data;
       });
+      // } else {
+      //   $http.post('/api/teams/members/' + $scope.user._id + '/remind', {
+      //     team: {
+      //       name: teamName
+      //     }
+      //   }).
+      //   success(function(data, status, headers, config) {
+      //     $timeout(function() {
+      //       $scope.reminderSent = false;
+      //     }, 15000);
+      //   }).
+      //   error(function(data, status, headers, config) {
+      //     console.log('message', data);
+      //     $scope.error = data.res.message;
+      //     $timeout(function() {
+      //       $scope.reminderSent = false;
+      //     }, 15000);
+      //   });
+      // }
     };
 
     $scope.findExpeditions = function() {

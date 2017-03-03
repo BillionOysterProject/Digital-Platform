@@ -9,6 +9,7 @@
         templateUrl: 'modules/profiles/client/views/user/view-user.client.view.html',
         scope: {
           user: '=',
+          team: '=?',
           teams: '=?',
           organization: '=?',
           closeFunction: '='
@@ -39,20 +40,12 @@
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
-            // scope.roles = scope.findUserRoles();
             scope.isCurrentUserAdmin = scope.checkRole('admin');
 
             scope.isAdmin = scope.checkViewedUserRole('admin');
-            scope.isTeamLead = scope.checkViewedUserRole('team lead') || scope.checkViewedUserRole('team lead pending');
-            // scope.isUserPending = scope.checkUserPending();
-            // scope.isUserTeamMember = scope.checkViewedUserRole('team member');
-            // scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
-            // scope.findExpeditions();
+            scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
+              scope.checkViewedUserRole('team lead pending');
             scope.findOrganization();
-            // scope.findTeams();
-            // scope.findRestorationStations();
-            // scope.findEvents();
-            // scope.findLessonsTaught();
           });
         },
         controller: ['$scope', 'lodash', 'ExpeditionViewHelper', 'SchoolOrganizationsService',
@@ -62,7 +55,7 @@
 
           $scope.checkViewedUserRole = function(role) {
             var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
-              return o === (role);
+              return o === role;
             });
             return (roleIndex > -1) ? true : false;
           };
@@ -114,7 +107,7 @@
           };
 
           $scope.openUserForm = function() {
-            if ($scope.isAdmin || $scope.isUserTeamLead) {
+            if ($scope.isAdmin || $scope.isTeamLead) {
               $scope.openAdminTeamLeadForm();
             } else {
               $scope.openFormTeamMember();

@@ -8,12 +8,20 @@
   FormAdminUserController.$inject = ['$scope', '$http', 'lodash', 'Authentication',
     'Users', 'TeamsService', 'SchoolOrganizationsService'];
 
-  function FormAdminUserController($scope, $http, lodash, Authentication, 
+  function FormAdminUserController($scope, $http, lodash, Authentication,
     Users, TeamsService, SchoolOrganizationsService) {
     $scope.user = Authentication.user;
     $scope.roles = [
       { name: 'Team Lead', value: 'team lead' },
       { name: 'Team Member', value: 'team member' }
+    ];
+
+    $scope.teamLeadType = [
+      { label: 'Teacher', value: 'teacher' },
+      { label: 'Citizen Scientist', value: 'citizen scientist' },
+      { label: 'Professional Scientist', value: 'professional scientist' },
+      { label: 'Site Coordinator', value: 'site coordinator' },
+      { label: 'Other', value: 'other' }
     ];
 
     if (!$scope.organizations) $scope.organizations = SchoolOrganizationsService.query();

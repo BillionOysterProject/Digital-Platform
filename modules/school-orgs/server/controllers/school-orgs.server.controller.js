@@ -503,7 +503,7 @@ exports.schoolOrgByID = function (req, res, next, id) {
   }
 
   SchoolOrg.findById(id).populate('creator', 'firstName displayName email')
-  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
+  .populate('orgLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg teamLeadType pending')
   .exec(function (err, schoolOrg) {
     if (err) {
       return next(err);

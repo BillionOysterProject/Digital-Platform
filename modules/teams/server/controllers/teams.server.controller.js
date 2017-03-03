@@ -579,7 +579,7 @@ exports.teamByID = function (req, res, next, id) {
   }
 
   Team.findById(id).populate('teamLead', 'displayName firstName lastName username email profileImageURL roles schoolOrg')
-  .populate('teamLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
+  .populate('teamLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg teamLeadType pending')
   .populate('teamMembers', 'displayName firstName lastName username email profileImageURL roles schoolOrg pending')
   .populate('schoolOrg', 'name')
   .exec(function (err, team) {
