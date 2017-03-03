@@ -1,0 +1,56 @@
+<div class="modal fade" id="modal-org-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-show="organization.teams.teamLeadCount === 0 ||
+          organization.teams.teamCount === 0 || organization.teams.teamMemberCount === 0">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete <span class="red">{{organization.name}}</span>?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+              <button type="button" class="btn btn-danger" ng-click="delete()" ng-disabled="organization.teams.teamLeadCount > 0 ||
+                organization.teams.teamCount > 0 || organization.teams.teamMemberCount > 0">Delete</button>
+            </div>
+        </div>
+        <div class="modal-content" ng-hide="organization.teams.teamLeadCount === 0 ||
+          organization.teams.teamCount === 0 || organization.teams.teamMemberCount === 0">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"><span class="red">{{organization.name}}</span> cannot be deleted</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <p ng-show="organization.teams.teamLeadCount > 0 ||
+                  organization.teams.teamCount > 0 || organization.teams.teamMemberCount > 0">
+                  There are currently <b>{{organization.teams.teamLeadCount}}</b> team leads,
+                  <b>{{organization.teams.teamCount}}</b> teams, and
+                  <b>{{organization.teams.teamMemberCount}}</b> team members in this organization.
+                  To delete the organization, you must first either delete or move the current teams, team leads, and team members to another organization.</p>
+                <!-- TODO: Will implement this later or if there is time -->
+                <!--Before deleting, you must select another organization to transfer all of these accounts.</p>
+                <div class="form-group">
+                  <label>Organization to transfer accounts</label>
+                  <select class="form-control">
+                    <option>Org Name</option>
+                    <option>Org Name</option>
+                    <option>Org Name</option>
+                    <option>Org Name</option>
+                  </select>
+                </div>-->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+          </div>
+        </div>
+    </div>
+</div>

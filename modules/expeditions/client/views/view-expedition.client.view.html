@@ -32,9 +32,16 @@
             <div class="col-sm-3">
                 <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="profile-image pull-left">
                 <p>
-                    <b>{{vm.team.name}}</b><br/>
+                    <a ui-sref="profiles.team-view({ teamId: vm.team._id })">
+                      <b>{{vm.team.name}}</b>
+                    </a>
+                    <br/>
                     {{vm.team.teamLead.displayName}}<br/>
-                    <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                    <span class="text-muted">
+                      <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                        {{vm.team.schoolOrg.name}}
+                      </a>
+                    </span>
                 </p>
             </div>
             <div class="col-sm-3">

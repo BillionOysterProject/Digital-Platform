@@ -93,9 +93,18 @@
                   <tr ng-repeat="activeUserItem in userActivityData | orderBy: '-loginCount'">
                       <td><b>{{activeUserItem.user.displayName}}</b></td>
                       <td><p class="text-muted"><b class="red">{{activeUserItem.loginCount}}</b> logins</p></td>
-                      <td ng-hide="isAdminSelected()"><span ng-repeat="team in activeUserItem.teams">{{team.name}}{{$last ? '' : ', '}}</span></td>
+                      <td ng-hide="isAdminSelected()">
+                        <span ng-repeat="team in activeUserItem.teams">
+                          <a ui-sref="profiles.team-view({ teamId: team._id })">{{team.name}}</a>
+                          {{$last ? '' : ', '}}
+                        </span>
+                      </td>
                       <td ng-hide="isAdminSelected()"><b>{{calculateTotalTeamMembers(activeUserItem)}}</b></td>
-                      <td ng-hide="isAdminSelected()">{{activeUserItem.schoolOrg.name}}</td>
+                      <td ng-hide="isAdminSelected()">
+                        <a ui-sref="profiles.organization-view({ schoolOrgId: activeUserItem.schoolOrg._id })">
+                          {{activeUserItem.schoolOrg.name}}
+                        </a>
+                      </td>
                   </tr>
               </table>
           </div>
@@ -109,10 +118,12 @@
                       <th>Organization</th>
                   </tr>
                   <tr ng-repeat="teamItem in metrics.largestTeams | orderBy: '-teamMemberCount' | limitTo:5">
-                      <td><b>{{teamItem.name}}</b></td>
+                      <td><a ui-sref="profiles.team-view({ teamId: teamItem._id })"><b>{{teamItem.name}}</b></a></td>
                       <td><p class="text-muted"><b class="red">{{teamItem.teamMemberCount}}</b> team members</p></td>
-                      <td>{{teamItem.teamLead.displayName}}</td>
-                      <td>{{teamItem.schoolOrg.name}}</td>
+                      <td><span ng-repeat="teamLeadItem in teamItem.teamLeads">{{teamLeadItem.displayName}}{{$last ? '' : ', '}}</span></td>
+                      <td><a ui-sref="profiles.organization-view({ schoolOrgId: teamItem.schoolOrg._id })">
+                        {{teamItem.schoolOrg.name}}</a>
+                      </td>
                   </tr>
               </table>
           </div>

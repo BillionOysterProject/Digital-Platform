@@ -123,7 +123,7 @@ exports.signup = function (req, res) {
           var defaultTeam = new Team({
             name: 'Default',
             schoolOrg: user.schoolOrg,
-            teamLead: user
+            teamLeads: [user]
           });
           defaultTeam.save(function(saveErr) {
             if (saveErr) {

@@ -1,0 +1,186 @@
+<div>
+  <div class="modal-header">
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <img ng-src="{{user.profileImageURL}}" alt="{{user.displayName}}" class="img-circle img-responsive" width="100">
+      </div>
+      <div class="col-md-4">
+        <h3>{{user.displayName}}</h3>
+        <h6>{{roles}}</h6>
+        <p class="text-muted">
+          <b>{{user.username}}</b><br/>
+          <a href="mailto:{{user.email}}">{{user.email}}</a>
+        </p>
+      </div>
+      <div class="col-md-3">
+        <br/>
+        <h6>{{teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+        <h4 ng-repeat="team in teams">
+          <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
+          <br/>
+          <div ng-repeat="teamLead in team.teamLeads">
+            <small ng-show="user._id !== teamLead._id">
+              <!-- the ui-sref here wasn't working -->
+              {{teamLead.displayName}}
+            </small>
+          </div>
+        </h4>
+      </div>
+      <div class="col-md-3">
+        <br/>
+        <h6>Organization</h6>
+        <h4 ng-show="organization">
+          <a ui-sref="profiles.organization-view({ schoolOrgId: organization._id })">
+            {{organization.name}}
+          </a>
+          <br/>
+          <small ng-show="organization.city && organization.state">{{organization.city}},
+            {{organization.state}}</small>
+        </h4>
+      </div>
+    </div>
+    <hr/>
+
+    <nav class="nav nav-default text-right" ng-show="isCurrentUserAdmin">
+      <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6>
+      <a class="btn btn-primary pull-left" ng-show="isUserPending && !reminderSent" ng-click="sendReminder()">
+        <i class="fa fa-envelope"></i>
+        Send reminder</a>
+      <h6 class="green pull-left" ng-show="reminderSent">
+        <i class="fa fa-check"></i>
+        Reminder sent</h6>
+      <a class="btn btn-default" ng-click="openUserForm()">Edit profile</a>
+      <a class="btn btn-danger" ng-click="openUserDelete()">Delete</a>
+      <hr/>
+    </nav>
+  </div>
+
+  <!-- Show if profile is a Team Member Profile, (not if viewer's role is team member)-->
+  <div class="modal-body">
+    <div ng-show="isUserTeamMember">
+      <div class="row">
+        <!-- this is only showing published expeditions -->
+        <div class="col-sm-6" ng-show="expeditions && expeditions.length > 0">
+          <dl class="dl-horizontal">
+            <dt>Expeditions</dt>
+            <dd ng-repeat="expedition in expeditions">
+              <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                {{expedition.name}}</a>
+            </dd>
+            <!--Could add in what protocols they were assigned to if applicable:
+                    <a>Nov Expedition</a>: Protocols 1-3
+                    -->
+          </dl>
+        </div>
+
+        <!--To be wired up once we build out the Research section
+          <div class="col-sm-6" ng-hide="true">
+              <dl class="dl-horizontal">
+                  <dt>Research</dt>
+                  <dd><a>Project 1</a></dd>
+                  <dd><a>Project 2</a></dd>
+              </dl>
+          </div>
+          -->
+      </div>
+    </div>
+
+    <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
+    <div ng-show="isUserTeamLead">
+      <div class="row">
+        <div class="col-sm-6">
+          <dl class="dl-horizontal">
+            <dt>Expeditions</dt>
+            <dd ng-repeat="expedition in expeditions">
+              <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                {{expedition.name}}</a>
+            </dd>
+            <dd ng-show="!expeditions || expeditions.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>
+        </div>
+
+        <div class="col-sm-6">
+          <dl class="dl-horizontal">
+            <dt>ORS</dt>
+            <dd ng-repeat="station in stations">
+              <a ui-sref="restoration-stations.list()">
+                {{station.name}}</a>
+            </dd>
+            <dd ng-show="!stations || stations.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-sm-6">
+          <dl class="dl-horizontal">
+            <dt>Events
+              <i class="fa fa-question-circle gray" title="A green check mark beside the event name shows that the user was marked in attendance"></i>
+            </dt>
+            <dd ng-repeat="event in events">
+              <i ng-show="didProfileUserAttendEvent(event)" class="fa fa-check green"></i>
+              <a ui-sref="events.view({ eventId: event._id })">
+                {{event.title}}</a>
+            </dd>
+            <dd ng-show="!events || events.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>
+        </div>
+        <div class="col-sm-6">
+          <dl class="dl-horizontal">
+            <dt>Lessons Taught</dt>
+            <dd ng-repeat="lesson in lessonsTaught">
+              <a ui-sref="lessons.view({ lessonId: lesson._id })">
+                {{lesson.title}}</a>
+            </dd>
+            <dd ng-show="!lessonsTaught || lessonsTaught.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>
+        </div>
+
+        <!--Wire up once we figure out where this data comes from --
+        <div class="col-sm-4">
+            <dl class="dl-horizontal">
+                <dt>Grade levels</dt>
+                <dd>9th-12th</dd><!--not sure where this should come from --
+
+                <dt>Subjects</dt>
+                <dd>English, Science</dd><!--not sure where this should come from --
+
+                <dt>Students</dt>
+                <dd>25</dd><!--sum total of all their teams--
+            </dl>
+        </div>
+        -->
+      </div>
+
+      <!-- commenting this section out until we have motivations wired up
+    <hr/>
+    <div class="row">
+        TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin
+        <div class="col-sm-12" ng-show="isAdmin">
+            <dl class="dl-horizontal">
+                <dt>Motivations</dt>
+                <dd>...</dd>
+                <dd>...</dd>
+                <dd>...</dd>
+            </dl>
+        </div>
+    </div>
+  -->
+    </div>
+  </div>
+</div>

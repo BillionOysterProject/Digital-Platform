@@ -1,0 +1,92 @@
+<section class="content">
+<div class="row">
+    <div class="col-md-2 col-sm-4">
+        <div class="form-group">
+            <select class="form-control" name="role" id="role" ng-model="filter.role"
+            ng-change="fieldChanged()">
+                <option value="">Show all roles</option>
+                <option value="team lead">Team Lead</option>
+                <option value="team member">Team Member</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <div class="form-group">
+            <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
+              ng-change="fieldChanged()">
+                <option value="">Show all organizations</option>
+                <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input class="form-control col-md-4" type="text" placeholder="Search"
+                ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
+                ng-change="searchChange()" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-right">
+        <!-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a> TODO-->
+        <!-- <a class="btn btn-primary">Import team leads</a> TODO: This should open modal duplicated from "Import Team Members" but with different text-->
+    </div>
+</div>
+<div class="alert alert-danger text-center" ng-show="error">
+  <p ng-bind="error"></p>
+</div>
+<div class="alert alert-info text-center" ng-show="(pagedItems.length === 0 && !error)">
+    Sorry, no results found for that search term
+</div>
+<div class="row" ng-show="leadRequests && leadRequests.length > 0">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>{{leadRequests.length}}</b> new team lead requests. <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a></div>
+    </div>
+</div>
+<div class="row" ng-show="leadRequestsOrgPending && leadRequestsOrgPending.length > 0">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">You have <b>{{leadRequestsOrgPending.length}}</b> new team lead requests that have organization request that must be approved before they can be approved.
+          <a class="btn btn-sm btn-default" ui-sref="settings.admin-organizations">Respond to Organizations</a></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-verticalalign table-responsive">
+            <tr ng-repeat="user in pagedItems">
+                <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
+                <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
+                <td>{{user.teamLeadType | teamLeadTypes}}</td>
+                <td>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</td>
+                <td>{{listRoles(user)}}</td>
+                <!-- <td>{{listTeams(user)}}</td> -->
+                <td><span ng-repeat="team in user.teams"><a ng-click="openAdminTeam(team)">{{team.name}}</a><span ng-if="!$last">, </span></span></td>
+                <td class="text-right">
+                    <a class="btn btn-default" ng-click="openAdminTeamLeadForm(user)">
+                      <i class="glyphicon glyphicon-edit"></i>
+
+                    </a>
+                    <a class="btn btn-danger" ng-click="openDeleteUser(user)">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    </div>
+</div>
+</section>
+
+<!-- MODALS -->
+<form-admin-team-lead-modal user="formUser" organizations="organizations" save-function="saveAdminTeamLeadForm" close-function="cancelAdminTeamLeadForm"></form-admin-team-lead-modal>
+<delete-user-modal user="userToDelete" can-be-deleted-function="canBeDeleted" delete-function="deleteUser" close-function="cancelDeleteUser"></delete-user-modal>
+<approve-team-leads-modal lead-requests="leadRequests" cancel-function="closeApproveTeamLeads"></approve-team-leads-modal>
+<view-admin-team-modal team="team" delete-team-function="openDeleteTeam" delete-team-error="deleteTeamError"
+  delete-team-member-function="openDeleteTeamMember" delete-team-member-error="deleteTeamMemberError"
+  close-function="closeAdminTeam"></view-admin-team-modal>
+<!-- END MODALS -->

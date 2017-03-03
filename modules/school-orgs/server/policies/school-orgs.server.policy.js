@@ -33,7 +33,7 @@ exports.invokeRolesPolicies = function () {
       permissions: 'get'
     }]
   }, {
-    roles: ['admin'],
+    roles: ['admin', 'org lead'],
     allows: [{
       resources: '/api/school-orgs/:schoolOrgId/teams',
       permissions: '*'
@@ -53,11 +53,35 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/school-orgs/:schoolOrgId/deny',
       permissions: '*'
     }, {
+      resources: '/api/school-orgs/:schoolOrgId/upload-image',
+      permissions: '*'
+    }, {
       resources: '/api/school-orgs/:schoolOrgId',
       permissions: '*'
     }]
   }, {
-    roles: ['user', 'team lead', 'team member', 'partner'],
+    roles: ['team lead', 'org lead'],
+    allows: [{
+      resources: '/api/school-orgs/:schoolOrgId/teams',
+      permissions: 'get'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId/team-leads',
+      permissions: 'get'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId/team-leads/:teamLeadId',
+      permissions: 'get'
+    }, {
+      resources: '/api/school-orgs',
+      permissions: 'get'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId/upload-image',
+      permissions: '*'
+    }, {
+      resources: '/api/school-orgs/:schoolOrgId',
+      permissions: 'get'
+    }]
+  }, {
+    roles: ['user', 'team member', 'partner'],
     allows: [{
       resources: '/api/school-orgs/:schoolOrgId/teams',
       permissions: 'get'

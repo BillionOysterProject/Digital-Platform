@@ -1,0 +1,177 @@
+<section class="content content-flush">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-4 shaded">
+                <img ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}" class="img-circle img-responsive center-block" width="100" />
+                <h3 class="text-center"><a href="#" ng-click="vm.openViewUserModal()">{{vm.user.displayName}}</a></h3>
+                <p class="text-muted text-center"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
+                <div class="text-center" ng-show="vm.isTeamLead">
+                    <a class="btn btn-success" ng-click="vm.openTeamProfileForm()"><i class="fa fa-plus"></i> Create a team</a>
+                </div>
+                <hr/>
+                <div ng-show="vm.organization && vm.organization._id">
+                  <h6>Organization</h6>
+                  <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a><br/>
+                    <small>{{vm.organization.city}}, {{vm.organization.state}}</small></h4>
+                  <hr/>
+                </div>
+                <div ng-show="vm.teams">
+                  <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                  <h4 ng-repeat="team in vm.teams">
+                    <a ui-sref="profiles.team-view({ teamId: team._id })">{{team.name}}</a><br/>
+                    <!-- compare on ID below in case the current user changes their sid -->
+                    <small ng-show="vm.user._id !== team.teamLead._id">
+                      <a data-toggle="modal" data-target="#modal-profile-user">{{team.teamLead.displayName}}</a></small>
+                  </h4>
+                  <hr/>
+                </div>
+                <a class="btn btn-default btn-block" ng-click="vm.openUserProfileForm()">Edit profile</a>
+                <a class="btn btn-default btn-block" ng-click="vm.openChangePicture()">Change profile picture</a>
+                <a class="btn btn-default btn-block" ng-click="vm.openChangePassword()">Change password</a>
+                <hr/>
+            </div>
+            <div class="col-md-9 col-sm-8">
+                <br/>
+                <div class="alert alert-info text-center" ng-show="vm.isTeamLead && vm.teams.length === 0">
+                    You don't have any teams yet!
+                    <a class="btn btn-sm btn-default" ng-click="vm.openTeamProfileForm()">Create a team</a>
+                </div>
+
+                <div class="alert alert-success" role="alert" ng-show="vm.teamRequests && vm.teamRequests.length > 0">
+                    You have <b>{{vm.teamRequests.length}}</b> team member requests.
+                    <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
+                </div>
+
+                <div class="alert alert-success" ng-show="vm.leadRequests && vm.leadRequests.length > 0" role="alert">
+                    You have <b>{{vm.leadRequests.length}}</b> new team lead requests.
+                    <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamLeads()">Respond</a>
+                </div>
+
+
+                <div ng-show="vm.organization && vm.organization._id">
+                  <h6>Organization</h6>
+                  <div>
+                      <div class="row">
+                          <div class="col-lg-3 col-md-6" ng-show="vm.orgPhotoUrl">
+                              <img class="img-thumbnail img-responsive" ng-src="{{vm.orgPhotoUrl}}" />
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-hide="vm.orgPhotoUrl">
+                              <div class="well text-center"><i class="fa fa-5x fa-building-o gray"></i></div>
+                          </div>
+                          <div class="col-lg-6 col-md-6">
+                              <h2><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a></h2>
+                              <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
+                              <p>{{vm.organization.description}}</p>
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
+                            <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
+                            <p ng-repeat="orgLead in vm.organization.orgLeads">
+                                <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
+                                    class="pull-left header-profile-image">
+                                <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
+                                <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
+                                  <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
+                                  <span class="green ng-hide" ng-show="orgLead.reminderSent">
+                                    <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                                </em>
+                            </p>
+                          </div>
+                          <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
+                      </div>
+                      <nav class="nav nav-default text-right">
+                        <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openFormOrg()">Edit organization profile</a>
+                        <a class="btn btn-default" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openInviteOrgLead()">Invite leads</a>
+                        <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteOrgLead()">Remove leads</a>
+                        <a class="btn btn-danger" ng-show="vm.organization && vm.organization._id && (vm.organization.isCurrentUserOrgLead || vm.isAdmin)" ng-click="vm.openDeleteForm()">Delete organization</a>
+                      </nav>
+                      <hr/>
+                  </div>
+                </div>
+
+                <h6 ng-show="!vm.teams || vm.teams.length === 0">No Teams</h6>
+                <h6 ng-show="vm.teams.length > 0">{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                <div ng-repeat="team in vm.teams">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6" ng-show="team.photo && team.photo.path">
+                            <img class="img-thumbnail img-responsive" ng-src="{{team.photo.path}}" />
+                        </div>
+                        <div class="col-lg-3 col-md-6" ng-hide="team.photo && team.photo.path">
+                            <div class="well text-center"><i class="fa fa-5x fa-users gray"></i></div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <h2><a ui-sref="profiles.team-view({ teamId: team._id })">{{team.name}}</a></h2>
+                            <h4><a ui-sref="profiles.organization-view({ schoolOrgId: team.schoolOrg._id })">{{team.schoolOrg.name}}</a></h4>
+                            <p>{{team.description}}</p>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-4" ng-show="team.teamLeads && team.teamLeads.length > 0">
+                                  <h6><i class="fa fa-user"></i> {{(team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
+                                  <p ng-repeat="teamLead in team.teamLeads">
+                                      <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                                          class="pull-left header-profile-image">
+                                      <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
+                                      <em class="text-muted" ng-show="(team.isCurrentUserTeamLead || vm.isAdmin) && teamLead.pending"> Pending<br/>
+                                        <a ng-click="vm.sendReminder(teamLead)" ng-hide="teamLead.reminderSent">Send reminder</a>
+                                        <span class="green ng-hide" ng-show="teamLead.reminderSent">
+                                          <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                                      </em>
+                                  </p>
+                                </div>
+                                <div class="col-sm-4" ng-hide="team.teamLeads && team.teamLeads.length > 0"></div>
+                                <div class="col-sm-4" ng-show="team.expeditions && team.expeditions.length > 0">
+                                    <h6><i class="fa fa-flag"></i> Published Expeditions</h6>
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="expedition in team.expeditions">
+                                          <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-4" ng-hide="team.expeditions && team.expeditions.length > 0"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <nav class="nav nav-default text-right">
+                      <a class="btn btn-default" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openTeamProfileForm(team)">Edit team profile</a>
+                      <a class="btn btn-default" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openInviteTeamLead(team)">Invite leads</a>
+                      <a class="btn btn-default" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openFormTeamMember(team)">Add members</a>
+                      <a class="btn btn-default" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openImportTeamMembers(team)">Import members</a>
+                      <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openDeleteTeamLead(team)">Remove leads</a>
+                      <a class="btn btn-danger" ng-show="vm.isAdmin || vm.isTeamLead" ng-click="vm.openDeleteTeam(team)">Delete team</a>
+                    </nav>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--MODALS-->
+<!-- Org Modals -->
+<form-org-profile-modal organization="vm.organization" close-function="vm.closeFormOrg"></form-org-profile-modal>
+<invite-org-lead-modal organization="vm.organization" close-function="vm.closeInviteOrgLead"></invite-org-lead-modal>
+<delete-org-lead-modal organization="vm.organization" close-function="vm.closeDeleteOrgLead"></delete-org-lead-modal>
+<delete-school-org-modal organization="vm.organization" close-function="vm.closeDeleteForm"></delete-school-org-modal>
+<!-- End Org Modals -->
+
+<!-- Team Modals -->
+<form-team-profile-modal team="vm.teamToOpen" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<invite-team-lead-modal team="vm.teamToOpen" organization="vm.organization" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
+<form-team-member-modal team-member="vm.userToOpen" team="vm.teamToOpen" organization="vm.organization"
+  close-function="vm.closeFormTeamMember"></form-team-member-modal>
+<import-team-members-modal team="vm.teamToOpen" organization="vm.organization"
+  close-function="vm.closeImportTeamMembers"></import-team-members-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
+<approve-team-leads-modal lead-requests="vm.leadRequests" cancel-function="vm.closeApproveTeamLeads"></approve-team-leads-modal>
+<delete-team-lead-modal team="vm.teamToOpen" organization="vm.organization" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
+<delete-team-modal team="vm.teamToOpen" close-function="vm.closeDeleteTeam"></delete-team-modal>
+<!-- End Team Modals -->
+
+<form-user-profile-modal close-function="vm.closeUserProfileForm"></form-user-profile-modal>
+<change-user-profile-image-modal close-function="vm.closeChangePicture"></change-user-profile-image-modal>
+
+<view-user-modal user="vm.user" teams="vm.teams" organization="vm.organization" close-function="vm.closeViewUserModal"></view-user-modal>
+<change-password-modal close-function="vm.closeChangePassword"></change-password-modal>
+<!--END MODALS-->
