@@ -16,7 +16,11 @@
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
-                        <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                        <span class="text-muted">
+                          <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                            {{vm.team.schoolOrg.name}}
+                          </a>
+                        </span>
                     </p>
                 </div>
             </div>
@@ -24,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
-                  You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                  You don't have any teams yet! <a class="btn btn-default" ui-sref="profiles.team">Add members</a>
                 </div>
                 <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
                   Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
@@ -84,12 +88,12 @@
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
-                                  <a ui-sref="settings.admin-team-owner" ng-class="{ 'disabled': vm.isTeamLeadPending }"
+                                  <a ui-sref="profiles.team" ng-class="{ 'disabled': vm.isTeamLeadPending }"
                                   ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner"
+                                <a class="btn btn-primary" ui-sref="profiles.team"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
@@ -124,8 +128,8 @@
                             </div>
                             <div class="panel-body">
                                 <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmU3dPVXNEaGdrRVE&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmRlNLTUFTbG5pWGs&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
+                                <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmaW9XN1hlM09vRXc?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
+                                <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
                                 <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
                             </div>
                         </div>

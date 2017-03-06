@@ -848,7 +848,7 @@
         cleanupPageChangeListeners();
       }
     });
-    
+
     var handleStateChangeStartEvent = function(event, toState, toParams, fromState, fromParams) {
       if(!areProtocolFormsDirty()) {
         cleanupPageChangeListeners();

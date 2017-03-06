@@ -13,7 +13,7 @@
       title: 'Research',
       state: 'researches',
       type: 'dropdown',
-      roles: ['*'],
+      roles: ['admin', 'team lead', 'team lead pending', 'team member', 'team member pending', 'partner'],
       icon: 'fa fa-file-text',
       position: 3
     });

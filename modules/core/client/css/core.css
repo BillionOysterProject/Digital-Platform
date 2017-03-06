@@ -16,6 +16,9 @@ body {
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
 .content-fixed { position: fixed; z-index: 1; width: 100% }
+.content-flush { padding: 0 0 0 80px; }
+/*.content-fixed { position: fixed; z-index: 1; }*/
+
 .content-fixed + div { padding-top: 125px; }
 
 .popover {
@@ -50,12 +53,12 @@ body {
     padding-bottom: 20px;
 }
 
-     .content-jumbotron { 
-        background-color: #fff; 
+     .content-jumbotron {
+        background-color: #fff;
         padding-top: 50px;
         padding-bottom: 50px;
     }
-    
+
         @media (max-width: 768px) {
             .content-jumbotron .btn {
                 display: block;
@@ -85,10 +88,13 @@ body {
     box-shadow: none;
 }
 
-    .navbar-default a.icon {
+    .navbar-default .icon {
         font-size: 20px;
         padding: 0 5px;
         line-height: 50px;
+    }
+
+    .navbar-default a.icon {
         color: #ccc !important;
     }
 
@@ -599,6 +605,10 @@ h6, .h6 {
     letter-spacing: 2px;
 }
 
+.capitalize {
+   text-transform: capitalize;
+}
+
 .break {
     word-break: break-all;
 }
@@ -1055,7 +1065,7 @@ form.ng-submitted .ng-invalid {
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 .container-ribbon {
-    background: url(../img/backgrounds/redribbon-bg.png) center top no-repeat transparent;
+    background: url(img/redribbon-bg.png) center top no-repeat transparent;
     margin-top: -50px;
 }
 
@@ -1087,4 +1097,33 @@ form.ng-submitted .ng-invalid {
     font-weight: 400;
     font-size: 3em;
     line-height: 1;
+}
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+          LOADING OVERLAY
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+.loading-dialog {
+    display: none;
+    position: fixed;
+    z-index: 1020;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,.5);
+}
+
+    .loading-dialog i {
+        margin-top: 300px;
+        margin-left: 80px;
+    }
+*/
+
+li.loading-dialog {
+    margin-right: 30px;
 }

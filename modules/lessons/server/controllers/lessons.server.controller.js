@@ -460,6 +460,33 @@ exports.trackLesson = function(req, res) {
   });
 };
 
+exports.listTrackedLessonsForUser = function(req, res) {
+  var user = (req.query.userId ? req.query.userId : req.user);
+
+  //get the unique lessonids that this person taught - they could have
+  //marked a lesson taught more than once
+  LessonTracker.find({ user: user }).distinct('lesson', function(err, trackedLessonIds) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if(trackedLessonIds && trackedLessonIds.length > 0) {
+      //get the lessons that match those ids
+      Lesson.find({ _id: { $in: trackedLessonIds } }).exec(function(err, lessons) {
+        if(err) {
+          return res.status(400).send({
+            message: 'No lessons found. ' + errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(lessons);
+        }
+      });
+    } else {
+      res.json([]);
+    }
+  });
+};
+
 exports.listTrackedForLessonAndUser = function(req, res) {
   var lesson = req.lesson;
 

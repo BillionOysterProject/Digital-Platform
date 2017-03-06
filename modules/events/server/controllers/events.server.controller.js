@@ -126,7 +126,7 @@ exports.create = function(req, res) {
     calendarEvent.dates = sortDates(calendarEvent.dates);
     calendarEvent.deadlineToRegister = (req.body.deadlineToRegister) ?
       moment(req.body.deadlineToRegister,'YYYY-MM-DDTHH:mm:ss.SSSZ') : '';
-      
+
     if (!calendarEvent.resources) {
       calendarEvent.resources = {
         resourcesFiles: []
@@ -706,7 +706,12 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) {
   var query;
+  var user = (req.query.userId ? req.query.userId : req.user);
   var and = [];
+
+  if(req.query.byRegistrants) {
+    and.push({ 'registrants.user': user });
+  }
 
   if (req.query.type) {
     and.push({ 'category.type': req.query.type });
@@ -714,7 +719,6 @@ exports.list = function(req, res) {
 
   if (req.query.timeFrame === 'Upcoming events') {
     var today1 = moment().local().startOf('day').toDate();
-    console.log('today1', today1);
     and.push({ 'dates.startDateTime': { '$gte': today1 } });
   } else if (req.query.timeFrame === 'Past events') {
     var today2 = moment().local().startOf('day').toDate();

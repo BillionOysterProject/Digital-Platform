@@ -42,6 +42,7 @@ var path = require('path'),
 var buildSearchQuery = function (req, callback) {
   function searchQuery (teams, siteConditionIds, oysterMeasurementIds,
     mobileTrapIds, settlementTileIds, waterQualityIds) {
+    var user = (req.query.userId ? req.query.userId : req.user);
     var query;
     var and = [];
 
@@ -50,16 +51,16 @@ var buildSearchQuery = function (req, callback) {
       and.push({ 'team': req.query.teamId });
     }
     if (req.query.byOwner) {
-      and.push({ 'teamLead': req.user });
+      and.push({ 'teamLead': user });
     }
 
     var memberOr = [];
     if (req.query.byMember) {
-      memberOr.push({ 'teamLists.siteCondition': req.user });
-      memberOr.push({ 'teamLists.oysterMeasurement': req.user });
-      memberOr.push({ 'teamLists.mobileTrap': req.user });
-      memberOr.push({ 'teamLists.settlementTiles': req.user });
-      memberOr.push({ 'teamLists.waterQuality': req.user });
+      memberOr.push({ 'teamLists.siteCondition': user });
+      memberOr.push({ 'teamLists.oysterMeasurement': user });
+      memberOr.push({ 'teamLists.mobileTrap': user });
+      memberOr.push({ 'teamLists.settlementTiles': user });
+      memberOr.push({ 'teamLists.waterQuality': user });
       and.push({ $or: memberOr });
     }
 

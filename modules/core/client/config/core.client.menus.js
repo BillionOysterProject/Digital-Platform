@@ -15,44 +15,15 @@
 
     Menus.addMenuItem('account', {
       title: '',
-      state: 'settings',
+      state: 'profile',
       type: 'dropdown'
     });
 
-    Menus.addSubMenuItem('account', 'settings', {
-      title: 'Settings',
-      state: 'settings.profile',
+    Menus.addSubMenuItem('account', 'profile', {
+      title: 'Profile',
+      state: 'profiles.main',
       roles: ['user']
     });
-
-
-    // Menus.addSubMenuItem('account', 'settings', {
-    //   title: 'Edit Profile',
-    //   state: 'settings.profile'
-    // });
-
-
-    // Menus.addSubMenuItem('account', 'settings', {
-    //   title: 'Edit Profile Picture',
-    //   state: 'settings.picture'
-    // });
-
-    // Menus.addSubMenuItem('account', 'settings', {
-    //   title: 'Change Password',
-    //   state: 'settings.password'
-    // });
-
-    // Menus.addSubMenuItem('account', 'settings', {
-    //   title: 'Manage Social Accounts',
-    //   state: 'settings.accounts'
-    // });
-
-    // Menus.addSubMenuItem('account', 'settings', {
-    //   title: 'Manage Users',
-    //   state: 'admin.users',
-    //   roles: ['admin']
-    // });
-
   }
 
 })();

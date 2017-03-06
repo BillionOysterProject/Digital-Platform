@@ -1,8 +1,8 @@
 Hi <%= FirstName %>,
 
-Your invite is waiting from <%= TeamLeadName %> to join the team <%= TeamName %> at the Billion Oyster Project.
+Your invite is waiting from <%= LeadName %> to join the <%= TeamOrOrg %> <%= TeamOrOrgName %> at the Billion Oyster Project.
 
-Visit <%= LinkCreateAccount %> to join the team.
+Visit <%= LinkCreateAccount %> to join the <%= TeamOrOrg %>.
 
 So glad to have you on board!
 
