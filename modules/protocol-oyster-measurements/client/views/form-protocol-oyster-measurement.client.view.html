@@ -73,9 +73,13 @@
                         <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation" required></select>
                     </div>
                     <div class="form-group">
-                        <label for="damage" class="control-label">Describe any damage to the cage</label>
+                        <label for="damage" class="control-label">Describe any damage to the cage</label>                    
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+                        
+                        <!--TODO: Wire up link to open status report modal (currently at the bottom of RS Dashboard until it and ORS profiles are wired up)-->
+                        <span class="help-block">Was the cage lost, destroyed or significantly damaged? <a href="#" class="btn btn-sm btn-danger pull-right">Submit status update</a></span>
                     </div>
+                    
                 </div>
             </div>
         </section>
