@@ -31,9 +31,9 @@
     });
 
     //Added temporarily to allow access to this view for mockup material
-    Menus.addSubMenuItem('topbar', 'researches', {
-      title: 'Poster Mockup',
-      state: 'researches.view'
-    });
+    //Menus.addSubMenuItem('topbar', 'researches', {
+    //  title: 'Poster Mockup',
+    //  state: 'researches.view'
+    //});
   }
 }());

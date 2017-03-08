@@ -14,14 +14,101 @@
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" ng-class="{active: vm.createdResearches.length > 0}"><a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Posters</a></li>
         <li role="presentation" view-permissions="admin"><a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Posters</a></li>
+        <li role="presentation"><a href="#teamdrafts" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamdrafts')">Team Posters</a></li>
       </ul>
       <div class="tab-content">
         <br />
         <div role="tabpanel" class="tab-pane" id="created" ng-class="{active: vm.createdResearches.length > 0}">
           <!--<created-researches ng-show="vm.active === 'created' || !vm.active"></created-researches>-->
+            
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
+                    </div>
+                    <div class="panel-footer">
+                        <h6 ng-show="created.status === 'published'">Published</h6>
+                        <h6>Draft</h6><!-- ng-show="created.status === 'draft'" -->
+                        <h6 ng-show="created.status === 'pending'" class="blue">Awaiting Approval</h6>
+                        <h6 ng-show="created.status === 'returned'" class="red">Returned</h6>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin">
           <!--<submitted-researches ng-show="vm.active === 'submitted'"></submitted-researches>-->
+          
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay">
+                    <a class="btn btn-sm btn-primary pull-right" ui-sref="researches.edit({ researchId: submitted._id })">
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                    <a class="btn btn-sm btn-danger pull-right" ng-click="sub.openReturnModal(submitted)">
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-success pull-right" ng-click="sub.openPublishModal(submitted)">
+                        <i class="glyphicon glyphicon-ok"></i></a>
+                </div>
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> jsmith
+                        <br/><small>Oyster Team,  Fearless Org</small>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div role="tabpanel" class="tab-pane" id="teamdrafts">
+        
+        
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> jsmith
+                        <br/><small>Oyster Team,  Fearless Org</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> jsmith
+                        <br/><small>Oyster Team,  Fearless Org</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>September 2, 2016</p>
+                        <h4>Poster Title</h4>
+                        <small>Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here. Abstract text here.</small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" src="modules/users/client/img/profile/default.png" /> jsmith
+                        <br/><small>Oyster Team,  Fearless Org</small>
+                    </div>
+                </div>
+            </div>
+            
         </div>
       </div>
     </div>
