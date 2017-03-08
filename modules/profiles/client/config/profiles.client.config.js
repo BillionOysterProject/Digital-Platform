@@ -12,7 +12,7 @@
       title: 'People',
       state: 'profiles',
       type: 'dropdown',
-      roles: ['user', 'team lead', 'team member', 'admin'],
+      roles: ['user', 'team lead', 'team member', 'admin', 'team lead pending', 'team member pending'],
       icon: 'fa fa-users',
       position: 4
     });
@@ -20,19 +20,19 @@
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Profile',
       state: 'profiles.main',
-      roles: ['user', 'team lead', 'team member', 'admin']
+      roles: ['user', 'team lead', 'team member', 'admin', 'team lead pending', 'team member pending']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Teams',
       state: 'profiles.team',
-      roles: ['team lead', 'team member', 'admin']
+      roles: ['team lead', 'team member', 'admin', 'team lead pending', 'team member pending']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
       title: 'Organizations',
       state: 'profiles.organization',
-      roles: ['team lead', 'team member', 'admin']
+      roles: ['team lead', 'team member', 'admin', 'team lead pending', 'team member pending']
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
