@@ -1,0 +1,94 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Organizations</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for an organization..." ng-model-options='{ debounce: 400 }'>
+            </div>
+            <div class="alert alert-danger text-center" ng-show="vm.error">
+              <p ng-bind="vm.error"></p>
+            </div>
+            <div class="alert alert-info text-center" ng-show="vm.organizations.length === 0 && vm.filter.searchString !== '' && !vm.error">
+                Sorry, no results found for that search term
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+
+        <div class="alert alert-success" ng-show="vm.isAdmin && vm.orgRequests && vm.orgRequests.length > 0" role="alert">
+            You have <b>{{vm.orgRequests.length}}</b> new organization requests.
+            <a class="btn btn-sm btn-default" ng-click="vm.openApproveSchoolOrgs()">Respond</a>
+        </div>
+
+        <nav class="navbar">
+            <a class="btn btn-default pull-right" view-permissions="admin" ng-click="vm.openSchoolOrgForm()">
+                <i class="glyphicon glyphicon-plus"></i> Add organization
+            </a>
+            <!--TODO: Wire up to show a duplicate of the org request modal from sign up page, auto request at submit
+            Only team leads that aren't admin should see this button:
+            <a class="btn btn-default pull-right">
+                <i class="glyphicon glyphicon-plus"></i> Request an organization
+            </a>
+            -->
+            <ul class="nav navbar-nav">
+                <li><a ng-click="vm.clearFilters()" ok-sel="*">Show All</a></li>
+                <li class="dropdown" id="typeSelection">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Type{{(vm.filter.typeName) ? ': ' + vm.filter.typeName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.typeSelected()" ok-sel=".all">All</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li ng-repeat="type in vm.types">
+                        <a ok-sel=".{{type.name}}" ng-click="vm.typeSelected(type)">
+                            {{type.name}}
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="alert alert-info text-center" view-permissions="admin" ng-show="vm.organizations.length === 0 && vm.filter.searchString === ''">
+            No organizations yet! Why don't you <a href="#" ng-click="vm.openSchoolOrgForm()">add some</a>?
+        </div>
+
+        <div class="row" isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="org in vm.organizations" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="profiles.organization-view({ schoolOrgId: org._id })">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{vm.capitalizeFirstLetter(org.organizationType)}}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>{{org.name}}</h4>
+                        <p><i class="fa fa-map-marker"></i> {{org.streetAddress}}, {{org.city}}, {{org.state}}</p>
+                        <p class="text-muted small">{{org.description | limitTo:200}}</p>
+                        <img class="img-responsive" ng-show="org.photo.path" ng-src="{{org.photo.path}}" />
+                        <hr ng-show="org.orgLeads && org.orgLeads.length > 0"/>
+                        <p>
+                            <org-lead-list-condensed org-leads="org.orgLeads"></org-lead-list-condensed>
+                        </p>
+                    </div>
+                    <div class="panel-footer text-muted">
+                        <ul class="list-inline text-center">
+                            <li><b>{{org.teams.teamMemberCount}}</b> team members</li>
+                            <li><b>{{org.teams.teamLeadCount}}</b> team leads</li>
+                            <li><b>{{org.teams.teamCount}}</b> teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--MODALS-->
+<form-org-profile-modal organization="vm.newOrganization" close-function="vm.closeSchoolOrgForm"></form-org-profile-modal>
+<approve-school-org-modal org-requests="vm.orgRequests" cancel-function="vm.closeApproveSchoolOrgs"></approve-school-org-modal>
+<!--END MODALS-->

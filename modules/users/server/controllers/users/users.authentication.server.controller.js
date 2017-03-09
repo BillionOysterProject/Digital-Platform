@@ -35,26 +35,27 @@ exports.signup = function (req, res) {
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = [req.body.userrole, 'user'];
 
+  var createdOrg = null;
   var createNewOrg = function(orgCallback) {
     if (req.body.schoolOrg === 'new') {
       if (req.body.addSchoolOrg) {
-        var schoolOrg = new SchoolOrg(req.body.addSchoolOrg);
-        schoolOrg.creator = user;
-        schoolOrg.pending = true;
+        createdOrg = new SchoolOrg(req.body.addSchoolOrg);
+        createdOrg.creator = user;
+        createdOrg.pending = true;
 
-        schoolOrg.save(function (err) {
+        createdOrg.save(function (err) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            user.schoolOrg = schoolOrg._id;
+            user.schoolOrg = createdOrg._id;
             var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
             var sendAdminNewOrganizationEmail = function(callback) {
               email.sendEmailTemplate(config.mailer.admin, 'A new organization is pending approval', 'org_waiting', {
                 TeamLeadName: user.displayName,
-                OrgName: schoolOrg.name,
+                OrgName: createdOrg.name,
                 LinkOrgRequest: httpTransport + req.headers.host + '/settings/organizations'
               }, function(info) {
                 if (callback) callback();
@@ -63,10 +64,10 @@ exports.signup = function (req, res) {
               });
             };
 
-            email.sendEmailTemplate(user.email, 'Your new organization request for ' + schoolOrg.name + ' is pending admin approval',
+            email.sendEmailTemplate(user.email, 'Your new organization request for ' + createdOrg.name + ' is pending admin approval',
             'org_pending', {
               FirstName: user.firstName,
-              OrgName: schoolOrg.name,
+              OrgName: createdOrg.name,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
               LinkProfile: httpTransport + req.headers.host + '/settings/profile'
             }, function(info) {
@@ -97,6 +98,18 @@ exports.signup = function (req, res) {
         } else if (errorMessage.indexOf('email already exists') > -1) {
           errorMessage = 'Email already exists';
         }
+        //if we can't insert the user, check if there was a new org created
+        //and remove it because it won't map to a user account
+        if(createdOrg !== null && createdOrg !== undefined) {
+          createdOrg.remove(function (err) {
+            if (err) {
+              return res.status(400).send({
+                message: 'Error removing the new organization: ' + errorHandler.getErrorMessage(err)
+              });
+            }
+          });
+        }
+
         return res.status(400).send({
           message: errorMessage
         });
@@ -110,7 +123,7 @@ exports.signup = function (req, res) {
           var defaultTeam = new Team({
             name: 'Default',
             schoolOrg: user.schoolOrg,
-            teamLead: user
+            teamLeads: [user]
           });
           defaultTeam.save(function(saveErr) {
             if (saveErr) {

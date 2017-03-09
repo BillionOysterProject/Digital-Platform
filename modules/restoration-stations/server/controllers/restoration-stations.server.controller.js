@@ -174,13 +174,14 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   var query;
+  var user = (req.query.userId ? req.query.userId : req.user._id);
   var and = [];
 
   if (req.query.teamLeadId) {
     and.push({ 'teamLeadId': req.query.teamLeadId });
   }
   if (req.query.teamLead) {
-    and.push({ 'teamLead': req.user._id });
+    and.push({ 'teamLead': user });
   }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });

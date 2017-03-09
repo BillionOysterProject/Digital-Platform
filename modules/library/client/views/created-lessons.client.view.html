@@ -22,7 +22,7 @@
             <div class="panel-body">
                 <small ng-show="created.lessonOverview.setting">{{created.lessonOverview.setting}}</small>
                 <h4>{{created.title}}</h4>
-                <p ng-bind-html="created.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                <p ng-bind-html="created.lessonOverview.lessonSummary | sanitize | limitTo:200 "></p>
                 <img ng-show="created.featuredImage" ng-src="{{created.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">
@@ -39,12 +39,12 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
+    <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
         <div class="panel panel-default" ui-sref="lessons.create">
             <div class="panel-body text-center text-muted">
                 <h1 class="glyphicon glyphicon-plus" aria-hidden="true"></h1>
                 <h4 class="list-group-item-heading">Create new lesson</h4>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>

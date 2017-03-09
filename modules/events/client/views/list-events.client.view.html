@@ -64,7 +64,7 @@
                 </li> -->
             </ul>
         </nav>
-        <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
+        <div class="row" isotope-container="isotope-container">
             <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
               ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
                 daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">

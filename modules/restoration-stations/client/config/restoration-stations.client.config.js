@@ -35,7 +35,7 @@
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Expeditions',
       state: 'expeditions.list',
-      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
+      roles: ['admin', 'team lead', 'team member', 'partner'],
       position: 2
     });
 

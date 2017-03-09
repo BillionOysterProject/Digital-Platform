@@ -11,12 +11,16 @@
                         </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
-                        <span class="btn btn-lg btn-success">{{vm.team.name}}</span>
+                        <h4><span class="label label-success">{{vm.team.name}}</span></h4>
                     </div>
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
                         <b>{{vm.team.teamLead.displayName}}</b><br />
-                        <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                        <span class="text-muted">
+                          <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                            {{vm.team.schoolOrg.name}}
+                          </a>
+                        </span>
                     </p>
                 </div>
             </div>
@@ -24,18 +28,21 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
-                  You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                  You don't have any teams yet! <a class="btn btn-default" ui-sref="profiles.team">Add members</a>
                 </div>
-                <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLeadPending">
-                  Sorry, you don't have any teams yet! You will be able to add members and teams as soon as your account is approved.
+                <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
+                  Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
                 </div>
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && (vm.isTeamMember)">
                   Sorry, you aren't on a team yet! As soon as your team lead adds you to a team, you'll see data here.
                 </div>
+                <div class="alert alert-info text-center" ng-show="vm.isTeamMemberPending">
+                  Sorry, your team membership is still pending! As soon as your team lead adds you to a team, you'll see data here.
+                </div>
             </div>
         </div>
         <div class="row">
-            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin || vm.isTeamLeadPending), 'col-md-12': vm.isTeamMemberPending }">
+            <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamMemberPending || vm.isTeamLeadPending) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>Oyster Restoration Stations</h4>
@@ -69,12 +76,11 @@
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-default" ui-sref="expeditions.data({ active: 'pubexpeditions' })" id="pubexpeditions">See all</a>
-                        <!-- TIFFANY: Wire up compare modal (currently living on Expeditions list page) -->
-                        <!-- <a class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-compare-expedition-data">Compare data</a> -->
+                        <a class="btn btn-default" ui-sref="expeditions.data({ active: 'compareexpeditions' })" id="compareexpeditions">Compare data</a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
+                    <div class="col-lg-4" ng-show="vm.isTeamLead && vm.team">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
@@ -82,19 +88,19 @@
                             <div class="panel-body">
                                 <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
-                                  <a ui-sref="settings.admin-team-owner" ng-class="{ 'disabled': vm.isTeamLeadPending }"
+                                  <a ui-sref="profiles.team" ng-class="{ 'disabled': vm.isTeamLeadPending }"
                                   ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner"
+                                <a class="btn btn-primary" ui-sref="profiles.team"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending) && vm.team">
+                        <div class="panel panel-default" ng-show="vm.isTeamLead && vm.team">
                             <div class="panel-heading">
                                 <h4>Activity <span class="badge badge-success pull-right">{{vm.activitiesCount}}</span></h4>
                             </div>
@@ -115,15 +121,15 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': vm.team, 'col-lg-12': !vm.team }">
+                    <div ng-show="vm.isTeamLead || vm.isAdmin || vm.isTeamLeadPending" ng-class="{ 'col-lg-4': ((vm.isTeamLead || vm.isAdmin) && vm.team), 'col-lg-12': (!vm.team || (vm.isTeamLeadPending && vm.team)) }">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>Documents</h4>
                             </div>
                             <div class="panel-body">
                                 <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmU3dPVXNEaGdrRVE&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmRlNLTUFTbG5pWGs&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
+                                <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmaW9XN1hlM09vRXc?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
+                                <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
                                 <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
                             </div>
                         </div>
@@ -131,7 +137,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isAdmin)">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isAdmin)">
                     <div class="panel-heading">
                         <h4>My ORS</h4>
                     </div>
@@ -166,7 +172,7 @@
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
                 </div>
-                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember) && vm.team">
+                <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
                     <div class="panel-heading">
                         <h4>My Expeditions</h4>
                     </div>
@@ -181,10 +187,10 @@
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td class="text-right">
                                     <!--<span class="label label-default" ng-show="vm.isUpcoming(expedition)">Coming up</span>-->
-                                    <span class="label label-danger"ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                                    <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
-                                    <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
-                                    <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
+                                    <span class="label label-danger"ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) || ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Protocols Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
+                                    <span class="label label-info" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
+                                    <span class="label label-info" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
+                                    <span class="label label-success" ng-show="expedition.status === 'published'">Expedition Published</span>
                                 </td>
                             </tr>
                         </table>

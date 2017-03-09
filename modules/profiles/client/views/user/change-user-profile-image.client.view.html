@@ -1,0 +1,27 @@
+<div class="modal fade" id="modal-user-profile-image-edit" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="form.userProfileImageForm" ng-submit="save(form.userProfileImageForm.$valid)" novalidate>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Change your profile picture</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="image" class="control-label">Profile Picture</label>
+                <single-image-drop-zone uploader="userPhotoUploader" image-url="userPhotoUrl"
+                image-alt="Profile Picture" id="user-profile-image-dropzone"></single-image-drop-zone>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

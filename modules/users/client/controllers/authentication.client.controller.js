@@ -5,7 +5,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
-
+    vm.isSubmitting = false;
+    vm.hasAcceptedTermsOfUse = false;
     vm.authentication = Authentication;
     vm.popoverMsg = PasswordValidator.getPopoverMsg();
 
@@ -18,7 +19,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
     }
 
     vm.signup = function (isValid) {
-      vm.error = null;
+      if(!vm.hasAcceptedTermsOfUse) {
+        vm.error = 'Please read and agree to the Terms of Use before completing sign up.';
+        isValid = false;
+      } else {
+        vm.error = null;
+      }
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
@@ -26,7 +32,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
         return false;
       }
 
+      vm.isSubmitting = true;
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
+        vm.isSubmitting = false;
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
 
@@ -34,9 +42,14 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           $location.path($rootScope.redirectFromLogin);
         } else {
           // And redirect to the previous or home page
-          $state.go($state.previous.state.name || 'home', $state.previous.params);
+          var toGoState = $state.previous.state.name;
+          if(!toGoState || toGoState === 'home') {
+            toGoState = 'restoration-stations.dashboard';
+          }
+          $state.go(toGoState, $state.previous.params);
         }
       }).error(function (response) {
+        vm.isSubmitting = false;
         vm.error = response.message;
       });
     };
@@ -65,11 +78,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
             return (teamLeadIndex > -1) ? true : false;
           };
 
-          var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
-            'lessons.list' : 'restoration-stations.dashboard';
+          //var dashboard = (checkRole('team lead') || checkRole('team lead pending')) ?
+          //  'lessons.list' : 'restoration-stations.dashboard';
 
-          $state.go($state.previous.state.name || dashboard, $state.previous.params);
-          //$state.go(dashboard);
+          //$state.go($state.previous.state.name || dashboard, $state.previous.params);
+          $state.go('restoration-stations.dashboard');
         }
       }).error(function (response) {
         vm.error = response.message;

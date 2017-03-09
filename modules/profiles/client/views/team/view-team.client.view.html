@@ -1,0 +1,124 @@
+<section class="content shaded">
+    <section class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6" ng-show="vm.teamPhotoURL">
+                <img class="img-thumbnail img-responsive" ng-src="{{vm.teamPhotoURL}}" />
+            </div>
+            <div class="col-lg-3 col-md-6" ng-hide="vm.teamPhotoURL">
+                <div class="well text-center"><i class="fa fa-5x fa-users gray"></i></div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h2>{{vm.team.name}}</h2>
+                <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                  {{vm.team.schoolOrg.name}}</a></h4>
+                <p>{{vm.team.description}}</p>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <br/>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6><i class="fa fa-user"></i> <span class="blue">{{vm.team.teamLeads.length}}</span> {{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
+                        <p ng-repeat="teamLead in vm.team.teamLeads" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
+                            <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                                class="pull-left header-profile-image">
+                            <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
+                            <em class="text-muted" ng-show="(vm.team.isCurrentUserTeamLead || vm.isAdmin) && teamLead.pending"> Pending<br/>
+                              <a ng-click="vm.sendReminder(teamLead)" ng-hide="teamLead.reminderSent">Send reminder</a>
+                              <span class="green ng-hide" ng-show="teamLead.reminderSent">
+                                <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                            </em>
+                        </p>
+                        <hr/>
+                        <h6><i class="fa fa-users"></i> <span class="blue">{{vm.team.teamMembers.length}}</span> team members</h6>
+                    </div>
+                    <div class="col-sm-6" ng-show="vm.expeditions && vm.expeditions.length > 0"><!--TODO: Remove ng-show on this so it always shows (should read "0 Published Expeditions" if none -- see below ORS count that needs wired up)-->
+                        <h6><i class="fa fa-flag"></i><!--TODO: Expose ORS count--> <span class="blue">{{vm.team.orsCount}}</span> Published Expeditions</h6>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="expedition in vm.expeditions">
+                              <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<section class="content" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember"><!--TODO: Should be visible to all members of the team -- not sure if "isCurrentUserTeamMember" is the right logic? -->
+    <section class="container-fluid">
+        <nav class="nav nav-default text-right">
+            <div class="form-group col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </span>
+                    <input class="form-control col-md-4" type="text" placeholder="Search"
+                      ng-model="vm.filter.searchString" ng-change="vm.searchChange($event)" />
+                </div>
+                <div class="alert alert-info text-center" ng-show="vm.teamMembers.length === 0 && vm.filter.searchString !== ''">
+                  No team members match the search filter.
+                </div>
+            </div>
+
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openInviteTeamLead()">Invite leads</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
+            <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin" ng-click="vm.openDeleteTeam()">Delete team</a>
+        </nav>
+        <hr/>
+
+        <div class="alert alert-info text-center" ng-show="(vm.isAdmin || vm.team.isCurrentUserTeamLead) &&
+          vm.teamMembers.length === 0 && vm.filter.searchString === ''">
+            No team members yet! Why don't you <a href="#" ng-click="vm.openFormTeamMember()">invite some</a>?
+        </div>
+        <div class="alert alert-success" role="alert" ng-show="(vm.isAdmin || vm.team.isCurrentUserTeamLead) && vm.teamRequests.length > 0">
+            You have <b>{{vm.teamRequests.length}}</b> team member requests.
+            <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
+        </div>
+       
+        <div class="row" isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead">
+                    <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openDeleteTeamMember(member)">
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-default pull-right" ng-click="vm.openFormTeamMember(member)">
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                </div>
+                <div class="panel" ng-click="vm.openViewUserModal(member)">
+                    <div class="panel-body text-muted text-center">
+                        <img class="img-circle img-responsive center-block"
+                          ng-show="member.profileImageURL" ng-src="{{member.profileImageURL}}" width="100" />
+                        <h3>{{member.displayName}}</h3>
+                        <h6 class="red" ng-show="{{member.pending === true}}">Pending</h6>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="text-muted text-center"><b>{{member.username}}</b><br/>{{member.email}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--MODALS-->
+<delete-team-member-modal team-member="vm.userToOpen" team="vm.team" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
+
+<form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
+<invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
+<form-team-member-modal team-member="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
+  close-function="vm.closeFormTeamMember"></form-team-member-modal>
+
+<!-- TODO: when the import modal is closed the whole pages goes blank.
+I think there is a missing html tag somewhere but can't find it -->
+<import-team-members-modal team="vm.teamToImport" organization="vm.team.schoolOrg"
+  close-function="vm.closeImportTeamMembers"></import-team-members-modal>
+
+<delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
+<delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
+
+<view-user-modal user="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeViewUserModal"></view-user-modal>
+<approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
+<!--END MODALS-->

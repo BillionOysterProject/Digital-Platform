@@ -45,6 +45,7 @@
     vm.resourceLinks = (vm.event && vm.event.resources && vm.event.resources.resourcesLinks) ?
       vm.event.resources.resourcesLinks : [];
     vm.event.deadlineToRegister = (vm.event && vm.event.deadlineToRegister) ? moment(vm.event.deadlineToRegister).toDate() : '';
+    vm.registrantToOpen = {};
 
     vm.featuredImageUploader = new FileUploader({
       alias: 'newFeaturedImage',
@@ -243,6 +244,21 @@
       });
     };
 
+    vm.openEventNote = function(registrant, note) {
+      vm.registrantToOpen = (registrant) ? registrant : {};
+      angular.element('#modal-registrant-note').modal('show');
+    };
+
+    vm.closeEventNote = function(registrants, attendees) {
+      angular.element('#modal-registrant-note').modal('hide');
+      if (registrants && attendees) {
+        $timeout(function() {
+          vm.event.registrants = registrants;
+          vm.event.attendees = attendees;
+        }, 500);
+      }
+    };
+
     vm.duplicateEvent = function() {
       $state.go('events.duplicate', {
         eventId: vm.event._id
@@ -269,6 +285,37 @@
       return columns;
     };
     vm.columns = vm.getColumnNumber();
+
+    vm.setEventDatesToGmt = function() {
+      if(vm.event.dates === null || vm.event.dates === undefined || vm.event.dates.length === 0) {
+        return;
+      }
+      for(var i = 0; i < vm.event.dates.length; i++) {
+        var currEventDate = vm.event.dates[i];
+        var year = moment(currEventDate.date).get('year');
+        var month = moment(currEventDate.date).get('month');
+        var day = moment(currEventDate.date).get('date');
+        var startHour = moment(currEventDate.startTime).get('hour');
+        var startMinute = moment(currEventDate.startTime).get('minute');
+        var endHour = moment(currEventDate.endTime).get('hour');
+        var endMinute = moment(currEventDate.endTime).get('minute');
+        var startDateTime = moment().set({ year: year, month: month, date: day, hour: startHour, minute: startMinute, second: 0, millisecond: 0 });
+        var endDateTime = moment().set({ year: year, month: month, date: day, hour: endHour, minute: endMinute, second: 0, millisecond: 0 });
+        var startDateTimeStr = startDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        var endDateTimeStr = endDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        vm.event.dates[i].startDateTime = startDateTimeStr;
+        vm.event.dates[i].endDateTime = endDateTimeStr;
+      }
+
+      if(vm.event.deadlineToRegister !== null && vm.event.deadlineToRegister !== undefined) {
+        var deadlineYear = moment(vm.event.deadlineToRegister).get('year');
+        var deadlineMonth = moment(vm.event.deadlineToRegister).get('month');
+        var deadlineDay = moment(vm.event.deadlineToRegister).get('date');
+        var deadlineToRegister = moment().set({ year: deadlineYear, month: deadlineMonth, date: deadlineDay, hour: 0, minute: 0, second: 0, millisecond: 0 });
+        var deadlineToRegisterStr = deadlineToRegister.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        vm.event.deadlineToRegister = deadlineToRegisterStr;
+      }
+    };
 
     // Save Event
     function save(isValid) {
@@ -307,8 +354,10 @@
 
       // TODO: move create/update logic to service
       if (vm.event._id) {
+        vm.setEventDatesToGmt();
         vm.event.$update(successCallback, errorCallback);
       } else {
+        vm.setEventDatesToGmt();
         vm.event.$save(successCallback, errorCallback);
       }
 

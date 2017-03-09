@@ -22,6 +22,7 @@ module.exports = {
         'public/lib/jquery/dist/jquery.js',
         'public/lib/select2/select2.js',
         'public/lib/Chart.js/Chart.js',
+        'public/lib/imagesloaded/imagesloaded.pkgd.js',
         'public/lib/isotope/dist/isotope.pkgd.js',
         'public/lib/bootstrap/dist/js/bootstrap.js',
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/js/iconset/iconset-fontawesome-4.2.0.min.js',
@@ -73,7 +74,8 @@ module.exports = {
       'modules/core/client/app/config.js',
       'modules/core/client/app/init.js',
       'modules/*/client/*.js',
-      'modules/*/client/**/*.js'
+      'modules/*/client/**/*.js',
+      'modules/*/client/**/**/*.js'
     ],
     img: [
       'modules/**/*/img/**/*.jpg',
@@ -81,7 +83,7 @@ module.exports = {
       'modules/**/*/img/**/*.gif',
       'modules/**/*/img/**/*.svg'
     ],
-    views: ['modules/*/client/views/**/*.html'],
+    views: ['modules/*/client/views/**/*.html', 'modules/*/client/views/**/**/*.html'],
     templates: ['build/templates.js']
   },
   server: {

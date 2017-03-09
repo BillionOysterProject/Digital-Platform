@@ -67,7 +67,7 @@
             </ul>
         </nav>
 
-        <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container">
+        <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container" images-loaded>
             <div ng-repeat="lesson in vm.lessons track by lesson._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
                 <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
                     <div class="panel-heading" style="background: {{lesson.unit.color}}">
@@ -84,7 +84,7 @@
                         <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
-                        <small ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</small>
+                        <small class="pull-left" ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</small>
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
                                 <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"

@@ -63,6 +63,12 @@
                 <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <p ng-bind-html="vm.event.description | sanitize"></p>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-sm-12">
@@ -117,56 +123,8 @@
     </section>
 </section>
 
-<section class="content shaded" ng-show="vm.isAdmin">
-    <section class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="blue">Registrants</h3>
-                <table class="table table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Organization</th>
-                            <th>Teams</th>
-                            <th>Email</th>
-                            <th>Date Registered</th>
-                            <th ng-show="vm.today || vm.past">Attended</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="registrant in vm.event.registrants">
-                            <td>{{registrant.user.displayName}}</td>
-                            <td>{{registrant.user.schoolOrg.name}}</td>
-                            <td>{{registrant.user.teams}}</td>
-                            <td>{{registrant.user.email}}</td>
-                            <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
-                            <td ng-show="vm.today || vm.past">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
-                                      registrant.attended === true)}"
-                                      ng-click="vm.notAttendedEvent(registrant)"><i class="fa fa-times"></i></a>
-                                    <a class="btn" ng-class="{'btn-success': registrant.attended === true,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
-                                      registrant.attended == false)}"
-                                      ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-</section>
 <section class="content">
     <section class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <p ng-bind-html="vm.event.description | sanitize"></p>
-                <hr/>
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3" ng-show="vm.event.resources && (vm.event.resources.resourcesFiles &&
               vm.event.resources.resourcesFiles.length > 0) || (vm.event.resources.resourcesLinks &&
@@ -198,6 +156,56 @@
     </section>
 </section>
 
+<section class="content shaded" ng-show="vm.isAdmin">
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="blue">Registrants</h3>
+                <table class="table table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Organization</th>
+                            <th>Teams</th>
+                            <th>Email</th>
+                            <th>Date Registered</th>
+                            <th>Notes</th>
+                            <th ng-show="vm.today || vm.past">Attended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="registrant in vm.event.registrants">
+                            <td>{{registrant.user.displayName}}</td>
+                            <td>{{registrant.user.schoolOrg.name}}</td>
+                            <td>{{registrant.user.teams}}</td>
+                            <td>{{registrant.user.email}}</td>
+                            <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
+                            <td class="col-sm-3">
+                              <a href="#" ng-click="vm.openEventNote(registrant)" ng-hide="registrant.note">
+                                <i class="fa fa-comment-o"></i> Add note</a>
+                              <a href="#" class="red" ng-click="vm.openEventNote(registrant)" ng-show="registrant.note">
+                                <i class="fa fa-comment"></i> {{registrant.note | limitTo: 50}}</a>
+                            </td>
+                            <td ng-show="vm.today || vm.past">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                                      registrant.attended === true)}"
+                                      ng-click="vm.notAttendedEvent(registrant)"><i class="fa fa-times"></i></a>
+                                    <a class="btn" ng-class="{'btn-success': registrant.attended === true,
+                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                                      registrant.attended == false)}"
+                                      ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</section>
+
 
 <!-- MODALS -->
 
@@ -207,6 +215,8 @@
 
 <unregister-event-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}">
   </unregister-event-modal>
+
+<event-note-modal event="vm.event" registrant="vm.registrantToOpen" close-function="vm.closeEventNote"></event-note-modal>
 
 <email-registrants-modal event="vm.event" date-time-string="{{vm.dateTimeRangeString}}"
   attendees="vm.event.attendees" past="vm.past"></email-registrants-modal>

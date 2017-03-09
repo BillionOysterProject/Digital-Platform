@@ -58,6 +58,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+                <li class="loading-dialog" data-http-loading>
+                    <i class="fa fa-spin fa-circle-o-notch red icon"></i>
+                </li>
                 <li class="hidden-xs" ui-sref-active="active">
                   <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 </li>

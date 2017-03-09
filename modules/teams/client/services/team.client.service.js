@@ -14,12 +14,17 @@
       update: {
         method: 'PUT'
       },
+      remove: {
+        method: 'DELETE'
+      },
       query: {
         method: 'GET',
         params: {
           byOwner: '@byOwner',
           byMember: '@byMember',
+          userId: '@userId',
           teamId: '@teamId',
+          orgId: '@orgId',
           sort: '@sort',
           limit: '@limit',
           page: '@page'

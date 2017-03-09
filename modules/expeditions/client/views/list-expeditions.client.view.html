@@ -34,10 +34,11 @@
                     <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
                     <td>
                         <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                          ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                        <span class="label label-success" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Pending</span>
-                        <span class="label label-success" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Submitted</span>
-                        <span class="label label-success" ng-show="expedition.status === 'published'">Published</span>
+                          ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Protocols Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
+                        <span class="label label-info" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
+                        <span class="label label-info" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
+                        <span class="label label-success" ng-show="expedition.status === 'published'">Expedition Published</span>
+                        &nbsp; <span class="label label-default" ng-show="expedition.status !== 'published'">Expedition Unpublished</span>
                     </td>
                     <td>
                         <b>{{vm.getExpeditionDate(expedition.monitoringStartDate)}}</b><br/>
@@ -51,7 +52,7 @@
                 No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
             </div>
             <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && (!vm.teams || vm.teams.length === 0) && (vm.isTeamLead || vm.isAdmin)">
-                You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                You don't have any teams yet! <a class="btn btn-default" ui-sref="profiles.team">Add members</a>
             </div>
             <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.isTeamMember">
                 No expeditions yet! As soon as your team lead assigns you to one, you'll see it here.

@@ -20,7 +20,7 @@
         controller: 'MetricsController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin'],
+          roles: ['admin', 'team lead'],
           pageTitle: 'Metrics'
         }
       });

@@ -19,4 +19,23 @@
       }
     });
   }
+
+  angular
+    .module('lessons.services')
+    .factory('UserLessonsListService', UserLessonsListService);
+
+  UserLessonsListService.$inject = ['$resource'];
+
+  function UserLessonsListService($resource) {
+    return $resource('api/lessons/tracked-list', {
+    }, {
+      'query':  {
+        method:'GET',
+        params: {
+          userId: '@userId'
+        },
+        isArray: true
+      }
+    });
+  }
 })();

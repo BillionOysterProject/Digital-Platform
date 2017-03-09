@@ -234,6 +234,12 @@ module.exports = function (grunt) {
         src: '**/*',
         dest: 'public/dist/fonts/',
         expand: true
+      },
+      images: {
+        cwd: 'modules/core/client/css/img/',
+        src: '**/*',
+        dest: 'public/dist/img/',
+        expand: true
       }
     },
     run: {
@@ -322,7 +328,7 @@ module.exports = function (grunt) {
   grunt.registerTask('lint', ['sass', 'less', 'jshint', 'eslint', 'csslint']);
 
   // Lint project files and minify them into two production files.
-  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'copy:fonts', 'cssmin']);
+  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'copy:fonts', 'copy:images', 'cssmin']);
 
   // Run the project tests
   grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'dropdb', 'run:testDBload', 'server', 'mochaTest', 'protractor']); //, 'karma:unit'

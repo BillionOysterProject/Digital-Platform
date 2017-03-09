@@ -20,7 +20,7 @@
         controller: ['$scope', 'FileUploader', function ($scope, FileUploader) {
           $scope.options = {
             height: 300,
-            focus: true,
+            focus: false,
             toolbar: [
               ['edit',['undo','redo']],
               //['headline', ['style']],
