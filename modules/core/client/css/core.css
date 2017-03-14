@@ -1042,6 +1042,20 @@ form.ng-submitted .ng-invalid {
         background: #ea6158; /*fallback*/
         color: #fff;
     }
+        
+        .library-item .panel .panel-heading.shaded, 
+        .panel .panel-heading.shaded {
+            background: #f4f7f8;
+            color: #2c3c56;
+        }
+        
+        .panel .panel-heading.flush {
+            padding: 0;
+        }
+            
+            .panel .panel-heading.flush .img-responsive {
+                width: 100%;
+            }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

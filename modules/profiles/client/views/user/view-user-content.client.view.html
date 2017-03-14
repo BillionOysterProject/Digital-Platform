@@ -67,7 +67,7 @@
     </nav>
   </div>
 
-  <!-- Show if profile is a Team Member Profile, (not if viewer's role is team member)-->
+  <!-- TEAM MEMBER PROFILES -->
   <div class="modal-body">
     <div ng-show="isUserTeamMember">
       <div class="row">
@@ -100,7 +100,7 @@
       </div>
     </div>
 
-    <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
+    <!-- TEAM LEAD PROFILES -->
     <div ng-show="isUserTeamLead">
       <div class="row">
         <div class="col-sm-6">
@@ -147,6 +147,17 @@
           </dl>
         </div>
         <div class="col-sm-6">
+          <!--TODO: Wire up to show lessons that the team lead has created:
+          <dl class="dl-horizontal">
+            <dt>Lessons Created</dt>
+            <dd ng-repeat="lesson in createdLessons">
+              <a ui-sref="lessons.view({ lessonId: lesson._id })">
+                {{lesson.title}}</a>
+            </dd>
+            <dd ng-show="!createdLessons || createdLessons.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>-->
           <dl class="dl-horizontal">
             <dt>Lessons Taught</dt>
             <dd ng-repeat="lesson in lessonsTaught">
