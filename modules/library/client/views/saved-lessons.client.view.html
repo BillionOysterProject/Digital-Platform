@@ -11,7 +11,7 @@
             </div>
             <div class="panel-body">
                 <small ng-show="saved.lessonOverview.setting">{{saved.lessonOverview.setting}}</small>
-                <h4>{{saved.title}}</h4>
+                <h4><b>{{saved.title}}</b></h4>
                 <p ng-bind-html="saved.lessonOverview.lessonSummary | sanitize | limitTo:200"></p>
                 <img ng-show="saved.featuredImage" ng-src="{{saved.featuredImage.path}}" class="img-responsive" />
             </div>
