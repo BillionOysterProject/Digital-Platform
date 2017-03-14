@@ -45,16 +45,24 @@
     </div>
     <hr/>
 
+    <!--TODO: Change visibility of nav to be more than just admin (see notes below) -->
     <nav class="nav nav-default text-right" ng-show="isCurrentUserAdmin">
       <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6>
+      
+      <!--TODO: only accessible to the user's team lead + admin:-->
       <a class="btn btn-primary pull-left" ng-show="isUserPending && !reminderSent" ng-click="sendReminder()">
         <i class="fa fa-envelope"></i>
         Send reminder</a>
       <h6 class="green pull-left" ng-show="reminderSent">
         <i class="fa fa-check"></i>
         Reminder sent</h6>
+      
+      <!--TODO: only accessible to the actual user (SELF) + THEIR team lead + admin (if they are a team lead, should not be visible to other team leads):-->
       <a class="btn btn-default" ng-click="openUserForm()">Edit profile</a>
+      
+      <!--TODO: only accessible to the user's team lead + admin:-->
       <a class="btn btn-danger" ng-click="openUserDelete()">Delete</a>
+      
       <hr/>
     </nav>
   </div>
@@ -64,12 +72,15 @@
     <div ng-show="isUserTeamMember">
       <div class="row">
         <!-- this is only showing published expeditions -->
-        <div class="col-sm-6" ng-show="expeditions && expeditions.length > 0">
+        <div class="col-sm-6">
           <dl class="dl-horizontal">
             <dt>Expeditions</dt>
             <dd ng-repeat="expedition in expeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
+            </dd>
+            <dd ng-show="!expeditions || expeditions.length === 0">
+              <em>none</em>
             </dd>
             <!--Could add in what protocols they were assigned to if applicable:
                     <a>Nov Expedition</a>: Protocols 1-3

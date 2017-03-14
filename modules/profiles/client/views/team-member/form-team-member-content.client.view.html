@@ -2,10 +2,16 @@
   <fieldset>
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">{{teamMember._id ? 'Update team member' : 'Add a team member'}}</h4>
+      <h4 class="modal-title">{{teamMember._id ? 'Edit team member profile' : 'Add a team member'}}</h4>
     </div>
+    
+    <!--
+        TODO: For SELF editing, this form (`form-team-member-content`) and `form-admin-team-lead-content` should replace `form-user-profile modal`
+    -->
+    
     <div class="modal-body">
       <div class="row">
+        <!--TODO: firstname/lastname/email fields should only be editable to the actual user (SELF), or on new user creation form, (readonly otherwise) -->
         <div class="form-group col-md-6" show-errors>
           <label for="firstName" class="control-label required">First Name</label>
           <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName"
@@ -16,12 +22,13 @@
           <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName"
             required ng-readonly="teamMember._id && teamMember.pending === false" required>
         </div>
-        <div class="form-group col-md-12" show-errors>
+        <div class="form-group col-md-6" show-errors>
           <label for="email" class="control-label required">Email</label>
           <input type="text" name="email" class="form-control" ng-model="teamMember.email"
             required ng-readonly="teamMember._id && teamMember.pending === false" required>
         </div>
-        <div class="form-group col-sm-12" show-errors ng-show="teamMember._id">
+        <!--TODO: Team should only be editable for Team Lead and Admin -->
+        <div class="form-group col-md-6" show-errors ng-show="teamMember._id">
           <label for="team" class="control-label" ng-class="{'required': teamMember._id}">Team</label>
           <select name="team" class="form-control" ng-model="newTeam" ng-required="teamMember._id">
             <option disabled selected value>
