@@ -66,7 +66,7 @@
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
             <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-show="vm.isAdmin" ng-click="vm.openDeleteTeam()">Delete team</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead"" ng-click="vm.openDeleteTeam()">Delete team</a>
         </nav>
         <hr/>
 
