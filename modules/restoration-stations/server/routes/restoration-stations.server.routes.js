@@ -12,6 +12,12 @@ module.exports = function (app) {
     .get(stations.list)
     .post(stations.create);
 
+  app.route('/api/restoration-stations/site-coordinators').all(stationsPolicy.isAllowed)
+    .get(stations.listSiteCoordinators);
+
+  app.route('/api/restoration-stations/property-owners').all(stationsPolicy.isAllowed)
+    .get(stations.listPropertyOwners);
+
   // Upload station photo route
   app.route('/api/restoration-stations/:stationId/upload-image').all(stationsPolicy.isAllowed)
     .post(stations.uploadStationPhoto);

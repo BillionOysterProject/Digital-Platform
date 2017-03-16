@@ -7,6 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
   Team = mongoose.model('Team'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   path = require('path'),
@@ -73,6 +74,10 @@ exports.read = function (req, res) {
 
   station.isCurrentUserOwner = req.user && station.teamLead &&
     station.teamLead._id.toString() === req.user._id.toString();
+
+  if (req.query.full) {
+    
+  }
 
   res.json(station);
 };
@@ -178,7 +183,7 @@ exports.list = function (req, res) {
   var and = [];
 
   if (req.query.teamLeadId) {
-    and.push({ 'teamLeadId': req.query.teamLeadId });
+    and.push({ 'teamLead': req.query.teamLeadId });
   }
   if (req.query.teamLead) {
     and.push({ 'teamLead': user });
@@ -234,6 +239,39 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of Site Coordinators
+ */
+exports.listSiteCoordinators = function (req, res) {
+  User.find({ 'teamLeadType': 'site coordinator' }).sort('displayName').exec(function (err, siteCoordinators) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(siteCoordinators);
+    }
+  });
+};
+
+/**
+ * List of Property Owner
+ */
+exports.listPropertyOwners = function (req, res) {
+  console.log('list property owners');
+  User.find({ 'teamLeadType': 'property owner' }).sort('displayName').exec(function (err, propertyOwners) {
+    if (err) {
+      console.log('err', err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(propertyOwners);
+    }
+  });
+};
+
+
+/**
  * Restoration station middleware
  */
 exports.stationByID = function (req, res, next, id) {
@@ -244,7 +282,10 @@ exports.stationByID = function (req, res, next, id) {
     });
   }
 
-  RestorationStation.findById(id).populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, station) {
+  RestorationStation.findById(id).populate('teamLead', 'displayName email schoolOrg roles')
+  .populate('siteCoordinator', 'displayName email schoolOrg roles')
+  .populate('propertyOwner', 'displayName email schoolOrg roles')
+  .populate('schoolOrg', 'name city state').exec(function (err, station) {
     if (err) {
       return next(err);
     } else if (!station) {

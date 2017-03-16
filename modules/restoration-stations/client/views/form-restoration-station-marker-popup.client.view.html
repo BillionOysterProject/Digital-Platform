@@ -1,17 +1,15 @@
 <div>
   <image ng-show="photoUrl" ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
-  
-  <!--TODO: Wire up labels:-->
-  <span class="label label-success" ng-show="vm.station.status === 'Active'">Active</span>
-  <span class="label label-danger" ng-show="vm.station.status === 'Lost'">Lost</span>
-  
-  <h4 class="blue">{{name}}</h4>
+
+  <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
+  <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+
+  <h4 class="blue">{{station.name}}</h4>
   <p>
-    {{bodyOfWater}}<br/>
+    {{station.bodyOfWater}}<br/>
     <span class="text-muted" ng-show="teamLead">by {{teamLead}} from </span>
     <span class="text-muted" ng-show="schoolOrg">{{schoolOrg}}</span>
   </p>
-  
-  <!--TODO: Edit link to open modal NOT inside of the map marker-->
-  <a class="btn btn-block btn-default" data-toggle="modal" data-target="#modal-station">See more</a>
+
+  <a class="btn btn-block btn-default" ng-click="openView()">See more</a>
 </div>

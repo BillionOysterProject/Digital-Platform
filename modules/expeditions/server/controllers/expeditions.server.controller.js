@@ -15,6 +15,7 @@ var path = require('path'),
   ExpeditionActivity = mongoose.model('ExpeditionActivity'),
   MobileOrganism = mongoose.model('MobileOrganism'),
   SessileOrganism = mongoose.model('SessileOrganism'),
+  RestorationStation = mongoose.model('RestorationStation'),
   Team = mongoose.model('Team'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -704,6 +705,18 @@ exports.list = function (req, res) {
           res.json(expeditions);
         }
       });
+    }
+  });
+};
+
+exports.listByORS = function (req, res) {
+  Expedition.find({ 'station': req.query.stationId }).exec(function (err, expeditions) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(expeditions);
     }
   });
 };

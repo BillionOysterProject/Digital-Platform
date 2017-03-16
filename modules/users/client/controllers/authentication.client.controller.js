@@ -112,6 +112,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       { label: 'Citizen Scientist', value: 'citizen scientist' },
       { label: 'Professional Scientist', value: 'professional scientist' },
       { label: 'Site Coordinator', value: 'site coordinator' },
+      { label: 'Property Owner', value: 'property owner' },
       { label: 'Other', value: 'other' }
     ];
 

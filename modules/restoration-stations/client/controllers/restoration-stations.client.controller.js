@@ -6,16 +6,33 @@
     .controller('RestorationStationsController', RestorationStationsController);
 
   RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader',
-  'BodiesOfWaterService', 'BoroughsCountiesService'];
+  'BodiesOfWaterService', 'BoroughsCountiesService', 'ShorelineTypesService', 'SiteCoordinatorsService',
+  'PropertyOwnersService', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function RestorationStationsController($scope, $http, $timeout, FileUploader,
-  BodiesOfWaterService, BoroughsCountiesService) {
+  BodiesOfWaterService, BoroughsCountiesService, ShorelineTypesService, SiteCoordinatorsService,
+  PropertyOwnersService, ExpeditionViewHelper, RestorationStationsService) {
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
     $scope.canClickMapToAddMarker = true;
 
     $scope.mapControls = {};
+    $scope.mapClick = function(e){
+    };
+    $scope.markerDragEnd = function(location){
+    };
+    if (!$scope.mapPoints && $scope.station) {
+      $scope.mapPoints = [{
+        lat: $scope.station.latitude,
+        lng: $scope.station.longitude,
+        icon: {
+          icon: 'glyphicon-map-marker',
+          prefix: 'glyphicon',
+          markerColor: 'blue'
+        },
+      }];
+    }
 
     $scope.stationPhotoUploader = new FileUploader({
       alias: 'stationPhoto'
@@ -31,17 +48,53 @@
       $scope.boroughsCounties = data;
     });
 
-    angular.element(document.querySelector('#modal-station-register')).on('shown.bs.modal', function(){
-      $timeout(function() {
-        $scope.mapControls.resizeMap();
-
-        $scope.teamId = ($scope.station && $scope.station.team && $scope.station.team._id) ?
-          $scope.station.team._id : $scope.station.team;
-
-        $scope.stationPhotoURL = ($scope.station && $scope.station.photo && $scope.station.photo.path) ?
-          $scope.station.photo.path : '';
-      });
+    ShorelineTypesService.query({
+    }, function(data) {
+      $scope.shorelineTypes = data;
     });
+    $scope.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
+
+    SiteCoordinatorsService.query({
+    }, function(data) {
+      $scope.siteCoordinators = data;
+    });
+
+    PropertyOwnersService.query({
+    }, function(data) {
+      $scope.propertyOwners = data;
+    });
+
+    $scope.statuses = [
+      { label: 'Active', value: 'Active' },
+      { label: 'Damaged', value: 'Damaged' },
+      { label: 'Destroyed', value: 'Destroyed' },
+      { label: 'Lost', value: 'Lost' },
+      { label: 'Unknown', value: 'Unknown' }
+    ];
+
+    $scope.load = function(callback) {
+      if ($scope.station) {
+        RestorationStationsService.get({
+          stationId: $scope.station._id
+        }, function(data) {
+          $scope.station = data;
+
+          $http.get('/api/expeditions/restoration-station', {
+            params: { stationId: $scope.station._id }
+          })
+          .success(function(response) {
+            $scope.station.expeditions = response;
+            console.log('response', response);
+            if (callback) callback();
+          })
+          .error(function(err) {
+            console.log('err', err);
+          });
+
+          $scope.mortalitySeries = ['Mortality'];
+        });
+      }
+    };
 
     $scope.save = function(isValid) {
       $scope.disableCancel = true;

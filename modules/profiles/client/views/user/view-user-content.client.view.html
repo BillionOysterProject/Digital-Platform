@@ -2,7 +2,7 @@
   <div class="modal-header">
     <div class="row">
       <div class="col-md-12">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" aria-label="Close" ng-click="closeFunction()"><!--  data-dismiss="modal"-->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -25,7 +25,7 @@
         <h4 ng-repeat="team in teams">
           <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
           <br/>
-          <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember"> 
+          <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember">
             <small>{{teamLead.displayName}}</small><!-- removed ng-show="user._id !== teamLead._id" -- would rather have logic depending on the profile being for a team lead or member -->
           </div>
         </h4>

@@ -67,12 +67,9 @@
               markerColor: (station.status === 'Active') ? 'green' : 'red'
             },
             info:{
-              name: station.name,
-              bodyOfWater: station.bodyOfWater,
-              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
-              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
-              photoUrl: photoUrl,
-              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
+              station: station,
+              openView: vm.openView,
+              html: '<form-restoration-station-marker-popup station="station" open-view="openView"> </form-restoration-station-marker-popup>'
             }
           };
 
@@ -84,7 +81,7 @@
     var getORSes = function(teamLeadId) {
       if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
-          teamLead: true
+          schoolOrgId: vm.user.schoolOrg
         }, function(data) {
           vm.stations = data;
         });
@@ -235,6 +232,23 @@
       angular.element('#modal-station-register').modal('show');
     };
 
+    vm.openViewRestorationStation = function(station) {
+      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (vm.station.latitude && vm.station.longitude) {
+        vm.stationMapPoints = [{
+          lat: vm.station.latitude,
+          lng: vm.station.longitude,
+          icon: {
+            icon: 'glyphicon-map-marker',
+            prefix: 'glyphicon',
+            markerColor: 'blue'
+          },
+        }];
+      }
+
+      angular.element('#modal-station').modal('show');
+    };
+
     vm.saveFormRestorationStation = function() {
       getORSes(vm.filter.teamId);
       vm.station = {};
@@ -281,6 +295,10 @@
         $rootScope.teamId = vm.filter.teamId;
         $state.go('expeditions.create');
       }
+    };
+
+    vm.openView = function() {
+      angular.element('#modal-station').modal('show');
     };
   }
 })();

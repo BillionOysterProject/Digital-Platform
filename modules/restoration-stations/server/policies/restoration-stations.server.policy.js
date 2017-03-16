@@ -20,6 +20,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/site-coordinators',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/property-owners',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId/upload-image',
       permissions: '*'
     }, {

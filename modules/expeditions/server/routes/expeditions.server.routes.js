@@ -15,6 +15,9 @@ module.exports = function (app) {
   app.route('/api/expeditions/export-compare').all(expeditionsPolicy.isAllowed)
     .post(expeditions.downloadCompareCsv);
 
+  app.route('/api/expeditions/restoration-station').all(expeditionsPolicy.isAllowed)
+    .get(expeditions.listByORS);
+
   // Expeditions collection routes
   app.route('/api/expeditions').all(expeditionsPolicy.isAllowed)
     .get(expeditions.list)
