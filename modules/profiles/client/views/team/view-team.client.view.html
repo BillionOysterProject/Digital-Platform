@@ -16,9 +16,9 @@
             <div class="col-lg-6 col-md-12">
                 <br/>
                 <div class="row">
-                    <div class="col-sm-4" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
-                        <h6><i class="fa fa-user"></i> {{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
-                        <p ng-repeat="teamLead in vm.team.teamLeads">
+                    <div class="col-sm-6">
+                        <h6><i class="fa fa-user"></i> <span class="blue">{{vm.team.teamLeads.length}}</span> {{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
+                        <p ng-repeat="teamLead in vm.team.teamLeads" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
                             <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
                                 class="pull-left header-profile-image">
                             <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
@@ -28,24 +28,24 @@
                                 <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
                             </em>
                         </p>
+                        <hr/>
+                        <h6><i class="fa fa-users"></i> <span class="blue">{{vm.team.teamMembers.length}}</span> team members</h6>
                     </div>
-                    <div class="col-sm-4" ng-hide="vm.team.teamLeads && vm.team.teamLeads.length > 0"></div>
-                    <div class="col-sm-4" ng-show="vm.expeditions && vm.expeditions.length > 0">
-                        <h6><i class="fa fa-flag"></i> Published Expeditions</h6>
+                    <div class="col-sm-6" ng-show="vm.expeditions && vm.expeditions.length > 0"><!--TODO: Remove ng-show on this so it always shows (should read "0 Published Expeditions" if none -- see below ORS count that needs wired up)-->
+                        <h6><i class="fa fa-flag"></i><!--TODO: Expose ORS count--> <span class="blue">{{vm.team.orsCount}}</span> Published Expeditions</h6>
                         <ul class="list-unstyled">
                             <li ng-repeat="expedition in vm.expeditions">
                               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-sm-4" ng-hide="vm.expeditions && vm.expeditions.length > 0"></div>
                 </div>
             </div>
         </div>
     </section>
 </section>
 
-<section class="content">
+<section class="content" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember"><!--TODO: Should be visible to all members of the team -- not sure if "isCurrentUserTeamMember" is the right logic? -->
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
             <div class="form-group col-md-4">
@@ -61,13 +61,12 @@
                 </div>
             </div>
 
-            <!--TIFF: only show buttons if team lead -->
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openTeamProfileForm()">Edit team profile</a>
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openInviteTeamLead()">Invite leads</a>
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
             <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-show="vm.isAdmin" ng-click="vm.openDeleteTeam()">Delete team</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead"" ng-click="vm.openDeleteTeam()">Delete team</a>
         </nav>
         <hr/>
 
@@ -78,8 +77,8 @@
         <div class="alert alert-success" role="alert" ng-show="(vm.isAdmin || vm.team.isCurrentUserTeamLead) && vm.teamRequests.length > 0">
             You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
-        </div><!--TIFF: Open modal from Settings -->
-
+        </div>
+       
         <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel-overlay" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead">

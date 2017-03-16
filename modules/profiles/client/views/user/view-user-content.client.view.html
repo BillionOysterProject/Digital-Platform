@@ -21,15 +21,12 @@
       </div>
       <div class="col-md-3">
         <br/>
-        <h6>{{teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+        <h6><span class="blue">{{teams.length}}</span> {{teams.length > 1 ? 'Teams' : 'Team'}}</h6>
         <h4 ng-repeat="team in teams">
           <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
           <br/>
-          <div ng-repeat="teamLead in team.teamLeads">
-            <small ng-show="user._id !== teamLead._id">
-              <!-- the ui-sref here wasn't working -->
-              {{teamLead.displayName}}
-            </small>
+          <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember"> 
+            <small>{{teamLead.displayName}}</small><!-- removed ng-show="user._id !== teamLead._id" -- would rather have logic depending on the profile being for a team lead or member -->
           </div>
         </h4>
       </div>
@@ -48,31 +45,42 @@
     </div>
     <hr/>
 
+    <!--TODO: Change visibility of nav to be more than just admin (see notes below) -->
     <nav class="nav nav-default text-right" ng-show="isCurrentUserAdmin">
       <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6>
+      
+      <!--TODO: only accessible to the user's team lead + admin:-->
       <a class="btn btn-primary pull-left" ng-show="isUserPending && !reminderSent" ng-click="sendReminder()">
         <i class="fa fa-envelope"></i>
         Send reminder</a>
       <h6 class="green pull-left" ng-show="reminderSent">
         <i class="fa fa-check"></i>
         Reminder sent</h6>
+      
+      <!--TODO: only accessible to the actual user (SELF) + THEIR team lead + admin (if they are a team lead, should not be visible to other team leads):-->
       <a class="btn btn-default" ng-click="openUserForm()">Edit profile</a>
+      
+      <!--TODO: only accessible to the user's team lead + admin:-->
       <a class="btn btn-danger" ng-click="openUserDelete()">Delete</a>
+      
       <hr/>
     </nav>
   </div>
 
-  <!-- Show if profile is a Team Member Profile, (not if viewer's role is team member)-->
+  <!-- TEAM MEMBER PROFILES -->
   <div class="modal-body">
     <div ng-show="isUserTeamMember">
       <div class="row">
         <!-- this is only showing published expeditions -->
-        <div class="col-sm-6" ng-show="expeditions && expeditions.length > 0">
+        <div class="col-sm-6">
           <dl class="dl-horizontal">
             <dt>Expeditions</dt>
             <dd ng-repeat="expedition in expeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
+            </dd>
+            <dd ng-show="!expeditions || expeditions.length === 0">
+              <em>none</em>
             </dd>
             <!--Could add in what protocols they were assigned to if applicable:
                     <a>Nov Expedition</a>: Protocols 1-3
@@ -92,7 +100,7 @@
       </div>
     </div>
 
-    <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
+    <!-- TEAM LEAD PROFILES -->
     <div ng-show="isUserTeamLead">
       <div class="row">
         <div class="col-sm-6">
@@ -139,6 +147,17 @@
           </dl>
         </div>
         <div class="col-sm-6">
+          <!--TODO: Wire up to show lessons that the team lead has created:
+          <dl class="dl-horizontal">
+            <dt>Lessons Created</dt>
+            <dd ng-repeat="lesson in createdLessons">
+              <a ui-sref="lessons.view({ lessonId: lesson._id })">
+                {{lesson.title}}</a>
+            </dd>
+            <dd ng-show="!createdLessons || createdLessons.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>-->
           <dl class="dl-horizontal">
             <dt>Lessons Taught</dt>
             <dd ng-repeat="lesson in lessonsTaught">

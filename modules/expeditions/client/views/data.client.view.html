@@ -27,20 +27,24 @@
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
                       ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                         <div class="panel" data-category="transition">
-                            <div class="panel-heading">
+                            <div class="panel-heading shaded">
                                 <h3 class="panel-title">
                                     <i class="fa fa-map-marker"></i> {{expedition.station.name}}
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
-                                <h4>{{expedition.name}}</h4>
-                                <p>{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</p>
-                                <p class="text-muted">{{expedition.notes}}</p>
+                                <h4><b>{{expedition.name}}</b></h4>
+                                <p>{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                                {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</p>
+                                <p class="text-muted small">{{expedition.notes}}</p>
                             </div>
                             <div class="panel-footer">
-                                {{vm.getExpeditionDate(expedition.monitoringStartDate)}},
-                                {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}
+                                <p><b>{{expedition.team.name}}</b>, led by {{expedition.teamLead.displayName}}</p>
+                                
+                        <p>
+                          <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
+                        </p>
+                                <h6>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</h6>
                             </div>
                         </div>
                     </div>

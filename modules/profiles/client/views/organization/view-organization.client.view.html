@@ -7,25 +7,38 @@
             <div class="col-lg-3 col-md-6" ng-hide="vm.orgPhotoUrl">
                 <div class="well text-center"><i class="fa fa-5x fa-building-o gray"></i></div>
             </div>
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-3 col-md-6">
                 <h2>{{vm.organization.name}}</h2>
                 <h4 class="text-muted">{{vm.capitalizeFirstLetter(vm.organization.organizationType)}}</a></h4>
                 <p>{{vm.organization.description}}</p>
             </div>
-            <div class="col-lg-3 col-md-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
-                <h6><i class="fa fa-user"></i> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
-                <p ng-repeat="orgLead in vm.organization.orgLeads">
-                    <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
-                        class="pull-left header-profile-image">
-                    <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
-                    <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
-                      <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
-                      <span class="green ng-hide" ng-show="orgLead.reminderSent">
-                        <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
-                    </em>
-                </p>
+            <div class="col-lg-6">
+                <br/>
+                <div class="row">
+                    <div class="col-sm-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
+                    <div class="col-sm-6" ng-show="vm.organization.orgLeads && vm.organization.orgLeads.length > 0">
+                        <h6><i class="fa fa-user"></i> <span class="blue">{{vm.organization.orgLeads.length}}</span> {{(vm.organization.orgLeads.length > 1) ? 'Organization Leads' : 'Organization Lead'}}</h6>
+                        <p ng-repeat="orgLead in vm.organization.orgLeads">
+                            <img ng-src="{{orgLead.profileImageURL}}" alt="{{orgLead.displayName}}"
+                                class="pull-left header-profile-image">
+                            <b><a ng-click="vm.openViewUserModal(orgLead)">{{orgLead.displayName}}</a></b>
+                            <em class="text-muted" ng-show="(vm.organization.isCurrentUserOrgLead || vm.isAdmin) && orgLead.pending"> Pending<br/>
+                              <a ng-click="vm.sendReminder(orgLead)" ng-hide="orgLead.reminderSent">Send reminder</a>
+                              <span class="green ng-hide" ng-show="orgLead.reminderSent">
+                                <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
+                            </em>
+                        </p>
+                    </div>
+                    <!--TODO: Expose this data:
+                    <div class="col-sm-6">
+                        <h6><span class="blue">{{vm.org.teams.teamMemberCount}}</span> team members</h6>
+                        <h6><span class="blue">{{vm.org.teams.teamLeadCount}}</span> team leads</h6>
+                        <h6><span class="blue">{{vm.org.teams.teamCount}}</span> teams</h6>
+                    </div>
+                    -->
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6" ng-hide="vm.organization.orgLeads && vm.organization.orgLeads.length > 0"></div>
+            
         </div>
     </section>
 </section>
@@ -62,20 +75,26 @@
         <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="team in vm.teams" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="profiles.team-view({ teamId: team._id })">
+                    <div class="panel-heading shaded flush" ng-show="team.photo && team.photo.path">
+                        <img class="img-responsive" ng-src="{{team.photo.path}}" />
+                    </div>
+                    <div class="panel-heading shaded" ng-hide="team.photo && team.photo.path">
+                        <div class="text-center"><i class="fa fa-4x fa-users gray"></i></div>
+                    </div>
                     <div class="panel-body text-center">
-                        <h4>{{team.name}}</h4>
+                        <h4><b>{{team.name}}</b></h4>
                         <p class="text-muted small">{{team.description | limitTo:200}}</p>
-                        <img class="img-responsive" ng-show="team.photo && team.photo.path" ng-src="{{team.photo.path}}" />
-                        <hr/>
+                        <h6>{{team.schoolOrg.name}}</h6>
+                        <hr ng-show="team.teamLeads && team.teamLeads.length > 0"/>
                         <p>
-                            <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
+                          <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
                         </p>
                     </div>
-                    <div class="panel-footer text-muted">
-                        <ul class="list-inline text-center">
-                            <li><i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members</li>
-                            <li><i class="fa fa-flag"></i> <b>{{team.expeditionCount}}</b> expeditions</li>
-                        </ul>
+                    <div class="panel-footer">
+                        <p class="text-center text-muted small">
+                            <i class="fa fa-users"></i> <b>{{team.teamMembers.length}}</b> members<br/>
+                            <i class="fa fa-flag"></i> <b>{{team.orsCount}}</b> expeditions
+                        </p>
                     </div>
                 </div>
             </div>

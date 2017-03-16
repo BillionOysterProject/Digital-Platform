@@ -2,10 +2,17 @@
   <fieldset>
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">{{user._id ? 'Update user' : 'Add a user'}}</h4>
+      <h4 class="modal-title">{{user._id ? 'Edit user profile' : 'Add a user'}}</h4>
     </div>
+    
+    <!--
+        TODO: For SELF editing, this form (`form-admin-team-lead-content`) and `form-team-member-content` should replace `form-user-profile modal`
+        As far as I'm aware, this form is never used for creating new users in the platform (since you can't create Team Leads), so that logic can be removed
+    -->
+    
     <div class="modal-body">
       <div class="row">
+        <!--TODO: firstname/lastname/email fields should only be editable to the actual user (SELF) (readonly to ADMIN) -->
         <div class="form-group col-md-6" show-errors>
           <label for="firstName" class="control-label required">First Name</label>
           <input type="text" name="firstName" class="form-control" ng-model="user.firstName" required ng-readonly="user._id" required>
@@ -18,7 +25,9 @@
           <label for="email" class="control-label required">Email</label>
           <input type="text" name="email" class="form-control" ng-model="user.email" required ng-readonly="user._id" required>
         </div>
-        <div class="form-group col-sm-12" show-errors>
+        
+        <!--TODO: Org should be editable to SELF (as well as ADMIN) -->
+        <div class="form-group col-md-6" show-errors>
           <label for="org" class="control-label required">Organization</label>
           <select name="org" class="form-control" ng-model="user.schoolOrg"
             ng-change="orgChanged()" required>
@@ -26,7 +35,11 @@
             <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
           </select>
         </div>
-        <div class="form-group col-sm-6" show-errors>
+        
+        <!--TODO: Role should only be editable to ADMIN (readonly to SELF) 
+        Seems dangerous to allow Role changes if the person would have any data (expeditions, teams, etc) in the system -- 
+        Is there an easy way to disable this field for EVERYBODY if the user already has data?-->
+        <div class="form-group col-md-6" show-errors>
           <label for="role" class="control-label required">Role</label>
           <select name="role" class="form-control" ng-model="selectedRole"
             ng-options="i.value as (i.name) for i in roles"
@@ -37,6 +50,7 @@
         </div>
 
         <!-- team lead options -->
+        <!--TODO: Team Lead Type should be editable to SELF/ADMIN-->
         <div class="form-group col-sm-4" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
           <label class="control-label required">Team Lead Type</label>
           <select class="form-control" name="teamLeadType" id="teamLeadType"
@@ -44,6 +58,8 @@
             <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
           </select>
         </div>
+        
+        <!--TODO: admin checkbox should only be editable and visible to ADMIN (hidden for SELF) -->
         <div class="form-group col-sm-2" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
           <div class="checkbox">
             <label><input type="checkbox" value="isAdmin" ng-model="isAdmin" ng-change="isAdminChanged()">Admin?</label>
