@@ -38,6 +38,7 @@
       TeamsService.query({
         organization: vm.filter.organization,
         searchString: vm.filter.searchString,
+        withMembers: true,
         full: true
       }, function(data) {
         vm.teams = data;

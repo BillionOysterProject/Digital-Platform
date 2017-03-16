@@ -262,6 +262,10 @@ exports.list = function (req, res) {
       and.push({ 'schoolOrg': req.query.organization });
     }
 
+    if (req.query.withMembers) {
+      and.push({ 'teamMembers': { $exists: true, $ne: [] } });
+    }
+
     var or = [];
     var searchRe;
     if (req.query.searchString) {
