@@ -76,7 +76,7 @@ exports.read = function (req, res) {
     station.teamLead._id.toString() === req.user._id.toString();
 
   if (req.query.full) {
-    
+
   }
 
   res.json(station);
@@ -150,6 +150,47 @@ exports.updateBaselines = function (req, res) {
         message: 'Substrate Shell #' + index + ' does not exist'
       });
     }
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
+    });
+  }
+};
+
+exports.updateStatusHistory = function(req, res) {
+  var station = req.station;
+
+  if (station) {
+    station.status = req.body.status;
+    station.statusHistory.push({
+      status: req.body.status,
+      description: req.body.description
+    });
+
+    station.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var index = (station.statusHistory.length - 1);
+        res.json({
+          station: station,
+          index: index
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
+    });
+  }
+};
+
+exports.measurementChartData = function(req, res) {
+  var station = req.station;
+
+  if (station) {
   } else {
     return res.status(400).send({
       message: 'ORS could not be found'
@@ -257,7 +298,6 @@ exports.listSiteCoordinators = function (req, res) {
  * List of Property Owner
  */
 exports.listPropertyOwners = function (req, res) {
-  console.log('list property owners');
   User.find({ 'teamLeadType': 'property owner' }).sort('displayName').exec(function (err, propertyOwners) {
     if (err) {
       console.log('err', err);
@@ -275,7 +315,6 @@ exports.listPropertyOwners = function (req, res) {
  * Restoration station middleware
  */
 exports.stationByID = function (req, res, next, id) {
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Restoration station is invalid'
@@ -296,6 +335,11 @@ exports.stationByID = function (req, res, next, id) {
     req.station = station;
     next();
   });
+};
+
+exports.statusHistoryByIndex = function (req, res, next, id) {
+  req.statusHistoryIndex = id;
+  next();
 };
 
 var deleteInternal = function(station, successCallback, errorCallback) {
@@ -360,6 +404,42 @@ exports.uploadStationPhoto = function (req, res) {
           return res.status(400).send({
             message: err
           });
+        });
+      });
+  } else {
+    res.status(400).send({
+      message: 'Station does not exist'
+    });
+  }
+};
+
+exports.uploadStationStatusPhoto = function (req, res) {
+  var station = req.station;
+  var index = req.statusHistoryIndex;
+  var upload = multer(config.uploads.stationStatusPhotoUpload).single('stationStatusPhoto');
+  var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = imageUploadFileFilter;
+
+  if (station && index) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.stationStatusPhotoUpload,
+      function(fileInfo) {
+        station.statusHistory[index].photo = fileInfo;
+
+        station.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(station);
+          }
+        });
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
         });
       });
   } else {

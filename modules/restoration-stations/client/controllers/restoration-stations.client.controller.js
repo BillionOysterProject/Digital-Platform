@@ -34,8 +34,14 @@
       }];
     }
 
+    $scope.status = {};
+
     $scope.stationPhotoUploader = new FileUploader({
       alias: 'stationPhoto'
+    });
+
+    $scope.stationStatusPhotoUploader = new FileUploader({
+      alias: 'stationStatusPhoto'
     });
 
     BodiesOfWaterService.query({
@@ -84,7 +90,6 @@
           })
           .success(function(response) {
             $scope.station.expeditions = response;
-            console.log('response', response);
             if (callback) callback();
           })
           .error(function(err) {
@@ -162,6 +167,59 @@
         console.log('error: ' + res.data.message);
         $scope.error = res.data.message;
       }
+    };
+
+    $scope.updateStatus = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.restorationStationStatusForm');
+        return false;
+      }
+
+      function uploadStationStatusPhoto(stationId, index, imageSuccessCallback, imageErrorCallback) {
+        if ($scope.stationStatusPhotoUploader.queue.length > 0) {
+          $scope.stationStatusPhotoUploader.onSuccessItem = function (fileItem, response, status, headers) {
+            $scope.stationStatusPhotoUploader.removeFromQueue(fileItem);
+            imageSuccessCallback();
+          };
+
+          $scope.stationStatusPhotoUploader.onErrorItem = function (fileItem, response, sttus, headers) {
+            imageErrorCallback(response.message);
+          };
+
+          $scope.stationStatusPhotoUploader.onBeforeUploadItem = function (item) {
+            item.url = 'api/restoration-stations/' + stationId + '/upload-status-image/' + index;
+          };
+          $scope.stationStatusPhotoUploader.uploadAll();
+        } else {
+          imageSuccessCallback();
+        }
+      }
+
+      $http.post('/api/restoration-stations/' + $scope.station._id + '/status-history', {
+        status: $scope.status.status,
+        description: $scope.status.description
+      })
+      .success(function(response) {
+        $scope.station = response.station;
+        var stationId = $scope.station._id;
+        var index = response.index;
+
+        if (stationId && index > -1) {
+          uploadStationStatusPhoto(stationId, index, function() {
+            $scope.closeFunction();
+          }, function(errorMessage) {
+            console.log('error: ' + errorMessage);
+            $scope.error = errorMessage;
+          });
+        } else {
+          console.log('Error adding station status');
+          $scope.error = 'Error adding station status';
+        }
+      })
+      .error(function(err) {
+        console.log('err', err);
+        $scope.error = err;
+      });
     };
 
     // Remove existing Lesson

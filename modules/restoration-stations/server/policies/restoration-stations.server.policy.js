@@ -29,6 +29,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations/:stationId/upload-image',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/status-history',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'
     }, {

@@ -18,11 +18,11 @@
           scope.$watch('station', function(newValue, oldValue) {
             scope.station = newValue;
 
-            if (!scope.station.siteCoordinator) {
+            if (scope.station && !scope.station.siteCoordinator) {
               scope.station.siteCoordinator = {};
             }
 
-            if (!scope.station.propertyOwner) {
+            if (scope.station && !scope.station.propertyOwner) {
               scope.station.propertyOwner = {};
             }
           });

@@ -250,6 +250,13 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    stationStatusPhotoUpload: {
+      s3dest: 'uploads/restoration-stations/img/status/',
+      dest: './modules/restoration-stations/client/img/status/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     eventFeaturedImageUpload: {
       s3dest: 'uploads/events/img/featured-images/',
       dest: './modules/events/client/img/featured-image/uploads/', // Event upload destination path

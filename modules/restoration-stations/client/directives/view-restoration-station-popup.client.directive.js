@@ -57,6 +57,7 @@
             };
 
             $scope.openRestorationStationStatus = function() {
+              $scope.$broadcast('stationStatus');
               $scope.content = 'orsStatus';
             };
 

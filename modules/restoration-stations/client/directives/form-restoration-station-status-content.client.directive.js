@@ -15,6 +15,13 @@
           scope.$watch('station', function(newValue, oldValue) {
             scope.station = newValue;
           });
+
+          scope.$on('stationStatus', function(event, data) {
+            scope.status = {
+              status: scope.station.status
+            };
+            scope.stationStatusPhotoURL = '';
+          });
         },
         controller: 'RestorationStationsController',
       };

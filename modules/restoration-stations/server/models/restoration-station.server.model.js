@@ -68,6 +68,20 @@ var RestorationStationSchema = new Schema({
     default: ['Active'],
     required: true
   },
+  statusHistory: [{
+    status: {
+      type: String,
+      enum: ['Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'],
+      default: ['Active']
+    },
+    description: String,
+    photo: {
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }
+  }],
   notes: {
     type: String
   },
