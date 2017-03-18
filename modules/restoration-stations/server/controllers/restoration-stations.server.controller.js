@@ -13,6 +13,7 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   moment = require('moment'),
   _ = require('lodash');
 
@@ -434,7 +435,21 @@ exports.uploadStationStatusPhoto = function (req, res) {
               message: errorHandler.getErrorMessage(saveError)
             });
           } else {
-            res.json(station);
+            var to = [config.mailer.ors];
+            if (req.user) to.push(req.user.email);
+            if (station.teamLead && station.teamLead.email) to.push(station.teamLead.email);
+
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+            email.sendEmailTemplate(to, 'subject', 'email_name', {
+              // TeamLeadName: req.user.displayName,
+              // LessonName: lesson.title,
+              // LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
+            }, function(info) {
+              res.json(station);
+            }, function(errorMessage) {
+              res.json(station);
+            });
           }
         });
       }, function(errorMessage) {
