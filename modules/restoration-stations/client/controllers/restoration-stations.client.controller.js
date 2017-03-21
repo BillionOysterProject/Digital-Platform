@@ -12,6 +12,9 @@
   function RestorationStationsController($scope, $http, $timeout, FileUploader,
   BodiesOfWaterService, BoroughsCountiesService, ShorelineTypesService, SiteCoordinatorsService,
   PropertyOwnersService, ExpeditionViewHelper, RestorationStationsService) {
+    var checkRole = ExpeditionViewHelper.checkRole;
+    $scope.isAdmin = checkRole('admin');
+
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;

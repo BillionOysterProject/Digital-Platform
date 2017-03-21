@@ -42,7 +42,7 @@
         </div>
         <hr/>
 
-        <nav class="nav nav-default text-right">
+        <nav class="nav nav-default text-right" ng-show="station.isCurrentUserOwner || isAdmin">
             <!-- TODO: Only show Edit button if viewer is ORS author or admin -->
             <a class="btn btn-default" ng-click="openOrsForm()">Edit ORS</a>
             <a class="btn btn-primary" ng-click="openOrsStatus()">Submit status update</a>
