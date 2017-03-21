@@ -10,7 +10,8 @@
           templateUrl: 'modules/restoration-stations/client/views/view-restoration-station-popup.client.view.html',
           scope: {
             station: '=',
-            cancelFunction: '='
+            cancelFunction: '=',
+            initial: '=?'
           },
           replace: true,
           link: function(scope, element, attrs) {
@@ -36,10 +37,11 @@
               }
             });
 
-            element.bind('shown.bs.modal', function() {
-              scope.content = '';
-              scope.$broadcast('viewOrsShow');
-              scope.content = 'orsView';
+            element.bind('show.bs.modal', function() {
+              scope.content = scope.initial || 'orsView';
+              if (scope.content === 'orsView') {
+                scope.$broadcast('viewOrsShow');
+              }
             });
           },
           controller: ['$scope',

@@ -212,13 +212,22 @@
         description: $scope.status.description
       })
       .success(function(response) {
+        $scope.closeFunction();
         $scope.station = response.station;
         var stationId = $scope.station._id;
         var index = response.index;
 
         if (stationId && index > -1) {
           uploadStationStatusPhoto(stationId, index, function() {
-            $scope.closeFunction();
+            $http.post('api/restoration-stations/' + $scope.station._id + '/send-status/' + index, {
+            })
+            .success(function(response) {
+              $scope.closeFunction();
+            })
+            .error(function(errorMessage) {
+              console.log('error: ' + errorMessage);
+              $scope.error = errorMessage;
+            });
           }, function(errorMessage) {
             console.log('error: ' + errorMessage);
             $scope.error = errorMessage;

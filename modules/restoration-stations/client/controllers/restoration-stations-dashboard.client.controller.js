@@ -5,12 +5,12 @@
     .module('restoration-stations')
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
-  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
-  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
+  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', 'lodash',
+  'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
   'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
-  function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
-    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
+  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, lodash,
+    moment, Authentication, TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
     ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
@@ -300,5 +300,17 @@
     vm.openView = function(station) {
       vm.openViewRestorationStation(station);
     };
+
+    if ($location.search().openORSForm) {
+      vm.initial = 'orsForm';
+      RestorationStationsService.get({
+        stationId: $location.search().openORSForm
+      }, function(data) {
+        vm.openViewRestorationStation(data.toJSON());
+      });
+
+    } else {
+      vm.initial = 'orsView';
+    }
   }
 })();
