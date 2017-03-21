@@ -25,6 +25,9 @@ module.exports = function (app) {
   app.route('/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex').all(stationsPolicy.isAllowed)
     .post(stations.uploadStationStatusPhoto);
 
+  app.route('/api/restoration-stations/:stationId/send-status/:statusHistoryIndex').all(stationsPolicy.isAllowed)
+    .post(stations.sendORSStatusEmail);
+
   app.route('/api/restoration-stations/:stationId/status-history').all(stationsPolicy.isAllowed)
     .post(stations.updateStatusHistory);
 

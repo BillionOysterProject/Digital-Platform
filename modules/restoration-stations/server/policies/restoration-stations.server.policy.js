@@ -32,6 +32,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/:stationId/send-status/:statusHistoryIndex',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId/status-history',
       permissions: '*'
     }, {
@@ -49,6 +52,15 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/restoration-stations',
       permissions: ['get']
+    }, {
+      resources: '/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/send-status/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/status-history',
+      permissions: '*'
     }, {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'

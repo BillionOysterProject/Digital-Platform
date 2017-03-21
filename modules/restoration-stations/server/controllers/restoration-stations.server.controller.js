@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
   ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
@@ -163,7 +164,6 @@ exports.updateStatusHistory = function(req, res) {
   var station = req.station;
 
   if (station) {
-    station.status = req.body.status;
     station.statusHistory.push({
       status: req.body.status,
       description: req.body.description
@@ -589,21 +589,7 @@ exports.uploadStationStatusPhoto = function (req, res) {
               message: errorHandler.getErrorMessage(saveError)
             });
           } else {
-            var to = [config.mailer.ors];
-            if (req.user) to.push(req.user.email);
-            if (station.teamLead && station.teamLead.email) to.push(station.teamLead.email);
-
-            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-
-            email.sendEmailTemplate(to, 'subject', 'email_name', {
-              // TeamLeadName: req.user.displayName,
-              // LessonName: lesson.title,
-              // LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
-            }, function(info) {
-              res.json(station);
-            }, function(errorMessage) {
-              res.json(station);
-            });
+            res.json(station);
           }
         });
       }, function(errorMessage) {
@@ -614,6 +600,55 @@ exports.uploadStationStatusPhoto = function (req, res) {
   } else {
     res.status(400).send({
       message: 'Station does not exist'
+    });
+  }
+};
+
+exports.sendORSStatusEmail = function(req, res) {
+  var station = req.station;
+  var index = req.statusHistoryIndex;
+
+  if (station && index) {
+    SchoolOrg.findById(req.user.schoolOrg).exec(function(err, org) {
+      if (err) {
+        return res.status(400).send({
+          message: 'User organization not found'
+        });
+      } else {
+        var to = [config.mailer.ors];
+        if (req.user) to.push(req.user.email);
+        if (station.teamLead && station.teamLead.email) to.push(station.teamLead.email);
+
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var statusHistory = station.statusHistory[index];
+
+        var attachments = [];
+        if (statusHistory.photo) {
+          attachments.push({
+            filename: statusHistory.photo.originalname,
+            path: statusHistory.photo.path,
+            cid: 'ors-status.ee'
+          });
+        }
+
+        email.sendEmailTemplate(to, 'ORS status change reported for ' + station.name, 'ors_report', {
+          ORSName: station.name,
+          FeedbackName: req.user.displayName,
+          FeedbackOrg: org.name,
+          ORSStatus: statusHistory.status,
+          ORSDescription: statusHistory.description,
+          LinkORSPhoto: (statusHistory.photo) ? statusHistory.photo.path : '',
+          LinkORSForm: httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id
+        }, function(info) {
+          res.json(station);
+        }, function(errorMessage) {
+          res.json(station);
+        }, attachments);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Station and/or status history index not found'
     });
   }
 };

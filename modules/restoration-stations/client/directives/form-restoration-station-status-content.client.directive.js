@@ -14,6 +14,12 @@
         link: function(scope, element, attrs) {
           scope.$watch('station', function(newValue, oldValue) {
             scope.station = newValue;
+            if (scope.station) {
+              scope.status = {
+                status: scope.station.status
+              };
+            }
+            scope.stationStatusPhotoURL = '';
           });
 
           scope.$on('stationStatus', function(event, data) {
