@@ -6,19 +6,45 @@
     .controller('RestorationStationsController', RestorationStationsController);
 
   RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader',
-  'BodiesOfWaterService', 'BoroughsCountiesService'];
+  'BodiesOfWaterService', 'BoroughsCountiesService', 'ShorelineTypesService', 'SiteCoordinatorsService',
+  'PropertyOwnersService', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function RestorationStationsController($scope, $http, $timeout, FileUploader,
-  BodiesOfWaterService, BoroughsCountiesService) {
+  BodiesOfWaterService, BoroughsCountiesService, ShorelineTypesService, SiteCoordinatorsService,
+  PropertyOwnersService, ExpeditionViewHelper, RestorationStationsService) {
+    var checkRole = ExpeditionViewHelper.checkRole;
+    $scope.isAdmin = checkRole('admin');
+
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
     $scope.showMarker = true;
     $scope.canClickMapToAddMarker = true;
 
     $scope.mapControls = {};
+    $scope.mapClick = function(e){
+    };
+    $scope.markerDragEnd = function(location){
+    };
+    if (!$scope.mapPoints && $scope.station) {
+      $scope.mapPoints = [{
+        lat: $scope.station.latitude,
+        lng: $scope.station.longitude,
+        icon: {
+          icon: 'glyphicon-map-marker',
+          prefix: 'glyphicon',
+          markerColor: 'blue'
+        },
+      }];
+    }
+
+    $scope.status = {};
 
     $scope.stationPhotoUploader = new FileUploader({
       alias: 'stationPhoto'
+    });
+
+    $scope.stationStatusPhotoUploader = new FileUploader({
+      alias: 'stationStatusPhoto'
     });
 
     BodiesOfWaterService.query({
@@ -31,17 +57,61 @@
       $scope.boroughsCounties = data;
     });
 
-    angular.element(document.querySelector('#modal-station-register')).on('shown.bs.modal', function(){
-      $timeout(function() {
-        $scope.mapControls.resizeMap();
-
-        $scope.teamId = ($scope.station && $scope.station.team && $scope.station.team._id) ?
-          $scope.station.team._id : $scope.station.team;
-
-        $scope.stationPhotoURL = ($scope.station && $scope.station.photo && $scope.station.photo.path) ?
-          $scope.station.photo.path : '';
-      });
+    ShorelineTypesService.query({
+    }, function(data) {
+      $scope.shorelineTypes = data;
     });
+    $scope.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
+
+    SiteCoordinatorsService.query({
+    }, function(data) {
+      $scope.siteCoordinators = data;
+    });
+
+    PropertyOwnersService.query({
+    }, function(data) {
+      $scope.propertyOwners = data;
+    });
+
+    $scope.statuses = [
+      { label: 'Active', value: 'Active' },
+      { label: 'Damaged', value: 'Damaged' },
+      { label: 'Destroyed', value: 'Destroyed' },
+      { label: 'Lost', value: 'Lost' },
+      { label: 'Unknown', value: 'Unknown' }
+    ];
+
+    $scope.load = function(callback) {
+      if ($scope.station) {
+        RestorationStationsService.get({
+          stationId: $scope.station._id
+        }, function(data) {
+          $scope.station = data;
+
+          $http.get('/api/expeditions/restoration-station', {
+            params: { stationId: $scope.station._id }
+          })
+          .success(function(response) {
+            $scope.station.expeditions = response;
+
+            // $http.get('/api/restoration-stations/' + $scope.station._id + '/measurement-chart-data')
+            // .success(function(response) {
+            //   console.log('response', response);
+            //
+            //   $scope.mortalitySeries = ['Mortality'];
+            if (callback) callback();
+            // })
+            // .error(function(err) {
+            //   console.log('err', err);
+            // });
+
+          })
+          .error(function(err) {
+            console.log('err', err);
+          });
+        });
+      }
+    };
 
     $scope.save = function(isValid) {
       $scope.disableCancel = true;
@@ -109,6 +179,59 @@
         console.log('error: ' + res.data.message);
         $scope.error = res.data.message;
       }
+    };
+
+    $scope.updateStatus = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.restorationStationStatusForm');
+        return false;
+      }
+
+      function uploadStationStatusPhoto(stationId, index, imageSuccessCallback, imageErrorCallback) {
+        if ($scope.stationStatusPhotoUploader.queue.length > 0) {
+          $scope.stationStatusPhotoUploader.onSuccessItem = function (fileItem, response, status, headers) {
+            $scope.stationStatusPhotoUploader.removeFromQueue(fileItem);
+            imageSuccessCallback();
+          };
+
+          $scope.stationStatusPhotoUploader.onErrorItem = function (fileItem, response, sttus, headers) {
+            imageErrorCallback(response.message);
+          };
+
+          $scope.stationStatusPhotoUploader.onBeforeUploadItem = function (item) {
+            item.url = 'api/restoration-stations/' + stationId + '/upload-status-image/' + index;
+          };
+          $scope.stationStatusPhotoUploader.uploadAll();
+        } else {
+          imageSuccessCallback();
+        }
+      }
+
+      $http.post('/api/restoration-stations/' + $scope.station._id + '/status-history', {
+        status: $scope.status.status,
+        description: $scope.status.description
+      })
+      .success(function(response) {
+        $scope.station = response.station;
+        var stationId = $scope.station._id;
+        var index = response.index;
+
+        if (stationId && index > -1) {
+          uploadStationStatusPhoto(stationId, index, function() {
+            $scope.closeFunction();
+          }, function(errorMessage) {
+            console.log('error: ' + errorMessage);
+            $scope.error = errorMessage;
+          });
+        } else {
+          console.log('Error adding station status');
+          $scope.error = 'Error adding station status';
+        }
+      })
+      .error(function(err) {
+        console.log('err', err);
+        $scope.error = err;
+      });
     };
 
     // Remove existing Lesson

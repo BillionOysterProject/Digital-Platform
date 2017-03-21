@@ -5,9 +5,9 @@
     .module('core')
     .controller('LeafletMapController', LeafletMapController);
 
-  LeafletMapController.$inject = ['$scope', 'L','$timeout','$compile'];
+  LeafletMapController.$inject = ['$scope', 'L', '$timeout', '$compile'];
 
-  function LeafletMapController($scope, L,$timeout,$compile) {
+  function LeafletMapController($scope, L, $timeout, $compile) {
     var vm = this;
     var mapSelectMap;
     var mapMarker = null;
@@ -122,7 +122,7 @@
             loadPoints();
           }
         }
-      }, 1000);
+      });
 
       $scope.$on('$destroy', function () {
         mapSelectMap.off('click');
@@ -184,5 +184,6 @@
     function definePopupScope(value,key){
       popupScope[key] = value;
     }
+
   }
 })();

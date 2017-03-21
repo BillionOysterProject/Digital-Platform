@@ -36,7 +36,7 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
 
     transporter.sendMail({
       from: defaultFrom,
-      to: to,
+      bcc: to,
       subject: subject,
       text: bodyText,
       html: bodyHtml
@@ -65,7 +65,7 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
     transporter.sendMail({
       from: defaultFrom,
       replyTo: from,
-      to: to,
+      bcc: to,
       subject: subject,
       text: bodyText,
       html: bodyHtml,

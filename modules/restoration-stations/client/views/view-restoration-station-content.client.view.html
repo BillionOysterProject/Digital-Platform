@@ -1,0 +1,98 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2" ng-show="station.photo">
+                <image ng-src="{{station.photo.path}}" alt="{{station.name}}" class="img-circle img-responsive" width="100" />
+            </div>
+            <div class="col-md-4">
+                <h3>
+                    <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
+                    <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                    {{station.name}} &nbsp;&nbsp;
+                    <span class="label"
+                    ng-class="{ 'label-success': station.status === 'Active', 'label-danger': station.status !== 'Active' }">
+                    {{station.status}}</span>
+                </h3>
+                <h5>
+                    {{station.bodyOfWater}}<br/>
+                    <small class="text-muted">{{station.latitude}}, {{station.longitude}}</small>
+                </h5>
+            </div>
+            <div class="col-md-3">
+                <br/>
+                <h6>Owner</h6>
+                <h4>
+                    <a ng-click="openTeamLeadView(station.teamLead)">{{station.teamLead.displayName}}</a><br/>
+                    <small><a href="mailto:{{station.teamLead.email}}">{{station.teamLead.email}}</a></small>
+                </h4>
+            </div>
+            <div class="col-md-3">
+                <br/>
+                <h6>Organization</h6>
+                <h4>
+                    <a ui-sref="profiles.organization-view({ schoolOrgId: station.schoolOrg._id })">{{station.schoolOrg.name}}</a><br/>
+                    <small ng-show="station.schoolOrg.city && station.schoolOrg.state">{{station.schoolOrg.city}}, {{station.schoolOrg.state}}</small>
+                </h4>
+            </div>
+        </div>
+        <hr/>
+
+        <nav class="nav nav-default text-right" ng-show="station.isCurrentUserOwner || isAdmin">
+            <!-- TODO: Only show Edit button if viewer is ORS author or admin -->
+            <a class="btn btn-default" ng-click="openOrsForm()">Edit ORS</a>
+            <a class="btn btn-primary" ng-click="openOrsStatus()">Submit status update</a>
+        </nav>
+    </div>
+    <div class="modal-body">
+        <div class="row" ng-hide="true"><!--TODO: All charts should be from baseline to present, use the same Line Charts from Metrics-->
+            <div class="col-md-4">
+                <label>Mortality</label>
+                <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                    chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                    chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+            <div class="col-md-4">
+                <label>Change in average mass</label>
+                <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                    chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                    chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+            <div class="col-md-4">
+                <label>Change in average length</label>
+                <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
+                    chart-labels="vm.labels" chart-legend="true" chart-series="vm.Bseries"
+                    chart-click="vm.onClick()" >
+                </canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <dl class="dl-horizontal">
+                    <dt>Expeditions to this ORS</dt>
+                    <dd ng-repeat="expedition in station.expeditions">
+                      <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-sm-6">
+                <dl class="dl-horizontal">
+                    <dt>Site Coordinator</dt>
+                    <dd><a ng-click="openTeamLeadView(station.siteCoordinator)">{{station.siteCoordinator.displayName}}</a></dd>
+                    <dt>Property Owner</dt>
+                    <dd><a ng-click="openTeamLeadView(station.propertyOwner)">{{station.propertyOwner.displayName}}</a></dd>
+                    <dt>Shoreline Type</dt>
+                    <dd>{{getShorelineTypes(station.shoreLineType)}}</dd>
+                    <dt>Notes</dt>
+                    <dd>{{station.notes}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
