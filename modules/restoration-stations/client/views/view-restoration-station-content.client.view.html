@@ -49,7 +49,7 @@
         </nav>
     </div>
     <div class="modal-body">
-        <div class="row"><!--TODO: All charts should be from baseline to present, use the same Line Charts from Metrics-->
+        <div class="row" ng-hide="true"><!--TODO: All charts should be from baseline to present, use the same Line Charts from Metrics-->
             <div class="col-md-4">
                 <label>Mortality</label>
                 <canvas id="line" class="chart chart-line" chart-data="vm.Bdata"
@@ -94,7 +94,5 @@
                 </dl>
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
     </div>
 </div>

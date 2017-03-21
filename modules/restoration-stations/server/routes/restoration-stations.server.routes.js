@@ -32,6 +32,9 @@ module.exports = function (app) {
   app.route('/api/restoration-stations/:stationId/substrate-history').all(stationsPolicy.isAllowed)
     .post(stations.updateBaselines);
 
+  app.route('/api/restoration-stations/:stationId/measurement-chart-data').all(stationsPolicy.isAllowed)
+    .get(stations.measurementChartData);
+
   // Single restoration station routes
   app.route('/api/restoration-stations/:stationId').all(stationsPolicy.isAllowed)
     .get(stations.read)

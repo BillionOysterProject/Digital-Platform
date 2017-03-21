@@ -60,23 +60,18 @@
           };
 
           $scope.findTeams = function() {
-            console.log('find teams');
             var byOwner, byMember;
             if ($scope.isTeamLead) {
               byOwner = true;
             } else {
               byMember = true;
             }
-            console.log('byOwner', byOwner);
-            console.log('byMember', byMember);
-            console.log('id', $scope.user._id);
 
             TeamsService.query({
               byOwner: byOwner,
               byMember: byMember,
               userId: $scope.user._id
             }, function(data) {
-              console.log('teams', data);
               $scope.teams = data;
             });
           };

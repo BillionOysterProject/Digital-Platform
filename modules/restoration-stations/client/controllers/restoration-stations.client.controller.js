@@ -90,13 +90,22 @@
           })
           .success(function(response) {
             $scope.station.expeditions = response;
+
+            // $http.get('/api/restoration-stations/' + $scope.station._id + '/measurement-chart-data')
+            // .success(function(response) {
+            //   console.log('response', response);
+            //
+            //   $scope.mortalitySeries = ['Mortality'];
             if (callback) callback();
+            // })
+            // .error(function(err) {
+            //   console.log('err', err);
+            // });
+
           })
           .error(function(err) {
             console.log('err', err);
           });
-
-          $scope.mortalitySeries = ['Mortality'];
         });
       }
     };

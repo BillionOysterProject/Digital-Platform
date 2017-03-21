@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
   Team = mongoose.model('Team'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -188,10 +189,163 @@ exports.updateStatusHistory = function(req, res) {
   }
 };
 
+var calculateValuesForSubstrateForMonth = function(substrateIndex, startDate, endDate, callback) {
+  console.log('startDate', startDate);
+  console.log('endDate', endDate);
+  ProtocolOysterMeasurement.findOne({ 'collectionTime': { '$gte': startDate, '$lt': endDate } }).sort('collectionTime')
+  .exec(function(err, samples) {
+    console.log('samples', samples);
+    if (err) {
+      callback(err);
+    } else if (!samples || samples.length === 0) {
+      callback(null, {
+        mortality: 0,
+        averageMass: 0,
+        averageSize: 0
+      });
+    } else {
+      var numberAlive = Number.MAX_VALUE;
+      var totalMass = 0;
+      var totalSize = 0;
+
+      for (var i = 0; i < samples.length; i++) {
+        var sample = samples[i];
+        var measurements = sample.measuringOysterGrowth.substrateShells[substrateIndex];
+        //find mortality
+        if (measurements.totalNumberOfLiveOystersOnShell < numberAlive) {
+          numberAlive = measurements.totalNumberOfLiveOystersOnShell;
+        }
+        //sum mass
+        totalMass += measurements.averageSizeOfLiveOysters;
+        //sum size
+        totalSize += measurements.totalMassOfScrubbedSubstrateShellOystersTagG;
+      }
+
+      var averageMass = totalMass / samples.length;
+      var averageSize = totalSize / samples.length;
+      callback(null, {
+        mortality: numberAlive,
+        averageMass: averageMass,
+        averageSize: averageSize
+      });
+    }
+  });
+};
+
+var calculateValuesForSubstrate = function(baseline, earliestSetDate, callback) {
+  var setDate = baseline.setDate;
+
+  var values = {
+    mortality: [],
+    averageMass: [],
+    averageSize: []
+  };
+  var baselineMoment = moment(setDate).startOf('month');
+
+  var earliestMoment = moment(earliestSetDate).startOf('month');
+  var todayMoment = moment().startOf('month');
+  if (earliestMoment.isBefore(baselineMoment)) {
+    var months = moment.duration(baselineMoment.toDate() - earliestMoment.toDate()).asMonths();
+    for (var i = 0; i < months; i++) {
+      values.mortality.push(0);
+      values.averageMass.push(0);
+      values.averageSize.push(0);
+    }
+  }
+
+  function getValue(valueCallback) {
+    if (baselineMoment.isBefore(todayMoment)) {
+      //get start and end dates
+      var startDate = baselineMoment.toDate();
+      var endDate = baselineMoment.endOf('month').toDate();
+      //set baseline to beginning of the next month
+      baselineMoment.add(2, 'days');
+      baselineMoment.startOf('month');
+      //get values
+      calculateValuesForSubstrateForMonth((baseline.substrateShellNumber-1), startDate, endDate, function(err, value) {
+        if (err) {
+          valueCallback(err);
+        } else {
+          values.mortality.push(value.mortality);
+          values.averageMass.push(value.averageMass);
+          values.averageSize.push(value.averageSize);
+          getValue(valueCallback);
+        }
+      });
+    } else {
+      valueCallback(null);
+    }
+  }
+
+  getValue(function(err) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, values);
+    }
+  });
+};
+
 exports.measurementChartData = function(req, res) {
   var station = req.station;
+  var mortalitySeries = [];
+  var averageMassSeries = [];
+  var averageSizeSeries = [];
+
+  function getValuesForSubstrate (index, baselineArray, earliestSetDate, callback) {
+    if (index < baselineArray.length) {
+      var baseline = baselineArray[index];
+
+      calculateValuesForSubstrate(baseline, earliestSetDate, function (err, values) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          mortalitySeries.push(values.mortality);
+          averageMassSeries.push(values.averageMass);
+          averageSizeSeries.push(values.averageSize);
+          getValuesForSubstrate((index+1), baselineArray, earliestSetDate, callback);
+        }
+      });
+    } else {
+      callback();
+    }
+  }
 
   if (station) {
+    var baselines = station.baselines;
+
+    //find earliestDate;
+    var earliestSetDate = moment();
+    var baselineArray = [];
+    for(var i = 1; i < 11; i++) {
+      var history = baselines['substrateShell'+i];
+      if (history) {
+        var baseline = history[history.length - 1];
+        if (baseline) {
+          baselineArray.push(baseline);
+          if (earliestSetDate.isAfter(baseline.setDate)) {
+            earliestSetDate = moment(baseline.setDate);
+          }
+        }
+      }
+    }
+
+    //get values by months for all substrate shells
+    if (baselineArray.length > 0) {
+      getValuesForSubstrate (0, baselineArray, earliestSetDate, function() {
+        res.json({
+          mortality: mortalitySeries,
+          averageMass: averageMassSeries,
+          averageSize: averageSizeSeries
+        });
+      });
+    } else {
+      return res.status(400).send({
+        message: 'No baseline values'
+      });
+    }
   } else {
     return res.status(400).send({
       message: 'ORS could not be found'

@@ -38,6 +38,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/:stationId/measurement-chart-data',
+      permissions: ['get']
+    }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: '*'
     }]
@@ -49,6 +52,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/measurement-chart-data',
+      permissions: ['get']
     }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: ['get']
