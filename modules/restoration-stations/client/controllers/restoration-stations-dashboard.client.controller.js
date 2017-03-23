@@ -79,14 +79,14 @@
     };
 
     var getORSes = function(teamLeadId) {
-      if (vm.isTeamLead || vm.isTeamLeadPending) {
+      if (vm.isAdmin) {
         RestorationStationsService.query({
-          schoolOrgId: vm.user.schoolOrg
         }, function(data) {
           vm.stations = data;
         });
-      } else if (vm.isAdmin) {
+      } else if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
+          schoolOrgId: vm.user.schoolOrg
         }, function(data) {
           vm.stations = data;
         });
