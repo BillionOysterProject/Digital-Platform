@@ -1,0 +1,11 @@
+Hi,
+
+<%= TeamLeadName %> just added an unlisted site coordinator for the ORS <%= ORSName %>.
+
+Name: <%= OtherName %>
+Email: <%= OtherEmail %>
+
+The site coordinator of <%= ORSName %> will not change in the platform until you update it. You can edit the ORS at <%= LinkORSForm %> to reflect any of this new information at any time.
+
+Thanks!
+The Billion Oyster Project

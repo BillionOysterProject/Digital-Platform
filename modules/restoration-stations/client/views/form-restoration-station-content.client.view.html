@@ -14,8 +14,6 @@
                 <input type="text" class="form-control" ng-model="station.name" name="name" id="name" required/>
             </div>
             <div class="form-group col-sm-3">
-                <!--TODO: Add additional status options "Active, Damaged, Lost or Destroyed, Unknown",
-                update views everywhere (ORS profile, Mapmarker, Dashboard, etc) -- should always be RED if anything but ACTIVE (green)-->
                 <label class="required" for="status">Status *</label>
                 <select class="form-control" ng-model="station.status" name="status" id="status" required>
                     <option ng-repeat="type in statuses" value="{{type.value}}">{{type.label}}</option>
@@ -30,7 +28,6 @@
         </div>
         <div class="row">
             <div class="form-group col-sm-6">
-                <!--TODO from Sam: Water Body should be an option list not open text (options: https://docs.google.com/a/nyharbor.org/spreadsheets/d/1HwqEwAHPT0YCyRZQ8GMtuqfvcSAb2mDNtC7FIfRYVqA/edit?usp=sharing) -->
                 <label class="required" for="bodyOfWater">Body of Water *</label>
                 <input type="text" ng-model="station.bodyOfWater" placeholder="Body of Water"
                 uib-typeahead="bodyOfWater.name as bodyOfWater.name for bodyOfWater in bodiesOfWater | filter:{name:$viewValue}"
@@ -38,7 +35,6 @@
             </div>
             <div class="form-group col-sm-6">
                 <label class="required" for="boroughCounty">Borough/County *</label>
-                <!-- <input type="text" class="form-control" ng-model="station.boroughCounty" required/> -->
                 <input type="text" ng-model="station.boroughCounty" placeholder="Borough/County"
                 uib-typeahead="boroughCounty.name as boroughCounty.name for boroughCounty in boroughsCounties | filter:{name:$viewValue}"
                 class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
@@ -80,14 +76,14 @@
                         <option value="-1">Other</option>
                     </select>
                 </div>
-                <div class="row" ng-show="station.siteCoordinator === '-1'">
+                <div class="row" ng-show="station.siteCoordinator._id === '-1'">
                     <div class="form-group col-sm-6">
                         <label>Site Coordinator Name</label>
-                        <input class="form-control" type="text" />
+                        <input class="form-control" type="text" ng-model="station.siteCoordinator.name"/>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label>Site Coordinator Email</label>
-                        <input class="form-control" type="text" />
+                      <label>Site Coordinator Email</label>
+                      <input class="form-control" type="text" ng-model="station.siteCoordinator.email"/>
                     </div>
                 </div>
 
@@ -101,17 +97,17 @@
                         <option value="-1">Other</option>
                     </select>
                 </div>
-                <div class="row" ng-show="station.propertyOwner === '-1'">
+                <div class="row" ng-show="station.propertyOwner._id === '-1'">
                     <div class="form-group col-sm-6">
                         <label>Property Owner Name</label>
-                        <input class="form-control" type="text" />
+                        <input class="form-control" type="text" ng-model="station.propertyOwner.name"/>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label>Property Owner Email</label>
-                        <input class="form-control" type="text" />
+                      <label>Property Owner Email</label>
+                      <input class="form-control" type="text" ng-model="station.propertyOwner.email"/>
                     </div>
                 </div>
-
+                
                 <hr/>
                 <div class="form-group">
                     <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>

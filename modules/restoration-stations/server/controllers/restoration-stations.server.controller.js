@@ -7,15 +7,17 @@ var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
   SchoolOrg = mongoose.model('SchoolOrg'),
-  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
-  Team = mongoose.model('Team'),
   User = mongoose.model('User'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
+  MetaPropertyOwner = mongoose.model('MetaPropertyOwner'),
+  Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  userAdmin = require(path.resolve('./modules/users/server/controllers/admin.server.controller')),
   moment = require('moment'),
   _ = require('lodash');
 
@@ -29,6 +31,22 @@ var path = require('path'),
 //     }
 //   });
 // };
+
+var SITE_COORDINATOR = 'site coordinator';
+
+var sendAdminEmailOther = function(subject, emailName, stationName, userName, otherName, otherEmail, link, callback) {
+  email.sendEmailTemplate(config.mailer.admin, subject, emailName, {
+    ORSName: stationName,
+    TeamLeadName: userName,
+    OtherName: otherName || '',
+    OtherEmail: otherEmail || '',
+    LinkORSForm: link
+  }, function(info) {
+    callback();
+  }, function(errorMessage) {
+    callback();
+  });
+};
 
 /**
  * Create a restoration station
@@ -52,6 +70,35 @@ exports.create = function (req, res) {
     station.baseline['substrateShell'+i] = [];
   }
 
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+  var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+
+  if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+    station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+    station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
+    station.siteCoordinator = undefined;
+
+    sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
+      station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink,
+      function() {
+      });
+  } else {
+    station.otherSiteCoordinator = {};
+  }
+
+  if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+    station.otherPropertyOwner.name = req.body.propertyOwner.name;
+    station.otherPropertyOwner.email = req.body.propertyOwner.email;
+    station.propertyOwner = undefined;
+
+    sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
+      station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink,
+      function() {
+      });
+  } else {
+    station.otherPropertyOwner = {};
+  }
+
   station.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -61,11 +108,6 @@ exports.create = function (req, res) {
       res.json(station);
     }
   });
-  // }, function(errorMessage) {
-  //   return res.status(400).send({
-  //     message: errorMessage
-  //   });
-  // });
 };
 
 /**
@@ -106,8 +148,43 @@ exports.update = function (req, res) {
     station.schoolOrg = req.user.schoolOrg;
     station.teamLead = req.user;
 
+    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+    var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+
+    if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+      if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
+        station.otherSiteCoordinator.name !== req.body.siteCoordinator.name ||
+        station.otherSiteCoordinator.email !== req.body.siteCoordinator.email) {
+        sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
+          station.name, req.user.displayName, req.body.siteCoordinator.name, req.body.siteCoordinator.email, orsFormLink,
+          function() {});
+      }
+      station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+      station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
+      station.siteCoordinator = undefined ;
+    } else {
+      station.otherSiteCoordinator = {};
+    }
+
+    if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+      if (!station.otherPropertyOwner || !station.otherPropertyOwner.name ||
+        station.otherPropertyOwner.name !== req.body.propertyOwner.name ||
+        station.otherPropertyOwner.email !== req.body.propertyOwner.email) {
+        sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
+          station.name, req.user.displayName, req.body.propertyOwner.name, req.body.propertyOwner.email, orsFormLink,
+          function() {
+          });
+      }
+      station.otherPropertyOwner.name = req.body.propertyOwner.name;
+      station.otherPropertyOwner.email = req.body.propertyOwner.email;
+      station.propertyOwner = undefined;
+    } else {
+      station.otherPropertyOwner = {};
+    }
+
     station.save(function(err) {
       if (err) {
+        console.log('err', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
@@ -115,11 +192,6 @@ exports.update = function (req, res) {
         res.json(station);
       }
     });
-    // }, function(errorMessage) {
-    //   return res.status(400).send({
-    //     message: errorMessage
-    //   });
-    // });
   }
 };
 
@@ -190,11 +262,8 @@ exports.updateStatusHistory = function(req, res) {
 };
 
 var calculateValuesForSubstrateForMonth = function(substrateIndex, startDate, endDate, callback) {
-  console.log('startDate', startDate);
-  console.log('endDate', endDate);
   ProtocolOysterMeasurement.findOne({ 'collectionTime': { '$gte': startDate, '$lt': endDate } }).sort('collectionTime')
   .exec(function(err, samples) {
-    console.log('samples', samples);
     if (err) {
       callback(err);
     } else if (!samples || samples.length === 0) {
@@ -438,7 +507,7 @@ exports.list = function (req, res) {
  * List of Site Coordinators
  */
 exports.listSiteCoordinators = function (req, res) {
-  User.find({ 'teamLeadType': 'site coordinator' }).sort('displayName').exec(function (err, siteCoordinators) {
+  User.find({ 'teamLeadType': SITE_COORDINATOR }).sort('displayName').exec(function (err, siteCoordinators) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -453,7 +522,7 @@ exports.listSiteCoordinators = function (req, res) {
  * List of Property Owner
  */
 exports.listPropertyOwners = function (req, res) {
-  User.find({ 'teamLeadType': 'property owner' }).sort('displayName').exec(function (err, propertyOwners) {
+  MetaPropertyOwner.find().sort('name').exec(function (err, propertyOwners) {
     if (err) {
       console.log('err', err);
       return res.status(400).send({
