@@ -442,7 +442,7 @@ exports.userByID = function (req, res, next, id) {
 };
 
 // inviting users
-exports.createUserInternal = function(userJSON, schoolOrg, role, successCallback, errorCallback) {
+var createUserInternal = function(userJSON, schoolOrg, role, successCallback, errorCallback) {
   User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
     if (userErr) {
       errorCallback(errorHandler.getErrorMessage(userErr));
@@ -668,7 +668,7 @@ exports.createUser = function (req, res) {
   var teamOrOrg = req.body.teamOrOrg;
   var role = req.body.role;
 
-  exports.createUserInternal(req.body.user, req.body.organization, role,
+  createUserInternal(req.body.user, req.body.organization, role,
     function(user, token) {
       addToTeamOrOrg (user, req.body.team, req.body.organization, role, teamOrOrg,
         function(team, schoolOrg) {
@@ -952,7 +952,7 @@ exports.createMemberCsv = function (req, res) {
 
   convertCsvMember(req.body.user,
     function(userJSON) {
-      exports.createUserInternal(userJSON, req.body.organization, role,
+      createUserInternal(userJSON, req.body.organization, role,
         function(user, token) {
           addToTeamOrOrg(user, req.body.team, req.body.organization, role, teamOrOrg,
             function(team, schoolOrg) {
