@@ -149,7 +149,7 @@
                             <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
                                 <td><h3>
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
-                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
                                 </h3></td>
                                 <td><image ng-src="{{station.photo.path}}" class="img-thumbnail" ng-show="station.photo"></td>
                                 <td>{{station.name}}<br/>

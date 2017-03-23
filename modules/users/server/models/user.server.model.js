@@ -105,7 +105,7 @@ var UserSchema = new Schema({
   },
   teamLeadType: {
     type: String,
-    enum: ['teacher', 'citizen scientist', 'professional scientist', 'site coordinator', 'property owner', 'other']
+    enum: ['teacher', 'citizen scientist', 'professional scientist', 'site coordinator', 'other']
   },
   updated: {
     type: Date

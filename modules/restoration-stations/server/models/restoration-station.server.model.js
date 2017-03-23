@@ -95,9 +95,17 @@ var RestorationStationSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  otherSiteCoordinator: {
+    name: String,
+    email: String
+  },
   propertyOwner: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'MetaPropertyOwner'
+  },
+  otherPropertyOwner: {
+    name: String,
+    email: String
   },
   baselines: {
     substrateShell1: [BaselineHistory],

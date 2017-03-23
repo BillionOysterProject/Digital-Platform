@@ -39,9 +39,16 @@
 
             element.bind('show.bs.modal', function() {
               scope.content = scope.initial || 'orsView';
+            });
+
+            element.bind('shown.bs.modal', function() {
               if (scope.content === 'orsView') {
                 scope.$broadcast('viewOrsShow');
               }
+            });
+
+            scope.$watch('station', function(newValue, oldValue) {
+              scope.station = newValue;
             });
           },
           controller: ['$scope',

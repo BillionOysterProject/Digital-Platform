@@ -1,8 +1,9 @@
 <div>
   <image ng-show="photoUrl" ng-src="{{photoUrl}}" class="img-thumbnail" width="100%">
 
-  <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
-  <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+  <span class="label"
+  ng-class="{ 'label-success': station.status === 'Active', 'label-danger': station.status !== 'Active' }">
+  {{station.status}}</span>
 
   <h4 class="blue">{{station.name}}</h4>
   <p>
