@@ -31,11 +31,8 @@
             }
           };
 
-          console.log('lesson logger');
           var getLessonTrackList = function() {
-            console.log('lesson track list');
             if ($scope.user) {
-              console.log('user', $scope.user);
               LessonTrackerListService.query({
                 lessonId: $scope.lesson._id
               }, function(trackList) {
