@@ -515,15 +515,16 @@ var updateUserInternal = function(user, userJSON, successCallback, errorCallback
 };
 
 
-var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
+var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, memberOrLead, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the ' + teamOrOrg + ' ' + teamOrOrgName,
-  'member_invite', {
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to be a ' + memberOrLead + ' of the ' +
+  teamOrOrg + ' ' + teamOrOrgName, 'member_invite', {
     FirstName: user.firstName,
     LeadName: leadName,
     TeamOrOrg: teamOrOrg,
     TeamOrOrgName: teamOrOrgName,
+    MemberOrLead: memberOrLead,
     LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
   }, function(info) {
     successCallback(info);
@@ -532,15 +533,16 @@ var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, t
   });
 };
 
-var sendExistingInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, successCallback, errorCallback) {
+var sendExistingInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, memberOrLead, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to join the team ' + teamOrOrg + ' ' + teamOrOrgName,
-  'member_existing_invite', {
+  email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to be a ' + memberOrLead + ' of the ' +
+  teamOrOrg + ' ' + teamOrOrgName, 'member_existing_invite', {
     FirstName: user.firstName,
     LeadName: leadName,
     TeamOrOrg: teamOrOrg,
     TeamOrOrgName: teamOrOrgName,
+    MemberOrLead: memberOrLead,
     LinkLogin: httpTransport + host + '/authentication/signin'
   }, function(info) {
     successCallback();
@@ -673,15 +675,16 @@ exports.createUser = function (req, res) {
       addToTeamOrOrg (user, req.body.team, req.body.organization, role, teamOrOrg,
         function(team, schoolOrg) {
           var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
+          var memberOrLead = (hasRole(user, 'team lead') || hasRole(user, 'team lead pending')) ? 'lead' : 'member';
           if (token) {
-            sendInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
+            sendInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, memberOrLead, token,
               function() {
                 res.json(user);
               }, function() {
                 res.json(user);
               });
           } else {
-            sendExistingInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName,
+            sendExistingInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, memberOrLead,
               function() {
                 res.json(user);
               }, function() {
@@ -957,15 +960,16 @@ exports.createMemberCsv = function (req, res) {
           addToTeamOrOrg(user, req.body.team, req.body.organization, role, teamOrOrg,
             function(team, schoolOrg) {
               var teamOrOrgName = (teamOrOrg === 'team' && team) ? team.name : schoolOrg.name;
+              var memberOrLead = (hasRole(user, 'team lead') || hasRole(user, 'team lead pending')) ? 'lead' : 'member';
               if (token) {
-                sendInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, token,
+                sendInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, memberOrLead, token,
                   function() {
                     res.json(user);
                   }, function() {
                     res.json(user);
                   });
               } else {
-                sendExistingInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName,
+                sendExistingInviteEmail(user, req.headers.host, req.user.displayName, teamOrOrg, teamOrOrgName, memberOrLead,
                   function() {
                     res.json(user);
                   }, function() {
