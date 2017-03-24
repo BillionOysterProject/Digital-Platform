@@ -15,7 +15,7 @@
     $scope.checkRole = ExpeditionViewHelper.checkRole;
 
     $scope.findOrganization = function() {
-      if ($scope.user.schoolOrg) {
+      if ($scope.user && $scope.user.schoolOrg) {
         if ($scope.user.schoolOrg._id) {
           $scope.organization = $scope.user.schoolOrg;
         } else {
@@ -29,24 +29,26 @@
     };
 
     $scope.findTeams = function(isTeamLead) {
-      var byOwner, byMember;
-      if ($scope.isTeamLead) {
-        byOwner = true;
-      } else {
-        byMember = true;
-      }
+      if ($scope.user) {
+        var byOwner, byMember;
+        if ($scope.isTeamLead) {
+          byOwner = true;
+        } else {
+          byMember = true;
+        }
 
-      TeamsService.query({
-        byOwner: byOwner,
-        byMember: byMember,
-        userId: $scope.user._id
-      }, function(data) {
-        $scope.teams = data;
-      });
+        TeamsService.query({
+          byOwner: byOwner,
+          byMember: byMember,
+          userId: $scope.user._id
+        }, function(data) {
+          $scope.teams = data;
+        });
+      }
     };
 
     $scope.findUserRoles = function() {
-      var roles = $scope.user.roles;
+      var roles = ($scope.user) ? $scope.user.roles : [];
       lodash.remove(roles, function(n) {
         return n === 'user';
       });
@@ -54,16 +56,24 @@
     };
 
     $scope.checkViewedUserRole = function(role) {
-      var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
-        return o === (role);
-      });
-      return (roleIndex > -1) ? true : false;
+      if ($scope.user) {
+        var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+          return o === (role);
+        });
+        return (roleIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
     };
 
     $scope.checkUserPending = function() {
-      return $scope.user.pending ||
-        $scope.checkViewedUserRole('team lead pending') ||
-        $scope.checkViewedUserRole('team member pending');
+      if ($scope.user) {
+        return $scope.user.pending ||
+          $scope.checkViewedUserRole('team lead pending') ||
+          $scope.checkViewedUserRole('team member pending');
+      } else {
+        return false;
+      }
     };
 
     $scope.sendReminder = function(teamName) {
@@ -105,39 +115,45 @@
     };
 
     $scope.findExpeditions = function() {
-      var byOwner, byMember;
-      if ($scope.isTeamLead) {
-        byOwner = true;
-      } else {
-        byMember = true;
-      }
+      if ($scope.user) {
+        var byOwner, byMember;
+        if ($scope.isTeamLead) {
+          byOwner = true;
+        } else {
+          byMember = true;
+        }
 
-      ExpeditionsService.query({
-        byOwner: byOwner,
-        byMember: byMember,
-        userId : $scope.user._id,
-        published: true
-      }, function(data) {
-        $scope.expeditions = data;
-      });
+        ExpeditionsService.query({
+          byOwner: byOwner,
+          byMember: byMember,
+          userId : $scope.user._id,
+          published: true
+        }, function(data) {
+          $scope.expeditions = data;
+        });
+      }
     };
 
     $scope.findRestorationStations = function() {
-      RestorationStationsService.query({
-        userId: $scope.user._id,
-        teamLead: true
-      }, function(data) {
-        $scope.stations = data;
-      });
+      if ($scope.user) {
+        RestorationStationsService.query({
+          userId: $scope.user._id,
+          teamLead: true
+        }, function(data) {
+          $scope.stations = data;
+        });
+      }
     };
 
     $scope.findEvents = function() {
-      EventsService.query({
-        byRegistrants: true,
-        userId: $scope.user._id
-      }, function(data) {
-        $scope.events = data;
-      });
+      if ($scope.user) {
+        EventsService.query({
+          byRegistrants: true,
+          userId: $scope.user._id
+        }, function(data) {
+          $scope.events = data;
+        });
+      }
     };
 
     $scope.didProfileUserAttendEvent = function(event) {
@@ -158,11 +174,13 @@
     };
 
     $scope.findLessonsTaught = function() {
-      UserLessonsListService.query({
-        userId: $scope.user._id
-      }, function(data) {
-        $scope.lessonsTaught = data;
-      });
+      if ($scope.user) {
+        UserLessonsListService.query({
+          userId: $scope.user._id
+        }, function(data) {
+          $scope.lessonsTaught = data;
+        });
+      }
     };
 
   }
