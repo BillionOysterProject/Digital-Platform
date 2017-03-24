@@ -63,15 +63,17 @@
     });
     $scope.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
 
-    SiteCoordinatorsService.query({
-    }, function(data) {
-      $scope.siteCoordinators = data;
-    });
+    if (($scope.station && $scope.station.isCurrentUserOwner) || $scope.isAdmin) {
+      SiteCoordinatorsService.query({
+      }, function(data) {
+        $scope.siteCoordinators = data;
+      });
 
-    PropertyOwnersService.query({
-    }, function(data) {
-      $scope.propertyOwners = data;
-    });
+      PropertyOwnersService.query({
+      }, function(data) {
+        $scope.propertyOwners = data;
+      });
+    }
 
     $scope.statuses = [
       { label: 'Active', value: 'Active' },
