@@ -31,25 +31,30 @@
             }
           };
 
+          console.log('lesson logger');
           var getLessonTrackList = function() {
-            LessonTrackerListService.query({
-              lessonId: $scope.lesson._id
-            }, function(trackList) {
-              $scope.trackList = trackList;
-              var trackListArray = [];
-              for (var i = 0; i < trackList.length; i++) {
-                //[date] in [subject] to [number of students]
-                var taughtOn = moment(trackList[i].taughtOn).format('MM/DD/YYYY');
-                var classOrSubject = (trackList[i].classOrSubject) ? trackList[i].classOrSubject.subject : '';
-                var tracked = taughtOn + ' in ' + classOrSubject + ' to ' + trackList[i].totalNumberOfStudents + ' students';
-                if (i === trackList.length-1 && trackList.length > 1) {
-                  tracked = 'and ' + tracked;
+            console.log('lesson track list');
+            if ($scope.user) {
+              console.log('user', $scope.user);
+              LessonTrackerListService.query({
+                lessonId: $scope.lesson._id
+              }, function(trackList) {
+                $scope.trackList = trackList;
+                var trackListArray = [];
+                for (var i = 0; i < trackList.length; i++) {
+                  //[date] in [subject] to [number of students]
+                  var taughtOn = moment(trackList[i].taughtOn).format('MM/DD/YYYY');
+                  var classOrSubject = (trackList[i].classOrSubject) ? trackList[i].classOrSubject.subject : '';
+                  var tracked = taughtOn + ' in ' + classOrSubject + ' to ' + trackList[i].totalNumberOfStudents + ' students';
+                  if (i === trackList.length-1 && trackList.length > 1) {
+                    tracked = 'and ' + tracked;
+                  }
+                  trackListArray.push(tracked);
                 }
-                trackListArray.push(tracked);
-              }
-              $scope.trackedLessonString = (trackListArray.length === 2) ? trackListArray.join(' ') :
-                trackListArray.join(', ');
-            });
+                $scope.trackedLessonString = (trackListArray.length === 2) ? trackListArray.join(' ') :
+                  trackListArray.join(', ');
+              });
+            }
           };
           getLessonTrackList();
 

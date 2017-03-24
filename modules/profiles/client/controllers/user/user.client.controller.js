@@ -174,7 +174,7 @@
     };
 
     $scope.findLessonsTaught = function() {
-      if ($scope.user) {
+      if ($scope.user && $scope.isTeamLead) {
         UserLessonsListService.query({
           userId: $scope.user._id
         }, function(data) {
