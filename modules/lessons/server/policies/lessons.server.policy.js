@@ -144,9 +144,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['get']
     }, {
-      resources: '/api/lessons/tracked-list',
-      permissions: ['get'] //TODO
-    }, {
       resources: '/api/lessons/:lessonId/tracked-list',
       permissions: ['get']
     }, {
