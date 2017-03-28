@@ -5,23 +5,24 @@
     .module('profiles')
     .controller('ProfileController', ProfileController);
 
-  ProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'Authentication',
+  ProfileController.$inject = ['$scope', '$http', '$timeout', '$state', 'lodash', 'Authentication',
     'ExpeditionViewHelper', 'TeamsService', 'SchoolOrganizationsService', 'ExpeditionsService', 'Admin',
-    'TeamRequestsService'];
+    'TeamRequestsService', 'RestorationStationsService'];
 
-  function ProfileController($scope, $http, $timeout, lodash, Authentication,
+  function ProfileController($scope, $http, $timeout, $state, lodash, Authentication,
     ExpeditionViewHelper, TeamsService, SchoolOrganizationsService, ExpeditionsService, Admin,
-    TeamRequestsService) {
+    TeamRequestsService, RestorationStationsService) {
     var vm = this;
 
     vm.authentication = Authentication;
     vm.error = [];
 
     vm.user = {};
-    vm.organization = {};
+    // vm.organization = {};
     vm.teams = [];
     vm.teamToOpen = {};
     vm.userToOpen = {};
+    vm.valuesLoaded = false;
 
     vm.checkRole = ExpeditionViewHelper.checkRole;
     vm.isTeamLead = vm.checkRole('team lead') || vm.checkRole('team lead pending');
@@ -55,8 +56,7 @@
           full: true
         }, function(orgData) {
           vm.organization = orgData;
-          vm.orgPhotoUrl = (vm.organization.photo && vm.organization.photo.path) ?
-            vm.organization.photo.path : '';
+          vm.orgPhotoUrl = (vm.organization.photo && vm.organization.photo.path) ? vm.organization.photo.path : '';
           if (callback) callback();
         });
       }
@@ -75,19 +75,25 @@
         byMember: byMember,
       }, function(data) {
         vm.teams = data;
-        var expeditionsForTeams = function(teams, index, addedCallback) {
+        var valuesForTeams = function(teams, index, addedCallback) {
           if (index < teams.length) {
-            var team = teams[index];
+            var team = teams[index].toJSON();
             vm.findExpeditions(team._id, function(expeditions) {
               team.expeditions = expeditions;
-              expeditionsForTeams(teams, index+1, addedCallback);
+              vm.findRestorationStations(team._id, function(stations) {
+                team.stations = stations;
+                teams[index] = team;
+                valuesForTeams(teams, index+1, addedCallback);
+              });
             });
           } else {
-            addedCallback();
+            addedCallback(teams);
           }
         };
 
-        expeditionsForTeams(vm.teams, 0, function() {
+        valuesForTeams(vm.teams, 0, function(teams) {
+          vm.teams = teams;
+          vm.valuesLoaded = true;
           if (callback) callback();
         });
       });
@@ -98,6 +104,14 @@
       ExpeditionsService.query({
         team: teamId,
         published: true
+      }, function(data) {
+        if (callback) callback(data);
+      });
+    };
+
+    vm.findRestorationStations = function(teamId, callback) {
+      RestorationStationsService.query({
+        team: teamId
       }, function(data) {
         if (callback) callback(data);
       });
@@ -163,6 +177,7 @@
     };
 
     vm.closeViewUserModal = function(openNewModalName) {
+      vm.userToOpen = {};
       angular.element('#modal-profile-user').modal('hide');
     };
 
@@ -326,6 +341,28 @@
           vm.findTeams();
         }, 500);
       }
+    };
+
+    vm.openViewRestorationStation = function(station) {
+      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (vm.station.latitude && vm.station.longitude) {
+        vm.stationMapPoints = [{
+          lat: vm.station.latitude,
+          lng: vm.station.longitude,
+          icon: {
+            icon: 'glyphicon-map-marker',
+            prefix: 'glyphicon',
+            markerColor: 'blue'
+          },
+        }];
+      }
+
+      angular.element('#modal-station').modal('show');
+    };
+
+    vm.closeViewRestorationStation = function() {
+      vm.station = {};
+      angular.element('#modal-station').modal('hide');
     };
 
     // end Team modals

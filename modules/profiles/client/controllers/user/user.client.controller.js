@@ -6,21 +6,38 @@
     .controller('UserProfileController', UserProfileController);
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
-    'TeamMembersService', 'TeamsService', 'Admin', 'ExpeditionsService', 'UserLessonsListService',
+    'TeamMembersService', 'TeamsService', 'Admin', 'Users', 'ExpeditionsService', 'UserLessonsListService',
     'SchoolOrganizationsService', 'RestorationStationsService', 'EventsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
-    TeamMembersService, TeamsService, Admin, ExpeditionsService, UserLessonsListService,
+    TeamMembersService, TeamsService, Admin, Users, ExpeditionsService, UserLessonsListService,
     SchoolOrganizationsService, RestorationStationsService, EventsService) {
     $scope.checkRole = ExpeditionViewHelper.checkRole;
 
+    $scope.loadUser = function(callback) {
+      if ($scope.user && $scope.user._id && !$scope.user.schoolOrg) {
+        $http.get('/api/users/username', {
+          params: { username: $scope.user.username }
+        })
+        .success(function(data, status, headers, config) {
+          $scope.user = data;
+          if (callback) callback();
+        })
+        .error(function(data, status, headers, config) {
+          if (callback) callback();
+        });
+      }
+    };
+
     $scope.findOrganization = function() {
-      if ($scope.user && $scope.user.schoolOrg) {
+      if ($scope.user && $scope.user.schoolOrg &&
+      (!$scope.organization || !$scope.organization.creator || !$scope.organization.creator._id)) {
         if ($scope.user.schoolOrg._id) {
           $scope.organization = $scope.user.schoolOrg;
         } else {
           SchoolOrganizationsService.get({
-            schoolOrgId: $scope.user.schoolOrg
+            schoolOrgId: $scope.user.schoolOrg,
+            full: true
           }, function(data) {
             $scope.organization = data;
           });

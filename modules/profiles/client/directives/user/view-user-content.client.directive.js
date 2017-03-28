@@ -21,7 +21,7 @@
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
-            if (scope.user) {
+            if (scope.user && scope.user.schoolOrg) {
               scope.roles = scope.findUserRoles();
               scope.isCurrentUserAdmin = scope.checkRole('admin');
 
@@ -36,6 +36,8 @@
               scope.findRestorationStations();
               scope.findEvents();
               scope.findLessonsTaught();
+            } else if (scope.user && !scope.user.schoolOrg) {
+              scope.loadUser();
             }
           });
         }
