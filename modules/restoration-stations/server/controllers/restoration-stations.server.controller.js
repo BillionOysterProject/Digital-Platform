@@ -453,6 +453,9 @@ exports.list = function (req, res) {
   if (req.query.teamLead) {
     and.push({ 'teamLead': user });
   }
+  if (req.query.team) {
+    and.push({ 'team': req.query.team });
+  }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });
   }

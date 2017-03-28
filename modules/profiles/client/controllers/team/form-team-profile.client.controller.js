@@ -14,8 +14,6 @@
     });
     $scope.error = [];
 
-    console.log('team', $scope.team);
-
     var checkRole = ExpeditionViewHelper.checkRole;
     $scope.isAdmin = checkRole('admin');
 
