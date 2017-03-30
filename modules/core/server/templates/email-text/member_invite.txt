@@ -4,6 +4,6 @@ Welcome, you've been invited by <%= LeadName %> to be a <%= MemberOrLead %> of t
 
 Visit <%= LinkCreateAccount %> to join the <%= TeamOrOrg %>.
 
-So glad to have you join!
+So glad to have you!
 
 The Billion Oyster Project
