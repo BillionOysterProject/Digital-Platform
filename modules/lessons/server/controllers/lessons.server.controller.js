@@ -841,7 +841,11 @@ exports.list = function(req, res) {
   }
 
   if (req.query.byCreator) {
-    and.push({ 'user': req.user });
+    if (req.query.byCreator === true) {
+      and.push({ 'user': req.user });
+    } else {
+      and.push({ 'user': req.query.byCreator });
+    }
   }
 
   if (req.query.status) {

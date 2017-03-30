@@ -9,9 +9,9 @@
         templateUrl: 'modules/profiles/client/views/user/view-user.client.view.html',
         scope: {
           user: '=',
-          team: '=?',
-          teams: '=?',
-          organization: '=?',
+          team: '@?',
+          teams: '@?',
+          organization: '@?',
           closeFunction: '='
         },
         replace: true,

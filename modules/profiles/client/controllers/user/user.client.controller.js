@@ -7,15 +7,18 @@
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
     'TeamMembersService', 'TeamsService', 'Admin', 'Users', 'ExpeditionsService', 'UserLessonsListService',
-    'SchoolOrganizationsService', 'RestorationStationsService', 'EventsService'];
+    'SchoolOrganizationsService', 'RestorationStationsService', 'EventsService', 'Authentication', 'LessonsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
     TeamMembersService, TeamsService, Admin, Users, ExpeditionsService, UserLessonsListService,
-    SchoolOrganizationsService, RestorationStationsService, EventsService) {
+    SchoolOrganizationsService, RestorationStationsService, EventsService, Authentication, LessonsService) {
+    $scope.currentUser = Authentication.user;
     $scope.checkRole = ExpeditionViewHelper.checkRole;
+    $scope.loading = false;
 
     $scope.loadUser = function(callback) {
-      if ($scope.user && $scope.user._id && !$scope.user.schoolOrg) {
+      $scope.loading = true;
+      if ($scope.user && $scope.user._id && !$scope.user.roles) {
         $http.get('/api/users/username', {
           params: { username: $scope.user.username }
         })
@@ -27,6 +30,31 @@
           if (callback) callback();
         });
       }
+    };
+
+    $scope.loadUserData = function() {
+      $scope.isCurrentUserAdmin = $scope.checkRole('admin');
+      $scope.isCurrentUserTeamLead = $scope.checkRole('team lead');
+      $scope.isCurrentUserUser = $scope.checkCurrentUserIsUser();
+      
+      $scope.isUserAdmin = $scope.isAdmin = $scope.checkViewedUserRole('admin');
+      $scope.isUserTeamLead = $scope.isTeamLead = $scope.checkViewedUserRole('team lead') || $scope.checkViewedUserRole('team lead pending');
+      $scope.isUserTeamMember = $scope.checkViewedUserRole('team member') || $scope.checkViewedUserRole('team member pending');
+      $scope.isUserTeamLeadOnly = $scope.checkViewedUserRole('team lead');
+      $scope.isUserPending = $scope.checkUserPending();
+
+      $scope.findTeams(function() {
+        $scope.canSeePending = $scope.pendingVisible();
+        $scope.roles = $scope.findUserRoles();
+        $scope.loading = false;
+      });
+
+      $scope.findExpeditions();
+      $scope.findOrganization();
+      $scope.findRestorationStations();
+      $scope.findEvents();
+      $scope.findCreatedLessons();
+      $scope.findLessonsTaught();
     };
 
     $scope.findOrganization = function() {
@@ -45,7 +73,7 @@
       }
     };
 
-    $scope.findTeams = function(isTeamLead) {
+    $scope.findTeams = function(callback) {
       if ($scope.user) {
         var byOwner, byMember;
         if ($scope.isTeamLead) {
@@ -60,8 +88,18 @@
           userId: $scope.user._id
         }, function(data) {
           $scope.teams = data;
+          $scope.isCurrentUserUsersTeamLead = $scope.checkCurrentUserTeamLead();
+          if (callback) callback();
         });
+      } else {
+        if (callback) callback();
       }
+    };
+
+    $scope.pendingVisible = function() {
+      return ($scope.isUserAdmin && $scope.isCurrentUserAdmin) ||
+      (($scope.isUserTeamMember || $scope.isUserTeamLead) &&
+      ($scope.isCurrentUserAdmin || $scope.isCurrentUserUsersTeamLead));
     };
 
     $scope.findUserRoles = function() {
@@ -69,6 +107,16 @@
       lodash.remove(roles, function(n) {
         return n === 'user';
       });
+      if (!$scope.canSeePending) {
+        for (var i = 0; i < roles.length; i++) {
+          if (roles[i] === 'team lead pending') {
+            roles[i] = 'team lead';
+          } else if (roles[i] === 'team member pending') {
+            roles[i] = 'team member';
+          }
+        }
+        roles = lodash.uniq(roles);
+      }
       return (roles && roles.length > 0) ? roles.join(', ') : '';
     };
 
@@ -93,6 +141,32 @@
       }
     };
 
+    $scope.checkCurrentUserTeamLead = function() {
+      if ($scope.teams && $scope.currentUser) {
+        var allTeamLeads = [];
+        for (var i = 0; i < $scope.teams.length; i++) {
+          allTeamLeads.push($scope.teams[i].teamLead);
+          allTeamLeads = allTeamLeads.concat($scope.teams[i].teamLeads);
+        }
+
+        var leadIndex = lodash.findIndex(allTeamLeads, function(l) {
+          return l.username === $scope.currentUser.username;
+        });
+        return (leadIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
+    };
+
+    $scope.checkCurrentUserIsUser = function() {
+      if ($scope.user && $scope.currentUser && $scope.user.username && $scope.currentUser.username &&
+      $scope.user.username === $scope.currentUser.username) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     $scope.sendReminder = function(teamName) {
       $scope.reminderSent = false;
 
@@ -110,25 +184,6 @@
       .error(function(data, status, headers, config) {
         $scope.error = data;
       });
-      // } else {
-      //   $http.post('/api/teams/members/' + $scope.user._id + '/remind', {
-      //     team: {
-      //       name: teamName
-      //     }
-      //   }).
-      //   success(function(data, status, headers, config) {
-      //     $timeout(function() {
-      //       $scope.reminderSent = false;
-      //     }, 15000);
-      //   }).
-      //   error(function(data, status, headers, config) {
-      //     console.log('message', data);
-      //     $scope.error = data.res.message;
-      //     $timeout(function() {
-      //       $scope.reminderSent = false;
-      //     }, 15000);
-      //   });
-      // }
     };
 
     $scope.findExpeditions = function() {
@@ -143,8 +198,7 @@
         ExpeditionsService.query({
           byOwner: byOwner,
           byMember: byMember,
-          userId : $scope.user._id,
-          published: true
+          userId : $scope.user._id
         }, function(data) {
           $scope.expeditions = data;
         });
@@ -188,6 +242,14 @@
           }
         }
       }
+    };
+
+    $scope.findCreatedLessons = function() {
+      LessonsService.query({
+        byCreator: $scope.user._id
+      }, function(data) {
+        $scope.createdLessons = data;
+      });
     };
 
     $scope.findLessonsTaught = function() {

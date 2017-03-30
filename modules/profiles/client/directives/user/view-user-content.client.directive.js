@@ -3,15 +3,15 @@
 
   angular
     .module('profiles')
-    .directive('viewUserContent', function($state) {
+    .directive('viewUserContent', function() {
       return {
         restrict: 'AE',
         templateUrl: 'modules/profiles/client/views/user/view-user-content.client.view.html',
         scope: {
           user: '=',
-          team: '=?',
-          teams: '=?',
-          organization: '=?',
+          team: '@?',
+          teams: '@?',
+          organization: '@?',
           openUserForm: '=',
           openUserDelete: '=',
           closeFunction: '='
@@ -21,23 +21,17 @@
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
-            if (scope.user && scope.user.schoolOrg) {
-              scope.roles = scope.findUserRoles();
-              scope.isCurrentUserAdmin = scope.checkRole('admin');
-
-              scope.isAdmin = scope.checkViewedUserRole('admin');
-              scope.isTeamLead = scope.checkViewedUserRole('team lead') || scope.checkViewedUserRole('team lead pending');
-              scope.isUserPending = scope.checkUserPending();
-              scope.isUserTeamMember = scope.checkViewedUserRole('team member');
-              scope.isUserTeamLead = scope.checkViewedUserRole('team lead');
-              scope.findExpeditions();
-              scope.findOrganization();
-              scope.findTeams();
-              scope.findRestorationStations();
-              scope.findEvents();
-              scope.findLessonsTaught();
-            } else if (scope.user && !scope.user.schoolOrg) {
-              scope.loadUser();
+            if (scope.user) {
+              scope.loaded = false;
+              if (!scope.user.roles) {
+                scope.loadUser(function() {
+                  scope.loadUserData();
+                });
+              } else {
+                if (!scope.loading) {
+                  scope.loadUserData();
+                }
+              }
             }
           });
         }
