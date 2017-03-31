@@ -45,7 +45,7 @@
     </section>
 </section>
 
-<section class="content" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember"><!--TODO: Should be visible to all members of the team -- not sure if "isCurrentUserTeamMember" is the right logic? -->
+<section class="content" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead || vm.team.isCurrentUserTeamMember">
     <section class="container-fluid">
         <nav class="nav nav-default text-right">
             <div class="form-group col-md-4">
@@ -78,7 +78,7 @@
             You have <b>{{vm.teamRequests.length}}</b> team member requests.
             <a class="btn btn-sm btn-default" ng-click="vm.openApproveTeamMembers()">Respond</a>
         </div>
-       
+
         <div class="row" isotope-container="isotope-container" images-loaded>
             <div ng-repeat="member in vm.teamMembers" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel-overlay" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead">
@@ -119,6 +119,7 @@ I think there is a missing html tag somewhere but can't find it -->
 <delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
 
-<view-user-modal user="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeViewUserModal"></view-user-modal>
+<view-user-modal user="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
+  close-function="vm.closeViewUserModal"></view-user-modal>
 <approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
 <!--END MODALS-->

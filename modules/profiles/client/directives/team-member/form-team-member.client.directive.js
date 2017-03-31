@@ -9,8 +9,8 @@
         templateUrl: 'modules/profiles/client/views/team-member/form-team-member.client.view.html',
         scope: {
           teamMember: '=',
-          team: '=',
-          organization: '=',
+          team: '@',
+          organization: '@',
           closeFunction: '='
         },
         replace: true

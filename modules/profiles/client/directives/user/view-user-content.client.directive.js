@@ -24,9 +24,7 @@
             if (scope.user) {
               scope.loaded = false;
               if (!scope.user.roles) {
-                scope.loadUser(function() {
-                  scope.loadUserData();
-                });
+                scope.loadUser();
               } else {
                 if (!scope.loading) {
                   scope.loadUserData();

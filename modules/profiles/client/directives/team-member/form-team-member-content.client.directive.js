@@ -9,8 +9,8 @@
         templateUrl: 'modules/profiles/client/views/team-member/form-team-member-content.client.view.html',
         scope: {
           teamMember: '=',
-          team: '=',
-          organization: '=',
+          team: '@',
+          organization: '@',
           closeFunction: '='
         },
         controller: 'TeamMemberController',
@@ -28,6 +28,8 @@
             scope.organization = newValue;
           });
           scope.$watch('teamMember', function(newValue, oldValue) {
+            console.log('teamMember oldValue', oldValue);
+            console.log('teamMember newValue', newValue);
             scope.teamMember = newValue;
           });
         }

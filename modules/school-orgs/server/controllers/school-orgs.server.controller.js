@@ -497,6 +497,7 @@ exports.teamsBySchoolOrgsAndTeamLeads = function (req, res) {
  */
 exports.schoolOrgByID = function (req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log('School/Organization is invalid');
     return res.status(400).send({
       message: 'School/Organization is invalid'
     });
@@ -506,8 +507,10 @@ exports.schoolOrgByID = function (req, res, next, id) {
   .populate('orgLeads', 'displayName firstName lastName username email profileImageURL roles schoolOrg teamLeadType pending')
   .exec(function (err, schoolOrg) {
     if (err) {
+      console.log('err', err);
       return next(err);
     } else if (!schoolOrg) {
+      console.log('No school/organization with that identifier has been found');
       return res.status(400).send({
         message: 'No school/organization with that identifier has been found'
       });

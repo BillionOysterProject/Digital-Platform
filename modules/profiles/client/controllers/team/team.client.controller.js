@@ -153,6 +153,7 @@
 
     vm.openFormTeamMember = function(member) {
       vm.userToOpen = member;
+      console.log('member', member);
       angular.element('#modal-team-member-editadd').modal('show');
     };
 
