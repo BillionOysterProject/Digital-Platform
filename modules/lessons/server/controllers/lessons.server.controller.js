@@ -181,7 +181,6 @@ var updateQuestions = function(lesson) {
  * Incrementally save a lesson
  */
 exports.incrementalSave = function(req, res) {
-  console.log('incrementalSave');
   var lesson = req.lesson;
 
   if (lesson) {
@@ -1108,7 +1107,6 @@ exports.downloadZip = function(req, res) {
         docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson.docx'), lesson,
         function(filepath) {
           var filename = _.replace(lesson.title + '.docx', /\s/, '_');
-          console.log('filepath', path.resolve(filepath));
           lessonDocxFilepath = path.resolve(filepath);
           archive.file(lessonDocxFilepath, { name: filename });
           lessonCallback();

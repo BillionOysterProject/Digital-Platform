@@ -9,15 +9,20 @@
         templateUrl: 'modules/profiles/client/views/user/view-user-content.client.view.html',
         scope: {
           user: '=',
-          team: '@?',
-          teams: '@?',
-          organization: '@?',
+          team: '=?',
+          teams: '=?',
+          organization: '=?',
           openUserForm: '=',
           openUserDelete: '=',
           closeFunction: '='
         },
         controller: 'UserProfileController',
         link: function(scope, element, attrs) {
+          scope.$on('userCrudShown', function() {
+            scope.isCurrentUserAdmin = false;
+            scope.isCurrentUserTeamLead = false;
+            scope.isCurrentUserUser = false;
+          });
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;

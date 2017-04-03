@@ -66,7 +66,7 @@
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openFormTeamMember()">Add members</a>
             <a class="btn btn-default" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openImportTeamMembers()">Import members</a>
             <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeamLead()">Remove leads</a>
-            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead"" ng-click="vm.openDeleteTeam()">Delete team</a>
+            <a class="btn btn-danger" ng-show="vm.isAdmin || vm.team.isCurrentUserTeamLead" ng-click="vm.openDeleteTeam()">Delete team</a>
         </nav>
         <hr/>
 
@@ -104,11 +104,11 @@
 </section>
 
 <!--MODALS-->
-<delete-team-member-modal team-member="vm.userToOpen" team="vm.team" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
+<delete-team-member-modal team-member="vm.userToView" team="vm.team" close-function="vm.closeDeleteTeamMember"></delete-team-member-modal>
 
 <form-team-profile-modal team="vm.team" close-function="vm.closeTeamProfileForm"></form-team-profile-modal>
 <invite-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeInviteTeamLead"></invite-team-lead-modal>
-<form-team-member-modal team-member="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
+<form-team-member-modal team-member="vm.userToView" team="vm.team" organization="vm.team.schoolOrg"
   close-function="vm.closeFormTeamMember"></form-team-member-modal>
 
 <!-- TODO: when the import modal is closed the whole pages goes blank.
@@ -119,7 +119,7 @@ I think there is a missing html tag somewhere but can't find it -->
 <delete-team-lead-modal team="vm.team" organization="vm.team.schoolOrg" close-function="vm.closeDeleteTeamLead"></delete-team-lead-modal>
 <delete-team-modal team="vm.team" close-function="vm.closeDeleteTeam"></delete-team-modal>
 
-<view-user-modal user="vm.userToOpen" team="vm.team" organization="vm.team.schoolOrg"
+<view-user-modal user="vm.userToView" team="vm.team" organization="vm.team.schoolOrg" initial="vm.initial"
   close-function="vm.closeViewUserModal"></view-user-modal>
 <approve-team-members-modal team-requests="vm.teamRequests" teams="vm.teams" close-function="vm.closeApproveTeamMembers"></approve-team-members-modal>
 <!--END MODALS-->

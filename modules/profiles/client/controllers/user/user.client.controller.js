@@ -47,6 +47,7 @@
         $scope.canSeePending = $scope.pendingVisible();
         $scope.roles = $scope.findUserRoles();
         $scope.loading = false;
+        $scope.loaded = true;
       });
 
       $scope.findExpeditions();
@@ -144,7 +145,7 @@
     };
 
     $scope.checkCurrentUserTeamLead = function() {
-      if ($scope.teams && $scope.currentUser) {
+      if ($scope.teams && $scope.currentUser && $scope.isUserTeamMember) {
         var allTeamLeads = [];
         for (var i = 0; i < $scope.teams.length; i++) {
           allTeamLeads.push($scope.teams[i].teamLead);
