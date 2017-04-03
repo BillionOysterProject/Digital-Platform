@@ -12,76 +12,90 @@
           team: '=?',
           teams: '=?',
           organization: '=?',
+          initial: '=?',
           closeFunction: '='
         },
         replace: true,
         link: function(scope, element, attrs) {
           element.bind('show.bs.modal', function() {
-            scope.content = 'userView';
+            scope.content = scope.initial || 'userView';
+            scope.$broadcast(scope.content);
           });
 
-          scope.$watch('user', function(newValue, oldValue) {
-            if (newValue) {
-              scope.user = newValue;
-              scope.isCurrentUserAdmin = scope.checkRole('admin');
+          // scope.$watch('user', function(newValue, oldValue) {
+          //   if (newValue) {
+          //     scope.user = newValue;
+          //     scope.isCurrentUserAdmin = scope.checkRole('admin');
+          //
+          //     scope.isAdmin = scope.checkViewedUserRole('admin');
+          //     scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
+          //       scope.checkViewedUserRole('team lead pending');
+          //     scope.findOrganization();
+          //     scope.findTeams();
+          //   }
+          // });
 
-              scope.isAdmin = scope.checkViewedUserRole('admin');
-              scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
-                scope.checkViewedUserRole('team lead pending');
-              scope.findOrganization();
-              scope.findTeams();
-            }
+          scope.$on('userCrudShown', function(event, data) {
+            scope.content = scope.initial = data.view || 'userView';
+            scope.$broadcast(scope.content);
           });
         },
         controller: ['$scope', 'lodash', 'ExpeditionViewHelper', 'SchoolOrganizationsService', 'TeamsService',
         function ($scope, lodash, ExpeditionViewHelper, SchoolOrganizationsService, TeamsService) {
-          $scope.content = 'userView';
-          $scope.checkRole = ExpeditionViewHelper.checkRole;
-
-          $scope.checkViewedUserRole = function(role) {
-            var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
-              return o === role;
-            });
-            return (roleIndex > -1) ? true : false;
-          };
-
-          $scope.findOrganization = function() {
-            if ($scope.user.schoolOrg) {
-              if ($scope.user.schoolOrg._id) {
-                $scope.organization = $scope.user.schoolOrg;
-              } else {
-                SchoolOrganizationsService.get({
-                  schoolOrgId: $scope.user.schoolOrg
-                }, function(data) {
-                  $scope.organization = data;
-                });
-              }
-            }
-          };
-
-          $scope.findTeams = function() {
-            var byOwner, byMember;
-            if ($scope.isTeamLead) {
-              byOwner = true;
-            } else {
-              byMember = true;
-            }
-
-            TeamsService.query({
-              byOwner: byOwner,
-              byMember: byMember,
-              userId: $scope.user._id
-            }, function(data) {
-              $scope.teams = data;
-            });
-          };
+          if (!$scope.content) {
+            $scope.content = $scope.initial || 'userView';
+            $scope.$broadcast($scope.content);
+          }
+          // $scope.checkRole = ExpeditionViewHelper.checkRole;
+          //
+          // $scope.checkViewedUserRole = function(role) {
+          //   var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+          //     return o === role;
+          //   });
+          //   return (roleIndex > -1) ? true : false;
+          // };
+          //
+          // $scope.findOrganization = function() {
+          //   if ($scope.user.schoolOrg) {
+          //     if ($scope.user.schoolOrg._id) {
+          //       $scope.organization = $scope.user.schoolOrg;
+          //     } else {
+          //       SchoolOrganizationsService.get({
+          //         schoolOrgId: $scope.user.schoolOrg
+          //       }, function(data) {
+          //         $scope.organization = data;
+          //       });
+          //     }
+          //   }
+          // };
+          //
+          // $scope.findTeams = function() {
+          //   var byOwner, byMember;
+          //   if ($scope.isTeamLead) {
+          //     byOwner = true;
+          //   } else {
+          //     byMember = true;
+          //   }
+          //
+          //   TeamsService.query({
+          //     byOwner: byOwner,
+          //     byMember: byMember,
+          //     userId: $scope.user._id
+          //   }, function(data) {
+          //     $scope.teams = data;
+          //   });
+          // };
 
           $scope.openAdminTeamLeadForm = function() {
             $scope.content = 'formTeamLead';
           };
 
           $scope.closeAdminTeamLeadForm = function() {
-            $scope.content = 'userView';
+            if ($scope.initial === 'formTeamLead') {
+              $scope.closeFunction();
+            } else {
+              $scope.content = 'userView';
+            }
           };
 
           $scope.openDeleteAdminTeamLead = function() {
@@ -89,23 +103,35 @@
           };
 
           $scope.closeDeleteAdminTeamLead = function() {
-            $scope.content = 'userView';
+            if ($scope.initial === 'deleteTeamLead') {
+              $scope.closeFunction();
+            } else {
+              $scope.content = 'userView';
+            }
           };
 
           $scope.openFormTeamMember = function() {
             $scope.content = 'formTeamMember';
           };
 
-          $scope.closeFormTeamMember = function() {
-            $scope.content = 'userView';
+          $scope.closeFormTeamMember = function(refresh) {
+            if ($scope.initial === 'formTeamMember') {
+              $scope.closeFunction(refresh);
+            } else {
+              $scope.content = 'userView';
+            }
           };
 
           $scope.openDeleteTeamMember = function(teamMember) {
             $scope.content = 'deleteTeamMember';
           };
 
-          $scope.closeDeleteTeamMember = function() {
-            $scope.content = 'userView';
+          $scope.closeDeleteTeamMember = function(refresh) {
+            if (refresh || $scope.initial === 'deleteTeamMember') {
+              $scope.closeFunction(refresh);
+            } else {
+              $scope.content = 'userView';
+            }
           };
 
           $scope.openUserForm = function() {

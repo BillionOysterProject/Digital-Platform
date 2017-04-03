@@ -16,18 +16,18 @@
     $scope.checkRole = ExpeditionViewHelper.checkRole;
     $scope.loading = false;
 
-    $scope.loadUser = function(callback) {
-      $scope.loading = true;
+    $scope.loadUser = function() {
       if ($scope.user && $scope.user._id && !$scope.user.roles) {
+        $scope.loading = true;
         $http.get('/api/users/username', {
           params: { username: $scope.user.username }
         })
         .success(function(data, status, headers, config) {
           $scope.user = data;
-          if (callback) callback();
+          $scope.loadUserData();
         })
         .error(function(data, status, headers, config) {
-          if (callback) callback();
+          console.log('err', data);
         });
       }
     };
@@ -36,7 +36,7 @@
       $scope.isCurrentUserAdmin = $scope.checkRole('admin');
       $scope.isCurrentUserTeamLead = $scope.checkRole('team lead');
       $scope.isCurrentUserUser = $scope.checkCurrentUserIsUser();
-      
+
       $scope.isUserAdmin = $scope.isAdmin = $scope.checkViewedUserRole('admin');
       $scope.isUserTeamLead = $scope.isTeamLead = $scope.checkViewedUserRole('team lead') || $scope.checkViewedUserRole('team lead pending');
       $scope.isUserTeamMember = $scope.checkViewedUserRole('team member') || $scope.checkViewedUserRole('team member pending');
@@ -47,6 +47,7 @@
         $scope.canSeePending = $scope.pendingVisible();
         $scope.roles = $scope.findUserRoles();
         $scope.loading = false;
+        $scope.loaded = true;
       });
 
       $scope.findExpeditions();
@@ -68,6 +69,8 @@
             full: true
           }, function(data) {
             $scope.organization = data;
+          }, function(err) {
+            console.log('err', err);
           });
         }
       }
@@ -142,7 +145,7 @@
     };
 
     $scope.checkCurrentUserTeamLead = function() {
-      if ($scope.teams && $scope.currentUser) {
+      if ($scope.teams && $scope.currentUser && $scope.isUserTeamMember) {
         var allTeamLeads = [];
         for (var i = 0; i < $scope.teams.length; i++) {
           allTeamLeads.push($scope.teams[i].teamLead);

@@ -9,9 +9,10 @@
         templateUrl: 'modules/profiles/client/views/user/view-user.client.view.html',
         scope: {
           user: '=',
-          team: '@?',
-          teams: '@?',
-          organization: '@?',
+          team: '=?',
+          teams: '=?',
+          organization: '=?',
+          initial: '=?',
           closeFunction: '='
         },
         replace: true,
@@ -29,6 +30,30 @@
               toGoParams = toParams;
               element.modal('hide');
             }
+          });
+
+          element.bind('show.bs.modal', function() {
+            scope.content = scope.initial || 'userView';
+            scope.loaded = false;
+            scope.isCurrentUserAdmin = false;
+            scope.isCurrentUserTeamLead = false;
+            scope.isCurrentUserUser = false;
+            scope.$broadcast('userCrudShown', {
+              view: scope.initial
+            });
+          });
+          //
+          // element.bind('shown.bs.modal', function() {
+          //   scope.$broadcast('userCrudShown', {
+          //     view: scope.content
+          //   });
+          // });
+
+          scope.$watch('initial', function(newValue, oldValue) {
+            scope.content = scope.initial = newValue || 'userView';
+            scope.$broadcast('userCrudShown', {
+              view: scope.initial
+            });
           });
 
           //when modal is hidden, if we were supposed to change state then do it

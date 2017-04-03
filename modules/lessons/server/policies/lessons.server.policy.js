@@ -63,6 +63,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/feedback',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/tracked-list',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/favorites',
       permissions: '*'
     }, {

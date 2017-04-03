@@ -15,7 +15,7 @@
         },
         controller: 'TeamMemberController',
         link: function(scope, element, attrs) {
-          element.bind('show.bs.modal', function () {
+          scope.$on('formTeamMember', function() {
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
             scope.error = null;
