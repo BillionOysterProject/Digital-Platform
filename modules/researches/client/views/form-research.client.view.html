@@ -21,7 +21,8 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-4">
+               <!--may have layouts in the future:
+               <div class="col-md-4">
                   <label>Layout *</label>
                   <div class="row">
                     <div class="col-sm-6">
@@ -39,9 +40,9 @@
                       </label>
                     </div>
                   </div>
-                </div>
+                </div>-->
 
-                <div class="col-md-4">
+                <div class="col-md-8">
                   <div class="form-group" show-errors>
                     <label for="color" class="control-label required">Color *</label><br/>
                     
@@ -64,9 +65,7 @@
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
                   </div>
-                </div>
-
-                <div class="col-md-4">
+                  
                   <div class="form-group" show-errors>
                     <label for="font" class="control-label required">Font *</label>
                     <select class="form-control" required>
@@ -77,6 +76,14 @@
                     <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-group" show-errors>
+                    <label for="image" class="control-label">Header Image</label>
+                    <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
+                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
                   </div>
                 </div>
               

@@ -87,19 +87,53 @@
 
       <form name="form.researchFeedbackForm" ng-submit="send(form.researchFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
-          <h4 class="blue">Rate the following using 1-5 stars.</h4>
-          <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="researchAbstract" class="control-label required">Poster Abstract *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
-                </div>
+          <h4 class="blue">Poster Abstract</h4>
+          
+          <div class="form-group">
+            <label for="researchAbstract" class="control-label">Give a rating using 1-5 stars</label><br>
+            <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
+          </div>
+          
+          <div class="form-group">
+            <label>Is the title creative and to the point?</label><br/>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> Yes
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> No
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> Somewhat
+            </label>
+          </div>
+
+          <label>Does the title quickly grab the audience's attention and make them want to learn more about the research?</label>
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> Yes
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> No
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="inlineCheckbox1"> Somewhat
+            </label>
+          </div>
+          
+        	<div class="form-group">
+        	  <label class="control-label">Specific feedback or suggestions</label>
+            <textarea class="form-control"></textarea>
+          </div>
+                
+                
+                
+                
+                
+                
                 <div class="form-group">
                     <label for="researchIntro" class="control-label required">Poster Intro *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.researchIntro" number="5"></raty-fa></h4>
                 </div>
-            </div>
-            <div class="col-sm-4">
                 <div class="form-group">
                     <label for="researchMethods" class="control-label required">Poster Methods *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchMethods" score="feedback.researchMethods" number="5"></raty-fa></h4>
@@ -108,8 +142,6 @@
                     <label for="researchResults" class="control-label required">Poster Results *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.researchResults" number="5"></raty-fa></h4>
                 </div>
-            </div>
-            <div class="col-sm-4">
                 <div class="form-group">
                     <label for="researchDiscussion" class="control-label required">Poster Discussion *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.researchDiscussion" number="5"></raty-fa></h4>
@@ -118,8 +150,8 @@
                     <label for="researchConclusion" class="control-label required">Poster Conclusion *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchConclusion" score="feedback.researchConclusion" number="5"></raty-fa></h4>
                 </div>
-            </div>
-          </div>
+                
+                
           <div class="row">
           	<div class="col-sm-12">
                 <hr/><h4 class="blue">General comments</h4>
@@ -128,6 +160,10 @@
                 </div>
             </div>
           </div>
+          
+          
+          
+          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
