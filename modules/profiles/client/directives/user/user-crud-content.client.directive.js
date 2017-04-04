@@ -22,18 +22,19 @@
             scope.$broadcast(scope.content);
           });
 
-          // scope.$watch('user', function(newValue, oldValue) {
-          //   if (newValue) {
-          //     scope.user = newValue;
-          //     scope.isCurrentUserAdmin = scope.checkRole('admin');
-          //
-          //     scope.isAdmin = scope.checkViewedUserRole('admin');
-          //     scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
-          //       scope.checkViewedUserRole('team lead pending');
-          //     scope.findOrganization();
-          //     scope.findTeams();
-          //   }
-          // });
+          scope.$watch('user', function(newValue, oldValue) {
+            if (newValue) {
+              scope.user = newValue;
+              scope.isCurrentUserAdmin = scope.checkRole('admin');
+              scope.isCurrentUserTeamLead = scope.checkRole('team lead');
+
+              scope.isAdmin = scope.checkViewedUserRole('admin');
+              scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
+                scope.checkViewedUserRole('team lead pending');
+              // scope.findOrganization();
+              // scope.findTeams();
+            }
+          });
 
           scope.$on('userCrudShown', function(event, data) {
             scope.content = scope.initial = data.view || 'userView';
@@ -46,15 +47,15 @@
             $scope.content = $scope.initial || 'userView';
             $scope.$broadcast($scope.content);
           }
-          // $scope.checkRole = ExpeditionViewHelper.checkRole;
-          //
-          // $scope.checkViewedUserRole = function(role) {
-          //   var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
-          //     return o === role;
-          //   });
-          //   return (roleIndex > -1) ? true : false;
-          // };
-          //
+          $scope.checkRole = ExpeditionViewHelper.checkRole;
+
+          $scope.checkViewedUserRole = function(role) {
+            var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+              return o === role;
+            });
+            return (roleIndex > -1) ? true : false;
+          };
+
           // $scope.findOrganization = function() {
           //   if ($scope.user.schoolOrg) {
           //     if ($scope.user.schoolOrg._id) {
@@ -90,9 +91,9 @@
             $scope.content = 'formTeamLead';
           };
 
-          $scope.closeAdminTeamLeadForm = function() {
+          $scope.closeAdminTeamLeadForm = function(refresh) {
             if ($scope.initial === 'formTeamLead') {
-              $scope.closeFunction();
+              $scope.closeFunction(refresh);
             } else {
               $scope.content = 'userView';
             }
@@ -102,9 +103,9 @@
             $scope.content = 'deleteTeamLead';
           };
 
-          $scope.closeDeleteAdminTeamLead = function() {
+          $scope.closeDeleteAdminTeamLead = function(refresh) {
             if ($scope.initial === 'deleteTeamLead') {
-              $scope.closeFunction();
+              $scope.closeFunction(refresh);
             } else {
               $scope.content = 'userView';
             }
@@ -112,6 +113,7 @@
 
           $scope.openFormTeamMember = function() {
             $scope.content = 'formTeamMember';
+            $scope.$broadcast('formTeamMember');
           };
 
           $scope.closeFormTeamMember = function(refresh) {

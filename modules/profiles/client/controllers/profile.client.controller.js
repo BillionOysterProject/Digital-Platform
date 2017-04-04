@@ -23,6 +23,7 @@
     vm.teamToOpen = {};
     vm.userToOpen = {};
     vm.valuesLoaded = false;
+    vm.initial = 'userView';
 
     vm.checkRole = ExpeditionViewHelper.checkRole;
     vm.isTeamLead = vm.checkRole('team lead') || vm.checkRole('team lead pending');
@@ -171,23 +172,29 @@
       }
     };
 
-    vm.openViewUserModal = function(user) {
-      vm.userToOpen = (user) ? user : new Admin();
+    vm.openViewUserModal = function(user, initial) {
+      vm.userToOpen = (user) ? new Admin(user) : new Admin();
+      vm.initial = initial || 'userView';
       angular.element('#modal-profile-user').modal('show');
     };
 
-    vm.closeViewUserModal = function(openNewModalName) {
+    vm.closeViewUserModal = function(refresh) {
+      console.log('refresh', refresh);
       vm.userToOpen = {};
+      if (refresh) vm.findCurrentUserAndOrganization();
       angular.element('#modal-profile-user').modal('hide');
     };
 
     vm.openUserProfileForm = function() {
-      angular.element('#modal-user-edit').modal('show');
+      if (vm.isAdmin || vm.isTeamLead) {
+        vm.openViewUserModal(vm.user, 'formTeamLead');
+      } else {
+        vm.openViewUserModal(vm.user, 'formTeamMember');
+      }
     };
 
     vm.closeUserProfileForm = function(refresh) {
-      angular.element('#modal-user-edit').modal('hide');
-      if (refresh) vm.findCurrentUserAndOrganization();
+      vm.closeViewUserModal(refresh);
     };
 
     vm.openChangePicture = function() {

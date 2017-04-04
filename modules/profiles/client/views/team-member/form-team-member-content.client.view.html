@@ -11,24 +11,22 @@
 
     <div class="modal-body">
       <div class="row">
-        <!--TODO: firstname/lastname/email fields should only be editable to the actual user (SELF), or on new user creation form, (readonly otherwise) -->
         <div class="form-group col-md-6" show-errors>
           <label for="firstName" class="control-label required">First Name</label>
           <input type="text" name="firstName" class="form-control" ng-model="teamMember.firstName"
-            required ng-readonly="teamMember._id && teamMember.pending === false" required>
+            ng-readonly="teamMember._id && !(teamMember.pending || isCurrentUserUser)" required>
         </div>
         <div class="form-group col-md-6" show-errors>
           <label for="lastName" class="control-label required">Last Name</label>
           <input type="text" name="lastName" class="form-control" ng-model="teamMember.lastName"
-            required ng-readonly="teamMember._id && teamMember.pending === false" required>
+            ng-readonly="teamMember._id && !(teamMember.pending || isCurrentUserUser)" required>
         </div>
         <div class="form-group col-md-6" show-errors>
           <label for="email" class="control-label required">Email</label>
           <input type="text" name="email" class="form-control" ng-model="teamMember.email"
-            required ng-readonly="teamMember._id && teamMember.pending === false" required>
+             ng-readonly="teamMember._id && !(teamMember.pending || isCurrentUserUser)" required>
         </div>
-        <!--TODO: Team should only be editable for Team Lead and Admin -->
-        <div class="form-group col-md-6" show-errors ng-show="teamMember._id">
+        <div class="form-group col-md-6" show-errors ng-show="teamMember._id && (isCurrentUserAdmin || isCurrentUserTeamLead)">
           <label for="team" class="control-label" ng-class="{'required': teamMember._id}">Team</label>
           <select name="team" class="form-control" ng-model="newTeam" ng-required="teamMember._id">
             <option disabled selected value>
