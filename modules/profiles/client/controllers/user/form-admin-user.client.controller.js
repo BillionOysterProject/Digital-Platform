@@ -10,7 +10,7 @@
 
   function FormAdminUserController($scope, $http, lodash, Authentication,
     Users, TeamsService, SchoolOrganizationsService) {
-    $scope.user = Authentication.user;
+    $scope.currentUser = Authentication.user;
     $scope.roles = [
       { name: 'Team Lead', value: 'team lead' },
       { name: 'Team Member', value: 'team member' }
@@ -68,6 +68,41 @@
         }
       }
       this.user.roles.push(newSelectedRole);
+    };
+
+    $scope.checkCurrentUserIsUser = function() {
+      if ($scope.user && $scope.currentUser && $scope.user.username && $scope.currentUser.username &&
+      $scope.user.username === $scope.currentUser.username) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    $scope.saveAdminTeamLeadForm = function(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'form.adminTeamLeadForm');
+        return false;
+      }
+
+      //$scope.user.$update(successCallback, errorCallback);
+      if ($scope.user._id) {
+        $http.put('api/users/leaders/' + $scope.user._id, {
+          user: $scope.user
+        })
+        .success(successCallback)
+        .error(errorCallback);
+      }
+
+      function successCallback(res) {
+        // $scope.findUsers();
+        // $scope.cancelAdminTeamLeadForm();
+        $scope.closeFunction(true);
+      }
+
+      function errorCallback(res) {
+        $scope.editUserError = res.data.message;
+      }
     };
 
     $scope.close = function() {

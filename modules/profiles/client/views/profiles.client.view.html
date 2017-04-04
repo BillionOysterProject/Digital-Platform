@@ -185,10 +185,10 @@
 <delete-team-modal team="vm.teamToOpen" close-function="vm.closeDeleteTeam"></delete-team-modal>
 <!-- End Team Modals -->
 
-<form-user-profile-modal close-function="vm.closeUserProfileForm"></form-user-profile-modal>
 <change-user-profile-image-modal close-function="vm.closeChangePicture"></change-user-profile-image-modal>
 
-<view-user-modal user="vm.userToOpen" teams="vm.teams" organization="vm.organization" close-function="vm.closeViewUserModal"></view-user-modal>
+<view-user-modal user="vm.userToOpen" teams="vm.teams" organization="vm.organization" initial="vm.initial"
+  close-function="vm.closeViewUserModal"></view-user-modal>
 <change-password-modal close-function="vm.closeChangePassword"></change-password-modal>
 <view-restoration-station-popup station="vm.station" open-view="vm.openViewRestorationStation"></view-restoration-station-popup>
 <!--END MODALS-->

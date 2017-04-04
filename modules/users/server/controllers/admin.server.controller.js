@@ -501,6 +501,8 @@ var updateUserInternal = function(user, userJSON, successCallback, errorCallback
     user.lastName = userJSON.lastName;
     user.displayName = user.firstName + ' ' + user.lastName;
     user.email = userJSON.email;
+    user.teamLeadType = userJSON.teamLeadType;
+    user.schoolOrg = userJSON.schoolOrg;
 
     user.save(function (err) {
       if (err) {

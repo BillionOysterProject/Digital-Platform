@@ -42,6 +42,13 @@
             } else {
               scope.isAdmin = false;
             }
+            scope.isCurrentUserUser = scope.checkCurrentUserIsUser();
+            scope.oldOrganization = (scope.user.schoolOrg) ? scope.user.schoolOrg : scope.organization;
+            if (scope.oldOrganization && !scope.oldOrganization._id) {
+              scope.user.schoolOrg = {
+                _id: scope.oldOrganization
+              };
+            }
           });
         }
       };
