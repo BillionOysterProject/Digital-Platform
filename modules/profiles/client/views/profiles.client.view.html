@@ -121,7 +121,7 @@
                                             class="pull-left header-profile-image">
                                         <b><a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a></b>
                                         <em class="text-muted" ng-show="(team.isCurrentUserTeamLead || vm.isAdmin) && teamLead.pending"> Pending<br/>
-                                          <a ng-click="vm.sendReminder(teamLead)" ng-hide="teamLead.reminderSent">Send reminder</a>
+                                          <a ng-click="vm.sendReminder(teamLead, team)" ng-hide="teamLead.reminderSent">Send reminder</a>
                                           <span class="green ng-hide" ng-show="teamLead.reminderSent">
                                             <i class="glyphicon glyphicon-ok"></i> Reminder sent</span>
                                         </em>
