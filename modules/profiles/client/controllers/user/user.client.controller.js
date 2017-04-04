@@ -91,7 +91,6 @@
           userId: $scope.user._id
         }, function(data) {
           $scope.teams = data;
-          console.log('teams', $scope.teams);
           $scope.isCurrentUserUsersTeamLead = $scope.checkCurrentUserTeamLead();
           if (callback) callback();
         });

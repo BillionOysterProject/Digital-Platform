@@ -148,11 +148,11 @@
       vm.findLeadRequests();
     }
 
-    vm.sendReminder = function(lead) {
+    vm.sendReminder = function(lead, team) {
       $http.post('api/users/leaders/' + lead._id + '/remind', {
         user: lead,
-        organization: vm.team.schoolOrg,
-        team: vm.team,
+        organization: vm.organization,
+        team: team,
         teamOrOrg: 'team',
         role: 'team lead pending'
       })
@@ -179,7 +179,6 @@
     };
 
     vm.closeViewUserModal = function(refresh) {
-      console.log('refresh', refresh);
       vm.userToOpen = {};
       if (refresh) vm.findCurrentUserAndOrganization();
       angular.element('#modal-profile-user').modal('hide');
