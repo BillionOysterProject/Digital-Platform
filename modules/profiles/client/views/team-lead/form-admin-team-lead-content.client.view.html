@@ -54,7 +54,7 @@
 
         <!-- team lead options -->
         <!--TODO: Team Lead Type should be editable to SELF/ADMIN-->
-        <div class="form-group col-sm-4" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
+        <div class="form-group col-md-6" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
           <label class="control-label required" for="teamLeadType">Team Lead Type</label>
           <select class="form-control" name="teamLeadType" id="teamLeadType"
             ng-model="user.teamLeadType">
@@ -63,10 +63,10 @@
         </div>
 
         <!--TODO: admin checkbox should only be editable and visible to ADMIN (hidden for SELF) -->
-        <div class="form-group col-sm-2" ng-show="user._id !== null && selectedRole === 'team lead' && isAdmin" show-errors>
+        <div class="form-group col-md-12" ng-show="user._id !== null && selectedRole === 'team lead' && isAdmin" show-errors>
           <div class="checkbox" for="adminCheck">
             <label><input name="adminCheck" id="adminCheck" type="checkbox" value="isAdmin" ng-model="isAdmin"
-              ng-change="isAdminChanged()">Admin?</label>
+              ng-change="isAdminChanged()">Admin</label>
           </div>
         </div>
 
