@@ -76,10 +76,10 @@
                           Other: {{calendarEvent.category.otherType}}</h3>
                     </div>
                     <div class="panel-body text-center">
+                        <h4><b ng-bind="calendarEvent.title"></b></h4>
                         <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
                           {{vm.getEventYear(date.startDateTime)}}<br/>
                           {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
-                        <h4><b class="red" ng-bind="calendarEvent.title"></b></h4>
                         <p ng-show="calendarEvent.location.addressString"><i class="fa fa-map-marker"></i> {{calendarEvent.location.addressString}}</p>
                     </div>
                     <div class="panel-footer">

@@ -1,0 +1,13 @@
+Hi,
+
+<%= FeedbackName %> from the organization <%= FeedbackOrg %> just reported a status change for the ORS <%= ORSName %>.
+
+New Status: <%= ORSStatus %>
+Description: <%= ORSDescription %>
+Photo: <%= LinkORSPhoto %>
+
+The status of <%= ORSName %> will not change in the platform until you update it. You can edit the ORS at <%= LinkORSForm %> to reflect any of this new information at any time.
+
+Thanks!
+The Billion Oyster Project
+

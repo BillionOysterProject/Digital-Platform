@@ -5,12 +5,12 @@
     .module('restoration-stations')
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
-  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', 'lodash', 'moment', 'Authentication',
-  'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
+  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', 'lodash',
+  'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
   'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
-  function RestorationStationsDashboardController($scope, $rootScope, $state, lodash, moment, Authentication,
-    TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
+  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, lodash,
+    moment, Authentication, TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
     ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
@@ -67,12 +67,9 @@
               markerColor: (station.status === 'Active') ? 'green' : 'red'
             },
             info:{
-              name: station.name,
-              bodyOfWater: station.bodyOfWater,
-              teamLead: (station.teamLead) ? station.teamLead.displayName : '',
-              schoolOrg: (station.schoolOrg) ? station.schoolOrg.name : '',
-              photoUrl: photoUrl,
-              html: '<form-restoration-station-marker-popup name="name" body-of-water="bodyOfWater" team-lead="teamLead" school-org="schoolOrg" photo-url="photoUrl"> </form-restoration-station-marker-popup>'
+              station: station,
+              openView: vm.openView,
+              html: '<form-restoration-station-marker-popup station="station" open-view="openView"> </form-restoration-station-marker-popup>'
             }
           };
 
@@ -82,14 +79,14 @@
     };
 
     var getORSes = function(teamLeadId) {
-      if (vm.isTeamLead || vm.isTeamLeadPending) {
+      if (vm.isAdmin) {
         RestorationStationsService.query({
-          teamLead: true
         }, function(data) {
           vm.stations = data;
         });
-      } else if (vm.isAdmin) {
+      } else if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
+          schoolOrgId: vm.user.schoolOrg
         }, function(data) {
           vm.stations = data;
         });
@@ -235,6 +232,23 @@
       angular.element('#modal-station-register').modal('show');
     };
 
+    vm.openViewRestorationStation = function(station) {
+      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (vm.station.latitude && vm.station.longitude) {
+        vm.stationMapPoints = [{
+          lat: vm.station.latitude,
+          lng: vm.station.longitude,
+          icon: {
+            icon: 'glyphicon-map-marker',
+            prefix: 'glyphicon',
+            markerColor: 'blue'
+          },
+        }];
+      }
+
+      angular.element('#modal-station').modal('show');
+    };
+
     vm.saveFormRestorationStation = function() {
       getORSes(vm.filter.teamId);
       vm.station = {};
@@ -282,5 +296,21 @@
         $state.go('expeditions.create');
       }
     };
+
+    vm.openView = function(station) {
+      vm.openViewRestorationStation(station);
+    };
+
+    if ($location.search().openORSForm) {
+      vm.initial = 'orsForm';
+      RestorationStationsService.get({
+        stationId: $location.search().openORSForm
+      }, function(data) {
+        vm.openViewRestorationStation(data.toJSON());
+      });
+
+    } else {
+      vm.initial = 'orsView';
+    }
   }
 })();

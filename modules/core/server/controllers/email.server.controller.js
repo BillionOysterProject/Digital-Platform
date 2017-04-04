@@ -30,16 +30,20 @@ var runTemplate = function(string, data) {
 /**
  * Send email
  */
-exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, errorCallback) {
+exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, errorCallback, attachments) {
   if (to && subject && bodyText && bodyHtml) {
     to = toAddresses(to);
+    if (!attachments) {
+      attachments = [];
+    }
 
     transporter.sendMail({
       from: defaultFrom,
-      to: to,
+      bcc: to,
       subject: subject,
       text: bodyText,
-      html: bodyHtml
+      html: bodyHtml,
+      attachments: attachments
     }, function(err, info) {
       if (err) errorCallback(err.message);
       successCallback(info);
@@ -49,7 +53,7 @@ exports.sendEmail = function(to, subject, bodyText, bodyHtml, successCallback, e
   }
 };
 
-var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallback, errorCallback) {
+var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallback, errorCallback, attachments) {
   if (to && subject && bodyTemplate && data) {
     to = toAddresses(to);
 
@@ -62,18 +66,23 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
     var bodyText = runTemplate(textContent, data);
     var bodyHtml = runTemplate(htmlContent, data);
 
+    if (!attachments) {
+      attachments = [];
+    }
+    attachments.push({
+      filename: 'logo.png',
+      path: 'https://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/logo.png',
+      cid: 'bop-logo.ee' //same cid value as in the html img src
+    });
+
     transporter.sendMail({
       from: defaultFrom,
       replyTo: from,
-      to: to,
+      bcc: to,
       subject: subject,
       text: bodyText,
       html: bodyHtml,
-      attachments: [{
-        filename: 'logo.png',
-        path: 'https://s3-us-west-1.amazonaws.com/digital-platform-dev-files/uploads/logo.png',
-        cid: 'bop-logo.ee' //same cid value as in the html img src
-      }]
+      attachments: attachments
     }, function(err, info) {
       if (err) {
         console.log('err', err);
@@ -88,8 +97,8 @@ var sendTemplate = function(to, from, subject, bodyTemplate, data, successCallba
   }
 };
 
-exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCallback, errorCallback) {
-  sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback);
+exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCallback, errorCallback, attachments) {
+  sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback, attachments);
 };
 
 exports.sendFeedback = function(to, from, subject, data, template, req, res) {

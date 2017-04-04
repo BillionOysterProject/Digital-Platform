@@ -20,11 +20,29 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations',
       permissions: '*'
     }, {
+      resources: '/api/restoration-stations/site-coordinators',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/property-owners',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId/upload-image',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/send-status/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/status-history',
       permissions: '*'
     }, {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/measurement-chart-data',
+      permissions: ['get']
     }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: '*'
@@ -35,8 +53,20 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/restoration-stations',
       permissions: ['get']
     }, {
+      resources: '/api/restoration-stations/:stationId/upload-status-image/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/send-status/:statusHistoryIndex',
+      permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/status-history',
+      permissions: '*'
+    }, {
       resources: '/api/restoration-stations/:stationId/substrate-history',
       permissions: '*'
+    }, {
+      resources: '/api/restoration-stations/:stationId/measurement-chart-data',
+      permissions: ['get']
     }, {
       resources: '/api/restoration-stations/:stationId',
       permissions: ['get']

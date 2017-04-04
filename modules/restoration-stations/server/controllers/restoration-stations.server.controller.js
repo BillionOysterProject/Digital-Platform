@@ -6,12 +6,18 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   RestorationStation = mongoose.model('RestorationStation'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
+  User = mongoose.model('User'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
+  MetaPropertyOwner = mongoose.model('MetaPropertyOwner'),
   Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   path = require('path'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  userAdmin = require(path.resolve('./modules/users/server/controllers/admin.server.controller')),
   moment = require('moment'),
   _ = require('lodash');
 
@@ -25,6 +31,22 @@ var path = require('path'),
 //     }
 //   });
 // };
+
+var SITE_COORDINATOR = 'site coordinator';
+
+var sendAdminEmailOther = function(subject, emailName, stationName, userName, otherName, otherEmail, link, callback) {
+  email.sendEmailTemplate(config.mailer.admin, subject, emailName, {
+    ORSName: stationName,
+    TeamLeadName: userName,
+    OtherName: otherName || '',
+    OtherEmail: otherEmail || '',
+    LinkORSForm: link
+  }, function(info) {
+    callback();
+  }, function(errorMessage) {
+    callback();
+  });
+};
 
 /**
  * Create a restoration station
@@ -48,6 +70,35 @@ exports.create = function (req, res) {
     station.baseline['substrateShell'+i] = [];
   }
 
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+  var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+
+  if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+    station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+    station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
+    station.siteCoordinator = undefined;
+
+    sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
+      station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink,
+      function() {
+      });
+  } else {
+    station.otherSiteCoordinator = {};
+  }
+
+  if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+    station.otherPropertyOwner.name = req.body.propertyOwner.name;
+    station.otherPropertyOwner.email = req.body.propertyOwner.email;
+    station.propertyOwner = undefined;
+
+    sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
+      station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink,
+      function() {
+      });
+  } else {
+    station.otherPropertyOwner = {};
+  }
+
   station.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -57,11 +108,6 @@ exports.create = function (req, res) {
       res.json(station);
     }
   });
-  // }, function(errorMessage) {
-  //   return res.status(400).send({
-  //     message: errorMessage
-  //   });
-  // });
 };
 
 /**
@@ -73,6 +119,10 @@ exports.read = function (req, res) {
 
   station.isCurrentUserOwner = req.user && station.teamLead &&
     station.teamLead._id.toString() === req.user._id.toString();
+
+  if (req.query.full) {
+
+  }
 
   res.json(station);
 };
@@ -98,8 +148,43 @@ exports.update = function (req, res) {
     station.schoolOrg = req.user.schoolOrg;
     station.teamLead = req.user;
 
+    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+    var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+
+    if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+      if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
+        station.otherSiteCoordinator.name !== req.body.siteCoordinator.name ||
+        station.otherSiteCoordinator.email !== req.body.siteCoordinator.email) {
+        sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
+          station.name, req.user.displayName, req.body.siteCoordinator.name, req.body.siteCoordinator.email, orsFormLink,
+          function() {});
+      }
+      station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+      station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
+      station.siteCoordinator = undefined ;
+    } else {
+      station.otherSiteCoordinator = {};
+    }
+
+    if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+      if (!station.otherPropertyOwner || !station.otherPropertyOwner.name ||
+        station.otherPropertyOwner.name !== req.body.propertyOwner.name ||
+        station.otherPropertyOwner.email !== req.body.propertyOwner.email) {
+        sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
+          station.name, req.user.displayName, req.body.propertyOwner.name, req.body.propertyOwner.email, orsFormLink,
+          function() {
+          });
+      }
+      station.otherPropertyOwner.name = req.body.propertyOwner.name;
+      station.otherPropertyOwner.email = req.body.propertyOwner.email;
+      station.propertyOwner = undefined;
+    } else {
+      station.otherPropertyOwner = {};
+    }
+
     station.save(function(err) {
       if (err) {
+        console.log('err', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
@@ -107,11 +192,6 @@ exports.update = function (req, res) {
         res.json(station);
       }
     });
-    // }, function(errorMessage) {
-    //   return res.status(400).send({
-    //     message: errorMessage
-    //   });
-    // });
   }
 };
 
@@ -152,6 +232,196 @@ exports.updateBaselines = function (req, res) {
   }
 };
 
+exports.updateStatusHistory = function(req, res) {
+  var station = req.station;
+
+  if (station) {
+    station.statusHistory.push({
+      status: req.body.status,
+      description: req.body.description
+    });
+
+    station.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var index = (station.statusHistory.length - 1);
+        res.json({
+          station: station,
+          index: index
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
+    });
+  }
+};
+
+var calculateValuesForSubstrateForMonth = function(substrateIndex, startDate, endDate, callback) {
+  ProtocolOysterMeasurement.findOne({ 'collectionTime': { '$gte': startDate, '$lt': endDate } }).sort('collectionTime')
+  .exec(function(err, samples) {
+    if (err) {
+      callback(err);
+    } else if (!samples || samples.length === 0) {
+      callback(null, {
+        mortality: 0,
+        averageMass: 0,
+        averageSize: 0
+      });
+    } else {
+      var numberAlive = Number.MAX_VALUE;
+      var totalMass = 0;
+      var totalSize = 0;
+
+      for (var i = 0; i < samples.length; i++) {
+        var sample = samples[i];
+        var measurements = sample.measuringOysterGrowth.substrateShells[substrateIndex];
+        //find mortality
+        if (measurements.totalNumberOfLiveOystersOnShell < numberAlive) {
+          numberAlive = measurements.totalNumberOfLiveOystersOnShell;
+        }
+        //sum mass
+        totalMass += measurements.averageSizeOfLiveOysters;
+        //sum size
+        totalSize += measurements.totalMassOfScrubbedSubstrateShellOystersTagG;
+      }
+
+      var averageMass = totalMass / samples.length;
+      var averageSize = totalSize / samples.length;
+      callback(null, {
+        mortality: numberAlive,
+        averageMass: averageMass,
+        averageSize: averageSize
+      });
+    }
+  });
+};
+
+var calculateValuesForSubstrate = function(baseline, earliestSetDate, callback) {
+  var setDate = baseline.setDate;
+
+  var values = {
+    mortality: [],
+    averageMass: [],
+    averageSize: []
+  };
+  var baselineMoment = moment(setDate).startOf('month');
+
+  var earliestMoment = moment(earliestSetDate).startOf('month');
+  var todayMoment = moment().startOf('month');
+  if (earliestMoment.isBefore(baselineMoment)) {
+    var months = moment.duration(baselineMoment.toDate() - earliestMoment.toDate()).asMonths();
+    for (var i = 0; i < months; i++) {
+      values.mortality.push(0);
+      values.averageMass.push(0);
+      values.averageSize.push(0);
+    }
+  }
+
+  function getValue(valueCallback) {
+    if (baselineMoment.isBefore(todayMoment)) {
+      //get start and end dates
+      var startDate = baselineMoment.toDate();
+      var endDate = baselineMoment.endOf('month').toDate();
+      //set baseline to beginning of the next month
+      baselineMoment.add(2, 'days');
+      baselineMoment.startOf('month');
+      //get values
+      calculateValuesForSubstrateForMonth((baseline.substrateShellNumber-1), startDate, endDate, function(err, value) {
+        if (err) {
+          valueCallback(err);
+        } else {
+          values.mortality.push(value.mortality);
+          values.averageMass.push(value.averageMass);
+          values.averageSize.push(value.averageSize);
+          getValue(valueCallback);
+        }
+      });
+    } else {
+      valueCallback(null);
+    }
+  }
+
+  getValue(function(err) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, values);
+    }
+  });
+};
+
+exports.measurementChartData = function(req, res) {
+  var station = req.station;
+  var mortalitySeries = [];
+  var averageMassSeries = [];
+  var averageSizeSeries = [];
+
+  function getValuesForSubstrate (index, baselineArray, earliestSetDate, callback) {
+    if (index < baselineArray.length) {
+      var baseline = baselineArray[index];
+
+      calculateValuesForSubstrate(baseline, earliestSetDate, function (err, values) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          mortalitySeries.push(values.mortality);
+          averageMassSeries.push(values.averageMass);
+          averageSizeSeries.push(values.averageSize);
+          getValuesForSubstrate((index+1), baselineArray, earliestSetDate, callback);
+        }
+      });
+    } else {
+      callback();
+    }
+  }
+
+  if (station) {
+    var baselines = station.baselines;
+
+    //find earliestDate;
+    var earliestSetDate = moment();
+    var baselineArray = [];
+    for(var i = 1; i < 11; i++) {
+      var history = baselines['substrateShell'+i];
+      if (history) {
+        var baseline = history[history.length - 1];
+        if (baseline) {
+          baselineArray.push(baseline);
+          if (earliestSetDate.isAfter(baseline.setDate)) {
+            earliestSetDate = moment(baseline.setDate);
+          }
+        }
+      }
+    }
+
+    //get values by months for all substrate shells
+    if (baselineArray.length > 0) {
+      getValuesForSubstrate (0, baselineArray, earliestSetDate, function() {
+        res.json({
+          mortality: mortalitySeries,
+          averageMass: averageMassSeries,
+          averageSize: averageSizeSeries
+        });
+      });
+    } else {
+      return res.status(400).send({
+        message: 'No baseline values'
+      });
+    }
+  } else {
+    return res.status(400).send({
+      message: 'ORS could not be found'
+    });
+  }
+};
+
 /**
  * Delete a restoration station
  */
@@ -178,10 +448,13 @@ exports.list = function (req, res) {
   var and = [];
 
   if (req.query.teamLeadId) {
-    and.push({ 'teamLeadId': req.query.teamLeadId });
+    and.push({ 'teamLead': req.query.teamLeadId });
   }
   if (req.query.teamLead) {
     and.push({ 'teamLead': user });
+  }
+  if (req.query.team) {
+    and.push({ 'team': req.query.team });
   }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });
@@ -234,17 +507,51 @@ exports.list = function (req, res) {
 };
 
 /**
+ * List of Site Coordinators
+ */
+exports.listSiteCoordinators = function (req, res) {
+  User.find({ 'teamLeadType': SITE_COORDINATOR }).sort('displayName').exec(function (err, siteCoordinators) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(siteCoordinators);
+    }
+  });
+};
+
+/**
+ * List of Property Owner
+ */
+exports.listPropertyOwners = function (req, res) {
+  MetaPropertyOwner.find().sort('name').exec(function (err, propertyOwners) {
+    if (err) {
+      console.log('err', err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(propertyOwners);
+    }
+  });
+};
+
+
+/**
  * Restoration station middleware
  */
 exports.stationByID = function (req, res, next, id) {
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Restoration station is invalid'
     });
   }
 
-  RestorationStation.findById(id).populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, station) {
+  RestorationStation.findById(id).populate('teamLead', 'displayName email schoolOrg roles')
+  .populate('siteCoordinator', 'displayName email schoolOrg roles')
+  .populate('propertyOwner', 'displayName email schoolOrg roles')
+  .populate('schoolOrg', 'name city state').exec(function (err, station) {
     if (err) {
       return next(err);
     } else if (!station) {
@@ -255,6 +562,11 @@ exports.stationByID = function (req, res, next, id) {
     req.station = station;
     next();
   });
+};
+
+exports.statusHistoryByIndex = function (req, res, next, id) {
+  req.statusHistoryIndex = id;
+  next();
 };
 
 var deleteInternal = function(station, successCallback, errorCallback) {
@@ -324,6 +636,91 @@ exports.uploadStationPhoto = function (req, res) {
   } else {
     res.status(400).send({
       message: 'Station does not exist'
+    });
+  }
+};
+
+exports.uploadStationStatusPhoto = function (req, res) {
+  var station = req.station;
+  var index = req.statusHistoryIndex;
+  var upload = multer(config.uploads.stationStatusPhotoUpload).single('stationStatusPhoto');
+  var imageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = imageUploadFileFilter;
+
+  if (station && index) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.stationStatusPhotoUpload,
+      function(fileInfo) {
+        station.statusHistory[index].photo = fileInfo;
+
+        station.save(function (saveError) {
+          if (saveError) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(saveError)
+            });
+          } else {
+            res.json(station);
+          }
+        });
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
+  } else {
+    res.status(400).send({
+      message: 'Station does not exist'
+    });
+  }
+};
+
+exports.sendORSStatusEmail = function(req, res) {
+  var station = req.station;
+  var index = req.statusHistoryIndex;
+
+  if (station && index) {
+    SchoolOrg.findById(req.user.schoolOrg).exec(function(err, org) {
+      if (err) {
+        return res.status(400).send({
+          message: 'User organization not found'
+        });
+      } else {
+        var to = [config.mailer.ors];
+        if (req.user) to.push(req.user.email);
+        if (station.teamLead && station.teamLead.email) to.push(station.teamLead.email);
+
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var statusHistory = station.statusHistory[index];
+
+        var attachments = [];
+        if (statusHistory.photo) {
+          attachments.push({
+            filename: statusHistory.photo.originalname,
+            path: statusHistory.photo.path,
+            cid: 'ors-status.ee'
+          });
+        }
+
+        email.sendEmailTemplate(to, 'ORS status change reported for ' + station.name, 'ors_report', {
+          ORSName: station.name,
+          FeedbackName: req.user.displayName,
+          FeedbackOrg: org.name,
+          ORSStatus: statusHistory.status,
+          ORSDescription: statusHistory.description,
+          LinkORSPhoto: (statusHistory.photo) ? statusHistory.photo.path : '',
+          LinkORSForm: httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id
+        }, function(info) {
+          res.json(station);
+        }, function(errorMessage) {
+          res.json(station);
+        }, attachments);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Station and/or status history index not found'
     });
   }
 };

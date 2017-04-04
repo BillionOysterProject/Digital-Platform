@@ -506,5 +506,13 @@
         validateErrorCallback();
       }
     };
+
+    $scope.openORSStatusForm = function() {
+      angular.element('#modal-station-status').modal('show');
+    };
+
+    $scope.closeORSStatusForm = function() {
+      angular.element('#modal-station-status').modal('hide');
+    };
   }
 })();

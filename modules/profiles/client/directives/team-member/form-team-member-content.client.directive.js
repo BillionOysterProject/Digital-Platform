@@ -15,7 +15,13 @@
         },
         controller: 'TeamMemberController',
         link: function(scope, element, attrs) {
-          element.bind('show.bs.modal', function () {
+          scope.$on('formTeamMember', function() {
+            scope.isCurrentUserAdmin = scope.checkRole('admin');
+            scope.isCurrentUserTeamLead = scope.checkRole('team lead');
+            scope.isCurrentUserUser = scope.checkCurrentUserIsUser();
+            console.log('isCurrentUserUser', scope.isCurrentUserUser);
+            scope.findCurrentUserTeams();
+
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
             scope.error = null;
@@ -29,6 +35,7 @@
           });
           scope.$watch('teamMember', function(newValue, oldValue) {
             scope.teamMember = newValue;
+            scope.isCurrentUserUser = scope.checkCurrentUserIsUser();
           });
         }
       };

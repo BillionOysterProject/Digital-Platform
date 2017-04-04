@@ -15,7 +15,8 @@
     var vm = this;
     vm.team = {};
     vm.teams = [];
-    vm.userToOpen = {};
+    vm.userToView = {};
+    vm.initial = 'userView';
 
     var checkRole = ExpeditionViewHelper.checkRole;
     vm.isAdmin = checkRole('admin');
@@ -26,7 +27,7 @@
       sort: 'lastName'
     };
 
-    var findTeamMembers = function() {
+    vm.findTeamMembers = function() {
       TeamMembersService.query({
         teamId: vm.team._id,
         searchString: vm.filter.searchString,
@@ -53,13 +54,13 @@
         searchString: '',
         sort: 'lastName'
       };
-      findTeamMembers();
+      vm.findTeamMembers();
     };
 
     vm.searchChange = function($event) {
       if (vm.filter.searchString.length >= 2 || vm.filter.searchString.length === 0) {
         vm.filter.page = 1;
-        findTeamMembers();
+        vm.findTeamMembers();
       }
     };
 
@@ -82,7 +83,7 @@
           vm.team = (data) ? data : new TeamsService();
           vm.teamPhotoURL = (vm.team && vm.team.photo && vm.team.photo.path) ? vm.team.photo.path : '';
           findExpeditions(vm.team._id);
-          findTeamMembers();
+          vm.findTeamMembers();
         });
       } else {
         vm.team = new TeamsService();
@@ -152,23 +153,20 @@
     };
 
     vm.openFormTeamMember = function(member) {
-      vm.userToOpen = member;
-      angular.element('#modal-team-member-editadd').modal('show');
+      vm.userToView = member || null;
+      vm.openViewUserModal(member, 'formTeamMember');
     };
 
     vm.closeFormTeamMember = function(refresh) {
-      angular.element('#modal-team-member-editadd').modal('hide');
-      if (refresh) findTeam();
+      vm.closeViewUserModal(refresh);
     };
 
     vm.openDeleteTeamMember = function(member) {
-      vm.userToOpen = member;
-      angular.element('#modal-team-member-delete').modal('show');
+      vm.openViewUserModal(member, 'deleteTeamMember');
     };
 
     vm.closeDeleteTeamMember = function(refresh) {
-      angular.element('#modal-team-member-delete').modal('hide');
-      if (refresh) findTeam();
+      vm.closeViewUserModal(refresh);
     };
 
     vm.openImportTeamMembers = function() {
@@ -203,12 +201,14 @@
       }
     };
 
-    vm.openViewUserModal = function(user) {
-      vm.userToOpen = (user) ? user : new Admin();
+    vm.openViewUserModal = function(user, initial) {
+      vm.userToView = (user) ? user : new Admin();
+      vm.initial = initial || 'userView';
       angular.element('#modal-profile-user').modal('show');
     };
 
-    vm.closeViewUserModal = function(openNewModalName) {
+    vm.closeViewUserModal = function(refresh) {
+      if (refresh) vm.findTeamMembers();
       angular.element('#modal-profile-user').modal('hide');
     };
 

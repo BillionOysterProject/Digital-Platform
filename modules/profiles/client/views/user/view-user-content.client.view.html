@@ -1,8 +1,8 @@
-<div>
+<div ng-show="loaded">
   <div class="modal-header">
     <div class="row">
       <div class="col-md-12">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" aria-label="Close" ng-click="closeFunction()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -25,8 +25,8 @@
         <h4 ng-repeat="team in teams">
           <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
           <br/>
-          <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember"> 
-            <small>{{teamLead.displayName}}</small><!-- removed ng-show="user._id !== teamLead._id" -- would rather have logic depending on the profile being for a team lead or member -->
+          <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember">
+            <small>{{teamLead.displayName}}</small>
           </div>
         </h4>
       </div>
@@ -42,42 +42,50 @@
             {{organization.state}}</small>
         </h4>
       </div>
-    </div>
-    <hr/>
-
-    <nav class="nav nav-default text-right" ng-show="isCurrentUserAdmin">
-      <h6 class="pull-left" ng-show="isUserPending">Pending&nbsp;&nbsp;</h6>
-      <a class="btn btn-primary pull-left" ng-show="isUserPending && !reminderSent" ng-click="sendReminder()">
-        <i class="fa fa-envelope"></i>
-        Send reminder</a>
-      <h6 class="green pull-left" ng-show="reminderSent">
-        <i class="fa fa-check"></i>
-        Reminder sent</h6>
-      <a class="btn btn-default" ng-click="openUserForm()">Edit profile</a>
-      <a class="btn btn-danger" ng-click="openUserDelete()">Delete</a>
       <hr/>
+    </div>
+
+    <nav class="nav nav-default text-right">
+      <h6 class="pull-left" ng-show="isUserPending && canSeePending">Pending&nbsp;&nbsp;</h6>
+
+      <span ng-show="isUserPending && canSeePending">
+        <a class="btn btn-primary pull-left" ng-hide="reminderSent" ng-click="sendReminder()">
+          <i class="fa fa-envelope"></i>
+          Send reminder</a>
+        <h6 class="green pull-left" ng-show="reminderSent">
+          <i class="fa fa-check"></i>
+          Reminder sent</h6>
+      </span>
+
+      <a class="btn btn-default" ng-click="openUserForm()"
+        ng-show="isCurrentUserUser || isCurrentUserUsersTeamLead || isCurrentUserAdmin">Edit profile</a>
+
+      <a class="btn btn-danger" ng-click="openUserDelete()" ng-show="isCurrentUserUsersTeamLead || isCurrentUserAdmin">Delete</a>
+      <hr ng-show="isCurrentUserUser || isCurrentUserUsersTeamLead || isCurrentUserAdmin || isUserPending"/>
     </nav>
   </div>
 
-  <!-- Show if profile is a Team Member Profile, (not if viewer's role is team member)-->
+  <!-- TEAM MEMBER PROFILES -->
   <div class="modal-body">
     <div ng-show="isUserTeamMember">
       <div class="row">
-        <!-- this is only showing published expeditions -->
-        <div class="col-sm-6" ng-show="expeditions && expeditions.length > 0">
+        <div class="col-sm-6">
           <dl class="dl-horizontal">
             <dt>Expeditions</dt>
             <dd ng-repeat="expedition in expeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
             </dd>
-            <!--Could add in what protocols they were assigned to if applicable:
+            <dd ng-show="!expeditions || expeditions.length === 0">
+              <em>none</em>
+            </dd>
+            <!-- TODO: Could add in what protocols they were assigned to if applicable:
                     <a>Nov Expedition</a>: Protocols 1-3
                     -->
           </dl>
         </div>
 
-        <!--To be wired up once we build out the Research section
+        <!-- TODO: To be wired up once we build out the Research section
           <div class="col-sm-6" ng-hide="true">
               <dl class="dl-horizontal">
                   <dt>Research</dt>
@@ -89,7 +97,7 @@
       </div>
     </div>
 
-    <!-- Show if Profile is a Team Lead Profile, (not if viewer's role is team lead)-->
+    <!-- TEAM LEAD PROFILES -->
     <div ng-show="isUserTeamLead">
       <div class="row">
         <div class="col-sm-6">
@@ -119,7 +127,7 @@
         </div>
       </div>
       <hr/>
-      <div class="row">
+      <div class="row" ng-show="isCurrentUserAdmin || isCurrentUserTeamLead">
         <div class="col-sm-6">
           <dl class="dl-horizontal">
             <dt>Events
@@ -137,6 +145,16 @@
         </div>
         <div class="col-sm-6">
           <dl class="dl-horizontal">
+            <dt>Lessons Created</dt>
+            <dd ng-repeat="lesson in createdLessons">
+              <a ui-sref="lessons.view({ lessonId: lesson._id })">
+                {{lesson.title}}</a>
+            </dd>
+            <dd ng-show="!createdLessons || createdLessons.length === 0">
+              <em>none</em>
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
             <dt>Lessons Taught</dt>
             <dd ng-repeat="lesson in lessonsTaught">
               <a ui-sref="lessons.view({ lessonId: lesson._id })">
@@ -148,7 +166,7 @@
           </dl>
         </div>
 
-        <!--Wire up once we figure out where this data comes from --
+        <!-- TODO: Wire up once we figure out where this data comes from --
         <div class="col-sm-4">
             <dl class="dl-horizontal">
                 <dt>Grade levels</dt>
@@ -168,7 +186,7 @@
     <hr/>
     <div class="row">
         TODO: Wire up, Add motivations dropdown to Team Lead signup form, only visible here to admin
-        <div class="col-sm-12" ng-show="isAdmin">
+        <div class="col-sm-12" ng-show="isUserAdmin">
             <dl class="dl-horizontal">
                 <dt>Motivations</dt>
                 <dd>...</dd>

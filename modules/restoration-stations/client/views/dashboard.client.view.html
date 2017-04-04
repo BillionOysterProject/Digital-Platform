@@ -1,4 +1,4 @@
-<section class="content shaded">
+<section class="content shaded" id="dashboard">
     <section class="container-fluid">
         <div class="page-header">
             <div class="row">
@@ -127,10 +127,10 @@
                                 <h4>Documents</h4>
                             </div>
                             <div class="panel-body">
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
                                 <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmaW9XN1hlM09vRXc?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
                                 <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
                                 <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Additional Resources</a></p>
                             </div>
                         </div>
                     </div>
@@ -143,14 +143,19 @@
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
-                            <tr ng-repeat="station in vm.stations" ng-click="vm.canEditRestorationStation(station)">
+                            <!--TODO: Change ng-click on each ORS to open profile modal #modal-station (Currently in MODAL list below, also set up click in mapmarker button to go to ORS profile)-->
+                            <!--TODO: Change list to only show all ORS user has created, then all stations user has visited on an expedition (we're removing ORS owned by teams, ORS are now owned by team leads)-->
+
+                            <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
                                 <td><h3>
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
-                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
                                 </h3></td>
                                 <td><image ng-src="{{station.photo.path}}" class="img-thumbnail" ng-show="station.photo"></td>
-                                <td>{{station.name}}<br/><span class="small text-muted">{{station.latitude}}, {{station.longitude}}<br />
-                                  {{station.bodyOfWater}}</span>
+                                <td>{{station.name}}<br/>
+                                    <span class="small text-muted">{{station.bodyOfWater}}</span><br/>
+                                    <span class="small text-muted" ng-show="station.teamLead">by {{station.teamLead.displayName}} from </span>
+                                    <span class="small text-muted" ng-show="station.schoolOrg">{{station.schoolOrg.name}}</span>
                                 </td>
                                 <td class="text-right">
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
@@ -221,4 +226,7 @@
 <form-restoration-station-modal station="vm.station" mapPoints="vm.stationMapPoints"
 save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRestorationStation"
 cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
+<view-restoration-station-popup station="vm.station" open-view="vm.openView" initial="vm.initial"
+></view-restoration-station-popup>
+
 <!--END MODALS-->
