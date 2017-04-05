@@ -840,7 +840,8 @@ exports.list = function(req, res) {
   }
 
   if (req.query.byCreator) {
-    if (req.query.byCreator === true) {
+    console.log('byCreator', req.query.byCreator);
+    if (req.query.byCreator === 'true') {
       and.push({ 'user': req.user });
     } else {
       and.push({ 'user': req.query.byCreator });
@@ -1210,7 +1211,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL username')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {

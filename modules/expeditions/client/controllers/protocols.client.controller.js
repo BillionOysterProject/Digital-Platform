@@ -22,6 +22,7 @@
     $scope.mobileTrapErrors = '';
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
+    $scope.userToView = {};
 
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
@@ -892,5 +893,14 @@
     //set up listeners for leaving the protocols page
     $scope.$applyAsync(listenForStateChanges);
     $scope.$applyAsync(listenForWindowUnload);
+
+    vm.openViewUserModal = function(user) {
+      vm.userToView = user || {};
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    vm.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
+    };
   }
 })();

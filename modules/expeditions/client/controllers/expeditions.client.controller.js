@@ -275,5 +275,14 @@
 
       angular.element('#modal-station-register').modal('hide');
     };
+
+    $scope.openViewUserModal = function(user) {
+      $scope.userToView = user || {};
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    $scope.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
+    };
   }
 })();

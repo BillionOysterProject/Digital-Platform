@@ -10,6 +10,8 @@
 
   function PeopleMetricsController($scope, $rootScope, $timeout, moment, lodash,
     Authentication, MetricsUsersService, MetricsUsersAdminService, MetricsUserActivityService) {
+    $scope.userToView = {};
+
     $scope.getPeopleMetrics = function() {
       if(!$scope.isAdmin) {
         MetricsUsersService.query({},
@@ -129,5 +131,14 @@
     }
     $scope.getPeopleMetrics();
     $scope.getMostActiveUsers();
+
+    $scope.openViewUserModal = function(user) {
+      $scope.userToView = user || {};
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    $scope.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
+    };
   }
 })();

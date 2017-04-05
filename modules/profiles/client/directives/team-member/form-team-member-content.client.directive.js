@@ -19,7 +19,6 @@
             scope.isCurrentUserAdmin = scope.checkRole('admin');
             scope.isCurrentUserTeamLead = scope.checkRole('team lead');
             scope.isCurrentUserUser = scope.checkCurrentUserIsUser();
-            console.log('isCurrentUserUser', scope.isCurrentUserUser);
             scope.findCurrentUserTeams();
 
             scope.form.teamMemberForm.$setSubmitted(false);

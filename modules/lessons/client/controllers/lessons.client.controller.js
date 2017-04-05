@@ -719,5 +719,13 @@
       }
     };
 
+    vm.openViewUserModal = function() {
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    vm.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
+    };
+
   }
 })();

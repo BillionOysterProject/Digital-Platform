@@ -17,43 +17,41 @@
         },
         replace: true,
         link: function(scope, element, attrs) {
-          element.bind('show.bs.modal', function() {
-            scope.content = scope.initial || 'userView';
-            scope.$broadcast(scope.content);
-          });
-
           scope.$watch('user', function(newValue, oldValue) {
-            if (newValue) {
-              scope.user = newValue;
-              scope.isCurrentUserAdmin = scope.checkRole('admin');
-              scope.isCurrentUserTeamLead = scope.checkRole('team lead');
-
-              scope.isAdmin = scope.checkViewedUserRole('admin');
-              scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
-                scope.checkViewedUserRole('team lead pending');
-              // scope.findOrganization();
-              // scope.findTeams();
-            }
+            scope.user = newValue;
           });
 
           scope.$on('userCrudShown', function(event, data) {
             scope.content = scope.initial = data.view || 'userView';
             scope.$broadcast(scope.content);
+
+            scope.isCurrentUserAdmin = scope.checkRole('admin');
+            scope.isCurrentUserTeamLead = scope.checkRole('team lead');
+
+            scope.isAdmin = scope.checkViewedUserRole('admin');
+            scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
+              scope.checkViewedUserRole('team lead pending');
+            // scope.findOrganization();
+            // scope.findTeams();
           });
         },
         controller: ['$scope', 'lodash', 'ExpeditionViewHelper', 'SchoolOrganizationsService', 'TeamsService',
         function ($scope, lodash, ExpeditionViewHelper, SchoolOrganizationsService, TeamsService) {
-          if (!$scope.content) {
-            $scope.content = $scope.initial || 'userView';
-            $scope.$broadcast($scope.content);
-          }
+          // if (!$scope.content) {
+          //   $scope.content = $scope.initial || 'userView';
+          //   $scope.$broadcast($scope.content);
+          // }
           $scope.checkRole = ExpeditionViewHelper.checkRole;
 
           $scope.checkViewedUserRole = function(role) {
-            var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
-              return o === role;
-            });
-            return (roleIndex > -1) ? true : false;
+            if ($scope.user) {
+              var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
+                return o === role;
+              });
+              return (roleIndex > -1) ? true : false;
+            } else {
+              return false;
+            }
           };
 
           // $scope.findOrganization = function() {

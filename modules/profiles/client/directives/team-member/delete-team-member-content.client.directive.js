@@ -14,6 +14,9 @@
         },
         controller: 'TeamMemberDeleteController',
         link: function(scope, element, attrs) {
+          scope.$on('deleteTeamMember', function() {
+          });
+
           scope.$watch('teamMember', function(newValue, oldValue) {
             scope.teamMember = newValue;
           });

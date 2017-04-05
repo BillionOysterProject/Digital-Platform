@@ -220,7 +220,7 @@ exports.listLessons = function(req, res) {
   var unit = req.unit;
 
   Lesson.find({ unit: unit }).sort('-created').
-  populate('user', 'displayName email team profileImageURL').
+  populate('user', 'firstName displayName email team profileImageURL username').
   populate('unit', 'title color icon').exec(function(err, lessons) {
     if (err) {
       console.log(err);
@@ -245,7 +245,7 @@ exports.unitByID = function (req, res, next, id) {
     });
   }
 
-  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL')
+  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username')
   .exec(function (err, unit) {
     if (err) {
       return next(err);

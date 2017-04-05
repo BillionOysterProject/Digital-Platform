@@ -27,47 +27,47 @@
     if (!$scope.organizations) $scope.organizations = SchoolOrganizationsService.query();
 
     $scope.isAdminChanged = function() {
-      var newAdminValue = this.isAdmin;
+      var newAdminValue = $scope.isAdmin;
       if(newAdminValue) {
-        this.user.roles.push('admin');
+        $scope.user.roles.push('admin');
       } else {
-        var roleIndex = lodash.findIndex(this.user.roles, function(r) {
+        var roleIndex = lodash.findIndex($scope.user.roles, function(r) {
           return r === 'admin';
         });
         if (roleIndex > -1) {
-          this.user.roles.splice(roleIndex, 1);
+          $scope.user.roles.splice(roleIndex, 1);
         }
       }
     };
 
     $scope.selectedRoleChanged = function() {
-      var newSelectedRole = this.selectedRole;
+      var newSelectedRole = $scope.selectedRole;
       var roleIndex = -1;
       if(newSelectedRole === 'team member') {
-        this.user.teamLeadType = undefined;
-        this.isAdmin = false;
-        roleIndex = lodash.findIndex(this.user.roles, function(r) {
+        $scope.user.teamLeadType = undefined;
+        $scope.isAdmin = false;
+        roleIndex = lodash.findIndex($scope.user.roles, function(r) {
           return r === 'team lead';
         });
         if (roleIndex > -1) {
-          this.user.roles.splice(roleIndex, 1);
+          $scope.user.roles.splice(roleIndex, 1);
         }
 
-        roleIndex = lodash.findIndex(this.user.roles, function(r) {
+        roleIndex = lodash.findIndex($scope.user.roles, function(r) {
           return r === 'admin';
         });
         if (roleIndex > -1) {
-          this.user.roles.splice(roleIndex, 1);
+          $scope.user.roles.splice(roleIndex, 1);
         }
       } else if(newSelectedRole === 'team lead') {
-        roleIndex = lodash.findIndex(this.user.roles, function(r) {
+        roleIndex = lodash.findIndex($scope.user.roles, function(r) {
           return r === 'team member';
         });
         if (roleIndex > -1) {
-          this.user.roles.splice(roleIndex, 1);
+          $scope.user.roles.splice(roleIndex, 1);
         }
       }
-      this.user.roles.push(newSelectedRole);
+      $scope.user.roles.push(newSelectedRole);
     };
 
     $scope.checkCurrentUserIsUser = function() {

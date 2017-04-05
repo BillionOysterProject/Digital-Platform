@@ -49,18 +49,22 @@
           //   });
           // });
 
-          scope.$watch('initial', function(newValue, oldValue) {
-            scope.content = scope.initial = newValue || 'userView';
-            scope.$broadcast('userCrudShown', {
-              view: scope.initial
-            });
-          });
+          // scope.$watch('initial', function(newValue, oldValue) {
+          //   scope.content = scope.initial = newValue || 'userView';
+          //   scope.$broadcast('userCrudShown', {
+          //     view: scope.initial
+          //   });
+          // });
 
           //when modal is hidden, if we were supposed to change state then do it
           element.bind('hidden.bs.modal', function() {
             if(toGoState) {
               $state.go(toGoState.name, toGoParams);
             }
+          });
+
+          scope.$watch('user', function(newValue, oldValue) {
+            scope.user = newValue;
           });
         },
       };
