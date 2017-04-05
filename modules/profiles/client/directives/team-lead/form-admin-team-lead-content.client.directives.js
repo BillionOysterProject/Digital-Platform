@@ -18,7 +18,11 @@
         },
         controller: 'FormAdminUserController',
         link: function(scope, element, attrs) {
+          scope.$on('formTeamLead', function() {
+          });
+
           scope.$watch('user', function(newValue, oldValue) {
+            scope.user = newValue;
             scope.selectedRole = 'guest';
             if(newValue && newValue.roles && newValue.roles.length > 0) {
               for(var i = 0; i < newValue.roles.length; i++) {

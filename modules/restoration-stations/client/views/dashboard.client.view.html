@@ -15,7 +15,7 @@
                     </div>
                     <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
                         <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
-                        <b>{{vm.team.teamLead.displayName}}</b><br />
+                        <b><a ng-click="vm.openViewUserModal(vm.team.teamLead)">{{vm.team.teamLead.displayName}}</a></b><br />
                         <span class="text-muted">
                           <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
                             {{vm.team.schoolOrg.name}}
@@ -86,14 +86,17 @@
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
-                                <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
+                                <p ng-repeat="member in vm.members">
+                                  <a ng-click="vm.openViewUserModal(member)">
+                                  <img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}
+                                </a></p>
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
                                   <a ui-sref="profiles.team" ng-class="{ 'disabled': vm.isTeamLeadPending }"
                                   ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="profiles.team"
+                                <a class="btn btn-primary" ui-sref="profiles.team-view({ teamId: vm.team._id })"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
@@ -228,5 +231,6 @@ save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRest
 cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
 <view-restoration-station-popup station="vm.station" open-view="vm.openView" initial="vm.initial"
 ></view-restoration-station-popup>
+<view-user-modal user="vm.userToView" close-function="vm.closeViewUserModal"></view-user-modal>
 
 <!--END MODALS-->

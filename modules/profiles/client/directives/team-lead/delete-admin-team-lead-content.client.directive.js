@@ -14,9 +14,11 @@
         },
         controller: 'TeamLeadDeleteController',
         link: function(scope, element, attrs) {
-          angular.element(document).ready(function () {
-            scope.teamLead = '';
+          scope.$on('deleteTeamLead', function() {
             scope.error = null;
+          });
+          scope.$watch('teamLead', function(newValue, oldValue) {
+            scope.teamLead = newValue;
           });
           scope.$watch('team', function(newValue, oldValue) {
             scope.team = newValue;

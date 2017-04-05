@@ -10,8 +10,6 @@
   function TeamLeadDeleteController($scope, $http, TeamLeadBySchoolOrgsService) {
     $scope.error = null;
 
-    $scope.teamLead = '';
-
     $scope.delete = function() {
       $http.delete('api/users/leaders/' + $scope.teamLead._id + '/team/' + $scope.team._id,
       {})
