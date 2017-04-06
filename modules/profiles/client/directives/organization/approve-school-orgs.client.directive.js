@@ -14,7 +14,9 @@
         replace: true,
         controller: 'SchoolOrganizationsApprovalController',
         link: function(scope, element, attrs) {
-
+          scope.$watch('orgRequests', function(newValue, oldValue) {
+            scope.orgRequests = newValue;
+          });
         }
       };
     });
