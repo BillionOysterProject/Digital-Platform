@@ -302,8 +302,10 @@
       vm.openViewRestorationStation(station);
     };
 
-    vm.openViewUserModal = function(user) {
+    vm.openViewUserModal = function(user, initial) {
       vm.userToView = user;
+      vm.initialUser = initial || 'userView';
+      console.log('initial', vm.initialUser);
       angular.element('#modal-profile-user').modal('show');
     };
 

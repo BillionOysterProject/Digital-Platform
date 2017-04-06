@@ -33,14 +33,16 @@
           });
 
           element.bind('show.bs.modal', function() {
-            scope.content = scope.initial || 'userView';
-            scope.loaded = false;
+            scope.shown = true;
             scope.isCurrentUserAdmin = false;
             scope.isCurrentUserTeamLead = false;
             scope.isCurrentUserUser = false;
-            scope.$broadcast('userCrudShown', {
-              view: scope.initial
-            });
+            if (!scope.content || (scope.initial && (scope.content !== scope.initial))) {
+              scope.content = scope.initial || 'userView';
+              scope.$broadcast('userCrudShown', {
+                view: scope.initial
+              });
+            }
           });
           //
           // element.bind('shown.bs.modal', function() {
@@ -49,15 +51,18 @@
           //   });
           // });
 
-          // scope.$watch('initial', function(newValue, oldValue) {
-          //   scope.content = scope.initial = newValue || 'userView';
-          //   scope.$broadcast('userCrudShown', {
-          //     view: scope.initial
-          //   });
-          // });
+          scope.$watch('initial', function(newValue, oldValue) {
+            if (scope.shown && (!scope.content || (scope.initial && (scope.content !== scope.initial)))) {
+              scope.content = scope.initial = newValue || 'userView';
+              scope.$broadcast('userCrudShown', {
+                view: scope.initial
+              });
+            }
+          });
 
           //when modal is hidden, if we were supposed to change state then do it
           element.bind('hidden.bs.modal', function() {
+            scope.shown = false;
             if(toGoState) {
               $state.go(toGoState.name, toGoParams);
             }
