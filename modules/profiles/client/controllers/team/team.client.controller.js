@@ -140,6 +140,7 @@
 
     vm.closeTeamProfileForm = function(data) {
       angular.element('#modal-team-edit').modal('hide');
+      console.log('data', data);
       if (data) findTeam();
     };
 

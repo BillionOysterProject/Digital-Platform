@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
-                  You don't have any teams yet! <a class="btn btn-default" ui-sref="profiles.team">Add members</a>
+                  You don't have any teams yet! <a class="btn btn-default" ng-click="vm.openViewUserModal(null, 'formTeamMember')">Add members</a>
                 </div>
                 <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
                   Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="profiles.team-view({ teamId: vm.team._id })"
+                                <a class="btn btn-primary" ng-click="vm.openViewUserModal(null, 'formTeamMember')"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
@@ -231,6 +231,6 @@ save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRest
 cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
 <view-restoration-station-popup station="vm.station" open-view="vm.openView" initial="vm.initial"
 ></view-restoration-station-popup>
-<view-user-modal user="vm.userToView" close-function="vm.closeViewUserModal"></view-user-modal>
+<view-user-modal user="vm.userToView" initial="vm.initialUser" team="vm.team" close-function="vm.closeViewUserModal"></view-user-modal>
 
 <!--END MODALS-->

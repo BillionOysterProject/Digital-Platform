@@ -42,6 +42,7 @@
         return false;
       }
 
+      $scope.team = $scope.editTeam;
       if ($scope.team.photo) {
         if ($scope.teamPhotoURL) {
           $scope.team.photo.path = $scope.teamPhotoURL;
@@ -49,6 +50,7 @@
           $scope.team.photo = null;
         }
       }
+
       if (!$scope.team.schoolOrg) {
         if ($scope.organization) {
           $scope.team.schoolOrg = $scope.organization;

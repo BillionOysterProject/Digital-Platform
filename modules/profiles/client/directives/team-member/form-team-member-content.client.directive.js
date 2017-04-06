@@ -21,6 +21,8 @@
             scope.isCurrentUserUser = scope.checkCurrentUserIsUser();
             scope.findCurrentUserTeams();
 
+            if (!scope.newTeam) scope.newTeam = (scope.team && scope.team._id) ? scope.team._id : scope.team;
+
             scope.form.teamMemberForm.$setSubmitted(false);
             scope.form.teamMemberForm.$setPristine();
             scope.error = null;
