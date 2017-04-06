@@ -18,7 +18,7 @@
         },
         controller: 'UserProfileController',
         link: function(scope, element, attrs) {
-          scope.$on('userCrudShown', function() {
+          scope.$on('userView', function() {
             scope.isCurrentUserAdmin = false;
             scope.isCurrentUserTeamLead = false;
             scope.isCurrentUserUser = false;
@@ -28,13 +28,7 @@
             scope.user = newValue;
             if (scope.user) {
               scope.loaded = false;
-              if (!scope.user.roles) {
-                scope.loadUser();
-              } else {
-                if (!scope.loading) {
-                  scope.loadUserData();
-                }
-              }
+              scope.loadUser();
             }
           });
         }

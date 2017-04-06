@@ -36,7 +36,7 @@
                       <b>{{vm.team.name}}</b>
                     </a>
                     <br/>
-                    {{vm.team.teamLead.displayName}}<br/>
+                    <a ng-click="vm.openViewUserModal(vm.team.teamLead)">{{vm.team.teamLead.displayName}}</a><br/>
                     <span class="text-muted">
                       <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
                         {{vm.team.schoolOrg.name}}
@@ -227,3 +227,4 @@
         </div>
     </section>
 </section>
+<view-user-modal user="vm.userToView" close-function="vm.closeViewUserModal"></view-user-modal>

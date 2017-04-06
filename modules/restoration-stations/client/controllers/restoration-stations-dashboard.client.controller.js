@@ -14,6 +14,7 @@
     ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
+    vm.userToView = {};
 
     vm.filter = {
       teamId: '',
@@ -299,6 +300,15 @@
 
     vm.openView = function(station) {
       vm.openViewRestorationStation(station);
+    };
+
+    vm.openViewUserModal = function(user) {
+      vm.userToView = user;
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    vm.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
     };
 
     if ($location.search().openORSForm) {

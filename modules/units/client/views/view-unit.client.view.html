@@ -18,8 +18,10 @@
                     Posted on
                     <span ng-bind="vm.unit.created | date:'mediumDate'"></span>
                     by
-                    <span ng-if="vm.unit.user" ng-bind="vm.unit.user.displayName"></span>
-                    <span ng-if="!vm.unit.user">Deleted User</span>
+                    <span ng-show="vm.unit.user">
+                      <b><a ng-click="vm.openViewUserModal()">{{vm.unit.user.displayName}}</a></b>
+                    </span>
+                    <span ng-hide="vm.unit.user">Deleted User</span>
                 </p>
             </div>
         </div>
@@ -145,4 +147,5 @@
     </div>
 </div>
 <unit-feedback-modal unit="vm.unit" close-function="vm.closeUnitFeedback"></unit-feedback-modal>
+<view-user-modal user="vm.unit.user" close-function="vm.closeViewUserModal"></view-user-modal>
 <!-- END MODALS -->

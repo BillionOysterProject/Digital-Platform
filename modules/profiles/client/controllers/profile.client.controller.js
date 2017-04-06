@@ -173,7 +173,7 @@
     };
 
     vm.openViewUserModal = function(user, initial) {
-      vm.userToOpen = (user) ? new Admin(user) : new Admin();
+      vm.userToOpen = (user) ? user : new Admin();
       vm.initial = initial || 'userView';
       angular.element('#modal-profile-user').modal('show');
     };

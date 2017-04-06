@@ -17,18 +17,21 @@
     $scope.loading = false;
 
     $scope.loadUser = function() {
-      if ($scope.user && $scope.user._id && !$scope.user.roles) {
-        $scope.loading = true;
-        $http.get('/api/users/username', {
-          params: { username: $scope.user.username }
-        })
-        .success(function(data, status, headers, config) {
-          $scope.user = data;
+      if ($scope.user && $scope.user._id) {
+        if (!$scope.user.roles) {
+          $http.get('/api/users/username', {
+            params: { username: $scope.user.username }
+          })
+          .success(function(data, status, headers, config) {
+            $scope.user = data;
+            $scope.loadUserData();
+          })
+          .error(function(data, status, headers, config) {
+            console.log('err', data);
+          });
+        } else {
           $scope.loadUserData();
-        })
-        .error(function(data, status, headers, config) {
-          console.log('err', data);
-        });
+        }
       }
     };
 
@@ -46,7 +49,6 @@
       $scope.findTeams(function() {
         $scope.canSeePending = $scope.pendingVisible();
         $scope.roles = $scope.findUserRoles();
-        $scope.loading = false;
         $scope.loaded = true;
       });
 
@@ -110,7 +112,7 @@
       lodash.remove(roles, function(n) {
         return n === 'user';
       });
-      if (!$scope.canSeePending) {
+      if (!$scope.canSeePending && roles && roles.length > 0) {
         for (var i = 0; i < roles.length; i++) {
           if (roles[i] === 'team lead pending') {
             roles[i] = 'team lead';
@@ -248,11 +250,13 @@
     };
 
     $scope.findCreatedLessons = function() {
-      LessonsService.query({
-        byCreator: $scope.user._id
-      }, function(data) {
-        $scope.createdLessons = data;
-      });
+      if ($scope.user) {
+        LessonsService.query({
+          byCreator: $scope.user._id
+        }, function(data) {
+          $scope.createdLessons = data;
+        });
+      }
     };
 
     $scope.findLessonsTaught = function() {
