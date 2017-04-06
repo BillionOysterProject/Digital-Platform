@@ -23,6 +23,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/school-orgs/:schoolOrgId/team-leads',
       permissions: 'get'
     }, {
+      resources: '/api/school-orgs/:schoolOrgId/upload-image',
+      permissions: ['post']
+    }, {
       resources: '/api/school-orgs/:schoolOrgId/team-leads/:teamLeadId',
       permissions: 'get'
     }, {
