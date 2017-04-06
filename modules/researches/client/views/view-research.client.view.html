@@ -87,53 +87,80 @@
 
       <form name="form.researchFeedbackForm" ng-submit="send(form.researchFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
-          <h4 class="blue">Poster Abstract</h4>
-          
-          <div class="form-group">
-            <label for="researchAbstract" class="control-label">Give a rating using 1-5 stars</label><br>
-            <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
-          </div>
-          
-          <div class="form-group">
-            <label>Is the title creative and to the point?</label><br/>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> Yes
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> No
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> Somewhat
-            </label>
-          </div>
 
-          <label>Does the title quickly grab the audience's attention and make them want to learn more about the research?</label>
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> Yes
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> No
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="inlineCheckbox1"> Somewhat
-            </label>
+          <h4 class="blue">Title</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="researchAbstract" class="control-label">Give a rating using 1-5 stars</label><br>
+                <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
+              </div>
+              <label>Is the title creative and to the point?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the title quickly grab the audience's attention and make them want to learn more about the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	  <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
           </div>
-          
-        	<div class="form-group">
-        	  <label class="control-label">Specific feedback or suggestions</label>
-            <textarea class="form-control"></textarea>
+          <hr/>
+          <h4 class="blue">Introduction</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchIntro" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.researchIntro" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the intro "hook" the audience and get them interested in the issue or problem right away?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro cite at least three sources of published, primary literature that relates to the research? </label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro clearly state the hypothesis or central question of the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro include at least one interesting photograph or visual that shows the research in action?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
           </div>
+          <hr/>
                 
                 
                 
                 
                 
-                
-                <div class="form-group">
-                    <label for="researchIntro" class="control-label required">Poster Intro *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.researchIntro" number="5"></raty-fa></h4>
-                </div>
                 <div class="form-group">
                     <label for="researchMethods" class="control-label required">Poster Methods *</label><br>
                     <h4 class="blue"><raty-fa id="starResearchMethods" score="feedback.researchMethods" number="5"></raty-fa></h4>
