@@ -231,7 +231,19 @@ angular.module('profiles').controller('UserListController', ['$scope', '$filter'
 
     $scope.closeApproveTeamLeads = function() {
       $scope.findUsers();
+      $scope.findLeadRequests();
       angular.element('#modal-team-lead-requests').modal('hide');
+    };
+
+    $scope.openApproveOrganizations = function() {
+      $scope.findUsers();
+      angular.element('#modal-org-requests').modal('show');
+    };
+
+    $scope.closeApproveOrganizations = function() {
+      $scope.findUsers();
+      $scope.findLeadRequests();
+      angular.element('#modal-org-requests').modal('hide');
     };
 
     $scope.openAdminTeam = function(team) {
