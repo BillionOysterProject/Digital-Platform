@@ -12,10 +12,7 @@
     Authentication, ExpeditionViewHelper) {
     var checkRole = ExpeditionViewHelper.checkRole;
     $scope.isAdmin = checkRole('admin');
-    console.log('isAdmin', $scope.isAdmin);
     $scope.isGuest = checkRole('guest');
-    console.log('guest', $scope.isGuest);
-    console.log('user', Authentication.user);
 
     $scope.orgPhotoUrl = ($scope.organization && $scope.organization.photo && $scope.organization.photo.path) ?
       $scope.organization.photo.path : '';
