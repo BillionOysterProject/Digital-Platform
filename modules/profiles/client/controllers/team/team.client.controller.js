@@ -34,6 +34,7 @@
         sort: vm.filter.sort
       }, function(data) {
         vm.teamMembers = data;
+        vm.team.teamMembers = data;
         vm.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
@@ -174,8 +175,9 @@
       angular.element('#modal-import-team-members').modal('show');
     };
 
-    vm.closeImportTeamMembers = function() {
+    vm.closeImportTeamMembers = function(refresh) {
       vm.teamToImport = {};
+      if (refresh) vm.findTeamMembers();
       angular.element('#modal-import-team-members').modal('hide');
     };
 
