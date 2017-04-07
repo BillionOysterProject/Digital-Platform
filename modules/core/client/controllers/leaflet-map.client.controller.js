@@ -12,7 +12,6 @@
     var mapSelectMap;
     var mapMarker = null;
     var popupScope = null;
-    var lastValidPosition = null;
     var addPointsGroup = new L.featureGroup();
 
     var settings = {
