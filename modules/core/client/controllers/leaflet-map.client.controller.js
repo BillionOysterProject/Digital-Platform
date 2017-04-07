@@ -12,6 +12,7 @@
     var mapSelectMap;
     var mapMarker = null;
     var popupScope = null;
+    var lastValidPosition = null;
     var addPointsGroup = new L.featureGroup();
 
     var settings = {
@@ -115,6 +116,15 @@
               }
             });
           });
+
+          if (vm.canMoveMarker) {
+            mapMarker.on('drag', function(e) {
+              var latLng = mapMarker.getLatLng();
+              if (!mapSelectMap.getBounds().contains(latLng)) {
+                panTo(latLng);
+              }
+            });
+          }
         }
 
         if(vm.addPoints && angular.isArray(vm.addPoints)){

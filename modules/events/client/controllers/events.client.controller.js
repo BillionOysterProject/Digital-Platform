@@ -152,13 +152,6 @@
       angular.element('#modal-email-registrants').modal('show');
     };
 
-    vm.openMap = function() {
-      angular.element('#modal-event-map').modal('show');
-      $timeout(function() {
-        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
-      }, 300);
-    };
-
     vm.deleteResourceFile = function(index, file) {
       if (file.index !== undefined && file.index > -1) {
         vm.resourcesFilesUploader.removeFromQueue(file.index);
@@ -257,6 +250,17 @@
           vm.event.attendees = attendees;
         }, 500);
       }
+    };
+
+    vm.openMap = function() {
+      angular.element('#modal-event-map').modal('show');
+      $timeout(function() {
+        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
+      }, 300);
+    };
+
+    vm.closeMap = function() {
+      angular.element('#modal-event-map').modal('hide');
     };
 
     vm.duplicateEvent = function() {

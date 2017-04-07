@@ -44,6 +44,8 @@
             element.bind('shown.bs.modal', function() {
               if (scope.content === 'orsView') {
                 scope.$broadcast('viewOrsShow');
+              } else if (scope.content === 'orsForm') {
+                scope.$broadcast('orsForm');
               }
             });
 
@@ -57,6 +59,7 @@
             $scope.user = {};
 
             $scope.openFormRestorationStation = function() {
+              $scope.$broadcast('orsForm');
               $scope.content = 'orsForm';
             };
 
