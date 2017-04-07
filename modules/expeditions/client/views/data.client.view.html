@@ -39,7 +39,9 @@
                                 <p class="text-muted small">{{expedition.notes}}</p>
                             </div>
                             <div class="panel-footer">
-                                <p><b>{{expedition.team.name}}</b>, led by {{expedition.teamLead.displayName}}</p>
+                                <p><b>{{expedition.team.name}}</b><br/>
+                                  <!--WIRE UP (don't show comma on last team lead): 
+                                  <span class="text-muted" ng-repeat="teamLead in vm.expedition.team.teamLeads"><{{expedition.teamLead.displayName}}, </span><br/>--></p>
                                 
                         <p>
                           <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>

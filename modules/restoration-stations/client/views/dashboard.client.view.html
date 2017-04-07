@@ -2,8 +2,8 @@
     <section class="container-fluid">
         <div class="page-header">
             <div class="row">
-                <h2 class="col-md-8">Dashboard</h2>
-                <div class="col-md-4">
+                <h2 class="col-md-3">Dashboard</h2>
+                <div class="col-md-9">
                     <div class="pull-right" ng-show="vm.teams.length > 1">
                         <a class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="teamMenu">{{vm.team.name}} <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="teamMenu">
@@ -11,16 +11,21 @@
                         </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
-                        <h4><span class="label label-success">{{vm.team.name}}</span></h4>
+                        <a ui-sref="profiles.team-view({ teamId: vm.team._id })"><h3>{{vm.team.name}}</h3></a>
                     </div>
-                    <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
-                        <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
-                        <b><a ng-click="vm.openViewUserModal(vm.team.teamLead)">{{vm.team.teamLead.displayName}}</a></b><br />
-                        <span class="text-muted">
-                          <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
-                            {{vm.team.schoolOrg.name}}
-                          </a>
-                        </span>
+                </div>
+            </div>
+            <div class="row">
+                <!--<div class="col-sm-2">
+                    <h6><i class="fa fa-building"></i> Organization</h6>
+                    <p class="pull-left"><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">{{vm.team.schoolOrg.name}}</a></p>
+                </div>-->
+                <div class="col-sm-12" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
+                    <p class="pull-right" ng-repeat="teamLead in vm.team.teamLeads">
+                        <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                            class="pull-left header-profile-image" />
+                        <a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a>
+                        &nbsp;&nbsp;&nbsp;
                     </p>
                 </div>
             </div>
@@ -68,7 +73,8 @@
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
-                                    <span class="text-muted">{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</span><br/>
+                                    {{expedition.team.name}}<br/>
+                                    <!--WIRE UP (don't show comma on last team lead): <span class="text-muted" ng-repeat="teamLead in vm.expedition.team.teamLeads"><{{expedition.teamLead.displayName}}, </span><br/>-->
                                     <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
                                 </td>
                             </tr>
