@@ -115,6 +115,15 @@
               }
             });
           });
+
+          if (vm.canMoveMarker) {
+            mapMarker.on('drag', function(e) {
+              var latLng = mapMarker.getLatLng();
+              if (!mapSelectMap.getBounds().contains(latLng)) {
+                panTo(latLng);
+              }
+            });
+          }
         }
 
         if(vm.addPoints && angular.isArray(vm.addPoints)){

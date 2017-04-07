@@ -5,36 +5,28 @@
     .module('forms')
     .controller('MapSelectController', MapSelectController);
 
-  MapSelectController.$inject = ['$timeout'];
+  MapSelectController.$inject = ['$timeout', '$scope'];
 
-  function MapSelectController($timeout) {
-    var vm = this;
+  function MapSelectController($timeout, $scope) {
+    $scope.mapControls = {};
 
-    vm.mapControls = {};
+    $scope.activate = function() {
+      $timeout(function() {
+        $scope.mapControls.resizeMap();
+        if($scope.latitude !== undefined && $scope.latitude !== null &&
+           $scope.longitude !== undefined && $scope.longitude !== null) {
+          var location = {
+            lat: $scope.latitude,
+            lng: $scope.longitude
+          };
+          $scope.mapControls.zoomToLocation(location);
+        }
+      });
+    };
 
-    activate();
-
-    function activate(){
-      if(vm.modalId){
-        angular.element(document.querySelector('#'+vm.modalId)).on('shown.bs.modal', function(){
-          $timeout(function() {
-            vm.mapControls.resizeMap();
-            if(vm.latitude !== undefined && vm.latitude !== null &&
-               vm.longitude !== undefined && vm.longitude !== null) {
-              var location = {
-                lat: vm.latitude,
-                lng: vm.longitude
-              };
-              vm.mapControls.zoomToLocation(location);
-            }
-          });
-        });
-      }
-    }
-
-    vm.placeSelected = function (place) {
+    $scope.placeSelected = function (place) {
       if (place.location) {
-        vm.mapControls.zoomToLocation(place.location);
+        $scope.mapControls.zoomToLocation(place.location);
         updateCoords(place.location);
       }
       if (place.place) {
@@ -42,21 +34,26 @@
       }
     };
 
-    vm.mapClick = function(e){
+    $scope.mapClick = function(e){
       updateCoords(e.latlng);
     };
 
-    vm.markerDragEnd = function(location){
+    $scope.markerDragEnd = function(location){
       updateCoords(location);
     };
 
     function updateCoords(coords) {
-      vm.latitude = coords.lat;
-      vm.longitude = coords.lng;
+      $scope.latitude = coords.lat;
+      $scope.longitude = coords.lng;
+      $scope.mapControls.resizeMap();
+      $scope.mapControls.zoomToLocation({
+        lat: $scope.latitude,
+        lng: $scope.longitude
+      });
     }
 
     function updateAddress(address) {
-      vm.address = address;
+      $scope.address = address;
     }
   }
 })();
