@@ -16,10 +16,10 @@
                 </div>
             </div>
             <div class="row">
-                <!--<div class="col-sm-2">
+                <!-- <div class="col-sm-2">
                     <h6><i class="fa fa-building"></i> Organization</h6>
                     <p class="pull-left"><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">{{vm.team.schoolOrg.name}}</a></p>
-                </div>-->
+                </div> -->
                 <div class="col-sm-12" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
                     <p class="pull-right" ng-repeat="teamLead in vm.team.teamLeads">
                         <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
@@ -74,8 +74,9 @@
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
                                     {{expedition.team.name}}<br/>
-                                    <!--WIRE UP (don't show comma on last team lead): <span class="text-muted" ng-repeat="teamLead in vm.expedition.team.teamLeads"><{{expedition.teamLead.displayName}}, </span><br/>-->
-                                    <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                    <span class="text-muted" ng-repeat="teamLead in expedition.team.teamLeads">
+                                      {{expedition.teamLead.displayName}}{{$last ? '' : ', '}}</span><br/>
+                                    <small>{{expedition.team.schoolOrg.name}}</small>
                                 </td>
                             </tr>
                         </table>

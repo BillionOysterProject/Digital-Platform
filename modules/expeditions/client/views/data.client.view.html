@@ -40,13 +40,10 @@
                             </div>
                             <div class="panel-footer">
                                 <p><b>{{expedition.team.name}}</b><br/>
-                                  <!--WIRE UP (don't show comma on last team lead): 
-                                  <span class="text-muted" ng-repeat="teamLead in vm.expedition.team.teamLeads"><{{expedition.teamLead.displayName}}, </span><br/>--></p>
-                                
-                        <p>
-                          <team-lead-list-condensed team-leads="team.teamLeads"></team-lead-list-condensed>
-                        </p>
-                                <h6>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</h6>
+                                  <span class="text-muted" ng-repeat="teamLead in expedition.team.teamLeads">
+                                    {{teamLead.displayName}}{{$last ? '' : ', '}}</span><br/>
+                                </p>
+                                <h6>{{expedition.team.schoolOrg.name}}</h6>
                             </div>
                         </div>
                     </div>
@@ -54,7 +51,7 @@
           </section>
         </section>
     </div>
-    
+
     <!-- COMPARE/DOWNLOAD EXPEDITIONS -->
     <div role="tabpanel" class="tab-pane" id="compareexpeditions" ng-class="{active: vm.activeTab === 'compareexpeditions'}">
       <compare-expedition-wizard ></compare-expedition-wizard>
