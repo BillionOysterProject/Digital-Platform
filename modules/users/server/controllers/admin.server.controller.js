@@ -503,7 +503,8 @@ var updateUserInternal = function(user, userJSON, successCallback, errorCallback
     user.email = userJSON.email;
     user.teamLeadType = userJSON.teamLeadType;
     user.schoolOrg = userJSON.schoolOrg;
-    user.roles = userJSON.roles;
+    if (userJSON.roles) user.roles = userJSON.roles;
+    user.researchInterests = userJSON.researchInterests;
 
     user.save(function (err) {
       if (err) {

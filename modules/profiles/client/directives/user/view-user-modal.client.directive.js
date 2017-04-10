@@ -62,6 +62,7 @@
 
           //when modal is hidden, if we were supposed to change state then do it
           element.bind('hidden.bs.modal', function() {
+            scope.content = {};
             scope.shown = false;
             if(toGoState) {
               $state.go(toGoState.name, toGoParams);

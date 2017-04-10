@@ -19,6 +19,10 @@
         link: function(scope, element, attrs) {
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
+
+            scope.isAdmin = scope.checkViewedUserRole('admin');
+            scope.isTeamLead = scope.checkViewedUserRole('team lead') ||
+              scope.checkViewedUserRole('team lead pending');
           });
 
           scope.$on('userCrudShown', function(event, data) {
@@ -37,10 +41,6 @@
         },
         controller: ['$scope', 'lodash', 'ExpeditionViewHelper', 'SchoolOrganizationsService', 'TeamsService',
         function ($scope, lodash, ExpeditionViewHelper, SchoolOrganizationsService, TeamsService) {
-          // if (!$scope.content) {
-          //   $scope.content = $scope.initial || 'userView';
-          //   $scope.$broadcast($scope.content);
-          // }
           $scope.checkRole = ExpeditionViewHelper.checkRole;
 
           $scope.checkViewedUserRole = function(role) {
@@ -53,37 +53,6 @@
               return false;
             }
           };
-
-          // $scope.findOrganization = function() {
-          //   if ($scope.user.schoolOrg) {
-          //     if ($scope.user.schoolOrg._id) {
-          //       $scope.organization = $scope.user.schoolOrg;
-          //     } else {
-          //       SchoolOrganizationsService.get({
-          //         schoolOrgId: $scope.user.schoolOrg
-          //       }, function(data) {
-          //         $scope.organization = data;
-          //       });
-          //     }
-          //   }
-          // };
-          //
-          // $scope.findTeams = function() {
-          //   var byOwner, byMember;
-          //   if ($scope.isTeamLead) {
-          //     byOwner = true;
-          //   } else {
-          //     byMember = true;
-          //   }
-          //
-          //   TeamsService.query({
-          //     byOwner: byOwner,
-          //     byMember: byMember,
-          //     userId: $scope.user._id
-          //   }, function(data) {
-          //     $scope.teams = data;
-          //   });
-          // };
 
           $scope.openAdminTeamLeadForm = function() {
             $scope.content = 'formTeamLead';

@@ -101,6 +101,7 @@
       }
 
       function errorCallback(res) {
+        console.log('res', res);
         $scope.editUserError = res.data.message;
       }
     };
