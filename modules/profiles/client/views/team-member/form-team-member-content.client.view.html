@@ -29,8 +29,9 @@
           </select>
         </div>
         <div class="form-group col-md-12" show-errors ng-show="teamMember._id && isCurrentUserUser">
-          <wysiwyg-editor name="researchInterests"
-          in-title="Research Interests" ng-model="teamMember.researchInterests" label-class="control-label"></wysiwyg-editor>
+          <label>Research Interests</label>
+          <span class="help-block">Please describe your research interests in BOP and a little bit about yourself, so other members of the BOP community may know you better.</span>
+          <wysiwyg-editor name="researchInterests" ng-model="teamMember.researchInterests" label-class="control-label"></wysiwyg-editor>
         </div>
       </div>
     </div>
