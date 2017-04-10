@@ -11,7 +11,7 @@
     $stateProvider
       .state('restoration-stations', {
         abstract: true,
-        url: '/restoration-stations',
+        url: '/restoration',
         template: '<ui-view/>'
       })
       .state('restoration-stations.dashboard', {

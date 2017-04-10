@@ -71,7 +71,7 @@ exports.create = function (req, res) {
   }
 
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-  var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+  var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
 
   if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
     station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
@@ -149,7 +149,7 @@ exports.update = function (req, res) {
     station.teamLead = req.user;
 
     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-    var orsFormLink = httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id;
+    var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
 
     if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
       if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
@@ -710,7 +710,7 @@ exports.sendORSStatusEmail = function(req, res) {
           ORSStatus: statusHistory.status,
           ORSDescription: statusHistory.description,
           LinkORSPhoto: (statusHistory.photo) ? statusHistory.photo.path : '',
-          LinkORSForm: httpTransport + req.headers.host + '/restoration-stations?openORSForm=' + station._id
+          LinkORSForm: httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id
         }, function(info) {
           res.json(station);
         }, function(errorMessage) {

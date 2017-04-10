@@ -1,9 +1,12 @@
 <section class="content">
-    <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" />
+  <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick"
+  marker-drag-end-event="vm.markerDragEnd" can-move-marker="vm.canMoveMarker"
+  show-marker="vm.showMarker" can-click-map-to-add-marker="vm.canClickMapToAddMarker"
+  add-points="vm.mapPoints"></leaflet-map>
 </section>
 <section class="content">
     <section class="container">
-        <a class="btn btn-primary pull-right">Register a station</a>
+        <a class="btn btn-primary pull-right" ng-click="vm.openFormRestorationStation()">Register a station</a>
         <h2>Stations</h2>
         <table class="table">
             <tr>
