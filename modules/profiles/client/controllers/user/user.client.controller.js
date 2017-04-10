@@ -14,6 +14,7 @@
     SchoolOrganizationsService, RestorationStationsService, EventsService, Authentication, LessonsService) {
     $scope.currentUser = Authentication.user;
     $scope.checkRole = ExpeditionViewHelper.checkRole;
+    $scope.loaded = false;
     $scope.loading = false;
 
     $scope.loadUser = function() {
@@ -32,6 +33,8 @@
         } else {
           $scope.loadUserData();
         }
+      } else {
+        $scope.loading = false;
       }
     };
 
@@ -50,6 +53,7 @@
         $scope.canSeePending = $scope.pendingVisible();
         $scope.roles = $scope.findUserRoles();
         $scope.loaded = true;
+        $scope.loading = false;
       });
 
       $scope.findExpeditions();

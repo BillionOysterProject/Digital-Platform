@@ -33,7 +33,8 @@
         <div class="form-group col-md-6" show-errors>
           <label for="org" class="control-label required">Organization</label>
           <select name="org" class="form-control" ng-model="user.schoolOrg._id"
-            ng-change="orgChanged()" required>
+            ng-change="orgChanged()"
+            ng-readonly="user._id && !(user.pending || isCurrentUserUser)" required>
             <option disabled selected value>
             <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
           </select>
@@ -68,6 +69,11 @@
             <label><input name="adminCheck" id="adminCheck" type="checkbox" value="isAdmin" ng-model="isAdmin"
               ng-change="isAdminChanged()">Admin</label>
           </div>
+        </div>
+
+        <div class="form-group col-md-12" show-errors ng-show="user._id && isCurrentUserUser">
+          <wysiwyg-editor name="researchInterests"
+          in-title="Research Interests" ng-model="user.researchInterests" label-class="control-label"></wysiwyg-editor>
         </div>
 
       </div>

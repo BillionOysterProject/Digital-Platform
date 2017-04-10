@@ -22,12 +22,18 @@
             scope.isCurrentUserAdmin = false;
             scope.isCurrentUserTeamLead = false;
             scope.isCurrentUserUser = false;
+            if (scope.user && scope.user._id && !scope.loading) {
+              scope.loaded = false;
+              scope.loading = true;
+              scope.loadUser();
+            }
           });
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
-            if (scope.user) {
+            if (scope.user && scope.user._id && !scope.loading) {
               scope.loaded = false;
+              scope.loading = true;
               scope.loadUser();
             }
           });

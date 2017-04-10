@@ -18,6 +18,7 @@
           <b>{{user.username}}</b><br/>
           <a href="mailto:{{user.email}}">{{user.email}}</a>
         </p>
+        <p ng-bind-html="user.researchInterests | sanitize"></p>
       </div>
       <div class="col-md-3">
         <br/>

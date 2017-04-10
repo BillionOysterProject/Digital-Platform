@@ -4,11 +4,6 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title">{{teamMember._id ? 'Edit team member profile' : 'Add a team member'}}</h4>
     </div>
-
-    <!--
-        TODO: For SELF editing, this form (`form-team-member-content`) and `form-admin-team-lead-content` should replace `form-user-profile modal`
-    -->
-
     <div class="modal-body">
       <div class="row">
         <div class="form-group col-md-6" show-errors>
@@ -28,9 +23,14 @@
         </div>
         <div class="form-group col-md-6" show-errors ng-show="teamMember._id && (isCurrentUserAdmin || isCurrentUserTeamLead)">
           <label for="team" class="control-label" ng-class="{'required': teamMember._id}">Team</label>
-          <select name="team" class="form-control" ng-model="newTeam" ng-required="teamMember._id"
+          <select name="team" class="form-control" ng-model="newTeam"
+            ng-required="teamMember._id && (isCurrentUserAdmin || isCurrentUserTeamLead)"
             ng-options="team._id as team.name for team in allTeams">
           </select>
+        </div>
+        <div class="form-group col-md-12" show-errors ng-show="teamMember._id && isCurrentUserUser">
+          <wysiwyg-editor name="researchInterests"
+          in-title="Research Interests" ng-model="teamMember.researchInterests" label-class="control-label"></wysiwyg-editor>
         </div>
       </div>
     </div>
