@@ -19,7 +19,7 @@
 
     $scope.loadUser = function() {
       if ($scope.user && $scope.user._id) {
-        if (!$scope.user.roles) {
+        if (!$scope.user.roles || !$scope.user.profileImageURL) {
           $http.get('/api/users/username', {
             params: { username: $scope.user.username }
           })
@@ -35,6 +35,7 @@
         }
       } else {
         $scope.loading = false;
+        $scope.loaded = true;
       }
     };
 

@@ -447,17 +447,47 @@ exports.list = function (req, res) {
   var user = (req.query.userId ? req.query.userId : req.user._id);
   var and = [];
 
+  if (req.query.status) {
+    and.push({ 'status': req.query.status });
+  }
   if (req.query.teamLeadId) {
     and.push({ 'teamLead': req.query.teamLeadId });
   }
   if (req.query.teamLead) {
-    and.push({ 'teamLead': user });
+    if (req.query.teamLead === 'true') {
+      and.push({ 'teamLead': user });
+    } else {
+      and.push({ 'teamLead': req.query.teamLead });
+    }
   }
   if (req.query.team) {
     and.push({ 'team': req.query.team });
   }
   if (req.query.schoolOrgId) {
     and.push({ 'schoolOrg': req.query.schoolOrgId });
+  }
+  if (req.query.organization) {
+    and.push({ 'schoolOrg': req.query.organization });
+  }
+
+  var or = [];
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'name': searchRe });
+    or.push({ 'bodyOfWater': searchRe });
+    or.push({ 'boroughCounty': searchRe });
+    or.push({ 'shoreLineType': searchRe });
+    or.push({ 'notes': searchRe });
+
+    and.push({ $or: or });
   }
 
   if (and.length === 1) {
@@ -486,7 +516,8 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('teamLead', 'displayName').populate('schoolOrg', 'name').exec(function (err, stations) {
+  query.populate('teamLead', 'displayName email schoolOrg roles username profileImageURL')
+  .populate('schoolOrg', 'name').exec(function (err, stations) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -548,7 +579,7 @@ exports.stationByID = function (req, res, next, id) {
     });
   }
 
-  RestorationStation.findById(id).populate('teamLead', 'displayName email schoolOrg roles')
+  RestorationStation.findById(id).populate('teamLead', 'displayName email schoolOrg roles username profileImageURL')
   .populate('siteCoordinator', 'displayName email schoolOrg roles')
   .populate('propertyOwner', 'displayName email schoolOrg roles')
   .populate('schoolOrg', 'name city state').exec(function (err, station) {

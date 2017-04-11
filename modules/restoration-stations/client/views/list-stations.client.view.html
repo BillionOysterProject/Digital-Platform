@@ -6,45 +6,67 @@
 </section>
 <section class="content">
     <section class="container">
+      <div class="row">
+        <a class="btn btn-link pull-left" ng-click="vm.resetFilters()">Reset filters</a>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </span>
+            <input type="text" class="form-control" ng-model="vm.filter.searchString"
+            ng-change="vm.searchChange()" placeholder="Search by name, body of water, borough, county, shoreline type, or notes">
+        </div>
+        <br/>
+      </div>
+      <div class="row">
+          <div class="form-group col-md-3 col-sm-6">
+              <label for="">Status</label>
+              <select class="form-control" name="status" id="status" ng-model="vm.filter.statusString"
+              ng-options="status as status for status in vm.statuses" ng-change="vm.statusSelected()"></select>
+          </div>
+
+          <div class="form-group col-md-3 col-sm-6">
+              <label for="">Organization</label>
+              <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+              uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="vm.organizationSelected()">
+          </div>
+
+          <div class="form-group col-md-3 col-sm-6">
+              <label for="">Team</label>
+              <input type="text" ng-model="vm.filter.teamObj" placeholder="Team"
+              uib-typeahead="team as team.name for team in vm.teams | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="vm.teamSelected()">
+          </div>
+
+          <div class="form-group col-md-3 col-sm-6">
+              <label for="">Team Lead</label>
+              <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+              uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="vm.teamLeadSelected()">
+          </div>
+      </div>
+      <div>
         <a class="btn btn-primary pull-right" ng-click="vm.openFormRestorationStation()">Register a station</a>
         <h2>Stations</h2>
-        <table class="table">
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td><h4>NY Harbor 19</h4><br/><span class="text-muted">East River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
-                <td>Eastern Shore 525<br/><span class="text-muted">West River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-default">Lost</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td>Baltimore Harbor 64<br/><span class="text-muted">North River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td><h4>NY Harbor 19</h4><br/><span class="text-muted">East River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
-                <td>Eastern Shore 525<br/><span class="text-muted">West River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-default">Lost</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td>Baltimore Harbor 64<br/><span class="text-muted">North River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
+        <table class="table table-hover">
+            <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
+                <td><h3>
+                  <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
+                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
+                </h3></td>
+                <td><h4>{{station.name}}</h4><br/><span class="text-muted">{{station.bodyOfWater}}</span></td>
+                <td>{{station.latitude}}, {{station.longitude}}</td>
+                <td class="text-right">
+                  <span class="label label-success" ng-show="station.status === 'Active'">{{station.status}}</span>
+                  <span class="label label-danger" ng-show="station.status !== 'Active'">{{station.status}}</span>
+                </td>
             </tr>
         </table>
+      </div>
     </section>
 </section>
+
+<view-restoration-station-popup station="vm.station" initial="vm.initial" close-function="vm.closeFormRestorationStation"></view-restoration-station-popup>

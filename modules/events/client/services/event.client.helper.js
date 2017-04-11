@@ -28,6 +28,14 @@
       return moment(startDate).format('h:mma') + '-' + moment(endDate).format('h:mma');
     };
 
+    var getEventDayOfWeekLong = function(startDate) {
+      return moment(startDate).format('dddd');
+    };
+
+    var getEventDayOfWeekShort = function(startDate) {
+      return moment(startDate).format('ddd');
+    };
+
     var getOpenSpots = function(registrants, maximumCapacity) {
       if (registrants && registrants.length >=0 && maximumCapacity && maximumCapacity >= 0) {
         return maximumCapacity - registrants.length;
@@ -104,6 +112,8 @@
       getEventDay: getEventDay,
       getEventYear: getEventYear,
       getEventTimeRange: getEventTimeRange,
+      getEventDayOfWeekLong: getEventDayOfWeekLong,
+      getEventDayOfWeekShort: getEventDayOfWeekShort,
       getOpenSpots: getOpenSpots,
       getDeadline: getDeadline,
       getDaysRemainingDeadline: getDaysRemainingDeadline,

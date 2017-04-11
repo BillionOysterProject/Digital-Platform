@@ -82,19 +82,22 @@
     var getORSes = function(teamLeadId) {
       if (vm.isAdmin) {
         RestorationStationsService.query({
+          limit: 5
         }, function(data) {
           vm.stations = data;
         });
       } else if (vm.isTeamLead || vm.isTeamLeadPending) {
         RestorationStationsService.query({
-          schoolOrgId: vm.user.schoolOrg
+          schoolOrgId: vm.user.schoolOrg,
+          limit: 5
         }, function(data) {
           vm.stations = data;
         });
       } else {
         if (teamLeadId) {
           RestorationStationsService.query({
-            teamLeadId: teamLeadId
+            teamLeadId: teamLeadId,
+            limit: 5
           }, function(data) {
             vm.stations = data;
           });
@@ -126,6 +129,7 @@
 
         if ($rootScope.teamId) {
           vm.filter.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
+          $rootScope.teamId = null;
 
           var teamIndex = lodash.findIndex(vm.teams, function(t) {
             return t._id === vm.filter.teamId;
@@ -216,7 +220,7 @@
       }
     };
 
-    vm.openFormRestorationStation = function(station) {
+    var openRestorationStationPopup = function(station, initial) {
       vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
       if (vm.station.latitude && vm.station.longitude) {
         vm.stationMapPoints = [{
@@ -230,44 +234,37 @@
         }];
       }
 
-      angular.element('#modal-station-register').modal('show');
+      vm.initial = initial || 'orsView';
+      angular.element('#modal-station').modal('show');
+    };
+
+    vm.openFormRestorationStation = function(station) {
+      openRestorationStationPopup(station, 'orsForm');
     };
 
     vm.openViewRestorationStation = function(station) {
-      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
-      if (vm.station.latitude && vm.station.longitude) {
-        vm.stationMapPoints = [{
-          lat: vm.station.latitude,
-          lng: vm.station.longitude,
-          icon: {
-            icon: 'glyphicon-map-marker',
-            prefix: 'glyphicon',
-            markerColor: 'blue'
-          },
-        }];
-      }
-
-      angular.element('#modal-station').modal('show');
+      openRestorationStationPopup(station, 'orsView');
     };
 
     vm.saveFormRestorationStation = function() {
       getORSes(vm.filter.teamId);
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     vm.removeFormRestorationStation = function() {
       getORSes(vm.filter.teamId);
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
-    vm.cancelFormRestorationStation = function() {
+    vm.closeFormRestorationStation = function(refresh) {
+      if (refresh) getORSes(vm.filter.teamId);
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     vm.placeSelected = function (place) {
@@ -305,7 +302,6 @@
     vm.openViewUserModal = function(user, initial) {
       vm.userToView = user;
       vm.initialUser = initial || 'userView';
-      console.log('initial', vm.initialUser);
       angular.element('#modal-profile-user').modal('show');
     };
 
