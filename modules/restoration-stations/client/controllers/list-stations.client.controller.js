@@ -6,10 +6,10 @@
     .controller('RestorationStationListController', RestorationStationListController);
 
   RestorationStationListController.$inject = ['$scope', 'ExpeditionViewHelper', 'RestorationStationsService',
-    'SchoolOrganizationsService', 'TeamsService', 'TeamLeads'];
+    'SchoolOrganizationsService', 'TeamLeads'];
 
   function RestorationStationListController($scope, ExpeditionViewHelper, RestorationStationsService,
-    SchoolOrganizationsService, TeamsService, TeamLeads) {
+    SchoolOrganizationsService, TeamLeads) {
     var vm = this;
     vm.filtered = false;
 
@@ -19,11 +19,6 @@
         name: 'All'
       },
       organizationName: 'All',
-      team: '',
-      teamObj: {
-        name: 'All'
-      },
-      teamName: 'All',
       teamLead: '',
       teamLeadObj: {
         displayName: 'All'
@@ -80,7 +75,6 @@
       RestorationStationsService.query({
         status: vm.filter.status,
         organization: vm.filter.organization,
-        team: vm.filter.team,
         teamLead: vm.filter.teamLead,
         searchString: vm.filter.searchString
       }, function(data) {
@@ -98,11 +92,6 @@
           name: 'All'
         },
         organizationName: 'All',
-        team: '',
-        teamObj: {
-          name: 'All'
-        },
-        teamName: 'All',
         teamLead: '',
         teamLeadObj: {
           displayName: 'All'
@@ -120,7 +109,6 @@
         roles: 'team lead',
         sort: 'name',
         organizationId: vm.filter.organization,
-        teamId: vm.filter.team
       }, function(data) {
         vm.teamLeads = [{
           displayName: 'All'
@@ -139,28 +127,6 @@
       findORSes();
     };
 
-    var findTeams = function() {
-      TeamsService.query({
-        sort: 'name',
-        organization: vm.filter.organization
-      }, function(data) {
-        vm.teams = [{
-          name: 'All'
-        }];
-        vm.teams = vm.teams.concat(data);
-        if (!vm.filter.teamObj) vm.filter.teamObj = vm.teams[0];
-      });
-    };
-    findTeams();
-
-    vm.teamSelected = function() {
-      vm.filtered = true;
-      vm.filter.team = (vm.filter.teamObj && vm.filter.teamObj._id) ? vm.filter.teamObj._id : '';
-      vm.filter.teamName = (vm.filter.teamObj && vm.filter.teamObj.name) ? vm.filter.teamObj.name : '';
-      findORSes();
-      findTeamLeads();
-    };
-
     SchoolOrganizationsService.query({
       sort: 'name'
     }, function(data) {
@@ -176,7 +142,6 @@
       vm.filter.organization = (vm.filter.organizationObj && vm.filter.organizationObj._id) ? vm.filter.organizationObj._id : '';
       vm.filter.organizationName = (vm.filter.organizationObj && vm.filter.organizationObj.name) ? vm.filter.organizationObj.name : '';
       findORSes();
-      findTeams();
       findTeamLeads();
     };
 

@@ -5,11 +5,11 @@
     .module('restoration-stations')
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
-  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', 'lodash',
+  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', '$http', 'lodash',
   'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
   'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
-  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, lodash,
+  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, $http, lodash,
     moment, Authentication, TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
     ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
@@ -44,12 +44,6 @@
     vm.isTeamLeadPending = checkRole('team lead pending');
     vm.isTeamMemberPending = checkRole('team member pending') || checkRole('partner');
     vm.isAdmin = checkRole('admin');
-
-    SchoolOrganizationsService.query({
-      sort: 'name'
-    }, function(data) {
-      vm.organizations = data;
-    });
 
     var findSchoolOrgRestorationStations = function() {
       RestorationStationsService.query({
@@ -87,8 +81,9 @@
           vm.stations = data;
         });
       } else if (vm.isTeamLead || vm.isTeamLeadPending) {
+        var schoolOrgId = (vm.user.schoolOrg && vm.user.schoolOrg._id) ? vm.user.schoolOrg._id : vm.user.schoolOrg;
         RestorationStationsService.query({
-          schoolOrgId: vm.user.schoolOrg,
+          schoolOrgId: schoolOrgId,
           limit: 5
         }, function(data) {
           vm.stations = data;
@@ -105,7 +100,27 @@
       }
       findSchoolOrgRestorationStations();
     };
-    getORSes();
+
+    if (vm.user && vm.user.username && !vm.user.schoolOrg) {
+      $http.get('/api/users/username', {
+        params: { username: vm.user.username }
+      })
+      .success(function(data, status, headers, config) {
+        vm.user = data;
+        getORSes();
+      })
+      .error(function(data, status, headers, config) {
+        console.log('err', data);
+      });
+    } else {
+      getORSes();
+    }
+
+    SchoolOrganizationsService.query({
+      sort: 'name'
+    }, function(data) {
+      vm.organizations = data;
+    });
 
     vm.getOrganizationName = function(id) {
       var index = lodash.findIndex(vm.organizations, function(o) {
