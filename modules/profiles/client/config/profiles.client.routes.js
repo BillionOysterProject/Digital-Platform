@@ -63,14 +63,6 @@
         templateUrl: 'modules/profiles/client/views/organization/view-organization.client.view.html',
         controller: 'OrganizationProfileController',
         controllerAs: 'vm',
-      })
-      .state('profiles.restoration-station', {
-        url: '/restoration-station',
-        templateUrl: 'modules/profiles/client/views/restoration-station/restoration-station.client.view.html',
-      })
-      .state('profiles.restoration-station-view', {
-        url: '/restoration-station/:stationId',
-        templateUrl: 'modules/profiles/client/views/restoration-station/view-restoration-station.client.view.html'
       });
   }
 

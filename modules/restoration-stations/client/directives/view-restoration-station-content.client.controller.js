@@ -25,11 +25,22 @@
             if (scope.station && !scope.station.propertyOwner) {
               scope.station.propertyOwner = {};
             }
+
+            if (scope.station && scope.station._id && !scope.loading) {
+              scope.loaded = false;
+              scope.loading = true;
+              scope.load(function() {
+              });
+            }
           });
 
-          scope.$on('viewOrsShow', function(event, data) {
-            scope.load(function() {
-            });
+          scope.$on('orsView', function(event, data) {
+            if (scope.station && scope.station._id && !scope.loading) {
+              scope.loaded = false;
+              scope.loading = true;
+              scope.load(function() {
+              });
+            }
           });
         },
         controller: 'RestorationStationsController',

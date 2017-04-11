@@ -178,6 +178,7 @@
                         </div>
                     </div>
                     <div class="panel-footer">
+                      <a class="btn btn-default" ui-sref="restoration-stations.list" ng-disabled="vm.isTeamLeadPending">See all</a>
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS"
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
                     </div>
@@ -233,11 +234,10 @@
 
 
 <!-- MODALS -->
-<form-restoration-station-modal station="vm.station" mapPoints="vm.stationMapPoints"
+<!-- <form-restoration-station-modal station="vm.station" mapPoints="vm.stationMapPoints"
 save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRestorationStation"
-cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
-<view-restoration-station-popup station="vm.station" open-view="vm.openView" initial="vm.initial"
-></view-restoration-station-popup>
+cancel-function="vm.closeFormRestorationStation"></form-restoration-station-modal> -->
+<view-restoration-station-popup station="vm.station" initial="vm.initial" close-function="vm.closeFormRestorationStation"></view-restoration-station-popup>
 <view-user-modal user="vm.userToView" initial="vm.initialUser" team="vm.team" close-function="vm.closeViewUserModal"></view-user-modal>
 
 <!--END MODALS-->

@@ -97,6 +97,8 @@
     vm.getEventDay = EventHelper.getEventDay;
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
+    vm.getEventDayOfWeekLong = EventHelper.getEventDayOfWeekLong;
+    vm.getEventDayOfWeekShort = EventHelper.getEventDayOfWeekShort;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
     vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);

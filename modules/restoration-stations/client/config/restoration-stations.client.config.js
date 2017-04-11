@@ -10,7 +10,7 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Restoration Stations',
+      title: 'Restoration',
       state: 'restoration-stations',
       type: 'dropdown',
       roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
@@ -25,25 +25,25 @@
       position: 1
     });
 
-    //Menus.addSubMenuItem('topbar', 'restoration-stations', {
-    //  title: 'Stations',
-    //  state: 'restoration-stations.list',
-    //  roles: ['team lead', 'team member', 'partner', 'admin'],
-    //  position: 2
-    //});
+    Menus.addSubMenuItem('topbar', 'restoration-stations', {
+      title: 'Stations',
+      state: 'restoration-stations.list',
+      roles: ['team lead', 'team member', 'partner', 'admin'],
+      position: 2
+    });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Expeditions',
       state: 'expeditions.list',
       roles: ['admin', 'team lead', 'team member', 'partner'],
-      position: 2
+      position: 3
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
       title: 'Data',
       state: 'expeditions.data',
       roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending', 'user', 'guest'],
-      position: 3
+      position: 4
     });
 
     //Menus.addSubMenuItem('topbar', 'restoration-stations', {
