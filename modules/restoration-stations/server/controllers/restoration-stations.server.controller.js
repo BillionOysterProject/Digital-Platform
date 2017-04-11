@@ -516,7 +516,7 @@ exports.list = function (req, res) {
     }
   }
 
-  query.populate('teamLead', 'displayName email schoolOrg roles username profileImageURL')
+  query.populate('teamLead', 'displayName firstName lastName email schoolOrg roles username profileImageURL teamLeadType')
   .populate('schoolOrg', 'name').exec(function (err, stations) {
     if (err) {
       return res.status(400).send({
@@ -579,7 +579,7 @@ exports.stationByID = function (req, res, next, id) {
     });
   }
 
-  RestorationStation.findById(id).populate('teamLead', 'displayName email schoolOrg roles username profileImageURL')
+  RestorationStation.findById(id).populate('teamLead', 'displayName firstName lastName email schoolOrg roles username profileImageURL teamLeadType')
   .populate('siteCoordinator', 'displayName email schoolOrg roles')
   .populate('propertyOwner', 'displayName email schoolOrg roles')
   .populate('schoolOrg', 'name city state').exec(function (err, station) {
