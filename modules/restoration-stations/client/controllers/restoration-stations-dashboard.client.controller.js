@@ -165,7 +165,7 @@
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
       if (byMember) {
-        getORSes(vm.filter.teamId);
+        getORSes();
       }
 
       ExpeditionsService.query({
@@ -244,21 +244,21 @@
     };
 
     vm.saveFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');
     };
 
     vm.removeFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');
     };
 
     vm.closeFormRestorationStation = function(refresh) {
-      if (refresh) getORSes(vm.filter.teamId);
+      if (refresh) getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');
