@@ -50,6 +50,7 @@
             <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamMemberPending || vm.isTeamLeadPending) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
+                        <a class="btn btn-default pull-right" ui-sref="restoration-stations.list">See all</a>
                         <h4>Oyster Restoration Stations</h4>
                     </div>
                     <div class="panel-body">
@@ -153,7 +154,6 @@
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
-                            <!--TODO: Change ng-click on each ORS to open profile modal #modal-station (Currently in MODAL list below, also set up click in mapmarker button to go to ORS profile)-->
                             <!--TODO: Change list to only show all ORS user has created, then all stations user has visited on an expedition (we're removing ORS owned by teams, ORS are now owned by team leads)-->
 
                             <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
@@ -178,9 +178,9 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                      <a class="btn btn-default" ui-sref="restoration-stations.list" ng-disabled="vm.isTeamLeadPending">See all</a>
+                      <a class="btn btn-default" ui-sref="restoration-stations.list">See all</a>
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS"
-                        ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
+                        ng-show="(vm.isTeamLead || vm.isTeamLeadPending)" ng-disabled="vm.isTeamLeadPending">Register an ORS</a>
                     </div>
                 </div>
                 <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
