@@ -1,3 +1,6 @@
+<div ng-hide="loaded">
+  <i class="fa fa-spin fa-circle-o-notch red icon"></i> ...Loading
+</div>
 <div ng-show="loaded">
   <div class="modal-header">
     <div class="row">
@@ -22,8 +25,8 @@
       </div>
       <div class="col-md-3">
         <br/>
-        <h6><span class="blue">{{teams.length}}</span> {{teams.length > 1 ? 'Teams' : 'Team'}}</h6>
-        <h4 ng-repeat="team in teams">
+        <h6><span class="blue">{{userTeams.length}}</span> {{userTeams.length > 1 ? 'Teams' : 'Team'}}</h6>
+        <h4 ng-repeat="team in userTeams">
           <a ui-sref="profiles.team-view({ teamId: team._id})">{{team.name}}</a>
           <br/>
           <div ng-repeat="teamLead in team.teamLeads" ng-show="isUserTeamMember">

@@ -236,6 +236,8 @@ exports.list = function (req, res) {
   var searchQuery = function(teamLeadIds) {
     var query;
     var userId = (req.query.userId ? req.query.userId : req.user._id);
+    console.log('userId', userId);
+    console.log('my id', req.user._id);
     var and = [];
 
     if (req.query.byOwner) {

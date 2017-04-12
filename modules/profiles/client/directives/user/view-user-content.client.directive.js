@@ -19,23 +19,31 @@
         controller: 'UserProfileController',
         link: function(scope, element, attrs) {
           scope.$on('userView', function() {
-            scope.isCurrentUserAdmin = false;
-            scope.isCurrentUserTeamLead = false;
-            scope.isCurrentUserUser = false;
+            scope.loaded = false;
             if (scope.user && scope.user._id && !scope.loading) {
-              scope.loaded = false;
-              scope.loading = true;
-              scope.loadUser();
+              scope.loaded = true;
+              scope.loading = false;
+            } else {
+              scope.isCurrentUserAdmin = false;
+              scope.isCurrentUserTeamLead = false;
+              scope.isCurrentUserUser = false;
             }
           });
 
           scope.$watch('user', function(newValue, oldValue) {
             scope.user = newValue;
-            if (scope.user && scope.user._id && !scope.loading) {
+            if (scope.user && scope.user._id) {
               scope.loaded = false;
               scope.loading = true;
               scope.loadUser();
+            } else {
+              scope.loading = false;
+              scope.loaded = true;
             }
+          });
+
+          scope.$watch('teams', function(newValue, oldValue) {
+            //scope.userTeams = newValue;
           });
         }
       };

@@ -97,7 +97,7 @@
           byMember: byMember,
           userId: $scope.user._id
         }, function(data) {
-          $scope.teams = data;
+          $scope.userTeams = data;
           $scope.isCurrentUserUsersTeamLead = $scope.checkCurrentUserTeamLead();
           if (callback) callback();
         });
@@ -152,11 +152,11 @@
     };
 
     $scope.checkCurrentUserTeamLead = function() {
-      if ($scope.teams && $scope.currentUser && $scope.isUserTeamMember) {
+      if ($scope.userTeams && $scope.currentUser && $scope.isUserTeamMember) {
         var allTeamLeads = [];
-        for (var i = 0; i < $scope.teams.length; i++) {
-          allTeamLeads.push($scope.teams[i].teamLead);
-          allTeamLeads = allTeamLeads.concat($scope.teams[i].teamLeads);
+        for (var i = 0; i < $scope.userTeams.length; i++) {
+          allTeamLeads.push($scope.userTeams[i].teamLead);
+          allTeamLeads = allTeamLeads.concat($scope.userTeams[i].teamLeads);
         }
 
         var leadIndex = lodash.findIndex(allTeamLeads, function(l) {
