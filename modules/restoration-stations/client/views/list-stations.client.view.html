@@ -81,7 +81,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="alert" ng-show="hide">
+        <div class="alert" ng-show="vm.stations.length <= 0">
             Sorry, no oyster restoration stations found for that search term or filter. Try <a ng-click="vm.resetFilters()">widening your search.</a>
         </div>
       </div>

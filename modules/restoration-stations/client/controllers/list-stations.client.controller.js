@@ -5,12 +5,13 @@
     .module('restoration-stations')
     .controller('RestorationStationListController', RestorationStationListController);
 
-  RestorationStationListController.$inject = ['$scope', 'ExpeditionViewHelper', 'RestorationStationsService',
-    'SchoolOrganizationsService', 'TeamLeads'];
+  RestorationStationListController.$inject = ['$scope', 'lodash', 'ExpeditionViewHelper', 'RestorationStationsService',
+    'SchoolOrganizationsService', 'TeamsService', 'TeamLeads', 'Authentication'];
 
-  function RestorationStationListController($scope, ExpeditionViewHelper, RestorationStationsService,
-    SchoolOrganizationsService, TeamLeads) {
+  function RestorationStationListController($scope, lodash, ExpeditionViewHelper, RestorationStationsService,
+    SchoolOrganizationsService, TeamsService, TeamLeads, Authentication) {
     var vm = this;
+    vm.user = Authentication.user;
     vm.filtered = false;
 
     vm.filter = {
@@ -177,6 +178,10 @@
 
       vm.initial = initial || 'orsView';
       angular.element('#modal-station').modal('show');
+    };
+
+    vm.openView = function(station) {
+      vm.openViewRestorationStation(station);
     };
 
     vm.openFormRestorationStation = function(station) {
