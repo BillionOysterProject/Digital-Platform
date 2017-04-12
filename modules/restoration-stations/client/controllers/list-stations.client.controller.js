@@ -179,6 +179,10 @@
       angular.element('#modal-station').modal('show');
     };
 
+    vm.openView = function(station) {
+      vm.openViewRestorationStation(station);
+    };
+
     vm.openFormRestorationStation = function(station) {
       openRestorationStationPopup(station, 'orsForm');
     };

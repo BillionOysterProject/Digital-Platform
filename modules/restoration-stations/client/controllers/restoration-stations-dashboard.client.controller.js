@@ -74,30 +74,12 @@
     };
 
     var getORSes = function(teamLeadId) {
-      if (vm.isAdmin) {
-        RestorationStationsService.query({
-          limit: 5
-        }, function(data) {
-          vm.stations = data;
-        });
-      } else if (vm.isTeamLead || vm.isTeamLeadPending) {
-        var schoolOrgId = (vm.user.schoolOrg && vm.user.schoolOrg._id) ? vm.user.schoolOrg._id : vm.user.schoolOrg;
-        RestorationStationsService.query({
-          schoolOrgId: schoolOrgId,
-          limit: 5
-        }, function(data) {
-          vm.stations = data;
-        });
-      } else {
-        if (teamLeadId) {
-          RestorationStationsService.query({
-            teamLeadId: teamLeadId,
-            limit: 5
-          }, function(data) {
-            vm.stations = data;
-          });
-        }
-      }
+      if (!teamLeadId) teamLeadId = (vm.user && vm.user._id) ? vm.user._id : vm.user;
+      RestorationStationsService.query({
+        teamLeadId: teamLeadId
+      }, function(data) {
+        vm.stations = data;
+      });
       findSchoolOrgRestorationStations();
     };
 
@@ -183,7 +165,7 @@
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
       if (byMember) {
-        getORSes(vm.filter.teamId);
+        getORSes();
       }
 
       ExpeditionsService.query({
@@ -262,21 +244,21 @@
     };
 
     vm.saveFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');
     };
 
     vm.removeFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');
     };
 
     vm.closeFormRestorationStation = function(refresh) {
-      if (refresh) getORSes(vm.filter.teamId);
+      if (refresh) getORSes();
       vm.station = {};
 
       angular.element('#modal-station').modal('hide');

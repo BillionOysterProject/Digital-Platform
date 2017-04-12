@@ -150,7 +150,7 @@
             <div class="col-md-4">
                 <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isAdmin)">
                     <div class="panel-heading">
-                        <h4>Organization ORS</h4>
+                        <h4>My ORS</h4>
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
@@ -178,7 +178,7 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                      <a class="btn btn-default" ui-sref="restoration-stations.list">See all</a>
+                      <!-- <a class="btn btn-default" ui-sref="restoration-stations.list">See all</a> -->
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS"
                         ng-show="(vm.isTeamLead || vm.isTeamLeadPending)" ng-disabled="vm.isTeamLeadPending">Register an ORS</a>
                     </div>
