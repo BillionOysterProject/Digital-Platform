@@ -6,10 +6,10 @@
     .controller('RestorationStationListController', RestorationStationListController);
 
   RestorationStationListController.$inject = ['$scope', 'ExpeditionViewHelper', 'RestorationStationsService',
-    'SchoolOrganizationsService', 'TeamsService'];
+    'SchoolOrganizationsService', 'TeamLeads'];
 
   function RestorationStationListController($scope, ExpeditionViewHelper, RestorationStationsService,
-    SchoolOrganizationsService, TeamsService) {
+    SchoolOrganizationsService, TeamLeads) {
     var vm = this;
     vm.filtered = false;
 
