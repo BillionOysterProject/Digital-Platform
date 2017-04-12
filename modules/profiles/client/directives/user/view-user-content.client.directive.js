@@ -41,10 +41,6 @@
               scope.loaded = true;
             }
           });
-
-          scope.$watch('teams', function(newValue, oldValue) {
-            //scope.userTeams = newValue;
-          });
         }
       };
     });
