@@ -5,13 +5,12 @@
     .module('restoration-stations')
     .controller('RestorationStationListController', RestorationStationListController);
 
-  RestorationStationListController.$inject = ['$scope', 'lodash', 'ExpeditionViewHelper', 'RestorationStationsService',
-    'SchoolOrganizationsService', 'TeamsService', 'TeamLeads', 'Authentication'];
+  RestorationStationListController.$inject = ['$scope', 'ExpeditionViewHelper', 'RestorationStationsService',
+    'SchoolOrganizationsService', 'TeamsService'];
 
-  function RestorationStationListController($scope, lodash, ExpeditionViewHelper, RestorationStationsService,
-    SchoolOrganizationsService, TeamsService, TeamLeads, Authentication) {
+  function RestorationStationListController($scope, ExpeditionViewHelper, RestorationStationsService,
+    SchoolOrganizationsService, TeamsService) {
     var vm = this;
-    vm.user = Authentication.user;
     vm.filtered = false;
 
     vm.filter = {
