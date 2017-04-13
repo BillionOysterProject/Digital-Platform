@@ -1,0 +1,6 @@
+Hi <%=FirstName%>,
+
+<%= TeamMemberName %> just requested publishing approval for the poster <%= PosterName %>. You can view and respond to the request at <%= LinkPosterRequest %>
+
+Thanks,
+The Billion Oyster Project

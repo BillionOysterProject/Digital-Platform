@@ -1,0 +1,59 @@
+Hi <%=FirstName%>,
+
+<%= PosterFeedbackName %> just gave you feedback on your poster <%= PosterName %>:
+
+Title:
+Is the title creative and to the point? <%= TitleCreativeYNS %>
+Does the title quickly grab the audience's attention and make them want to learn more about the research? <%= TitleAttentionYNS %>
+Specific feedback or suggestions: <%= TitleFeedback %>
+
+Introduction:
+Does the intro "hook" the audience and get them interested in the issue or problem right away? <%= IntroHookYNS %>
+Does the intro cite at least three sources of published, primary literature that relates to the research? <%= IntroCiteYNS %>
+Does the intro clearly state the hypothesis or central question of the research? <%= IntroHypothesisYNS %>
+Does the intro include at least one interesting photograph or visual that shows the research in action? <%= IntroVisualYNS %>
+Specific feedback or suggestions: <%= IntroFeedback %>
+
+Materials and methods:
+Does the author clearly explain their experimental approach, steps, procedure and equipment used? <%= MaterialsExplainYNS %>
+Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis? <%= MaterialsAnalysisYNS %>
+Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design? <%= MaterialsIllustrationsYNS %>
+Specific feedback or suggestions: <%= MaterialsFeedback %>
+
+Results:
+Does the author state whether the research or experimental procedure actually worked or not? <%= ResultsWorkYNS %>
+Does the author describe any unexpected changes or important surprises? <%= ResultsSurprisesYNS %>
+Does the author provide a quantitative analysis of the data? <%= ResultsAnalysisYNS %>
+Is there at least one chart or figure that clearly summarizes the data results? <%= ResultsChartYNS %>
+Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation? <%= ResultsChartSpeaksYNS %>
+Specific feedback or suggestions: <%= ResultsFeedback %>
+
+Discussion/Conclusions:
+Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research? <%= DiscussionSignificanceYNS %>
+Does the author discuss any problems with their approach? <%= DiscussionProblemsYNS %>
+Are you convinced that the outcome of the research is interesting and/or important? <%= DiscussionConvinceYNS %>
+Do you find the research to be of significance for the ecology of New York Harbor or New York City? <%= DiscussionEcologyYNS %>
+Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field? <%= DiscussionStepsYNS %>
+Specific feedback or suggestions: <%= DiscussionFeedback %>
+
+Literature cited:
+Does the author list at least three sources or references in APA format? <%= CitedThreeYNS %>
+Specific feedback or suggestions: <%= CitedFeedback %>
+
+Acknowledgments:
+Specific feedback or suggestions: <%= AcknowledgmentsFeedback %>
+
+<% if(Other !== '') { %>
+Other:
+Specific feedback or suggestions: <%= OtherFeedback %>
+<% } %>
+
+General Feedback:
+<%= GeneralFeedback %>
+
+You can visit your poster at <%= LinkPoster %> to edit and republish at any time.
+
+Thanks!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
