@@ -840,7 +840,6 @@ exports.list = function(req, res) {
   }
 
   if (req.query.byCreator) {
-    console.log('byCreator', req.query.byCreator);
     if (req.query.byCreator === 'true') {
       and.push({ 'user': req.user });
     } else {

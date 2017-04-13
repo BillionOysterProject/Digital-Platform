@@ -9,7 +9,7 @@
   ResearchesService.$inject = ['$resource'];
 
   function ResearchesService($resource) {
-    return $resource('api/researches/:researchId', {
+    return $resource('api/research/:researchId', {
       researchId: '@_id'
     }, {
       query: {

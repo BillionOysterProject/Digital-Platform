@@ -27,7 +27,7 @@
                   <div class="row">
                     <div class="col-sm-6">
                       <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
                         <img class="img-thumbnail" alt="Layout 1" src="modules/core/client/img/icons/poster-layout1.png" />
                         Layout 1
                       </label>
@@ -45,27 +45,27 @@
                 <div class="col-md-8">
                   <div class="form-group" show-errors>
                     <label for="color" class="control-label required">Color *</label><br/>
-                    
+
                     <!--TODO: Can each of the below icons, when clicked, fill in the colorpicker input with their hex number? (Trying to give standard color options, but also let the user select their own color using the input). If this is too complicated, we can do something else. -->
                     <div class="row">
                       <div class="col-sm-12">
-                        <a><i class="fa fa-circle fa-3x red"></i></a>&nbsp;&nbsp;<!-- #ea6158 -->
-                        <a><i class="fa fa-circle fa-3x crimson"></i></a>&nbsp;&nbsp;<!-- #943234 -->
-                        <a><i class="fa fa-circle fa-3x lightyellow"></i></a>&nbsp;&nbsp;<!-- #fbe8ac -->
-                        <a><i class="fa fa-circle fa-3x lightblue"></i></a>&nbsp;&nbsp;<!-- #a0d0cb -->
-                        <a><i class="fa fa-circle fa-3x blue"></i></a>&nbsp;&nbsp;<!-- #426ca9 -->
-                        <a><i class="fa fa-circle fa-3x darkblue"></i></a><!-- #2c3c56 -->
+                        <a ng-click="vm.changeColor('#ea6158')"><i class="fa fa-circle fa-3x red"></i></a>&nbsp;&nbsp;<!-- #ea6158 -->
+                        <a ng-click="vm.changeColor('#943234')"><i class="fa fa-circle fa-3x crimson"></i></a>&nbsp;&nbsp;<!-- #943234 -->
+                        <a ng-click="vm.changeColor('#fbe8ac')"><i class="fa fa-circle fa-3x lightyellow"></i></a>&nbsp;&nbsp;<!-- #fbe8ac -->
+                        <a ng-click="vm.changeColor('#a0d0cb')"><i class="fa fa-circle fa-3x lightblue"></i></a>&nbsp;&nbsp;<!-- #a0d0cb -->
+                        <a ng-click="vm.changeColor('#426ca9')"><i class="fa fa-circle fa-3x blue"></i></a>&nbsp;&nbsp;<!-- #426ca9 -->
+                        <a ng-click="vm.changeColor('#2c3c56')"><i class="fa fa-circle fa-3x darkblue"></i></a><!-- #2c3c56 -->
                       </div>
                     </div><br/>
-                    
+
                     <input colorpicker colorpicker-size="200" type="text" class="form-control"
-                    placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
+                    placeholder="#426ca9" name="color" id="color" ng-model="vm.research.color" required />
                     <span class="help-block">Choose from one of the colors above, or click the input field to pick any color. This color will be used to customize the layout you chose.</span>
-                    <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
+                    <div ng-messages="vm.form.researchForm.color.$error" role="alert">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
                   </div>
-                  
+
                   <div class="form-group" show-errors>
                     <label for="font" class="control-label required">Font *</label>
                     <select class="form-control" required>
@@ -73,24 +73,24 @@
                       <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
                     </select>
                     <span class="help-block">This font will be used for headings/etc throughout your poster.</span>
-                    <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
+                    <div ng-messages="vm.form.researchForm.color.$error" role="alert">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="col-md-4">
                   <div class="form-group" show-errors>
                     <label for="image" class="control-label">Header Image</label>
-                    <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
-                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
+                    <single-image-drop-zone uploader="vm.headerImageUploader" image-url="vm.headerImageURL"
+                    image-alt="Header Image" id="research-header-image"></single-image-drop-zone>
                   </div>
                 </div>
-              
+
               </div>
             </div>
           </div>
-          
+
           <!-- Title -->
           <div class="panel panel-default">
             <div class="panel-body">
@@ -101,10 +101,10 @@
                 </div>
                 <div class="col-md-8">
                   <div class="form-group" show-errors>
-                    <label for="researchTitle" class="control-label required">Title *</label>
-                    <input class="form-control" name="researchTitle" id="researchTitle" ng-model="vm.researchForm.title"
+                    <label for="title" class="control-label required">Title *</label>
+                    <input class="form-control" name="title" id="title" ng-model="vm.research.title"
                     required/>
-                    <div ng-messages="vm.form.researchForm.researchFormTitle.$error" role="alert">
+                    <div ng-messages="vm.form.researchForm.title.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Title is required.</p>
                     </div>
                   </div>
@@ -202,7 +202,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Other -->
           <div class="panel panel-default">
             <div class="panel-body">
@@ -211,20 +211,20 @@
                   <h3 class="blue">Other</h3>
                   <p>This is an optional section for you to add anything else that is not included above.</p>
                   <div class="form-group" show-errors>
-                    <label for="researchOtherTitle" class="control-label required">Heading</label>
-                    <input class="form-control" name="researchOtherTitle" id="researchOtherTitle" ng-model="vm.researchForm.otherTitle"
+                    <label for="otherTitle" class="control-label required">Heading</label>
+                    <input class="form-control" name="otherTitle" id="otherTitle" ng-model="vm.research.other.title"
                     required/>
-                    <div ng-messages="vm.form.researchForm.researchOtherTitle.$error" role="alert">
+                    <div ng-messages="vm.form.researchForm.otherTitle.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Title is required.</p>
                     </div>
                   </div>
                 </div>
-                <wysiwyg-editor outer-column="col-md-8" name="cited" in-title=""
+                <wysiwyg-editor outer-column="col-md-8" name="otherCited" in-title=""
                 ng-model="vm.research.cited" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
-          
+
           <div class="alert alert-danger" ng-show="(vm.form.researchForm.$dirty || vm.form.researchForm.$submitted) &&
           vm.form.researchForm.$invalid && (vm.form.researchForm.$error || vm.error.length > 0)">
             <h4>Sorry, you can't submit just yet!</h4>
@@ -239,7 +239,7 @@
             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
-            <a class="btn btn-default">Save draft and preview</a>
+            <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.researchForm.$valid">
               {{vm.research._id ? 'Update published poster' : 'Publish poster'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 
@@ -254,9 +254,7 @@
 
 
 <!--MODALS (wire up! I just copied from lessons and updated text)-->
-  <saved-research-modal></saved-research-modal>
+  <saved-research-modal team-lead="{{}}"></saved-research-modal>
   <updated-research-modal></updated-research-modal>
-  <delete-research-modal callback-function="vm.confirmDeleteResearch"></delete-research-modal>
+  <delete-research-modal close-function="vm.confirmDeleteResearch"></delete-research-modal>
   <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
-  
-  

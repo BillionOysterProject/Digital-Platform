@@ -15,28 +15,46 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/researches',
+      resources: '/api/research',
       permissions: '*'
     }, {
-      resources: '/api/researches/:researchId',
+      resources: '/api/research/:researchId/upload-header-image',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId',
       permissions: '*'
     }]
   }, {
-    roles: ['user'],
+    roles: ['team lead'],
     allows: [{
-      resources: '/api/researches',
-      permissions: ['get', 'post']
+      resources: '/api/research',
+      permissions: '*'
     }, {
-      resources: '/api/researches/:researchId',
-      permissions: ['get']
+      resources: '/api/research/:researchId/upload-header-image',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId',
+      permissions: '*'
     }]
   }, {
-    roles: ['guest'],
+    roles: ['team member'],
     allows: [{
-      resources: '/api/researches',
+      resources: '/api/research',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/upload-header-image',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['user', 'team lead pending', 'team member pending', 'partner'],
+    allows: [{
+      resources: '/api/research',
       permissions: ['get']
     }, {
-      resources: '/api/researches/:researchId',
+      resources: '/api/research/:researchId',
       permissions: ['get']
     }]
   }]);

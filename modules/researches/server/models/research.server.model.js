@@ -10,16 +10,69 @@ var mongoose = require('mongoose'),
  * Research Schema
  */
 var ResearchSchema = new Schema({
-  name: {
+  headerImage: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
+  },
+  color: {
+    type: String,
+    trim: true,
+    required: 'Please fill Research color'
+  },
+  font: {
+    type: String,
+    trim: true,
+    required: 'Please fill Research font'
+  },
+  title: {
     type: String,
     default: '',
-    required: 'Please fill Research name',
+    required: 'Please fill Research title',
     trim: true
+  },
+  intro: {
+    type: String,
+  },
+  methods: {
+    type: String
+  },
+  results: {
+    type: String
+  },
+  discussion: {
+    type: String
+  },
+  cited: {
+    type: String
+  },
+  acknowledgments: {
+    type: String
+  },
+  other: {
+    title: {
+      type: String,
+      default: '',
+      trim: true
+    },
+    cited: {
+      type: String
+    }
+  },
+  status: {
+    type: String,
+    enum: ['draft', 'pending', 'published', 'returned'],
+    default: 'draft',
+    required: true
   },
   created: {
     type: Date,
     default: Date.now
   },
+  updated: [{
+    type: Date
+  }],
   user: {
     type: Schema.ObjectId,
     ref: 'User'

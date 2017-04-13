@@ -6,24 +6,81 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Research = mongoose.model('Research'),
+  Team = mongoose.model('Team'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+  UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
+  email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  _ = require('lodash'),
+  fs = require('fs'),
+  archiver = require('archiver'),
+  request = require('request'),
+  path = require('path'),
+  multer = require('multer'),
+  moment = require('moment'),
+  config = require(path.resolve('./config/config'));
+
+var validateResearch = function(research, successCallback, errorCallback) {
+  var errorMessages = [];
+
+  if (errorMessages.length > 0) {
+    errorCallback(errorMessages);
+  } else {
+    successCallback(research);
+  }
+};
+
+var checkRole = function(user, role) {
+  var index = _.findIndex(user.roles, function(r) {
+    return r === role;
+  });
+  return (index > -1) ? true : false;
+};
+
+var getTeam = function(user) {
+
+};
 
 /**
  * Create a Research
  */
 exports.create = function(req, res) {
-  var research = new Research(req.body);
-  research.user = req.user;
+  validateResearch(req.body,
+  function(researchJSON) {
+    var research = new Research(researchJSON);
 
-  research.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(research);
+    research.user = req.user;
+    research.status = researchJSON.status || 'pending';
+
+    var pattern = /^data:image\/[a-z]*;base64,/i;
+    if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
+      research.headerImage.path = '';
     }
+
+    research.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        // var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        //
+        // email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+        //   TeamLeadName: req.user.displayName,
+        //   LessonName: lesson.title,
+        //   LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
+        // }, function(info) {
+        //   res.json(lesson);
+        // }, function(errorMessage) {
+        //   res.json(lesson);
+        // });
+
+        res.jsonp(research);
+      }
+    });
+  }, function(errorMessages) {
+    return res.status(400).send({
+      message: errorMessages
+    });
   });
 };
 
@@ -41,39 +98,334 @@ exports.read = function(req, res) {
   res.jsonp(research);
 };
 
+// /**
+//  * Publish a lesson
+//  */
+// exports.publish = function(req, res) {
+//   var lesson = req.lesson;
+//
+//   if (lesson) {
+//     lesson.status = 'published';
+//     lesson.returnedNotes = '';
+//
+//     lesson.save(function(err) {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         });
+//       } else {
+//         var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+//
+//         email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+//         'lesson_approved', {
+//           FirstName: lesson.user.firstName,
+//           LessonName: lesson.title,
+//           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+//           LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+//         },
+//         function(response) {
+//           res.json(lesson);
+//         }, function(errorMessage) {
+//           return res.status(400).send({
+//             message: errorMessage
+//           });
+//         });
+//       }
+//     });
+//   } else {
+//     return res.status(400).send({
+//       message: 'Cannot update the lesson'
+//     });
+//   }
+// };
+//
+// /**
+//  * Return a lesson
+//  */
+// exports.return = function(req, res) {
+//   var lesson = req.lesson;
+//
+//   if (lesson) {
+//     lesson.status = 'returned';
+//     lesson.returnedNotes = req.body.returnedNotes;
+//
+//     lesson.save(function(err) {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         });
+//       } else {
+//         var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+//
+//         email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+//         'lesson_returned', {
+//           FirstName: lesson.user.firstName,
+//           LessonName: lesson.title,
+//           LessonReturnedNote: lesson.returnedNotes,
+//           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+//           LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+//         },
+//         function(response) {
+//           res.json(lesson);
+//         }, function(errorMessage) {
+//           return res.status(400).send({
+//             message: errorMessage
+//           });
+//         });
+//       }
+//     });
+//   } else {
+//     return res.status(400).send({
+//       message: 'Cannot update the lesson'
+//     });
+//   }
+// };
+
 /**
  * Update a Research
  */
 exports.update = function(req, res) {
   var research = req.research;
+  validateResearch(req.body,
+  function(researchJSON) {
+    if (research) {
+      research = _.extend(research, researchJSON);
+      research.status = researchJSON.status || 'pending';
 
-  research = _.extend(research, req.body);
+      var pattern = /^data:image\/[a-z]*;base64,/i;
+      if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
+        research.headerImage.path = '';
+      }
 
-  research.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+      if (!research.updated) research.updated = [];
+      research.updated.push(Date.now());
+
+      research.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(research);
+        }
       });
     } else {
-      res.jsonp(research);
+      return res.status(400).send({
+        message: 'Cannot update the research'
+      });
     }
+  }, function(errorMessages) {
+    return res.status(400).send({
+      message: errorMessages
+    });
   });
 };
+
+// /**
+//  * Feedback for a lesson
+//  */
+// exports.lessonFeedback = function(req, res) {
+//   var lesson = req.lesson;
+//   var user = req.user;
+//
+//   var lessonFeedback = new LessonFeedback(req.body.feedback);
+//   lessonFeedback.user = user;
+//   lessonFeedback.lesson = lesson;
+//
+//   lessonFeedback.save(function(err) {
+//     if (err) {
+//       return res.status(400).send({
+//         message: errorHandler.getErrorMessage(err)
+//       });
+//     } else {
+//       var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+//       var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+//       var toList = [lesson.user.email, config.mailer.admin];
+//
+//       email.sendEmailTemplate(toList, subject,
+//       'lesson_feedback', {
+//         FirstName: req.body.lesson.user.firstName,
+//         LessonFeedbackName: req.user.displayName,
+//         LessonName: req.body.lesson.title,
+//         LessonFeedbackNote: req.body.message,
+//         LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
+//         LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
+//         LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
+//         LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
+//         HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
+//         WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
+//         WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
+//         LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
+//         LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
+//         MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
+//         Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
+//         Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
+//         InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
+//         Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
+//         Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
+//         LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+//         LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+//       },
+//       function(response) {
+//         res.json(lessonFeedback);
+//       }, function(errorMessage) {
+//         return res.status(400).send({
+//           message: errorMessage
+//         });
+//       });
+//     }
+//   });
+// };
+//
+// exports.listFeedbackForLesson = function(req, res) {
+//   var lesson = req.lesson;
+//
+//   LessonFeedback.find({ lesson: lesson }).populate('lesson', 'title')
+//   .populate('user', 'displayName email team profileImageURL').exec(function(err, feedback) {
+//     if (err) {
+//       return res.status(400).send({
+//         message: errorHandler.getErrorMessage(err)
+//       });
+//     } else {
+//       res.json(feedback);
+//     }
+//   });
+// };
+//
+// exports.feedbackForLesson = function(req, res) {
+//   var lesson = req.lesson;
+//
+//   LessonFeedback.aggregate([
+//     { $match: { lesson: lesson._id } },
+//     { $group: {
+//       _id: null,
+//       lessonEffective: { $avg: '$lessonEffective' },
+//       lessonAlignWithCurriculumn: { $avg: '$lessonAlignWithCurriculumn' },
+//       lessonSupportScientificPractice: { $avg: '$lessonSupportScientificPractice' },
+//       lessonPreparesStudents: { $avg: '$lessonPreparesStudents' }
+//     } }
+//   ], function(err, result) {
+//     if (err) {
+//       res.status(400).send({
+//         message: 'Could not retrieve averages'
+//       });
+//     } else {
+//       LessonFeedback.find({ lesson: lesson._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
+//         if (err1) {
+//           res.status(400).send({
+//             message: 'Could not retrieve feedback'
+//           });
+//         } else {
+//           //Get array of feedback
+//           var howLessonTaughtFeedback = [];
+//           var whyLessonTaughtNowFeedback = [];
+//           var willTeachLessonAgainFeedback = [];
+//           var lessonSummaryFeedback = [];
+//           var lessonObjectivesFeedback = [];
+//           var materialsResourcesFeedback = [];
+//           var preparationFeedback = [];
+//           var backgroundFeedback = [];
+//           var instructionPlanFeedback = [];
+//           var standardsFeedback = [];
+//           var otherFeedback = [];
+//           for (var i = 0; i < feedbackList.length; i++) {
+//             var feedback = feedbackList[i];
+//             var author = feedback.user.displayName;
+//             var date = moment(feedback.created).format('MMMM D, YYYY');
+//
+//             if (feedback.howLessonTaught) howLessonTaughtFeedback.push({ author: author, date: date,
+//               feedback: feedback.howLessonTaught });
+//             if (feedback.whyLessonTaughtNow) whyLessonTaughtNowFeedback.push({ author: author, date: date,
+//               feedback: feedback.whyLessonTaughtNow });
+//             if (feedback.willTeachLessonAgain) willTeachLessonAgainFeedback.push({ author: author, date: date,
+//               feedback: feedback.willTeachLessonAgain });
+//             if (feedback.additionalFeedback.lessonSummary) lessonSummaryFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.lessonSummary });
+//             if (feedback.additionalFeedback.lessonObjectives) lessonObjectivesFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.lessonObjectives });
+//             if (feedback.additionalFeedback.materialsResources) materialsResourcesFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.materialsResources });
+//             if (feedback.additionalFeedback.preparation) preparationFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.preparation });
+//             if (feedback.additionalFeedback.background) backgroundFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.background });
+//             if (feedback.additionalFeedback.instructionPlan) instructionPlanFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.instructionPlan });
+//             if (feedback.additionalFeedback.standards) standardsFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.standards });
+//             if (feedback.additionalFeedback.other) otherFeedback.push({ author: author, date: date,
+//               feedback: feedback.additionalFeedback.other });
+//           }
+//
+//           res.json({
+//             lessonEffectiveAvg: (result[0]) ? result[0].lessonEffective : 0,
+//             lessonAlignWithCurriculumnAvg: (result[0]) ? result[0].lessonAlignWithCurriculumn : 0,
+//             lessonSupportScientificPracticeAvg: (result[0]) ? result[0].lessonSupportScientificPractice : 0,
+//             lessonPreparesStudentsAvg: (result[0]) ? result[0].lessonPreparesStudents : 0,
+//             howLessonTaughtFeedback: howLessonTaughtFeedback,
+//             whyLessonTaughtNowFeedback: whyLessonTaughtNowFeedback,
+//             willTeachLessonAgainFeedback: willTeachLessonAgainFeedback,
+//             lessonSummaryFeedback: lessonSummaryFeedback,
+//             lessonObjectivesFeedback: lessonObjectivesFeedback,
+//             materialsResourcesFeedback: materialsResourcesFeedback,
+//             preparationFeedback: preparationFeedback,
+//             backgroundFeedback: backgroundFeedback,
+//             instructionPlanFeedback: instructionPlanFeedback,
+//             standardsFeedback: standardsFeedback,
+//             otherFeedback: otherFeedback
+//           });
+//         }
+//       });
+//     }
+//   });
+// };
 
 /**
  * Delete an Research
  */
+var deleteInternal = function(research, successCallback, errorCallback) {
+  var filesToDelete = [];
+  if (research) {
+    if (research.headerImage && research.headerImage.path) {
+      filesToDelete.push(research.headerImage.path);
+    }
+
+    if (filesToDelete.length > 0) {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.deleteRemote(filesToDelete,
+      function() {
+        research.remove(function(err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(research);
+          }
+        });
+      }, function(err) {
+        errorCallback(err);
+      });
+    } else {
+      research.remove(function(err) {
+        if (err) {
+          errorCallback(errorHandler.getErrorMessage(err));
+        } else {
+          successCallback(research);
+        }
+      });
+    }
+  }
+};
+
 exports.delete = function(req, res) {
   var research = req.research;
 
-  research.remove(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(research);
-    }
+  deleteInternal(research,
+  function(research) {
+    res.json(research);
+  }, function(err) {
+    return res.status(400).send({
+      message: err
+    });
   });
 };
 
@@ -81,7 +433,82 @@ exports.delete = function(req, res) {
  * List of Researches
  */
 exports.list = function(req, res) {
-  Research.find().sort('-created').populate('user', 'displayName').exec(function(err, researches) {
+  var query;
+  var and = [];
+
+  if (req.query.byCreator) {
+    if (req.query.byCreator === 'true') {
+      and.push({ 'user': req.user });
+    } else {
+      and.push({ 'user': req.query.byCreator });
+    }
+  }
+
+  if (req.query.byTeammates) {
+    and.push({ 'user': { $in: req.query.byTeammates } });
+  }
+
+  if (req.query.status) {
+    if (req.query.status === 'pending') {
+      and.push({ 'status': 'pending' });
+    } else if (req.query.status === 'published') {
+      and.push({ 'status': 'published' });
+    }
+  }
+
+  var or = [];
+  var searchRe;
+  if (req.query.searchString) {
+    try {
+      searchRe = new RegExp(req.query.searchString, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Search string is invalid'
+      });
+    }
+
+    or.push({ 'title': searchRe });
+    or.push({ 'intro': searchRe });
+    or.push({ 'methods': searchRe });
+    or.push({ 'results': searchRe });
+    or.push({ 'discussion': searchRe });
+    or.push({ 'cited': searchRe });
+    or.push({ 'methods': searchRe });
+    or.push({ 'other.title': searchRe });
+    or.push({ 'other.cited': searchRe });
+
+    and.push({ $or: or });
+  }
+
+  if (and.length === 1) {
+    query = Research.find(and[0]);
+  } else if (and.length > 0) {
+    query = Research.find({ $and: and });
+  } else {
+    query = Research.find();
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'owner') {
+      query.sort({ 'user.lastName': 1 });
+    } else if (req.query.sort === 'title') {
+      query.sort({ 'title': 1 });
+    }
+  } else {
+    query.sort('-create');
+  }
+
+  if (req.query.limit) {
+    var limit = Number(req.query.limit);
+    if (req.query.page) {
+      var page = Number(req.query.page);
+      query.skip(limit*(page-1)).limit(limit);
+    } else {
+      query.limit(limit);
+    }
+  }
+
+  query.populate('user', 'displayName firstName lastName email profileImageURL').exec(function(err, researches) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -91,6 +518,59 @@ exports.list = function(req, res) {
     }
   });
 };
+
+/**
+ * Upload image
+ */
+var uploadFileSuccess = function(research, res) {
+  research.save(function(saveError) {
+    if (saveError) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(saveError)
+      });
+    } else {
+      res.json(research);
+    }
+  });
+};
+
+var uploadFileError = function(research, errorMessage, res) {
+  return res.status(400).send({
+    message: errorMessage
+  });
+};
+
+exports.uploadHeaderImage = function (req, res) {
+  var research = req.research;
+  var upload = multer(config.uploads.researchHeaderImageUpload).single('newHeaderImage');
+  var headerImageUploadFileFilter = require(path.resolve('./config/lib/multer')).imageUploadFileFilter;
+
+  // Filtering to upload only images
+  upload.fileFilter = headerImageUploadFileFilter;
+
+  if (research) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.researchHeaderImageUpload,
+    function(fileInfo) {
+      research.headerImage = fileInfo;
+
+      uploadFileSuccess(research, res);
+    }, function(errorMessage) {
+      uploadFileError(research, errorMessage, res);
+    });
+  } else {
+    res.status(400).send({
+      message: 'Research does not exist'
+    });
+  }
+};
+
+// exports.downloadFile = function(req, res){
+//   res.setHeader('Content-disposition', 'attachment;');
+//   res.setHeader('content-type', req.query.mimetype);
+//
+//   request(req.query.path).pipe(res);
+// };
 
 /**
  * Research middleware
@@ -103,7 +583,7 @@ exports.researchByID = function(req, res, next, id) {
     });
   }
 
-  Research.findById(id).populate('user', 'displayName').exec(function (err, research) {
+  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {
