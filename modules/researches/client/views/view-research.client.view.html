@@ -87,7 +87,7 @@
 
       <form name="form.researchFeedbackForm" ng-submit="send(form.researchFeedbackForm.$valid)" novalidate>
         <div class="modal-body">
-
+          <hr/>
           <h4 class="blue">Title</h4>
           <div class="row">
             <div class="col-md-6">
@@ -156,41 +156,194 @@
             </div>
           </div>
           <hr/>
-                
-                
-                
-                
-                
-                <div class="form-group">
-                    <label for="researchMethods" class="control-label required">Poster Methods *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchMethods" score="feedback.researchMethods" number="5"></raty-fa></h4>
-                </div>
-                <div class="form-group">
-                    <label for="researchResults" class="control-label required">Poster Results *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.researchResults" number="5"></raty-fa></h4>
-                </div>
-                <div class="form-group">
-                    <label for="researchDiscussion" class="control-label required">Poster Discussion *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.researchDiscussion" number="5"></raty-fa></h4>
-                </div>
-                <div class="form-group">
-                    <label for="researchConclusion" class="control-label required">Poster Conclusion *</label><br>
-                    <h4 class="blue"><raty-fa id="starResearchConclusion" score="feedback.researchConclusion" number="5"></raty-fa></h4>
-                </div>
-                
-                
+          <h4 class="blue">Materials and methods</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchMaterials" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchMaterials" score="feedback.researchMaterials" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author clearly explain their experimental approach, steps, procedure and equipment used?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Results</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchResults" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.researchResults" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author state whether the research or experimental procedure actually worked or not?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author describe any unexpected changes or important surprises?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author provide a quantitative analysis of the data?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Is there at least one chart or figure that clearly summarizes the data results?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Discussion/Conclusions</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchDiscussion" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.researchDiscussion" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author discuss any problems with their approach?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Are you convinced that the outcome of the research is interesting and/or important?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Do you find the research to be of significance for the ecology of New York Harbor or New York City?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Literature cited</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchCited" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchCited" score="feedback.researchCited" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author list at least three sources or references in APA format?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Acknowledgments</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchAcknowledgments" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchAcknowledgments" score="feedback.researchAcknowledgments" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Other <!--TODO: replace "Other" with the heading title the author gave to the "other" field. If they didn't fill in this section, don't show this h4 or the div below --></h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchAcknowledgments" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchAcknowledgments" score="feedback.researchAcknowledgments" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
           <div class="row">
           	<div class="col-sm-12">
-                <hr/><h4 class="blue">General comments</h4>
+                <h4 class="blue">General comments</h4>
               	<div class="form-group">
                   <textarea class="form-control"></textarea>
                 </div>
             </div>
           </div>
-          
-          
-          
-          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
