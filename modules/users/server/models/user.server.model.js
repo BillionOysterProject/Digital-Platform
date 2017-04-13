@@ -125,6 +125,9 @@ var UserSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'SchoolOrg'
   },
+  researchInterests: {
+    type: String
+  },
   pending: {
     type: Boolean,
     default: false

@@ -85,6 +85,17 @@
       searchString: ''
     };
 
+    TeamLeads.query({
+      roles: 'team lead',
+      organization: vm.filter.organization
+    }, function(data) {
+      vm.teamLeads = [{
+        displayName: 'All'
+      }];
+      vm.teamLeads = vm.teamLeads.concat(data);
+      vm.filter.teamLeadObj = vm.teamLeads[0];
+    });
+
     ExpeditionsService.query({
       byOwner: byOwner,
       byMember: byMember,
@@ -205,6 +216,13 @@
       return (index > -1) ? vm.organizations[index].name : '';
     };
 
+    vm.getTeamLead = function(id) {
+      var index = lodash.findIndex(vm.teamLeads, function(l) {
+        return l._id === id;
+      });
+      return (index > -1) ? vm.teamLeads[index] : id;
+    };
+
     RestorationStationsService.query({
     }, function(data) {
       vm.stations = [{
@@ -220,19 +238,7 @@
       vm.findPublishedExpeditions();
     };
 
-    TeamLeads.query({
-      roles: 'team lead',
-      organization: vm.filter.organization
-    }, function(data) {
-      vm.teamLeads = [{
-        displayName: 'All'
-      }];
-      vm.teamLeads = vm.teamLeads.concat(data);
-      vm.filter.teamLeadObj = vm.teamLeads[0];
-    });
-
     vm.teamLeadSelected = function() {
-      console.log('selected');
       vm.filter.teamLead = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj._id : '';
       vm.filter.teamLeadName = (vm.filter.teamLeadObj && vm.filter.teamLeadObj._id) ? vm.filter.teamLeadObj.displayName : '';
 

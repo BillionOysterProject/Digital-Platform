@@ -56,7 +56,7 @@
                   <p class="help-block error-text" ng-message="required">Description is required.</p>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" ng-show="isAdmin || organization._id">
                 <label for="image" class="control-label">Organization Photo</label>
                 <single-image-drop-zone uploader="orgPhotoUploader" image-url="orgPhotoUrl"
                 image-alt="Organization Photo" id="org-image-dropzone"></single-image-drop-zone>

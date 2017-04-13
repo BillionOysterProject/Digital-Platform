@@ -5,9 +5,15 @@
     .module('profiles')
     .controller('SchoolOrganizationFormController', SchoolOrganizationFormController);
 
-  SchoolOrganizationFormController.$inject = ['$scope', '$http', 'FileUploader', 'SchoolOrganizationsService'];
+  SchoolOrganizationFormController.$inject = ['$scope', '$http', 'FileUploader', 'SchoolOrganizationsService',
+    'Authentication', 'ExpeditionViewHelper'];
 
-  function SchoolOrganizationFormController($scope, $http, FileUploader, SchoolOrganizationsService) {
+  function SchoolOrganizationFormController($scope, $http, FileUploader, SchoolOrganizationsService,
+    Authentication, ExpeditionViewHelper) {
+    var checkRole = ExpeditionViewHelper.checkRole;
+    $scope.isAdmin = checkRole('admin');
+    $scope.isGuest = checkRole('guest');
+
     $scope.orgPhotoUrl = ($scope.organization && $scope.organization.photo && $scope.organization.photo.path) ?
       $scope.organization.photo.path : '';
 
@@ -49,11 +55,15 @@
         }
       }
 
-      if ($scope.organization._id) {
-        $scope.organization.$update(successCallback, errorCallback);
+      if (!Authentication.user || $scope.isGuest) {
+        $scope.closeFunction($scope.organization);
       } else {
-        //TODO: $save doesn't exist if the user is an admin and has no org
-        $scope.organization.$save(successCallback, errorCallback);
+        if ($scope.organization._id) {
+          $scope.organization.$update(successCallback, errorCallback);
+        } else {
+          //TODO: $save doesn't exist if the user is an admin and has no org
+          $scope.organization.$save(successCallback, errorCallback);
+        }
       }
 
       function successCallback(res) {

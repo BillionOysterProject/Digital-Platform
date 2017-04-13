@@ -21,6 +21,7 @@
           });
           scope.$watch('team', function(newValue, oldValue) {
             scope.team = newValue;
+            scope.editTeam = angular.copy(scope.team);
             scope.teamPhotoURL = (scope.team && scope.team.photo && scope.team.photo.path) ? scope.team.photo.path : '';
           });
         }

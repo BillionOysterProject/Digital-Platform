@@ -17,7 +17,8 @@
         controller: 'RestorationStationsController',
         replace: true,
         link: function(scope, element, attrs) {
-          element.ready(function(){
+          scope.$on('orsForm', function() {
+            scope.$broadcast('displayMapSelectContent');
             scope.form.restorationStationForm.$setSubmitted(false);
             scope.form.restorationStationForm.$setPristine();
           });

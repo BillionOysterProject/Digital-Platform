@@ -5,11 +5,11 @@
     .module('restoration-stations')
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
-  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', 'lodash',
+  RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', '$http', 'lodash',
   'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
   'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
-  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, lodash,
+  function RestorationStationsDashboardController($scope, $rootScope, $state, $location, $http, lodash,
     moment, Authentication, TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,
     ExpeditionActivitiesService, TeamRequestsService, SchoolOrganizationsService, ExpeditionViewHelper) {
     var vm = this;
@@ -45,12 +45,6 @@
     vm.isTeamMemberPending = checkRole('team member pending') || checkRole('partner');
     vm.isAdmin = checkRole('admin');
 
-    SchoolOrganizationsService.query({
-      sort: 'name'
-    }, function(data) {
-      vm.organizations = data;
-    });
-
     var findSchoolOrgRestorationStations = function() {
       RestorationStationsService.query({
       }, function(data) {
@@ -80,29 +74,35 @@
     };
 
     var getORSes = function(teamLeadId) {
-      if (vm.isAdmin) {
-        RestorationStationsService.query({
-        }, function(data) {
-          vm.stations = data;
-        });
-      } else if (vm.isTeamLead || vm.isTeamLeadPending) {
-        RestorationStationsService.query({
-          schoolOrgId: vm.user.schoolOrg
-        }, function(data) {
-          vm.stations = data;
-        });
-      } else {
-        if (teamLeadId) {
-          RestorationStationsService.query({
-            teamLeadId: teamLeadId
-          }, function(data) {
-            vm.stations = data;
-          });
-        }
-      }
+      if (!teamLeadId) teamLeadId = (vm.user && vm.user._id) ? vm.user._id : vm.user;
+      RestorationStationsService.query({
+        teamLeadId: teamLeadId
+      }, function(data) {
+        vm.stations = data;
+      });
       findSchoolOrgRestorationStations();
     };
-    getORSes();
+
+    if (vm.user && vm.user.username && !vm.user.schoolOrg) {
+      $http.get('/api/users/username', {
+        params: { username: vm.user.username }
+      })
+      .success(function(data, status, headers, config) {
+        vm.user = data;
+        getORSes();
+      })
+      .error(function(data, status, headers, config) {
+        console.log('err', data);
+      });
+    } else {
+      getORSes();
+    }
+
+    SchoolOrganizationsService.query({
+      sort: 'name'
+    }, function(data) {
+      vm.organizations = data;
+    });
 
     vm.getOrganizationName = function(id) {
       var index = lodash.findIndex(vm.organizations, function(o) {
@@ -126,6 +126,7 @@
 
         if ($rootScope.teamId) {
           vm.filter.teamId = ($rootScope.teamId) ? $rootScope.teamId : '';
+          $rootScope.teamId = null;
 
           var teamIndex = lodash.findIndex(vm.teams, function(t) {
             return t._id === vm.filter.teamId;
@@ -164,7 +165,7 @@
       var byMember = ((vm.isTeamMember || vm.isTeamMemberPending) && !vm.isTeamLead) ? true : '';
 
       if (byMember) {
-        getORSes(vm.filter.teamId);
+        getORSes();
       }
 
       ExpeditionsService.query({
@@ -216,7 +217,7 @@
       }
     };
 
-    vm.openFormRestorationStation = function(station) {
+    var openRestorationStationPopup = function(station, initial) {
       vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
       if (vm.station.latitude && vm.station.longitude) {
         vm.stationMapPoints = [{
@@ -230,44 +231,37 @@
         }];
       }
 
-      angular.element('#modal-station-register').modal('show');
-    };
-
-    vm.openViewRestorationStation = function(station) {
-      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
-      if (vm.station.latitude && vm.station.longitude) {
-        vm.stationMapPoints = [{
-          lat: vm.station.latitude,
-          lng: vm.station.longitude,
-          icon: {
-            icon: 'glyphicon-map-marker',
-            prefix: 'glyphicon',
-            markerColor: 'blue'
-          },
-        }];
-      }
-
+      vm.initial = initial || 'orsView';
       angular.element('#modal-station').modal('show');
     };
 
+    vm.openFormRestorationStation = function(station) {
+      openRestorationStationPopup(station, 'orsForm');
+    };
+
+    vm.openViewRestorationStation = function(station) {
+      openRestorationStationPopup(station, 'orsView');
+    };
+
     vm.saveFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     vm.removeFormRestorationStation = function() {
-      getORSes(vm.filter.teamId);
+      getORSes();
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
-    vm.cancelFormRestorationStation = function() {
+    vm.closeFormRestorationStation = function(refresh) {
+      if (refresh) getORSes();
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     vm.placeSelected = function (place) {
@@ -302,8 +296,9 @@
       vm.openViewRestorationStation(station);
     };
 
-    vm.openViewUserModal = function(user) {
+    vm.openViewUserModal = function(user, initial) {
       vm.userToView = user;
+      vm.initialUser = initial || 'userView';
       angular.element('#modal-profile-user').modal('show');
     };
 

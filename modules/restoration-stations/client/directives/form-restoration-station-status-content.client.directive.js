@@ -22,7 +22,7 @@
             scope.stationStatusPhotoURL = '';
           });
 
-          scope.$on('stationStatus', function(event, data) {
+          scope.$on('orsStatus', function(event, data) {
             scope.status = {
               status: scope.station.status
             };

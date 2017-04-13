@@ -3,10 +3,12 @@
 
   angular
     .module('forms')
-    .directive('mapSelect', ['$timeout', 'L',function($timeout, L) {
+    .directive('mapSelectContent', ['$timeout', 'L',function($timeout, L) {
+      var mapUniqueId = 1;
+
       return {
         restrict: 'AE',
-        templateUrl: 'modules/forms/client/views/map-select.client.view.html',
+        templateUrl: 'modules/forms/client/views/map-select-content.client.view.html',
         scope: {
           canClickMapToAddMarker:'=',
           canGeocode:'=',
@@ -15,14 +17,15 @@
           longitude: '=',
           address: '=',
           modalId:'@',
-          showMarker:'=',
-          dismissFunction: '='
+          showMarker:'='
         },
         link: function(scope, elem, attrs) {
-          elem.bind('shown.bs.modal', function(){
-            scope.$broadcast('displayMapSelectContent');
+          scope.mapUniqueId = 'forms-map-select-map' + mapUniqueId++;
+          scope.$on('displayMapSelectContent', function() {
+            scope.activate();
           });
         },
+        controller: 'MapSelectController',
         replace: true
       };
     }]);

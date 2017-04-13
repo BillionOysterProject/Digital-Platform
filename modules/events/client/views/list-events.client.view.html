@@ -77,6 +77,7 @@
                     </div>
                     <div class="panel-body text-center">
                         <h4><b ng-bind="calendarEvent.title"></b></h4>
+                        <!-- vm.getEventDayOfWeekShort(date.startDateTime) or vm.getEventDayOfWeekLong(date.startDateTime)-->
                         <h3 class="blue" ng-repeat="date in calendarEvent.dates">{{vm.getEventDate(date.startDateTime)}} <small>
                           {{vm.getEventYear(date.startDateTime)}}<br/>
                           {{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</small></h3>
