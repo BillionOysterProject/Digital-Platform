@@ -14,11 +14,12 @@
     SchoolOrganizationsService, RestorationStationsService, EventsService, Authentication, LessonsService) {
     $scope.currentUser = Authentication.user;
     $scope.checkRole = ExpeditionViewHelper.checkRole;
+    $scope.loaded = false;
     $scope.loading = false;
 
     $scope.loadUser = function() {
       if ($scope.user && $scope.user._id) {
-        if (!$scope.user.roles) {
+        if (!$scope.user.roles || !$scope.user.profileImageURL) {
           $http.get('/api/users/username', {
             params: { username: $scope.user.username }
           })
@@ -32,6 +33,9 @@
         } else {
           $scope.loadUserData();
         }
+      } else {
+        $scope.loading = false;
+        $scope.loaded = true;
       }
     };
 
@@ -50,6 +54,7 @@
         $scope.canSeePending = $scope.pendingVisible();
         $scope.roles = $scope.findUserRoles();
         $scope.loaded = true;
+        $scope.loading = false;
       });
 
       $scope.findExpeditions();
@@ -92,7 +97,7 @@
           byMember: byMember,
           userId: $scope.user._id
         }, function(data) {
-          $scope.teams = data;
+          $scope.userTeams = data;
           $scope.isCurrentUserUsersTeamLead = $scope.checkCurrentUserTeamLead();
           if (callback) callback();
         });
@@ -147,11 +152,11 @@
     };
 
     $scope.checkCurrentUserTeamLead = function() {
-      if ($scope.teams && $scope.currentUser && $scope.isUserTeamMember) {
+      if ($scope.userTeams && $scope.currentUser && $scope.isUserTeamMember) {
         var allTeamLeads = [];
-        for (var i = 0; i < $scope.teams.length; i++) {
-          allTeamLeads.push($scope.teams[i].teamLead);
-          allTeamLeads = allTeamLeads.concat($scope.teams[i].teamLeads);
+        for (var i = 0; i < $scope.userTeams.length; i++) {
+          allTeamLeads.push($scope.userTeams[i].teamLead);
+          allTeamLeads = allTeamLeads.concat($scope.userTeams[i].teamLeads);
         }
 
         var leadIndex = lodash.findIndex(allTeamLeads, function(l) {

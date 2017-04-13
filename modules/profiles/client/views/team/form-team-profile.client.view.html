@@ -11,18 +11,18 @@
                 <div class="modal-body">
                     <div class="form-group" show-errors>
                         <label for="name" class="control-label required">Team Name *</label>
-                        <input class="form-control" id="name" name="name" ng-model="team.name" required />
+                        <input class="form-control" id="name" name="name" ng-model="editTeam.name" required />
                         <div ng-messages="form.teamProfileForm.name.$error" role="alert">
                             <p class="help-block error-text" ng-message="required">Team name is required.</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="description" class="control-label">Team Description</label>
-                        <textarea class="form-control" id="description" name="description" ng-model="team.description"></textarea>
+                        <textarea class="form-control" id="description" name="description" ng-model="editTeam.description"></textarea>
                     </div>
                     <div class="form-group" ng-show="isAdmin && !team._id">
                         <label for="schoolOrg" ng-class="{'required': isAdmin}">Team Organization *</label>
-                        <input type="text" ng-model="team.schoolOrg" placeholder="Team Organization" id="schoolOrg" name="schoolOrg"
+                        <input type="text" ng-model="editTeam.schoolOrg" placeholder="Team Organization" id="schoolOrg" name="schoolOrg"
                         uib-typeahead="org as org.name for org in organizations | filter:{name:$viewValue}"
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         ng-disabled="!isAdmin" ng-required="isAdmin">

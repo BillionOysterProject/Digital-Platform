@@ -336,7 +336,7 @@
     };
 
     vm.openDeleteTeam = function(team) {
-      vm.teamToOpen = team;
+      vm.teamToOpen = new TeamsService(team);
       angular.element('#modal-team-delete').modal('show');
     };
 

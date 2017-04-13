@@ -11,15 +11,15 @@
             <div class="col-md-6" ng-repeat="request in orgRequests">
               <div class="panel panel-default">
                 <div class="panel-body text-center">
-                  <h4>{{request.name}}</h4>
-                  <p class="text-muted small">{{request.streetAddress}}, {{request.city}} {{request.state}}<br/>Requested by {{request.creator.displayName}}</p>
-                  <p class="small">{{request.description}}</p>
+                  <h4>{{request.schoolOrg.name}}</h4>
+                  <p class="text-muted small">{{request.schoolOrg.streetAddress}}, {{request.schoolOrg.city}} {{request.schoolOrg.state}}<br/>Requested by {{request.displayName}}</p>
+                  <p class="small">{{request.schoolOrg.description}}</p>
                   <div class="btn-group">
                     <a class="btn btn-success btn-sm" title="Accept" ng-model="request.approve"
-                      ng-change="approve(request)" uib-btn-radio="true">
+                      ng-change="approve(request.schoolOrg)" uib-btn-radio="true">
                       <i class="glyphicon glyphicon-ok"></i></a>
                     <a class="btn btn-danger btn-sm" title="Reject" ng-model="request.approve"
-                      ng-change="deny(request)" uib-btn-radio="false">
+                      ng-change="deny(request.schoolOrg)" uib-btn-radio="false">
                       <i class="glyphicon glyphicon-remove"></i></a>
                   </div>
                   <div ng-show="request.error && (request.approve !== true && request.approve !== false)" class="text-danger">

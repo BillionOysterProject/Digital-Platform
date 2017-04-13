@@ -10,7 +10,7 @@
           templateUrl: 'modules/restoration-stations/client/views/view-restoration-station-popup.client.view.html',
           scope: {
             station: '=',
-            cancelFunction: '=',
+            closeFunction: '=',
             initial: '=?'
           },
           replace: true,
@@ -32,18 +32,33 @@
 
             //when modal is hidden, if we were supposed to change state then do it
             element.bind('hidden.bs.modal', function() {
+              scope.shown = false;
               if(toGoState) {
                 $state.go(toGoState.name, toGoParams);
               }
+              scope.content = null;
             });
 
             element.bind('show.bs.modal', function() {
-              scope.content = scope.initial || 'orsView';
+              scope.shown = true;
+              if (!scope.content || (scope.initial && (scope.content !== scope.initial))) {
+                scope.content = scope.initial || 'orsView';
+                scope.$broadcast(scope.content);
+              }
             });
 
-            element.bind('shown.bs.modal', function() {
-              if (scope.content === 'orsView') {
-                scope.$broadcast('viewOrsShow');
+            // element.bind('shown.bs.modal', function() {
+            //   if (scope.content === 'orsView') {
+            //     scope.$broadcast('viewOrsShow');
+            //   } else if (scope.content === 'orsForm') {
+            //     scope.$broadcast('orsForm');
+            //   }
+            // });
+
+            scope.$watch('initial', function(newValue, oldValue) {
+              if (scope.shown && (!scope.content || (scope.initial && (scope.content !== scope.initial)))) {
+                scope.content = scope.initial = newValue || 'orsView';
+                scope.$broadcast(scope.content);
               }
             });
 
@@ -57,33 +72,49 @@
             $scope.user = {};
 
             $scope.openFormRestorationStation = function() {
+              $scope.$broadcast('orsForm');
               $scope.content = 'orsForm';
             };
 
             $scope.closeFormRestorationStation = function() {
-              $scope.$broadcast('viewOrsShow');
-              $scope.content = 'orsView';
+              if ($scope.initial === 'orsForm') {
+                $scope.closeFunction();
+              } else {
+                $scope.$broadcast('orsView');
+                $scope.content = 'orsView';
+              }
             };
 
             $scope.openRestorationStationStatus = function() {
-              $scope.$broadcast('stationStatus');
               $scope.content = 'orsStatus';
+              $scope.$broadcast('orsStatus');
             };
 
-            $scope.closeRestorationStationStatus = function() {
-              $scope.$broadcast('viewOrsShow');
-              $scope.content = 'orsView';
+            $scope.closeRestorationStationStatus = function(refresh) {
+              if ($scope.initial === 'orsStatus') {
+                $scope.closeFunction(refresh);
+              } else {
+                $scope.$broadcast('orsView');
+                $scope.content = 'orsView';
+              }
             };
 
             $scope.openTeamLeadView = function(teamLead) {
               $scope.user = teamLead;
-              $scope.content = 'teamLeadView';
+              $scope.content = 'userView';
+              $scope.$broadcast('userCrudShown', {
+                view: $scope.content
+              });
             };
 
-            $scope.closeTeamLeadView = function() {
-              $scope.user = {};
-              $scope.$broadcast('viewOrsShow');
-              $scope.content = 'orsView';
+            $scope.closeTeamLeadView = function(refresh) {
+              if ($scope.initial === 'userView') {
+                $scope.closeFunction();
+              } else {
+                $scope.user = {};
+                $scope.$broadcast('orsView');
+                $scope.content = 'orsView';
+              }
             };
           }]
         };

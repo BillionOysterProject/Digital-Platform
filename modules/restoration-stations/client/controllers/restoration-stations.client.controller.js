@@ -14,6 +14,8 @@
   PropertyOwnersService, ExpeditionViewHelper, RestorationStationsService) {
     var checkRole = ExpeditionViewHelper.checkRole;
     $scope.isAdmin = checkRole('admin');
+    $scope.loaded = false;
+    $scope.loading = false;
 
     $scope.canGeocode = true;
     $scope.canMoveMarker = true;
@@ -95,6 +97,8 @@
           })
           .success(function(response) {
             $scope.station.expeditions = response;
+            $scope.loading = false;
+            $scope.loaded = true;
 
             // $http.get('/api/restoration-stations/' + $scope.station._id + '/measurement-chart-data')
             // .success(function(response) {
@@ -112,6 +116,9 @@
             console.log('err', err);
           });
         });
+      } else {
+        $scope.loading = false;
+        $scope.loaded = true;
       }
     };
 

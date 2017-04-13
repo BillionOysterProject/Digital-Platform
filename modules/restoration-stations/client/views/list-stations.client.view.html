@@ -1,47 +1,91 @@
 <section class="content">
-    <img src="https://www.google.com/maps/vt/data=RfCSdfNZ0LFPrHSm0ublXdzhdrDFhtmHhN1u-gM,GtRFbUGq-rIYPEWbVKQMOsWLP66nINEZFiKRAQWuJqJ_oX27lup9OV0aoCavFivvdIhdlMyZ-2Z1VF-NmId_ceQgGI_Q8-ybngfTChgFAQ" width="100%" />
+    <section class="container-fluid">
+        <leaflet-map map-controls="vm.mapControls" map-click-event="vm.mapClick"
+        marker-drag-end-event="vm.markerDragEnd" can-move-marker="vm.canMoveMarker"
+        show-marker="vm.showMarker" can-click-map-to-add-marker="vm.canClickMapToAddMarker"
+        add-points="vm.mapPoints"></leaflet-map>
+    </section>
+</section>
+<section class="content shaded">
+    <section class="container">
+      <h2>Oyster Restoration Stations <a class="btn btn-primary pull-right" ng-click="vm.openFormRestorationStation()">Register a station</a></h2>
+      <hr/>
+      <div class="row">
+        <div class="col-sm-12">
+            <a class="btn btn-link pull-left" ng-click="vm.resetFilters()">Reset filters</a>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString"
+                ng-change="vm.searchChange()" placeholder="Search by name, body of water, borough, county, shoreline type, or notes">
+            </div>
+            <br/>
+        </div>
+      </div>
+      <div class="row">
+          <div class="form-group col-md-4 col-sm-6">
+              <label for="">Status</label>
+              <select class="form-control" name="status" id="status" ng-model="vm.filter.statusString"
+              ng-options="status as status for status in vm.statuses" ng-change="vm.statusSelected()"></select>
+          </div>
+
+          <div class="form-group col-md-4 col-sm-6">
+              <label for="">Organization</label>
+              <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+              uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="vm.organizationSelected()">
+          </div>
+
+          <div class="form-group col-md-4 col-sm-6">
+              <label for="">Team Lead</label>
+              <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+              uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
+              class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
+              typeahead-on-select="vm.teamLeadSelected()">
+          </div>
+      </div>
+    </section>
 </section>
 <section class="content">
     <section class="container">
-        <a class="btn btn-primary pull-right">Register a station</a>
-        <h2>Stations</h2>
-        <table class="table">
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td><h4>NY Harbor 19</h4><br/><span class="text-muted">East River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
-                <td>Eastern Shore 525<br/><span class="text-muted">West River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-default">Lost</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td>Baltimore Harbor 64<br/><span class="text-muted">North River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td><h4>NY Harbor 19</h4><br/><span class="text-muted">East River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker red"></i></h3></td>
-                <td>Eastern Shore 525<br/><span class="text-muted">West River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-default">Lost</span></td>
-            </tr>
-            <tr>
-                <td><h3><i class="glyphicon glyphicon-map-marker green"></i></h3></td>
-                <td>Baltimore Harbor 64<br/><span class="text-muted">North River</span></td>
-                <td>40.704039, -74.0035392</td>
-                <td class="text-right"><span class="label label-success">Active</span></td>
-            </tr>
+      <div class="row">
+        <table class="table table-hover col-sm-12">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
+                    <td><h3>
+                      <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
+                      <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
+                    </h3></td>
+                    <td><h4>{{station.name}}</h4></td>
+                    <td>{{station.bodyOfWater}}<br/><span class="text-muted small">{{station.latitude}}, {{station.longitude}}</span></td>
+                    <td>
+                      <img ng-src="{{station.teamLead.profileImageURL}}" alt="{{station.teamLead.displayName}}" class="pull-left header-profile-image" />
+                      {{station.teamLead.displayName}}<br/>
+                      <small>{{station.schoolOrg.name}}</small>
+                    </td>
+                    <td class="text-right">
+                      <span class="label label-success" ng-show="station.status === 'Active'">{{station.status}}</span>
+                      <span class="label label-danger" ng-show="station.status !== 'Active'">{{station.status}}</span>
+                    </td>
+                </tr>
+            </tbody>
         </table>
+        <div class="alert" ng-show="vm.stations.length <= 0">
+            Sorry, no oyster restoration stations found for that search term or filter. Try <a ng-click="vm.resetFilters()">widening your search.</a>
+        </div>
+      </div>
     </section>
 </section>
+
+<view-restoration-station-popup station="vm.station" initial="vm.initial" close-function="vm.closeFormRestorationStation"></view-restoration-station-popup>

@@ -100,5 +100,7 @@
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
     vm.getOpenSpots = EventHelper.getOpenSpots;
     vm.getDaysRemainingDeadline = EventHelper.getDaysRemainingDeadline;
+    vm.getEventDayOfWeekLong = EventHelper.getEventDayOfWeekLong;
+    vm.getEventDayOfWeekShort = EventHelper.getEventDayOfWeekShort;
   }
 }());

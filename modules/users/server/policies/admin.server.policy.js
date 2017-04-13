@@ -96,6 +96,12 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
+    roles: ['team member', 'team member pending', 'team lead pending'],
+    allows: [{
+      resources: '/api/users/leaders/:userId',
+      permissions: ['put']
+    }]
+  }, {
     roles: ['user'],
     allows: [{
       resources: '/api/users/teamleads',

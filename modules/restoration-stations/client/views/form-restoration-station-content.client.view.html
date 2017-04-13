@@ -47,23 +47,10 @@
         <hr/>
         <div class="row">
             <div class="col-sm-6">
-                <google-geocode ng-if="canGeocode" place-selected="placeSelected"></google-geocode>
-                <leaflet-map map-controls="mapControls" can-click-map-to-add-marker="canClickMapToAddMarker"
-                map-click-event="mapClick" marker-drag-end-event="markerDragEnd"
-                can-move-marker="canMoveMarker" show-marker="showMarker" add-points="mapPoints"></leaflet-map>
-                <br/>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label class="required" for="latitude">Latitude *</label>
-                        <input type="text" class="form-control" placeholder="39.290385"
-                        ng-model="station.latitude" name="latitude" id="latitude" readonly required/>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label class="required" for="longitude">Longitude *</label>
-                        <input type="text" class="form-control" placeholder="-76.612189"
-                        ng-model="station.longitude" name="longitude" id="longitude" readonly required/>
-                    </div>
-                </div>
+              <map-select-content modal-id="modal-ors-map" latitude="station.latitude"
+              longitude="station.longitude" address="station.addressString"
+              can-geocode="true" can-click-map-to-add-marker="true"
+              can-move-marker="true" show-marker="true"></map-select-content>
             </div>
             <div class="col-sm-6">
 
@@ -107,7 +94,7 @@
                       <input class="form-control" type="text" ng-model="station.propertyOwner.email"/>
                     </div>
                 </div>
-                
+
                 <hr/>
                 <div class="form-group">
                     <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>

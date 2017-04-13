@@ -17,6 +17,8 @@ var path = require('path'),
   SessileOrganism = mongoose.model('SessileOrganism'),
   RestorationStation = mongoose.model('RestorationStation'),
   Team = mongoose.model('Team'),
+  User = mongoose.model('User'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   siteConditionHandler = require(path.resolve('./modules/protocol-site-conditions/server/controllers/protocol-site-conditions.server.controller')),
@@ -682,8 +684,7 @@ exports.list = function (req, res) {
         }
       }
 
-      query.populate('team', 'name schoolOrg')
-      .populate('team.schoolOrg', 'name')
+      query.populate('team', 'name schoolOrg teamLeads')
       .populate('teamLead', 'displayName username profileImageURL')
       .populate('station', 'name')
       .populate('teamLists.siteCondition', 'displayName username profileImageURL')
@@ -702,7 +703,18 @@ exports.list = function (req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(expeditions);
+          async.forEach(expeditions, function(item,callback) {
+            SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
+              if (err) throw err;
+
+              User.populate(item.team, { 'path': 'teamLeads' }, function(err,output) {
+                if (err) throw err; 
+                callback();
+              });
+            });
+          }, function(err) {
+            res.json(expeditions);
+          });
         }
       });
     }
@@ -763,6 +775,7 @@ exports.expeditionByID = function (req, res, next, id) {
 
   var query = Expedition.findById(id).populate('team').populate('teamLead', 'email displayName firstName profileImageURL')
   .populate('team.schoolOrg', 'name')
+  .populate('team.teamLeads', 'email distplayName firstName profileImageURL')
   .populate('station')
   .populate('teamLists.siteCondition', 'email displayName username profileImageURL')
   .populate('teamLists.oysterMeasurement', 'email displayName username profileImageURL')

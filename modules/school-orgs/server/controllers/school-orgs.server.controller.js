@@ -17,10 +17,14 @@ var path = require('path'),
   config = require(path.resolve('./config/config'));
 
 var isAdmin = function(user) {
-  var index = _.findIndex(user.roles, function(r) {
-    return r === 'admin';
-  });
-  return (index > -1) ? true : false;
+  if (user && user.roles) {
+    var index = _.findIndex(user.roles, function(r) {
+      return r === 'admin';
+    });
+    return (index > -1) ? true : false;
+  } else {
+    return false;
+  }
 };
 
 /**
@@ -29,7 +33,7 @@ var isAdmin = function(user) {
 exports.create = function(req, res) {
   var schoolOrg = new SchoolOrg(req.body);
   schoolOrg.creator = req.user;
-  schoolOrg.pending = false;
+  schoolOrg.pending = (isAdmin(req.user)) ? false : true;
 
   schoolOrg.save(function (err) {
     if (err) {

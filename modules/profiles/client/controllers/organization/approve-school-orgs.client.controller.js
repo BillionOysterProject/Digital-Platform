@@ -8,7 +8,6 @@
   SchoolOrganizationsApprovalController.$inject = ['$scope', '$http'];
 
   function SchoolOrganizationsApprovalController($scope, $http) {
-
     $scope.reset = function() {
       for (var i = 0; i < $scope.orgRequests.length; i++) {
         delete $scope.orgRequests.approve;
