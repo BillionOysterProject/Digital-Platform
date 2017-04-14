@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/upload-header-image',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/download',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -31,6 +34,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/upload-header-image',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/download',
       permissions: '*'
     }, {
       resources: '/api/research/:researchId',
@@ -45,6 +51,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/upload-header-image',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/download',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -53,6 +62,18 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/research',
       permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/download',
+      permissions: ['post']
+    }, {
+      resources: '/api/research/:researchId',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['guest'],
+    allows: [{
+      resources: '/api/research/:researchId/download',
+      permissions: ['post']
     }, {
       resources: '/api/research/:researchId',
       permissions: ['get']

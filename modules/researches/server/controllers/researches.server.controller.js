@@ -17,6 +17,7 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   moment = require('moment'),
+  wkhtmltopdf = require('node-wkhtmltopdf'),
   config = require(path.resolve('./config/config'));
 
 var validateResearch = function(research, successCallback, errorCallback) {
@@ -520,7 +521,33 @@ exports.list = function(req, res) {
 };
 
 /**
- * Upload image
+ * Downloads
+ */
+exports.download = function(req, res) {
+  var options = [
+    '--quiet',
+    //'--cookie connect.sid ' + connectSid,
+    '--margin-bottom 1',
+    '--margin-left 1',
+    '--margin-right 1',
+    '--margin-top 1'
+  ];
+
+  var input = 'http://platform.bop.nyc';
+
+  var doc = wkhtmltopdf(options, input);
+
+  doc.stdout.pipe(res);
+
+  res.writeHead(200, {
+    'Content-Type': 'application/pdf',
+    'Access-Control-Allow-Origin': '*',
+    'Content-Disposition': 'inline; filename=order.pdf'
+  });
+};
+
+/**
+ * Uploads
  */
 var uploadFileSuccess = function(research, res) {
   research.save(function(saveError) {
