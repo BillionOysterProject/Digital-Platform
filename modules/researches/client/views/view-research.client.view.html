@@ -1,64 +1,33 @@
-<!--<section>
-  <div class="page-header">
-    <h1 ng-bind="vm.research.name"></h1>
-  </div>
-  <div class="pull-right"
-       ng-show="vm.research.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       ui-sref="researches.edit({ researchId: vm.research._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.research.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.research.user"
-            ng-bind="vm.research.user.displayName"></span>
-      <span ng-if="!vm.research.user">Deleted User</span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="vm.research.content"></p>
-</section>
--->
-
-
 <section>
     <section class="content shaded content-unpadded content-fixed">
         <section class="container-fluid">
             <div class="row">
                 <nav class="navbar">
-                    <a href="#" ui-sref="expeditions.view({ expeditionId: vm.expedition._id })"><h6 class="navbar-text blue">Poster Title</h6></a>
-                    <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> username</h6>
-                    <h6 class="navbar-text">September 2, 2016</h6>
+                    <h6 class="navbar-text blue">{{vm.research.title}}</h6>
+                    <a ng-click="vm.openViewUserModal()"><h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6></a>
+                    <h6 class="navbar-text">{{vm.getDate(vm.research.created)}}</h6>
                     <div class="pull-right">
-                        <!--only show published status if author:
-                        <h6 class="navbar-text" ng-show="">Published</h6>
-                        -->
-                        <h6 class="navbar-text" ng-show="">Draft</h6>
-                                                
-                        <!--only show if author:-->
-                        <a class="btn btn-primary" ui-sref="researches.create">Edit</a><!--If currently published, this should read "Unpublish and edit"-->
-                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-view-feedback">View Feedback</a>
-                        <!--/author-->
-                        
-                        <!--only show if not author: (Others can give feedback on Drafts! Does not need to be published)-->
-                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-feedback">Give Feedback</a>
-                        <!--/not author-->
-                        
+                        <h6 class="navbar-text" ng-show="vm.research.isCurrentUserOwner && vm.research.status === 'published'">Published</h6>
+
+                        <h6 class="navbar-text" ng-show="vm.research.status === 'draft'">Draft</h6>
+
+                        <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
+                          ng-show="vm.research.isCurrentUserOwner && vm.research._id">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
+                        <!-- <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-view-feedback"
+                          ng-show="vm.research.isCurrentUserOwner">View Feedback</a> TODO -->
+
+                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-feedback"
+                          ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a><!-- TODO: (Others can give feedback on Drafts! Does not need to be published) -->
+
                         <!--show only if published -- share the public viewable link (no login required) on social:
-                        This public view should be a stripped down version of the site 
+                        This public view should be a stripped down version of the site
                         -- just the logo, sign up/in buttons, poster title/user/date, and poster
                         (let me know if I should create a separate view for this?)
                         -->
-                        <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
+                        <!-- <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>
-                        <a class="btn btn-default">Download PDF</a>
+                        <a class="btn btn-default">Download PDF</a> -->
                     </div>
                 </nav>
             </div>
@@ -68,8 +37,38 @@
         <section class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <img class="img-responsive col-sm-12" src="modules/core/client/img/icons/poster-layout2.png" />
+                    <img class="img-responsive col-sm-12" ng-src="{{vm.headerImageURL}}" ng-show="vm.headerImageURL"/>
                 </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.intro | sanitize"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.methods | sanitize"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.results | sanitize"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.discussion | sanitize"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.cited | sanitize"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-bind-html="vm.research.acknowledgments | sanitize"></div>
+              </div>
             </div>
         </section>
     </div>
@@ -693,3 +692,5 @@
     </div>
   </div>
 </div>
+
+<view-user-modal user="vm.research.user" close-function="vm.closeViewUserModal"></view-user-modal>

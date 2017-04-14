@@ -29,12 +29,6 @@
         controller: 'ResearchesController',
         controllerAs: 'vm'
       })
-      .state('researches.view', {
-        url: '/view',
-        templateUrl: 'modules/researches/client/views/view-research.client.view.html',
-        controller: 'ResearchesController',
-        controllerAs: 'vm'
-      })
       .state('researches.create', {
         url: '/create',
         templateUrl: 'modules/researches/client/views/form-research.client.view.html',
@@ -47,6 +41,15 @@
           roles: ['user', 'admin'],
           pageTitle: 'Researches Create'
         }
+      })
+      .state('researches.view', {
+        url: '/:researchId',
+        templateUrl: 'modules/researches/client/views/view-research.client.view.html',
+        controller: 'ResearchesController',
+        controllerAs: 'vm',
+        resolve: {
+          researchResolve: getResearch
+        },
       })
       .state('researches.edit', {
         url: '/:researchId/edit',

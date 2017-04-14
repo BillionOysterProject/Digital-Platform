@@ -59,23 +59,17 @@
                     </div><br/>
 
                     <input colorpicker colorpicker-size="200" type="text" class="form-control"
-<<<<<<< HEAD
                     placeholder="#426ca9" name="color" id="color" ng-model="vm.research.color" required />
-                    <span class="help-block">Choose from one of the colors above, or click the input field to pick any color. This color will be used to customize the layout you chose.</span>
-                    <div ng-messages="vm.form.researchForm.color.$error" role="alert">
-=======
-                    placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
                     <span class="help-block">Choose from one of the colors above, or click the input field to pick any color. This color will be used throughout the poster design.</span>
-                    <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
->>>>>>> c836088cc095f1196bb4adfb92d44a45aae6c92d
+                    <div ng-messages="vm.form.researchForm.color.$error" role="alert">
                         <p class="help-block error-text" ng-message="required">Color is required.</p>
                     </div>
                   </div>
 
                   <div class="form-group" show-errors>
                     <label for="font" class="control-label required">Font *</label>
-                    <select class="form-control" required>
-                      <option></option>
+                    <select class="form-control" ng-model="vm.research.font" required>
+                      <option value="Serif">Serif</option>
                       <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
                     </select>
                     <span class="help-block">This font will be used for headings/etc throughout your poster.</span>
@@ -217,16 +211,15 @@
                   <h3 class="blue">Other</h3>
                   <p>This is an optional section for you to add anything else that is not included above.</p>
                   <div class="form-group" show-errors>
-                    <label for="otherTitle" class="control-label required">Heading</label>
-                    <input class="form-control" name="otherTitle" id="otherTitle" ng-model="vm.research.other.title"
-                    required/>
+                    <label for="otherTitle" class="control-label">Heading</label>
+                    <input class="form-control" name="otherTitle" id="otherTitle" ng-model="vm.research.other.title"/>
                     <div ng-messages="vm.form.researchForm.otherTitle.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Title is required.</p>
                     </div>
                   </div>
                 </div>
                 <wysiwyg-editor outer-column="col-md-8" name="otherCited" in-title=""
-                ng-model="vm.research.cited" label-class="control-label"></wysiwyg-editor>
+                ng-model="vm.research.other.cited" label-class="control-label"></wysiwyg-editor>
               </div>
             </div>
           </div>
@@ -247,7 +240,7 @@
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
             <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.researchForm.$valid">
-              {{vm.research._id ? 'Update published poster' : 'Publish poster'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.research._id ? 'Update published poster' : 'Publish poster'}}</button>
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
           </div>
@@ -259,7 +252,7 @@
 
 
 
-<!--MODALS (wire up! I just copied from lessons and updated text)-->
+<!--MODALS-->
   <saved-research-modal team-lead="{{}}"></saved-research-modal>
   <updated-research-modal></updated-research-modal>
   <delete-research-modal close-function="vm.confirmDeleteResearch"></delete-research-modal>

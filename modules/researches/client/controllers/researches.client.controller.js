@@ -6,10 +6,14 @@
     .module('researches')
     .controller('ResearchesController', ResearchesController);
 
-  ResearchesController.$inject = ['$scope', '$state', '$timeout', 'researchResolve', 'lodash', 'Authentication', 'FileUploader'];
+  ResearchesController.$inject = ['$scope', '$state', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
+  'ExpeditionViewHelper'];
 
-  function ResearchesController ($scope, $state, $timeout, research, lodash, Authentication, FileUploader) {
+  function ResearchesController ($scope, $state, $timeout, research, lodash, moment, Authentication, FileUploader,
+  ExpeditionViewHelper) {
     var vm = this;
+    var toGoState = null;
+    var toGoParams = null;
 
     vm.research = research;
     vm.authentication = Authentication;
@@ -18,6 +22,10 @@
     vm.form = {};
     vm.saving = false;
     vm.valid = (vm.research.status === 'published') ? true : false;
+    vm.getDate = ExpeditionViewHelper.getDate;
+
+    //TODO remove font
+    vm.research.font = 'Serif';
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
 
@@ -43,11 +51,11 @@
     };
 
     vm.confirmDeleteResearch = function(shouldDelete) {
-      var element = angular.element('#modal-delete-poster');
-      element.bind('hidden.bs.modal', function() {
+      var modal = angular.element('#modal-delete-poster');
+      modal.bind('hidden.bs.modal', function() {
         if (shouldDelete) vm.research.$remove($state.go('researches.list'));
       });
-      element.modal('hide');
+      modal.modal('hide');
     };
 
     vm.cancel = function() {
@@ -86,16 +94,15 @@
 
       vm.finishedSaving = 0;
       $timeout(function() {
-        var element;
         if (status === 'draft') {
           $scope.savingStatus = 'Saving Poster Draft';
-          element = angular.element('#modal-save-draft-progress-bar');
+          vm.modal = angular.element('#modal-save-draft-progress-bar');
         } else if (vm.research._id) {
-          element = angular.element('#modal-updated-poster');
+          vm.modal = angular.element('#modal-updated-poster');
         } else {
-          element = angular.element('#modal-saved-poster');
+          vm.modal = angular.element('#modal-saved-poster');
         }
-        element.modal('show');
+        vm.modal.modal('show');
 
         // TODO: move create/update logic to service
         if (vm.research._id) {
@@ -111,12 +118,22 @@
         vm.finishedSaving = 50;
         $timeout(function () {
           uploadHeaderImage(researchId, function() {
-            element.modal('hide');
-            vm.saving = false;
-            vm.finishedSaving = 100;
-            $state.go('researches.view', {
-              researchId: res._id
-            });
+            if (vm.modal) {
+              vm.modal.bind('hidden.bs.modal', function() {
+                console.log('close modal', vm.modal);
+                vm.saving = false;
+                vm.finishedSaving = 100;
+                $state.go('researches.view', {
+                  researchId: res._id
+                });
+              });
+
+              vm.modal.modal('hide');
+            } else {
+              $state.go('researches.view', {
+                researchId: res._id
+              });
+            }
           });
         }, 500);
       }
@@ -133,6 +150,14 @@
 
     vm.saveDraftAndPreview = function(isValid) {
       vm.save(isValid, 'draft');
+    };
+
+    vm.openViewUserModal = function() {
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    vm.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
     };
   }
 }());
