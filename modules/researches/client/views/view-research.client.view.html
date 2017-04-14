@@ -35,41 +35,7 @@
     </section>
     <div class="content">
         <section class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <img class="img-responsive col-sm-12" ng-src="{{vm.headerImageURL}}" ng-show="vm.headerImageURL"/>
-                </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.intro | sanitize"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.methods | sanitize"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.results | sanitize"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.discussion | sanitize"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.cited | sanitize"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div ng-bind-html="vm.research.acknowledgments | sanitize"></div>
-              </div>
-            </div>
+            <view-research-poster research="vm.research" header-image="vm.headerImageURL"></view-research-poster>
         </section>
     </div>
 </section>

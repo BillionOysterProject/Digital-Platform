@@ -51,15 +51,15 @@
           researchResolve: getResearch
         },
       })
-      // .state('researches.download', {
-      //   url: '/:researchId/download',
-      //   templateUrl: 'modules/researches/client/views/download-research.client.view.html',
-      //   controller: 'ResearchesController',
-      //   controllerAs: 'vm',
-      //   resolve: {
-      //     researchResolve: getResearch
-      //   },
-      // })
+      .state('researches.download', {
+        url: '/:researchId/download',
+        templateUrl: 'modules/researches/client/views/download-research.client.view.html',
+        controller: 'ResearchesController',
+        controllerAs: 'vm',
+        resolve: {
+          researchResolve: getResearch
+        },
+      })
       .state('researches.edit', {
         url: '/:researchId/edit',
         templateUrl: 'modules/researches/client/views/form-research.client.view.html',

@@ -530,10 +530,16 @@ exports.download = function(req, res) {
     '--margin-bottom 1',
     '--margin-left 1',
     '--margin-right 1',
-    '--margin-top 1'
+    '--margin-top 1',
+    '--orientation Portrait',
+    '--page-size A4',
+    '--disable-smart-shrinking',
+    '--zoom 1.5'
   ];
 
-  var input = 'http://platform.bop.nyc';
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
 
   var doc = wkhtmltopdf(options, input);
 

@@ -28,6 +28,10 @@ exports.renderIndex = function (req, res) {
   });
 };
 
+exports.renderFullPage = function (req, res) {
+  res.render('modules/core/server/views/full-page', req.dataToRender);
+};
+
 /**
  * Render the server error page
  */

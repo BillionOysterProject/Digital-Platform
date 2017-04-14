@@ -1,0 +1,37 @@
+<div>
+  <div class="row">
+      <div class="col-sm-12">
+          <img class="img-responsive col-sm-12" ng-src="{{headerImage}}" ng-show="headerImage"/>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.intro | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.methods | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.results | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.discussion | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.cited | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-bind-html="research.acknowledgments | sanitize"></div>
+    </div>
+  </div>
+</div>
