@@ -19,6 +19,7 @@
         headersValid: false,
         filename: ''
       };
+      console.log('reset', $scope.csv);
 
       $scope.bulkFileUploaded = false;
 
@@ -33,6 +34,7 @@
         teamId: null,
         newTeamName: null
       };
+      angular.element('#import-team-members-upload').trigger('change');
     };
 
     $scope.reset();
@@ -52,7 +54,7 @@
         });
     };
 
-    $scope.validate = function() {      
+    $scope.validate = function() {
       var csvMembers = $scope.csv.result;
       if(!csvMembers) {
         $scope.headersInvalid = true;
