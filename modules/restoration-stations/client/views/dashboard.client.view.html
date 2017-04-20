@@ -169,7 +169,7 @@
                                 </td>
                                 <td class="text-right">
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
-                                  <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+                                  <span class="label label-danger" ng-show="station.status !== 'Active'">{{station.status}}</span>
                                 </td>
                               </tr>
                         </table>

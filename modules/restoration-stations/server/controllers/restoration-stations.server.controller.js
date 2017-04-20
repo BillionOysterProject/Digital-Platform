@@ -581,7 +581,7 @@ exports.stationByID = function (req, res, next, id) {
 
   RestorationStation.findById(id).populate('teamLead', 'displayName firstName lastName email schoolOrg roles username profileImageURL teamLeadType')
   .populate('siteCoordinator', 'displayName email schoolOrg roles')
-  .populate('propertyOwner', 'displayName email schoolOrg roles')
+  .populate('propertyOwner', 'name email')
   .populate('schoolOrg', 'name city state').exec(function (err, station) {
     if (err) {
       return next(err);

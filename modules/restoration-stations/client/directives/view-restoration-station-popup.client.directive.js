@@ -41,6 +41,7 @@
 
             element.bind('show.bs.modal', function() {
               scope.shown = true;
+              scope.refresh = false;
               if (!scope.content || (scope.initial && (scope.content !== scope.initial))) {
                 scope.content = scope.initial || 'orsView';
                 scope.$broadcast(scope.content);
@@ -71,18 +72,31 @@
             $scope.content = 'orsView';
             $scope.user = {};
 
+            $scope.openViewRestorationStation = function() {
+              $scope.$broadcast('orsView');
+              $scope.content = 'orsView';
+            };
+
+            $scope.closeViewRestorationStation = function() {
+              $scope.closeFunction($scope.refresh);
+            };
+
             $scope.openFormRestorationStation = function() {
               $scope.$broadcast('orsForm');
               $scope.content = 'orsForm';
             };
 
-            $scope.closeFormRestorationStation = function() {
+            $scope.closeFormRestorationStation = function(refresh) {
               if ($scope.initial === 'orsForm') {
-                $scope.closeFunction();
+                $scope.closeFunction(refresh);
               } else {
-                $scope.$broadcast('orsView');
-                $scope.content = 'orsView';
+                $scope.refresh = true;
+                $scope.openViewRestorationStation();
               }
+            };
+
+            $scope.deleteRestorationStation = function() {
+              $scope.closeFunction(true);
             };
 
             $scope.openRestorationStationStatus = function() {
@@ -94,8 +108,8 @@
               if ($scope.initial === 'orsStatus') {
                 $scope.closeFunction(refresh);
               } else {
-                $scope.$broadcast('orsView');
-                $scope.content = 'orsView';
+                $scope.refresh = true;
+                $scope.openViewRestorationStation();
               }
             };
 
@@ -112,8 +126,7 @@
                 $scope.closeFunction();
               } else {
                 $scope.user = {};
-                $scope.$broadcast('orsView');
-                $scope.content = 'orsView';
+                $scope.openViewRestorationStation();
               }
             };
           }]

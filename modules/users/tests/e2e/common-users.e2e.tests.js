@@ -35,6 +35,7 @@ var signup = function(user) {
   element(by.model('vm.credentials.username')).sendKeys(user.username);
   element(by.model('vm.credentials.password')).sendKeys(user.password);
   element(by.model('vm.credentials.retypePassword')).sendKeys(user.password);
+  element(by.model('vm.hasAcceptedTermsOfUse')).click();
   element(by.buttonText('Sign up')).click();
   browser.sleep(1000);
 };
@@ -90,7 +91,11 @@ module.exports = {
     displayName: 'New Student Local'
   },
   team: { name: 'Test Team' },
-  organization: { name: 'Org1' },
+  organization: {
+    name: 'Org1',
+    city: 'Anytown',
+    state: 'NY'
+  },
   station: {
     name: 'Test Station',
     baselines: {

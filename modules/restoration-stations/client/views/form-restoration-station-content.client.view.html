@@ -50,7 +50,7 @@
               <map-select-content modal-id="modal-ors-map" latitude="station.latitude"
               longitude="station.longitude" address="station.addressString"
               can-geocode="true" can-click-map-to-add-marker="true"
-              can-move-marker="true" show-marker="true"></map-select-content>
+              can-move-marker="true" show-marker="true" lat-long-required="true"></map-select-content>
             </div>
             <div class="col-sm-6">
 
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <label for="propertyOwner">Property Owner</label>
                     <select class="form-control" name="propertyOwner" id="propertyOwner" ng-model="station.propertyOwner._id">
-                        <option ng-repeat="person in propertyOwners" value="{{person._id}}">{{person.displayName}}</option>
+                        <option ng-repeat="person in propertyOwners" value="{{person._id}}">{{person.name}}</option>
                         <option value="-1">Other</option>
                     </select>
                 </div>

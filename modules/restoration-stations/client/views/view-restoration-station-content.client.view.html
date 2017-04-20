@@ -2,15 +2,15 @@
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="close" aria-label="Close" ng-click="closeFunction()"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" aria-label="Close" ng-click="closeFunction()" id="ors-view-close"><span aria-hidden="true">&times;</span></button>
             </div>
         </div>
         <div class="row">
             <div class="col-md-2" ng-show="station.photo">
-                <image ng-src="{{station.photo.path}}" alt="{{station.name}}" class="img-circle img-responsive" width="100" />
+                <image ng-src="{{station.photo.path}}" alt="{{station.name}}" class="img-circle img-responsive" id="ors-view-image" width="100" />
             </div>
             <div class="col-md-4">
-                <h3>
+                <h3 id="ors-view-info">
                     <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
                     <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
                     {{station.name}} &nbsp;&nbsp;
@@ -18,12 +18,12 @@
                     ng-class="{ 'label-success': station.status === 'Active', 'label-danger': station.status !== 'Active' }">
                     {{station.status}}</span>
                 </h3>
-                <h5>
+                <h5 id="ors-view-location">
                     {{station.bodyOfWater}}, {{station.boroughCounty}}<br/>
                     <small class="text-muted">{{station.latitude}}, {{station.longitude}}</small>
                 </h5>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="ors-view-owner">
                 <br/>
                 <h6>Owner</h6>
                 <h4>
@@ -31,7 +31,7 @@
                     <small><a href="mailto:{{station.teamLead.email}}">{{station.teamLead.email}}</a></small>
                 </h4>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="ors-view-organization">
                 <br/>
                 <h6>Organization</h6>
                 <h4>
@@ -72,7 +72,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6" id="ors-view-expeditions">
                 <dl class="dl-horizontal">
                     <dt>Expeditions to this ORS</dt>
                     <dd ng-repeat="expedition in station.expeditions">
@@ -81,11 +81,17 @@
                 </dl>
             </div>
             <div class="col-sm-6">
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal" id="ors-view-extra">
                     <dt>Site Coordinator</dt>
-                    <dd><a ng-click="openTeamLeadView(station.siteCoordinator)">{{station.siteCoordinator.displayName}}</a></dd>
+                    <dd ng-hide="!station.siteCoordinator || station.siteCoordinator._id === '-1'">
+                      <a ng-click="openTeamLeadView(station.siteCoordinator)">{{station.siteCoordinator.displayName}}</a>
+                    </dd>
+                    <dd ng-show="station.siteCoordinator._id === '-1'">
+                      <a href="mailto:{{station.siteCoordinator.email}}">{{station.siteCoordinator.displayName}}</a>
+                    </dd>
+                    <dd ng-show="!station.siteCoordinator"></dd>
                     <dt>Property Owner</dt>
-                    <dd><a ng-click="openTeamLeadView(station.propertyOwner)">{{station.propertyOwner.displayName}}</a></dd>
+                    <dd><a href="mailto:{{station.propertyOwner.email}}">{{station.propertyOwner.name}}</a></dd>
                     <dt>Shoreline Type</dt>
                     <dd>{{getShorelineTypes(station.shoreLineType)}}</dd>
                     <dt>Notes</dt>

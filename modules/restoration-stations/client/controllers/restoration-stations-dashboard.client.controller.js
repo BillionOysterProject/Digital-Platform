@@ -243,19 +243,19 @@
       openRestorationStationPopup(station, 'orsView');
     };
 
-    vm.saveFormRestorationStation = function() {
-      getORSes();
-      vm.station = {};
-
-      angular.element('#modal-station').modal('hide');
-    };
-
-    vm.removeFormRestorationStation = function() {
-      getORSes();
-      vm.station = {};
-
-      angular.element('#modal-station').modal('hide');
-    };
+    // vm.saveFormRestorationStation = function() {
+    //   getORSes();
+    //   vm.station = {};
+    //
+    //   angular.element('#modal-station').modal('hide');
+    // };
+    //
+    // vm.removeFormRestorationStation = function() {
+    //   getORSes();
+    //   vm.station = {};
+    //
+    //   angular.element('#modal-station').modal('hide');
+    // };
 
     vm.closeFormRestorationStation = function(refresh) {
       if (refresh) getORSes();

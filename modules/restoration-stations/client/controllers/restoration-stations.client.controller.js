@@ -5,15 +5,16 @@
     .module('restoration-stations')
     .controller('RestorationStationsController', RestorationStationsController);
 
-  RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'FileUploader',
+  RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'lodash', 'FileUploader',
   'BodiesOfWaterService', 'BoroughsCountiesService', 'ShorelineTypesService', 'SiteCoordinatorsService',
   'PropertyOwnersService', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
-  function RestorationStationsController($scope, $http, $timeout, FileUploader,
+  function RestorationStationsController($scope, $http, $timeout, lodash, FileUploader,
   BodiesOfWaterService, BoroughsCountiesService, ShorelineTypesService, SiteCoordinatorsService,
   PropertyOwnersService, ExpeditionViewHelper, RestorationStationsService) {
     var checkRole = ExpeditionViewHelper.checkRole;
     $scope.isAdmin = checkRole('admin');
+    $scope.isTeamLead = checkRole('team lead');
     $scope.loaded = false;
     $scope.loading = false;
 
@@ -65,7 +66,7 @@
     });
     $scope.getShorelineTypes = ExpeditionViewHelper.getShorelineTypes;
 
-    if (($scope.station && $scope.station.isCurrentUserOwner) || $scope.isAdmin) {
+    if ($scope.isTeamLead || $scope.isAdmin) {
       SiteCoordinatorsService.query({
       }, function(data) {
         $scope.siteCoordinators = data;
@@ -133,6 +134,17 @@
         '_id': $scope.teamId
       };
 
+      if (lodash.isEmpty($scope.station.siteCoordinator)) {
+        $scope.station.siteCoordinator = undefined;
+      } else if (!lodash.isEmpty($scope.station.siteCoordinator) && $scope.station.siteCoordinator._id !== '-1') {
+        $scope.station.otherSiteCoordinator = {};
+      }
+      if (lodash.isEmpty($scope.station.propertyOwner)) {
+        $scope.station.propertyOwner = undefined;
+      } else if (!lodash.isEmpty($scope.station.propertyOwner) && $scope.station.propertyOwner._id !== '-1') {
+        $scope.station.otherPropertyOwner = {};
+      }
+
       if ($scope.station.photo) {
         if ($scope.stationPhotoURL) {
           $scope.station.photo.path = $scope.stationPhotoURL;
@@ -177,7 +189,7 @@
 
         uploadStationPhoto(stationId, function() {
           $scope.disableCancel = false;
-          $scope.saveFunction();
+          $scope.closeFunction(true);
         }, function(errorMessage) {
           $scope.disableCancel = false;
           unsubmitStation(errorMessage);

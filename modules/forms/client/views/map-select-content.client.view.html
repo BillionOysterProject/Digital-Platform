@@ -10,12 +10,12 @@
           <br />
           <div class="row">
               <div class="form-group col-sm-6">
-                  <label>Latitude</label>
-                  <input type="text" class="form-control" placeholder="39.290385" ng-model="latitude"/>
+                  <label>Latitude{{(latLongRequired) ? ' *' : ''}}</label>
+                  <input type="text" class="form-control" placeholder="39.290385" ng-model="latitude" ng-required="latLongRequired"/>
               </div>
               <div class="form-group col-sm-6">
-                  <label>Longitude</label>
-                  <input type="text" class="form-control" placeholder="-76.612189" ng-model="longitude"/>
+                  <label>Longitude{{(latLongRequired) ? ' *' : ''}}</label>
+                  <input type="text" class="form-control" placeholder="-76.612189" ng-model="longitude" ng-required="latLongRequired"/>
               </div>
           </div>
       </div>
