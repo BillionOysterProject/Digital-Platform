@@ -8,14 +8,14 @@
       return {
         restrict: 'E',
         scope: {
-          name: '=',
-          bodyOfWater: '=',
-          teamLead: '=',
-          schoolOrg: '=',
-          photoUrl: '='
+          station: '=',
+          openView: '='
         },
         replace: true,
         link: function(scope, element, attrs) {
+          scope.photoUrl = (scope.station.photo && scope.station.photo.path) ? scope.station.photo.path : '';
+          scope.teamLead = (scope.station.teamLead) ? scope.station.teamLead.displayName : '';
+          scope.schoolOrg = (scope.station.schoolOrg) ? scope.station.schoolOrg.name : '';
           var viewKey = 'modules/restoration-stations/client/views/form-restoration-station-marker-popup.client.view.html';
 
           $http.get(viewKey,{ cache:$templateCache }).then(function(results){

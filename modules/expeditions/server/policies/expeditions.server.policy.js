@@ -38,6 +38,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/expeditions/export',
       permissions: '*'
     }, {
+      resources: '/api/expeditions/restoration-station',
+      permissions: '*'
+    }, {
       resources: '/api/expeditions',
       permissions: '*'
     }]
@@ -56,6 +59,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/expeditions/export',
       permissions: '*'
     }, {
+      resources: '/api/expeditions/restoration-station',
+      permissions: '*'
+    }, {
       resources: '/api/expeditions',
       permissions: '*'
     }]
@@ -69,6 +75,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/expeditions/export-compare',
+      permissions: '*'
+    }, {
+      resources: '/api/expeditions/restoration-station',
       permissions: '*'
     }, {
       resources: '/api/expeditions',

@@ -30,21 +30,36 @@
         <hr/>
         <div class="row">
             <div class="col-sm-3">
+                <h6>Team</h6>
                 <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="profile-image pull-left">
                 <p>
-                    <b>{{vm.team.name}}</b><br/>
-                    {{vm.team.teamLead.displayName}}<br/>
-                    <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                    <a ui-sref="profiles.team-view({ teamId: vm.team._id })">
+                      <b>{{vm.team.name}}</b>
+                    </a>
+                    <br/>
+                    <a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">
+                      {{vm.team.schoolOrg.name}}
+                    </a>
+                </p>
+            </div>
+            <div class="col-sm-3" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
+                <h6>{{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
+                <p ng-repeat="teamLead in vm.team.teamLeads">
+                    <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                        class="pull-left header-profile-image" />
+                    <a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a>
                 </p>
             </div>
             <div class="col-sm-3">
+                <h6>Date & Location</h6>
                 <p>
                     <i class="glyphicon glyphicon-calendar gray"></i> <b>{{vm.getExpeditionDate(vm.expedition.monitoringStartDate)}},
                       {{vm.getExpeditionTimeRange(vm.expedition.monitoringStartDate, vm.expedition.monitoringEndDate)}}</b><br/>
                     <i class="glyphicon glyphicon-map-marker gray"></i> {{vm.expedition.station.name}}
                 </p>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-3">
+                <h6>Notes</h6>
                 <p>{{vm.expedition.notes}}</p>
             </div>
         </div>
@@ -220,3 +235,4 @@
         </div>
     </section>
 </section>
+<view-user-modal user="vm.userToView" close-function="vm.closeViewUserModal"></view-user-modal>

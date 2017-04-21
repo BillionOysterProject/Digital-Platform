@@ -36,11 +36,12 @@
 
     <div class="row text-muted">
       <div class="col-sm-10">
-        <h5 id="lesson-author-info">
+        <h5 id="lesson-author-info" ng-show="vm.lesson.user">
           <img ng-src="{{vm.lesson.user.profileImageURL}}" alt="{{vm.lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
-          <b>{{vm.lesson.user.displayName}}</b><br>
+          <b><a ng-click="vm.openViewUserModal()">{{vm.lesson.user.displayName}}</a></b><br>
           <a href="mailto:{{vm.lesson.user.email}}">{{vm.lesson.user.email}}</a>
         </h5>
+        <h5 ng-hide="vm.lesson.user">Deleted User</h5>
       </div>
       <div class="col-sm-2 text-right" id="lesson-created-date">
         <p ng-bind="vm.lesson.created | date:'mediumDate'"></p>
@@ -409,5 +410,5 @@
   </div>
 </div>
 
-
+<view-user-modal user="vm.lesson.user" close-function="vm.closeViewUserModal"></view-user-modal>
 <!-- END MODALS -->

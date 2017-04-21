@@ -30,6 +30,9 @@ module.exports = function (app) {
   app.route('/api/school-orgs/:schoolOrgId/deny').all(schoolOrgsPolicy.isAllowed)
     .post(schoolOrgs.deny);
 
+  app.route('/api/school-orgs/:schoolOrgId/upload-image').all(schoolOrgsPolicy.isAllowed)
+    .post(schoolOrgs.uploadOrgPhoto);
+
   app.route('/api/school-orgs/:schoolOrgId').all(schoolOrgsPolicy.isAllowed)
     .get(schoolOrgs.read)
     .put(schoolOrgs.update)

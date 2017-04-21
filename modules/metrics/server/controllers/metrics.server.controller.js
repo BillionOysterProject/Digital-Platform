@@ -52,17 +52,22 @@ var teamMemberCountQuery = User.count({
   ] }
 );
 
-//TODO: change teamLead to teamLeads when new user profile
-//stuff is integrated
 var largestTeamsQuery = Team.aggregate([
   { $match: { teamMembers: { $exists: true } } },
-  { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
+  { $project: { id: 1, name: 1, teamLeads: 1, schoolOrg: 1, teamMemberCount: { $size: '$teamMembers' } } },
   { $sort: { teamMemberCount: -1 } },
   { $limit: 5 },
   { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
-  { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
-  { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
-  { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
+  { $project: { id: 1, name: 1, teamLeads: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
+  { $unwind: '$teamLeads' },
+  { $lookup: { from: 'users', localField: 'teamLeads', foreignField: '_id', as: 'teamLeadsLookup' } },
+  { $group: {
+    _id: '$_id',
+    teamLeads: { $push: { $arrayElemAt: [ '$teamLeadsLookup', 0 ] } },
+    name: { $first: '$name' },
+    teamMemberCount: { $first: '$teamMemberCount' },
+    schoolOrg: { $first: '$schoolOrg' }
+  } }
 ]);
 
 exports.getPeopleMetrics = function(req, res) {
@@ -205,8 +210,7 @@ exports.getMostActiveUsers = function(req, res) {
     teamLookup = { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamMembers', as: 'teams' } };
   } else if(req.query.userRole === 'team lead') {
     userRoleMatch = { $match: { 'user.roles': 'team lead' } };
-    //TODO: change 'teamLead' to 'teamLeads' once the new profile code is integrated
-    teamLookup = { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamLead', as: 'teams' } };
+    teamLookup = { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamLeads', as: 'teams' } };
   }
 
   var activeUsersQuery = null;
@@ -1220,10 +1224,7 @@ exports.downloadZip = function(req, res) {
     { $sort: { teamMemberCount: -1 } },
     { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
     { $match: { 'schoolOrgs.0': { $exists: true } } },
-    { $project: { id: 1, name: 1, teamLead: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } },
-    { $lookup: { from: 'users', localField: 'teamLead', foreignField: '_id', as: 'users' } },
-    { $match: { 'users.0': { $exists: true } } },
-    { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: 1, teamLead: { $arrayElemAt: ['$users', 0] } } }
+    { $project: { id: 1, name: 1, teamMemberCount: 1, schoolOrg: { $arrayElemAt: [ '$schoolOrgs', 0 ] } } }
   ]);
 
   var userLoginReportQuery = UserActivity.aggregate([

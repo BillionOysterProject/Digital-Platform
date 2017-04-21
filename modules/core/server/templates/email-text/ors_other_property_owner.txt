@@ -1,0 +1,11 @@
+Hi,
+
+<%= TeamLeadName %> just added an unlisted property owner for the ORS <%= ORSName %>.
+
+Name: <%= OtherName %>
+Email: <%= OtherEmail %>
+
+To edit the ORS, visit <%= LinkORSForm %>.
+
+Thanks!
+The Billion Oyster Project

@@ -51,10 +51,14 @@
     var nitratesUnits = NitrateUnitsService.query();
 
     var checkRole = function(role) {
-      var teamLeadIndex = lodash.findIndex(user.roles, function(o) {
-        return o === role;
-      });
-      return (teamLeadIndex > -1) ? true : false;
+      if (user && user.roles) {
+        var teamLeadIndex = lodash.findIndex(user.roles, function(o) {
+          return o === role;
+        });
+        return (teamLeadIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
     };
 
     var checkWrite = function(teamList) {

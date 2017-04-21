@@ -181,7 +181,6 @@ var updateQuestions = function(lesson) {
  * Incrementally save a lesson
  */
 exports.incrementalSave = function(req, res) {
-  console.log('incrementalSave');
   var lesson = req.lesson;
 
   if (lesson) {
@@ -456,6 +455,33 @@ exports.trackLesson = function(req, res) {
       });
     } else {
       res.json(trackedLesson);
+    }
+  });
+};
+
+exports.listTrackedLessonsForUser = function(req, res) {
+  var user = (req.query.userId ? req.query.userId : req.user);
+
+  //get the unique lessonids that this person taught - they could have
+  //marked a lesson taught more than once
+  LessonTracker.find({ user: user }).distinct('lesson', function(err, trackedLessonIds) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if(trackedLessonIds && trackedLessonIds.length > 0) {
+      //get the lessons that match those ids
+      Lesson.find({ _id: { $in: trackedLessonIds } }).exec(function(err, lessons) {
+        if(err) {
+          return res.status(400).send({
+            message: 'No lessons found. ' + errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(lessons);
+        }
+      });
+    } else {
+      res.json([]);
     }
   });
 };
@@ -814,7 +840,11 @@ exports.list = function(req, res) {
   }
 
   if (req.query.byCreator) {
-    and.push({ 'user': req.user });
+    if (req.query.byCreator === 'true') {
+      and.push({ 'user': req.user });
+    } else {
+      and.push({ 'user': req.query.byCreator });
+    }
   }
 
   if (req.query.status) {
@@ -1077,7 +1107,6 @@ exports.downloadZip = function(req, res) {
         docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson.docx'), lesson,
         function(filepath) {
           var filename = _.replace(lesson.title + '.docx', /\s/, '_');
-          console.log('filepath', path.resolve(filepath));
           lessonDocxFilepath = path.resolve(filepath);
           archive.file(lessonDocxFilepath, { name: filename });
           lessonCallback();
@@ -1181,7 +1210,7 @@ exports.lessonByID = function(req, res, next, id) {
     });
   }
 
-  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL')
+  var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL username')
   .populate('unit', 'title color icon');
 
   if (req.query.full) {

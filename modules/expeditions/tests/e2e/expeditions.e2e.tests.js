@@ -43,7 +43,7 @@ var path = require('path'),
   assertWaterQualityCompare = CommonWaterQuality.assertWaterQualityCompare,
   EC = protractor.ExpectedConditions;
 
-describe('Expedition E2E Tests', function() {
+xdescribe('Expedition E2E Tests', function() {
 
   var leader = CommonUser.leader;
   var member1 = CommonUser.member1;
@@ -81,7 +81,7 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('List/Search Expeditions Tests', function() {
+  describe('List/Search Expeditions Tests', function() {
     describe('Search Expeditions', function() {
       var startDate = element.all(by.model('vm.filter.startDate')).get(0);
       var endDate = element.all(by.model('vm.filter.endDate')).get(0);
@@ -95,7 +95,7 @@ describe('Expedition E2E Tests', function() {
         // Sign in as team member
         signinAs(member1);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to public expeditions
         element(by.id('pubexpeditions')).click();
         browser.sleep(500);
@@ -161,7 +161,7 @@ describe('Expedition E2E Tests', function() {
         // Sign in as team member
         signinAs(member1);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to published expeditions
         element(by.id('pubexpeditions')).click();
         browser.sleep(500);
@@ -268,13 +268,13 @@ describe('Expedition E2E Tests', function() {
 //############################################################################//
 //  TEAM MEMBER - VIEW PUBLISHED EXPEDITION
 //############################################################################//
-  xdescribe('View Expedition Tests', function() {
+  describe('View Expedition Tests', function() {
     describe('View Full Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
         signinAs(member2);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to public expeditions
         element(by.id('pubexpeditions')).click();
         browser.sleep(500);
@@ -383,12 +383,12 @@ describe('Expedition E2E Tests', function() {
   //  TEAM MEMBER 1 - VIEW EXPEDITION
   //############################################################################//
 
-    describe('Team member 1 fill out Expedition', function () {
+    xdescribe('Team member 1 fill out Expedition', function () {
       it ('should allow team member 1 to click protocols 1 & 4', function () {
         // Sign in as team member 1
         signinAs(member1);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to expeditions
         browser.get('http://localhost:8081/expeditions');
         browser.wait(EC.presenceOf($('#list-expeditions')), 5000);
@@ -504,7 +504,7 @@ describe('Expedition E2E Tests', function() {
   //  TEAM LEAD - VIEW EXPEDITION
   //############################################################################//
 
-    describe('Team lead fill out Expedition', function () {
+    xdescribe('Team lead fill out Expedition', function () {
       it ('should allow team lead to click protocol 1, 3, & 4', function () {
         // Sign in as team lead
         signinAs(leader);
@@ -610,12 +610,12 @@ describe('Expedition E2E Tests', function() {
   //  TEAM MEMBER 2 - VIEW EXPEDITION
   //############################################################################//
 
-    describe('Team member 2 fill out Expedition', function () {
+    xdescribe('Team member 2 fill out Expedition', function () {
       it ('should allow team member 2 to click protocols 2 & 5', function () {
         // Sign in as team member 2
         signinAs(member2);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to expeditions
         browser.get('http://localhost:8081/expeditions');
         browser.wait(EC.presenceOf($('#list-expeditions')), 5000);
@@ -736,7 +736,7 @@ describe('Expedition E2E Tests', function() {
   //  TEAM LEAD - RETURN EXPEDITION
   //############################################################################//
 
-    describe('Return Expedition', function() {
+    xdescribe('Return Expedition', function() {
       it('should allow a team lead to return the protocols to the team members', function() {
         // Sign in as team lead
         signinAs(leader);
@@ -837,7 +837,7 @@ describe('Expedition E2E Tests', function() {
         // Sign in as team member 1
         signinAs(member1);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to expeditions
         browser.get('http://localhost:8081/expeditions');
         browser.wait(EC.presenceOf($('#list-expeditions')), 5000);
@@ -970,7 +970,7 @@ describe('Expedition E2E Tests', function() {
         // Sign in as team member 2
         signinAs(member2);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to expeditions
         browser.get('http://localhost:8081/expeditions');
         browser.wait(EC.presenceOf($('#list-expeditions')), 5000);
@@ -1032,7 +1032,7 @@ describe('Expedition E2E Tests', function() {
   //  TEAM LEAD - PUBLISH EXPEDITION
   //############################################################################//
 
-    describe('Publish Expedition', function() {
+    xdescribe('Publish Expedition', function() {
       it('should allow a team lead to publish the protocols', function() {
         // Sign in as team lead
         signinAs(leader);
@@ -1114,7 +1114,7 @@ describe('Expedition E2E Tests', function() {
   //  TEAM LEAD - UNPUBLISH EXPEDITION
   //############################################################################//
 
-    describe('Unpublish Expedition', function() {
+    xdescribe('Unpublish Expedition', function() {
       it('should allow a team lead to unpublish the protocols', function() {
         // Sign in as team lead
         signinAs(leader);
@@ -1149,7 +1149,7 @@ describe('Expedition E2E Tests', function() {
   //  TEAM LEAD - RE-PUBLISH EXPEDITION
   //############################################################################//
 
-    describe('Re-publish Expedition', function() {
+    xdescribe('Re-publish Expedition', function() {
       it('should allow a team lead to re-publish the protocols', function() {
         // Sign in as team lead
         signinAs(leader);
@@ -1192,12 +1192,12 @@ describe('Expedition E2E Tests', function() {
   //  TEAM MEMBER - VIEW EXPEDITION
   //############################################################################//
 
-    describe('View Expedition', function() {
+    xdescribe('View Expedition', function() {
       it('should allow a team member to view expedition', function() {
         // Sign in as team member
         signinAs(member1);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration-stations');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
         // Go to public expeditions
         element(by.id('pubexpeditions')).click();
 

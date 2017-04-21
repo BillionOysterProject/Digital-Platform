@@ -97,6 +97,8 @@
     vm.getEventDay = EventHelper.getEventDay;
     vm.getEventYear = EventHelper.getEventYear;
     vm.getEventTimeRange = EventHelper.getEventTimeRange;
+    vm.getEventDayOfWeekLong = EventHelper.getEventDayOfWeekLong;
+    vm.getEventDayOfWeekShort = EventHelper.getEventDayOfWeekShort;
     vm.earliestDateString = EventHelper.getEarliestDateString(vm.event.dates);
     vm.earliestDate = moment(vm.earliestDateString, 'MMM D YYYY');
     vm.earliestDateTimeString = EventHelper.getEarliestDateTimeRangeString(vm.event.dates);
@@ -150,13 +152,6 @@
 
     vm.openEmailRegistrants = function() {
       angular.element('#modal-email-registrants').modal('show');
-    };
-
-    vm.openMap = function() {
-      angular.element('#modal-event-map').modal('show');
-      $timeout(function() {
-        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
-      }, 300);
     };
 
     vm.deleteResourceFile = function(index, file) {
@@ -257,6 +252,17 @@
           vm.event.attendees = attendees;
         }, 500);
       }
+    };
+
+    vm.openMap = function() {
+      angular.element('#modal-event-map').modal('show');
+      $timeout(function() {
+        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
+      }, 300);
+    };
+
+    vm.closeMap = function() {
+      angular.element('#modal-event-map').modal('hide');
     };
 
     vm.duplicateEvent = function() {

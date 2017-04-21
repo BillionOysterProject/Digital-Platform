@@ -53,7 +53,7 @@
           <div class="form-group" show-errors
           ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
             <label for="schoolOrg" class="control-label required">Organization
-              <a href="#" ng-click="vm.openSchoolOrgForm()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
+              <a href="#" ng-click="vm.openFormOrg()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
             </label>
             <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="vm.credentials.schoolOrg"
               ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)" required>
@@ -148,8 +148,9 @@
 
 
 <!-- MODALS -->
-<form-school-org-modal school-org="vm.newSchoolOrg" save-school-org="false" save-function="vm.saveSchoolOrgForm"
-cancel-function="vm.cancelSchoolOrgForm"></form-school-org-modal>
+<form-org-profile-modal organization="vm.newSchoolOrg" close-function="vm.closeFormOrg"></form-org-profile-modal>
+<!-- <form-school-org-modal school-org="vm.newSchoolOrg" save-school-org="false" save-function="vm.saveSchoolOrgForm"
+cancel-function="vm.cancelSchoolOrgForm"></form-school-org-modal> -->
 
 <div class="modal fade" id="modal-termsofuse" tabindex="-1" role="dialog" aria-labelledby="modal-termsofuse">
     <div class="modal-dialog modal-lg" role="document">

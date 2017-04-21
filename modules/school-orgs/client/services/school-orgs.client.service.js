@@ -28,4 +28,28 @@
       }
     });
   }
+
+  angular
+    .module('school-orgs.services')
+    .factory('TeamLeadBySchoolOrgsService', TeamLeadBySchoolOrgsService);
+
+  TeamLeadBySchoolOrgsService.$inject = ['$resource'];
+
+  function TeamLeadBySchoolOrgsService($resource) {
+    return $resource('api/school-orgs/:schoolOrgId/team-leads', {
+      schoolOrgId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      query: {
+        method: 'GET',
+        params: {
+          pending: '@pending',
+          searchString: '@searchString'
+        },
+        isArray: true
+      }
+    });
+  }
 })();

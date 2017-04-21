@@ -1,9 +1,9 @@
-<section class="content shaded">
+<section class="content shaded" id="dashboard">
     <section class="container-fluid">
         <div class="page-header">
             <div class="row">
-                <h2 class="col-md-8">Dashboard</h2>
-                <div class="col-md-4">
+                <h2 class="col-md-3">Dashboard</h2>
+                <div class="col-md-9">
                     <div class="pull-right" ng-show="vm.teams.length > 1">
                         <a class="btn btn-lg btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="teamMenu">{{vm.team.name}} <span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="teamMenu">
@@ -11,12 +11,21 @@
                         </ul>
                     </div>
                     <div class="pull-right" ng-show="vm.teams.length === 1" id="single-team-name">
-                        <h4><span class="label label-success">{{vm.team.name}}</span></h4>
+                        <a ui-sref="profiles.team-view({ teamId: vm.team._id })"><h3>{{vm.team.name}}</h3></a>
                     </div>
-                    <p ng-show="vm.teams.length > 0" id="team-list-dropdown">
-                        <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="header-profile-image pull-left">
-                        <b>{{vm.team.teamLead.displayName}}</b><br />
-                        <span class="text-muted">{{vm.team.schoolOrg.name}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <!-- <div class="col-sm-2">
+                    <h6><i class="fa fa-building"></i> Organization</h6>
+                    <p class="pull-left"><a ui-sref="profiles.organization-view({ schoolOrgId: vm.team.schoolOrg._id })">{{vm.team.schoolOrg.name}}</a></p>
+                </div> -->
+                <div class="col-sm-12" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
+                    <p class="pull-right" ng-repeat="teamLead in vm.team.teamLeads">
+                        <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                            class="pull-left header-profile-image" />
+                        <a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a>
+                        &nbsp;&nbsp;&nbsp;
                     </p>
                 </div>
             </div>
@@ -24,7 +33,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info text-center" ng-show="(!vm.teams || vm.teams.length === 0) && vm.isTeamLead">
-                  You don't have any teams yet! <a class="btn btn-default" ui-sref="settings.admin-team-owner">Add members</a>
+                  You don't have any teams yet! <a class="btn btn-default" ng-click="vm.openViewUserModal(null, 'formTeamMember')">Add members</a>
                 </div>
                 <div class="alert alert-info text-center" ng-show="vm.isTeamLeadPending">
                   Sorry, your team lead account is still pending! You will be able to add members and teams as soon as your account is approved.
@@ -41,6 +50,7 @@
             <div ng-class="{ 'col-md-8': (vm.isTeamLead || vm.isTeamMember || vm.isAdmin), 'col-md-12': (vm.isTeamMemberPending || vm.isTeamLeadPending) }">
                 <div class="panel panel-default">
                     <div class="panel-heading">
+                        <a class="btn btn-default pull-right" ui-sref="restoration-stations.list">See all</a>
                         <h4>Oyster Restoration Stations</h4>
                     </div>
                     <div class="panel-body">
@@ -64,8 +74,10 @@
                                 </td>
                                 <td><i class="glyphicon glyphicon-map-marker gray"></i> {{expedition.station.name}}</td>
                                 <td>
-                                    <span class="text-muted">{{expedition.team.name}}, led by {{expedition.teamLead.displayName}}</span><br/>
-                                    <small>{{vm.getOrganizationName(expedition.team.schoolOrg)}}</small>
+                                    {{expedition.team.name}}<br/>
+                                    <span class="text-muted" ng-repeat="teamLead in expedition.team.teamLeads">
+                                      {{expedition.teamLead.displayName}}{{$last ? '' : ', '}}</span><br/>
+                                    <small>{{expedition.team.schoolOrg.name}}</small>
                                 </td>
                             </tr>
                         </table>
@@ -82,14 +94,17 @@
                                 <h4>Team Members <span class="badge badge-success pull-right">{{vm.members.length}}</span></h4>
                             </div>
                             <div class="panel-body">
-                                <p ng-repeat="member in vm.members"><img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}</p>
+                                <p ng-repeat="member in vm.members">
+                                  <a ng-click="vm.openViewUserModal(member)">
+                                  <img ng-src="{{member.profileImageURL}}" class="header-profile-image"> {{member.displayName}}
+                                </a></p>
                                 <div class="alert" ng-show="vm.members.length === 0">No members yet! To start,
-                                  <a ui-sref="settings.admin-team-owner" ng-class="{ 'disabled': vm.isTeamLeadPending }"
+                                  <a ui-sref="profiles.team" ng-class="{ 'disabled': vm.isTeamLeadPending }"
                                   ng-disabled="vm.isTeamLeadPending" disable-link="vm.isTeamLeadPending">invite members to join</a>.
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" ui-sref="settings.admin-team-owner"
+                                <a class="btn btn-primary" ng-click="vm.openViewUserModal(null, 'formTeamMember')"
                                 ng-class="{ 'disabled': vm.isTeamLeadPending }" ng-disabled="vm.isTeamLeadPending"
                                 disable-link="vm.isTeamLeadPending">Add members</a>
                             </div>
@@ -123,10 +138,10 @@
                                 <h4>Documents</h4>
                             </div>
                             <div class="panel-body">
-                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Resources & Curriculum</a></p>
                                 <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmaW9XN1hlM09vRXc?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open pull-left"></i>&nbsp;&nbsp;Data Sheets</a></p>
                                 <p><a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU?usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Manuals</a></p>
                                 <p><a href="https://drive.google.com/folderview?id=0BwOkf1kzdWyncFR4SFRHMkJMZkU&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Species ID</a></p>
+                                <p><a href="https://drive.google.com/folderview?id=0Bzf_STNcTtRmbG1pMVpUM1lGUmM&usp=sharing" target="_blank"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Additional Resources</a></p>
                             </div>
                         </div>
                     </div>
@@ -139,18 +154,22 @@
                     </div>
                     <div class="panel-body">
                         <table class="table table-hover">
-                            <tr ng-repeat="station in vm.stations" ng-click="vm.canEditRestorationStation(station)">
+                            <!--TODO: Change list to only show all ORS user has created, then all stations user has visited on an expedition (we're removing ORS owned by teams, ORS are now owned by team leads)-->
+
+                            <tr ng-repeat="station in vm.stations" ng-click="vm.openViewRestorationStation(station)">
                                 <td><h3>
                                   <i class="glyphicon glyphicon-map-marker green" ng-show="station.status === 'Active'"></i>
-                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status === 'Lost'"></i>
+                                  <i class="glyphicon glyphicon-map-marker red" ng-show="station.status !== 'Active'"></i>
                                 </h3></td>
                                 <td><image ng-src="{{station.photo.path}}" class="img-thumbnail" ng-show="station.photo"></td>
-                                <td>{{station.name}}<br/><span class="small text-muted">{{station.latitude}}, {{station.longitude}}<br />
-                                  {{station.bodyOfWater}}</span>
+                                <td>{{station.name}}<br/>
+                                    <span class="small text-muted">{{station.bodyOfWater}}</span><br/>
+                                    <span class="small text-muted" ng-show="station.teamLead">by {{station.teamLead.displayName}} from </span>
+                                    <span class="small text-muted" ng-show="station.schoolOrg">{{station.schoolOrg.name}}</span>
                                 </td>
                                 <td class="text-right">
                                   <span class="label label-success" ng-show="station.status === 'Active'">Active</span>
-                                  <span class="label label-danger" ng-show="station.status === 'Lost'">Lost</span>
+                                  <span class="label label-danger" ng-show="station.status !== 'Active'">{{station.status}}</span>
                                 </td>
                               </tr>
                         </table>
@@ -159,8 +178,9 @@
                         </div>
                     </div>
                     <div class="panel-footer">
+                      <!-- <a class="btn btn-default" ui-sref="restoration-stations.list">See all</a> -->
                         <a class="btn btn-primary" ng-click="vm.openFormRestorationStation()" id="register-an-ORS"
-                        ng-show="(vm.isTeamLead || vm.isTeamLeadPending)">Register an ORS</a>
+                        ng-show="(vm.isTeamLead || vm.isTeamLeadPending)" ng-disabled="vm.isTeamLeadPending">Register an ORS</a>
                     </div>
                 </div>
                 <div class="panel panel-default" ng-show="(vm.isTeamLead || vm.isTeamMember) && vm.team">
@@ -214,7 +234,10 @@
 
 
 <!-- MODALS -->
-<form-restoration-station-modal station="vm.station" mapPoints="vm.stationMapPoints"
+<!-- <form-restoration-station-modal station="vm.station" mapPoints="vm.stationMapPoints"
 save-function="vm.saveFormRestorationStation" remove-function="vm.removeFormRestorationStation"
-cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
+cancel-function="vm.closeFormRestorationStation"></form-restoration-station-modal> -->
+<view-restoration-station-popup station="vm.station" initial="vm.initial" close-function="vm.closeFormRestorationStation"></view-restoration-station-popup>
+<view-user-modal user="vm.userToView" initial="vm.initialUser" team="vm.team" close-function="vm.closeViewUserModal"></view-user-modal>
+
 <!--END MODALS-->

@@ -1,0 +1,87 @@
+<form name="form.adminTeamLeadForm" ng-submit="saveAdminTeamLeadForm(form.adminTeamLeadForm.$valid)" novalidate>
+  <fieldset>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">{{user._id ? 'Edit user profile' : 'Add a user'}}</h4>
+    </div>
+
+    <!--
+        TODO: For SELF editing, this form (`form-admin-team-lead-content`) and `form-team-member-content` should replace `form-user-profile modal`
+        As far as I'm aware, this form is never used for creating new users in the platform (since you can't create Team Leads), so that logic can be removed
+    -->
+
+    <div class="modal-body">
+      <div class="row">
+        <!--TODO: firstname/lastname/email fields should only be editable to the actual user (SELF) (readonly to ADMIN) -->
+        <div class="form-group col-md-6" show-errors>
+          <label for="firstName" class="control-label required">First Name</label>
+          <input type="text" name="firstName" class="form-control" ng-model="user.firstName"
+            ng-readonly="user._id && !(user.pending || isCurrentUserUser)" required>
+        </div>
+        <div class="form-group col-md-6" show-errors>
+          <label for="lastName" class="control-label required">Last Name</label>
+          <input type="text" name="lastName" class="form-control" ng-model="user.lastName"
+            ng-readonly="user._id && !(user.pending || isCurrentUserUser)" required>
+        </div>
+        <div class="form-group col-md-6" show-errors>
+          <label for="email" class="control-label required">Email</label>
+          <input type="text" name="email" class="form-control" ng-model="user.email"
+            ng-readonly="user._id && !(user.pending || isCurrentUserUser)" required>
+        </div>
+
+        <!--TODO: Org should be editable to SELF (as well as ADMIN) -->
+        <div class="form-group col-md-6" show-errors>
+          <label for="org" class="control-label required">Organization</label>
+          <select name="org" class="form-control" ng-model="user.schoolOrg._id"
+            ng-change="orgChanged()"
+            ng-readonly="user._id && !(user.pending || isCurrentUserUser)" required>
+            <option disabled selected value>
+            <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
+          </select>
+        </div>
+
+        <!--TODO: Role should only be editable to ADMIN (readonly to SELF)
+        Seems dangerous to allow Role changes if the person would have any data (expeditions, teams, etc) in the system --
+        Is there an easy way to disable this field for EVERYBODY if the user already has data?-->
+        <div class="form-group col-md-6" ng-show="isAdmin" show-errors>
+          <label for="role" class="control-label required">Role</label>
+          <select name="role" class="form-control" ng-model="selectedRole"
+            ng-options="i.value as (i.name) for i in roles"
+            ng-change="selectedRoleChanged()"
+            required>
+            <option disabled selected value>
+          </select>
+        </div>
+
+        <!-- team lead options -->
+        <!--TODO: Team Lead Type should be editable to SELF/ADMIN-->
+        <div class="form-group col-md-6" ng-show="user._id !== null && selectedRole === 'team lead'" show-errors>
+          <label class="control-label required" for="teamLeadType">Team Lead Type</label>
+          <select class="form-control" name="teamLeadType" id="teamLeadType"
+            ng-model="user.teamLeadType">
+            <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
+          </select>
+        </div>
+
+        <!--TODO: admin checkbox should only be editable and visible to ADMIN (hidden for SELF) -->
+        <div class="form-group col-md-12" ng-show="user._id !== null && selectedRole === 'team lead' && isAdmin" show-errors>
+          <div class="checkbox" for="adminCheck">
+            <label><input name="adminCheck" id="adminCheck" type="checkbox" value="isAdmin" ng-model="isAdmin"
+              ng-change="isAdminChanged()">Admin</label>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12" show-errors ng-show="user._id && isCurrentUserUser">
+          <label>Research Interests</label>
+          <span class="help-block">Please describe your research interests in BOP and a little bit about yourself, so other members of the BOP community may know you better.</span>
+          <wysiwyg-editor name="researchInterests" ng-model="user.researchInterests" label-class="control-label"></wysiwyg-editor>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="closeFunction()">Cancel</button>
+      <button type="submit" class="btn btn-primary">{{user._id ? 'Update' : 'Send Invite'}}</button>
+    </div>
+  </fieldset>
+</form>

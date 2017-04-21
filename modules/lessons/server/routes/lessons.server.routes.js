@@ -56,6 +56,9 @@ module.exports = function (app) {
   app.route('/api/lessons/favorites').all(lessonsPolicy.isAllowed)
     .get(lessons.listFavorites);
 
+  app.route('/api/lessons/tracked-list').all(lessonsPolicy.isAllowed)
+    .get(lessons.listTrackedLessonsForUser);
+    
   app.route('/api/lessons/:lessonId/tracked-list').all(lessonsPolicy.isAllowed)
     .get(lessons.listTrackedForLessonAndUser);
 

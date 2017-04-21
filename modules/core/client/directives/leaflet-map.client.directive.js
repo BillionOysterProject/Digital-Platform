@@ -21,6 +21,10 @@
 
         link: function(scope, elem, attrs) {
           scope.mapUniqueId = 'leaflet-map' + mapUniqueId++;
+
+          scope.$on('$viewContentLoaded', function ($evt, data) {
+            scope.refresh();
+          });
         },
         controller: 'LeafletMapController',
         controllerAs: 'vm',

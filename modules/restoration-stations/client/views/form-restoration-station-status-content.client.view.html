@@ -1,0 +1,38 @@
+<div class="modal-content">
+  <!--TODO: needs wired up (currently copied fields from ORS form), moved elsewhere
+  Form should be emailed "to the ORS owner AND to all team leads who are using that ORS for an expedition AND most importantly to our field science admin Rob Buchanan" Email to OWS owner/admin should include a link to update the status (ORS Edit modal) themselves (a user submitting the status update does not automatically change the status). Team leads who are using the ORS for an expedition should just receive an email notifying them (no link to update the status).
+  -->
+  <!--TODO: also make this modal accessible from the new button on Procotol 2 -->
+  <form name="form.restorationStationStatusForm" ng-submit="updateStatus(form.restorationStationStatusForm.$valid)" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="closeFunction()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Submit a status update for <span class="red">{{station.name}}</span></h4>
+        <p>The ORS owner and admin will be notified. Thanks for keeping us informed!</p>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <!--TODO: Add additional status options "Active, Damaged, Lost or Destroyed, Unknown"-->
+            <label class="required" for="status">Current status *</label>
+            <select class="form-control" ng-model="status.status" name="status" id="status" required>
+                <option ng-repeat="type in statuses" value="{{type.value}}">{{type.label}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="required" for="description">Description *</label>
+            <textarea class="form-control" rows="3" ng-model="status.description"
+              name="description" id="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
+            <single-image-drop-zone uploader="stationStatusPhotoUploader" image-url="stationStatusPhotoURL"
+            image-alt="Status Photograph" id="ors-status-dropzone"></single-image-drop-zone>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeFunction()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </div>
+  </form>
+</div>

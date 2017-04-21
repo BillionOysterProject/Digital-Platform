@@ -5,6 +5,7 @@
  */
 var acl = require('acl'),
   path = require('path'),
+  _ = require('lodash'),
   authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backend
@@ -17,28 +18,22 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin', 'team lead'],
     allows: [{
-      resources: '/api/teams/members/csv',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/validate/csv',
-      permissions: '*'
-    }, {
       resources: '/api/teams/members',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/:memberId/remind',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: '*'
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
       permissions: '*'
     }, {
       resources: '/api/teams',
       permissions: '*'
     }, {
+      resources: '/api/teams/members/:memberId',
+      permissions: '*'
+    }, {
+      resources: '/api/teams/:teamId/upload-image',
+      permissions: '*'
+    }, {
       resources: '/api/teams/:teamId',
+      permissions: '*'
+    },{
+      resources: '/api/teams/:teamId/members/:memberId',
       permissions: '*'
     }]
   }, {
@@ -47,13 +42,10 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams/members',
       permissions: ['get']
     }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: ['get']
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
-      permissions: ['get']
-    }, {
       resources: '/api/teams',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/members/:memberId',
       permissions: ['get']
     }, {
       resources: '/api/teams/:teamId',
@@ -65,13 +57,10 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/teams/members',
       permissions: ['get']
     }, {
-      resources: '/api/teams/members/:memberId',
-      permissions: ['get']
-    }, {
-      resources: '/api/teams/:teamId/members/:memberId',
-      permissions: ['get']
-    }, {
       resources: '/api/teams',
+      permissions: ['get']
+    }, {
+      resources: '/api/teams/members/:memberId',
       permissions: ['get']
     }, {
       resources: '/api/teams/:teamId',
@@ -89,6 +78,14 @@ exports.isAllowed = function (req, res, next) {
   // If an team is being processed and the current user created it then allow any manipulation
   if (req.team && req.user && req.team.teamLead && req.team.teamLead.id === req.user.id) {
     return next();
+  }
+
+  if(req.team && req.user && req.team.teamLeads && req.team.teamLeads.length > 0) {
+    var indexL = _.findIndex(req.team.teamLeads, function(l) {
+      var leadId = (l && l._id) ? l._id : l;
+      return leadId.toString() === req.user._id.toString();
+    });
+    if(indexL >= 0) { return next(); }
   }
 
   // Check for user roles

@@ -1,0 +1,79 @@
+<div class="modal fade" id="modal-import-team-members" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Import team members</h4>
+      </div>
+      <div class="modal-body" ng-hide="bulkFileUploaded">
+        <p>Have a large team? Mass import a list of team members via a CSV file below.</p>
+        <button class="btn btn-default" ng-click="downloadExample()">Download Example</button>
+        <br/><br/>
+        <p>Please use the headers provided in the example spreadsheet. All columns with an * in their header are required to have values. The spreadsheet must be in CSV (comma separated value) format, you may need to export the files as a CSV from your spreadsheet editor.</p>
+
+        <div class="row">
+          <div class="col-sm-8">
+            <csv-file-upload class="file-uploader" id="import-team-members-upload" content="csv.content" result="csv.result" header-list="['First Name *', 'Last Name *', 'Username', 'Email *']" headers-valid="csv.headersValid" filename="csv.filename"></csv-file-upload>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn btn-default btn-block" ng-click="validate()">Upload</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" ng-hide="bulkFileUploaded">
+        <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+      </div>
+      <div class="modal-body" ng-show="headersInvalid">
+        <h3 class="red">The headers for this CSV file are invalid. Please download the example and enter your values in it.</h3>
+      </div>
+      <div class="modal-footer" ng-show="headersInvalid">
+        <button class="btn btn-default" ng-click="reset()">Start over</button>
+      </div>
+      <form name="form.importTeamMembersForm" ng-submit="upload(form.importTeamMembersForm.$valid)" novalidate>
+        <fieldset>
+          <div class="modal-body" ng-show="bulkFileUploaded && !headersInvalid">
+            <div ng-hide="finishedValidation">
+              <i class="glyphicon glyphicon-hourglass"></i> uploading {{totalUploading}} members ...</h3>
+            </div>
+            <div ng-show="finishedValidation === true">
+              <h4><b>{{validCsv.length}}</b> successful entries, <b>{{invalidCsv.length}}</b> errors</h4>
+              <p>Review all member entries and submit below.</p>
+              <table class="table">
+                <tr>
+                  <th></th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Username</th>
+                  <th></th>
+                </tr>
+                <tr ng-repeat="member in csv.result" ng-class="{'error-text': member.valid === false}">
+                  <td>
+                    <i class="glyphicon glyphicon-ok green" ng-show="member.valid === true"></i>
+                    <i class="glyphicon glyphicon-remove red" ng-hide="member.valid === true"></i>
+                  </td>
+                  <td>{{member['First Name *']}}</td>
+                  <td>{{member['Last Name *']}}</td>
+                  <td>{{member['Email *']}}</td>
+                  <td>{{member['Username']}}</td>
+                  <td><em class="red">{{member.errors}}</em></td>
+                </tr>
+              </table>
+            </div>
+            <div class="row">
+              <div class="text-danger row" ng-show="error">
+                <strong ng-bind="error"></strong>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" ng-show="bulkFileUploaded && !headersInvalid">
+            <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-default" ng-click="reset()" ng-show="invalidCsv.length > 0" ng-disabled="uploadingCsv">Start over</button>
+            <button button="submit" class="btn btn-default" ng-show="invalidCsv.length > 0 && validCsv.length > 0" ng-disabled="uploadingCsv">Submit the {{validCsv.length}} successful entries</button>
+            <button button="submit" class="btn btn-default" ng-show="invalidCsv.length === 0" ng-disabled="uploadingCsv">Submit</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

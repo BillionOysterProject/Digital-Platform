@@ -1,0 +1,37 @@
+<div class="modal fade" id="modal-team-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-show="team.teamMembers.length === 0">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to delete <span class="red">{{team.name}}</span>?</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This action cannot be reversed.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
+            </div>
+        </div>
+        <div class="modal-content" ng-hide="team.teamMembers.length === 0">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span class="red">{{team.name}}</span> cannot be deleted</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>This team currently has members in it. To delete the team, you must first either delete the current member accounts or move each one to another team.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

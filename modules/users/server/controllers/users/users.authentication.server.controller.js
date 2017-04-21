@@ -56,7 +56,7 @@ exports.signup = function (req, res) {
               email.sendEmailTemplate(config.mailer.admin, 'A new organization is pending approval', 'org_waiting', {
                 TeamLeadName: user.displayName,
                 OrgName: createdOrg.name,
-                LinkOrgRequest: httpTransport + req.headers.host + '/settings/organizations'
+                LinkOrgRequest: httpTransport + req.headers.host + '/profiles/users'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
@@ -123,7 +123,7 @@ exports.signup = function (req, res) {
           var defaultTeam = new Team({
             name: 'Default',
             schoolOrg: user.schoolOrg,
-            teamLead: user
+            teamLeads: [user]
           });
           defaultTeam.save(function(saveErr) {
             if (saveErr) {
@@ -185,7 +185,7 @@ exports.signup = function (req, res) {
             var sendAdminNewTeamLeadEmail = function(callback) {
               email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
                 TeamLeadName: user.displayName,
-                LinkTeamLeadRequest: httpTransport + req.headers.host + '/settings/users'
+                LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
