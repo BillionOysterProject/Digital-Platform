@@ -16,7 +16,6 @@
     var toGoParams = null;
 
     vm.research = research;
-    vm.research.filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/, '_');
 
     vm.authentication = Authentication;
     vm.user = Authentication.user;
@@ -152,6 +151,27 @@
 
     vm.saveDraftAndPreview = function(isValid) {
       vm.save(isValid, 'draft');
+    };
+
+    vm.downloadResearch = function() {
+      var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/, '_');
+      $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename, {
+        responseType: 'arraybuffer'
+      }).
+        success(function(data, status, headers, config) {
+          var blob = new Blob([data], { type: 'application/pdf' });
+          var url = (window.URL || window.webkitURL).createObjectURL(blob);
+
+          var anchor = angular.element('<a/>');
+          anchor.attr({
+            href: url,
+            target: '_blank',
+            download: filename
+          })[0].click();
+        }).
+        error(function(data, status, headers, config) {
+
+        });
     };
 
     vm.openViewUserModal = function() {

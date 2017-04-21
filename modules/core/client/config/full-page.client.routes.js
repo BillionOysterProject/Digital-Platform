@@ -17,6 +17,9 @@
           controllerAs: 'vm',
           resolve: {
             researchResolve: getResearch
+          },
+          data: {
+            pageTitle: 'Research'
           }
         });
     }

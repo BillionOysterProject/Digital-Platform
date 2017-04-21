@@ -64,7 +64,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId/download',
-      permissions: ['post']
+      permissions: ['get']
     }, {
       resources: '/api/research/:researchId',
       permissions: ['get']
@@ -73,7 +73,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['guest'],
     allows: [{
       resources: '/api/research/:researchId/download',
-      permissions: ['post']
+      permissions: ['get']
     }, {
       resources: '/api/research/:researchId',
       permissions: ['get']
