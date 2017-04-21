@@ -35,6 +35,7 @@ var signup = function(user) {
   element(by.model('vm.credentials.username')).sendKeys(user.username);
   element(by.model('vm.credentials.password')).sendKeys(user.password);
   element(by.model('vm.credentials.retypePassword')).sendKeys(user.password);
+  element(by.model('vm.hasAcceptedTermsOfUse')).click();
   element(by.buttonText('Sign up')).click();
   browser.sleep(1000);
 };
@@ -46,20 +47,38 @@ module.exports = {
     displayName: 'Admin Local'
   },
   leader: {
-    username: 'teacher',
+    username: 'teacher1',
     password: 'P@$$w0rd!!',
-    displayName: 'Teacher Local',
-    email: 'teacher@localhost.com'
+    displayName: 'Teacher1 Local',
+    email: 'teacher1@localhost.com',
+    researchInterestsText: 'I\'m interested in teaching.'
+  },
+  leader2: {
+    username: 'teacher2',
+    password: 'P@$$w0rd!!',
+    displayName: 'Teacher2 Local',
+    email: 'teacher2@localhost.com'
   },
   member1: {
     username: 'student1',
     password: 'P@$$w0rd!!',
-    displayName: 'Student1 Local'
+    displayName: 'Student1 Local',
+    researchInterestsText: 'I want to learn.'
   },
   member2: {
     username: 'student2',
     password: 'P@$$w0rd!!',
     displayName: 'Student2 Local'
+  },
+  member3: {
+    username: 'student3',
+    password: 'P@$$w0rd!!',
+    displayName: 'Student3 Local'
+  },
+  member4: {
+    username: 'student4',
+    password: 'P@$$w0rd!!',
+    displayName: 'Student4 Local'
   },
   newLeader: {
     firstName: 'New Leader',
@@ -89,8 +108,27 @@ module.exports = {
     password: 'P@$$w0rd!!',
     displayName: 'New Student Local'
   },
-  team: { name: 'Test Team' },
-  organization: { name: 'Org1' },
+  team: {
+    name: 'Test Team1',
+    teamLeads: [{
+      displayName: 'Teacher1 Local'
+    }, {
+      displayName: 'Teacher2 Local'
+    }]
+  },
+  team2: {
+    name: 'Test Team2',
+    teamLeads: [{
+      displayName: 'Teacher1 Local'
+    }, {
+      displayName: 'Teacher2 Local'
+    }]
+  },
+  organization: {
+    name: 'Org1',
+    city: 'Anytown',
+    state: 'NY'
+  },
   station: {
     name: 'Test Station',
     baselines: {

@@ -21,6 +21,9 @@
           scope.$watch('organization', function(newValue, oldValue) {
             scope.organization = newValue;
           });
+          element.bind('show.bs.modal', function() {
+            scope.reset();
+          });
         }
       };
     });

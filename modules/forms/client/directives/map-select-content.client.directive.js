@@ -17,7 +17,8 @@
           longitude: '=',
           address: '=',
           modalId:'@',
-          showMarker:'='
+          showMarker:'=',
+          latLongRequired:'='
         },
         link: function(scope, elem, attrs) {
           scope.mapUniqueId = 'forms-map-select-map' + mapUniqueId++;

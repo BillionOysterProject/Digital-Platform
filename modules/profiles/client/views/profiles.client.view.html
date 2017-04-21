@@ -4,24 +4,25 @@
             <div class="col-md-3 col-sm-4 shaded">
                 <img ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}" class="img-circle img-responsive center-block" width="100" />
                 <h3 class="text-center"><a href="#" ng-click="vm.openViewUserModal(vm.user)">{{vm.user.displayName}}</a></h3>
-                <p class="text-muted text-center"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
-                <p ng-bind-html="vm.user.researchInterests | sanitize"></p>
+                <p class="text-muted text-center" id="profile-view-contact"><b>{{vm.user.username}}</b><br/>{{vm.user.email}}</p>
+                <p id="profile-view-research-interests" ng-bind-html="vm.user.researchInterests | sanitize"></p>
                 <div class="text-center" ng-show="vm.isTeamLead">
                     <a class="btn btn-success" ng-click="vm.openTeamProfileForm()"><i class="fa fa-plus"></i> Create a team</a>
                 </div>
                 <hr/>
-                <div ng-show="vm.organization && vm.organization._id">
+                <div ng-show="vm.organization && vm.organization._id" id="profile-view-side-organization">
                   <h6>Organization</h6>
                   <h4><a ui-sref="profiles.organization-view({ schoolOrgId: vm.organization._id })">{{vm.organization.name}}</a><br/>
                     <small>{{vm.organization.city}}, {{vm.organization.state}}</small></h4>
                   <hr/>
                 </div>
-                <div ng-show="vm.teams">
+                <div ng-show="vm.teams" id="profile-view-side-teams">
                   <h6>{{vm.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
                   <h4 ng-repeat="team in vm.teams">
                     <a ui-sref="profiles.team-view({ teamId: team._id })">{{team.name}}</a><br/>
                     <small ng-show="vm.isTeamMember">
-                      <a ng-click="vm.openViewUserModal(team.teamLead)">{{team.teamLead.displayName}}</a></small>
+                      <span ng-repeat="lead in team.teamLeads"><a ng-click="vm.openViewUserModal(lead)">{{lead.displayName}}</a>{{($last) ? '' : ', '}}</span>
+                    </small>
                   </h4>
                   <hr/>
                 </div>
@@ -115,7 +116,7 @@
                         <div class="col-lg-6 col-md-12">
                             <br/>
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <h6><i class="fa fa-user"></i> <span class="blue">{{team.teamLeads.length}}</span> {{(team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
                                     <p ng-repeat="teamLead in team.teamLeads" ng-show="team.teamLeads && team.teamLeads.length > 0">
                                         <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
@@ -130,7 +131,7 @@
                                     <hr/>
                                     <h6><i class="fa fa-users"></i> <span class="blue">{{team.teamMembers.length}}</span> team members</h6>
                                 </div>
-                                <div class="col-sm-4" ng-show="vm.valuesLoaded">
+                                <div class="col-sm-6" ng-show="vm.valuesLoaded">
                                     <h6><i class="fa fa-file-image-o"></i><span class="blue">{{(team.expeditions) ? team.expeditions.length : 0}}</span> Published Expeditions</h6>
                                     <ul class="list-unstyled">
                                         <li ng-repeat="expedition in team.expeditions">
@@ -138,14 +139,14 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="col-sm-4" ng-show="vm.valuesLoaded">
+                                <!-- <div class="col-sm-4" ng-show="vm.valuesLoaded">
                                     <h6><i class="fa fa-flag"></i><span class="blue">{{(team.stations) ? team.stations.length : 0}}</span> Restoration Stations</h6>
                                     <ul class="list-unstyled">
                                         <li ng-repeat="station in team.stations">
                                           <a ng-click="vm.openViewRestorationStation(station)">{{station.name}}</a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

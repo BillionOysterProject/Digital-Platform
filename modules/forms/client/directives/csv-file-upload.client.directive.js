@@ -14,13 +14,13 @@
           headersValid: '=',
           filename: '='
         },
-        template: '<div class="input-group"><span class="input-group-btn"><span class="btn btn-primary btn-file">Browse&hellip; ' + 
-          '<input type="file" accept="text/comma-separated-values, text/csv, application/csv"></span></span>' + 
+        template: '<div class="input-group"><span class="input-group-btn"><span class="btn btn-primary btn-file">Browse&hellip; ' +
+          '<input type="file" accept="text/comma-separated-values, text/csv, application/csv"></span></span>' +
           '<input type="text" class="form-control" value="{{filename}}" readonly></div>',
-        link: function(scope, element) {
+        link: function(scope, element, attrs) {
           scope.header = true;
           scope.separator = ',';
-          
+
           var validateHeaders = function(content) {
             if (scope.header) {
               if (scope.headerList) {
@@ -86,40 +86,45 @@
               scope.headersValid = validateHeaders(content);
               scope.result = csvToJSON(content);
               scope.$apply();
-            } 
+            }
           });
 
           element.on('change', function(onChangeEvent) {
-            var reader = new FileReader();
-            scope.filename = onChangeEvent.target.files[0].name;
-            reader.onload = function(onLoadEvent) {
-              scope.$apply(function() {
-                var content = {
-                  csv: onLoadEvent.target.result.replace(/\r\n|\r/g,'\n'),
-                  header: scope.header,
-                  separator: scope.separator
-                };
+            if (onChangeEvent && onChangeEvent.target && onChangeEvent.target.files && onChangeEvent.target.files.length &&
+              onChangeEvent.target.files[0] && onChangeEvent.target.files[0].name) {
+              var reader = new FileReader();
+              scope.filename = onChangeEvent.target.files[0].name;
+              reader.onload = function(onLoadEvent) {
+                scope.$apply(function() {
+                  var content = {
+                    csv: onLoadEvent.target.result.replace(/\r\n|\r/g,'\n'),
+                    header: scope.header,
+                    separator: scope.separator
+                  };
 
-                scope.content = content.csv;
-                scope.headersValid = validateHeaders(content);
-                scope.result = csvToJSON(content);
-                scope.result.filename = scope.filename;
-              });
-            };
+                  scope.content = content.csv;
+                  scope.headersValid = validateHeaders(content);
+                  scope.result = csvToJSON(content);
+                  scope.result.filename = scope.filename;
+                });
+              };
 
-            if ((onChangeEvent.target.type === 'file') && (onChangeEvent.target.files !== null || onChangeEvent.srcElement.files !== null)) {
-              reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-            } else {
-              if (scope.content !== null) {
-                var content = {
-                  csv: scope.content,
-                  header: !scope.header,
-                  separator: scope.separator
-                };
-                scope.headersValid = validateHeaders(content);
-                scope.result = csvToJSON(content);
-
+              if ((onChangeEvent.target.type === 'file') && (onChangeEvent.target.files !== null || onChangeEvent.srcElement.files !== null)) {
+                reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+              } else {
+                if (scope.content !== null) {
+                  var content = {
+                    csv: scope.content,
+                    header: !scope.header,
+                    separator: scope.separator
+                  };
+                  scope.headersValid = validateHeaders(content);
+                  scope.result = csvToJSON(content);
+                }
               }
+            } else if (onChangeEvent && onChangeEvent.target && !onChangeEvent.target.files) {
+              scope.filename = null;
+              angular.element('input[type="file"]').val(null);
             }
           });
         }

@@ -934,43 +934,50 @@ var convertCsvMember = function(csvMember, successCallback, errorCallback) {
 exports.validateMemberCsv = function (req, res) {
   convertCsvMember(req.body.member,
     function(memberJSON) {
+      var pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       var email = memberJSON.email;
-      var username = email.substring(0, email.indexOf('@'));
-      User.find({ $or: [{ 'email': email },{ 'username': username }] }).exec(function(userErr, users) {
-        if (userErr) {
-          return res.status(400).send({
-            message: userErr
-          });
-        } else {
-          if (users && users.length > 0) {
-            var nameIndex = _.findIndex(users, function(u) {
-              return u.username === username;
+      var username = (memberJSON.username) ? memberJSON.username : email.substring(0, email.indexOf('@'));
+      if(!pattern.test(email)) {
+        return res.status(400).send({
+          message: 'Email is invalid'
+        });
+      } else {
+        User.find({ $or: [{ 'email': email },{ 'username': username }] }).exec(function(userErr, users) {
+          if (userErr) {
+            return res.status(400).send({
+              message: userErr
             });
-
-            var emailIndex = _.findIndex(users, function(u) {
-              return u.email === email;
-            });
-
-            if (nameIndex > -1 && emailIndex === -1) {
-              return res.status(400).send({
-                message: 'Email address is already in use'
+          } else {
+            if (users && users.length > 0) {
+              var nameIndex = _.findIndex(users, function(u) {
+                return u.username === memberJSON.username;
               });
-            } else if (nameIndex === -1 && emailIndex > -1) {
-              return res.status(400).send({
-                message: 'Username is already in use'
+
+              var emailIndex = _.findIndex(users, function(u) {
+                return u.email === email;
               });
+
+              if (nameIndex > -1 && emailIndex === -1) {
+                return res.status(400).send({
+                  message: 'Username is already in use'
+                });
+              } else if (nameIndex === -1 && emailIndex > -1) {
+                return res.status(400).send({
+                  message: 'Email is already in use'
+                });
+              } else {
+                return res.status(400).send({
+                  message: 'Username and email address are already in use'
+                });
+              }
             } else {
-              return res.status(400).send({
-                message: 'Username and email address is already in use'
+              return res.status(200).send({
+                message: 'Valid member'
               });
             }
-          } else {
-            return res.status(200).send({
-              message: 'Valid member'
-            });
           }
-        }
-      });
+        });
+      }
     }, function (err) {
       return res.status(400).send({
         message: err

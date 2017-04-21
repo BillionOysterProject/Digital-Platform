@@ -63,8 +63,8 @@ var findTeamStats = function(orgToFind, callback) {
         teamLeads = teamLeads.concat(teams[i].teamLeads);
         teamMembers = teamMembers.concat(teams[i].teamMembers);
       }
-      teamLeads = _.uniq(teamLeads);
-      teamMembers = _.uniq(teamMembers);
+      teamLeads = _.uniqWith(teamLeads, _.isEqual);
+      teamMembers = _.uniqWith(teamMembers, _.isEqual);
     }
     org.teams = {
       teamLeads: teamLeads,
