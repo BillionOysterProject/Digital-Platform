@@ -58,17 +58,54 @@ var RestorationStationSchema = new Schema({
     type: String,
     //required: true
   },
+  shoreLineType: {
+    type: String,
+    //required: true
+  },
   status: {
     type: String,
-    enum: ['Active', 'Lost'],
+    enum: ['Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'],
     default: ['Active'],
     required: true
+  },
+  statusHistory: [{
+    status: {
+      type: String,
+      enum: ['Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'],
+      default: ['Active']
+    },
+    description: String,
+    photo: {
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }
+  }],
+  notes: {
+    type: String
   },
   photo: {
     originalname: String,
     mimetype: String,
     filename: String,
     path: String
+  },
+  siteCoordinator: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  otherSiteCoordinator: {
+    name: String,
+    email: String
+  },
+  propertyOwner: {
+    type: Schema.ObjectId,
+    ref: 'MetaPropertyOwner'
+  },
+  otherPropertyOwner: {
+    name: String,
+    email: String
   },
   baselines: {
     substrateShell1: [BaselineHistory],

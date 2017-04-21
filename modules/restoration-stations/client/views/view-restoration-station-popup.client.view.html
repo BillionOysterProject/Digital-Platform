@@ -1,0 +1,16 @@
+<div class="modal fade" id="modal-station" tabindex="-1" role="dialog" data-backdrop="static"><!-- data-keyboard="false"-->
+    <div class="modal-dialog modal-lg" role="document">
+        <view-restoration-station-content station="station" close-function="closeViewRestorationStation"
+          open-ors-form="openFormRestorationStation" open-ors-status="openRestorationStationStatus"
+          open-team-lead-view="openTeamLeadView" ng-show="content === 'orsView'"></view-restoration-station-content>
+
+        <form-restoration-station-content station="station" map-points="mapPoints" remove-function="deleteRestorationStation"
+          close-function="closeFormRestorationStation"
+          ng-show="content === 'orsForm'"></form-restoration-station-content>
+
+        <form-restoration-station-status-content station="station" close-function="closeRestorationStationStatus"
+          ng-show="content === 'orsStatus'"></form-restoration-station-status-content>
+
+        <user-crud-content user="user" close-function="closeTeamLeadView" ng-show="content === 'userView'"></user-crud-content>
+    </div>
+</div>

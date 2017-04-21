@@ -43,7 +43,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
         } else {
           // And redirect to the previous or home page
           var toGoState = $state.previous.state.name;
-          if(toGoState === undefined || toGoState === null || toGoState === 'home') {
+          if(!toGoState || toGoState === 'home') {
             toGoState = 'restoration-stations.dashboard';
           }
           $state.go(toGoState, $state.previous.params);
@@ -112,6 +112,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       { label: 'Citizen Scientist', value: 'citizen scientist' },
       { label: 'Professional Scientist', value: 'professional scientist' },
       { label: 'Site Coordinator', value: 'site coordinator' },
+      { label: 'Property Owner', value: 'property owner' },
       { label: 'Other', value: 'other' }
     ];
 
@@ -170,22 +171,33 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       }
     };
 
-    vm.openSchoolOrgForm = function() {
+    // vm.openSchoolOrgForm = function() {
+    //   vm.newSchoolOrg = new SchoolOrganizationsService();
+    //   angular.element('#modal-org-editadd').modal('show');
+    // };
+    //
+    // vm.saveSchoolOrgForm = function(newSchoolOrg) {
+    //   vm.credentials.schoolOrg = 'new';
+    //   vm.newSchoolOrg = angular.copy(newSchoolOrg);
+    //   vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
+    //   vm.findOrganizations();
+    //   angular.element('#modal-org-editadd').modal('hide');
+    // };
+
+    vm.openFormOrg = function() {
       vm.newSchoolOrg = new SchoolOrganizationsService();
-      angular.element('#modal-org-editadd').modal('show');
+      angular.element('#modal-org-edit').modal('show');
     };
 
-    vm.saveSchoolOrgForm = function(newSchoolOrg) {
-      vm.credentials.schoolOrg = 'new';
-      vm.newSchoolOrg = angular.copy(newSchoolOrg);
-      vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
-      vm.findOrganizations();
-      angular.element('#modal-org-editadd').modal('hide');
+    vm.closeFormOrg = function(newSchoolOrg) {
+      angular.element('#modal-org-edit').modal('hide');
+      if (newSchoolOrg) {
+        vm.credentials.schoolOrg = 'new';
+        vm.newSchoolOrg = angular.copy(newSchoolOrg);
+        vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
+        vm.findOrganizations();
+      }
     };
 
-    vm.cancelSchoolOrgForm = function() {
-      vm.newSchoolOrg = {};
-      angular.element('#modal-org-editadd').modal('hide');
-    };
   }
 ]);

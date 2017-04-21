@@ -1,0 +1,2 @@
+{"_id":{"$oid":"58f7cc41bb4e4d02d1cb468f"},"name":"Property1","email":"property1@localhost.com","created":{"$date":"2016-08-24T17:27:45.549Z"}}
+{"_id":{"$oid":"58f7cc86bb4e4d02d1cb4690"},"name":"Property2","email":"property2@localhost.com","created":{"$date":"2016-08-24T17:27:45.549Z"}}

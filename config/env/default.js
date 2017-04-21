@@ -142,9 +142,30 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    organizationPhotoUpload: {
+      s3dest: 'uploads/school-orgs/img/organization/',
+      dest: './modules/school-orgs/client/img/organization/uploads/',
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    teamPhotoUpload: {
+      s3dest: 'uploads/teams/img/team/',
+      dest: './modules/teams/client/img/team/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     stationPhotoUpload: {
       s3dest: 'uploads/restoration-stations/img/station/',
       dest: './modules/restoration-stations/client/img/station/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    stationStatusPhotoUpload: {
+      s3dest: 'uploads/restoration-stations/img/status/',
+      dest: './modules/restoration-stations/client/img/status/uploads/', // Lesson upload destination path
       limits: {
         fileSize: 20*1024*1024
       }

@@ -1,0 +1,23 @@
+<div>
+  <div class="row">
+      <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
+
+        <google-geocode ng-if="canGeocode" place-selected="placeSelected"></google-geocode>
+
+        <leaflet-map map-controls="mapControls" can-click-map-to-add-marker="canClickMapToAddMarker"
+          map-click-event="mapClick" marker-drag-end-event="markerDragEnd"
+          can-move-marker="canMoveMarker" show-marker="showMarker"></leaflet-map>
+          <br />
+          <div class="row">
+              <div class="form-group col-sm-6">
+                  <label>Latitude{{(latLongRequired) ? ' *' : ''}}</label>
+                  <input type="text" class="form-control" placeholder="39.290385" ng-model="latitude" ng-required="latLongRequired"/>
+              </div>
+              <div class="form-group col-sm-6">
+                  <label>Longitude{{(latLongRequired) ? ' *' : ''}}</label>
+                  <input type="text" class="form-control" placeholder="-76.612189" ng-model="longitude" ng-required="latLongRequired"/>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

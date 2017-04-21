@@ -1,34 +1,18 @@
-<div class="modal-dialog" role="document">
+<div class="modal fade" id="{{modalId}}" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-              ng-click="vm.dismissFunction()"><span aria-hidden="true">&times;</span></button>
+              ng-click="dismissFunction()"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Mark the location on a map</h4>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-sm-12"><!-- TODO: Add map and allow marker to be placed on a location, pull the lat/lng into the form on "Save" -->
-
-                  <google-geocode ng-if="vm.canGeocode" place-selected="vm.placeSelected"></google-geocode>
-
-                  <leaflet-map map-controls="vm.mapControls" can-click-map-to-add-marker="vm.canClickMapToAddMarker" map-click-event="vm.mapClick" marker-drag-end-event="vm.markerDragEnd"
-                               can-move-marker="vm.canMoveMarker" show-marker="vm.showMarker"></leaflet-map>
-                    <br />
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label>Latitude</label>
-                            <input type="text" class="form-control" placeholder="39.290385" ng-model="vm.latitude"/>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>Longitude</label>
-                            <input type="text" class="form-control" placeholder="-76.612189" ng-model="vm.longitude"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <map-select-content can-click-map-to-add-marker="canClickMapToAddMarker" can-geocode="canGeocode" can-move-marker="canMoveMarker"
+              latitude="latitude" longitude="longitude" address="address" modal-id="{{modalId}}" show-marker="showMarker"></map-select-content>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.dismissFunction()" id="saveMapSelectModal-{{vm.modalId}}">Save</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="dismissFunction()" id="saveMapSelectModal-{{modalId}}">Save</button>
         </div>
     </div>
+  </div>
 </div>

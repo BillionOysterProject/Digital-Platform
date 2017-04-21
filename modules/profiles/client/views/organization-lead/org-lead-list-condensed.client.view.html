@@ -1,0 +1,6 @@
+<div ng-repeat="orgLead in orgLeads">
+    <img ng-show="orgLead.profileImageURL" ng-src="{{orgLead.profileImageURL}}"
+        alt="{{orgLead.displayName}}" class="header-profile-image">
+    {{orgLead.displayName}}
+    <span ng-hide="$last">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+</div>

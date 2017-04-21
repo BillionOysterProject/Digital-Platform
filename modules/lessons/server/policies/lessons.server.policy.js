@@ -63,6 +63,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/feedback',
       permissions: ['*']
     }, {
+      resources: '/api/lessons/tracked-list',
+      permissions: ['*']
+    }, {
       resources: '/api/lessons/favorites',
       permissions: '*'
     }, {
@@ -99,10 +102,16 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/unfavorite',
       permissions: '*'
     }, {
+      resources: '/api/lessons/:lessonId/tracked-list',
+      permissions: ['get']
+    }, {
       resources: '/api/lessons/:lessonId/download',
       permissions: '*'
     }, {
       resources: '/api/lessons/favorites',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/tracked-list',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/tracked-list',
@@ -141,6 +150,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/:lessonId/download',
       permissions: ['get']
     }, {
+      resources: '/api/lessons/tracked-list',
+      permissions: ['get']
+    }, {
       resources: '/api/lessons/:lessonId/tracked-list',
       permissions: ['get']
     }, {
@@ -160,6 +172,15 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/lessons/:lessonId',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['team member', 'team member pending'],
+    allows: [{
+      resources: '/api/lessons',
+      permissions: ['get']
+    }, {
+      resources: '/api/lessons/tracked-list',
       permissions: ['get']
     }]
   }]);

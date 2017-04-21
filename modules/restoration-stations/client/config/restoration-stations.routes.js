@@ -11,7 +11,7 @@
     $stateProvider
       .state('restoration-stations', {
         abstract: true,
-        url: '/restoration-stations',
+        url: '/restoration',
         template: '<ui-view/>'
       })
       .state('restoration-stations.dashboard', {
@@ -27,7 +27,7 @@
       .state('restoration-stations.list', {
         url: '/stations',
         templateUrl: 'modules/restoration-stations/client/views/list-stations.client.view.html',
-        controller: 'RestorationStationsDashboardController',
+        controller: 'RestorationStationListController',
         controllerAs: 'vm',
         data: {
           roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],

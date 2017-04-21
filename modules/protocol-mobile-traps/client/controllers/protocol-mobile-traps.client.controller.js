@@ -380,5 +380,13 @@
         validateErrorCallback();
       }
     };
+
+    $scope.openViewUserModal = function() {
+      angular.element('#modal-profile-user').modal('show');
+    };
+
+    $scope.closeViewUserModal = function(refresh) {
+      angular.element('#modal-profile-user').modal('hide');
+    };
   }
 })();

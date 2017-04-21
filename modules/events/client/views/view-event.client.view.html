@@ -9,6 +9,7 @@
                         'col-xs-12': (vm.past === true || vm.isTeamMember)}">
                             <span ng-show="vm.event.dates && vm.event.dates.length > 1"
                               ng-repeat="date in vm.event.dates">
+                              <!-- vm.getEventDayOfWeekShort(date.startDateTime) or vm.getEventDayOfWeekLong(date.startDateTime)-->
                               <h3><b>{{vm.getEventDate(date.startDateTime)}}</b>
                                 {{vm.getEventYear(date.startDateTime)}}</h3>
                               <h5>{{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</h5>
@@ -63,7 +64,7 @@
                 <a class="btn btn-primary" ng-click="vm.openEmailRegistrants()">Email registrants</a>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-sm-12">
                 <p ng-bind-html="vm.event.description | sanitize"></p>

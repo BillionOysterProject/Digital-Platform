@@ -15,6 +15,7 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
+.content-flush { padding: 0 0 0 80px; }
 .content-fixed { position: fixed; z-index: 1; }
 .content-fixed + div { padding-top: 125px; }
 
@@ -601,6 +602,10 @@ h6, .h6 {
     letter-spacing: 2px;
 }
 
+.capitalize {
+   text-transform: capitalize;
+}
+
 .break {
     word-break: break-all;
 }
@@ -705,6 +710,29 @@ blockquote {
 /*.table tr td {
     word-break: break-all;
 }*/
+
+
+/*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+           MAP MARKERS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+.leaflet-popup-content {
+    margin: 20px;
+}
+
+    .leaflet-popup-content h4 {
+        margin: 10px 0 0 0;
+    }
+
+    .leaflet-popup-content p {
+        margin: 5px 0 10px 0;
+    }
+
+    .leaflet-popup-content a.btn {
+        color: #fff;
+    }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1037,6 +1065,20 @@ form.ng-submitted .ng-invalid {
         background: #ea6158; /*fallback*/
         color: #fff;
     }
+        
+        .library-item .panel .panel-heading.shaded, 
+        .panel .panel-heading.shaded {
+            background: #f4f7f8;
+            color: #2c3c56;
+        }
+        
+        .panel .panel-heading.flush {
+            padding: 0;
+        }
+            
+            .panel .panel-heading.flush .img-responsive {
+                width: 100%;
+            }
 
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

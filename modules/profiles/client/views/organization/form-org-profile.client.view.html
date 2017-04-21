@@ -1,0 +1,74 @@
+<div class="modal fade" id="modal-org-edit" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="form.orgProfileForm" ng-submit="save(form.orgProfileForm.$valid)" novalidate>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" ng-show="organization._id">Edit the <span class="red">{{organization.name}}</span> profile</h4>
+          <h4 class="modal-title" ng-hide="organization._id">Add an organization</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="name" class="control-label required">Organization Name *</label>
+                <input type="text" name="name" class="form-control" ng-model="organization.name" required/>
+                <div ng-messages="form.orgProfileForm.name.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Organization name is required.</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="streetAddress" class="control-label required">Street Address *</label>
+                <input type="text" name="streetAddress" class="form-control" ng-model="organization.streetAddress" required/>
+                <div ng-messages="form.orgProfileForm.streetAddress.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Street address is required.</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-sm-6">
+                  <label for="city" class="control-label required">City *</label>
+                  <input type="text" name="city" class="form-control" ng-model="organization.city" required/>
+                  <div ng-messages="form.orgProfileForm.city.$error" role="alert">
+                    <p class="help-block error-text" ng-message="required">City is required.</p>
+                  </div>
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="state" class="control-label required">State *</label>
+                  <input type="text" name="state" class="form-control" ng-model="organization.state" required/>
+                  <div ng-messages="form.orgProfileForm.state.$error" role="alert">
+                    <p class="help-block error-text" ng-message="required">State is required.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="type" class="control-label required">Organization Type *</label>
+                <select class="form-control" name="type" id="type" ng-model="organization.organizationType" required>
+                  <option ng-repeat="type in types" value="{{type.value}}">{{type.name}}</option>
+                </select>
+                <div ng-messages="form.orgProfileForm.type.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Organization type is required.</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description" class="control-label required">Organization Description *</label>
+                <textarea class="form-control" name="description" rows="5" ng-model="organization.description" required></textarea>
+                <div ng-messages="form.orgProfileForm.description.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Description is required.</p>
+                </div>
+              </div>
+              <div class="form-group" ng-show="isAdmin || organization._id">
+                <label for="image" class="control-label">Organization Photo</label>
+                <single-image-drop-zone uploader="orgPhotoUploader" image-url="orgPhotoUrl"
+                image-alt="Organization Photo" id="org-image-dropzone"></single-image-drop-zone>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{organization._id ? 'Update' : 'Add'}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

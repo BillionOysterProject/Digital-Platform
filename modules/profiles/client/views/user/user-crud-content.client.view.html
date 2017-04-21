@@ -1,0 +1,17 @@
+<div class="modal-content">
+  <view-user-content user="user" teams="teams" organization="organization"
+    open-user-form="openUserForm" open-user-delete="openUserDelete"
+    close-function="closeFunction" ng-show="content === 'userView'"></view-user-content>
+
+  <form-admin-team-lead-content user="user" team="team" organization="organization"
+    close-function="closeAdminTeamLeadForm" ng-show="content === 'formTeamLead'"></form-admin-team-lead-content>
+
+  <delete-team-lead-content team-lead="user" team="team"
+    close-function="closeDeleteAdminTeamLead" ng-show="content === 'deleteTeamLead'"></delete-team-lead-content>
+
+  <form-team-member-content team-member="user" team="team" organization="organization"
+    close-function="closeFormTeamMember" ng-show="content === 'formTeamMember'"></form-team-member-content>
+
+  <delete-team-member-content team-member="user" team="team" organization="organization"
+    close-function="closeDeleteTeamMember" ng-show="content === 'deleteTeamMember'"></delete-team-member-content>
+</div>

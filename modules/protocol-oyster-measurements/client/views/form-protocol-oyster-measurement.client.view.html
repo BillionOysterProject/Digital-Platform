@@ -75,7 +75,11 @@
                     <div class="form-group">
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+
+                        <!--TODO: Wire up link to open status report modal (currently at the bottom of RS Dashboard until it and ORS profiles are wired up)-->
+                        <span class="help-block">Was the cage lost, destroyed or significantly damaged? <a class="btn btn-sm btn-danger pull-right" ng-click="openORSStatusForm()">Submit status update</a></span>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -152,3 +156,5 @@ save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm" index="{
     longitude="oysterMeasurement.longitude" can-geocode="true" can-click-map-to-add-marker="true"
     can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 </div>
+
+<form-restoration-station-status-popup station="station" close-function="closeORSStatusForm"></form-restoration-station-status-popup>

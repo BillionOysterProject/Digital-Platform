@@ -1,0 +1,113 @@
+<div class="modal-content">
+  <form name="form.restorationStationForm" ng-submit="save(form.restorationStationForm.$valid)" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="cancelFunction()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" ng-hide="station._id">Register an ORS</h4>
+        <h4 class="modal-title" ng-show="station._id">Edit the <span class="red">{{station.name}}</span> ORS</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="required" for="name">ORS Name *</label>
+                <input type="text" class="form-control" ng-model="station.name" name="name" id="name" required/>
+            </div>
+            <div class="form-group col-sm-3">
+                <label class="required" for="status">Status *</label>
+                <select class="form-control" ng-model="station.status" name="status" id="status" required>
+                    <option ng-repeat="type in statuses" value="{{type.value}}">{{type.label}}</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="shorelineType" class="required">Shoreline Type *</label>
+                <select class="form-control" name="shoreLineType"
+                ng-options="type.value as type.label for type in shorelineTypes"
+                ng-model="station.shoreLineType" required></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="required" for="bodyOfWater">Body of Water *</label>
+                <input type="text" ng-model="station.bodyOfWater" placeholder="Body of Water"
+                uib-typeahead="bodyOfWater.name as bodyOfWater.name for bodyOfWater in bodiesOfWater | filter:{name:$viewValue}"
+                class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="required" for="boroughCounty">Borough/County *</label>
+                <input type="text" ng-model="station.boroughCounty" placeholder="Borough/County"
+                uib-typeahead="boroughCounty.name as boroughCounty.name for boroughCounty in boroughsCounties | filter:{name:$viewValue}"
+                class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea class="form-control" rows="3" ng-model="station.notes"></textarea>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-6">
+              <map-select-content modal-id="modal-ors-map" latitude="station.latitude"
+              longitude="station.longitude" address="station.addressString"
+              can-geocode="true" can-click-map-to-add-marker="true"
+              can-move-marker="true" show-marker="true" lat-long-required="true"></map-select-content>
+            </div>
+            <div class="col-sm-6">
+
+                <!--TODO wire up -- choose from site coordinator list (a type of Team Lead chosen at signup),
+                if none give option to add name and email -->
+                <div class="form-group">
+                    <label for="siteCoordinator">Site Coordinator</label>
+                    <select class="form-control" name="siteCoordinator" id="siteCoordinator" ng-model="station.siteCoordinator._id">
+                        <option ng-repeat="person in siteCoordinators" value="{{person._id}}">{{person.displayName}}</option>
+                        <option value="-1">Other</option>
+                    </select>
+                </div>
+                <div class="row" ng-show="station.siteCoordinator._id === '-1'">
+                    <div class="form-group col-sm-6">
+                        <label>Site Coordinator Name</label>
+                        <input class="form-control" type="text" ng-model="station.siteCoordinator.name"/>
+                    </div>
+                    <div class="form-group col-sm-6">
+                      <label>Site Coordinator Email</label>
+                      <input class="form-control" type="text" ng-model="station.siteCoordinator.email"/>
+                    </div>
+                </div>
+
+                <hr/>
+                <!--TODO wire up -- choose from property owner list (a type of Team Lead chosen at signup),
+                if none give option to add name and email -->
+                <div class="form-group">
+                    <label for="propertyOwner">Property Owner</label>
+                    <select class="form-control" name="propertyOwner" id="propertyOwner" ng-model="station.propertyOwner._id">
+                        <option ng-repeat="person in propertyOwners" value="{{person._id}}">{{person.name}}</option>
+                        <option value="-1">Other</option>
+                    </select>
+                </div>
+                <div class="row" ng-show="station.propertyOwner._id === '-1'">
+                    <div class="form-group col-sm-6">
+                        <label>Property Owner Name</label>
+                        <input class="form-control" type="text" ng-model="station.propertyOwner.name"/>
+                    </div>
+                    <div class="form-group col-sm-6">
+                      <label>Property Owner Email</label>
+                      <input class="form-control" type="text" ng-model="station.propertyOwner.email"/>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group">
+                    <label for="image" class="control-label">Take a photograph of the station from the shore with your camera</label>
+                    <single-image-drop-zone uploader="stationPhotoUploader" image-url="stationPhotoURL"
+                    image-alt="Station Photograph" id="ors-image-dropzone"></single-image-drop-zone>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-show="station._id" ng-click="remove()">Delete</button>
+        <button type="button" class="btn btn-default" ng-click="cancelFunction()" ng-disabled="disableCancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{station._id ? 'Update' : 'Register'}}</button>
+    </div>
+  </form>
+</div>

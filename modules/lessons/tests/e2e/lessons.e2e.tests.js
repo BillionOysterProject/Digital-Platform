@@ -13,7 +13,7 @@ var path = require('path'),
   wysiwygFillin = CommonCore.wysiwygFillin,
   EC = protractor.ExpectedConditions;
 
-describe('Lesson E2E Tests', function() {
+xdescribe('Lesson E2E Tests', function() {
   var leader = CommonUser.leader;
   var member1 = CommonUser.member1;
   var member2 = CommonUser.member2;
@@ -580,7 +580,8 @@ describe('Lesson E2E Tests', function() {
         // Sign in as team lead
         signinAs(leader);
         // Assert that it went to the correct opening page
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
+        browser.get('http://localhost:8081/lessons');
         // Assert taht there are 6 expeditions
         var lessons = element.all(by.repeater('lesson in vm.lessons track by lesson._id'));
         expect(lessons.count()).toEqual(6);
@@ -659,7 +660,8 @@ describe('Lesson E2E Tests', function() {
       // Sign in as team lead
       signinAs(leader);
       // Assert that it went to the correct opening page
-      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/lessons');
+      expect(browser.getCurrentUrl()).toEqual('http://localhost:8081/restoration');
+      browser.get('http://localhost:8081/lessons');
       // Click create lesson button
       element(by.css('[ui-sref="lessons.create"]')).click();
       // View form page

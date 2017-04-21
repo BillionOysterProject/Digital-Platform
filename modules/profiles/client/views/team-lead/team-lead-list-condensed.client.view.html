@@ -1,0 +1,6 @@
+<div ng-repeat="teamLead in teamLeads">
+    <img ng-show="teamLead.profileImageURL" ng-src="{{teamLead.profileImageURL}}"
+        alt="{{teamLead.displayName}}" class="header-profile-image">
+    {{teamLead.displayName}}
+    <span ng-hide="$last">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+</div>

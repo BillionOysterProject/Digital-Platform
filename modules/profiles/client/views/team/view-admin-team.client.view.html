@@ -1,0 +1,54 @@
+<div class="modal fade" id="modal-admin-team" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{team.name}}</h4>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-3">
+                        <img ng-src="{{team.teamLead.profileImageURL}}" class="profile-image pull-left">
+                        <p>{{team.teamLead.displayName}}<br/><span class="text-muted">{{team.schoolOrg.name}}</span></p>
+                    </div>
+                    <div class="col-md-3 text-muted">
+                        <h6><span class="red">{{team.teamMembers.length}}</span> Members</h6>
+                    </div>
+                    <!-- <div class="col-md-3 text-muted">
+                        <h6><span class="red">2</span> Expeditions</h6>
+                    </div> -->
+                </div>
+            </div>
+            <div class="modal-body">
+              <div class="alert alert-danger text-center" ng-show="deleteTeamError || deleteTeamMemberError">
+                <p ng-bind="deleteTeamMemberError"></p>
+                <p ng-bind="deleteTeamError"></p>
+              </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-verticalalign table-responsive">
+                            <tr ng-repeat="member in pagedItems">
+                                <td><img ng-src="{{member.profileImageURL}}" class="header-profile-image">
+                                <td><b>{{member.displayName}}</b></td>
+                                <td class="text-muted">{{member.username}}</td>
+                                <td class="text-muted">{{member.email}}</td>
+                                <td class="text-right">
+                                  <a class="btn btn-danger" ng-click="deleteTeamMemberFunction(member, team)">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                  </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <uib-pagination boundary-links="true" max-size="7" items-per-page="itemsPerPage" total-items="team.teamMembers.length" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"
+                  ng-disabled="team.teamMembers.length > 0" ng-click="deleteTeamFunction(team)">Delete team</button>
+                <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
+            </div>
+        </div>
+    </div>
+    <!--remove-team-member-modal user="memberToDelete" team="memberToDeleteTeam" delete-function="deleteTeamMember" cancel-function="cancelDeleteTeamMember"></remove-team-member-modal-->
+</div>
