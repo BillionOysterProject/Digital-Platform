@@ -115,8 +115,8 @@ module.exports = {
       }
     },
     researchHeaderImageUpload: {
-      s3dest: 'uploads/research/img/header-images/',
-      dest: './modules/research/client/img/header-image/uploads/',
+      s3dest: 'uploads/researches/img/header-images/',
+      dest: './modules/researches/client/img/header-image/uploads/',
       limits: {
         fileSize: 20*1024*1024
       }

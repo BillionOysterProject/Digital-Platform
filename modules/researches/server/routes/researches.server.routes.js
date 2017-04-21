@@ -16,7 +16,7 @@ module.exports = function(app) {
     .post(researches.uploadHeaderImage);
 
   app.route('/api/research/:researchId/download').all(researchesPolicy.isAllowed)
-    .post(researches.download);
+    .get(researches.download);
 
   app.route('/api/research/:researchId').all(researchesPolicy.isAllowed)
     .get(researches.read)

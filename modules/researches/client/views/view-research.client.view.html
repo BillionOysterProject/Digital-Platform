@@ -26,8 +26,9 @@
                         -->
                         <!-- <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
-                        <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>
-                        <a class="btn btn-default">Download PDF</a> -->
+                        <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
+                        <a class="btn btn-default" download="{{vm.research.filename}}" target="_blank"
+                        ng-href="api/research/{{vm.research._id}}/download?filename={{vm.research.filename}}">Download PDF</a>
                     </div>
                 </nav>
             </div>

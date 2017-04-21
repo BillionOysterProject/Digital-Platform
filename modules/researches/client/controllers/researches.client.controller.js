@@ -6,16 +6,18 @@
     .module('researches')
     .controller('ResearchesController', ResearchesController);
 
-  ResearchesController.$inject = ['$scope', '$state', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
+  ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
   'ExpeditionViewHelper'];
 
-  function ResearchesController ($scope, $state, $timeout, research, lodash, moment, Authentication, FileUploader,
+  function ResearchesController ($scope, $state, $http, $timeout, research, lodash, moment, Authentication, FileUploader,
   ExpeditionViewHelper) {
     var vm = this;
     var toGoState = null;
     var toGoParams = null;
 
     vm.research = research;
+    vm.research.filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/, '_');
+
     vm.authentication = Authentication;
     vm.user = Authentication.user;
     vm.error = [];

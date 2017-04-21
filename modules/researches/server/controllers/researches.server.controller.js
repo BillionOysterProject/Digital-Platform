@@ -546,9 +546,8 @@ exports.download = function(req, res) {
   doc.stdout.pipe(res);
 
   res.writeHead(200, {
-    'Content-Type': 'application/pdf',
-    'Access-Control-Allow-Origin': '*',
-    'Content-Disposition': 'inline; filename=order.pdf'
+    'Content-Type': 'application/pdf, application/octet-stream',
+    'Content-Disposition': 'attachment; filename=' + req.query.filename
   });
 };
 
