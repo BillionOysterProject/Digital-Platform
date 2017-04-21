@@ -23,32 +23,8 @@ describe('Restoration Station E2E Tests', function() {
   var team = CommonUser.team;
   var organization = CommonUser.organization;
 
-  var station1 = {
-    name: 'Test Station',
-    location: {
-      latitude: '39.765',
-      longitude: '-76.234'
-    },
-    bodyOfWater: 'Flushing Bay',
-    boroughCounty: 'Queens',
-    shoreLineText: 'Fixed Pier',
-    statusText: 'Active',
-    siteCoordinatorName: 'Site1 Coordinator',
-    propertyOwnerName: 'Property1'
-  };
-  var station2 = {
-    name: 'Other Station',
-    location: {
-      latitude: '39.765',
-      longitude: '-76.234'
-    },
-    bodyOfWater: 'Bronx River',
-    boroughCounty: 'Bronx',
-    shoreLineText: 'Dirt/Sand',
-    statusText: 'Active',
-    siteCoordinatorName: 'Site2 Coordinator',
-    propertyOwnerName: 'Property2'
-  };
+  var station1 = CommonProfiles.station1;
+  var station2 = CommonProfiles.station2;
   var station3 = {
     name: 'New Station 1',
     location: {

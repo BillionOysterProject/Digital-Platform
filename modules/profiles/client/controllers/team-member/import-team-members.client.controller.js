@@ -19,7 +19,6 @@
         headersValid: false,
         filename: ''
       };
-      console.log('reset', $scope.csv);
 
       $scope.bulkFileUploaded = false;
 

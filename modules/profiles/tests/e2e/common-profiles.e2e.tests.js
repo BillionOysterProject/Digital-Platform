@@ -3,6 +3,33 @@
 var path = require('path'),
   EC = protractor.ExpectedConditions;
 
+var station1 = {
+  name: 'Test Station',
+  location: {
+    latitude: '39.765',
+    longitude: '-76.234'
+  },
+  bodyOfWater: 'Flushing Bay',
+  boroughCounty: 'Queens',
+  shoreLineText: 'Fixed Pier',
+  statusText: 'Active',
+  siteCoordinatorName: 'Site1 Coordinator',
+  propertyOwnerName: 'Property1'
+};
+var station2 = {
+  name: 'Other Station',
+  location: {
+    latitude: '39.765',
+    longitude: '-76.234'
+  },
+  bodyOfWater: 'Bronx River',
+  boroughCounty: 'Bronx',
+  shoreLineText: 'Dirt/Sand',
+  statusText: 'Active',
+  siteCoordinatorName: 'Site2 Coordinator',
+  propertyOwnerName: 'Property2'
+};
+
 var assertORSProfile = function(values, teamLead, organization, isAdmin, isOwner) {
   // Station image
   if (values.photo) {
@@ -72,5 +99,7 @@ var assertORSProfile = function(values, teamLead, organization, isAdmin, isOwner
 };
 
 module.exports = {
-  assertORSProfile: assertORSProfile
+  assertORSProfile: assertORSProfile,
+  station1: station1,
+  station2: station2
 };

@@ -90,10 +90,8 @@
           });
 
           element.on('change', function(onChangeEvent) {
-            console.log('csv change');
             if (onChangeEvent && onChangeEvent.target && onChangeEvent.target.files && onChangeEvent.target.files.length &&
               onChangeEvent.target.files[0] && onChangeEvent.target.files[0].name) {
-              console.log('filename', onChangeEvent.target.files[0].name);
               var reader = new FileReader();
               scope.filename = onChangeEvent.target.files[0].name;
               reader.onload = function(onLoadEvent) {
@@ -125,7 +123,6 @@
                 }
               }
             } else if (onChangeEvent && onChangeEvent.target && !onChangeEvent.target.files) {
-              console.log('no files');
               scope.filename = null;
               angular.element('input[type="file"]').val(null);
             }
