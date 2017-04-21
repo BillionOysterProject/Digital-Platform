@@ -132,7 +132,7 @@
                                     <h6><i class="fa fa-users"></i> <span class="blue">{{team.teamMembers.length}}</span> team members</h6>
                                 </div>
                                 <div class="col-sm-6" ng-show="vm.valuesLoaded">
-                                    <h6><i class="fa fa-file-image-o"></i><span class="blue">{{(team.expeditions) ? team.expeditions.length : 0}}</span> Published Expeditions</h6>
+                                    <h6><i class="fa fa-flag"></i> <span class="blue">{{(team.expeditions) ? team.expeditions.length : 0}}</span> Published Expeditions</h6>
                                     <ul class="list-unstyled">
                                         <li ng-repeat="expedition in team.expeditions">
                                           <a ui-sref="expeditions.view({ expeditionId: expedition._id })">{{expedition.name}}</a>
