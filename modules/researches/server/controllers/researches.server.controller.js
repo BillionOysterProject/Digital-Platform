@@ -7,6 +7,8 @@ var path = require('path'),
   mongoose = require('mongoose'),
   Research = mongoose.model('Research'),
   Team = mongoose.model('Team'),
+  SchoolOrg = mongoose.model('SchoolOrg'),
+  User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
@@ -16,6 +18,7 @@ var path = require('path'),
   request = require('request'),
   path = require('path'),
   multer = require('multer'),
+  async = require('async'),
   moment = require('moment'),
   wkhtmltopdf = require('node-wkhtmltopdf'),
   config = require(path.resolve('./config/config'));
@@ -37,8 +40,71 @@ var checkRole = function(user, role) {
   return (index > -1) ? true : false;
 };
 
-var getTeam = function(user) {
+var getTeammates = function(user, callback) {
+  Team.find({ 'teamMembers': user }).exec(function(err, teams) {
+    if (err) {
+      callback(err);
+    } else {
+      var teammates = [];
+      for (var i = 0; i < teams.length; i++) {
+        teammates = teammates.concat(teams[i].teamMembers);
+      }
+      teammates = _.uniqWith(teammates, _.isEqual);
+      var index = _.findIndex(teammates, function(m) {
+        return m.toString() === user._id.toString();
+      });
+      if (index > -1) {
+        teammates.splice(index, 1);
+      }
+      callback(null, teammates);
+    }
+  });
+};
 
+var getTeamMembers = function(user, callback) {
+  Team.find({ $or: [{ 'teamLead': user },{ 'teamLeads': user }] }).exec(function(err, teams) {
+    if (err) {
+      callback(err);
+    } else {
+      var teamMembers = [];
+      for (var i = 0; i < teams.length; i++) {
+        teamMembers = teamMembers.concat(teams[i].teamMembers);
+        console.log('teamMembers', teamMembers);
+      }
+      teamMembers = _.uniqWith(teamMembers, _.isEqual);
+      console.log('final', teamMembers);
+      callback(null, teamMembers);
+    }
+  });
+};
+
+var getOrganizationIdsByName = function(searchRe, callback) {
+  SchoolOrg.find({ 'name': searchRe }).exec(function(err, orgs) {
+    if (err) {
+      callback(err);
+    } else {
+      var orgIds = [];
+      for (var i = 0; i < orgs.length; i++) {
+        orgIds.push(orgs[i]._id);
+      }
+      callback(null, orgIds);
+    }
+  });
+};
+
+var getAuthorIdsByName = function(searchRe, callback) {
+  User.find([{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
+  { 'email': searchRe }, { 'username': searchRe }]).exec(function(err, users) {
+    if (err) {
+      callback(err);
+    } else {
+      var userIds = [];
+      for (var i = 0; i < users.length; i++) {
+        userIds.push(users[i]._id);
+      }
+      callback(null, userIds);
+    }
+  });
 };
 
 /**
@@ -434,32 +500,94 @@ exports.delete = function(req, res) {
  * List of Researches
  */
 exports.list = function(req, res) {
-  var query;
-  var and = [];
+  var search = function(searchStringOr, teammates) {
+    var query;
+    var and = [];
 
-  if (req.query.byCreator) {
-    if (req.query.byCreator === 'true') {
-      and.push({ 'user': req.user });
+    if (req.query.byCreator) {
+      if (req.query.byCreator === 'true') {
+        and.push({ 'user': req.user });
+      } else {
+        and.push({ 'user': req.query.byCreator });
+      }
+    }
+
+    if (teammates) {
+      console.log('teammates', teammates);
+      and.push({ 'user': { $in: teammates } });
+    }
+
+    if (req.query.status) {
+      if (req.query.status === 'pending') {
+        console.log('pending');
+        and.push({ 'status': 'pending' });
+      } else if (req.query.status === 'published') {
+        and.push({ 'status': 'published' });
+      } else if (req.query.status === 'draft') {
+        and.push({ 'status': 'draft' });
+      }
+    }
+
+    if (searchStringOr) {
+      console.log('searchStringOr', searchStringOr);
+      and.push({ $or: searchStringOr });
+    }
+
+    console.log('and', and);
+    if (and.length === 1) {
+      query = Research.find(and[0]);
+    } else if (and.length > 0) {
+      query = Research.find({ $and: and });
     } else {
-      and.push({ 'user': req.query.byCreator });
+      query = Research.find();
     }
-  }
 
-  if (req.query.byTeammates) {
-    and.push({ 'user': { $in: req.query.byTeammates } });
-  }
-
-  if (req.query.status) {
-    if (req.query.status === 'pending') {
-      and.push({ 'status': 'pending' });
-    } else if (req.query.status === 'published') {
-      and.push({ 'status': 'published' });
+    if (req.query.sort) {
+      if (req.query.sort === 'owner') {
+        query.sort({ 'user.lastName': 1 });
+      } else if (req.query.sort === 'title') {
+        query.sort({ 'title': 1 });
+      }
+    } else {
+      query.sort('-create');
     }
-  }
 
-  var or = [];
-  var searchRe;
-  if (req.query.searchString) {
+    if (req.query.limit) {
+      var limit = Number(req.query.limit);
+      if (req.query.page) {
+        var page = Number(req.query.page);
+        query.skip(limit*(page-1)).limit(limit);
+      } else {
+        query.limit(limit);
+      }
+    }
+
+    query.populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg').exec(function(err, researches) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        async.forEach(researches, function(item,callback) {
+          SchoolOrg.populate(item.user, { 'path': 'schoolOrg' }, function(err, output) {
+            if (err) {
+              return res.status(400).send({
+                message: err
+              });
+            } else {
+              callback();
+            }
+          });
+        }, function(err) {
+          res.json(researches);
+        });
+      }
+    });
+  };
+
+  var getSearchStringOr = function(callback) {
+    var or = [];
+    var searchRe;
     try {
       searchRe = new RegExp(req.query.searchString, 'i');
     } catch(e) {
@@ -478,45 +606,44 @@ exports.list = function(req, res) {
     or.push({ 'other.title': searchRe });
     or.push({ 'other.cited': searchRe });
 
-    and.push({ $or: or });
-  }
+    getOrganizationIdsByName(searchRe, function() {
+      getAuthorIdsByName(searchRe, function() {
+        callback(or, searchRe);
+      });
+    });
+  };
 
-  if (and.length === 1) {
-    query = Research.find(and[0]);
-  } else if (and.length > 0) {
-    query = Research.find({ $and: and });
-  } else {
-    query = Research.find();
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'owner') {
-      query.sort({ 'user.lastName': 1 });
-    } else if (req.query.sort === 'title') {
-      query.sort({ 'title': 1 });
-    }
-  } else {
-    query.sort('-create');
-  }
-
-  if (req.query.limit) {
-    var limit = Number(req.query.limit);
-    if (req.query.page) {
-      var page = Number(req.query.page);
-      query.skip(limit*(page-1)).limit(limit);
-    } else {
-      query.limit(limit);
-    }
-  }
-
-  query.populate('user', 'displayName firstName lastName email profileImageURL').exec(function(err, researches) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+  var findBySearchString = function(callback) {
+    if (req.query.searchString) {
+      console.log('searchString', req.query.searchString);
+      getSearchStringOr(function(or, searchRe) {
+        callback(or);
       });
     } else {
-      res.jsonp(researches);
+      callback();
     }
+  };
+
+  var findByTeammates = function(callback) {
+    if (req.query.byTeammates) {
+      getTeammates(req.user, function(err, teammates) {
+        callback(teammates);
+      });
+    } else if (req.query.byTeamMembers) {
+      getTeamMembers(req.user, function(err, teamMembers) {
+        console.log('teamMembers', teamMembers);
+        callback(teamMembers);
+      });
+    } else {
+      callback();
+    }
+  };
+
+  findBySearchString(function(or) {
+    console.log('or', or);
+    findByTeammates(function(teammates) {
+      search(or, teammates);
+    });
   });
 };
 

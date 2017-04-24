@@ -26,7 +26,7 @@
       .state('researches.user', {
         url: '/user',
         templateUrl: 'modules/researches/client/views/user-research.client.view.html',
-        controller: 'ResearchesController',
+        controller: 'ResearchesListController',
         controllerAs: 'vm'
       })
       .state('researches.create', {
