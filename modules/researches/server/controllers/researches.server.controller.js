@@ -668,8 +668,10 @@ exports.download = function(req, res) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
   var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
+  console.log('downloading from ' + input);
 
   var doc = wkhtmltopdf(options, input);
+  console.log('converted');
 
   doc.stdout.pipe(res);
 
