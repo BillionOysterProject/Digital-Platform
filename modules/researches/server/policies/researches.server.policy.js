@@ -24,6 +24,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/download',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/publish',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/return',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -37,6 +43,12 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/download',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/publish',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/return',
       permissions: '*'
     }, {
       resources: '/api/research/:researchId',

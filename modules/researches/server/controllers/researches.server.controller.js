@@ -131,7 +131,8 @@ exports.create = function(req, res) {
       } else {
         // var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
         //
-        // email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+        // email.sendEmailTemplate(config.mailer.admin, 'A new poster is pending approval', 'poster_waiting', {
+        //   FirstName:
         //   TeamLeadName: req.user.displayName,
         //   LessonName: lesson.title,
         //   LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
@@ -165,88 +166,88 @@ exports.read = function(req, res) {
   res.jsonp(research);
 };
 
-// /**
-//  * Publish a lesson
-//  */
-// exports.publish = function(req, res) {
-//   var lesson = req.lesson;
-//
-//   if (lesson) {
-//     lesson.status = 'published';
-//     lesson.returnedNotes = '';
-//
-//     lesson.save(function(err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-//
-//         email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-//         'lesson_approved', {
-//           FirstName: lesson.user.firstName,
-//           LessonName: lesson.title,
-//           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-//           LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-//         },
-//         function(response) {
-//           res.json(lesson);
-//         }, function(errorMessage) {
-//           return res.status(400).send({
-//             message: errorMessage
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     return res.status(400).send({
-//       message: 'Cannot update the lesson'
-//     });
-//   }
-// };
-//
-// /**
-//  * Return a lesson
-//  */
-// exports.return = function(req, res) {
-//   var lesson = req.lesson;
-//
-//   if (lesson) {
-//     lesson.status = 'returned';
-//     lesson.returnedNotes = req.body.returnedNotes;
-//
-//     lesson.save(function(err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-//
-//         email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-//         'lesson_returned', {
-//           FirstName: lesson.user.firstName,
-//           LessonName: lesson.title,
-//           LessonReturnedNote: lesson.returnedNotes,
-//           LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-//           LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-//         },
-//         function(response) {
-//           res.json(lesson);
-//         }, function(errorMessage) {
-//           return res.status(400).send({
-//             message: errorMessage
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     return res.status(400).send({
-//       message: 'Cannot update the lesson'
-//     });
-//   }
-// };
+/**
+ * Publish a poster
+ */
+exports.publish = function(req, res) {
+  var research = req.research;
+
+  if (research) {
+    research.status = 'published';
+    research.returnedNotes = '';
+
+    research.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been approved',
+        'poster_approved', {
+          FirstName: research.user.firstName,
+          PosterName: research.title,
+          LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+        },
+        function(response) {
+          res.json(research);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Cannot update the poster'
+    });
+  }
+};
+
+/**
+ * Return a poster
+ */
+exports.return = function(req, res) {
+  var research = req.research;
+
+  if (research) {
+    research.status = 'returned';
+    research.returnedNotes = req.body.returnedNotes;
+
+    research.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+        email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been returned',
+        'poster_returned', {
+          FirstName: research.user.firstName,
+          PosterName: research.title,
+          PosterReturnedNote: research.returnedNotes,
+          LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+        },
+        function(response) {
+          res.json(research);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
+        });
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Cannot update the poster'
+    });
+  }
+};
 
 /**
  * Update a Research

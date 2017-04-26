@@ -120,5 +120,27 @@
         vm.findResearchDraftsByTeammates();
       }
     };
+
+    vm.openReturnModal = function(research) {
+      vm.research = new ResearchesService(research);
+      angular.element('#modal-return-research').modal('show');
+    };
+
+    vm.closeReturnModal = function(refresh) {
+      vm.research = {};
+      angular.element('#modal-return-research').modal('hide');
+      if (refresh) vm.findSubmittedResearch();
+    };
+
+    vm.openPublishModal = function(research) {
+      vm.research = new ResearchesService(research);
+      angular.element('#modal-accept-research').modal('show');
+    };
+
+    vm.closePublishModal = function(refresh) {
+      vm.research = {};
+      angular.element('#modal-accept-research').modal('hide');
+      if (refresh) vm.findSubmittedResearch();
+    };
   }
 }());

@@ -66,6 +66,9 @@ var ResearchSchema = new Schema({
     default: 'draft',
     required: true
   },
+  returnedNotes: {
+    type: String
+  },
   created: {
     type: Date,
     default: Date.now

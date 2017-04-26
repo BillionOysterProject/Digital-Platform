@@ -18,6 +18,12 @@ module.exports = function(app) {
   app.route('/api/research/:researchId/download').all(researchesPolicy.isAllowed)
     .get(researches.download);
 
+  app.route('/api/research/:researchId/publish').all(researchesPolicy.isAllowed)
+    .post(researches.publish);
+
+  app.route('/api/research/:researchId/return').all(researchesPolicy.isAllowed)
+    .post(researches.return);
+
   app.route('/api/research/:researchId').all(researchesPolicy.isAllowed)
     .get(researches.read)
     .put(researches.update)
