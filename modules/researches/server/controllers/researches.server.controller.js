@@ -20,7 +20,7 @@ var path = require('path'),
   multer = require('multer'),
   async = require('async'),
   moment = require('moment'),
-  wkhtmltopdf = require('node-wkhtmltopdf'),
+  wkhtmltopdf = require('wkhtmltopdf'),
   config = require(path.resolve('./config/config'));
 
 var validateResearch = function(research, successCallback, errorCallback) {
@@ -652,33 +652,32 @@ exports.list = function(req, res) {
  * Downloads
  */
 exports.download = function(req, res) {
-  var options = [
-    '--quiet',
-    //'--cookie connect.sid ' + connectSid,
-    '--margin-bottom 1',
-    '--margin-left 1',
-    '--margin-right 1',
-    '--margin-top 1',
-    '--orientation Portrait',
-    '--page-size A4',
-    '--disable-smart-shrinking',
-    '--zoom 1.5'
-  ];
-
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
   var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
   console.log('downloading from ' + input);
 
-  var doc = wkhtmltopdf(options, input);
-  console.log('converted');
-
-  doc.stdout.pipe(res);
-
-  res.writeHead(200, {
-    'Content-Type': 'application/pdf, application/octet-stream',
-    'Content-Disposition': 'attachment; filename=' + req.query.filename
-  });
+  wkhtmltopdf(input, {
+    customHeader : [
+      ['Content-Type', 'application/pdf, application/octet-stream'],
+      ['Content-Disposition', 'attachment; filename=' + req.query.filename]
+    ],
+    cookie : [
+      ['sessionId', req.cookies.sessionId]
+    ],
+    title: req.query.title,
+    quiet: true,
+    marginBottom: 1,
+    marginLeft: 1,
+    marginRight: 1,
+    marginTop: 1,
+    orientation: 'Portrait',
+    pageSize: 'letter',
+    disableSmartShrinking: true,
+    zoom: 1.5,
+    debugJavascript: true,
+    ignore: [/QFont::setPixelSize/]
+  }).pipe(res);
 };
 
 /**
