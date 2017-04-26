@@ -161,8 +161,8 @@
     };
 
     vm.downloadResearch = function() {
-      var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/, '_');
-      $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename, {
+      var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/g, '_');
+      $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename + '&title=' + vm.research.title, {
         responseType: 'arraybuffer'
       }).
         success(function(data, status, headers, config) {
