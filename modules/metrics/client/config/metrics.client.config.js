@@ -14,7 +14,7 @@
       state: 'metrics.dashboard',
       roles: ['admin', 'team lead'],
       icon: 'glyphicon glyphicon-equalizer',
-      position: 5
+      position: 6
     });
 
   }

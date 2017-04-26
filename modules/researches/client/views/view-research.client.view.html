@@ -1,0 +1,662 @@
+<section>
+    <section class="content shaded content-unpadded content-fixed">
+        <section class="container-fluid">
+            <div class="row">
+                <nav class="navbar">
+                    <h6 class="navbar-text blue">{{vm.research.title}}</h6>
+                    <a ng-click="vm.openViewUserModal()"><h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6></a>
+                    <h6 class="navbar-text">{{vm.getDate(vm.research.created)}}</h6>
+                    <div class="pull-right">
+                        <h6 class="navbar-text" ng-show="vm.research.isCurrentUserOwner && vm.research.status === 'published'">Published</h6>
+
+                        <h6 class="navbar-text" ng-show="vm.research.status === 'draft'">Draft</h6>
+
+                        <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
+                          ng-show="vm.research.isCurrentUserOwner && vm.research._id">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
+                        <!-- <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-view-feedback"
+                          ng-show="vm.research.isCurrentUserOwner">View Feedback</a> TODO -->
+
+                        <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-feedback"
+                          ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a><!-- TODO: (Others can give feedback on Drafts! Does not need to be published) -->
+
+                        <!--show only if published -- share the public viewable link (no login required) on social:
+                        This public view should be a stripped down version of the site
+                        -- just the logo, sign up/in buttons, poster title/user/date, and poster
+                        (let me know if I should create a separate view for this?)
+                        -->
+                        <!-- <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
+                        <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
+                        <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
+                        <a class="btn btn-default" ng-click="vm.downloadResearch()">Download PDF</a>
+                    </div>
+                </nav>
+            </div>
+        </section>
+    </section>
+    <div class="content">
+        <section class="container">
+            <view-research-poster research="vm.research" header-image="vm.headerImageURL"></view-research-poster>
+        </section>
+    </div>
+</section>
+
+<!-- MODALS -->
+<div class="modal fade" id="modal-research-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-feedback">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" ng-hide="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Send feedback to the author</h4>
+        <p>Thanks for contributing input! All feedback is appreciated.</p>
+      </div>
+
+      <form name="form.researchFeedbackForm" ng-submit="send(form.researchFeedbackForm.$valid)" novalidate>
+        <div class="modal-body">
+          <hr/>
+          <h4 class="blue">Title</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="researchAbstract" class="control-label">Give a rating using 1-5 stars</label><br>
+                <h4 class="blue"><raty-fa id="starResearchAbstract" score="feedback.researchAbstract" number="5"></raty-fa></h4>
+              </div>
+              <label>Is the title creative and to the point?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the title quickly grab the audience's attention and make them want to learn more about the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	  <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Introduction</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchIntro" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.researchIntro" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the intro "hook" the audience and get them interested in the issue or problem right away?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro cite at least three sources of published, primary literature that relates to the research? </label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro clearly state the hypothesis or central question of the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the intro include at least one interesting photograph or visual that shows the research in action?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Materials and methods</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchMaterials" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchMaterials" score="feedback.researchMaterials" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author clearly explain their experimental approach, steps, procedure and equipment used?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Results</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchResults" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.researchResults" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author state whether the research or experimental procedure actually worked or not?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author describe any unexpected changes or important surprises?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author provide a quantitative analysis of the data?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Is there at least one chart or figure that clearly summarizes the data results?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Discussion/Conclusions</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchDiscussion" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.researchDiscussion" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author discuss any problems with their approach?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Are you convinced that the outcome of the research is interesting and/or important?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Do you find the research to be of significance for the ecology of New York Harbor or New York City?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+              <label>Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Literature cited</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchCited" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchCited" score="feedback.researchCited" number="5"></raty-fa></h4>
+              </div>
+              <label>Does the author list at least three sources or references in APA format?</label>
+              <div class="form-group">
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Yes</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> No</label>
+                <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox1"> Somewhat</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Acknowledgments</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchAcknowledgments" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchAcknowledgments" score="feedback.researchAcknowledgments" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Other <!--TODO: replace "Other" with the heading title the author gave to the "other" field. If they didn't fill in this section, don't show this h4 or the div below --></h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="researchAcknowledgments" class="control-label required">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchAcknowledgments" score="feedback.researchAcknowledgments" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+          	<div class="col-sm-12">
+                <h4 class="blue">General comments</h4>
+              	<div class="form-group">
+                  <textarea class="form-control"></textarea>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal-content" ng-show="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Feedback submitted!</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modal-research-view-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-view-feedback">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" ng-hide="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Feedback given for the poster <b class="red">{{poster.title}}</b></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="nav nav-pills nav-stacked col-sm-3" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#overall" aria-controls="overall" role="tab" data-toggle="tab">Overall</a></li>
+              <li role="presentation">
+                <a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title</a></li>
+              <li role="presentation">
+                <a href="#introduction" aria-controls="introduction" role="tab" data-toggle="tab">Introduction</a></li>
+              <li role="presentation">
+                <a href="#materials" aria-controls="materials" role="tab" data-toggle="tab">Materials and Methods</a></li>
+              <li role="presentation">
+                <a href="#results" aria-controls="results" role="tab" data-toggle="tab">Results</a></li>
+              <li role="presentation">
+                <a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">Discussion/Conclusions</a></li>
+              <li role="presentation">
+                <a href="#cited" aria-controls="cited" role="tab" data-toggle="tab">Literature cited</a></li>
+              <li role="presentation">
+                <a href="#acknowledgments" aria-controls="acknowledgments" role="tab" data-toggle="tab">Acknowledgments</a></li>
+              <li role="presentation"><!--   ng-show="feedback.otherFeedback && feedback.otherFeedback.length > 0"   -->
+                <a href="#other" aria-controls="other" role="tab" data-toggle="tab">Other <!--Insert The Other Heading here instead of "Other"--></a></li>
+            </ul>
+
+            <div class="tab-content col-md-9">
+              <div role="tabpanel" class="tab-pane active" id="overall">
+                <ul ng-repeat="feedback in feedback.overallFeedback">
+                  <li><b>{{feedback.author}}, {{feedback.date}}:</b> {{feedback.feedback}}</li>
+                <ul>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="title">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Is the title creative and to the point?</label>
+                    <p><!--Put "badge-info" class on the highest number of the 3 -->
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the title quickly grab the audience's attention and make them want to learn more about the research? </label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="introduction">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the intro "hook" the audience and get them interested in the issue or problem right away?</label>
+                    <p><!--Put "badge-info" class on the highest number of the 3 -->
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro cite at least three sources of published, primary literature that relates to the research?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro clearly state the hypothesis or central question of the research?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro include at least one interesting photograph or visual that shows the research in action?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="materials">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author clearly explain their experimental approach, steps, procedure and equipment used?</label>
+                    <p><!--Put "badge-info" class on the highest number of the 3 -->
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="results">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author state whether the research or experimental procedure actually worked or not?</label>
+                    <p><!--Put "badge-info" class on the highest number of the 3 -->
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author describe any unexpected changes or important surprises?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author provide a quantitative analysis of the data?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Is there at least one chart or figure that clearly summarizes the data results?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="discussion">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research?</label>
+                    <p><!--Put "badge-info" class on the highest number of the 3 -->
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author discuss any problems with their approach?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Are you convinced that the outcome of the research is interesting and/or important?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Do you find the research to be of significance for the ecology of New York Harbor or New York City?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="cited">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author list at least three sources or references in APA format?</label>
+                    <p>
+                        <span class="badge badge-info">52</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">5</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge">8</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="acknowledgments">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="other">
+                <h3 ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}">{{feedback.lessonPreparesStudentsAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.lessonPreparesStudentsAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.lessonPreparesStudentsAvg > 3, 'yellow': feedback.lessonPreparesStudentsAvg === 3,
+                'red': feedback.lessonPreparesStudentsAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="feedback in feedback.titleFeedback">
+                      <li>{{feedback.author}}, {{feedback.date}}: <em>{{feedback.feedback}}</em></li>
+                    <ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<view-user-modal user="vm.research.user" close-function="vm.closeViewUserModal"></view-user-modal>

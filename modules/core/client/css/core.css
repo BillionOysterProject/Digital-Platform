@@ -15,8 +15,10 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
+.content-fixed { position: fixed; z-index: 1; width: 100% }
 .content-flush { padding: 0 0 0 80px; }
-.content-fixed { position: fixed; z-index: 1; }
+/*.content-fixed { position: fixed; z-index: 1; }*/
+
 .content-fixed + div { padding-top: 125px; }
 
 .popover {
@@ -91,7 +93,7 @@ body {
         padding: 0 5px;
         line-height: 50px;
     }
-    
+
     .navbar-default a.icon {
         color: #ccc !important;
     }
@@ -357,7 +359,8 @@ body {
 .red { color: #ea6158; }
 .darkblue { color: #2c3c56; }
 .lightblue { color: #a0d0cb; }
-.yellow { color: #ff9501; } /* bop brand yellow: #fbe8ac */
+.yellow { color: #ff9501; }
+.lightyellow { color: #fbe8ac } /*bop brand yellow*/
 .crimson { color: #943234; }
 .green { color: #4CAF50; }
 .gray { color: #ccc; }
@@ -1065,17 +1068,17 @@ form.ng-submitted .ng-invalid {
         background: #ea6158; /*fallback*/
         color: #fff;
     }
-        
-        .library-item .panel .panel-heading.shaded, 
+
+        .library-item .panel .panel-heading.shaded,
         .panel .panel-heading.shaded {
             background: #f4f7f8;
             color: #2c3c56;
         }
-        
+
         .panel .panel-heading.flush {
             padding: 0;
         }
-            
+
             .panel .panel-heading.flush .img-responsive {
                 width: 100%;
             }
@@ -1161,4 +1164,3 @@ form.ng-submitted .ng-invalid {
 li.loading-dialog {
     margin-right: 30px;
 }
-

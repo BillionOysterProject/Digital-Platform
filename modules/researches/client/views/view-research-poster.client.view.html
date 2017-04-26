@@ -1,0 +1,83 @@
+<div class="poster-content">
+
+  <style type="text/css">
+      .poster-content {
+          padding: 50px; 
+          border: 15px solid {{research.color}};
+          -webkit-font-smoothing: antialiased;
+      }
+      .poster-header {
+          padding: 30px;
+          margin: -50px -50px 0 -50px;
+          text-align: center;
+          background-color: {{research.color}};
+          color: #fff;
+      }
+      .poster-heading {
+          /*padding: 10px 50px; 
+          margin: 30px -50px 20px -50px; 
+          text-transform: uppercase; 
+          font-weight: bold; 
+          font-size: 12pt;
+          letter-spacing: 5px; 
+          background-color: #f4f7f8;
+          */
+          color: {{research.color}};
+          font-size: 16pt;
+          padding: 20px 0;
+          margin-top: 40px;
+          border-bottom: 5px solid #f4f7f8;
+      }
+  </style>
+
+  <div class="poster-header">
+      <h1>{{research.title}}</h1>
+  </div>
+  <div class="row">
+      <div class="col-sm-12">
+          <img class="img-responsive col-sm-12" ng-src="{{headerImage}}" ng-show="headerImage"/>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Introduction</h4>
+      <div ng-bind-html="research.intro | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Materials & Methods</h4>
+      <div ng-bind-html="research.methods | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Results</h4>
+      <div ng-bind-html="research.results | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Discussion & Conclusions</h4>
+      <div ng-bind-html="research.discussion | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Literature Cited</h4>
+      <div ng-bind-html="research.cited | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">Acknowledgments</h4>
+      <div ng-bind-html="research.acknowledgments | sanitize"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="poster-heading">{{research.other.title}}</h4>
+      <div ng-bind-html="research.other.cited | sanitize"></div>
+    </div>
+  </div>
+</div>

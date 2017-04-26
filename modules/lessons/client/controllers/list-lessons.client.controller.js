@@ -53,7 +53,6 @@
         // page: vm.filter.page
       }, function(data) {
         vm.lessons = data;
-        console.log('data', data);
         vm.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
