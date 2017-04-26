@@ -42,7 +42,7 @@
                   </div>
                 </div>-->
 
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <div class="form-group" show-errors>
                     <label for="color" class="control-label required">Color *</label><br/>
 
@@ -66,20 +66,20 @@
                     </div>
                   </div>
 
-                  <div class="form-group" show-errors>
+                  <!-- <div class="form-group" show-errors>
                     <label for="font" class="control-label required">Font *</label>
                     <select class="form-control" ng-model="vm.research.font" required>
                       <option value="Serif">Serif</option>
                       <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
-                    </select>
+                    <!-- </select>
                     <span class="help-block">This font will be used for headings/etc throughout your poster.</span>
                     <div ng-messages="vm.form.researchForm.font.$error" role="alert">
                         <p class="help-block error-text" ng-message="required">Font is required.</p>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="form-group" show-errors>
                     <label for="image" class="control-label">Header Image</label>
                     <single-image-drop-zone uploader="vm.headerImageUploader" image-url="vm.headerImageURL"
@@ -87,6 +87,22 @@
                   </div>
                 </div>
 
+              </div>
+            </div>
+          </div>
+
+          <!-- Team -->
+          <div class="panel panel-default" ng-show="vm.myTeams && vm.myTeams.length > 1">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="blue">Team</h3>
+                  <select class="form-control" name="team" id="team" ng-model="vm.team"
+                  ng-options="team._id as team.name for team in vm.myTeams" ng-required="vm.myTeams && vm.myTeams.length > 1"></select>
+                  <div ng-messages="vm.form.researchForm.team.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Team is required.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

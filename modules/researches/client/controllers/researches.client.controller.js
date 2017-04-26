@@ -7,10 +7,10 @@
     .controller('ResearchesController', ResearchesController);
 
   ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
-  'ExpeditionViewHelper'];
+  'ExpeditionViewHelper', 'TeamsService'];
 
   function ResearchesController ($scope, $state, $http, $timeout, research, lodash, moment, Authentication, FileUploader,
-  ExpeditionViewHelper) {
+  ExpeditionViewHelper, TeamsService) {
     var vm = this;
     var toGoState = null;
     var toGoParams = null;
@@ -33,6 +33,13 @@
     vm.headerImageUploader = new FileUploader({
       alias: 'newHeaderImage',
       queueLimit: 2
+    });
+
+    TeamsService.query({
+      byMember: true
+    }, function(data) {
+      vm.myTeams = data;
+      if (vm.myTeams && vm.myTeams.length === 1) vm.team = vm.myTeams[0];
     });
 
     vm.checkRole = function(role) {
