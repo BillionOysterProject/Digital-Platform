@@ -652,7 +652,7 @@ exports.list = function(req, res) {
  * Downloads
  */
 exports.download = function(req, res) {
-  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
 
   var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
   console.log('downloading from ' + input);
