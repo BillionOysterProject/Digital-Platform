@@ -20,7 +20,7 @@
         </li>
         <li role="presentation" ng-class="{active: vm.createdResearches.length === 0 && !vm.isAdmin && !vm.isTeamLead}">
           <a href="#teamdrafts" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamdrafts')">
-            {{(vm.isAdmin || vm.isTeamLead) ? 'Team Members' : 'Teammate'}} Posters</a>
+            {{(vm.isAdmin || vm.isTeamLead) ? 'Team' : 'Teammate'}} Posters</a>
         </li>
       </ul>
       <div class="tab-content">
