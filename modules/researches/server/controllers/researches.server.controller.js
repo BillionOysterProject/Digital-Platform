@@ -129,20 +129,25 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        // var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-        //
-        // email.sendEmailTemplate(config.mailer.admin, 'A new poster is pending approval', 'poster_waiting', {
-        //   FirstName:
-        //   TeamLeadName: req.user.displayName,
-        //   LessonName: lesson.title,
-        //   LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
-        // }, function(info) {
-        //   res.json(lesson);
-        // }, function(errorMessage) {
-        //   res.json(lesson);
-        // });
+        Team.findById(research.team._id).populate('teamLeads', 'firstName email').exec(function(err, team) {
 
-        res.jsonp(research);
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          async.forEach(team.teamLeads, function(item,callback) {
+            email.sendEmailTemplate(item.email, 'A new poster is pending approval', 'poster_waiting', {
+              FirstName: item.firstName,
+              TeamMemberName: req.user.displayName,
+              PosterName: research.title,
+              LinkPosterRequest: httpTransport + req.headers.host + '/research/user'
+            }, function(info) {
+              callback();
+            }, function(errorMessage) {
+              callback();
+            });
+          }, function(err) {
+            res.json(research);
+          });
+        });
       }
     });
   }, function(errorMessages) {
@@ -258,7 +263,8 @@ exports.update = function(req, res) {
   function(researchJSON) {
     if (research) {
       research = _.extend(research, researchJSON);
-      research.status = researchJSON.status || 'pending';
+      research.returnedNotes = '';
+      research.status = 'pending';
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
       if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
@@ -667,15 +673,16 @@ exports.download = function(req, res) {
     ],
     title: req.query.title,
     quiet: true,
-    marginBottom: 1,
-    marginLeft: 1,
-    marginRight: 1,
-    marginTop: 1,
+    marginBottom: '10mm',
+    marginLeft: '10mm',
+    marginRight: '10mm',
+    marginTop: '10mm',
     orientation: 'Portrait',
     pageSize: 'letter',
-    disableSmartShrinking: true,
-    zoom: 1.5,
-    debugJavascript: true,
+    enableSmartShrinking: true,
+    // disableSmartShrinking: true,
+    // zoom: 1.5,
+    // debugJavascript: true,
     ignore: [/QFont::setPixelSize/]
   }).pipe(res);
 };
