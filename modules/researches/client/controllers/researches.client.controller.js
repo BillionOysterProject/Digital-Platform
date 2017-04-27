@@ -39,7 +39,7 @@
       byMember: true
     }, function(data) {
       vm.myTeams = data;
-      if (vm.myTeams && vm.myTeams.length === 1) vm.team = vm.myTeams[0];
+      if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
     });
 
     vm.checkRole = function(role) {

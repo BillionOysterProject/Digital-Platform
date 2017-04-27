@@ -79,6 +79,10 @@ var ResearchSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  team: {
+    type: Schema.ObjectId,
+    ref: 'Team'
   }
 });
 

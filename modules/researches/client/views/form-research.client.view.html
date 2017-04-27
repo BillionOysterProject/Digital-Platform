@@ -97,7 +97,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h3 class="blue">Team</h3>
-                  <select class="form-control" name="team" id="team" ng-model="vm.team"
+                  <select class="form-control" name="team" id="team" ng-model="vm.research.team"
                   ng-options="team._id as team.name for team in vm.myTeams" ng-required="vm.myTeams && vm.myTeams.length > 1"></select>
                   <div ng-messages="vm.form.researchForm.team.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Team is required.</p>
