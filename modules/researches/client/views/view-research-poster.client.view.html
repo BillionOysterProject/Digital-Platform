@@ -2,77 +2,147 @@
 
   <style type="text/css">
       .poster-content {
-          padding: 50px; 
+          margin-top: 50px;
           border: 15px solid {{research.color}};
           -webkit-font-smoothing: antialiased;
       }
       .poster-header {
-          padding: 30px;
-          margin: -50px -50px 0 -50px;
-          text-align: center;
+          padding: 30px 50px;
           background-color: {{research.color}};
           color: #fff;
+          text-align: center;
       }
           .poster-header h1 {
-              font-size: 36pt;
+              font-size: 33pt;
+              font-weight: normal;
+              font-family: {{research.font}};
+              margin: 0;
           }
-      .poster-heading {
-          color: {{research.color}};
-          font-size: 16pt;
-          padding: 20px 0;
-          margin-top: 40px;
-          border-bottom: 5px solid #f4f7f8;
+          .poster-header img {
+              height: 200px;
+              border: 15px solid {{research.color}};
+              background-color: #fff;
+              padding: 10px;
+              border-radius: 50%;
+              margin: -90px 0 10px 0;
+          }
+          
+      .poster-subheader {
+          background-color: #f4f7f8;
+          padding: 10px 50px;
+          text-align: center;
       }
+          .poster-subheader p {
+              text-transform: uppercase;
+              color: #aaa;
+              font-weight: bold;
+              font-size: 10pt;
+              letter-spacing: 2px;
+              margin: 0;
+          }
+      
+      .poster-body {
+          padding: 0 50px 50px 50px;
+          clear: both;
+      }
+          .poster-body h3 {
+              color: {{research.color}};
+              text-transform: uppercase;
+              font-weight: normal;
+              font-size: 16pt;
+              font-family: {{research.font}};
+              padding: 20px 0;
+              margin: 20px 0;
+              border-bottom: 5px solid #f4f7f8;
+          }
+          
+      .poster-footer {
+          background-color: #f4f7f8;
+          padding: 0 50px;
+          text-align: center;
+      }
+          .poster-footer .poster-block {
+              display: inline-block;
+              vertical-align: middle;
+              padding: 0 10px;
+              margin: 30px 10px;
+              border-right: 1px solid #ccc;
+              width: 200px;
+              text-align: center;
+              text-transform: uppercase;
+              color: #aaa;
+              font-weight: bold;
+              font-size: 10pt;
+              letter-spacing: 2px;
+          }
+              .poster-footer .poster-block:last-child {
+                  border-right: none;
+              }
+              .poster-footer .poster-block img {
+                  width: 100px;
+                  margin-bottom: 10px;
+              } 
+              .poster-footer .poster-block img.img-thumbnail {
+                  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
+                  box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
+                  display: inline-block;
+                  max-width: 100%;
+                  height: auto;
+                  padding: 4px;
+                  line-height: 1.42857143;
+                  background-color: #fff;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  -webkit-transition: all .2s ease-in-out;
+                  -o-transition: all .2s ease-in-out;
+                  transition: all .2s ease-in-out;
+              }
   </style>
 
   <div class="poster-header">
+      <img ng-src="{{headerImage}}" ng-show="headerImage"/>
+      <img src="http://ocean.nationalgeographic.com/u/TvyamNb-BivtNwpvn7Sct0VFDulyAfA9wBcU0gVHVnqC5ghqXjggeitqtJ-1ZIZ1rmCgor42TXOteIQU/"/>
       <h1>{{research.title}}</h1>
   </div>
-  <div class="row">
-      <div class="col-sm-12">
-          <img class="img-responsive col-sm-12" ng-src="{{headerImage}}" ng-show="headerImage"/>
-      </div>
+  <div class="poster-subheader">
+      <p>{{research.user.displayName}}&nbsp;&nbsp;&#8226;&nbsp;&nbsp;{{getDate(research.created)}}</p>
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Introduction</h4>
+  <div class="poster-body">
+      <h3>Introduction</h3>
       <div ng-bind-html="research.intro | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Materials & Methods</h4>
+
+      <h3>Materials & Methods</h3>
       <div ng-bind-html="research.methods | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Results</h4>
+
+      <h3>Results</h3>
       <div ng-bind-html="research.results | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Discussion & Conclusions</h4>
+
+      <h3>Discussion & Conclusions</h3>
       <div ng-bind-html="research.discussion | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Literature Cited</h4>
+
+      <h3>Literature Cited</h3>
       <div ng-bind-html="research.cited | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">Acknowledgments</h4>
+
+      <h3>Acknowledgments</h3>
       <div ng-bind-html="research.acknowledgments | sanitize"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="poster-heading">{{research.other.title}}</h4>
+
+      <h3>{{research.other.title}}</h3>
       <div ng-bind-html="research.other.cited | sanitize"></div>
-    </div>
+  </div>
+  <div class="poster-footer">
+      <div class="poster-block">
+          <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
+          <p>Billion Oyster Project</p>
+      </div>
+      <div class="poster-block">
+          <img class="img-thumbnail" ng-src="{{org.photo.path}}" ng-show="org.photo && org.photo.path" />
+          <img class="img-thumbnail" src="http://ocean.nationalgeographic.com/u/TvyamNb-BivtNwpvn7Sct0VFDulyAfA9wBcU0gVHVnqC5ghqXjggeitqtJ-1ZIZ1rmCgor42TXOteIQU/" />
+          <p>Org Name</p>
+      </div>
+      <div class="poster-block">
+          <img class="img-thumbnail" ng-src="{{team.photo.path}}" ng-show="team.photo && team.photo.path" />
+          <img class="img-thumbnail" src="http://ocean.nationalgeographic.com/u/TvyamNb-BivtNwpvn7Sct0VFDulyAfA9wBcU0gVHVnqC5ghqXjggeitqtJ-1ZIZ1rmCgor42TXOteIQU/" />
+          <p>Team Name</p>
+      </div>
   </div>
 </div>
