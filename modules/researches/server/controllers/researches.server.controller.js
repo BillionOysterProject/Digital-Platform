@@ -61,20 +61,9 @@ var getTeammates = function(user, callback) {
   });
 };
 
-var getTeamMembers = function(user, callback) {
+var getTeams = function(user, callback) {
   Team.find({ $or: [{ 'teamLead': user },{ 'teamLeads': user }] }).exec(function(err, teams) {
-    if (err) {
-      callback(err);
-    } else {
-      var teamMembers = [];
-      for (var i = 0; i < teams.length; i++) {
-        teamMembers = teamMembers.concat(teams[i].teamMembers);
-        console.log('teamMembers', teamMembers);
-      }
-      teamMembers = _.uniqWith(teamMembers, _.isEqual);
-      console.log('final', teamMembers);
-      callback(null, teamMembers);
-    }
+    callback(err, teams);
   });
 };
 
@@ -164,11 +153,19 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var research = req.research ? req.research.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
+  SchoolOrg.populate(research.team, { 'path': 'schoolOrg' }, function(err, output) {
+    if (err) {
+      return res.status(400).send({
+        message: err
+      });
+    } else {
+      // Add a custom field to the Article, for determining if the current User is the "owner".
+      // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+      research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(research);
+      res.jsonp(research);
+    }
+  });
 };
 
 /**
@@ -264,7 +261,7 @@ exports.update = function(req, res) {
     if (research) {
       research = _.extend(research, researchJSON);
       research.returnedNotes = '';
-      research.status = 'pending';
+      research.status = req.body.status || 'pending';
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
       if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
@@ -507,9 +504,21 @@ exports.delete = function(req, res) {
  * List of Researches
  */
 exports.list = function(req, res) {
-  var search = function(searchStringOr, teammates) {
+  var search = function(searchStringOr, teammates, teams) {
     var query;
     var and = [];
+
+    if (searchStringOr) {
+      and.push({ $or: searchStringOr });
+    }
+
+    if (teammates) {
+      and.push({ 'user': { $in: teammates } });
+    }
+
+    if (teams) {
+      and.push({ 'team': { $in: teams } });
+    }
 
     if (req.query.byCreator) {
       if (req.query.byCreator === 'true') {
@@ -519,14 +528,8 @@ exports.list = function(req, res) {
       }
     }
 
-    if (teammates) {
-      console.log('teammates', teammates);
-      and.push({ 'user': { $in: teammates } });
-    }
-
     if (req.query.status) {
       if (req.query.status === 'pending') {
-        console.log('pending');
         and.push({ 'status': 'pending' });
       } else if (req.query.status === 'published') {
         and.push({ 'status': 'published' });
@@ -535,12 +538,6 @@ exports.list = function(req, res) {
       }
     }
 
-    if (searchStringOr) {
-      console.log('searchStringOr', searchStringOr);
-      and.push({ $or: searchStringOr });
-    }
-
-    console.log('and', and);
     if (and.length === 1) {
       query = Research.find(and[0]);
     } else if (and.length > 0) {
@@ -569,14 +566,16 @@ exports.list = function(req, res) {
       }
     }
 
-    query.populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg').exec(function(err, researches) {
+    query.populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg')
+    .populate('team', 'name schoolOrg').exec(function(err, researches) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
         async.forEach(researches, function(item,callback) {
-          SchoolOrg.populate(item.user, { 'path': 'schoolOrg' }, function(err, output) {
+          console.log('item', item);
+          SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
             if (err) {
               return res.status(400).send({
                 message: err
@@ -622,7 +621,6 @@ exports.list = function(req, res) {
 
   var findBySearchString = function(callback) {
     if (req.query.searchString) {
-      console.log('searchString', req.query.searchString);
       getSearchStringOr(function(or, searchRe) {
         callback(or);
       });
@@ -636,10 +634,15 @@ exports.list = function(req, res) {
       getTeammates(req.user, function(err, teammates) {
         callback(teammates);
       });
-    } else if (req.query.byTeamMembers) {
-      getTeamMembers(req.user, function(err, teamMembers) {
-        console.log('teamMembers', teamMembers);
-        callback(teamMembers);
+    } else {
+      callback();
+    }
+  };
+
+  var findBySubmitted = function(callback) {
+    if (req.query.bySubmitted) {
+      getTeams(req.user, function(err, teams) {
+        callback(teams);
       });
     } else {
       callback();
@@ -649,7 +652,9 @@ exports.list = function(req, res) {
   findBySearchString(function(or) {
     console.log('or', or);
     findByTeammates(function(teammates) {
-      search(or, teammates);
+      findBySubmitted(function(teams) {
+        search(or, teammates, teams);
+      });
     });
   });
 };
@@ -751,7 +756,8 @@ exports.researchByID = function(req, res, next, id) {
     });
   }
 
-  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username').exec(function (err, research) {
+  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username')
+  .populate('team', 'name schoolOrg').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {

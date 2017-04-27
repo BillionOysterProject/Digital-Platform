@@ -12,7 +12,7 @@
                         <h6 class="navbar-text" ng-show="vm.research.status === 'draft'">Draft</h6>
 
                         <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
-                          ng-show="vm.research.isCurrentUserOwner && vm.research._id">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
+                          ng-show="vm.research.isCurrentUserOwner && vm.research._id && vm.status !== 'pending'">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
                         <!-- <a class="btn btn-default" data-toggle="modal" data-target="#modal-research-view-feedback"
                           ng-show="vm.research.isCurrentUserOwner">View Feedback</a> TODO -->
 

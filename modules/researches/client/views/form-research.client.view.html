@@ -256,7 +256,7 @@
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
             <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.researchForm.$valid">
-              {{vm.research._id ? 'Update published poster' : 'Publish poster'}}</button>
+              {{vm.research._id ? 'Submit poster' : 'Resubmit poster'}}</button>
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
           </div>

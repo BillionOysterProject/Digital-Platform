@@ -15,7 +15,7 @@
 <section class="content">
     <section class="container-fluid">
         <nav class="navbar">
-            <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="admin,team lead,team member">
+            <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member">
                 <i class="glyphicon glyphicon-plus"></i> Create new poster
             </a>
         </nav>
@@ -42,7 +42,7 @@
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="research.user && research.user.profileImageURL"
                           ng-src="{{research.user.profileImageURL}}"/> {{research.user.username}}
-                        <br/><small><!--Oyster Team,  -->{{research.user.schoolOrg.name}}</small>
+                        <br/><small>{{research.team.name}}, {{research.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>

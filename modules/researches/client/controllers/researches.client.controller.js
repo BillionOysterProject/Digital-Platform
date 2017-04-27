@@ -7,10 +7,10 @@
     .controller('ResearchesController', ResearchesController);
 
   ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
-  'ExpeditionViewHelper', 'TeamsService'];
+  'ExpeditionViewHelper', 'TeamsService', 'ResearchesService'];
 
   function ResearchesController ($scope, $state, $http, $timeout, research, lodash, moment, Authentication, FileUploader,
-  ExpeditionViewHelper, TeamsService) {
+  ExpeditionViewHelper, TeamsService, ResearchesService) {
     var vm = this;
     var toGoState = null;
     var toGoParams = null;
@@ -91,14 +91,23 @@
       }
     };
 
+    var updateResearchObject = function(researchId) {
+      ResearchesService.get({
+        researchId: researchId
+      }, function(data) {
+        vm.research = data;
+        vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
+      });
+    };
+
     // Save Research
-    vm.save = function(isValid, status) {
+    vm.save = function(isValid, status, stayOnPage) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
         return false;
       }
       vm.saving = true;
-      if (status) vm.research.status = status;
+      vm.research.status = status || 'pending';
 
       vm.finishedSaving = 0;
       $timeout(function() {
@@ -126,21 +135,27 @@
         vm.finishedSaving = 50;
         $timeout(function () {
           uploadHeaderImage(researchId, function() {
+            vm.saving = false;
             if (vm.modal) {
               vm.modal.bind('hidden.bs.modal', function() {
-                console.log('close modal', vm.modal);
-                vm.saving = false;
                 vm.finishedSaving = 100;
+                if (stayOnPage) {
+                  updateResearchObject(researchId);
+                } else {
+                  $state.go('researches.view', {
+                    researchId: res._id
+                  });
+                }
+              });
+              vm.modal.modal('hide');
+            } else {
+              if (stayOnPage) {
+                updateResearchObject(researchId);
+              } else {
                 $state.go('researches.view', {
                   researchId: res._id
                 });
-              });
-
-              vm.modal.modal('hide');
-            } else {
-              $state.go('researches.view', {
-                researchId: res._id
-              });
+              }
             }
           });
         }, 500);
@@ -153,11 +168,11 @@
     };
 
     vm.saveDraft = function(isValid) {
-      vm.save(isValid, 'draft');
+      vm.save(isValid, 'draft', true);
     };
 
     vm.saveDraftAndPreview = function(isValid) {
-      vm.save(isValid, 'draft');
+      vm.save(isValid, 'draft', false);
     };
 
     vm.downloadResearch = function() {
