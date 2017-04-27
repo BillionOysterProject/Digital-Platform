@@ -66,7 +66,7 @@
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
                           ng-src="{{pendingResearch.user.profileImageURL}}"/> {{pendingResearch.user.username}}
-                        <br/><small><!--Oyster Team,  -->{{pendingResearch.user.schoolOrg.name}}</small>
+                        <br/><small>{{pendingResearch.team.name}}, {{pendingResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="draftResearch.user && draftResearch.user.profileImageURL"
                           ng-src="{{draftResearch.user.profileImageURL}}"/> {{draftResearch.user.username}}
-                        <br/><small><!--Oyster Team,  -->{{draftResearch.user.schoolOrg.name}}</small>
+                        <br/><small>{{draftResearch.team.name}}, {{draftResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>

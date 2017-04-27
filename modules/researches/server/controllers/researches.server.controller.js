@@ -153,11 +153,19 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var research = req.research ? req.research.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
+  SchoolOrg.populate(research.team, { 'path': 'schoolOrg' }, function(err, output) {
+    if (err) {
+      return res.status(400).send({
+        message: err
+      });
+    } else {
+      // Add a custom field to the Article, for determining if the current User is the "owner".
+      // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+      research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
 
-  res.jsonp(research);
+      res.jsonp(research);
+    }
+  });
 };
 
 /**
@@ -558,14 +566,16 @@ exports.list = function(req, res) {
       }
     }
 
-    query.populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg').exec(function(err, researches) {
+    query.populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg')
+    .populate('team', 'name schoolOrg').exec(function(err, researches) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
         async.forEach(researches, function(item,callback) {
-          SchoolOrg.populate(item.user, { 'path': 'schoolOrg' }, function(err, output) {
+          console.log('item', item);
+          SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
             if (err) {
               return res.status(400).send({
                 message: err
@@ -746,7 +756,8 @@ exports.researchByID = function(req, res, next, id) {
     });
   }
 
-  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username').exec(function (err, research) {
+  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username')
+  .populate('team', 'name schoolOrg').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {

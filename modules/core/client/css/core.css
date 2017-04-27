@@ -7,7 +7,7 @@
 
 body {
     -webkit-font-smoothing: antialiased;
-    font-family: 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Calibri, Arial, sans-serif;
     background: #fff;
     color: #2c3c56;
     margin-top: 51px; /* allow for navbar, so content and jumbotron can be in any order */
