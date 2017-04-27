@@ -6,7 +6,7 @@
     .directive('publishResearch', function() {
       return {
         restrict: 'E',
-        templateUrl: 'modules/researches/client/view/publish-research.client.view.html',
+        templateUrl: 'modules/researches/client/views/publish-research.client.view.html',
         controller: 'PublishResearchController',
         controllerAs: 'vm',
         scope: {

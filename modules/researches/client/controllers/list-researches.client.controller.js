@@ -68,22 +68,24 @@
     };
 
     vm.findResearchByCreator = function() {
-      ResearchesService.query({
-        byCreator: true
-      }, function(data) {
-        vm.createdResearches = data;
-        $rootScope.$broadcast('iso-method', { name:null, params:null });
-        $timeout(function() {
+      if (vm.isTeamMember) {
+        ResearchesService.query({
+          byCreator: true
+        }, function(data) {
+          vm.createdResearches = data;
           $rootScope.$broadcast('iso-method', { name:null, params:null });
-        }, 200);
-      });
+          $timeout(function() {
+            $rootScope.$broadcast('iso-method', { name:null, params:null });
+          }, 200);
+        });
+      }
     };
     vm.findResearchByCreator();
 
     vm.findSubmittedResearch = function() {
       if (vm.isAdmin || vm.isTeamLead) {
         ResearchesService.query({
-          byTeamMembers: true,
+          bySubmitted: true,
           status: 'pending'
         }, function(data) {
           vm.pendingResearches = data;
@@ -99,7 +101,7 @@
     vm.findResearchDraftsByTeammates = function() {
       ResearchesService.query({
         byTeammates: ((vm.isTeamMember) ? true : null),
-        byTeamMembers: ((vm.isTeamLead) ? true : null),
+        bySubmitted: ((vm.isTeamLead) ? true : null),
         status: 'draft'
       }, function(data) {
         vm.draftResearches = data;
