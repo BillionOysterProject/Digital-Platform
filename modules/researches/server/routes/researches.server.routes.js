@@ -24,6 +24,13 @@ module.exports = function(app) {
   app.route('/api/research/:researchId/return').all(researchesPolicy.isAllowed)
     .post(researches.return);
 
+  app.route('/api/research/:researchId/feedback-list').all(researchesPolicy.isAllowed)
+    .get(researches.listFeedbackForResearch);
+
+  app.route('/api/research/:researchId/feedback').all(researchesPolicy.isAllowed)
+    .post(researches.researchFeedback)
+    .get(researches.feedbackForResearch);
+
   app.route('/api/research/:researchId').all(researchesPolicy.isAllowed)
     .get(researches.read)
     .put(researches.update)

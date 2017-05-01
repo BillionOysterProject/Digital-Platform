@@ -726,6 +726,7 @@ exports.feedbackForLesson = function(req, res) {
             if (feedback.additionalFeedback.other) otherFeedback.push({ author: author, date: date,
               feedback: feedback.additionalFeedback.other });
           }
+          console.log('result', result[0]);
 
           res.json({
             lessonEffectiveAvg: (result[0]) ? result[0].lessonEffective : 0,

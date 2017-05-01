@@ -203,5 +203,23 @@
     vm.closeViewUserModal = function(refresh) {
       angular.element('#modal-profile-user').modal('hide');
     };
+
+    vm.openResearchFeedbackModal = function() {
+      angular.element('#modal-research-feedback').modal('show');
+    };
+
+    vm.closeResearchFeedbackModal = function(refresh) {
+      angular.element('#modal-research-feedback').modal('hide');
+      if (refresh) console.log('reload feedback');
+    };
+
+    vm.openResearchFeedbackView = function() {
+      angular.element('#modal-research-view-feedback').modal('show');
+    };
+
+    vm.closeResearchFeedbackView = function(refresh) {
+      angular.element('#modal-research-view-feedback').modal('hide');
+      if (refresh) console.log('reload feedback view');
+    };
   }
 }());

@@ -9,7 +9,8 @@
         templateUrl: 'modules/researches/client/views/view-research-poster.client.view.html',
         scope: {
           research: '=',
-          headerImage: '='
+          headerImage: '=',
+          created: '@'
         }
       };
     });
