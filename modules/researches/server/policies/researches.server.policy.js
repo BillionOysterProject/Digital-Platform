@@ -30,6 +30,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/return',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/feedback-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/research/:researchId/feedback',
+      permissions: ['*']
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -51,6 +57,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/return',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/feedback-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/research/:researchId/feedback',
+      permissions: ['*']
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -65,6 +77,12 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/research/:researchId/download',
       permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/feedback-list',
+      permissions: ['*']
+    }, {
+      resources: '/api/research/:researchId/feedback',
+      permissions: ['*']
     }, {
       resources: '/api/research/:researchId',
       permissions: '*'

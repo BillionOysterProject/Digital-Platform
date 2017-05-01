@@ -104,7 +104,7 @@
       <h1>{{research.title}}</h1>
   </div>
   <div class="poster-subheader">
-      <p>{{research.user.displayName}}&nbsp;&nbsp;&#8226;&nbsp;&nbsp;{{getDate(research.created)}}</p>
+      <p>{{research.user.displayName}}&nbsp;&nbsp;&#8226;&nbsp;&nbsp;{{created}}</p>
   </div>
   <div class="poster-body">
       <h3>Introduction</h3>
@@ -126,7 +126,7 @@
       <div ng-bind-html="research.acknowledgments | sanitize"></div>
 
       <h3>{{research.other.title}}</h3>
-      <div ng-bind-html="research.other.cited | sanitize"></div>
+      <div ng-bind-html="research.other.content | sanitize"></div>
   </div>
   <div class="poster-footer">
       <div class="poster-block">

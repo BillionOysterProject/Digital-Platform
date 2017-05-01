@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Research = mongoose.model('Research'),
+  ResearchFeedback = mongoose.model('ResearchFeedback'),
   Team = mongoose.model('Team'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   User = mongoose.model('User'),
@@ -292,164 +293,255 @@ exports.update = function(req, res) {
   });
 };
 
-// /**
-//  * Feedback for a lesson
-//  */
-// exports.lessonFeedback = function(req, res) {
-//   var lesson = req.lesson;
-//   var user = req.user;
-//
-//   var lessonFeedback = new LessonFeedback(req.body.feedback);
-//   lessonFeedback.user = user;
-//   lessonFeedback.lesson = lesson;
-//
-//   lessonFeedback.save(function(err) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-//       var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-//       var toList = [lesson.user.email, config.mailer.admin];
-//
-//       email.sendEmailTemplate(toList, subject,
-//       'lesson_feedback', {
-//         FirstName: req.body.lesson.user.firstName,
-//         LessonFeedbackName: req.user.displayName,
-//         LessonName: req.body.lesson.title,
-//         LessonFeedbackNote: req.body.message,
-//         LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
-//         LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
-//         LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
-//         LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
-//         HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
-//         WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
-//         WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
-//         LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
-//         LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
-//         MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
-//         Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
-//         Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
-//         InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
-//         Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
-//         Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
-//         LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-//         LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-//       },
-//       function(response) {
-//         res.json(lessonFeedback);
-//       }, function(errorMessage) {
-//         return res.status(400).send({
-//           message: errorMessage
-//         });
-//       });
-//     }
-//   });
-// };
-//
-// exports.listFeedbackForLesson = function(req, res) {
-//   var lesson = req.lesson;
-//
-//   LessonFeedback.find({ lesson: lesson }).populate('lesson', 'title')
-//   .populate('user', 'displayName email team profileImageURL').exec(function(err, feedback) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       res.json(feedback);
-//     }
-//   });
-// };
-//
-// exports.feedbackForLesson = function(req, res) {
-//   var lesson = req.lesson;
-//
-//   LessonFeedback.aggregate([
-//     { $match: { lesson: lesson._id } },
-//     { $group: {
-//       _id: null,
-//       lessonEffective: { $avg: '$lessonEffective' },
-//       lessonAlignWithCurriculumn: { $avg: '$lessonAlignWithCurriculumn' },
-//       lessonSupportScientificPractice: { $avg: '$lessonSupportScientificPractice' },
-//       lessonPreparesStudents: { $avg: '$lessonPreparesStudents' }
-//     } }
-//   ], function(err, result) {
-//     if (err) {
-//       res.status(400).send({
-//         message: 'Could not retrieve averages'
-//       });
-//     } else {
-//       LessonFeedback.find({ lesson: lesson._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
-//         if (err1) {
-//           res.status(400).send({
-//             message: 'Could not retrieve feedback'
-//           });
-//         } else {
-//           //Get array of feedback
-//           var howLessonTaughtFeedback = [];
-//           var whyLessonTaughtNowFeedback = [];
-//           var willTeachLessonAgainFeedback = [];
-//           var lessonSummaryFeedback = [];
-//           var lessonObjectivesFeedback = [];
-//           var materialsResourcesFeedback = [];
-//           var preparationFeedback = [];
-//           var backgroundFeedback = [];
-//           var instructionPlanFeedback = [];
-//           var standardsFeedback = [];
-//           var otherFeedback = [];
-//           for (var i = 0; i < feedbackList.length; i++) {
-//             var feedback = feedbackList[i];
-//             var author = feedback.user.displayName;
-//             var date = moment(feedback.created).format('MMMM D, YYYY');
-//
-//             if (feedback.howLessonTaught) howLessonTaughtFeedback.push({ author: author, date: date,
-//               feedback: feedback.howLessonTaught });
-//             if (feedback.whyLessonTaughtNow) whyLessonTaughtNowFeedback.push({ author: author, date: date,
-//               feedback: feedback.whyLessonTaughtNow });
-//             if (feedback.willTeachLessonAgain) willTeachLessonAgainFeedback.push({ author: author, date: date,
-//               feedback: feedback.willTeachLessonAgain });
-//             if (feedback.additionalFeedback.lessonSummary) lessonSummaryFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.lessonSummary });
-//             if (feedback.additionalFeedback.lessonObjectives) lessonObjectivesFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.lessonObjectives });
-//             if (feedback.additionalFeedback.materialsResources) materialsResourcesFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.materialsResources });
-//             if (feedback.additionalFeedback.preparation) preparationFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.preparation });
-//             if (feedback.additionalFeedback.background) backgroundFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.background });
-//             if (feedback.additionalFeedback.instructionPlan) instructionPlanFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.instructionPlan });
-//             if (feedback.additionalFeedback.standards) standardsFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.standards });
-//             if (feedback.additionalFeedback.other) otherFeedback.push({ author: author, date: date,
-//               feedback: feedback.additionalFeedback.other });
-//           }
-//
-//           res.json({
-//             lessonEffectiveAvg: (result[0]) ? result[0].lessonEffective : 0,
-//             lessonAlignWithCurriculumnAvg: (result[0]) ? result[0].lessonAlignWithCurriculumn : 0,
-//             lessonSupportScientificPracticeAvg: (result[0]) ? result[0].lessonSupportScientificPractice : 0,
-//             lessonPreparesStudentsAvg: (result[0]) ? result[0].lessonPreparesStudents : 0,
-//             howLessonTaughtFeedback: howLessonTaughtFeedback,
-//             whyLessonTaughtNowFeedback: whyLessonTaughtNowFeedback,
-//             willTeachLessonAgainFeedback: willTeachLessonAgainFeedback,
-//             lessonSummaryFeedback: lessonSummaryFeedback,
-//             lessonObjectivesFeedback: lessonObjectivesFeedback,
-//             materialsResourcesFeedback: materialsResourcesFeedback,
-//             preparationFeedback: preparationFeedback,
-//             backgroundFeedback: backgroundFeedback,
-//             instructionPlanFeedback: instructionPlanFeedback,
-//             standardsFeedback: standardsFeedback,
-//             otherFeedback: otherFeedback
-//           });
-//         }
-//       });
-//     }
-//   });
-// };
+/**
+ * Feedback for a poster
+ */
+exports.researchFeedback = function(req, res) {
+  var research = req.research;
+  var user = req.user;
+
+  var researchFeedback = new ResearchFeedback(req.body.feedback);
+  researchFeedback.user = user;
+  researchFeedback.research = research;
+
+  researchFeedback.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+      var subject = 'Feedback from ' + req.user.displayName + ' about your poster ' + research.title;
+      var toList = [research.user.email, config.mailer.admin];
+
+      email.sendEmailTemplate(toList, subject,
+      'poster_feedback', {
+        FirstName: research.user.firstName,
+        PosterFeedbackName: req.user.displayName,
+        PosterName: research.title,
+        TitleCreativeYNS: researchFeedback.title.creativeToThePoint,
+        TitleAttentionYNS: researchFeedback.title.attentionGrabbing,
+        TitleFeedback: researchFeedback.title.feedbackSuggestions,
+        IntroHookYNS: researchFeedback.introduction.hookTheAudience,
+        IntroCiteYNS: researchFeedback.introduction.citeThreeSources,
+        IntroHypothesisYNS: researchFeedback.introduction.clearHypothesis,
+        IntroVisualYNS: researchFeedback.introduction.includeOneVisual,
+        IntroFeedback: researchFeedback.introduction.feedbackSuggestions,
+        MaterialsExplainYNS: researchFeedback.materialMethods.clearExplanation,
+        MaterialsAnalysisYNS: researchFeedback.materialMethods.describeAnalysis,
+        MaterialsIllustrationsYNS: researchFeedback.materialMethods.includeVisuals,
+        MaterialsFeedback: researchFeedback.materialMethods.feedbackSuggestions,
+        ResultsWorkYNS: researchFeedback.results.stateConclusion,
+        ResultsSurprisesYNS: researchFeedback.results.describeSurprises,
+        ResultsAnalysisYNS: researchFeedback.results.quantitativeAnalysis,
+        ResultsChartYNS: researchFeedback.results.includeOneVisual,
+        ResultsChartSpeaksYNS: researchFeedback.results.understandableVisuals,
+        ResultsFeedback: researchFeedback.results.feedbackSuggestions,
+        DiscussionSignificanceYNS: researchFeedback.discussionConclusions.significancePresent,
+        DiscussionProblemsYNS: researchFeedback.discussionConclusions.discussProblems,
+        DiscussionConvinceYNS: researchFeedback.discussionConclusions.interestingImportant,
+        DiscussionEcologyYNS: researchFeedback.discussionConclusions.significantToEcology,
+        DiscussionStepsYNS: researchFeedback.discussionConclusions.explainsNextSteps,
+        DiscussionFeedback: researchFeedback.discussionConclusions.feedbackSuggestions,
+        CitedThreeYNS: researchFeedback.literatureCited.citeThreeSourcesCorrectly,
+        CitedFeedback: researchFeedback.literatureCited.feedbackSuggestions,
+        AcknowledgmentsFeedback: researchFeedback.acknowledgments.feedbackSuggestions,
+        OtherFeedback: researchFeedback.other.feedbackSuggestions,
+        GeneralFeedback: researchFeedback.generalComments,
+        LinkPoster: httpTransport + req.headers.host + '/researches/' + research._id,
+        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+      },
+      function(response) {
+        res.json(researchFeedback);
+      }, function(errorMessage) {
+        return res.status(400).send({
+          message: errorMessage
+        });
+      });
+    }
+  });
+};
+
+exports.listFeedbackForResearch = function(req, res) {
+  var research = req.research;
+
+  ResearchFeedback.find({ research: research }).populate('research', 'title')
+  .populate('user', 'displayName email team profileImageURL').exec(function(err, feedback) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(feedback);
+    }
+  });
+};
+
+exports.feedbackForResearch = function(req, res) {
+  var research = req.research;
+
+  ResearchFeedback.aggregate([
+    { $match: { research: research._id } },
+    { $group: {
+      _id: null,
+      titleRatingAvg: { $avg: '$title.rating' },
+      introductionRatingAvg: { $avg: '$introduction.rating' },
+      materialMethodsRatingAvg: { $avg: '$materialMethods.rating' },
+      resultsRatingAvg: { $avg: '$results.rating' },
+      discussionConclusionsRatingAvg: { $avg: '$discussionConclusions.rating' },
+      literatureCitedRatingAvg: { $avg: '$literatureCited.rating' },
+      acknowledgmentsRatingAvg: { $avg: '$acknowledgments.rating' },
+      otherRatingAvg: { $avg: '$other.rating' }
+    } },
+  ], function(err, result) {
+    if (err) {
+      res.status(400).send({
+        message: 'Could not retrieve averages'
+      });
+    } else {
+      ResearchFeedback.find({ research: research._id }).sort('-created').populate('user', 'displayName').exec(function(err1, feedbackList) {
+        if (err1) {
+          res.status(400).send({
+            message: 'Could not retrieve feedback'
+          });
+        } else {
+          //Get array of feedback
+          var titleFeedback = [];
+          var introductionFeedback = [];
+          var materialMethodsFeedback = [];
+          var resultsFeedback = [];
+          var discussionConclusionsFeedback = [];
+          var literatureCitedFeedback = [];
+          var acknowledgmentsFeedback = [];
+          var otherFeedback = [];
+          var generalComments = [];
+          for (var i = 0; i < feedbackList.length; i++) {
+            var feedback = feedbackList[i];
+            var author = feedback.user.displayName;
+            var date = moment(feedback.created).format('MMMM D, YYYY');
+
+            if (feedback.title.feedbackSuggestions) titleFeedback.push({ author: author, date: date,
+              feedback: feedback.title.feedbackSuggestions });
+            if (feedback.introduction.feedbackSuggestions) introductionFeedback.push({ author: author, date: date,
+              feedback: feedback.introduction.feedbackSuggestions });
+            if (feedback.materialMethods.feedbackSuggestions) materialMethodsFeedback.push({ author: author, date: date,
+              feedback: feedback.materialMethods.feedbackSuggestions });
+            if (feedback.results.feedbackSuggestions) resultsFeedback.push({ author: author, date: date,
+              feedback: feedback.results.feedbackSuggestions });
+            if (feedback.discussionConclusions.feedbackSuggestions) discussionConclusionsFeedback.push({ author: author, date: date,
+              feedback: feedback.discussionConclusions.feedbackSuggestions });
+            if (feedback.literatureCited.feedbackSuggestions) literatureCitedFeedback.push({ author: author, date: date,
+              feedback: feedback.literatureCited.feedbackSuggestions });
+            if (feedback.acknowledgments.feedbackSuggestions) acknowledgmentsFeedback.push({ author: author, date: date,
+              feedback: feedback.acknowledgments.feedbackSuggestions });
+            if (feedback.other.feedbackSuggestions) otherFeedback.push({ author: author, date: date,
+              feedback: feedback.other.feedbackSuggestions });
+            if (feedback.generalComments) generalComments.push({ author: author, date: date,
+              feedback: feedback.generalComments });
+          }
+
+          var feedbackResults = {
+            titleRatingAvg: (result[0]) ? result[0].titleRatingAvg : 0,
+            titleFeedback: titleFeedback,
+            introductionRatingAvg: (result[0]) ? result[0].introductionRatingAvg : 0,
+            introductionFeedback: introductionFeedback,
+            materialMethodsRatingAvg: (result[0]) ? result[0].materialMethodsRatingAvg : 0,
+            materialMethodsFeedback: materialMethodsFeedback,
+            resultsRatingAvg: (result[0]) ? result[0].resultsRatingAvg : 0,
+            resultsFeedback: resultsFeedback,
+            discussionConclusionsRatingAvg: (result[0]) ? result[0].discussionConclusionsRatingAvg : 0,
+            discussionConclusionsFeedback: discussionConclusionsFeedback,
+            literatureCitedRatingAvg: (result[0]) ? result[0].literatureCitedRatingAvg : 0,
+            literatureCitedFeedback: literatureCitedFeedback,
+            acknowledgmentsRatingAvg: (result[0]) ? result[0].acknowledgmentsRatingAvg : 0,
+            acknowledgmentsFeedback: acknowledgmentsFeedback,
+            otherRatingAvg: (result[0]) ? result[0].otherRatingAvg : 0,
+            otherFeedback: otherFeedback,
+            generalComments: generalComments
+          };
+
+          var yesNoSomewhatFields = [{
+            field: '$title.creativeToThePoint',
+            name: 'titleCreativeCounts'
+          },{
+            field: '$title.attentionGrabbing',
+            name: 'titleAttentionCounts'
+          },{
+            field: '$introduction.hookTheAudience',
+            name: 'introductionHookCounts'
+          },{
+            field: '$introduction.citeThreeSources',
+            name: 'introductionSourcesCounts'
+          },{
+            field: '$introduction.clearHypothesis',
+            name: 'introductionHypothesisCounts'
+          },{
+            field: '$introduction.includeOneVisual',
+            name: 'introductionVisualCounts'
+          },{
+            field: '$materialMethods.clearExplanation',
+            name: 'materialMethodsExplanationCounts'
+          },{
+            field: '$materialMethods.describeAnalysis',
+            name: 'materialMethodsAnalysisCounts'
+          },{
+            field: '$materialMethods.includeVisuals',
+            name: 'materialMethodsVisualsCounts'
+          },{
+            field: '$results.stateConclusion',
+            name: 'resultsConclusionCounts'
+          },{
+            field: '$results.describeSurprises',
+            name: 'resultsSurprisesCounts'
+          },{
+            field: '$results.quantitativeAnalysis',
+            name: 'resultsAnalysisCounts'
+          },{
+            field: '$results.includeOneVisual',
+            name: 'resultsIncludeVisualsCounts'
+          },{
+            field: '$results.understandableVisuals',
+            name: 'resultsUnderstandableVisualsCounts'
+          },{
+            field: '$discussionConclusions.significancePresent',
+            name: 'discussionConclusionsSignificanceCounts'
+          },{
+            field: '$discussionConclusions.discussProblems',
+            name: 'discussionConclusionsProblemsCounts'
+          },{
+            field: '$discussionConclusions.interestingImportant',
+            name: 'discussionConclusionsInterestingCounts'
+          },{
+            field: '$discussionConclusions.significantToEcology',
+            name: 'disccusionConclusionsEcologyCounts'
+          },{
+            field: '$discussionConclusions.explainsNextSteps',
+            name: 'discussionConclusionsNextStepsCounts'
+          },{
+            field: '$literatureCited.citeThreeSourcesCorrectly',
+            name: 'literatureCitedSourcesCounts'
+          }];
+          async.forEach(yesNoSomewhatFields, function(field, callback) {
+            ResearchFeedback.aggregate([
+              { $match: { research: research._id } },
+              { $group: { _id: field.field, count: { $sum: 1 } } },
+            ], function(err, counts) {
+              var values = { yes: 0, no: 0, somewhat: 0 };
+              for (var i = 0; i < counts.length; i++) {
+                var id = counts[i]._id;
+                values[id] = counts[i].count;
+              }
+              feedbackResults[field.name] = values;
+              callback();
+            });
+          }, function(err) {
+            res.json(feedbackResults);
+          });
+        }
+      });
+    }
+  });
+};
 
 /**
  * Delete an Research
@@ -574,7 +666,6 @@ exports.list = function(req, res) {
         });
       } else {
         async.forEach(researches, function(item,callback) {
-          console.log('item', item);
           SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
             if (err) {
               return res.status(400).send({
@@ -650,7 +741,6 @@ exports.list = function(req, res) {
   };
 
   findBySearchString(function(or) {
-    console.log('or', or);
     findByTeammates(function(teammates) {
       findBySubmitted(function(teams) {
         search(or, teammates, teams);
@@ -666,7 +756,6 @@ exports.download = function(req, res) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
 
   var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
-  console.log('downloading from ' + input);
 
   wkhtmltopdf(input, {
     customHeader : [

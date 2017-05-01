@@ -43,7 +43,7 @@ Specific feedback or suggestions: <%= CitedFeedback %>
 Acknowledgments:
 Specific feedback or suggestions: <%= AcknowledgmentsFeedback %>
 
-<% if(Other !== '') { %>
+<% if(OtherFeedback !== '') { %>
 Other:
 Specific feedback or suggestions: <%= OtherFeedback %>
 <% } %>
