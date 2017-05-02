@@ -164,7 +164,19 @@ exports.read = function(req, res) {
       // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
       research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
 
-      res.jsonp(research);
+      if (checkRole(req.user, 'team lead')) {
+        Team.findOne({ '_id': research.team._id, 'teamLeads': req.user }).exec(function(err, team) {
+          research.isCurrentUserTeamLead = (team) ? true : false;
+          res.jsonp(research);
+        });
+      } else if (checkRole(req.user, 'team member')) {
+        Team.findOne({ '_id': research.team._id, 'teamMembers': req.user }).exec(function(err, team) {
+          research.isCurrentUserTeammate = (team) ? true : false;
+          res.jsonp(research);
+        });
+      } else {
+        res.jsonp(research);
+      }
     }
   });
 };

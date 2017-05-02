@@ -20,8 +20,8 @@
           <a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Posters</a>
         </li>
         <li role="presentation" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
-          <a href="#teamdrafts" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamdrafts')">
-            {{(vm.isAdmin || vm.isTeamLead) ? 'Team Members' : 'Teammate'}} Draft Posters</a>
+          <a href="#teamposters" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamposters')">
+            {{(vm.isAdmin || vm.isTeamLead) ? 'Team Members' : 'Teammate'}} Posters</a>
         </li>
       </ul>
       <div class="tab-content">
@@ -72,9 +72,9 @@
             </div>
           </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="teamdrafts" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
+        <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
           <div isotope-container="isotope-container" images-loaded>
-            <div ng-repeat="draftResearch in vm.draftResearches track by draftResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+            <div ng-repeat="draftResearch in vm.teamResearches track by draftResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: draftResearch._id })">
                     <div class="panel-body">
                         <p>{{vm.getLongDate(draftResearch.created)}}</p>

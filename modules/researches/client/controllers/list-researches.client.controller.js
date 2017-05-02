@@ -98,28 +98,27 @@
     };
     vm.findSubmittedResearch();
 
-    vm.findResearchDraftsByTeammates = function() {
+    vm.findResearchByTeammates = function() {
       ResearchesService.query({
         byTeammates: ((vm.isTeamMember) ? true : null),
         bySubmitted: ((vm.isTeamLead) ? true : null),
-        status: 'draft'
       }, function(data) {
-        vm.draftResearches = data;
+        vm.teamResearches = data;
         $rootScope.$broadcast('iso-method', { name:null, params:null });
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
         }, 200);
       });
     };
-    vm.findResearchDraftsByTeammates();
+    vm.findResearchByTeammates();
 
     vm.switchTab = function(tab) {
       if (tab === 'created') {
         vm.findResearchByCreator();
       } else if (tab === 'submitted') {
         vm.findSubmittedResearch();
-      } else if (tab === 'teamdrafts') {
-        vm.findResearchDraftsByTeammates();
+      } else if (tab === 'teamposters') {
+        vm.findResearchByTeammates();
       }
     };
 

@@ -9,7 +9,6 @@
 
   function ResearchFeedbackController($scope, $http, ResearchFeedbackService) {
     $scope.getFeedback = function() {
-      console.log('getFeedback', $scope.research._id);
       ResearchFeedbackService.get({
         researchId: $scope.research._id
       }, function(data) {

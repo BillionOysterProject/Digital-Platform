@@ -142,9 +142,7 @@
                 if (stayOnPage) {
                   updateResearchObject(researchId);
                 } else {
-                  $state.go('researches.view', {
-                    researchId: res._id
-                  });
+                  vm.goToView(researchId);
                 }
               });
               vm.modal.modal('hide');
@@ -152,9 +150,7 @@
               if (stayOnPage) {
                 updateResearchObject(researchId);
               } else {
-                $state.go('researches.view', {
-                  researchId: res._id
-                });
+                vm.goToView(researchId);
               }
             }
           });
@@ -163,8 +159,20 @@
 
       function errorCallback(res) {
         vm.error = res.data.message;
-        vm.saving = true;
+        vm.saving = false;
+        if (vm.modal) {
+          vm.modal.bind('hidden.bs.modal', function() {
+            vm.finishedSaving = 100;
+          });
+          vm.modal.modal('hide');
+        }
       }
+    };
+
+    vm.goToView = function(researchId) {
+      $state.go('researches.view', {
+        researchId: researchId
+      });
     };
 
     vm.saveDraft = function(isValid) {
@@ -173,6 +181,10 @@
 
     vm.saveDraftAndPreview = function(isValid) {
       vm.save(isValid, 'draft', false);
+    };
+
+    vm.saveAndSubmit = function(isValid) {
+      vm.save(isValid, 'pending', false);
     };
 
     vm.downloadResearch = function() {
