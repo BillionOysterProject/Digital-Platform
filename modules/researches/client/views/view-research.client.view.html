@@ -7,15 +7,15 @@
                     <a ng-click="vm.openViewUserModal()"><h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6></a>
                     <h6 class="navbar-text">{{vm.getDate(vm.research.created)}}</h6>
                     <div class="pull-right">
-                        <h6 class="navbar-text" ng-show="vm.research.isCurrentUserOwner && vm.research.status === 'published'">Published</h6>
-
+                        <h6 class="navbar-text" ng-show="(vm.research.isCurrentUserOwner || vm.research.isCurrentUserTeamLead || vm.research.isCurrentUserTeammate) &&
+                          vm.research.status === 'published'">Published</h6>
                         <h6 class="navbar-text" ng-show="vm.research.status === 'draft'">Draft</h6>
+                        <h6 class="navbar-text" ng-show="vm.research.status === 'pending'">Pending</h6>
 
                         <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
                           ng-show="vm.research.isCurrentUserOwner && vm.research._id && vm.status !== 'pending'">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.research.isCurrentUserOwner">View Feedback</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a>
-                        <!-- TODO: (Others can give feedback on Drafts! Does not need to be published) -->
 
                         <!--show only if published -- share the public viewable link (no login required) on social:
                         This public view should be a stripped down version of the site

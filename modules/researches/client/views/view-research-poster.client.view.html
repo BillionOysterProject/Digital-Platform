@@ -101,7 +101,7 @@
 
   <div class="poster-header">
       <img ng-src="{{headerImage}}" ng-show="headerImage"/>
-      <h1>{{research.title}}</h1>
+      <h1>{{research.title | sanitize}}</h1>
   </div>
   <div class="poster-subheader">
       <p>{{research.user.displayName}}&nbsp;&nbsp;&#8226;&nbsp;&nbsp;{{created}}</p>
