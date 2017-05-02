@@ -408,6 +408,10 @@ a {
         background: #ea6158;
     }
 
+    .btn-shaded, .btn-shaded:hover, .btn-shaded:focus, .btn-shaded:active, .btn-shaded.active, .open > .dropdown-toggle.btn-shaded, .btn-shaded:active:hover, .btn-shaded.active:hover, .open > .dropdown-toggle.btn-shaded:hover, .btn-shaded:active:focus, .btn-shaded.active:focus, .open > .dropdown-toggle.btn-shaded:focus, .btn-shaded:active.focus, .btn-shaded.active.focus, .open > .dropdown-toggle.btn-shaded.focus {
+        background: #ccc;
+    }
+
         .btn-primary:hover,
         .btn-primary:focus,
         .btn-primary:active,
@@ -463,7 +467,21 @@ a {
         .open > .dropdown-toggle.btn-success:focus,
         .btn-success:active.focus,
         .btn-success.active.focus,
-        .open > .dropdown-toggle.btn-success.focus {
+        .open > .dropdown-toggle.btn-success.focus,
+        .btn-shaded:hover,
+        .btn-shaded:focus,
+        .btn-shaded:active,
+        .btn-shaded.active,
+        .open > .dropdown-toggle.btn-shaded,
+        .btn-shaded:active:hover,
+        .btn-shaded.active:hover,
+        .open > .dropdown-toggle.btn-shaded:hover,
+        .btn-shaded:active:focus,
+        .btn-shaded.active:focus,
+        .open > .dropdown-toggle.btn-shaded:focus,
+        .btn-shaded:active.focus,
+        .btn-shaded.active.focus,
+        .open > .dropdown-toggle.btn-shaded.focus {
             -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
             filter: alpha(opacity=80);
             opacity: 0.8;
@@ -484,12 +502,14 @@ a {
     .btn-info:active,
     .btn-warning:active,
     .btn-danger:active,
+    .btn-shaded:active,
     .btn-default.active,
     .btn-primary.active,
     .btn-success.active,
     .btn-info.active,
     .btn-warning.active,
-    .btn-danger.active {
+    .btn-danger.active,
+    .btn-shaded.active {
         -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
         box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
@@ -501,12 +521,14 @@ a {
         .btn-info:active .hidden,
         .btn-warning:active .hidden,
         .btn-danger:active .hidden,
+        .btn-shaded:active .hidden,
         .btn-default.active .hidden,
         .btn-primary.active .hidden,
         .btn-success.active .hidden,
         .btn-info.active .hidden,
         .btn-warning.active .hidden,
-        .btn-danger.active .hidden {
+        .btn-danger.active .hidden,
+        .btn-shaded.active .hidden {
             display: inline !important;
             font-weight: bold;
         }
