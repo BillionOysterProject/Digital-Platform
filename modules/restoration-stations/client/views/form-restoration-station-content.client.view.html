@@ -40,6 +40,12 @@
                 class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
             </div>
         </div>
+        <div class="row">
+          <div class="form-group col-sm-12">
+            <label for="tagNumber">Tag Number</label>
+            <input type="text" class="form-control" ng-model="station.tagNumber" name="tagNumber" id="tagNumber"/>
+          </div>
+        </div>
         <div class="form-group">
             <label>Notes</label>
             <textarea class="form-control" rows="3" ng-model="station.notes"></textarea>
