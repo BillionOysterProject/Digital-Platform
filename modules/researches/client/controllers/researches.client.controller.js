@@ -7,10 +7,10 @@
     .controller('ResearchesController', ResearchesController);
 
   ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
-  'ExpeditionViewHelper', 'TeamsService', 'ResearchesService'];
+  'ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
 
   function ResearchesController ($scope, $state, $http, $timeout, research, lodash, moment, Authentication, FileUploader,
-  ExpeditionViewHelper, TeamsService, ResearchesService) {
+  ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {
     var vm = this;
     var toGoState = null;
     var toGoParams = null;
@@ -26,7 +26,7 @@
     vm.getDate = ExpeditionViewHelper.getDate;
 
     //TODO remove font
-    vm.research.font = 'Serif';
+    vm.research.font = 'Roboto';
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
 
@@ -41,6 +41,14 @@
       vm.myTeams = data;
       if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
     });
+
+    if (vm.research && vm.research._id) {
+      ResearchFeedbackService.get({
+        researchId: vm.research._id
+      }, function(data) {
+        vm.feedback = data;
+      });
+    }
 
     vm.checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -114,8 +122,6 @@
         if (status === 'draft') {
           $scope.savingStatus = 'Saving Poster Draft';
           vm.modal = angular.element('#modal-save-draft-progress-bar');
-        } else if (vm.research._id) {
-          vm.modal = angular.element('#modal-updated-poster');
         } else {
           vm.modal = angular.element('#modal-saved-poster');
         }

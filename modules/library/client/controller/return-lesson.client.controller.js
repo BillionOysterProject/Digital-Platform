@@ -19,7 +19,7 @@
       })
       .success(function(data, status, headers, config) {
         $scope.form.returnLessonForm.$setPristine();
-        $scope.saveFunction();
+        $scope.saveFunction(true);
       })
       .error(function(data, status, headers, config) {
         $scope.error = data.message;

@@ -64,11 +64,19 @@ var getTeammates = function(user, callback) {
 
 var getTeams = function(user, callback) {
   Team.find({ $or: [{ 'teamLead': user },{ 'teamLeads': user }] }).exec(function(err, teams) {
-    callback(err, teams);
+    if (err) {
+      callback(err);
+    } else {
+      var teamIds = [];
+      for (var j = 0; j < teams.length; j++) {
+        teamIds.push(teams[j]._id);
+      }
+      callback(null, teamIds);
+    }
   });
 };
 
-var getOrganizationIdsByName = function(searchRe, callback) {
+var getTeamIdsByOrganizationName = function(searchRe, callback) {
   SchoolOrg.find({ 'name': searchRe }).exec(function(err, orgs) {
     if (err) {
       callback(err);
@@ -77,14 +85,38 @@ var getOrganizationIdsByName = function(searchRe, callback) {
       for (var i = 0; i < orgs.length; i++) {
         orgIds.push(orgs[i]._id);
       }
-      callback(null, orgIds);
+      Team.find({ 'schoolOrg': { $in: orgIds } }).exec(function(err, teams) {
+        if (err) {
+          callback(err);
+        } else {
+          var teamIds = [];
+          for (var j = 0; j < teams.length; j++) {
+            teamIds.push(teams[j]._id);
+          }
+          callback(null, teamIds);
+        }
+      });
+    }
+  });
+};
+
+var getTeamIdsByName = function(searchRe, callback) {
+  Team.find({ 'name': searchRe }).exec(function(err, teams) {
+    if (err) {
+      callback(err);
+    } else {
+      var teamIds = [];
+      for (var j = 0; j < teams.length; j++) {
+        teamIds.push(teams[j]._id);
+      }
+      callback(null, teamIds);
     }
   });
 };
 
 var getAuthorIdsByName = function(searchRe, callback) {
-  User.find([{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
-  { 'email': searchRe }, { 'username': searchRe }]).exec(function(err, users) {
+  User.find({ $or: [{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
+  { 'email': searchRe }, { 'username': searchRe }] }).exec(function(err, users) {
     if (err) {
       callback(err);
     } else {
@@ -93,6 +125,31 @@ var getAuthorIdsByName = function(searchRe, callback) {
         userIds.push(users[i]._id);
       }
       callback(null, userIds);
+    }
+  });
+};
+
+var getTeamIdsByTeamLeadName = function(searchRe, callback) {
+  User.find({ $or: [{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
+  { 'email': searchRe }, { 'username': searchRe }] }).exec(function(err, users) {
+    if (err) {
+      callback(err);
+    } else {
+      var userIds = [];
+      for (var i = 0; i < users.length; i++) {
+        userIds.push(users[i]._id);
+      }
+      Team.find({ $or: [{ 'teamLead': { $in: userIds } }, { 'teamLeads': { $in: userIds } }] }).exec(function(err, teams) {
+        if (err) {
+          callback(err);
+        } else {
+          var teamIds = [];
+          for (var j = 0; j < teams.length; j++) {
+            teamIds.push(teams[j]._id);
+          }
+          callback(null, teamIds);
+        }
+      });
     }
   });
 };
@@ -107,6 +164,11 @@ exports.create = function(req, res) {
 
     research.user = req.user;
     research.status = researchJSON.status || 'pending';
+
+    if (research.status === 'pending') {
+      if (!research.submitted) research.submitted = [];
+      research.submitted.push(Date.now());
+    }
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
@@ -164,12 +226,12 @@ exports.read = function(req, res) {
       // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
       research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
 
-      if (checkRole(req.user, 'team lead')) {
+      if (checkRole(req.user, 'team lead') && research.team._id) {
         Team.findOne({ '_id': research.team._id, 'teamLeads': req.user }).exec(function(err, team) {
           research.isCurrentUserTeamLead = (team) ? true : false;
           res.jsonp(research);
         });
-      } else if (checkRole(req.user, 'team member')) {
+      } else if (checkRole(req.user, 'team member') && research.team._id) {
         Team.findOne({ '_id': research.team._id, 'teamMembers': req.user }).exec(function(err, team) {
           research.isCurrentUserTeammate = (team) ? true : false;
           res.jsonp(research);
@@ -190,6 +252,9 @@ exports.publish = function(req, res) {
   if (research) {
     research.status = 'published';
     research.returnedNotes = '';
+
+    if (!research.published) research.published = [];
+    research.published.push(Date.now());
 
     research.save(function(err) {
       if (err) {
@@ -283,6 +348,11 @@ exports.update = function(req, res) {
 
       if (!research.updated) research.updated = [];
       research.updated.push(Date.now());
+
+      if (research.status === 'pending') {
+        if (!research.submitted) research.submitted = [];
+        research.submitted.push(Date.now());
+      }
 
       research.save(function(err) {
         if (err) {
@@ -453,6 +523,7 @@ exports.feedbackForResearch = function(req, res) {
           }
 
           var feedbackResults = {
+            feedbackCount: (feedbackList) ? feedbackList.length : 0,
             titleRatingAvg: (result[0]) ? result[0].titleRatingAvg : 0,
             titleFeedback: titleFeedback,
             introductionRatingAvg: (result[0]) ? result[0].introductionRatingAvg : 0,
@@ -608,7 +679,7 @@ exports.delete = function(req, res) {
  * List of Researches
  */
 exports.list = function(req, res) {
-  var search = function(searchStringOr, teammates, teams) {
+  var search = function(searchStringOr, userIds, teamIds) {
     var query;
     var and = [];
 
@@ -616,12 +687,12 @@ exports.list = function(req, res) {
       and.push({ $or: searchStringOr });
     }
 
-    if (teammates) {
-      and.push({ 'user': { $in: teammates } });
+    if (userIds && userIds.length > 0) {
+      and.push({ 'user': { $in: userIds } });
     }
 
-    if (teams) {
-      and.push({ 'team': { $in: teams } });
+    if (teamIds && teamIds.length > 0) {
+      and.push({ 'team': { $in: teamIds } });
     }
 
     if (req.query.byCreator) {
@@ -715,16 +786,25 @@ exports.list = function(req, res) {
     or.push({ 'other.title': searchRe });
     or.push({ 'other.cited': searchRe });
 
-    getOrganizationIdsByName(searchRe, function() {
-      getAuthorIdsByName(searchRe, function() {
-        callback(or, searchRe);
+    getTeamIdsByOrganizationName(searchRe, function(err, teamIds1) {
+      getTeamIdsByName(searchRe, function(err, teamIds2) {
+        // getTeamIdsByTeamLeadName(searchRe, function(err, teamIds3) {
+        var teamIds = teamIds1.concat(teamIds2);
+        // teamIds = teamIds.concat(teamIds3);
+        teamIds = _.uniqWith(teamIds, _.isEqual);
+        getAuthorIdsByName(searchRe, function(err, userIds) {
+          if (teamIds && teamIds.length > 0) or.push({ 'team': { $in: teamIds } });
+          if (userIds && userIds.length > 0) or.push({ 'user': { $in: userIds } });
+          callback(or, teamIds, userIds);
+        });
+        // });
       });
     });
   };
 
   var findBySearchString = function(callback) {
     if (req.query.searchString) {
-      getSearchStringOr(function(or, searchRe) {
+      getSearchStringOr(function(or) {
         callback(or);
       });
     } else {
@@ -752,10 +832,11 @@ exports.list = function(req, res) {
     }
   };
 
-  findBySearchString(function(or) {
-    findByTeammates(function(teammates) {
-      findBySubmitted(function(teams) {
-        search(or, teammates, teams);
+
+  findByTeammates(function(teammatesIds) {
+    findBySubmitted(function(teamIds) {
+      findBySearchString(function(or) {
+        search(or, teammatesIds, teamIds);
       });
     });
   });

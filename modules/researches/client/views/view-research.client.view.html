@@ -14,7 +14,7 @@
 
                         <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
                           ng-show="vm.research.isCurrentUserOwner && vm.research._id && vm.status !== 'pending'">{{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
-                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.research.isCurrentUserOwner">View Feedback</a>
+                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0">View Feedback</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a>
 
                         <!--show only if published -- share the public viewable link (no login required) on social:

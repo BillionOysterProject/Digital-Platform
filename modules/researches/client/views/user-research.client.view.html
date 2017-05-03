@@ -32,8 +32,8 @@
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: createdResearch._id })">
                     <div class="panel-body">
                         <p>{{vm.getLongDate(createdResearch.created)}}</p>
-                        <h4>{{createdResearch.title}}</h4>
-                        <small>{{createdResearch.intro}}</small>
+                        <h4>{{createdResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small>
                     </div>
                     <div class="panel-footer">
                         <h6 ng-show="createdResearch.status === 'published'">Published</h6>
@@ -43,6 +43,9 @@
                     </div>
                 </div>
             </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="vm.createdResearches.$resolved && vm.createdResearches.length == 0" view-permissions="team member">
+              No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
           </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin,team lead"
@@ -60,8 +63,8 @@
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: pendingResearch._id })">
                     <div class="panel-body">
                         <p>{{vm.getLongDate(pendingResearch.created)}}</p>
-                        <h4>{{pendingResearch.title}}</h4>
-                        <small>{{pendingResearch.intro}}</small>
+                        <h4>{{pendingResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small>
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
@@ -71,23 +74,29 @@
                 </div>
             </div>
           </div>
+          <div class="alert alert-info text-center" ng-if="vm.pendingResearches.$resolved && vm.pendingResearches.length == 0" view-permissions="admin,team lead">
+              No posters waiting for approval! As soon as your team members submits them, they'll show up here.
+          </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
           <div isotope-container="isotope-container" images-loaded>
-            <div ng-repeat="draftResearch in vm.teamResearches track by draftResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
-                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: draftResearch._id })">
+            <div ng-repeat="teamResearch in vm.teamResearches track by teamResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: teamResearch._id })">
                     <div class="panel-body">
-                        <p>{{vm.getLongDate(draftResearch.created)}}</p>
-                        <h4>{{draftResearch.title}}</h4>
-                        <small>{{draftResearch.intro}}</small>
+                        <p>{{vm.getLongDate(teamResearch.created)}}</p>
+                        <h4>{{teamResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small>
                     </div>
                     <div class="panel-footer">
-                        <img class="header-profile-image" ng-show="draftResearch.user && draftResearch.user.profileImageURL"
-                          ng-src="{{draftResearch.user.profileImageURL}}"/> {{draftResearch.user.username}}
-                        <br/><small>{{draftResearch.team.name}}, {{draftResearch.team.schoolOrg.name}}</small>
+                        <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
+                          ng-src="{{teamResearch.user.profileImageURL}}"/> {{teamResearch.user.username}}
+                        <br/><small>{{teamResearch.team.name}}, {{teamResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="vm.teamResearches.$resolved && vm.teamResearches.length == 0">
+              None of your {{(vm.isAdmin || vm.isTeamLead) ? 'team members' : 'teammates'}} have any posters yet! As soon as they create them, they'll show up here.
           </div>
         </div>
       </div>
