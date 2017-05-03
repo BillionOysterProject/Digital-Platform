@@ -9,33 +9,33 @@
         <div class="row">
           <div class="col-md-12">
             <ul class="nav nav-pills nav-stacked col-sm-3" role="tablist">
-              <li role="presentation" class="active">
+              <li role="presentation" ng-class="{'active': active === 'generalFeedback'}" ng-show="generalCommentsContent">
                 <a href="#overall" aria-controls="overall" role="tab" data-toggle="tab">Overall</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'titleFeedback'}" ng-show="titleContent">
                 <a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'introductionFeedback'}" ng-show="introductionContent">
                 <a href="#introduction" aria-controls="introduction" role="tab" data-toggle="tab">Introduction</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'materialMethodsFeedback'}" ng-show="materialMethodsContent">
                 <a href="#materials" aria-controls="materials" role="tab" data-toggle="tab">Materials and Methods</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'resultsFeedback'}" ng-show="resultsContent">
                 <a href="#results" aria-controls="results" role="tab" data-toggle="tab">Results</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'discussionConclusionsFeedback'}" ng-show="discussionConclusionsContent">
                 <a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">Discussion/Conclusions</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'literatureCitedFeedback'}" ng-show="literatureCitedContent">
                 <a href="#cited" aria-controls="cited" role="tab" data-toggle="tab">Literature cited</a></li>
-              <li role="presentation">
+              <li role="presentation" ng-class="{'active': active === 'acknowledgmentsFeedback'}" ng-show="acknowledgmentsContent">
                 <a href="#acknowledgments" aria-controls="acknowledgments" role="tab" data-toggle="tab">Acknowledgments</a></li>
-              <li role="presentation" ng-show="research.other && research.other.title">
+              <li role="presentation" ng-class="{'active': active === 'otherFeedback'}" ng-show="otherContent">
                 <a href="#other" aria-controls="other" role="tab" data-toggle="tab">{{(research.other && research.other.title) ? research.other.title : 'Other'}}</a></li>
             </ul>
 
             <div class="tab-content col-md-9">
-              <div role="tabpanel" class="tab-pane active" id="overall">
+              <div role="tabpanel" class="tab-pane active" id="overall" ng-show="generalCommentsContent">
                 <ul ng-repeat="comment in feedback.generalComments">
                   <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
                 <ul>
               </div>
-              <div role="tabpanel" class="tab-pane" id="title">
+              <div role="tabpanel" class="tab-pane" id="title" ng-show="titleContent">
                 <h3 ng-class="{'green': feedback.titleRatingAvg > 3, 'yellow': feedback.titleRatingAvg === 3,
                 'red': feedback.titleRatingAvg < 3}">{{feedback.titleRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.titleRatingAvg" number="5" read-only="true"
@@ -78,7 +78,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="introduction">
+              <div role="tabpanel" class="tab-pane" id="introduction" ng-show="introductionContent">
                 <h3 ng-class="{'green': feedback.introductionRatingAvg > 3, 'yellow': feedback.introductionRatingAvg === 3,
                 'red': feedback.introductionRatingAvg < 3}">{{feedback.introductionRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.introductionRatingAvg" number="5" read-only="true"
@@ -149,7 +149,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="materials">
+              <div role="tabpanel" class="tab-pane" id="materials" ng-show="materialMethodsContent">
                 <h3 ng-class="{'green': feedback.materialMethodsRatingAvg > 3, 'yellow': feedback.materialMethodsRatingAvg === 3,
                 'red': feedback.materialMethodsRatingAvg < 3}">{{feedback.materialMethodsRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.materialMethodsRatingAvg" number="5" read-only="true"
@@ -206,7 +206,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="results">
+              <div role="tabpanel" class="tab-pane" id="results" ng-show="resultsContent">
                 <h3 ng-class="{'green': feedback.resultsRatingAvg > 3, 'yellow': feedback.resultsRatingAvg === 3,
                 'red': feedback.resultsRatingAvg < 3}">{{feedback.resultsRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.resultsRatingAvg" number="5" read-only="true"
@@ -291,7 +291,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="discussion">
+              <div role="tabpanel" class="tab-pane" id="discussion" ng-show="discussionConclusionsContent">
                 <h3 ng-class="{'green': feedback.discussionConclusionsRatingAvg > 3, 'yellow': feedback.discussionConclusionsRatingAvg === 3,
                 'red': feedback.discussionConclusionsRatingAvg < 3}">{{feedback.discussionConclusionsRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.discussionConclusionsRatingAvg" number="5" read-only="true"
@@ -376,7 +376,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="cited">
+              <div role="tabpanel" class="tab-pane" id="cited" ng-show="literatureCitedContent">
                 <h3 ng-class="{'green': feedback.literatureCitedRatingAvg > 3, 'yellow': feedback.literatureCitedRatingAvg === 3,
                 'red': feedback.literatureCitedRatingAvg < 3}">{{feedback.literatureCitedRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.literatureCitedRatingAvg" number="5" read-only="true"
@@ -405,7 +405,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="acknowledgments">
+              <div role="tabpanel" class="tab-pane" id="acknowledgments" ng-show="acknowledgmentsContent">
                 <h3 ng-class="{'green': feedback.acknowledgmentsRatingAvg > 3, 'yellow': feedback.acknowledgmentsRatingAvg === 3,
                 'red': feedback.acknowledgmentsRatingAvg < 3}">{{feedback.acknowledgmentsRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.acknowledgmentsRatingAvg" number="5" read-only="true"
@@ -419,7 +419,7 @@
                     <ul>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="other">
+              <div role="tabpanel" class="tab-pane" id="other" ng-show="otherContent">
                 <h3 ng-class="{'green': feedback.otherRatingAvg > 3, 'yellow': feedback.otherRatingAvg === 3,
                 'red': feedback.otherRatingAvg < 3}">{{feedback.otherRatingAvg | number:1}}</h3>
                 <h4><raty-fa id="star4" score="feedback.otherRatingAvg" number="5" read-only="true"

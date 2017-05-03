@@ -12,7 +12,7 @@
       .state('researches', {
         abstract: true,
         url: '/research',
-        template: '<ui-view/>'
+        template: '<ui-view autoscroll="true"/>'
       })
       .state('researches.list', {
         url: '',

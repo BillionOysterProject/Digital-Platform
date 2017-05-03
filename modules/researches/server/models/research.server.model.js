@@ -76,6 +76,12 @@ var ResearchSchema = new Schema({
   updated: [{
     type: Date
   }],
+  submitted: [{
+    type: Date
+  }],
+  published: [{
+    type: Date
+  }],
   user: {
     type: Schema.ObjectId,
     ref: 'User'
