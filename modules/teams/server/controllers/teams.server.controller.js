@@ -324,56 +324,25 @@ exports.list = function (req, res) {
           res.json([]);
         }
 
+        for(var i = 0; i < teams.length; i++) {
+          var team = teams[i] ? teams[i].toJSON() : {};
+          addTeamPermissionsForCurrentUser(req, team);
+          teams[i] = team;
+          console.log('team', teams[i]);
+        }
+
         if (req.query.full) {
-          var getExpeditionCount = function(team, callback) {
-            Expedition.count({ team: team }).exec(function(err, expeditionCount) {
-              if (err) {
-                callback(0);
-              } else {
-                callback(expeditionCount);
-              }
-            });
-          };
-
-          var getORSCount = function(team, callback) {
-            RestorationStation.count({ team: team }).exec(function(err, orsCount) {
-              if (err) {
-                callback(0);
-              } else {
-                callback(orsCount);
-              }
-            });
-          };
-
-          var getCounts = function(teams, index, callback) {
-            if (index < teams.length) {
-              var teamObj = teams[index];
-              var team = teamObj ? teamObj.toJSON() : {};
-              getExpeditionCount(team, function(expeditionCount) {
-                getORSCount(team, function(orsCount) {
-                  team.expeditionCount = expeditionCount;
-                  team.orsCount = orsCount;
-                  teams[index] = team;
-                  getCounts(teams, index+1, callback);
-                });
-              });
-            } else {
+          async.forEach(teams, function(team, callback) {
+            // Get published expedition count
+            Expedition.count({ team: team, status: 'published' }).exec(function(err, expeditionCount) {
+              team.expeditionCount = expeditionCount || 0;
               callback();
-            }
-          };
-
-          getCounts(teams, 0, function() {
-            for(var i = 0; i < teams.length; i++) {
-              addTeamPermissionsForCurrentUser(req, teams[i]);
-            }
+            });
+          }, function(err) {
             res.json(teams);
           });
         } else {
-          for(var i = 0; i < teams.length; i++) {
-            var team = teams[i] ? teams[i].toJSON() : {};
-            addTeamPermissionsForCurrentUser(req, team);
-            teams[i] = team;
-          }
+
           res.json(teams);
         }
       }

@@ -14,6 +14,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   multer = require('multer'),
+  async = require('async'),
   config = require(path.resolve('./config/config'));
 
 var isAdmin = function(user) {
@@ -47,24 +48,24 @@ exports.create = function(req, res) {
 };
 
 var findTeamStats = function(orgToFind, callback) {
-  var findTeams = function(org, callback) {
-    Team.find({ 'schoolOrg' : org }).exec(function(err, teams) {
-      callback(teams);
-    });
-  };
-
-  findTeams(orgToFind, function(teams) {
+  Team.find({ 'schoolOrg' : orgToFind }).populate('teamLead', 'displayName').populate('teamLeads', 'displayName')
+  .populate('teamMembers', 'displayName').exec(function(err, teams) {
     var org = orgToFind ? orgToFind.toJSON() : {};
     var teamLeads = [];
     var teamMembers = [];
+
     if (teams && teams.length) {
       for (var i = 0; i < teams.length; i++) {
-        teamLeads.push(teams[i].teamLead);
-        teamLeads = teamLeads.concat(teams[i].teamLeads);
-        teamMembers = teamMembers.concat(teams[i].teamMembers);
+        if (teams[i].teamLead) teamLeads.push(teams[i].teamLead);
+        if (teams[i].teamLeads && teams[i].teamLeads.length) teamLeads = teamLeads.concat(teams[i].teamLeads);
+        if (teams[i].teamMembers && teams[i].teamMembers.length) teamMembers = teamMembers.concat(teams[i].teamMembers);
       }
-      teamLeads = _.uniqWith(teamLeads, _.isEqual);
-      teamMembers = _.uniqWith(teamMembers, _.isEqual);
+      teamLeads = _.uniqWith(teamLeads, function(a, b) {
+        return a._id.toString() === b._id.toString();
+      });
+      teamMembers = _.uniqWith(teamMembers, function(a, b) {
+        return a._id.toString() === b._id.toString();
+      });
     }
     org.teams = {
       teamLeads: teamLeads,
@@ -291,18 +292,13 @@ exports.list = function (req, res) {
       }
 
       if (req.query.showTeams) {
-        var findTeamsForOrg = function(index, schoolOrgs, updatedSchoolOrgs, callback) {
-          if (index < schoolOrgs.length) {
-            findTeamStats(schoolOrgs[index], function(org) {
-              updatedSchoolOrgs.push(org);
-              findTeamsForOrg(index+1, schoolOrgs, updatedSchoolOrgs, callback);
-            });
-          } else {
-            callback(updatedSchoolOrgs);
-          }
-        };
-
-        findTeamsForOrg(0, schoolOrgs, [], function(updatedSchoolOrgs) {
+        var updatedSchoolOrgs = [];
+        async.forEach(schoolOrgs, function(schoolOrg, callback) {
+          findTeamStats(schoolOrg, function(org) {
+            updatedSchoolOrgs.push(org);
+            callback();
+          });
+        }, function(err) {
           res.json(updatedSchoolOrgs);
         });
       } else {

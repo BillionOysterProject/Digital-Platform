@@ -85,6 +85,9 @@ var RestorationStationSchema = new Schema({
   notes: {
     type: String
   },
+  tagNumber: {
+    type: String
+  },
   photo: {
     originalname: String,
     mimetype: String,
