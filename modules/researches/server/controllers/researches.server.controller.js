@@ -44,7 +44,7 @@ var checkRole = function(user, role) {
 var getTeammates = function(user, callback) {
   Team.find({ 'teamMembers': user }).exec(function(err, teams) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var teammates = [];
       for (var i = 0; i < teams.length; i++) {
@@ -65,7 +65,7 @@ var getTeammates = function(user, callback) {
 var getTeams = function(user, callback) {
   Team.find({ $or: [{ 'teamLead': user },{ 'teamLeads': user }] }).exec(function(err, teams) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var teamIds = [];
       for (var j = 0; j < teams.length; j++) {
@@ -79,7 +79,7 @@ var getTeams = function(user, callback) {
 var getTeamIdsByOrganizationName = function(searchRe, callback) {
   SchoolOrg.find({ 'name': searchRe }).exec(function(err, orgs) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var orgIds = [];
       for (var i = 0; i < orgs.length; i++) {
@@ -87,7 +87,7 @@ var getTeamIdsByOrganizationName = function(searchRe, callback) {
       }
       Team.find({ 'schoolOrg': { $in: orgIds } }).exec(function(err, teams) {
         if (err) {
-          callback(err, []);
+          callback(err);
         } else {
           var teamIds = [];
           for (var j = 0; j < teams.length; j++) {
@@ -103,7 +103,7 @@ var getTeamIdsByOrganizationName = function(searchRe, callback) {
 var getTeamIdsByName = function(searchRe, callback) {
   Team.find({ 'name': searchRe }).exec(function(err, teams) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var teamIds = [];
       for (var j = 0; j < teams.length; j++) {
@@ -118,7 +118,7 @@ var getAuthorIdsByName = function(searchRe, callback) {
   User.find({ $or: [{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
   { 'email': searchRe }, { 'username': searchRe }] }).exec(function(err, users) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var userIds = [];
       for (var i = 0; i < users.length; i++) {
@@ -133,7 +133,7 @@ var getTeamIdsByTeamLeadName = function(searchRe, callback) {
   User.find({ $or: [{ 'displayName': searchRe }, { 'firstName': searchRe }, { 'lastName': searchRe },
   { 'email': searchRe }, { 'username': searchRe }] }).exec(function(err, users) {
     if (err) {
-      callback(err, []);
+      callback(err);
     } else {
       var userIds = [];
       for (var i = 0; i < users.length; i++) {
@@ -141,7 +141,7 @@ var getTeamIdsByTeamLeadName = function(searchRe, callback) {
       }
       Team.find({ $or: [{ 'teamLead': { $in: userIds } }, { 'teamLeads': { $in: userIds } }] }).exec(function(err, teams) {
         if (err) {
-          callback(err, []);
+          callback(err);
         } else {
           var teamIds = [];
           for (var j = 0; j < teams.length; j++) {
