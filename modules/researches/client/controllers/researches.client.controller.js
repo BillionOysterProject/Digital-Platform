@@ -104,6 +104,7 @@
         researchId: researchId
       }, function(data) {
         vm.research = data;
+        console.log('_id', vm.research._id);
         vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
       });
     };
