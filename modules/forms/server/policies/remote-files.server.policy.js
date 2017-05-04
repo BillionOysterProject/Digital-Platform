@@ -15,7 +15,7 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin', 'team lead'],
+    roles: ['admin', 'team lead', 'team member'],
     allows: [{
       resources: '/api/remote-files/delete-file',
       permissions: '*'

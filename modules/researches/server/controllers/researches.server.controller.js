@@ -181,25 +181,29 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        Team.findById(research.team._id).populate('teamLeads', 'firstName email').exec(function(err, team) {
+        if (research.status === 'pending') {
+          var teamId = (research.team && research.team._id) ? research.team._id : research.team;
+          Team.findById(teamId).populate('teamLeads', 'firstName email').exec(function(err, team) {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-
-          async.forEach(team.teamLeads, function(item,callback) {
-            email.sendEmailTemplate(item.email, 'A new poster is pending approval', 'poster_waiting', {
-              FirstName: item.firstName,
-              TeamMemberName: req.user.displayName,
-              PosterName: research.title,
-              LinkPosterRequest: httpTransport + req.headers.host + '/research/user'
-            }, function(info) {
-              callback();
-            }, function(errorMessage) {
-              callback();
+            async.forEach(team.teamLeads, function(item,callback) {
+              email.sendEmailTemplate(item.email, 'A new poster is pending approval', 'poster_waiting', {
+                FirstName: item.firstName,
+                TeamMemberName: req.user.displayName,
+                PosterName: research.title,
+                LinkPosterRequest: httpTransport + req.headers.host + '/research/user'
+              }, function(info) {
+                callback();
+              }, function(errorMessage) {
+                callback();
+              });
+            }, function(err) {
+              res.json(research);
             });
-          }, function(err) {
-            res.json(research);
           });
-        });
+        } else {
+          res.json(research);
+        }
       }
     });
   }, function(errorMessages) {
@@ -209,6 +213,26 @@ exports.create = function(req, res) {
   });
 };
 
+var setOwnership = function(user, research, callback) {
+  // Add a custom field to the Article, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
+  research.isCurrentUserOwner = user && research.user && research.user._id.toString() === user._id.toString();
+
+  if (checkRole(user, 'team lead') && research.team._id) {
+    Team.findOne({ '_id': research.team._id, 'teamLeads': user }).exec(function(err, team) {
+      research.isCurrentUserTeamLead = (team) ? true : false;
+      callback(research);
+    });
+  } else if (checkRole(user, 'team member') && research.team._id) {
+    Team.findOne({ '_id': research.team._id, 'teamMembers': user }).exec(function(err, team) {
+      research.isCurrentUserTeammate = (team) ? true : false;
+      callback(research);
+    });
+  } else {
+    callback(research);
+  }
+};
+
 /**
  * Show the current Research
  */
@@ -216,31 +240,33 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var research = req.research ? req.research.toJSON() : {};
 
-  SchoolOrg.populate(research.team, { 'path': 'schoolOrg' }, function(err, output) {
-    if (err) {
-      return res.status(400).send({
-        message: err
-      });
-    } else {
-      // Add a custom field to the Article, for determining if the current User is the "owner".
-      // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-      research.isCurrentUserOwner = req.user && research.user && research.user._id.toString() === req.user._id.toString();
-
-      if (checkRole(req.user, 'team lead') && research.team._id) {
-        Team.findOne({ '_id': research.team._id, 'teamLeads': req.user }).exec(function(err, team) {
-          research.isCurrentUserTeamLead = (team) ? true : false;
-          res.jsonp(research);
-        });
-      } else if (checkRole(req.user, 'team member') && research.team._id) {
-        Team.findOne({ '_id': research.team._id, 'teamMembers': req.user }).exec(function(err, team) {
-          research.isCurrentUserTeammate = (team) ? true : false;
-          res.jsonp(research);
+  if (research.team) {
+    SchoolOrg.populate(research.team, { 'path': 'schoolOrg' }, function(err, output) {
+      if (err) {
+        return res.status(400).send({
+          message: err
         });
       } else {
-        res.jsonp(research);
+        setOwnership(req.user, research, function(updatedResearch) {
+          res.jsonp(updatedResearch);
+        });
       }
-    }
-  });
+    });
+  } else if (checkRole(research.user, 'team lead') && research.user.schoolOrg) {
+    SchoolOrg.populate(research.user, { 'path': 'schoolOrg' }, function(err, output) {
+      if (err) {
+        return res.status(400).send({
+          message: err
+        });
+      } else {
+        setOwnership(req.user, research, function(updatedResearch) {
+          res.jsonp(updatedResearch);
+        });
+      }
+    });
+  } else {
+    res.jsonp(research);
+  }
 };
 
 /**
@@ -866,8 +892,8 @@ exports.download = function(req, res) {
     marginTop: '5mm',
     orientation: 'Landscape',
     //pageSize: 'letter',
-    //enableSmartShrinking: true,
-    disableSmartShrinking: true,
+    enableSmartShrinking: true,
+    //disableSmartShrinking: true,
     // zoom: 1.5,
     // debugJavascript: true,
     ignore: [/QFont::setPixelSize/]
@@ -938,7 +964,7 @@ exports.researchByID = function(req, res, next, id) {
     });
   }
 
-  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username')
+  Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg roles')
   .populate('team', 'name schoolOrg photo').exec(function (err, research) {
     if (err) {
       return next(err);

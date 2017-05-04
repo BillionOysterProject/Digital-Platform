@@ -1,6 +1,6 @@
 <section class="content shaded">
   <section class="container">
-    <form name="vm.form.researchForm" ng-submit="vm.saveAndSubmit(vm.form.researchForm.$valid)" novalidate>
+    <form name="vm.form.researchForm" novalidate>
       <fieldset>
         <div class="container-fluid">
           <div class="page-header">
@@ -240,7 +240,7 @@
             </div>
           </div>
 
-          <div class="alert alert-danger" ng-show="(vm.form.researchForm.$dirty || vm.form.researchForm.$submitted) &&
+          <div class="alert alert-danger" ng-show="vm.form.researchForm.$dirty && vm.form.researchForm.$submitted &&
           vm.form.researchForm.$invalid && (vm.form.researchForm.$error || vm.error.length > 0)">
             <h4>Sorry, you can't submit just yet!</h4>
             <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.researchForm.$error track by $index">
@@ -255,8 +255,8 @@
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
             <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
-            <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.researchForm.$valid">
-              {{vm.research._id ? 'Resubmit poster' : 'Submit poster'}}</button>
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid">
+              {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Resubmit poster' : 'Submit poster'}}</a>
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
           </div>
