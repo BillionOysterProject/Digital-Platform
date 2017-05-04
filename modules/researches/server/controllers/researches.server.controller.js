@@ -939,7 +939,7 @@ exports.researchByID = function(req, res, next, id) {
   }
 
   Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username')
-  .populate('team', 'name schoolOrg').exec(function (err, research) {
+  .populate('team', 'name schoolOrg photo').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {
