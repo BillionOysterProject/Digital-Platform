@@ -328,7 +328,6 @@ exports.list = function (req, res) {
           var team = teams[i] ? teams[i].toJSON() : {};
           addTeamPermissionsForCurrentUser(req, team);
           teams[i] = team;
-          console.log('team', teams[i]);
         }
 
         if (req.query.full) {

@@ -16,6 +16,12 @@
     var toGoParams = null;
 
     vm.research = research;
+    vm.research.organization = null;
+    if (vm.research.team && vm.research.team.schoolOrg) {
+      vm.research.organization = vm.research.team.schoolOrg;
+    } else if (!vm.research.team && vm.research.user && vm.research.user.schoolOrg && vm.research.user.schoolOrg._id) {
+      vm.research.organization = vm.research.user.schoolOrg;
+    }
 
     vm.authentication = Authentication;
     vm.user = Authentication.user;
@@ -164,7 +170,7 @@
       }
 
       function errorCallback(res) {
-        vm.error = res.data.message;
+        vm.error = res.message;
         vm.saving = false;
         if (vm.modal) {
           vm.modal.bind('hidden.bs.modal', function() {
@@ -182,11 +188,17 @@
     };
 
     vm.saveDraft = function(isValid) {
-      vm.save(isValid, 'draft', true);
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
+      }
+      vm.save(true, 'draft', true);
     };
 
     vm.saveDraftAndPreview = function(isValid) {
-      vm.save(isValid, 'draft', false);
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
+      }
+      vm.save(true, 'draft', false);
     };
 
     vm.saveAndSubmit = function(isValid) {
