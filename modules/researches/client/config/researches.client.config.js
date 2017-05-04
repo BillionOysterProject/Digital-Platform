@@ -20,14 +20,14 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'researches', {
-      title: 'Posters',
-      state: 'researches.list'
+      title: 'My Posters',
+      state: 'researches.user'
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'researches', {
-      title: 'My Collection',
-      state: 'researches.user'
+      title: 'Publications',
+      state: 'researches.list'
     });
 
     //Added temporarily to allow access to this view for mockup material

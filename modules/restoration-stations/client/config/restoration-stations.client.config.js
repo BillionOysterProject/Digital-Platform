@@ -26,16 +26,16 @@
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
-      title: 'ORS',
-      state: 'restoration-stations.list',
-      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
+      title: 'My Expeditions',
+      state: 'expeditions.list',
+      roles: ['admin', 'team lead', 'team member', 'partner'],
       position: 2
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
-      title: 'Expeditions',
-      state: 'expeditions.list',
-      roles: ['admin', 'team lead', 'team member', 'partner'],
+      title: 'ORS',
+      state: 'restoration-stations.list',
+      roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
       position: 3
     });
 
