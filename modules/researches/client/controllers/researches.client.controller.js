@@ -251,5 +251,17 @@
       angular.element('#modal-research-view-feedback').modal('hide');
       if (refresh) console.log('reload feedback view');
     };
+
+    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      if (vm.modal && vm.modal.hasClass('in')) {
+        event.preventDefault();
+        vm.modal.bind('hidden.bs.modal', function() {
+          if (toState) {
+            $state.go(toState, toParams);
+          }
+        });
+        vm.modal.modal('hide');
+      }
+    });
   }
 }());
