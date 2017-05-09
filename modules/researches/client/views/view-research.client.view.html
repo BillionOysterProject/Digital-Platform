@@ -28,10 +28,13 @@
                         <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
                         <a href="#" socialshare socialshare-provider="facebook"
-                          socialshare-description="Check out my poster at the Billion Oyster Project"
-                          socialshare-hashtags="BillionOysterProject"
-                          socialshare-media="{{vm.url}}">
+                          ng-show="vm.research.status === 'published'"
+                          socialshare-type="feed"
+                          socialshare-via="{{vm.facebookAppId}}"
+                          socialshare-url="{{vm.url}}">
                           <i class="fa fa-facebook"></i>
+                          <!--socialshare-description="Check out my poster at the Billion Oyster Project"
+                          socialshare-hashtags="BillionOysterProject"-->
                         </a>
                         <a href="#" socialshare socialshare-provider="twitter"
                           ng-show="vm.research.status === 'published'"
@@ -41,13 +44,17 @@
                           <i class="fa fa-twitter"></i>
                         </a>
                         <a href="#" socialshare socialshare-provider="pinterest"
-                          socialshare-description="Check out my poster at the Billion Oyster Project"
+                          ng-show="vm.research.status === 'published'"
+                          socialshare-text="Check out my poster at the Billion Oyster Project"
+                          socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-pinterest"></i>
                         </a>
                         <a href="#" socialshare socialshare-provider="linkedin"
+                          ng-show="vm.research.status === 'published'"
                           socialshare-text="I was published on the Billion Oyster Project"
                           socialshare-description="Check out my poster"
+                          socialshare-source="{{vm.source}}"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-linkedin"></i>
                         </a>
