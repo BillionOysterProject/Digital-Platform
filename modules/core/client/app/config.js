@@ -24,7 +24,8 @@ var ApplicationConfiguration = (function () {
     'ngLodash',
     'colorpicker.module',
     'angularMoment',
-    'mwl.calendar'];
+    'mwl.calendar',
+    '720kb.socialshare'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

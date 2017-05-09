@@ -6,11 +6,11 @@
     .module('researches')
     .controller('ResearchesController', ResearchesController);
 
-  ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', 'researchResolve', 'lodash', 'moment', 'Authentication', 'FileUploader',
-  'ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
+  ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', '$location', 'researchResolve', 'lodash', 'moment',
+  'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
 
-  function ResearchesController ($scope, $state, $http, $timeout, research, lodash, moment, Authentication, FileUploader,
-  ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {
+  function ResearchesController ($scope, $state, $http, $timeout, $location, research, lodash, moment,
+  Authentication, FileUploader, ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {
     var vm = this;
     var toGoState = null;
     var toGoParams = null;
@@ -22,6 +22,10 @@
     } else if (!vm.research.team && vm.research.user && vm.research.user.schoolOrg && vm.research.user.schoolOrg._id) {
       vm.research.organization = vm.research.user.schoolOrg;
     }
+
+    //vm.url = $location.protocol() + '://'+ $location.host() +':'+ $location.port();
+    vm.url = $location.absUrl();
+    console.log('url', vm.url);
 
     vm.authentication = Authentication;
     vm.user = Authentication.user;

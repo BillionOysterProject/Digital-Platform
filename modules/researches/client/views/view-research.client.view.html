@@ -17,6 +17,7 @@
                           {{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0">View Feedback</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a>
+                        <a class="btn btn-default" ng-click="vm.downloadResearch()">Download PDF</a><br/>
 
                         <!--show only if published -- share the public viewable link (no login required) on social:
                         This public view should be a stripped down version of the site
@@ -26,7 +27,30 @@
                         <!-- <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
-                        <a class="btn btn-default" ng-click="vm.downloadResearch()">Download PDF</a>
+                        <a href="#" socialshare socialshare-provider="facebook"
+                          socialshare-description="Check out my poster at the Billion Oyster Project"
+                          socialshare-hashtags="BillionOysterProject"
+                          socialshare-media="{{vm.url}}">
+                          <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" socialshare socialshare-provider="twitter"
+                          ng-show="vm.research.status === 'published'"
+                          socialshare-text="Check out my poster: "
+                          socialshare-hashtags="BillionOysterProject"
+                          socialshare-url="{{vm.url}}">
+                          <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" socialshare socialshare-provider="pinterest"
+                          socialshare-description="Check out my poster at the Billion Oyster Project"
+                          socialshare-url="{{vm.url}}">
+                          <i class="fa fa-pinterest"></i>
+                        </a>
+                        <a href="#" socialshare socialshare-provider="linkedin"
+                          socialshare-text="I was published on the Billion Oyster Project"
+                          socialshare-description="Check out my poster"
+                          socialshare-url="{{vm.url}}">
+                          <i class="fa fa-linkedin"></i>
+                        </a>
                     </div>
                 </nav>
             </div>
