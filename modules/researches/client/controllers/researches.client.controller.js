@@ -6,10 +6,10 @@
     .module('researches')
     .controller('ResearchesController', ResearchesController);
 
-  ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', '$location', '$document', 'researchResolve', 'lodash', 'moment',
+  ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', '$location', 'researchResolve', 'lodash', 'moment',
   'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
 
-  function ResearchesController ($scope, $state, $http, $timeout, $location, $document, research, lodash, moment,
+  function ResearchesController ($scope, $state, $http, $timeout, $location, research, lodash, moment,
   Authentication, FileUploader, ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {
     var vm = this;
     var toGoState = null;
