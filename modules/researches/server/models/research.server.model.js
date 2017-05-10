@@ -56,7 +56,7 @@ var ResearchSchema = new Schema({
       default: '',
       trim: true
     },
-    cited: {
+    content: {
       type: String
     }
   },
