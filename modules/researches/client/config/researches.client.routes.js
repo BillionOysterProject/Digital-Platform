@@ -20,7 +20,7 @@
         controller: 'ResearchesListController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Researches List'
+          pageTitle: 'Published Research List'
         }
       })
       .state('researches.user', {
@@ -29,7 +29,8 @@
         controller: 'ResearchesListController',
         controllerAs: 'vm',
         data: {
-          roles: ['team member', 'team lead', 'admin']
+          roles: ['team member', 'team lead', 'admin'],
+          pageTitle: 'My Research List'
         }
       })
       .state('researches.create', {
@@ -42,7 +43,7 @@
         },
         data: {
           roles: ['team member', 'team lead', 'admin'],
-          pageTitle: 'Researches Create'
+          pageTitle: 'Research Create'
         }
       })
       .state('researches.view', {
