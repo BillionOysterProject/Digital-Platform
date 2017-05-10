@@ -215,7 +215,6 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var query;
   var and = [];
-  console.log('schoolOrg', req.user.schoolOrg);
 
   if (req.query.type) {
     if (req.query.type === 'other') {
@@ -238,7 +237,6 @@ exports.list = function (req, res) {
     } else {
       schoolOrgs.push(req.user.schoolOrg);
     }
-    console.log('schoolOrgs', schoolOrgs);
     and.push({ '_id': { $in: schoolOrgs } });
   }
 
