@@ -27,7 +27,10 @@
         url: '/user',
         templateUrl: 'modules/researches/client/views/user-research.client.view.html',
         controller: 'ResearchesListController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        data: {
+          roles: ['team member', 'team lead', 'admin']
+        }
       })
       .state('researches.create', {
         url: '/create',
@@ -38,7 +41,7 @@
           researchResolve: newResearch
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['team member', 'team lead', 'admin'],
           pageTitle: 'Researches Create'
         }
       })
@@ -69,23 +72,10 @@
           researchResolve: getResearch
         },
         data: {
-          roles: ['user', 'admin'],
+          roles: ['team member', 'team lead', 'admin'],
           pageTitle: 'Edit Research {{ researchResolve.name }}'
         }
-      })
-      // .state('researches.view', {
-      //   url: '/:researchId',
-      //   templateUrl: 'modules/researches/client/views/view-research.client.view.html',
-      //   controller: 'ResearchesController',
-      //   controllerAs: 'vm',
-      //   resolve: {
-      //     researchResolve: getResearch
-      //   },
-      //   data: {
-      //     pageTitle: 'Research {{ researchResolve.name }}'
-      //   }
-      // })
-      ;
+      });
   }
 
   getResearch.$inject = ['$stateParams', 'ResearchesService'];
