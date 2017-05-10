@@ -46,12 +46,14 @@
       queueLimit: 2
     });
 
-    TeamsService.query({
-      byMember: true
-    }, function(data) {
-      vm.myTeams = data;
-      if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
-    });
+    if (vm.user) {
+      TeamsService.query({
+        byMember: true
+      }, function(data) {
+        vm.myTeams = data;
+        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
+      });
+    }
 
     if (vm.research && vm.research._id) {
       ResearchFeedbackService.get({
@@ -62,10 +64,14 @@
     }
 
     vm.checkRole = function(role) {
-      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
-        return o === role;
-      });
-      return (roleIndex > -1) ? true : false;
+      if (vm.user) {
+        var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+          return o === role;
+        });
+        return (roleIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
     };
 
     vm.changeColor = function(color) {

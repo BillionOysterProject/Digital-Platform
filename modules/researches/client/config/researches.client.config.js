@@ -21,7 +21,8 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'researches', {
       title: 'My Posters',
-      state: 'researches.user'
+      state: 'researches.user',
+      roles: ['team member', 'team lead', 'admin']
     });
 
     // Add the dropdown list item
