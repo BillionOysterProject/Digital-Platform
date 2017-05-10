@@ -215,6 +215,7 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var query;
   var and = [];
+  console.log('schoolOrg', req.user.schoolOrg);
 
   if (req.query.type) {
     if (req.query.type === 'other') {
@@ -228,6 +229,17 @@ exports.list = function (req, res) {
     and.push({ 'pending': true });
   } else if (req.query.approvedOnly) {
     and.push({ 'pending': false });
+  }
+
+  if (req.query.mySchoolOrgs === 'true') {
+    var schoolOrgs = [];
+    if (_.isArray(req.user.schoolOrg)) {
+      schoolOrgs.concat(req.user.schoolOrg);
+    } else {
+      schoolOrgs.push(req.user.schoolOrg);
+    }
+    console.log('schoolOrgs', schoolOrgs);
+    and.push({ '_id': { $in: schoolOrgs } });
   }
 
   var searchRe;
