@@ -52,6 +52,15 @@
                       </li>
                     </ul>
                 </li>
+                <li class="dropdown" id="memberFilter">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{(vm.filter.memberFilterName) ? vm.filter.memberFilterName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.memberFilterSelected()" ok-sel=".all">All Organizations</a></li>
+                      <li><a ng-click="vm.memberFilterSelected('mine')" ok-sel=".mine">My Organizations</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
 

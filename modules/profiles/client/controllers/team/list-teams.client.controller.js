@@ -20,6 +20,8 @@
     vm.filter = {
       organization: '',
       organizationName: '',
+      memberFilter: true,
+      memberFilterName: 'My Teams',
       searchString: '',
       sort: ''
     };
@@ -28,6 +30,8 @@
       vm.filter = {
         organization: '',
         organizationName: '',
+        memberFilter: false,
+        memberFilterName: 'All Teams',
         searchString: '',
         sort: ''
       };
@@ -35,8 +39,18 @@
     };
 
     vm.findTeams = function() {
+      var byOwner, byMember;
+      if (vm.filter.memberFilter === true) {
+        if (vm.isTeamLead) {
+          byOwner = true;
+        } else {
+          byMember = true;
+        }
+      }
       TeamsService.query({
         organization: vm.filter.organization,
+        byOwner: byOwner,
+        byMember: byMember,
         searchString: vm.filter.searchString,
         withMembers: true,
         full: true
@@ -56,6 +70,17 @@
     vm.organizationSelected = function(selection) {
       vm.filter.organization = (selection) ? selection._id : '';
       vm.filter.organizationName = (selection) ? selection.name : '';
+      vm.findTeams();
+    };
+
+    vm.memberFilterSelected = function(selection) {
+      if (selection === 'mine') {
+        vm.filter.memberFilter = true;
+        vm.filter.memberFilterName = 'My Teams';
+      } else {
+        vm.filter.memberFilter = false;
+        vm.filter.memberFilterName = 'All Teams';
+      }
       vm.findTeams();
     };
 

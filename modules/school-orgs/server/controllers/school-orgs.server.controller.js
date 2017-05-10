@@ -230,6 +230,16 @@ exports.list = function (req, res) {
     and.push({ 'pending': false });
   }
 
+  if (req.query.mySchoolOrgs === 'true') {
+    var schoolOrgs = [];
+    if (_.isArray(req.user.schoolOrg)) {
+      schoolOrgs.concat(req.user.schoolOrg);
+    } else {
+      schoolOrgs.push(req.user.schoolOrg);
+    }
+    and.push({ '_id': { $in: schoolOrgs } });
+  }
+
   var searchRe;
   var or = [];
   if (req.query.searchString) {
