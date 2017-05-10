@@ -115,7 +115,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId/feedback',
-      permissions: ['*']
+      permissions: ['get']
     }, {
       resources: '/api/research/:researchId/download',
       permissions: ['get']
