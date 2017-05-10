@@ -31,10 +31,12 @@
                           ng-show="vm.research.status === 'published'"
                           socialshare-type="feed"
                           socialshare-via="{{vm.facebookAppId}}"
+                          socialshare-title="I was published on the Billion Oyster Project"
+                          socialshare-description="Check out my poster"
+                          socialshare-hashtags="BillionOysterProject"
+                          socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-facebook"></i>
-                          <!--socialshare-description="Check out my poster at the Billion Oyster Project"
-                          socialshare-hashtags="BillionOysterProject"-->
                         </a>
                         <a href="#" socialshare socialshare-provider="twitter"
                           ng-show="vm.research.status === 'published'"
@@ -43,20 +45,19 @@
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-twitter"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="pinterest"
+                        <a href="#" socialshare socialshare-provider="tumblr"
                           ng-show="vm.research.status === 'published'"
                           socialshare-text="Check out my poster at the Billion Oyster Project"
                           socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}">
-                          <i class="fa fa-pinterest"></i>
+                          <i class="fa fa-tumblr"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="linkedin"
+                        <a href="#" socialshare socialshare-provider="sms"
                           ng-show="vm.research.status === 'published'"
-                          socialshare-text="I was published on the Billion Oyster Project"
-                          socialshare-description="Check out my poster"
-                          socialshare-source="{{vm.source}}"
+                          socialshare-text="Check out my poster at the Billion Oyster Project"
+                          socialshare-to="678-999-7657"
                           socialshare-url="{{vm.url}}">
-                          <i class="fa fa-linkedin"></i>
+                          <i class="fa fa-mobile"></i>
                         </a>
                     </div>
                 </nav>
