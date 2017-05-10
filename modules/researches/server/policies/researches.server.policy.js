@@ -93,6 +93,12 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research',
       permissions: ['get']
     }, {
+      resources: '/api/research/:researchId/feedback-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/feedback',
+      permissions: ['get']
+    }, {
       resources: '/api/research/:researchId/download',
       permissions: ['get']
     }, {
@@ -102,6 +108,15 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['guest'],
     allows: [{
+      resources: '/api/research',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/feedback-list',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/feedback',
+      permissions: ['get']
+    }, {
       resources: '/api/research/:researchId/download',
       permissions: ['get']
     }, {

@@ -4,7 +4,10 @@
             <div class="row">
                 <nav class="navbar">
                     <h6 class="navbar-text blue">{{vm.research.title}}</h6>
-                    <a ng-click="vm.openViewUserModal()"><h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6></a>
+                    <a ng-click="vm.openViewUserModal()" ng-show="vm.user">
+                      <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6>
+                    </a>
+                    <h6 class="navbar-text" ng-hide="vm.user"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6>
                     <h6 class="navbar-text">{{vm.getDate(vm.research.created)}}</h6>
                     <div class="pull-right">
                         <h6 class="navbar-text" ng-show="(vm.research.isCurrentUserOwner || vm.research.isCurrentUserTeamLead || vm.research.isCurrentUserTeammate) &&
@@ -15,8 +18,8 @@
                         <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
                           ng-show="vm.research.isCurrentUserOwner && vm.research._id && vm.research.status !== 'pending'">
                           {{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
-                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0">View Feedback</a>
-                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner">Give Feedback</a>
+                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0 && vm.user">View Feedback</a>
+                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner || !vm.user">Give Feedback</a>
                         <a class="btn btn-default" ng-click="vm.downloadResearch()">Download PDF</a><br/>
 
                         <!--show only if published -- share the public viewable link (no login required) on social:
@@ -28,7 +31,7 @@
                         <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
                         <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
                         <a href="#" socialshare socialshare-provider="facebook"
-                          ng-show="vm.research.status === 'published'"
+                          ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-type="feed"
                           socialshare-via="{{vm.facebookAppId}}"
                           socialshare-title="I was published on the Billion Oyster Project"
@@ -39,26 +42,26 @@
                           <i class="fa fa-facebook"></i>
                         </a>
                         <a href="#" socialshare socialshare-provider="twitter"
-                          ng-show="vm.research.status === 'published'"
+                          ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="Check out my poster: "
                           socialshare-hashtags="BillionOysterProject"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-twitter"></i>
                         </a>
                         <a href="#" socialshare socialshare-provider="tumblr"
-                          ng-show="vm.research.status === 'published'"
+                          ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="Check out my poster at the Billion Oyster Project"
                           socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-tumblr"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="sms"
-                          ng-show="vm.research.status === 'published'"
+                        <!-- <a href="#" socialshare socialshare-provider="sms"
+                          ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="Check out my poster at the Billion Oyster Project"
                           socialshare-to="678-999-7657"
                           socialshare-url="{{vm.url}}">
                           <i class="fa fa-mobile"></i>
-                        </a>
+                        </a> -->
                     </div>
                 </nav>
             </div>

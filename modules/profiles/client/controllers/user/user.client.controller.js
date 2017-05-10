@@ -18,7 +18,7 @@
     $scope.loading = false;
 
     $scope.loadUser = function() {
-      if ($scope.user && $scope.user._id) {
+      if ($scope.currentUser && $scope.user && $scope.user._id) {
         if (!$scope.user.roles || !$scope.user.profileImageURL) {
           $http.get('/api/users/username', {
             params: { username: $scope.user.username }
@@ -40,33 +40,35 @@
     };
 
     $scope.loadUserData = function() {
-      $scope.isCurrentUserAdmin = $scope.checkRole('admin');
-      $scope.isCurrentUserTeamLead = $scope.checkRole('team lead');
-      $scope.isCurrentUserUser = $scope.checkCurrentUserIsUser();
+      if ($scope.currentUser) {
+        $scope.isCurrentUserAdmin = $scope.checkRole('admin');
+        $scope.isCurrentUserTeamLead = $scope.checkRole('team lead');
+        $scope.isCurrentUserUser = $scope.checkCurrentUserIsUser();
 
-      $scope.isUserAdmin = $scope.isAdmin = $scope.checkViewedUserRole('admin');
-      $scope.isUserTeamLead = $scope.isTeamLead = $scope.checkViewedUserRole('team lead') || $scope.checkViewedUserRole('team lead pending');
-      $scope.isUserTeamMember = $scope.checkViewedUserRole('team member') || $scope.checkViewedUserRole('team member pending');
-      $scope.isUserTeamLeadOnly = $scope.checkViewedUserRole('team lead');
-      $scope.isUserPending = $scope.checkUserPending();
+        $scope.isUserAdmin = $scope.isAdmin = $scope.checkViewedUserRole('admin');
+        $scope.isUserTeamLead = $scope.isTeamLead = $scope.checkViewedUserRole('team lead') || $scope.checkViewedUserRole('team lead pending');
+        $scope.isUserTeamMember = $scope.checkViewedUserRole('team member') || $scope.checkViewedUserRole('team member pending');
+        $scope.isUserTeamLeadOnly = $scope.checkViewedUserRole('team lead');
+        $scope.isUserPending = $scope.checkUserPending();
 
-      $scope.findTeams(function() {
-        $scope.canSeePending = $scope.pendingVisible();
-        $scope.roles = $scope.findUserRoles();
-        $scope.loaded = true;
-        $scope.loading = false;
-      });
+        $scope.findTeams(function() {
+          $scope.canSeePending = $scope.pendingVisible();
+          $scope.roles = $scope.findUserRoles();
+          $scope.loaded = true;
+          $scope.loading = false;
+        });
 
-      $scope.findExpeditions();
-      $scope.findOrganization();
-      $scope.findRestorationStations();
-      $scope.findEvents();
-      $scope.findCreatedLessons();
-      $scope.findLessonsTaught();
+        $scope.findExpeditions();
+        $scope.findOrganization();
+        $scope.findRestorationStations();
+        $scope.findEvents();
+        $scope.findCreatedLessons();
+        $scope.findLessonsTaught();
+      }
     };
 
     $scope.findOrganization = function() {
-      if ($scope.user && $scope.user.schoolOrg &&
+      if ($scope.currentUser && $scope.user && $scope.user.schoolOrg &&
       (!$scope.organization || !$scope.organization.creator || !$scope.organization.creator._id)) {
         if ($scope.user.schoolOrg._id) {
           $scope.organization = $scope.user.schoolOrg;
@@ -84,7 +86,7 @@
     };
 
     $scope.findTeams = function(callback) {
-      if ($scope.user) {
+      if ($scope.currentUser && $scope.user) {
         var byOwner, byMember;
         if ($scope.isTeamLead) {
           byOwner = true;
@@ -197,7 +199,7 @@
     };
 
     $scope.findExpeditions = function() {
-      if ($scope.user) {
+      if ($scope.currentUser && $scope.user) {
         var byOwner, byMember;
         if ($scope.isTeamLead) {
           byOwner = true;
@@ -216,7 +218,7 @@
     };
 
     $scope.findRestorationStations = function() {
-      if ($scope.user) {
+      if ($scope.currentUser && $scope.user) {
         RestorationStationsService.query({
           userId: $scope.user._id,
           teamLead: true
@@ -227,7 +229,7 @@
     };
 
     $scope.findEvents = function() {
-      if ($scope.user) {
+      if ($scope.currentUser && $scope.user) {
         EventsService.query({
           byRegistrants: true,
           userId: $scope.user._id
@@ -255,7 +257,7 @@
     };
 
     $scope.findCreatedLessons = function() {
-      if ($scope.user) {
+      if ($scope.currentUser && $scope.user) {
         LessonsService.query({
           byCreator: $scope.user._id
         }, function(data) {
@@ -265,7 +267,7 @@
     };
 
     $scope.findLessonsTaught = function() {
-      if ($scope.user && $scope.isTeamLead) {
+      if ($scope.currentUser && $scope.user && $scope.isTeamLead) {
         UserLessonsListService.query({
           userId: $scope.user._id
         }, function(data) {

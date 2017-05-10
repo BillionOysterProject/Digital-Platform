@@ -35,10 +35,14 @@ var validateResearch = function(research, successCallback, errorCallback) {
 };
 
 var checkRole = function(user, role) {
-  var index = _.findIndex(user.roles, function(r) {
-    return r === role;
-  });
-  return (index > -1) ? true : false;
+  if (user) {
+    var index = _.findIndex(user.roles, function(r) {
+      return r === role;
+    });
+    return (index > -1) ? true : false;
+  } else {
+    return false;
+  }
 };
 
 var getTeammates = function(user, callback) {
