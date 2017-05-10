@@ -13,7 +13,7 @@
       title: 'Research',
       state: 'researches',
       type: 'dropdown',
-      roles: ['*'],
+      roles: ['team member', 'team member pending', 'team lead', 'team lead pending', 'admin', 'partner', 'user'],
       icon: 'fa fa-file-text',
       position: 3
     });
@@ -29,7 +29,7 @@
     Menus.addSubMenuItem('topbar', 'researches', {
       title: 'Publications',
       state: 'researches.list',
-      roles: ['*']
+      roles: ['team member', 'team member pending', 'team lead', 'team lead pending', 'admin', 'partner', 'user'],
     });
 
     //Added temporarily to allow access to this view for mockup material
