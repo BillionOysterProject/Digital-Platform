@@ -1,0 +1,109 @@
+<div class="jumbotron text-center">
+  <section class="content">
+    <section class="container-fluid">
+      <h2>My Collection</h2>
+    </section>
+  </section>
+</div>
+<section class="content">
+  <section class="container-fluid">
+    <div>
+      <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member">
+        <i class="glyphicon glyphicon-plus"></i> Create new poster
+      </a>
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" view-permissions="team member" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
+          <a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Posters</a>
+        </li>
+        <li role="presentation" view-permissions="admin,team lead"
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
+          <a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Posters</a>
+        </li>
+        <li role="presentation" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
+          <a href="#teamposters" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamposters')">
+            {{(vm.isAdmin || vm.isTeamLead) ? 'Team Members' : 'Teammate'}} Posters</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <br />
+        <div role="tabpanel" class="tab-pane" id="created" view-permissions="team member" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
+          <div isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="createdResearch in vm.createdResearches track by createdResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: createdResearch._id })">
+                    <div class="panel-body">
+                        <p>{{vm.getLongDate(createdResearch.created)}}</p>
+                        <h4>{{createdResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small>
+                    </div>
+                    <div class="panel-footer">
+                        <h6 ng-show="createdResearch.status === 'published'">Published</h6>
+                        <h6 ng-show="createdResearch.status === 'draft'">Draft</h6>
+                        <h6 ng-show="createdResearch.status === 'pending'" class="blue">Awaiting Approval</h6>
+                        <h6 ng-show="createdResearch.status === 'returned'" class="red">Returned</h6>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="vm.createdResearches.$resolved && vm.createdResearches.length == 0" view-permissions="team member">
+              No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin,team lead"
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
+          <div isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="pendingResearch in vm.pendingResearches track by pendingResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel-overlay">
+                    <a class="btn btn-sm btn-primary pull-right" ui-sref="researches.edit({ researchId: pendingResearch._id })">
+                        <i class="glyphicon glyphicon-pencil"></i></a>
+                    <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openReturnModal(pendingResearch)">
+                        <i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-sm btn-success pull-right" ng-click="vm.openPublishModal(pendingResearch)">
+                        <i class="glyphicon glyphicon-ok"></i></a>
+                </div>
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: pendingResearch._id })">
+                    <div class="panel-body">
+                        <p>{{vm.getLongDate(pendingResearch.created)}}</p>
+                        <h4>{{pendingResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
+                          ng-src="{{pendingResearch.user.profileImageURL}}"/> {{pendingResearch.user.username}}
+                        <br/><small>{{pendingResearch.team.name}}, {{pendingResearch.team.schoolOrg.name}}</small>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="vm.pendingResearches.$resolved && vm.pendingResearches.length == 0" view-permissions="admin,team lead">
+              No posters waiting for approval! As soon as your team members submits them, they'll show up here.
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
+          <div isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="teamResearch in vm.teamResearches track by teamResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: teamResearch._id })">
+                    <div class="panel-body">
+                        <p>{{vm.getLongDate(teamResearch.created)}}</p>
+                        <h4>{{teamResearch.title | sanitize}}</h4>
+                        <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small>
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
+                          ng-src="{{teamResearch.user.profileImageURL}}"/> {{teamResearch.user.username}}
+                        <br/><small>{{teamResearch.team.name}}, {{teamResearch.team.schoolOrg.name}}</small>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="vm.teamResearches.$resolved && vm.teamResearches.length == 0">
+              None of your {{(vm.isAdmin || vm.isTeamLead) ? 'team members' : 'teammates'}} have any posters yet! As soon as they create them, they'll show up here.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- Modals -->
+<return-research research="vm.research" close-function="vm.closeReturnModal"></return-research>
+<publish-research research="vm.research" close-function="vm.closePublishModal"></publish-research>

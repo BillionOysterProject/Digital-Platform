@@ -15,7 +15,7 @@
       type: 'dropdown',
       roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
       icon: 'glyphicon glyphicon-map-marker',
-      position: 2
+      position: 1
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
@@ -26,7 +26,7 @@
     });
 
     Menus.addSubMenuItem('topbar', 'restoration-stations', {
-      title: 'Stations',
+      title: 'ORS',
       state: 'restoration-stations.list',
       roles: ['admin', 'team lead', 'team member', 'partner', 'team lead pending', 'team member pending'],
       position: 2

@@ -5,9 +5,9 @@
     .module('library')
     .controller('SubmittedLessonsController', SubmittedLessonsController);
 
-  SubmittedLessonsController.$inject = ['$scope', 'LessonsService', '$http'];
+  SubmittedLessonsController.$inject = ['$scope', '$rootScope', '$timeout', 'LessonsService', '$http'];
 
-  function SubmittedLessonsController($scope, LessonsService, $http) {
+  function SubmittedLessonsController($scope, $rootScope, $timeout, LessonsService, $http) {
     var sub = this;
 
     sub.findSubmittedLessons = function() {
@@ -15,6 +15,10 @@
         status: 'pending'
       }, function(data) {
         sub.submittedLessons = data;
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        }, 100);
         //$scope.$emit('iso-method', { name: 'reloadItems' });
         //$scope.$emit('iso-method', { name: 'layout', params: null });
         //$scope.$emit('iso-method', { name: null, params: { sortBy: 'title' } });

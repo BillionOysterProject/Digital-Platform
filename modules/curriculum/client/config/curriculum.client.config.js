@@ -14,7 +14,7 @@
       type: 'dropdown',
       roles: ['admin', 'team lead', 'team lead pending', 'partner'],
       icon: 'glyphicon glyphicon-book',
-      position: 1
+      position: 2
     });
 
     //COMMENT OUT NODE GRAPH

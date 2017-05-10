@@ -3,7 +3,7 @@
 
   angular
     .module('forms')
-    .directive('wysiwygEditor', function() {
+    .directive('wysiwygEditor', function($rootScope) {
       return {
         restrict: 'AE',
         templateUrl: 'modules/forms/client/views/wysiwyg-editor.client.directive.view.html',
@@ -65,15 +65,17 @@
           };
 
           $scope.imageUpload = function(files) {
-            // console.log('image upload\'s editable:', $scope.editable);
             if (files !== null) {
-              // console.log('files', files);
               $scope.imageUploader.addToQueue(files);
-              // console.log('queue', $scope.imageUploader.queue);
               $scope.imageUploader.uploadAll();
             }
           };
-        }]
+        }],
+        link: function(scope, element, attrs) {
+          $rootScope.$on('dropFromImageDrop', function(event, data) {
+            element.trigger('drop');
+          });
+        }
       };
     });
 })();
