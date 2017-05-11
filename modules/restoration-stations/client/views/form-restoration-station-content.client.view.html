@@ -1,7 +1,7 @@
 <div class="modal-content">
   <form name="form.restorationStationForm" ng-submit="save(form.restorationStationForm.$valid)" novalidate>
     <div class="modal-header">
-        <button type="button" class="close" aria-label="Close" ng-click="cancelFunction()">
+        <button type="button" class="close" aria-label="Close" ng-click="closeFunction()">
             <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" ng-hide="station._id">Register an ORS</h4>
@@ -110,7 +110,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" ng-show="station._id" ng-click="remove()">Delete</button>
-        <button type="button" class="btn btn-default" ng-click="cancelFunction()" ng-disabled="disableCancel">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="closeFunction()" ng-disabled="disableCancel">Cancel</button>
         <button type="submit" class="btn btn-primary">{{station._id ? 'Update' : 'Register'}}</button>
     </div>
   </form>

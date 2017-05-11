@@ -442,6 +442,17 @@ exports.update = function (req, res) {
   });
 };
 
+exports.updateTeamMembers = function(siteCondition, list, successCallback, errorCallback) {
+  siteCondition.teamMembers = list;
+  siteCondition.save(function (err) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(siteCondition);
+    }
+  });
+};
+
 /**
  * Delete a protocol site condition
  */

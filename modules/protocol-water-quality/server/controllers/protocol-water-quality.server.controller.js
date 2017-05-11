@@ -199,6 +199,17 @@ exports.update = function (req, res) {
   });
 };
 
+exports.updateTeamMembers = function(waterQuality, list, successCallback, errorCallback) {
+  waterQuality.teamMembers = list;
+  waterQuality.save(function (err) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(waterQuality);
+    }
+  });
+};
+
 /**
  * Delete a protocol water quality
  */

@@ -313,6 +313,17 @@ exports.update = function (req, res) {
   });
 };
 
+exports.updateTeamMembers = function(oysterMeasurement, list, successCallback, errorCallback) {
+  oysterMeasurement.teamMembers = list;
+  oysterMeasurement.save(function (err) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(oysterMeasurement);
+    }
+  });
+};
+
 /**
  * Delete a protocol oyster measurement
  */

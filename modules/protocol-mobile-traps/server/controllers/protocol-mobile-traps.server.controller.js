@@ -214,6 +214,17 @@ exports.update = function (req, res) {
   });
 };
 
+exports.updateTeamMembers = function(mobileTrap, list, successCallback, errorCallback) {
+  mobileTrap.teamMembers = list;
+  mobileTrap.save(function (err) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(mobileTrap);
+    }
+  });
+};
+
 var deleteInternal = function(mobileTrap, successCallback, errorCallback) {
   var filesToDelete = [];
   for (var i = 0; i < mobileTrap.mobileOrganisms.length; i++) {

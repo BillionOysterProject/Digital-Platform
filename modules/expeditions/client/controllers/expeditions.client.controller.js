@@ -21,6 +21,15 @@
     vm.remove = remove;
     vm.save = save;
 
+    console.log('expedition', vm.expedition);
+
+    vm.protocolsPresent = {};
+    vm.protocolsPresent.siteCondition = (vm.expedition.protocols.siteCondition) ? true : false;
+    vm.protocolsPresent.oysterMeasurement = (vm.expedition.protocols.oysterMeasurement) ? true : false;
+    vm.protocolsPresent.mobileTrap = (vm.expedition.protocols.mobileTrap) ? true : false;
+    vm.protocolsPresent.settlementTiles = (vm.expedition.protocols.settlementTiles) ? true : false;
+    vm.protocolsPresent.waterQuality = (vm.expedition.protocols.waterQuality) ? true : false;
+
     vm.memberLists = {
       'selected': null,
       'members': []
@@ -89,16 +98,7 @@
       }
 
       getORSes();
-
-      if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) {
-        vm.expedition.teamLists = {
-          siteCondition: [],
-          oysterMeasurement: [],
-          mobileTrap: [],
-          settlementTiles: [],
-          waterQuality: [],
-        };
-      }
+      vm.setTeamLists();
     };
 
     var checkRole = function(role) {
@@ -121,13 +121,7 @@
 
     vm.fieldChanged = function(team) {
       vm.team = team;
-      vm.expedition.teamLists = {
-        siteCondition: [],
-        oysterMeasurement: [],
-        mobileTrap: [],
-        settlementTiles: [],
-        waterQuality: [],
-      };
+      vm.setTeamLists();
       vm.findTeamValues();
     };
 
@@ -139,19 +133,33 @@
       });
     }
 
+    var protocolListsValid = function() {
+      if ((vm.protocolsPresent.siteCondition === true && vm.expedition.teamLists.siteCondition && vm.expedition.teamLists.siteCondition.length === 0) ||
+        (vm.protocolsPresent.oysterMeasurement === true && vm.expedition.teamLists.oysterMeasurement && vm.expedition.teamLists.oysterMeasurement.length === 0) ||
+        (vm.protocolsPresent.mobileTrap === true && vm.expedition.teamLists.mobileTrap && vm.expedition.teamLists.mobileTrap.length === 0) ||
+        (vm.protocolsPresent.settlementTiles === true && vm.expedition.teamLists.settlementTiles && vm.expedition.teamLists.settlementTiles.length === 0) ||
+        (vm.protocolsPresent.waterQuality === true && vm.expedition.teamLists.waterQuality && vm.expedition.teamLists.waterQuality.length === 0)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
     // Save Expedition
     function save(isValid) {
+      console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }
 
       // check protocol team lists
-      if (vm.expedition.teamLists.siteCondition.length === 0 ||
-        vm.expedition.teamLists.oysterMeasurement.length === 0 ||
-        vm.expedition.teamLists.mobileTrap.length === 0 ||
-        vm.expedition.teamLists.settlementTiles.length === 0 ||
-        vm.expedition.teamLists.waterQuality.length === 0) {
+      console.log('siteCondition', vm.expedition.teamLists.siteCondition);
+      console.log('oysterMeasurement', vm.expedition.teamLists.oysterMeasurement);
+      console.log('mobileTrap', vm.expedition.teamLists.mobileTrap);
+      console.log('settlementTiles', vm.expedition.teamLists.settlementTiles);
+      console.log('waterQuality', vm.expedition.teamLists.waterQuality);
+      if (!protocolListsValid()) {
         vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
@@ -196,18 +204,52 @@
       if (!vm.isInList(item, list)) {
         list.push(item);
       }
+
+      if (vm.form.expeditionForm.$valid === false) {
+        if (!protocolListsValid()) {
+          vm.form.expeditionForm.$setValidity('lists', false);
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
+          return false;
+        } else {
+          vm.form.expeditionForm.$setValidity('lists', true);
+        }
+      } else {
+        vm.form.expeditionForm.$setValidity('lists', true);
+      }
+
       return true;
+    };
+
+    vm.changeProtocol = function($event, protocol) {
+      console.log('changing protocol', protocol);
+      var newValue = vm.protocolsPresent[protocol];
+      if (newValue === false) {
+        vm.protocolsPresent[protocol] = !vm.protocolsPresent[protocol];
+        // $event.stopPropagation();
+        // $event.preventDefault();
+
+        //vm.setTeamLists();
+      }
+    };
+
+    vm.setTeamLists = function() {
+      console.log('set team lists');
+      if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) vm.expedition.teamLists = {};
+      angular.forEach(vm.protocolsPresent, function(value, key) {
+        if (value) {
+          if (!vm.expedition.teamLists[key] || vm.expedition.teamLists[key] === undefined) {
+            vm.expedition.teamLists[key] = [];
+          }
+        } else {
+          delete vm.expedition.teamLists[key];
+        }
+      });
     };
 
     vm.autoAssign = function() {
       var keys = [];
-      vm.expedition.teamLists = {
-        siteCondition: [],
-        oysterMeasurement: [],
-        mobileTrap: [],
-        settlementTiles: [],
-        waterQuality: [],
-      };
+      vm.expedition.teamLists = {};
+      vm.setTeamLists();
       angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });
@@ -255,25 +297,37 @@
       'expeditions.protocols({ expeditionId: expedition._id })';
     };
 
+    var openRestorationStationPopup = function(station, initial) {
+      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (vm.station.latitude && vm.station.longitude) {
+        vm.stationMapPoints = [{
+          lat: vm.station.latitude,
+          lng: vm.station.longitude,
+          icon: {
+            icon: 'glyphicon-map-marker',
+            prefix: 'glyphicon',
+            markerColor: 'blue'
+          },
+        }];
+      }
+
+      vm.initial = initial || 'orsView';
+      angular.element('#modal-station').modal('show');
+    };
+
     vm.openFormRestorationStation = function(station) {
-      vm.station = new RestorationStationsService();
-
-      angular.element('#modal-station-register').modal('show');
+      openRestorationStationPopup(station, 'orsForm');
     };
 
-    vm.saveFormRestorationStation = function() {
-      getORSes(function() {
-        vm.stationId = vm.station._id;
-        vm.station = {};
-
-        angular.element('#modal-station-register').modal('hide');
-      });
+    vm.openViewRestorationStation = function(station) {
+      openRestorationStationPopup(station, 'orsView');
     };
 
-    vm.cancelFormRestorationStation = function() {
+    vm.closeFormRestorationStation = function(refresh) {
+      if (refresh) getORSes();
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     $scope.openViewUserModal = function(user) {

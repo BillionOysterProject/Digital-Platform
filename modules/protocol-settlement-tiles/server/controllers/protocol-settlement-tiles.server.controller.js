@@ -302,6 +302,17 @@ exports.update = function (req, res) {
   });
 };
 
+exports.updateTeamMembers = function(settlementTiles, list, successCallback, errorCallback) {
+  settlementTiles.teamMembers = list;
+  settlementTiles.save(function (err) {
+    if (err) {
+      errorCallback(errorHandler.getErrorMessage(err));
+    } else {
+      successCallback(settlementTiles);
+    }
+  });
+};
+
 /**
  * Delete a protocol settlement tiles
  */
