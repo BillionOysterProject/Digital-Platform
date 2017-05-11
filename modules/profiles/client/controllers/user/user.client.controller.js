@@ -209,6 +209,7 @@
 
         ExpeditionsService.query({
           byOwner: byOwner,
+          published: true,
           byMember: byMember,
           userId : $scope.user._id
         }, function(data) {
@@ -259,6 +260,7 @@
     $scope.findCreatedLessons = function() {
       if ($scope.currentUser && $scope.user) {
         LessonsService.query({
+          status: published,
           byCreator: $scope.user._id
         }, function(data) {
           $scope.createdLessons = data;
