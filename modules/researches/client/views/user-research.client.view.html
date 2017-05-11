@@ -77,7 +77,7 @@
             </div>
           </div>
           <div class="alert alert-info text-center" ng-if="vm.pendingResearches.$resolved && vm.pendingResearches.length == 0" view-permissions="admin,team lead">
-              No posters waiting for approval! As soon as your team members submits them, they'll show up here.
+              No posters waiting for approval! As soon as your team members submit them, they'll show up here.
           </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">

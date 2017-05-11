@@ -12,9 +12,9 @@
       text-align: center;
     }
     .poster-header h1 {
-      font-size: 33pt;
-      font-weight: normal;
-      font-family: {{research.font}};
+      font-size: 30pt;
+      font-weight: bold;
+      font-family: {{research.font}}, 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Calibri, Arial, sans-serif;
       margin: 0;
     }
     .poster-header img {
@@ -22,10 +22,8 @@
       border:15px solid{{research.color}};
       background-color: #fff;
       padding: 10px;
-      border-radius: 50%;
       margin: -90px 0 10px;
     }
-
     .poster-subheader {
       background-color: #f4f7f8;
       padding: 10px 50px;
@@ -33,59 +31,84 @@
     }
     .poster-subheader p {
       text-transform: uppercase;
-      color: #aaa;
+      color: #777;
       font-weight: bold;
       font-size: 10pt;
       letter-spacing: 2px;
       margin: 0;
     }
-
     .poster-body {
-      padding: 0 50px 50px;
+      padding: 0 50px;
       clear: both;
+    }
+    .poster-body .row {
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+    .poster-body .row:before,
+    .poster-body .row:after {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      display: table;
+      content: " ";
+    }
+    .poster-body .row:after {
+      clear:both;
+    } 
+    .poster-body .row .col-md-6 {
+      position: relative;
+      float: left;
+      width: 50%;
+      min-height: 1px;
+      padding-right: 15px;
+      padding-left: 15px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
     }
     .poster-body h3 {
       color: {{research.color}};
-      text-transform: uppercase;
-      font-weight: normal;
-      font-size: 16pt;
-      font-family: {{research.font}};
-      padding: 20px 0;
-      margin: 20px 0;
-      border-bottom: 5px solid #f4f7f8;
+      font-weight: bold;
+      font-size: 14pt;
+      font-family: {{research.font}}, 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Calibri, Arial, sans-serif;
+      padding: 10px 0;
+      margin: 20px 0 10px 0;
+      border-bottom: 3px solid #f4f7f8;
     }
-
     .poster-footer {
       background-color: #f4f7f8;
       padding: 0 50px;
+      margin-top: 50px;
       text-align: center;
+      clear: both;
     }
     .poster-footer .poster-block {
       display: inline-block;
       vertical-align: middle;
       padding: 0 10px;
       margin: 30px 10px;
-      border-right: 1px solid #ccc;
+      border-left: 1px solid #ccc;
       width: 200px;
       text-align: center;
       text-transform: uppercase;
-      color: #aaa;
+      color: #777;
       font-weight: bold;
-      font-size: 10pt;
+      font-size: 8pt;
       letter-spacing: 2px;
     }
-    .poster-footer .poster-block:last-child {
-      border-right: none;
+    .poster-footer .poster-block:first-child {
+      border-left: none;
     }
     .poster-footer .poster-block img {
-      width: 100px;
+      width: 50px;
       margin-bottom: 10px;
     }
     .poster-footer .poster-block img.img-thumbnail {
       -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
       box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
       display: inline-block;
-      max-width: 100%;
+      max-width: 50%;
       height: auto;
       padding: 4px;
       line-height: 1.42857143;
@@ -116,23 +139,27 @@
   <div class="poster-body">
     <h3>Introduction</h3>
     <div ng-bind-html="research.intro | sanitize"></div>
-
+    
     <h3>Materials & Methods</h3>
     <div ng-bind-html="research.methods | sanitize"></div>
-
+    
     <h3>Results</h3>
     <div ng-bind-html="research.results | sanitize"></div>
 
     <h3>Discussion & Conclusions</h3>
     <div ng-bind-html="research.discussion | sanitize"></div>
 
-    <h3>Literature Cited</h3>
-    <div ng-bind-html="research.cited | sanitize"></div>
-
-    <h3>Acknowledgments</h3>
-    <div ng-bind-html="research.acknowledgments | sanitize"></div>
-
-    <h3>{{research.other.title}}</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Literature Cited</h3>
+        <div ng-bind-html="research.cited | sanitize"></div>
+      </div>
+      <div class="col-md-6">
+        <h3>Acknowledgments</h3>
+        <div ng-bind-html="research.acknowledgments | sanitize"></div>
+      </div>
+    </div>
+    <h3 ng-show="research.other.title">{{research.other.title}}</h3>
     <div ng-bind-html="research.other.content | sanitize"></div>
   </div>
   <div class="poster-footer">
