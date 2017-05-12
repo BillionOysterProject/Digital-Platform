@@ -8,11 +8,11 @@
 <section class="content">
   <section class="container-fluid">
     <div>
-      <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member">
+      <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member,team lead,admin">
         <i class="glyphicon glyphicon-plus"></i> Create new poster
       </a>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" view-permissions="team member" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
+        <li role="presentation" view-permissions="team member,team lead,admin" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
           <a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Posters</a>
         </li>
         <li role="presentation" view-permissions="admin,team lead"
@@ -70,7 +70,7 @@
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
                           ng-src="{{pendingResearch.user.profileImageURL}}"/> {{pendingResearch.user.displayName}}
                         <br/><small>{{pendingResearch.team.name}}
-                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span> 
+                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span>
                           {{pendingResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
                           ng-src="{{teamResearch.user.profileImageURL}}"/> {{teamResearch.user.displayName}}
                         <br/><small>{{teamResearch.team.name}}
-                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span> 
+                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span>
                           {{teamResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>

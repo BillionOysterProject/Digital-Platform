@@ -165,13 +165,19 @@ exports.create = function(req, res) {
   validateResearch(req.body,
   function(researchJSON) {
     var research = new Research(researchJSON);
-
     research.user = req.user;
-    research.status = researchJSON.status || 'pending';
 
-    if (research.status === 'pending') {
+    if (checkRole(req.user, 'team lead') || checkRole(req.user, 'admin')) {
+      research.status = researchJSON.status || 'published';
       if (!research.submitted) research.submitted = [];
-      research.submitted.push(Date.now());
+      if (!research.published) research.published = [];
+      research.published.push(Date.now());
+    } else {
+      research.status = researchJSON.status || 'pending';
+      if (research.status === 'pending') {
+        if (!research.submitted) research.submitted = [];
+        research.submitted.push(Date.now());
+      }
     }
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -222,16 +228,20 @@ var setOwnership = function(user, research, callback) {
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   research.isCurrentUserOwner = user && research.user && research.user._id.toString() === user._id.toString();
 
-  if (checkRole(user, 'team lead') && research.team._id) {
-    Team.findOne({ '_id': research.team._id, 'teamLeads': user }).exec(function(err, team) {
-      research.isCurrentUserTeamLead = (team) ? true : false;
+  if (!research.isCurrentUserOwner) {
+    if (checkRole(user, 'team lead') && research.team && research.team._id) {
+      Team.findOne({ '_id': research.team._id, 'teamLeads': user }).exec(function(err, team) {
+        research.isCurrentUserTeamLead = (team) ? true : false;
+        callback(research);
+      });
+    } else if (checkRole(user, 'team member') && research.team && research.team._id) {
+      Team.findOne({ '_id': research.team._id, 'teamMembers': user }).exec(function(err, team) {
+        research.isCurrentUserTeammate = (team) ? true : false;
+        callback(research);
+      });
+    } else {
       callback(research);
-    });
-  } else if (checkRole(user, 'team member') && research.team._id) {
-    Team.findOne({ '_id': research.team._id, 'teamMembers': user }).exec(function(err, team) {
-      research.isCurrentUserTeammate = (team) ? true : false;
-      callback(research);
-    });
+    }
   } else {
     callback(research);
   }
@@ -369,7 +379,19 @@ exports.update = function(req, res) {
     if (research) {
       research = _.extend(research, researchJSON);
       research.returnedNotes = '';
-      research.status = req.body.status || 'pending';
+
+      if (checkRole(req.user, 'team lead') || checkRole(req.user, 'admin')) {
+        research.status = researchJSON.status || 'published';
+        if (!research.submitted) research.submitted = [];
+        if (!research.published) research.published = [];
+        research.published.push(Date.now());
+      } else {
+        research.status = researchJSON.status || 'pending';
+        if (research.status === 'pending') {
+          if (!research.submitted) research.submitted = [];
+          research.submitted.push(Date.now());
+        }
+      }
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
       if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
@@ -378,11 +400,6 @@ exports.update = function(req, res) {
 
       if (!research.updated) research.updated = [];
       research.updated.push(Date.now());
-
-      if (research.status === 'pending') {
-        if (!research.submitted) research.submitted = [];
-        research.submitted.push(Date.now());
-      }
 
       research.save(function(err) {
         if (err) {

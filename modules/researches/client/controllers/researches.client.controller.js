@@ -46,23 +46,6 @@
       queueLimit: 2
     });
 
-    if (vm.user) {
-      TeamsService.query({
-        byMember: true
-      }, function(data) {
-        vm.myTeams = data;
-        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
-      });
-    }
-
-    if (vm.research && vm.research._id) {
-      ResearchFeedbackService.get({
-        researchId: vm.research._id
-      }, function(data) {
-        vm.feedback = data;
-      });
-    }
-
     vm.checkRole = function(role) {
       if (vm.user) {
         var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
@@ -73,6 +56,47 @@
         return false;
       }
     };
+    vm.isTeamLead = vm.checkRole('team lead');
+    vm.isTeamMember = vm.checkRole('team member');
+    vm.isAdmin = vm.checkRole('admin');
+
+    var getTeamLeadNames = function() {
+      vm.teamLeads = [];
+      if (vm.research.team) {
+        vm.teamLeads.push(vm.research.team.teamLead.displayName);
+        for(var i = 0; i < vm.research.team.teamLeads.length; i++) {
+          vm.teamLeads.push(vm.research.team.teamLeads[i].displayName);
+        }
+        vm.teamLeads = lodash.uniq(vm.teamLeads);
+      }
+    };
+
+    if (vm.user) {
+      var byOwner, byMember;
+      if (vm.isTeamLead || vm.isAdmin) {
+        byOwner = true;
+      } else {
+        byMember = true;
+      }
+      TeamsService.query({
+        byOwner: byOwner,
+        byMember: byMember
+      }, function(data) {
+        vm.myTeams = data;
+        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) {
+          vm.research.team = vm.myTeams[0];
+          getTeamLeadNames();
+        }
+      });
+    }
+
+    if (vm.research && vm.research._id) {
+      ResearchFeedbackService.get({
+        researchId: vm.research._id
+      }, function(data) {
+        vm.feedback = data;
+      });
+    }
 
     vm.changeColor = function(color) {
       vm.research.color = color;
@@ -132,7 +156,7 @@
         return false;
       }
       vm.saving = true;
-      vm.research.status = status || 'pending';
+      vm.research.status = status;
 
       vm.finishedSaving = 0;
       $timeout(function() {
@@ -213,7 +237,7 @@
     };
 
     vm.saveAndSubmit = function(isValid) {
-      vm.save(isValid, 'pending', false);
+      vm.save(isValid, null, false);
     };
 
     vm.downloadResearch = function() {
