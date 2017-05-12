@@ -65,8 +65,10 @@ var buildSearchQuery = function (req, callback) {
     }
 
     // Published Search
-    if (req.query.published) {
+    if (req.query.published === 'true') {
       and.push({ 'status': 'published' });
+    } else if (req.query.published === 'false') {
+      and.push({ 'status': { '$ne': 'published' } });
     }
 
     var searchOr = [];

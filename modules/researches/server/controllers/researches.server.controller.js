@@ -52,6 +52,8 @@ var getTeammates = function(user, callback) {
     } else {
       var teammates = [];
       for (var i = 0; i < teams.length; i++) {
+        teammates.push(teams[i].teamLead);
+        teammates = teammates.concat(teams[i].teamLeads);
         teammates = teammates.concat(teams[i].teamMembers);
       }
       teammates = _.uniqWith(teammates, _.isEqual);
@@ -758,6 +760,12 @@ exports.list = function(req, res) {
       } else if (req.query.status === 'draft') {
         and.push({ 'status': 'draft' });
       }
+    }
+
+    if (req.query.published === 'true') {
+      and.push({ 'status': 'published' });
+    } else if (req.query.published === 'false') {
+      and.push({ 'status': { '$ne': 'published' } });
     }
 
     if (and.length === 1) {

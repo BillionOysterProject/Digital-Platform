@@ -28,8 +28,7 @@
       </div>
       <div class="col-md-4">
         <h3>{{user.displayName}}</h3>
-        <!--TIFF: Only show 1 main role instead of list (either Admin, Team Lead/Member pending, or Team Lead/Member)-->
-        <h6>{{roles}}<br/><span class="blue" ng-show="user.teamLeadType">{{user.teamLeadType | teamLeadTypes}}</span></h6>
+        <h6>{{roles | roleNormalizer}}<br/><span class="blue" ng-show="user.teamLeadType">{{user.teamLeadType | teamLeadTypes}}</span></h6>
         <p class="text-muted">
           <b>{{user.username}}</b><br/>
           <a href="mailto:{{user.email}}">{{user.email}}</a>
@@ -101,40 +100,48 @@
               <em>none</em>
             </dd>
           </dl>
-          
-          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin:
-          <dl class="dl-horizontal">
-            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published --
-            <dd ng-repeat="expedition in expeditions">
+
+          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
+          <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
+            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published -->
+            <dd ng-repeat="expedition in launchedExpeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
             </dd>
-            <!-- TODO: Add in what protocols they are assigned to: <a>Nov Expedition</a>: Protocols 1, 2--
-            <dd ng-show="!expeditions || expeditions.length === 0">
+            <!-- TODO: Add in what protocols they are assigned to: <a>Nov Expedition</a>: Protocols 1, 2-->
+            <dd ng-show="!launchedExpeditions || launchedExpeditions.length === 0">
               <em>none</em>
             </dd>
           </dl>
-          -->
         </div>
 
-        <!-- TODO: Wire up once we build out the Research section
+        <!-- TODO: Wire up once we build out the Research section -->
         <div class="col-sm-6">
             <dl class="dl-horizontal">
                 <dt>Publications
                 <i class="fa fa-question-circle gray" title="Published research posters"></i>
             </dt>
-                <dd><a>Poster 1</a></dd>
-                <dd><a>Poster 2</a></dd>
+                <dd ng-repeat="poster in publishedResearch">
+                  <a ui-sref="researches.view({ researchId: poster._id })">
+                    {{poster.title}}</a>
+                </dd>
+                <dd ng-show="!publishedResearch || publishedResearch.length === 0">
+                  <em>none</em>
+                </dd>
             </dl>
-            
-            Only show if the viewer is the profile's teammate, profile's team lead, or admin:
-            <dl class="dl-horizontal">
+
+            <!--Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
+            <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
                 <dt>Poster Drafts</dt>
-                <dd><a>Poster 1</a></dd>
-                <dd><a>Poster 2</a></dd>
+                <dd ng-repeat="poster in pendingResearch">
+                  <a ui-sref="researches.view({ researchId: poster._id })">
+                    {{poster.title}}</a>
+                </dd>
+                <dd ng-show="!pendingResearch || pendingResearch.length === 0">
+                  <em>none</em>
+                </dd>
             </dl>
         </div>
-        -->
       </div>
     </div>
 
@@ -155,18 +162,17 @@
               <em>none</em>
             </dd>
           </dl>
-          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin:
-          <dl class="dl-horizontal">
-            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published --
-            <dd ng-repeat="expedition in expeditions">
+          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
+          <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
+            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published -->
+            <dd ng-repeat="expedition in launchedExpeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
             </dd>
-            <dd ng-show="!expeditions || expeditions.length === 0">
+            <dd ng-show="!launchedExpeditions || launchedExpeditions.length === 0">
               <em>none</em>
             </dd>
           </dl>
-          -->
         </div>
 
         <div class="col-sm-6">
@@ -211,17 +217,17 @@
               <em>none</em>
             </dd>
           </dl>
-          <!--TIFF: Wire up for only admin to see lesson drafts (if they don't have access to the actual draft, remove the link and just show the text) 
+          <!--TIFF: Wire up for only admin to see lesson drafts (if they don't have access to the actual draft, remove the link and just show the text) -->
           <dl class="dl-horizontal" ng-show="isCurrentUserAdmin">
             <dt>Lesson Drafts</dt>
-            <dd ng-repeat="lesson in createdLessons">
+            <dd ng-repeat="lesson in draftLessons">
               <a ui-sref="lessons.view({ lessonId: lesson._id })">
                 {{lesson.title}}</a>
             </dd>
-            <dd ng-show="!createdLessons || createdLessons.length === 0">
+            <dd ng-show="!draftLessons || draftLessons.length === 0">
               <em>none</em>
             </dd>
-          </dl>-->
+          </dl>
           <dl class="dl-horizontal">
             <dt>Lessons Taught</dt>
             <dd ng-repeat="lesson in lessonsTaught">

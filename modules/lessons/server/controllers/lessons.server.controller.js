@@ -856,6 +856,12 @@ exports.list = function(req, res) {
     }
   }
 
+  if (req.query.published === 'true') {
+    and.push({ 'status': 'published' });
+  } else if (req.query.published === 'false') {
+    and.push({ 'status': { '$ne': 'published' } });
+  }
+
   var or = [];
   var searchRe;
   if (req.query.searchString) {
