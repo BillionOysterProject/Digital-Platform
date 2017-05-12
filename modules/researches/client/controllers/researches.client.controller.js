@@ -160,7 +160,7 @@
 
       vm.finishedSaving = 0;
       $timeout(function() {
-        if (status === 'draft') {
+        if (status === 'draft' || status === null) {
           $scope.savingStatus = 'Saving Poster Draft';
           vm.modal = angular.element('#modal-save-draft-progress-bar');
         } else {
