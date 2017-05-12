@@ -40,7 +40,8 @@
                     <div class="panel-body">
                         <p>{{vm.getLongDate(research.created)}}</p>
                         <h4>{{research.title | sanitize}}</h4>
-                        <small class="img-responsive" ng-bind-html="research.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small class="img-responsive" ng-bind-html="research.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="research.headerImage" ng-src="{{research.headerImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="research.user && research.user.profileImageURL" class="img-responsive"

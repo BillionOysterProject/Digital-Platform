@@ -33,7 +33,8 @@
                     <div class="panel-body">
                         <p>{{vm.getLongDate(createdResearch.created)}}</p>
                         <h4>{{createdResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="createdResearch.headerImage" ng-src="{{createdResearch.headerImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <h6 ng-show="createdResearch.status === 'published'">Published</h6>
@@ -64,7 +65,8 @@
                     <div class="panel-body">
                         <p>{{vm.getLongDate(pendingResearch.created)}}</p>
                         <h4>{{pendingResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="pendingResearch.headerImage" ng-src="{{pendingResearch.headerImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
@@ -87,7 +89,8 @@
                     <div class="panel-body">
                         <p>{{vm.getLongDate(teamResearch.created)}}</p>
                         <h4>{{teamResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="teamResearch.headerImage" ng-src="{{teamResearch.headerImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
