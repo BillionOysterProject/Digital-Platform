@@ -260,7 +260,7 @@
     $scope.findCreatedLessons = function() {
       if ($scope.currentUser && $scope.user) {
         LessonsService.query({
-          status: published,
+          status: 'published',
           byCreator: $scope.user._id
         }, function(data) {
           $scope.createdLessons = data;

@@ -68,7 +68,7 @@
     };
 
     vm.findResearchByCreator = function() {
-      if (vm.isTeamMember) {
+      if (vm.isTeamMember || vm.isTeamLead || vm.isAdmin) {
         ResearchesService.query({
           byCreator: true
         }, function(data) {

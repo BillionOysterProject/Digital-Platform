@@ -8,7 +8,7 @@
         restrict: 'E',
         templateUrl: 'modules/researches/client/views/saved-research.client.view.html',
         scope: {
-          teamLead: '@'
+          teamLeads: '@'
         }
       };
     });
