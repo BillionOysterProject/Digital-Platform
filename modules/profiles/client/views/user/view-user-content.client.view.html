@@ -87,7 +87,6 @@
       <div class="row">
         <div class="col-sm-6">
           <dl class="dl-horizontal">
-            <!--TIFF: Check user.client.controller.js file to make sure this is only returning published expeditions -->
             <dt>Data
               <i class="fa fa-question-circle gray" title="Published expeditions"></i>
             </dt>
@@ -101,9 +100,8 @@
             </dd>
           </dl>
 
-          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
           <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
-            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published -->
+            <dt>Launched Expeditions</dt>
             <dd ng-repeat="expedition in launchedExpeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
@@ -115,7 +113,6 @@
           </dl>
         </div>
 
-        <!-- TODO: Wire up once we build out the Research section -->
         <div class="col-sm-6">
             <dl class="dl-horizontal">
                 <dt>Publications
@@ -130,7 +127,6 @@
                 </dd>
             </dl>
 
-            <!--Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
             <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
                 <dt>Poster Drafts</dt>
                 <dd ng-repeat="poster in pendingResearch">
@@ -150,7 +146,6 @@
       <div class="row">
         <div class="col-sm-6">
           <dl class="dl-horizontal">
-            <!--TIFF: Check user.client.controller.js file to make sure this is only returning published expeditions -->
             <dt>Data
               <i class="fa fa-question-circle gray" title="Published expeditions"></i>
             </dt>
@@ -162,9 +157,8 @@
               <em>none</em>
             </dd>
           </dl>
-          <!--TIFF: Wire up - Only show if the viewer is the profile's teammate, profile's team lead, or admin: -->
           <dl class="dl-horizontal" ng-show="isCurrentUserUsersTeamMember || isCurrentUserUsersTeamLead || isCurrentUserAdmin">
-            <dt>Launched Expeditions</dt> <!--This should be everything that isn't published -->
+            <dt>Launched Expeditions</dt>
             <dd ng-repeat="expedition in launchedExpeditions">
               <a ui-sref="expeditions.view({ expeditionId: expedition._id })">
                 {{expedition.name}}</a>
@@ -207,7 +201,6 @@
         </div>
         <div class="col-sm-6">
           <dl class="dl-horizontal">
-            <!--TIFF: Check user.client.controller.js file to make sure this is only returning published lessons -->
             <dt>Lessons Created</dt>
             <dd ng-repeat="lesson in createdLessons">
               <a ui-sref="lessons.view({ lessonId: lesson._id })">
@@ -217,7 +210,6 @@
               <em>none</em>
             </dd>
           </dl>
-          <!--TIFF: Wire up for only admin to see lesson drafts (if they don't have access to the actual draft, remove the link and just show the text) -->
           <dl class="dl-horizontal" ng-show="isCurrentUserAdmin">
             <dt>Lesson Drafts</dt>
             <dd ng-repeat="lesson in draftLessons">
