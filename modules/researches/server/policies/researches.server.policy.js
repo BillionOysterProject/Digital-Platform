@@ -3,7 +3,10 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  _ = require('lodash'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backend
 acl = new acl(new acl.memoryBackend());
@@ -36,6 +39,18 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/feedback',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/favorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/unfavorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/favorites',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/share',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -57,6 +72,18 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research/:researchId/feedback',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/favorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/unfavorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/favorites',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/share',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId',
       permissions: '*'
     }]
@@ -73,6 +100,18 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId/feedback',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/favorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/research/:researchId/unfavorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/research/favorites',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/share',
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId',

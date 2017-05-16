@@ -7,26 +7,26 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 /**
- * Lesson Activity Schema
+ * Research Activity Schema
  */
-var LessonActivitySchema = new Schema({
+var ResearchActivitySchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User',
     required: true
   },
-  lesson: {
+  research: {
     type: Schema.ObjectId,
-    ref: 'Lesson',
+    ref: 'Research',
     required: true
   },
   activity: {
     type: String,
-    enum: ['viewed', 'downloaded', 'shared', 'duplicated', 'liked', 'unliked', 'taught', 'feedback', 'submitted', 'published', 'returned'],
+    enum: ['viewed', 'downloaded', 'shared', 'liked', 'unliked','feedback', 'submitted', 'published', 'returned'],
     required: true
   },
   additionalInfo: {
-    type: String,
+    type: String
   },
   created: {
     type: Date,
@@ -34,4 +34,4 @@ var LessonActivitySchema = new Schema({
     required: true
   }
 });
-mongoose.model('LessonActivity', LessonActivitySchema);
+mongoose.model('ResearchActivity', ResearchActivitySchema);

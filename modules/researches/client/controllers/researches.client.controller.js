@@ -240,6 +240,26 @@
       vm.save(isValid, null, false);
     };
 
+    vm.favoriteResearch = function() {
+      $http.post('api/research/'+vm.research._id+'/favorite', {})
+      .success(function(data, status, headers, config) {
+        vm.research.saved = true;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.unfavoriteResearch = function() {
+      $http.post('api/research/'+vm.research._id+'/unfavorite', {})
+      .success(function(data, status, headers, config) {
+        vm.research.saved = false;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
     vm.downloadResearch = function() {
       var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/g, '_');
       $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename + '&title=' + vm.research.title, {
@@ -259,6 +279,14 @@
         error(function(data, status, headers, config) {
 
         });
+    };
+
+    vm.share = function(site) {
+      $http.get('/api/research/' + vm.research._id + '/share?site=' + site, {})
+      .success(function(data, status, headers, config) {
+      })
+      .error(function(data, status, headers, config) {
+      });
     };
 
     vm.openViewUserModal = function() {
