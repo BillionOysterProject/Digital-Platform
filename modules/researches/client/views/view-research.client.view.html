@@ -43,9 +43,9 @@
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-type="feed"
                           socialshare-via="{{vm.facebookAppId}}"
-                          socialshare-title="I was published on the Billion Oyster Project"
-                          socialshare-description="Check out my poster"
-                          socialshare-hashtags="BillionOysterProject"
+                          socialshare-title="{{vm.subject}}"
+                          socialshare-description="{{vm.message}}"
+                          socialshare-hashtags="{{vm.hashtags}}"
                           socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('facebook')">
@@ -53,15 +53,15 @@
                         </a>
                         <a href="#" socialshare socialshare-provider="twitter"
                           ng-show="vm.research.status === 'published' && vm.user"
-                          socialshare-text="Check out my poster: "
-                          socialshare-hashtags="BillionOysterProject"
+                          socialshare-text="{{vm.text}}"
+                          socialshare-hashtags="{{vm.hashtags}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('twitter')">
                           <i class="fa fa-twitter"></i>
                         </a>
                         <a href="#" socialshare socialshare-provider="tumblr"
                           ng-show="vm.research.status === 'published' && vm.user"
-                          socialshare-text="Check out my poster at the Billion Oyster Project"
+                          socialshare-text="{{vm.text}}"
                           socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('tumblr')">
@@ -69,12 +69,17 @@
                         </a>
                         <a href="#" socialshare socialshare-provider="pinterest"
                           ng-show="vm.research.status === 'published' && vm.user"
-                          socialshare-text="Check out my poster at the Billion Oyster Project"
+                          socialshare-text="{{vm.text}}"
                           socialshare-media="{{vm.headerImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('pinterest')">
                           <i class="fa fa-pinterest"></i>
                         </a>
+                        <a href="#" ng-click="vm.openEmailShare()"
+                          ng-show="vm.research.status === 'published' && vm.user">
+                          <i class="fa fa-envelope"></i>
+                        </a>
+
                         <!-- <a href="#" socialshare socialshare-provider="sms"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="Check out my poster at the Billion Oyster Project"
@@ -98,3 +103,5 @@
 <research-feedback-modal research="vm.research" close-function="vm.closeResearchFeedbackModal"></research-feedback-modal>
 <research-feedback-view-modal research="vm.research" close-function="vm.closeResearchFeedbackView"></research-feedback-view-modal>
 <view-user-modal user="vm.research.user" close-function="vm.closeViewUserModal"></view-user-modal>
+<share-email share-subject="{{vm.subject}}" share-message="{{vm.message}}" share-link="{{vm.url}}"
+  modal-header="Share this research poster" close-function="vm.closeEmailShare"></share-email>

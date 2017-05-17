@@ -15,7 +15,10 @@
     var toGoState = null;
     var toGoParams = null;
 
-    vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
+    vm.authentication = Authentication;
+    vm.user = Authentication.user;
+    vm.error = [];
+    vm.form = {};
 
     vm.research = research;
     vm.research.organization = null;
@@ -28,10 +31,12 @@
     vm.source = $location.protocol() + '://'+ $location.host() +':'+ $location.port();
     vm.url = $location.absUrl();
 
-    vm.authentication = Authentication;
-    vm.user = Authentication.user;
-    vm.error = [];
-    vm.form = {};
+    vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
+    vm.subject = vm.user.displayName + ' has shared a research poster with you';
+    vm.message = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
+    vm.text = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
+    vm.hastags = 'BillionOysterProject';
+
     vm.saving = false;
     vm.valid = (vm.research.status === 'published') ? true : false;
     vm.getDate = ExpeditionViewHelper.getDate;
@@ -287,6 +292,16 @@
       })
       .error(function(data, status, headers, config) {
       });
+    };
+
+    vm.openEmailShare = function() {
+      angular.element('#modal-share-email').modal('show');
+    };
+
+    vm.closeEmailShare = function(sent) {
+      if (sent) {
+        vm.share('email');
+      }
     };
 
     vm.openViewUserModal = function() {
