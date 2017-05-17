@@ -2,6 +2,8 @@ Hi <%= FirstName %>,
 
 Welcome, you've been invited by <%= LeadName %> to be a <%= MemberOrLead %> of the <%= TeamOrOrg %> <%= TeamOrOrgName %> at the Billion Oyster Project.
 
+Your initial username is <%= Username %>, but it can be changed when you claim your account.
+
 Visit <%= LinkCreateAccount %> to join the <%= TeamOrOrg %>.
 
 So glad to have you!
