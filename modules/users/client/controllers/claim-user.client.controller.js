@@ -5,8 +5,6 @@ angular.module('users').controller('ClaimUserController', ['$scope', '$statePara
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
-    console.log('stateParams', $stateParams);
-    console.log('username', $location.search().username);
     $scope.username = $location.search().username;
 
     // If user is signed in then redirect back home
