@@ -165,3 +165,15 @@ exports.sendUnitFeedback = function(req, res) {
   };
   exports.sendFeedback(req.body.unit.user.email, req.user.email, subject, data, 'unit_feedback', req, res);
 };
+
+exports.sendShare = function(req, res) {
+  var subject = req.body.subject;
+  var data = {
+    ShareSubject: subject,
+    ShareToName: req.body.toName,
+    ShareMessage: req.body.message,
+    ShareLink: req.body.link,
+    ShareFromName: req.user.displayName
+  };
+  exports.sendFeedback(req.body.toEmail, req.user.email, subject, data, 'share', req, res);
+};
