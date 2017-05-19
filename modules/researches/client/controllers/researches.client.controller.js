@@ -32,7 +32,7 @@
     vm.url = $location.absUrl();
 
     vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
-    vm.subject = vm.user.displayName + ' has shared a research poster with you';
+    vm.subject = (vm.user) ? vm.user.displayName : 'Someone' + ' has shared a research poster with you';
     vm.message = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
     vm.text = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
     vm.hastags = 'BillionOysterProject';
@@ -50,6 +50,14 @@
       alias: 'newHeaderImage',
       queueLimit: 2
     });
+
+    var getResearchFeedback = function() {
+      ResearchFeedbackService.get({
+        researchId: vm.research._id
+      }, function(data) {
+        vm.feedback = data;
+      });
+    };
 
     vm.checkRole = function(role) {
       if (vm.user) {
@@ -96,11 +104,7 @@
     }
 
     if (vm.research && vm.research._id) {
-      ResearchFeedbackService.get({
-        researchId: vm.research._id
-      }, function(data) {
-        vm.feedback = data;
-      });
+      getResearchFeedback();
     }
 
     vm.changeColor = function(color) {
@@ -266,12 +270,12 @@
     };
 
     vm.downloadResearch = function() {
-      var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/g, '_');
+      var filename = lodash.replace(vm.research.title.trim() + '.png', /\s/g, '_');
       $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename + '&title=' + vm.research.title, {
         responseType: 'arraybuffer'
       }).
         success(function(data, status, headers, config) {
-          var blob = new Blob([data], { type: 'application/pdf' });
+          var blob = new Blob([data], { type: 'image/png' });
           var url = (window.URL || window.webkitURL).createObjectURL(blob);
 
           var anchor = angular.element('<a/>');
@@ -282,7 +286,7 @@
           })[0].click();
         }).
         error(function(data, status, headers, config) {
-
+          console.log('error', data);
         });
     };
 
@@ -318,7 +322,7 @@
 
     vm.closeResearchFeedbackModal = function(refresh) {
       angular.element('#modal-research-feedback').modal('hide');
-      if (refresh) console.log('reload feedback');
+      if (refresh) getResearchFeedback();
     };
 
     vm.openResearchFeedbackView = function() {
@@ -327,7 +331,7 @@
 
     vm.closeResearchFeedbackView = function(refresh) {
       angular.element('#modal-research-view-feedback').modal('hide');
-      if (refresh) console.log('reload feedback view');
+      if (refresh) getResearchFeedback();
     };
 
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {

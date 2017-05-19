@@ -27,7 +27,7 @@
                           {{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0 && vm.user">View Feedback &nbsp;&nbsp;<span class="badge">{{vm.feedback.feedbackCount}}</span></a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner || !vm.user">Give Feedback</a>
-                        <a class="btn btn-default" ng-click="vm.downloadResearch()">Download PDF</a><br/>
+                        <a class="btn btn-default" ng-click="vm.downloadResearch()">Download as Image</a><br/>
 
                         <!--show only if published -- share the public viewable link (no login required) on social:
                         This public view should be a stripped down version of the site

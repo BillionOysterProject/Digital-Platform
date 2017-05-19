@@ -406,7 +406,6 @@
                           $scope.finishedSaving = 100;
                           $timeout(function () {
                             vm.saving = false;
-                            console.log('vm.lesson._id', vm.lesson._id);
                             if (!vm.lesson._id) {
                               vm.lesson._id = data._id;
                               $location.path('/lessons/' + vm.lesson._id + '/draft', false);

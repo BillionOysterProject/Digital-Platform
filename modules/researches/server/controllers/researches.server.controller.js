@@ -23,7 +23,8 @@ var path = require('path'),
   multer = require('multer'),
   async = require('async'),
   moment = require('moment'),
-  wkhtmltopdf = require('wkhtmltopdf'),
+  wkhtmltoimage = require('wkhtmltoimage'),
+  exec = require('child_process').exec,
   config = require(path.resolve('./config/config'));
 
 var validateResearch = function(research, successCallback, errorCallback) {
@@ -212,6 +213,29 @@ var alertTeamLeads = function(research, user, host, callback) {
   }
 };
 
+var setImageToDownload = function(host, research, callback) {
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var input = httpTransport + host + '/full-page/research/' + research._id;
+  var filename = research._id + '.png';
+  var mimetype = 'image/png';
+
+  exec('wkhtmltoimage -f png ' + input + ' ' + path.resolve(config.uploads.researchDownloadImageUpload.dest) + '/' + filename, function(error, stdout, stderr) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.researchDownloadImageUpload,
+    function(fileInfo) {
+      research.downloadImage = fileInfo;
+      research.save(function(err) {
+        if (err) {
+          callback(err);
+        }
+        callback(null, fileInfo);
+      });
+    }, function(errorMessage) {
+      callback(errorMessage);
+    });
+  });
+};
+
 /**
  * Create a Research
  */
@@ -245,8 +269,11 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        alertTeamLeads(research, req.user, req.headers.host, function(research) {
-          res.json(research);
+        setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+          if (fileInfo) research.downloadImage = fileInfo;
+          alertTeamLeads(research, req.user, req.headers.host, function(research) {
+            res.json(research);
+          });
         });
       }
     });
@@ -261,8 +288,6 @@ var setOwnership = function(user, research, fullPage, callback) {
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   research.isCurrentUserOwner = user && research.user && research.user._id.toString() === user._id.toString();
-
-  console.log('fullPage', fullPage);
 
   var setTeam = function() {
     if (checkRole(user, 'team lead') && research.team && research.team._id) {
@@ -379,8 +404,11 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          alertTeamLeads(research, req.user, req.headers.host, function(research) {
-            res.json(research);
+          setImageToDownload(req.headers.host, research, function(fileInfo) {
+            if (fileInfo) research.downloadImage = fileInfo;
+            alertTeamLeads(research, req.user, req.headers.host, function(research) {
+              res.json(research);
+            });
           });
         }
       });
@@ -1110,9 +1138,7 @@ exports.list = function(req, res) {
  * Downloads
  */
 exports.download = function(req, res) {
-  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
-
-  var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
+  var research = req.research;
 
   var activity = new ResearchActivity({
     user: req.user,
@@ -1121,28 +1147,25 @@ exports.download = function(req, res) {
   });
 
   activity.save(function(err) {
-    wkhtmltopdf(input, {
-      customHeader : [
-        ['Content-Type', 'application/pdf, application/octet-stream'],
-        ['Content-Disposition', 'attachment; filename=' + req.query.filename]
-      ],
-      cookie : [
-        ['sessionId', req.cookies.sessionId]
-      ],
-      title: req.query.title,
-      quiet: true,
-      marginBottom: '5mm',
-      marginLeft: '5mm',
-      marginRight: '5mm',
-      marginTop: '5mm',
-      orientation: 'Landscape',
-      //pageSize: 'letter',
-      enableSmartShrinking: true,
-      //disableSmartShrinking: true,
-      // zoom: 1.5,
-      // debugJavascript: true,
-      ignore: [/QFont::setPixelSize/]
-    }).pipe(res);
+    // if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
+    //   console.log('downloadImage', research.downloadImage);
+    //   res.setHeader('Content-disposition', 'attachment;');
+    //   res.setHeader('content-type', research.downloadImage.mimetype);
+    //
+    //   request(research.downloadImage.path).pipe(res);
+    // } else {
+    setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+      if (err) {
+        return res.status(400).send({
+          message: err
+        });
+      } else {
+        res.setHeader('Content-disposition', 'attachment;');
+        res.setHeader('content-type', fileInfo.mimetype);
+
+        request(fileInfo.path).pipe(res);
+      }
+    });
   });
 };
 

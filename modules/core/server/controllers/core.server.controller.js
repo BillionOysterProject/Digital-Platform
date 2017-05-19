@@ -2,26 +2,30 @@
 
 var validator = require('validator');
 
+var safeUser = function(user) {
+  var safeUserObject = null;
+  if (user) {
+    safeUserObject = {
+      displayName: validator.escape(user.displayName),
+      provider: validator.escape(user.provider),
+      username: validator.escape(user.username),
+      created: user.created.toString(),
+      roles: user.roles,
+      profileImageURL: user.profileImageURL,
+      email: validator.escape(user.email),
+      lastName: validator.escape(user.lastName),
+      firstName: validator.escape(user.firstName),
+      additionalProvidersData: user.additionalProvidersData
+    };
+  }
+  return safeUserObject;
+};
+
 /**
  * Render the main application page
  */
 exports.renderIndex = function (req, res) {
-
-  var safeUserObject = null;
-  if (req.user) {
-    safeUserObject = {
-      displayName: validator.escape(req.user.displayName),
-      provider: validator.escape(req.user.provider),
-      username: validator.escape(req.user.username),
-      created: req.user.created.toString(),
-      roles: req.user.roles,
-      profileImageURL: req.user.profileImageURL,
-      email: validator.escape(req.user.email),
-      lastName: validator.escape(req.user.lastName),
-      firstName: validator.escape(req.user.firstName),
-      additionalProvidersData: req.user.additionalProvidersData
-    };
-  }
+  var safeUserObject = safeUser(req.user);
 
   res.render('modules/core/server/views/index', {
     user: safeUserObject
@@ -29,7 +33,11 @@ exports.renderIndex = function (req, res) {
 };
 
 exports.renderFullPage = function (req, res) {
-  res.render('modules/core/server/views/full-page');
+  var safeUserObject = safeUser(req.user);
+
+  res.render('modules/core/server/views/full-page', {
+    user: safeUserObject
+  });
 };
 
 /**

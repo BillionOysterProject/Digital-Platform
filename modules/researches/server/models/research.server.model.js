@@ -89,6 +89,12 @@ var ResearchSchema = new Schema({
   team: {
     type: Schema.ObjectId,
     ref: 'Team'
+  },
+  downloadImage: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
   }
 });
 
