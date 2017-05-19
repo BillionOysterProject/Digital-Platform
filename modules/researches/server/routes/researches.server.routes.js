@@ -43,6 +43,9 @@ module.exports = function(app) {
   app.route('/api/research/:researchId/share').all(researchesPolicy.isAllowed)
     .get(researches.share);
 
+  app.route('/api/research/:researchId/saveAsImage').all(researchesPolicy.isAllowed)
+    .put(researches.saveResearchAsImage);
+
   app.route('/api/research/:researchId').all(researchesPolicy.isAllowed)
     .get(researches.read)
     .put(researches.update)

@@ -150,6 +150,20 @@
       }
     };
 
+    var saveResearchAsImage = function(generateImage, researchId, saveAsCallback) {
+      $scope.savingStatus = 'Finalizing Research';
+      $http.put('api/research/' + researchId + '/saveAsImage')
+      .success(function(data, status, headers, config) {
+        vm.research.downloadImage = data;
+        vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+        saveAsCallback();
+      })
+      .error(function(data, status, headers, config) {
+        console.log('error', data);
+        saveAsCallback(data);
+      });
+    };
+
     var updateResearchObject = function(researchId, callback) {
       ResearchesService.get({
         researchId: researchId
@@ -192,13 +206,27 @@
         var researchId = res._id;
         vm.downloadImageURL = (res && res.downloadImage) ? res.downloadImage.path : '';
 
-        vm.finishedSaving = 50;
+        vm.finishedSaving = 33;
         $timeout(function () {
+
           uploadHeaderImage(researchId, function() {
-            vm.saving = false;
-            if (vm.modal) {
-              vm.modal.bind('hidden.bs.modal', function() {
-                vm.finishedSaving = 100;
+            vm.finishedSaving = 66;
+            saveResearchAsImage(researchId, function() {
+              vm.saving = false;
+              if (vm.modal) {
+                vm.modal.bind('hidden.bs.modal', function() {
+                  vm.finishedSaving = 100;
+                  if (stayOnPage) {
+                    updateResearchObject(researchId, function() {
+                      console.log('preview', preview);
+                      if (preview) vm.openResearchPreviewModal();
+                    });
+                  } else {
+                    vm.goToView(researchId);
+                  }
+                });
+                vm.modal.modal('hide');
+              } else {
                 if (stayOnPage) {
                   updateResearchObject(researchId, function() {
                     console.log('preview', preview);
@@ -207,18 +235,8 @@
                 } else {
                   vm.goToView(researchId);
                 }
-              });
-              vm.modal.modal('hide');
-            } else {
-              if (stayOnPage) {
-                updateResearchObject(researchId, function() {
-                  console.log('preview', preview);
-                  if (preview) vm.openResearchPreviewModal();
-                });
-              } else {
-                vm.goToView(researchId);
               }
-            }
+            });
           });
         }, 500);
       }

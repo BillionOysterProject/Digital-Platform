@@ -21,6 +21,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/saveAsImage',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId/upload-header-image',
       permissions: '*'
     }, {
@@ -58,6 +61,9 @@ exports.invokeRolesPolicies = function () {
     roles: ['team member'],
     allows: [{
       resources: '/api/research',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/saveAsImage',
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/upload-header-image',
