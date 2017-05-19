@@ -150,8 +150,8 @@
       }
     };
 
-    var saveResearchAsImage = function(generateImage, researchId, saveAsCallback) {
-      $scope.savingStatus = 'Finalizing Research';
+    var saveResearchAsImage = function(researchId, saveAsCallback) {
+      $scope.savingStatus = 'Finalizing Poster';
       $http.put('api/research/' + researchId + '/saveAsImage')
       .success(function(data, status, headers, config) {
         vm.research.downloadImage = data;
