@@ -17,7 +17,7 @@
         </li>
         <li role="presentation" view-permissions="team member,team lead,admin,team lead pending,team member pending,partner"
           ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && vm.savedResearches && vm.savedResearches.length > 0}">
-          <a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Starred Posters</a>
+          <a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Favorite Posters</a>
         </li>
         <li role="presentation" view-permissions="admin,team lead"
           ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (!vm.savedResearches || vm.savedResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="alert alert-info text-center" ng-if="!vm.savedResearches || (vm.savedResearches.$resolved && vm.savedResearches.length == 0)">
-              No starred research posters yet
+          No favorite posters yet! When viewing a poster, click the heart in the title to save your favorites here.
           </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin,team lead"

@@ -4,14 +4,12 @@
             <div class="row">
                 <nav class="navbar">
                     <h6 class="navbar-text blue">{{vm.research.title}}
-                      <small>
                         <a ng-click="vm.favoriteResearch()" ng-hide="vm.research.saved">
-                          <i class="glyphicon glyphicon-star-empty"></i>
+                          <i class="fa fa-heart-o"></i>
                         </a>
                         <a ng-click="vm.unfavoriteResearch()" ng-show="vm.research.saved">
-                          <i class="glyphicon glyphicon-star red"></i>
+                          <i class="fa fa-heart red"></i>
                         </a>
-                      </small>
                     </h6>
                     <a ng-click="vm.openViewUserModal()" ng-show="vm.user">
                       <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6>
@@ -27,7 +25,7 @@
                         <a class="btn btn-primary" ui-sref="researches.edit({ researchId: vm.research._id })"
                           ng-show="vm.research.isCurrentUserOwner && vm.research._id && vm.research.status !== 'pending'">
                           {{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
-                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0 && vm.user">View Feedback</a>
+                        <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0 && vm.user">View Feedback &nbsp;&nbsp;<span class="badge">{{vm.feedback.feedbackCount}}</span></a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner || !vm.user">Give Feedback</a>
                         <a class="btn btn-default" ng-click="vm.downloadResearch()">Download as Image</a><br/>
 
