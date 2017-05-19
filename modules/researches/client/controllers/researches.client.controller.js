@@ -218,7 +218,6 @@
                   vm.finishedSaving = 100;
                   if (stayOnPage) {
                     updateResearchObject(researchId, function() {
-                      console.log('preview', preview);
                       if (preview) vm.openResearchPreviewModal();
                     });
                   } else {
@@ -229,7 +228,6 @@
               } else {
                 if (stayOnPage) {
                   updateResearchObject(researchId, function() {
-                    console.log('preview', preview);
                     if (preview) vm.openResearchPreviewModal();
                   });
                 } else {
@@ -363,7 +361,6 @@
     };
 
     vm.openResearchPreviewModal = function() {
-      console.log('opening preview poster');
       angular.element('#modal-preview-poster').modal('show');
     };
 

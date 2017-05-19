@@ -8,8 +8,15 @@
         restrict: 'E',
         templateUrl: 'modules/researches/client/views/preview-research.client.view.html',
         scope: {
-          posterImage: '@',
+          posterImage: '=',
           closeFunction: '='
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+          element.bind('show.bs.modal', function() {
+            scope.image = null;
+            scope.image = scope.posterImage;
+          });
         },
         controller: function($scope) {
           $scope.close = function() {
