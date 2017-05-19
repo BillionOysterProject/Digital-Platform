@@ -220,17 +220,22 @@ var setImageToDownload = function(host, research, callback) {
   var mimetype = 'image/png';
 
   exec('wkhtmltoimage -f png ' + input + ' ' + path.resolve(config.uploads.researchDownloadImageUpload.dest) + '/' + filename, function(error, stdout, stderr) {
+    console.log('wkhtmltoimage error: ', error);
+    console.log('wkhtmltoimage stdout: ', stdout);
+    console.log('wkhmtltoimage stderr: ', stderr);
     var uploadRemote = new UploadRemote();
     uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.researchDownloadImageUpload,
     function(fileInfo) {
       research.downloadImage = fileInfo;
       research.save(function(err) {
         if (err) {
+          console.log('save file info error: ', err);
           callback(err);
         }
         callback(null, fileInfo);
       });
     }, function(errorMessage) {
+      console.log('save image remotely error: ', errorMessage);
       callback(errorMessage);
     });
   });
