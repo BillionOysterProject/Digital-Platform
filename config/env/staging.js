@@ -210,8 +210,8 @@ module.exports = {
       }
     },
     researchDownloadImageUpload: {
-      s3dest: 'uploads/researches/img/download/',
-      dest: './modules/researches/client/img/download/uploads/',
+      s3dest: 'uploads/researches/img/downloads/',
+      dest: '/tmp/',
       limits: {
         fileSize: 20*1024*1024
       }

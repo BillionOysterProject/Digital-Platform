@@ -45,6 +45,7 @@
     vm.research.font = 'Roboto';
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
+    vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
 
     vm.headerImageUploader = new FileUploader({
       alias: 'newHeaderImage',
@@ -149,17 +150,19 @@
       }
     };
 
-    var updateResearchObject = function(researchId) {
+    var updateResearchObject = function(researchId, callback) {
       ResearchesService.get({
         researchId: researchId
       }, function(data) {
         vm.research = data;
         vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
+        vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+        if (callback) callback();
       });
     };
 
     // Save Research
-    vm.save = function(isValid, status, stayOnPage) {
+    vm.save = function(isValid, status, stayOnPage, preview) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
         return false;
@@ -187,6 +190,7 @@
 
       function successCallback(res) {
         var researchId = res._id;
+        vm.downloadImageURL = (res && res.downloadImage) ? res.downloadImage.path : '';
 
         vm.finishedSaving = 50;
         $timeout(function () {
@@ -196,7 +200,10 @@
               vm.modal.bind('hidden.bs.modal', function() {
                 vm.finishedSaving = 100;
                 if (stayOnPage) {
-                  updateResearchObject(researchId);
+                  updateResearchObject(researchId, function() {
+                    console.log('preview', preview);
+                    if (preview) vm.openResearchPreviewModal();
+                  });
                 } else {
                   vm.goToView(researchId);
                 }
@@ -204,7 +211,10 @@
               vm.modal.modal('hide');
             } else {
               if (stayOnPage) {
-                updateResearchObject(researchId);
+                updateResearchObject(researchId, function() {
+                  console.log('preview', preview);
+                  if (preview) vm.openResearchPreviewModal();
+                });
               } else {
                 vm.goToView(researchId);
               }
@@ -235,18 +245,18 @@
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
       }
-      vm.save(true, 'draft', true);
+      vm.save(true, 'draft', true, false);
     };
 
     vm.saveDraftAndPreview = function(isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
       }
-      vm.save(true, 'draft', false);
+      vm.save(true, 'draft', true, true);
     };
 
     vm.saveAndSubmit = function(isValid) {
-      vm.save(isValid, null, false);
+      vm.save(isValid, null, false, false);
     };
 
     vm.favoriteResearch = function() {
@@ -332,6 +342,15 @@
     vm.closeResearchFeedbackView = function(refresh) {
       angular.element('#modal-research-view-feedback').modal('hide');
       if (refresh) getResearchFeedback();
+    };
+
+    vm.openResearchPreviewModal = function() {
+      console.log('opening preview poster');
+      angular.element('#modal-preview-poster').modal('show');
+    };
+
+    vm.closeResearchPreviewModal = function() {
+      angular.element('#modal-preview-poster').modal('hide');
     };
 
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
