@@ -44,7 +44,7 @@
                           socialshare-title="{{vm.subject}}"
                           socialshare-description="{{vm.message}}"
                           socialshare-hashtags="{{vm.hashtags}}"
-                          socialshare-media="{{vm.headerImageURL}}"
+                          socialshare-media="{{vm.downloadImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('facebook')">
                           <i class="fa fa-facebook"></i>
@@ -60,7 +60,7 @@
                         <a href="#" socialshare socialshare-provider="tumblr"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="{{vm.text}}"
-                          socialshare-media="{{vm.headerImageURL}}"
+                          socialshare-media="{{vm.downloadImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('tumblr')">
                           <i class="fa fa-tumblr"></i>
@@ -68,7 +68,7 @@
                         <a href="#" socialshare socialshare-provider="pinterest"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="{{vm.text}}"
-                          socialshare-media="{{vm.headerImageURL}}"
+                          socialshare-media="{{vm.downloadImageURL}}"
                           socialshare-url="{{vm.url}}"
                           ng-click="vm.share('pinterest')">
                           <i class="fa fa-pinterest"></i>
