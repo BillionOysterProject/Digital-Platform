@@ -257,6 +257,7 @@
             <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
             <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid">
               {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Resubmit poster' : 'Submit poster'}}</a>
+            <a class="btn btn-primary" ng-click="vm.openResearchPreviewModal()">Preview</a>
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
           </div>
@@ -273,4 +274,4 @@
   <updated-research-modal></updated-research-modal>
   <delete-research-modal close-function="vm.confirmDeleteResearch"></delete-research-modal>
   <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
-  <preview-research-modal poster-image="{{vm.downloadImageURL}}" close-function="vm.closeResearchPreviewModal"></preview-research-modal>
+  <preview-research-modal poster-image="vm.downloadImageURL" close-function="vm.closeResearchPreviewModal"></preview-research-modal>
