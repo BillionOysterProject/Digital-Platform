@@ -245,6 +245,14 @@ var setImageToDownload = function(host, research, callback) {
   });
 };
 
+exports.saveResearchAsImage = function(req, res) {
+  var research = req.research;
+  setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+    if (fileInfo) research.downloadImage = fileInfo;
+    res.json(fileInfo);
+  });
+};
+
 /**
  * Create a Research
  */
@@ -278,11 +286,8 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        setImageToDownload(req.headers.host, research, function(err, fileInfo) {
-          if (fileInfo) research.downloadImage = fileInfo;
-          alertTeamLeads(research, req.user, req.headers.host, function(research) {
-            res.json(research);
-          });
+        alertTeamLeads(research, req.user, req.headers.host, function(research) {
+          res.json(research);
         });
       }
     });
@@ -413,11 +418,8 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          setImageToDownload(req.headers.host, research, function(fileInfo) {
-            if (fileInfo) research.downloadImage = fileInfo;
-            alertTeamLeads(research, req.user, req.headers.host, function(research) {
-              res.json(research);
-            });
+          alertTeamLeads(research, req.user, req.headers.host, function(research) {
+            res.json(research);
           });
         }
       });
