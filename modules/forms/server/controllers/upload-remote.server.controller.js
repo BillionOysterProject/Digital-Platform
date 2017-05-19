@@ -28,6 +28,58 @@ function UploadRemote() {
   this.remoteUrl = 'http://s3-' + config.s3.region + '.amazonaws.com/' + config.s3.bucket + '/';
 }
 
+var saveLocalToRemote = function(vm, localFileName, file, uploadConfig, successCallback, errorCallback) {
+  var pathExt = path.extname(file.originalname);
+  var s3Filename = vm.remoteUrl + uploadConfig.s3dest + file.filename + pathExt;
+
+  //console.log('key', uploadConfig.s3dest + file.filename + pathExt);
+  var params = {
+    localFile: localFileName,
+    s3Params: {
+      Bucket: config.s3.bucket,
+      Key: uploadConfig.s3dest + file.filename + pathExt
+      // other options supported by putObject, except Body and ContentLength.
+      // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+    }
+  };
+
+  // Upload file to s3
+  var s3Uploader = vm.client.uploadFile(params);
+
+  // Listen for stage changes on the call
+  s3Uploader.on('error', function(err) {
+    //console.error('unable to upload:', err.stack);
+    errorCallback(err.stack);
+  })
+  .on('progress', function() {
+    //console.log('progress', s3Uploader.progressMd5Amount, s3Uploader.progressAmount, s3Uploader.progressTotal);
+  })
+  .on('fileOpened', function() {
+    //console.log('File Opened');
+  })
+  .on('end', function() {
+    //console.log('done uploading');
+  })
+  .on('fileClosed', function() {
+    //console.log('File Closed');
+    var fileInfo = {
+      path: s3Filename,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      filename: file.filename
+    };
+
+    fs.exists(localFileName, function(exists) {
+      if(exists) {
+        fs.unlink(localFileName);
+        successCallback(fileInfo);
+      } else {
+        errorCallback('Local file is missing');
+      }
+    });
+  });
+};
+
 /**
  * Upload file to local storage, upload to s3, then delete from local storage
  */
@@ -40,57 +92,8 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
         errorCallback(localUploadError.code);
       } else {
         if (req.file) {
-          var file = req.file;
-          var localFileName = uploadConfig.dest + file.filename;
-          var pathExt = path.extname(file.originalname);
-          var s3Filename = vm.remoteUrl + uploadConfig.s3dest + file.filename + pathExt;
-
-          //console.log('key', uploadConfig.s3dest + file.filename + pathExt);
-          var params = {
-            localFile: localFileName,
-            s3Params: {
-              Bucket: config.s3.bucket,
-              Key: uploadConfig.s3dest + file.filename + pathExt
-              // other options supported by putObject, except Body and ContentLength.
-              // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-            }
-          };
-
-          // Upload file to s3
-          var s3Uploader = vm.client.uploadFile(params);
-
-          // Listen for stage changes on the call
-          s3Uploader.on('error', function(err) {
-            //console.error('unable to upload:', err.stack);
-            errorCallback(err.stack);
-          })
-          .on('progress', function() {
-            //console.log('progress', s3Uploader.progressMd5Amount, s3Uploader.progressAmount, s3Uploader.progressTotal);
-          })
-          .on('fileOpened', function() {
-            //console.log('File Opened');
-          })
-          .on('end', function() {
-            //console.log('done uploading');
-          })
-          .on('fileClosed', function() {
-            //console.log('File Closed');
-            var fileInfo = {
-              path: s3Filename,
-              originalname: file.originalname,
-              mimetype: file.mimetype,
-              filename: file.filename
-            };
-
-            fs.exists(localFileName, function(exists) {
-              if(exists) {
-                fs.unlink(localFileName);
-                successCallback(fileInfo);
-              } else {
-                errorCallback('Local file is missing');
-              }
-            });
-          });
+          var localFileName = uploadConfig.dest + req.file.filename;
+          saveLocalToRemote(vm, localFileName, req.file, uploadConfig, successCallback, errorCallback);
         } else {
           errorCallback('No file for uploading');
         }
@@ -98,6 +101,20 @@ UploadRemote.prototype.uploadLocalAndRemote = function(req, res, localUploader, 
     });
   } else {
     errorCallback('Must have an uploader');
+  }
+};
+
+UploadRemote.prototype.saveLocalAndRemote = function(filename, mimetype, uploadConfig, successCallback, errorCallback) {
+  var vm = this;
+  if (filename && mimetype && uploadConfig) {
+    var localFileName = uploadConfig.dest + filename;
+    saveLocalToRemote(vm, localFileName, {
+      originalname: filename,
+      mimetype: mimetype,
+      filename: path.parse(filename).name,
+    }, uploadConfig, successCallback, errorCallback);
+  } else {
+    errorCallback('Must have file and config');
   }
 };
 

@@ -55,7 +55,7 @@
     }
     .poster-body .row:after {
       clear:both;
-    } 
+    }
     .poster-body .row .col-md-6 {
       position: relative;
       float: left;
@@ -137,30 +137,30 @@
     <p>{{research.user.displayName}}&nbsp;&nbsp;&#8226;&nbsp;&nbsp;{{created}}</p>
   </div>
   <div class="poster-body">
-    <h3>Introduction</h3>
-    <div ng-bind-html="research.intro | sanitize"></div>
-    
-    <h3>Materials & Methods</h3>
-    <div ng-bind-html="research.methods | sanitize"></div>
-    
-    <h3>Results</h3>
-    <div ng-bind-html="research.results | sanitize"></div>
+    <div class="col-md-3">
+      <h3>Introduction</h3>
+      <div ng-bind-html="research.intro | sanitize"></div>
 
-    <h3>Discussion & Conclusions</h3>
-    <div ng-bind-html="research.discussion | sanitize"></div>
-
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Literature Cited</h3>
-        <div ng-bind-html="research.cited | sanitize"></div>
-      </div>
-      <div class="col-md-6">
-        <h3>Acknowledgments</h3>
-        <div ng-bind-html="research.acknowledgments | sanitize"></div>
-      </div>
+      <h3>Materials & Methods</h3>
+      <div ng-bind-html="research.methods | sanitize"></div>
     </div>
-    <h3 ng-show="research.other.title">{{research.other.title}}</h3>
-    <div ng-bind-html="research.other.content | sanitize"></div>
+    <div class="col-md-6">
+      <h3>Results</h3>
+      <div ng-bind-html="research.results | sanitize"></div>
+
+      <h3>Discussion & Conclusions</h3>
+      <div ng-bind-html="research.discussion | sanitize"></div>
+
+      <h3 ng-show="research.other.title">{{research.other.title}}</h3>
+      <div ng-bind-html="research.other.content | sanitize"></div>
+    </div>
+    <div class="col-md-3">
+      <h3>Literature Cited</h3>
+      <div ng-bind-html="research.cited | sanitize"></div>
+
+      <h3>Acknowledgments</h3>
+      <div ng-bind-html="research.acknowledgments | sanitize"></div>
+    </div>
   </div>
   <div class="poster-footer">
     <div class="poster-block">
