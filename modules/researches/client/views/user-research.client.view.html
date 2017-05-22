@@ -62,7 +62,8 @@
                         <p>{{vm.getLongDate(savedResearch.created)}}</p>
                         <h4>{{savedResearch.title | sanitize}}</h4>
                         <!-- <small ng-bind-html="savedResearch.intro | limitTo:200 | sanitize"></small> -->
-                        <img ng-show="savedResearch.headerImage" ng-src="{{savedResearch.headerImage.path}}" class="img-responsive" />
+                        <!-- <img ng-show="savedResearch.headerImage" ng-src="{{savedResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="savedResearch.downloadImage" ng-src="{{savedResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="savedResearch.user && savedResearch.user.profileImageURL"
@@ -95,7 +96,8 @@
                         <p>{{vm.getLongDate(pendingResearch.created)}}</p>
                         <h4>{{pendingResearch.title | sanitize}}</h4>
                         <!-- <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small> -->
-                        <img ng-show="pendingResearch.headerImage" ng-src="{{pendingResearch.headerImage.path}}" class="img-responsive" />
+                        <!-- <img ng-show="pendingResearch.headerImage" ng-src="{{pendingResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="pendingResearch.downloadImage" ng-src="{{pendingResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
@@ -119,7 +121,8 @@
                         <p>{{vm.getLongDate(teamResearch.created)}}</p>
                         <h4>{{teamResearch.title | sanitize}}</h4>
                         <!-- <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small> -->
-                        <img ng-show="teamResearch.headerImage" ng-src="{{teamResearch.headerImage.path}}" class="img-responsive" />
+                        <!-- <img ng-show="teamResearch.headerImage" ng-src="{{teamResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="teamResearch.downloadImage" ng-src="{{teamResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
