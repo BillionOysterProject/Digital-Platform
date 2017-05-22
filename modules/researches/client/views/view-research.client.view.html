@@ -4,12 +4,14 @@
             <div class="row">
                 <nav class="navbar">
                     <h6 class="navbar-text blue">{{vm.research.title}}
-                        <a ng-click="vm.favoriteResearch()" ng-hide="vm.research.saved">
-                          <i class="fa fa-heart-o"></i>
-                        </a>
-                        <a ng-click="vm.unfavoriteResearch()" ng-show="vm.research.saved">
-                          <i class="fa fa-heart red"></i>
-                        </a>
+                        <span ng-show="vm.user">
+                          <a ng-click="vm.favoriteResearch()" ng-hide="vm.research.saved">
+                            <i class="fa fa-heart-o"></i>
+                          </a>
+                          <a ng-click="vm.unfavoriteResearch()" ng-show="vm.research.saved">
+                            <i class="fa fa-heart red"></i>
+                          </a>
+                        </span>
                     </h6>
                     <a ng-click="vm.openViewUserModal()" ng-show="vm.user">
                       <h6 class="navbar-text"><i class="glyphicon glyphicon-user"></i> {{vm.research.user.displayName}}</h6>
