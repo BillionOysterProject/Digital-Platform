@@ -1158,25 +1158,26 @@ exports.download = function(req, res) {
   });
 
   activity.save(function(err) {
-    // if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
-    //   console.log('downloadImage', research.downloadImage);
-    //   res.setHeader('Content-disposition', 'attachment;');
-    //   res.setHeader('content-type', research.downloadImage.mimetype);
-    //
-    //   request(research.downloadImage.path).pipe(res);
-    // } else {
-    setImageToDownload(req.headers.host, research, function(err, fileInfo) {
-      if (err) {
-        return res.status(400).send({
-          message: err
-        });
-      } else {
-        res.setHeader('Content-disposition', 'attachment;');
-        res.setHeader('content-type', fileInfo.mimetype);
+    if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
+      console.log('downloadImage', research.downloadImage);
+      res.setHeader('Content-disposition', 'attachment;');
+      res.setHeader('content-type', research.downloadImage.mimetype);
 
-        request(fileInfo.path).pipe(res);
-      }
-    });
+      request(research.downloadImage.path).pipe(res);
+    } else {
+      setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          res.setHeader('Content-disposition', 'attachment;');
+          res.setHeader('content-type', fileInfo.mimetype);
+
+          request(fileInfo.path).pipe(res);
+        }
+      });
+    }
   });
 };
 

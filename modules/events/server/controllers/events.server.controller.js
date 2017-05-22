@@ -223,7 +223,11 @@ exports.read = function(req, res) {
 
     // is the current user registered for the event
     var index = _.findIndex(calendarEvent.registrants, function(r) {
-      return r.user._id.toString() === req.user._id.toString();
+      if (r && r.user && r.user._id && req.user && req.user._id) {
+        return r.user._id.toString() === req.user._id.toString();
+      } else {
+        return false;
+      }
     });
     calendarEvent.isRegistered = (index > -1) ? true : false;
   }

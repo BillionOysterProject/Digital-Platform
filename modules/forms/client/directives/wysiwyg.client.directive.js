@@ -32,7 +32,9 @@
               //['height', ['height']],
               ['table', ['table']],
               ['insert', ['link','picture','video','hr']],
-            ]
+            ],
+            disableDragAndDrop: true,
+            shortcuts: false
           };
 
           $scope.imageUploader = new FileUploader({
