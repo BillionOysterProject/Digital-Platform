@@ -27,17 +27,9 @@
                           {{(vm.research.status === 'published') ? 'Unpublish and edit' : 'Edit'}}</a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackView()" ng-show="vm.feedback.feedbackCount > 0 && vm.user">View Feedback &nbsp;&nbsp;<span class="badge">{{vm.feedback.feedbackCount}}</span></a>
                         <a class="btn btn-default" ng-click="vm.openResearchFeedbackModal()" ng-hide="vm.research.isCurrentUserOwner || !vm.user">Give Feedback</a>
-                        <a class="btn btn-default" ng-click="vm.downloadResearch()" ng-show="vm.user">Download as Image</a><br/>
+                        <a class="btn btn-default" ng-click="vm.downloadResearch()" ng-show="vm.user">Download</a><br/>
 
-                        <!--show only if published -- share the public viewable link (no login required) on social:
-                        This public view should be a stripped down version of the site
-                        -- just the logo, sign up/in buttons, poster title/user/date, and poster
-                        (let me know if I should create a separate view for this?)
-                        -->
-                        <!-- <a class="btn btn-danger"><i class="fa fa-facebook"></i></a>
-                        <a class="btn btn-danger"><i class="fa fa-twitter"></i></a>
-                        <a class="btn btn-danger"><i class="fa fa-instagram"></i></a>-->
-                        <a href="#" socialshare socialshare-provider="facebook"
+                        <a href="#" class="btn btn-default" socialshare socialshare-provider="facebook"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-type="feed"
                           socialshare-via="{{vm.facebookAppId}}"
@@ -49,7 +41,7 @@
                           ng-click="vm.share('facebook')">
                           <i class="fa fa-facebook"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="twitter"
+                        <a href="#" class="btn btn-default" socialshare socialshare-provider="twitter"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="{{vm.text}}"
                           socialshare-hashtags="{{vm.hashtags}}"
@@ -57,7 +49,7 @@
                           ng-click="vm.share('twitter')">
                           <i class="fa fa-twitter"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="tumblr"
+                        <a href="#" class="btn btn-default" socialshare socialshare-provider="tumblr"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="{{vm.text}}"
                           socialshare-media="{{vm.downloadImageURL}}"
@@ -65,7 +57,7 @@
                           ng-click="vm.share('tumblr')">
                           <i class="fa fa-tumblr"></i>
                         </a>
-                        <a href="#" socialshare socialshare-provider="pinterest"
+                        <a href="#" class="btn btn-default" socialshare socialshare-provider="pinterest"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="{{vm.text}}"
                           socialshare-media="{{vm.downloadImageURL}}"
@@ -73,12 +65,12 @@
                           ng-click="vm.share('pinterest')">
                           <i class="fa fa-pinterest"></i>
                         </a>
-                        <a href="#" ng-click="vm.openEmailShare()"
+                        <a href="#" class="btn btn-default" ng-click="vm.openEmailShare()"
                           ng-show="vm.research.status === 'published' && vm.user">
                           <i class="fa fa-envelope"></i>
                         </a>
 
-                        <!-- <a href="#" socialshare socialshare-provider="sms"
+                        <!-- <a href="#" class="btn btn-default" socialshare socialshare-provider="sms"
                           ng-show="vm.research.status === 'published' && vm.user"
                           socialshare-text="Check out my poster at the Billion Oyster Project"
                           socialshare-to="678-999-7657"
