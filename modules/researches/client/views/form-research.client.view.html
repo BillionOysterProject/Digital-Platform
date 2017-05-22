@@ -254,8 +254,8 @@
             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
-            <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Save draft and preview</a>
-            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid" ng-show="vm.isTeamMember">
+            <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Preview</a>
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid">
               {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Resubmit poster' : 'Submit poster'}}</a>
             <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid" ng-show="vm.isTeamLead || vm.isAdmin">
               {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Republish poster' : 'Publish poster'}}</a>
