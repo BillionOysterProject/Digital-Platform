@@ -32,7 +32,7 @@
     vm.url = $location.absUrl();
 
     vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
-    vm.subject = (vm.user) ? vm.user.displayName : 'Someone' + ' has shared a research poster with you';
+    vm.subject = ((vm.user) ? vm.user.displayName : 'Someone') + ' has shared a research poster with you';
     vm.message = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
     vm.text = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
     vm.hastags = 'BillionOysterProject';
