@@ -8,7 +8,7 @@
                 <div class="form-group" show-errors>
                   <label for="username">Username</label>
                   <input type="text" id="username" name="username" class="form-control" ng-model="username"
-                  placeholder="Username" lowercase required>
+                  placeholder="Username" lowercase required ng-disabled="usernameProvided">
                   <div ng-messages="claimUserForm.username.$error" role="alert">
                     <p class="help-block error-text" ng-message="required">Username is required.</p>
                   </div>
