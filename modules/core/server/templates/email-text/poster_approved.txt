@@ -1,0 +1,10 @@
+Hi <%=FirstName%>,
+
+Congrats, your poster <%= PosterName %> was approved and is now published! You can now find it in the Research section, and can edit it at any time.
+
+View your poster at <%= LinkPoster %>.
+
+Thanks for your contribution!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.

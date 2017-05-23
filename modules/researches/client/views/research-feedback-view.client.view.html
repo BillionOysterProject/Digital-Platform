@@ -1,0 +1,445 @@
+<div class="modal fade" id="modal-research-view-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-view-feedback">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" ng-hide="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Feedback given for the poster <b class="red">{{research.title}}</b></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="nav nav-pills nav-stacked col-sm-3" role="tablist">
+              <li role="presentation" ng-class="{'active': active === 'generalFeedback'}" ng-show="generalCommentsContent">
+                <a href="#overall" aria-controls="overall" role="tab" data-toggle="tab">Overall</a></li>
+              <li role="presentation" ng-class="{'active': active === 'titleFeedback'}" ng-show="titleContent">
+                <a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title</a></li>
+              <li role="presentation" ng-class="{'active': active === 'introductionFeedback'}" ng-show="introductionContent">
+                <a href="#introduction" aria-controls="introduction" role="tab" data-toggle="tab">Introduction</a></li>
+              <li role="presentation" ng-class="{'active': active === 'materialMethodsFeedback'}" ng-show="materialMethodsContent">
+                <a href="#materials" aria-controls="materials" role="tab" data-toggle="tab">Materials and Methods</a></li>
+              <li role="presentation" ng-class="{'active': active === 'resultsFeedback'}" ng-show="resultsContent">
+                <a href="#results" aria-controls="results" role="tab" data-toggle="tab">Results</a></li>
+              <li role="presentation" ng-class="{'active': active === 'discussionConclusionsFeedback'}" ng-show="discussionConclusionsContent">
+                <a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">Discussion/Conclusions</a></li>
+              <li role="presentation" ng-class="{'active': active === 'literatureCitedFeedback'}" ng-show="literatureCitedContent">
+                <a href="#cited" aria-controls="cited" role="tab" data-toggle="tab">Literature cited</a></li>
+              <li role="presentation" ng-class="{'active': active === 'acknowledgmentsFeedback'}" ng-show="acknowledgmentsContent">
+                <a href="#acknowledgments" aria-controls="acknowledgments" role="tab" data-toggle="tab">Acknowledgments</a></li>
+              <li role="presentation" ng-class="{'active': active === 'otherFeedback'}" ng-show="otherContent">
+                <a href="#other" aria-controls="other" role="tab" data-toggle="tab">{{(research.other && research.other.title) ? research.other.title : 'Other'}}</a></li>
+            </ul>
+
+            <div class="tab-content col-md-9">
+              <div role="tabpanel" class="tab-pane active" id="overall" ng-show="generalCommentsContent">
+                <ul ng-repeat="comment in feedback.generalComments">
+                  <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                <ul>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="title" ng-show="titleContent">
+                <h3 ng-class="{'green': feedback.titleRatingAvg > 3, 'yellow': feedback.titleRatingAvg === 3,
+                'red': feedback.titleRatingAvg < 3}">{{feedback.titleRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.titleRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.titleRatingAvg > 3, 'yellow': feedback.titleRatingAvg === 3,
+                'red': feedback.titleRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Is the title creative and to the point?</label>
+                    <p>
+                        <span class="badge" ng-class="{'badge-info': feedback.titleCreativeCounts.yes > feedback.titleCreativeCounts.no &&
+                        feedback.titleCreativeCounts.yes > feedback.titleCreativeCounts.somewhat}">
+                          {{feedback.titleCreativeCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge" ng-class="{'badge-info': feedback.titleCreativeCounts.no > feedback.titleCreativeCounts.yes &&
+                        feedback.titleCreativeCounts.no > feedback.titleCreativeCounts.somewhat}">
+                          {{feedback.titleCreativeCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span class="badge" ng-class="{'badge-info': feedback.titleCreativeCounts.somewhat > feedback.titleCreativeCounts.yes &&
+                        feedback.titleCreativeCounts.somewhat > feedback.titleCreativeCounts.no}">
+                          {{feedback.titleCreativeCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the title quickly grab the audience's attention and make them want to learn more about the research? </label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.titleAttentionCounts.yes > feedback.titleAttentionCounts.no &&
+                      feedback.titleAttentionCounts.yes > feedback.titleAttentionCounts.somewhat}">
+                        {{feedback.titleAttentionCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.titleAttentionCounts.no > feedback.titleAttentionCounts.yes &&
+                      feedback.titleAttentionCounts.no > feedback.titleAttentionCounts.somewhat}">
+                        {{feedback.titleAttentionCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.titleAttentionCounts.somewhat > feedback.titleAttentionCounts.yes &&
+                      feedback.titleAttentionCounts.somewhat > feedback.titleAttentionCounts.no}">
+                        {{feedback.titleAttentionCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.titleFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="introduction" ng-show="introductionContent">
+                <h3 ng-class="{'green': feedback.introductionRatingAvg > 3, 'yellow': feedback.introductionRatingAvg === 3,
+                'red': feedback.introductionRatingAvg < 3}">{{feedback.introductionRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.introductionRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.introductionRatingAvg > 3, 'yellow': feedback.introductionRatingAvg === 3,
+                'red': feedback.introductionRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the intro "hook" the audience and get them interested in the issue or problem right away?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHookCounts.yes > feedback.introductionHookCounts.no &&
+                      feedback.introductionHookCounts.yes > feedback.introductionHookCounts.somewhat}">
+                        {{feedback.introductionHookCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHookCounts.no > feedback.introductionHookCounts.yes &&
+                      feedback.introductionHookCounts.no > feedback.introductionHookCounts.somewhat}">
+                        {{feedback.introductionHookCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHookCounts.somewhat > feedback.introductionHookCounts.yes &&
+                      feedback.introductionHookCounts.somewhat > feedback.introductionHookCounts.no}">
+                        {{feedback.introductionHookCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro cite at least three sources of published, primary literature that relates to the research?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionSourcesCounts.yes > feedback.introductionSourcesCounts.no &&
+                      feedback.introductionSourcesCounts.yes > feedback.introductionSourcesCounts.somewhat}">
+                        {{feedback.introductionSourcesCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionSourcesCounts.no > feedback.introductionSourcesCounts.yes &&
+                      feedback.introductionSourcesCounts.no > feedback.introductionSourcesCounts.somewhat}">
+                        {{feedback.introductionSourcesCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionSourcesCounts.somewhat > feedback.introductionSourcesCounts.yes &&
+                      feedback.introductionSourcesCounts.somewhat > feedback.introductionSourcesCounts.no}">
+                        {{feedback.introductionSourcesCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro clearly state the hypothesis or central question of the research?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHypothesisCounts.yes > feedback.introductionHypothesisCounts.no &&
+                      feedback.introductionHypothesisCounts.yes > feedback.introductionHypothesisCounts.somewhat}">
+                        {{feedback.introductionHypothesisCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHypothesisCounts.no > feedback.introductionHypothesisCounts.yes &&
+                      feedback.introductionHypothesisCounts.no > feedback.introductionHypothesisCounts.somewhat}">
+                        {{feedback.introductionHypothesisCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionHypothesisCounts.somewhat > feedback.introductionHypothesisCounts.yes &&
+                      feedback.introductionHypothesisCounts.somewhat > feedback.introductionHypothesisCounts.no}">
+                        {{feedback.introductionHypothesisCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the intro include at least one interesting photograph or visual that shows the research in action?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionVisualCounts.yes > feedback.introductionVisualCounts.no &&
+                      feedback.introductionVisualCounts.yes > feedback.introductionVisualCounts.somewhat}">
+                        {{feedback.introductionVisualCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionVisualCounts.no > feedback.introductionVisualCounts.yes &&
+                      feedback.introductionVisualCounts.no > feedback.introductionVisualCounts.somewhat}">
+                        {{feedback.introductionVisualCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.introductionVisualCounts.somewhat > feedback.introductionVisualCounts.yes &&
+                      feedback.introductionVisualCounts.somewhat > feedback.introductionVisualCounts.no}">
+                        {{feedback.introductionVisualCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.introductionFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="materials" ng-show="materialMethodsContent">
+                <h3 ng-class="{'green': feedback.materialMethodsRatingAvg > 3, 'yellow': feedback.materialMethodsRatingAvg === 3,
+                'red': feedback.materialMethodsRatingAvg < 3}">{{feedback.materialMethodsRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.materialMethodsRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.materialMethodsRatingAvg > 3, 'yellow': feedback.materialMethodsRatingAvg === 3,
+                'red': feedback.materialMethodsRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author clearly explain their experimental approach, steps, procedure and equipment used?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsExplanationCounts.yes > feedback.materialMethodsExplanationCounts.no &&
+                      feedback.materialMethodsExplanationCounts.yes > feedback.materialMethodsExplanationCounts.somewhat}">
+                        {{feedback.materialMethodsExplanationCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsExplanationCounts.no > feedback.materialMethodsExplanationCounts.yes &&
+                      feedback.materialMethodsExplanationCounts.no > feedback.materialMethodsExplanationCounts.somewhat}">
+                        {{feedback.materialMethodsExplanationCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsExplanationCounts.somewhat > feedback.materialMethodsExplanationCounts.yes &&
+                      feedback.materialMethodsExplanationCounts.somewhat > feedback.materialMethodsExplanationCounts.no}">
+                        {{feedback.materialMethodsExplanationCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsAnalysisCounts.yes > feedback.materialMethodsAnalysisCounts.no &&
+                      feedback.materialMethodsAnalysisCounts.yes > feedback.materialMethodsAnalysisCounts.somewhat}">
+                        {{feedback.materialMethodsAnalysisCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsAnalysisCounts.no > feedback.materialMethodsAnalysisCounts.yes &&
+                      feedback.materialMethodsAnalysisCounts.no > feedback.materialMethodsAnalysisCounts.somewhat}">
+                        {{feedback.materialMethodsAnalysisCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsAnalysisCounts.somewhat > feedback.materialMethodsAnalysisCounts.yes &&
+                      feedback.materialMethodsAnalysisCounts.somewhat > feedback.materialMethodsAnalysisCounts.no}">
+                        {{feedback.materialMethodsAnalysisCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsVisualsCounts.yes > feedback.materialMethodsVisualsCounts.no &&
+                      feedback.materialMethodsVisualsCounts.yes > feedback.materialMethodsVisualsCounts.somewhat}">
+                        {{feedback.materialMethodsVisualsCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsVisualsCounts.no > feedback.materialMethodsVisualsCounts.yes &&
+                      feedback.materialMethodsVisualsCounts.no > feedback.materialMethodsVisualsCounts.somewhat}">
+                        {{feedback.materialMethodsVisualsCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.materialMethodsVisualsCounts.somewhat > feedback.materialMethodsVisualsCounts.yes &&
+                      feedback.materialMethodsVisualsCounts.somewhat > feedback.materialMethodsVisualsCounts.no}">
+                        {{feedback.materialMethodsVisualsCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.materialMethodsFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="results" ng-show="resultsContent">
+                <h3 ng-class="{'green': feedback.resultsRatingAvg > 3, 'yellow': feedback.resultsRatingAvg === 3,
+                'red': feedback.resultsRatingAvg < 3}">{{feedback.resultsRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.resultsRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.resultsRatingAvg > 3, 'yellow': feedback.resultsRatingAvg === 3,
+                'red': feedback.resultsRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author state whether the research or experimental procedure actually worked or not?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsConclusionCounts.yes > feedback.resultsConclusionCounts.no &&
+                      feedback.resultsConclusionCounts.yes > feedback.resultsConclusionCounts.somewhat}">
+                        {{feedback.resultsConclusionCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsConclusionCounts.no > feedback.resultsConclusionCounts.yes &&
+                      feedback.resultsConclusionCounts.no > feedback.resultsConclusionCounts.somewhat}">
+                        {{feedback.resultsConclusionCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsConclusionCounts.somewhat > feedback.resultsConclusionCounts.yes &&
+                      feedback.resultsConclusionCounts.somewhat > feedback.resultsConclusionCounts.no}">
+                        {{feedback.resultsConclusionCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author describe any unexpected changes or important surprises?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsSurprisesCounts.yes > feedback.resultsSurprisesCounts.no &&
+                      feedback.resultsSurprisesCounts.yes > feedback.resultsSurprisesCounts.somewhat}">
+                        {{feedback.resultsSurprisesCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsSurprisesCounts.no > feedback.resultsSurprisesCounts.yes &&
+                      feedback.resultsSurprisesCounts.no > feedback.resultsSurprisesCounts.somewhat}">
+                        {{feedback.resultsSurprisesCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsSurprisesCounts.somewhat > feedback.resultsSurprisesCounts.yes &&
+                      feedback.resultsSurprisesCounts.somewhat > feedback.resultsSurprisesCounts.no}">
+                        {{feedback.resultsSurprisesCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author provide a quantitative analysis of the data?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsAnalysisCounts.yes > feedback.resultsAnalysisCounts.no &&
+                      feedback.resultsAnalysisCounts.yes > feedback.resultsAnalysisCounts.somewhat}">
+                        {{feedback.resultsAnalysisCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsAnalysisCounts.no > feedback.resultsAnalysisCounts.yes &&
+                      feedback.resultsAnalysisCounts.no > feedback.resultsAnalysisCounts.somewhat}">
+                        {{feedback.resultsAnalysisCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsAnalysisCounts.somewhat > feedback.resultsAnalysisCounts.yes &&
+                      feedback.resultsAnalysisCounts.somewhat > feedback.resultsAnalysisCounts.no}">
+                        {{feedback.resultsAnalysisCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Is there at least one chart or figure that clearly summarizes the data results?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsIncludeVisualsCounts.yes > feedback.resultsIncludeVisualsCounts.no &&
+                      feedback.resultsIncludeVisualsCounts.yes > feedback.resultsIncludeVisualsCounts.somewhat}">
+                        {{feedback.resultsIncludeVisualsCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsIncludeVisualsCounts.no > feedback.resultsIncludeVisualsCounts.yes &&
+                      feedback.resultsIncludeVisualsCounts.no > feedback.resultsIncludeVisualsCounts.somewhat}">
+                        {{feedback.resultsIncludeVisualsCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsIncludeVisualsCounts.somewhat > feedback.resultsIncludeVisualsCounts.yes &&
+                      feedback.resultsIncludeVisualsCounts.somewhat > feedback.resultsIncludeVisualsCounts.no}">
+                        {{feedback.resultsIncludeVisualsCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsUnderstandableVisualsCounts.yes > feedback.resultsUnderstandableVisualsCounts.no &&
+                      feedback.resultsUnderstandableVisualsCounts.yes > feedback.resultsUnderstandableVisualsCounts.somewhat}">
+                        {{feedback.resultsUnderstandableVisualsCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsUnderstandableVisualsCounts.no > feedback.resultsUnderstandableVisualsCounts.yes &&
+                      feedback.resultsUnderstandableVisualsCounts.no > feedback.resultsUnderstandableVisualsCounts.somewhat}">
+                        {{feedback.resultsUnderstandableVisualsCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.resultsUnderstandableVisualsCounts.somewhat > feedback.resultsUnderstandableVisualsCounts.yes &&
+                      feedback.resultsUnderstandableVisualsCounts.somewhat > feedback.resultsUnderstandableVisualsCounts.no}">
+                        {{feedback.resultsUnderstandableVisualsCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.resultsFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="discussion" ng-show="discussionConclusionsContent">
+                <h3 ng-class="{'green': feedback.discussionConclusionsRatingAvg > 3, 'yellow': feedback.discussionConclusionsRatingAvg === 3,
+                'red': feedback.discussionConclusionsRatingAvg < 3}">{{feedback.discussionConclusionsRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.discussionConclusionsRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.discussionConclusionsRatingAvg > 3, 'yellow': feedback.discussionConclusionsRatingAvg === 3,
+                'red': feedback.discussionConclusionsRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsSignificanceCounts.yes > feedback.discussionConclusionsSignificanceCounts.no &&
+                      feedback.discussionConclusionsSignificanceCounts.yes > feedback.discussionConclusionsSignificanceCounts.somewhat}">
+                        {{feedback.discussionConclusionsSignificanceCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsSignificanceCounts.no > feedback.discussionConclusionsSignificanceCounts.yes &&
+                      feedback.discussionConclusionsSignificanceCounts.no > feedback.discussionConclusionsSignificanceCounts.somewhat}">
+                        {{feedback.discussionConclusionsSignificanceCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsSignificanceCounts.somewhat > feedback.discussionConclusionsSignificanceCounts.yes &&
+                      feedback.discussionConclusionsSignificanceCounts.somewhat > feedback.discussionConclusionsSignificanceCounts.no}">
+                        {{feedback.discussionConclusionsSignificanceCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author discuss any problems with their approach?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsProblemsCounts.yes > feedback.discussionConclusionsProblemsCounts.no &&
+                      feedback.discussionConclusionsProblemsCounts.yes > feedback.discussionConclusionsProblemsCounts.somewhat}">
+                        {{feedback.discussionConclusionsProblemsCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsProblemsCounts.no > feedback.discussionConclusionsProblemsCounts.yes &&
+                      feedback.discussionConclusionsProblemsCounts.no > feedback.discussionConclusionsProblemsCounts.somewhat}">
+                        {{feedback.discussionConclusionsProblemsCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsProblemsCounts.somewhat > feedback.discussionConclusionsProblemsCounts.yes &&
+                      feedback.discussionConclusionsProblemsCounts.somewhat > feedback.discussionConclusionsProblemsCounts.no}">
+                        {{feedback.discussionConclusionsProblemsCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Are you convinced that the outcome of the research is interesting and/or important?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsInterestingCounts.yes > feedback.discussionConclusionsInterestingCounts.no &&
+                      feedback.discussionConclusionsInterestingCounts.yes > feedback.discussionConclusionsInterestingCounts.somewhat}">
+                        {{feedback.discussionConclusionsInterestingCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsInterestingCounts.no > feedback.discussionConclusionsInterestingCounts.yes &&
+                      feedback.discussionConclusionsInterestingCounts.no > feedback.discussionConclusionsInterestingCounts.somewhat}">
+                        {{feedback.discussionConclusionsInterestingCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsInterestingCounts.somewhat > feedback.discussionConclusionsInterestingCounts.yes &&
+                      feedback.discussionConclusionsInterestingCounts.somewhat > feedback.discussionConclusionsInterestingCounts.no}">
+                        {{feedback.discussionConclusionsInterestingCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Do you find the research to be of significance for the ecology of New York Harbor or New York City?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.disccusionConclusionsEcologyCounts.yes > feedback.disccusionConclusionsEcologyCounts.no &&
+                      feedback.disccusionConclusionsEcologyCounts.yes > feedback.disccusionConclusionsEcologyCounts.somewhat}">
+                        {{feedback.disccusionConclusionsEcologyCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.disccusionConclusionsEcologyCounts.no > feedback.disccusionConclusionsEcologyCounts.yes &&
+                      feedback.disccusionConclusionsEcologyCounts.no > feedback.disccusionConclusionsEcologyCounts.somewhat}">
+                        {{feedback.disccusionConclusionsEcologyCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.disccusionConclusionsEcologyCounts.somewhat > feedback.disccusionConclusionsEcologyCounts.yes &&
+                      feedback.disccusionConclusionsEcologyCounts.somewhat > feedback.disccusionConclusionsEcologyCounts.no}">
+                        {{feedback.disccusionConclusionsEcologyCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsNextStepsCounts.yes > feedback.discussionConclusionsNextStepsCounts.no &&
+                      feedback.discussionConclusionsNextStepsCounts.yes > feedback.discussionConclusionsNextStepsCounts.somewhat}">
+                        {{feedback.discussionConclusionsNextStepsCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsNextStepsCounts.no > feedback.discussionConclusionsNextStepsCounts.yes &&
+                      feedback.discussionConclusionsNextStepsCounts.no > feedback.discussionConclusionsNextStepsCounts.somewhat}">
+                        {{feedback.discussionConclusionsNextStepsCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.discussionConclusionsNextStepsCounts.somewhat > feedback.discussionConclusionsNextStepsCounts.yes &&
+                      feedback.discussionConclusionsNextStepsCounts.somewhat > feedback.discussionConclusionsNextStepsCounts.no}">
+                        {{feedback.discussionConclusionsNextStepsCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.discussionConclusionsFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="cited" ng-show="literatureCitedContent">
+                <h3 ng-class="{'green': feedback.literatureCitedRatingAvg > 3, 'yellow': feedback.literatureCitedRatingAvg === 3,
+                'red': feedback.literatureCitedRatingAvg < 3}">{{feedback.literatureCitedRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.literatureCitedRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.literatureCitedRatingAvg > 3, 'yellow': feedback.literatureCitedRatingAvg === 3,
+                'red': feedback.literatureCitedRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Does the author list at least three sources or references in APA format?</label>
+                    <p>
+                      <span class="badge" ng-class="{'badge-info': feedback.literatureCitedSourcesCounts.yes > feedback.literatureCitedSourcesCounts.no &&
+                      feedback.literatureCitedSourcesCounts.yes > feedback.literatureCitedSourcesCounts.somewhat}">
+                        {{feedback.literatureCitedSourcesCounts.yes}}</span> Yes&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.literatureCitedSourcesCounts.no > feedback.literatureCitedSourcesCounts.yes &&
+                      feedback.literatureCitedSourcesCounts.no > feedback.literatureCitedSourcesCounts.somewhat}">
+                        {{feedback.literatureCitedSourcesCounts.no}}</span> No&nbsp;&nbsp;|&nbsp;&nbsp;
+                      <span class="badge" ng-class="{'badge-info': feedback.literatureCitedSourcesCounts.somewhat > feedback.literatureCitedSourcesCounts.yes &&
+                      feedback.literatureCitedSourcesCounts.somewhat > feedback.literatureCitedSourcesCounts.no}">
+                        {{feedback.literatureCitedSourcesCounts.somewhat}}</span> Somewhat
+                    </p>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.literatureCitedFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="acknowledgments" ng-show="acknowledgmentsContent">
+                <h3 ng-class="{'green': feedback.acknowledgmentsRatingAvg > 3, 'yellow': feedback.acknowledgmentsRatingAvg === 3,
+                'red': feedback.acknowledgmentsRatingAvg < 3}">{{feedback.acknowledgmentsRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.acknowledgmentsRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.acknowledgmentsRatingAvg > 3, 'yellow': feedback.acknowledgmentsRatingAvg === 3,
+                'red': feedback.acknowledgmentsRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.acknowledgmentsFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="other" ng-show="otherContent">
+                <h3 ng-class="{'green': feedback.otherRatingAvg > 3, 'yellow': feedback.otherRatingAvg === 3,
+                'red': feedback.otherRatingAvg < 3}">{{feedback.otherRatingAvg | number:1}}</h3>
+                <h4><raty-fa id="star4" score="feedback.otherRatingAvg" number="5" read-only="true"
+                ng-class="{'green': feedback.otherRatingAvg > 3, 'yellow': feedback.otherRatingAvg === 3,
+                'red': feedback.otherRatingAvg < 3}"></raty-fa></h4>
+                <hr/>
+                <div class="form-group">
+                    <label>Specific feedback or suggestions </label>
+                    <ul ng-repeat="comment in feedback.otherFeedback">
+                      <li><b>{{comment.author}}, {{comment.date}}:</b> {{comment.feedback}}</li>
+                    <ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeFunction()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

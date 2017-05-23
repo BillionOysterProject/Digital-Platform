@@ -9,7 +9,7 @@
 
   function menuConfig(Menus) {
     Menus.addMenuItem('topbar', {
-      title: 'People',
+      title: 'Community',
       state: 'profiles',
       type: 'dropdown',
       roles: ['user', 'team lead', 'team member', 'admin', 'team lead pending', 'team member pending'],
@@ -18,7 +18,7 @@
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Profile',
+      title: 'My Profile',
       state: 'profiles.main',
       roles: ['user', 'team lead', 'team member', 'admin', 'team lead pending', 'team member pending']
     });

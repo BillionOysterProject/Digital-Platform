@@ -52,6 +52,15 @@
                       </li>
                     </ul>
                 </li>
+                <li class="dropdown" id="memberFilter">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{(vm.filter.memberFilterName) ? vm.filter.memberFilterName : ''}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a ng-click="vm.memberFilterSelected()" ok-sel=".all">All Organizations</a></li>
+                      <li><a ng-click="vm.memberFilterSelected('mine')" ok-sel=".mine">My Organizations</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
 
@@ -70,7 +79,14 @@
                     </div>
                     <div class="panel-body text-center">
                         <h4><b>{{org.name}}</b></h4>
-                        <p><i class="fa fa-map-marker"></i> {{org.streetAddress}}, {{org.city}}, {{org.state}}</p>
+                        <p ng-show="org.streetAddress || org.city || org.state">
+                          <i class="fa fa-map-marker"></i>
+                          <span ng-show="org.streetAddress && org.city">{{org.streetAddress}},</span>
+                          <span ng-hide="org.streetAddress && org.city">{{org.streetAddress}}</span>
+                          <span ng-show="org.city && org.state">{{org.city}},</span>
+                          <span ng-hide="org.city && org.state">{{org.city}}</span>
+                          <span ng-show="org.state">{{org.state}}</span>
+                        </p>
                         <p class="text-muted small">{{org.description | limitTo:200}}</p>
                         <h6>{{vm.capitalizeFirstLetter(org.organizationType)}}</h6>
                         <hr ng-show="org.orgLeads && org.orgLeads.length > 0"/>

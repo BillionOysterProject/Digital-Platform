@@ -1,0 +1,61 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>Publications</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="vm.filter.searchString" ng-change="vm.searchChange()"
+                placeholder="Search for research posters by title, keyword, author, team, organization...">
+            </div>
+        </section>
+    </section>
+</div>
+<section class="content">
+    <section class="container-fluid">
+        <nav class="navbar">
+            <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member,team lead,admin">
+                <i class="glyphicon glyphicon-plus"></i> Create new poster
+            </a>
+        </nav>
+
+        <div class="alert alert-danger text-center" ng-show="vm.error">
+          <p ng-bind="vm.error"></p>
+        </div>
+        <div class="alert alert-info text-center" ng-show="vm.researches.length === 0 && vm.filter.searchString !== '' && !vm.error">
+            Sorry, no results found for that search term
+        </div>
+
+        <div class="alert alert-info text-center" ng-if="vm.researches.$resolved && vm.researches.length == 0 && vm.filter.searchString === ''" view-permissions="team member">
+            No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
+        </div>
+        <div class="alert alert-info text-center" ng-if="vm.researches.$resolved && vm.researches.length == 0 && vm.filter.searchString === ''" view-permissions="admin,team lead">
+            No research posters yet
+        </div>
+
+        <div class="row" id="research-list-isotope-container" isotope-container="" ng-cloak="">
+            <div ng-repeat="research in vm.researches track by research._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: research._id })">
+                    <div class="panel-body">
+                        <p>{{vm.getLongDate(research.created)}}</p>
+                        <h4>{{research.title | sanitize}}</h4>
+                        <!-- <small class="img-responsive" ng-bind-html="research.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="research.downloadImage" ng-src="{{research.downloadImage.path}}" class="img-responsive" />
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" ng-show="research.user && research.user.profileImageURL" class="img-responsive"
+                          ng-src="{{research.user.profileImageURL}}"/> {{research.user.displayName}}
+                        <br/><small>{{research.team.name}}, {{research.team.schoolOrg.name}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+
+<!-- MODALS -->
+
+<!--END OF MODALS-->

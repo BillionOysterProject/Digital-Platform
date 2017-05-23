@@ -1,0 +1,208 @@
+<div class="modal fade" id="modal-research-feedback" tabindex="-1" role="dialog" aria-labelledby="modal-research-feedback">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" ng-hide="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Send feedback to the author</h4>
+        <p>Thanks for contributing input! All feedback is appreciated.</p>
+      </div>
+
+      <form name="form.researchFeedbackForm" ng-submit="send(form.researchFeedbackForm.$valid)" novalidate>
+        <div class="modal-body">
+          <hr/>
+          <h4 class="blue">Title</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="starResearchTitle" class="control-label">Give a rating using 1-5 stars</label><br>
+                <h4 class="blue"><raty-fa id="starResearchTitle" score="feedback.title.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="createResearchTitle">Is the title creative and to the point?</label>
+              <radio-agreement name="createResearchTitle" ng-model="feedback.title.creativeToThePoint"></radio-agreement>
+              <label for="attentionGrabbingResearchTitle">Does the title quickly grab the audience's attention and make them want to learn more about the research?</label>
+              <radio-agreement name="attentionGrabbingResearchTitle" ng-model="feedback.title.attentionGrabbing"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	  <label class="control-label" for="feedbackResearchTitle">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchTitle" ng-model="feedback.title.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Introduction</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchIntro" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchIntro" score="feedback.introduction.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="hookResearchIntro">Does the intro "hook" the audience and get them interested in the issue or problem right away?</label>
+              <radio-agreement name="hookResearchIntro" ng-model="feedback.introduction.hookTheAudience"></radio-agreement>
+              <label for="sourcesResearchIntro">Does the intro cite at least three sources of published, primary literature that relates to the research? </label>
+              <radio-agreement name="sourcesResearchIntro" ng-model="feedback.introduction.citeThreeSources"></radio-agreement>
+              <label for="hypothesisResearchIntro">Does the intro clearly state the hypothesis or central question of the research?</label>
+              <radio-agreement name="hypothesisResearchIntro" ng-model="feedback.introduction.clearHypothesis"></radio-agreement>
+              <label for="visualResearchIntro">Does the intro include at least one interesting photograph or visual that shows the research in action?</label>
+              <radio-agreement name="visualResearchIntro" ng-model="feedback.introduction.includeOneVisual"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchIntro">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchIntro" ng-model="feedback.introduction.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Materials and methods</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchMaterials" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchMaterials" score="feedback.materialMethods.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="explanationResearchMaterials">Does the author clearly explain their experimental approach, steps, procedure and equipment used?</label>
+              <radio-agreement name="explanationResearchMaterials" ng-model="feedback.materialMethods.clearExplanation"></radio-agreement>
+              <label for="analysisResearchMaterials">Does the author describe how they analyzed data and how that analysis helped or did not help answer their hypothesis?</label>
+              <radio-agreement name="analysisResearchMaterials" ng-model="feedback.materialMethods.describeAnalysis"></radio-agreement>
+              <label for="visualsResearchMaterials">Does the author include diagrams, flowcharts, pictures, or labeled drawings that help to illustrate the experimental design?</label>
+              <radio-agreement name="visualsResearchMaterials" ng-model="feedback.materialMethods.includeVisuals"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchMaterialMethods">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchMaterialMethods" ng-model="feedback.materialMethods.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Results</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchResults" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchResults" score="feedback.results.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="conclusionResearchResults">Does the author state whether the research or experimental procedure actually worked or not?</label>
+              <radio-agreement name="conclusionResearchResults" ng-model="feedback.results.stateConclusion"></radio-agreement>
+              <label for="surprisesResearchResults">Does the author describe any unexpected changes or important surprises?</label>
+              <radio-agreement name="surprisesResearchResults" ng-model="feedback.results.describeSurprises"></radio-agreement>
+              <label for="analysisResearchResults">Does the author provide a quantitative analysis of the data?</label>
+              <radio-agreement name="analysisResearchResults" ng-model="feedback.results.quantitativeAnalysis"></radio-agreement>
+              <label for="oneVisualResearchResults">Is there at least one chart or figure that clearly summarizes the data results?</label>
+              <radio-agreement name="oneVisualResearchResults" ng-model="feedback.results.includeOneVisual"></radio-agreement>
+              <label for="understandableVisualsResearchResults">Do the charts or figures speak for themselves? That is, can you understand what they are saying without additional written explanation?</label>
+              <radio-agreement name="understandableVisualsResearchResults" ng-model="feedback.results.understandableVisuals"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchResults">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchResults" ng-model="feedback.results.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Discussion/Conclusions</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchDiscussion" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchDiscussion" score="feedback.discussionConclusions.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="significanceResearchDiscussion">Does the author discuss the significance of the results, important lessons or conclusions to be drawn from the research?</label>
+              <radio-agreement name="significanceResearchDiscussion" ng-model="feedback.discussionConclusions.significancePresent"></radio-agreement>
+              <label for="problemsResearchDiscussion">Does the author discuss any problems with their approach?</label>
+              <radio-agreement name="problemsResearchDiscussion" ng-model="feedback.discussionConclusions.discussProblems"></radio-agreement>
+              <label for="interestingResearchDiscussion">Are you convinced that the outcome of the research is interesting and/or important?</label>
+              <radio-agreement name="interestingResearchDiscussion" ng-model="feedback.discussionConclusions.interestingImportant"></radio-agreement>
+              <label for="ecologyResearchDiscussion">Do you find the research to be of significance for the ecology of New York Harbor or New York City?</label>
+              <radio-agreement name="ecologyResearchDiscussion" ng-model="feedback.discussionConclusions.significantToEcology"></radio-agreement>
+              <label for="nextStepsResearchDiscussion">Does the author explain the next steps she/he will take to further address the research or make suggestions for what other researchers should do in the same field?</label>
+              <radio-agreement name="nextStepsResearchDiscussion" ng-model="feedback.discussionConclusions.explainsNextSteps"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchDiscussion">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchDiscussion" ng-model="feedback.discussionConclusions.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Literature cited</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchCited" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchCited" score="feedback.literatureCited.rating" number="5"></raty-fa></h4>
+              </div>
+              <label for="sourcesResearchCited">Does the author list at least three sources or references in APA format?</label>
+              <radio-agreement name="sourcesResearchCited" ng-model="feedback.literatureCited.citeThreeSourcesCorrectly"></radio-agreement>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchCited">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="8" name="feedbackResearchCited" ng-model="feedback.literatureCited.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <h4 class="blue">Acknowledgments</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchAcknowledgments" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchAcknowledgments" score="feedback.acknowledgments.rating" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchAcknowledgments">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4" name="feedbackResearchAcknowledgments" ng-model="feedback.acknowledgments.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr ng-show="research.other && research.other.content"/>
+          <h4 class="blue" ng-show="research.other && research.other.content">{{(research.other && research.other.title) ? research.other.title : 'Other'}}</h4>
+          <div class="row" ng-show="research.other && research.other.content">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="starResearchOther" class="control-label">Give a rating using 1-5 stars</label><br>
+                  <h4 class="blue"><raty-fa id="starResearchOther" score="feedback.other.rating" number="5"></raty-fa></h4>
+              </div>
+            </div>
+            <div class="col-md-6">
+            	<div class="form-group">
+            	    <label class="control-label" for="feedbackResearchOther">Specific feedback or suggestions</label>
+                <textarea class="form-control" rows="4" name="feedbackResearchOther" ng-model="feedback.other.feedbackSuggestions"></textarea>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+          	<div class="col-sm-12">
+                <h4 class="blue">General comments</h4>
+              	<div class="form-group">
+                  <textarea class="form-control" ng-model="feedback.generalComments"></textarea>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal-content" ng-show="sent">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Feedback submitted!</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

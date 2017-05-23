@@ -57,7 +57,8 @@ module.exports = {
         'public/lib/angular-moment/angular-moment.min.js',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
         'public/lib/angular-isotope/dist/angular-isotope.js',
-        'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js'
+        'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js',
+        'public/lib/angular-socialshare/dist/angular-socialshare.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

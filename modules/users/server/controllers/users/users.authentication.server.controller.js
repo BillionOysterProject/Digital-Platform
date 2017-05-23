@@ -14,7 +14,8 @@ var path = require('path'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   async = require('async'),
   Team = mongoose.model('Team'),
-  TeamRequest = mongoose.model('TeamRequest');
+  TeamRequest = mongoose.model('TeamRequest'),
+  queryString = require('query-string');
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -232,7 +233,9 @@ exports.validateNewUserToken = function (req, res) {
       return res.redirect('/claim-user/invalid');
     }
 
-    res.redirect('/claim-user/' + req.params.token);
+    var usernameParams = queryString.stringify({ username: user.username });
+
+    res.redirect('/claim-user/' + req.params.token + '?' + usernameParams);
   });
 };
 

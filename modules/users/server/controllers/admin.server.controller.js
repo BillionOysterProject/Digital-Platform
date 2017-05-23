@@ -13,6 +13,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
+  queryString = require('query-string'),
   crypto = require('crypto');
 
 /**
@@ -547,6 +548,8 @@ var updateUserInternal = function(user, userJSON, successCallback, errorCallback
 var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, memberOrLead, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
+  var usernameParams = queryString.stringify({ username: user.username });
+
   email.sendEmailTemplate(user.email, 'You\'ve been invited by ' + leadName + ' to be a ' + memberOrLead + ' of the ' +
   teamOrOrg + ' ' + teamOrOrgName, 'member_invite', {
     FirstName: user.firstName,
@@ -554,7 +557,8 @@ var sendInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, m
     TeamOrOrg: teamOrOrg,
     TeamOrOrgName: teamOrOrgName,
     MemberOrLead: memberOrLead,
-    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
+    Username: user.username,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token + '?' + usernameParams
   }, function(info) {
     successCallback(info);
   }, function(errorMessage) {
@@ -802,13 +806,16 @@ exports.updateUser = function (req, res) {
 var sendReminderInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOrgName, token, successCallback, errorCallback) {
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
+  var usernameParams = queryString.stringify({ username: user.username });
+
   email.sendEmailTemplate(user.email, 'Reminder: You\'ve been invited by ' + leadName + ' to join the ' + teamOrOrg + ' ' + teamOrOrgName,
   'invite_reminder', {
     FirstName: user.firstName,
     LeadName: leadName,
     TeamOrOrg: teamOrOrg,
     TeamOrOrgName: teamOrOrgName,
-    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token
+    Username: user.username,
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token + '?' + usernameParams
   }, function(info) {
     successCallback();
   }, function(errorMessage) {

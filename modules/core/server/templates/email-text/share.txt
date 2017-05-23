@@ -1,0 +1,8 @@
+Hi <%= ShareToName %>,
+
+<%= ShareMessage %>
+
+Visit <%= ShareLink %> to see it.
+
+Thanks!
+<%= ShareFromName %>
