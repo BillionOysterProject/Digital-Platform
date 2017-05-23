@@ -30,7 +30,6 @@
               $scope.sent = true;
             })
             .error(function(data, status, headers, config) {
-              console.log('data', data);
               $scope.error = data.message;
             });
           };

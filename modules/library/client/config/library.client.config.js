@@ -12,7 +12,7 @@
       title: 'My Library',
       state: 'library.user',
       roles: ['admin', 'team lead', 'team lead pending', 'partner'],
-      position: 3
+      position: 1
     });
   }
 })();

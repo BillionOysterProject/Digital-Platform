@@ -114,6 +114,20 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    researchHeaderImageUpload: {
+      s3dest: 'uploads/researches/img/header-images/',
+      dest: './modules/researches/client/img/header-image/uploads/',
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
+    researchDownloadImageUpload: {
+      s3dest: 'uploads/researches/img/downloads/',
+      dest: '/tmp/',
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     lessonFeaturedImageUpload: {
       s3dest: 'uploads/lessons/img/featured-images/',
       dest: './modules/lessons/client/img/featured-image/uploads/', // Lesson upload destination path

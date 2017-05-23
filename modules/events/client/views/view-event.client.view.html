@@ -9,17 +9,19 @@
                         'col-xs-12': (vm.past === true || vm.isTeamMember)}">
                             <span ng-show="vm.event.dates && vm.event.dates.length > 1"
                               ng-repeat="date in vm.event.dates">
-                              <!-- vm.getEventDayOfWeekShort(date.startDateTime) or vm.getEventDayOfWeekLong(date.startDateTime)-->
                               <h3><b>{{vm.getEventDate(date.startDateTime)}}</b>
                                 {{vm.getEventYear(date.startDateTime)}}</h3>
+                              <h6>{{vm.getEventDayOfWeekLong(date.startDateTime)}}</h6>
                               <h5>{{vm.getEventTimeRange(date.startDateTime, date.endDateTime)}}</h5>
                             </span>
 
                             <span ng-show="vm.event.dates && vm.event.dates.length === 1" id="singleDateDisplay">
                               <h2><b>{{vm.getEventMonthShort(vm.event.dates[0].startDateTime)}}<br/>
                                 <span class="h1">{{vm.getEventDay(vm.event.dates[0].startDateTime)}}</span></b>
-                                <br/>{{vm.getEventYear(vm.event.dates[0].startDateTime)}}</h2>
-                                <h5>{{vm.getEventTimeRange(vm.event.dates[0].startDateTime, vm.event.dates[0].endDateTime)}}</h5>
+                                <br/>{{vm.getEventYear(vm.event.dates[0].startDateTime)}}
+                              </h2>
+                              <h6>{{vm.getEventDayOfWeekLong(vm.event.dates[0].startDateTime)}}</h6>
+                              <h5>{{vm.getEventTimeRange(vm.event.dates[0].startDateTime, vm.event.dates[0].endDateTime)}}</h5>
                             </span>
                         </div>
 
@@ -166,19 +168,23 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Team Lead Type</th>
                             <th>Organization</th>
-                            <th>Teams</th>
+                            <!--<th>Teams</th>-->
                             <th>Email</th>
                             <th>Date Registered</th>
                             <th>Notes</th>
                             <th ng-show="vm.today || vm.past">Attended</th>
+                            <!--TIFF: Uncomment when you wire up the unregister button: 
+                            <th>Unregister</th>-->
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="registrant in vm.event.registrants">
                             <td>{{registrant.user.displayName}}</td>
+                            <td>{{registrant.user.teamLeadType}}</td>
                             <td>{{registrant.user.schoolOrg.name}}</td>
-                            <td>{{registrant.user.teams}}</td>
+                            <!--<td>{{registrant.user.teams}}</td>-->
                             <td>{{registrant.user.email}}</td>
                             <td>{{vm.getRegistrationDate(registrant.registrationDate)}}</td>
                             <td class="col-sm-3">
@@ -187,18 +193,20 @@
                               <a href="#" class="red" ng-click="vm.openEventNote(registrant)" ng-show="registrant.note">
                                 <i class="fa fa-comment"></i> {{registrant.note | limitTo: 50}}</a>
                             </td>
-                            <td ng-show="vm.today || vm.past">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a class="btn" ng-class="{'btn-danger': registrant.attended === false,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                            <td ng-show="vm.today || vm.past" width="85px">
+                                <div class="btn-group" role="group">
+                                    <a class="btn" ng-class="{'btn-primary': registrant.attended === false,
+                                      'btn-shaded': (registrant.attended === undefined || registrant.attended === null ||
                                       registrant.attended === true)}"
                                       ng-click="vm.notAttendedEvent(registrant)"><i class="fa fa-times"></i></a>
                                     <a class="btn" ng-class="{'btn-success': registrant.attended === true,
-                                      'btn-link': (registrant.attended === undefined || registrant.attended === null ||
+                                      'btn-shaded': (registrant.attended === undefined || registrant.attended === null ||
                                       registrant.attended == false)}"
                                       ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
                                 </div>
                             </td>
+                            <!--TIFF: Wire up 
+                            <td><a class="btn btn-danger" data-toggle="modal" data-target="#modal-event-adminunregister" title="Unregister"><i class="fa fa-trash"></i></a></td>-->
                         </tr>
                     </tbody>
                 </table>
@@ -242,6 +250,23 @@
                       </leaflet-map>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--TIFF: Wire up -->
+<div class="modal fade" id="modal-event-adminunregister">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Are you sure you want to unregister <b class="red">{{registrant.user.displayName}}</b> from the <b class="red">{{event.title}}</b> on <b class="red">{{dateTimeString}}</b>?</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{registrant.user.displayName}} will be removed from the event registration. To rejoin the registrant list, they must visit the page and register again.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

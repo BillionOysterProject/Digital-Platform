@@ -1,0 +1,278 @@
+<section class="content shaded">
+  <section class="container">
+    <form name="vm.form.researchForm" novalidate>
+      <fieldset>
+        <div class="container-fluid">
+          <div class="page-header">
+            <div class="pull-right">
+                <!-- Show saving when saving -->
+                <h6 class="navbar-text green" ng-show="vm.saving">
+                  <i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+
+                <!-- Show status -->
+                <h6 class="navbar-text" ng-show="vm.research.status === 'draft'">Draft</h6>
+                <h6 class="navbar-text blue" ng-show="vm.research.status === 'pending'">Awaiting Approval</h6>
+                <h6 class="navbar-text red" ng-show="vm.research.status === 'returned'">Returned</h6>
+                <h6 class="navbar-text" ng-show="vm.research.status === 'published'">Published</h6>
+            </div>
+            <h1>{{vm.research._id ? 'Edit poster' : 'Create a new poster'}}</h1>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+               <!--may have layouts in the future:
+               <div class="col-md-4">
+                  <label>Layout *</label>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                        <img class="img-thumbnail" alt="Layout 1" src="modules/core/client/img/icons/poster-layout1.png" />
+                        Layout 1
+                      </label>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                        <img class="img-thumbnail" alt="Layout 2" src="modules/core/client/img/icons/poster-layout2.png" />
+                        Layout 2
+                      </label>
+                    </div>
+                  </div>
+                </div>-->
+
+                <div class="col-md-6">
+                  <div class="form-group" show-errors>
+                    <label for="color" class="control-label required">Color *</label><br/>
+
+                    <!--TODO: Can each of the below icons, when clicked, fill in the colorpicker input with their hex number? (Trying to give standard color options, but also let the user select their own color using the input). If this is too complicated, we can do something else. -->
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <a ng-click="vm.changeColor('#ea6158')"><i class="fa fa-circle fa-3x red"></i></a>&nbsp;&nbsp;<!-- #ea6158 -->
+                        <a ng-click="vm.changeColor('#943234')"><i class="fa fa-circle fa-3x crimson"></i></a>&nbsp;&nbsp;<!-- #943234 -->
+                        <a ng-click="vm.changeColor('#fbe8ac')"><i class="fa fa-circle fa-3x lightyellow"></i></a>&nbsp;&nbsp;<!-- #fbe8ac -->
+                        <a ng-click="vm.changeColor('#a0d0cb')"><i class="fa fa-circle fa-3x lightblue"></i></a>&nbsp;&nbsp;<!-- #a0d0cb -->
+                        <a ng-click="vm.changeColor('#426ca9')"><i class="fa fa-circle fa-3x blue"></i></a>&nbsp;&nbsp;<!-- #426ca9 -->
+                        <a ng-click="vm.changeColor('#2c3c56')"><i class="fa fa-circle fa-3x darkblue"></i></a><!-- #2c3c56 -->
+                      </div>
+                    </div><br/>
+
+                    <input colorpicker colorpicker-size="200" type="text" class="form-control"
+                    placeholder="#426ca9" name="color" id="color" ng-model="vm.research.color" required />
+                    <span class="help-block">Choose from one of the colors above, or click the input field to pick any color. This color will be used throughout the poster design.</span>
+                    <div ng-messages="vm.form.researchForm.color.$error" role="alert">
+                        <p class="help-block error-text" ng-message="required">Color is required.</p>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group" show-errors>
+                    <label for="font" class="control-label required">Font *</label>
+                    <select class="form-control" ng-model="vm.research.font" required>
+                      <option value="Serif">Serif</option>
+                      <!--Use Example 5 from here: http://bootstrapformhelpers.com/googlefont/ -->
+                    <!-- </select>
+                    <span class="help-block">This font will be used for headings/etc throughout your poster.</span>
+                    <div ng-messages="vm.form.researchForm.font.$error" role="alert">
+                        <p class="help-block error-text" ng-message="required">Font is required.</p>
+                    </div>
+                  </div> -->
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group" show-errors>
+                    <label for="image" class="control-label">Header Image</label>
+                    <single-image-drop-zone uploader="vm.headerImageUploader" image-url="vm.headerImageURL"
+                    image-alt="Header Image" id="research-header-image"></single-image-drop-zone>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Team -->
+          <div class="panel panel-default" ng-show="vm.myTeams && vm.myTeams.length > 1">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="blue">Team</h3>
+                  <select class="form-control" name="team" id="team" ng-model="vm.research.team" ng-change="getTeamLeadNames()"
+                  ng-options="team._id as team.name for team in vm.myTeams" ng-required="vm.myTeams && vm.myTeams.length > 1"></select>
+                  <div ng-messages="vm.form.researchForm.team.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Team is required.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Title</h3>
+                  <p>State the focus of your research as a question or problem. Be creative and succinct. The purpose of the title is to grab your audience's attention as they are walking by your poster and immediately make them think, "wow that's an interesting idea, I want to learn more!"</p>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group" show-errors>
+                    <label for="title" class="control-label required">Title *</label>
+                    <input class="form-control" name="title" id="title" ng-model="vm.research.title"
+                    required/>
+                    <div ng-messages="vm.form.researchForm.title.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Title is required.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Intro -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Introduction</h3>
+                  <p>The purpose of the introduction is to "hook" your audience into the core idea of your research. Provide background (tell a brief story) on how you arrived at your research question. Get your viewer interested in the issue/problem. Then place your issue in the context of other similar research. Briefly cite at least three sources of published, primary literature that relates to your research. Pitch your hypothesis! Include at least one interesting photograph or visual that shows your research in action. Do not include a data chart in your intro - save this for the results section.</p>
+                  <em>[approximately 200 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="intro" in-title=""
+                ng-model="vm.research.intro" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Materials & Methods -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Materials & Methods</h3>
+                  <p>Briefly describe the experimental approach you used to test your hypothesis. Explain why you decided to conduct your research in the way you did. Describe your procedure, the steps, and the equipment you used. Use process diagrams or flowcharts to illustrate your experimental design. Include photographs or labeled drawings of equipment or organisms involved in the experiment. Describe exactly how you analyzed the data and how that analysis helped (or didn't help) answer your hypothesis.</p>
+                  <em>[approximately 250 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="methods" in-title=""
+                ng-model="vm.research.methods" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Results</h3>
+                  <p>First, state whether your experimental procedure actually worked or not. State whether you experienced any unexpected changes or important surprises in the research. Give the audience a descriptive (qualitative) overview of your results.  Then dive into quantitative analysis of your data. Include at least one chart or figure that clearly summarizes your data results. Refer to the chart(s) in your writing. Your charts/figures should have simple and easy to read keys or legends, so that the audience can easily understand what they are saying without needing to read an explanation. This is always the largest section of the poster (except if you have no data).</p>
+                  <em>[approximately 300 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="results" in-title=""
+                ng-model="vm.research.results" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discussion & Conclusions -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Discussion & Conclusions</h3>
+                  <p>Explain your results. Did the experiment work? Are the results of your data analysis statistically significant? Are the results of your research scientifically important? If yes, what are the important lessons or conclusions to be drawn from your research? If not, was there a problem with your experiment or your approach, or with your materials and methods, or something else?  Whether your results are statistically significant or not, try to convince the audience that the outcome of your research is interesting and important.  In particular, why is your research important to the ecology of New York Harbor? To oysters or other organisms? To people and the city? Lastly, explain to the audience any next steps you plan to take in continuing your research and make suggestions for what other researchers and scientists might do based on your results. Connect your findings to other published work and cite references as needed.</p>
+                  <em>[approximately 300 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="discussion" in-title=""
+                ng-model="vm.research.discussion" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Literature cited -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Literature cited</h3>
+                  <p>All BOP research should follow <a href="http://www.bibme.org/citation-guide/apa/" target="_blank">APA format</a>. APA format requires you to write (author’s last name, year of publication) in parenthesis within the text and then list the full citation in alphabetical order in the bibliography.</p>
+                  <em>[at least 3 citations]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="cited" in-title=""
+                ng-model="vm.research.cited" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acknowledgments -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Acknowledgments</h3>
+                  <p>Here you can thank anyone who supported or assisted your research such as teachers, mentors, peers, parents, community members or others. You can also thank people or organizations who donated supplies or money to your research.  Be formal and concise.</p>
+                  <em>[approximately 50 words]</em>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="acknowledgments" in-title=""
+                ng-model="vm.research.acknowledgments" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <!-- Other -->
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h3 class="blue">Other</h3>
+                  <p>This is an optional section for you to add anything else that is not included above.</p>
+                  <div class="form-group" show-errors>
+                    <label for="otherTitle" class="control-label">Heading</label>
+                    <input class="form-control" name="otherTitle" id="otherTitle" ng-model="vm.research.other.title"/>
+                    <div ng-messages="vm.form.researchForm.otherTitle.$error" role="alert">
+                      <p class="help-block error-text" ng-message="required">Title is required.</p>
+                    </div>
+                  </div>
+                </div>
+                <wysiwyg-editor outer-column="col-md-8" name="otherContent" in-title=""
+                ng-model="vm.research.other.content" label-class="control-label"></wysiwyg-editor>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-danger" ng-show="vm.form.researchForm.$dirty && vm.form.researchForm.$submitted &&
+          vm.form.researchForm.$invalid && (vm.form.researchForm.$error || vm.error.length > 0)">
+            <h4>Sorry, you can't submit just yet!</h4>
+            <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.researchForm.$error track by $index">
+                <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
+            </ul>
+            <ul class="list-unstyled">
+              <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
+            </ul>
+          </div>
+          <div>
+            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+            <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
+            <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
+            <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Preview</a>
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid">
+              {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Resubmit poster' : 'Submit poster'}}</a>
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid" ng-show="vm.isTeamLead || vm.isAdmin">
+              {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Republish poster' : 'Publish poster'}}</a>
+
+            <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+</section>
+
+
+
+<!--MODALS-->
+  <saved-research-modal team-leads="{{}}"></saved-research-modal>
+  <updated-research-modal></updated-research-modal>
+  <delete-research-modal close-function="vm.confirmDeleteResearch"></delete-research-modal>
+  <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
+  <preview-research-modal poster-image="vm.downloadImageURL" close-function="vm.closeResearchPreviewModal"></preview-research-modal>

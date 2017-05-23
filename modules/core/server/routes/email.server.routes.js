@@ -12,4 +12,6 @@ module.exports = function (app) {
   app.route('/api/email/general-feedback').post(email.sendGeneralFeedback);
 
   app.route('/api/email/unit-feedback').post(email.sendUnitFeedback);
+
+  app.route('/api/email/share').post(email.sendShare);
 };

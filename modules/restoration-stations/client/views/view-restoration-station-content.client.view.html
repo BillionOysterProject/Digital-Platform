@@ -19,9 +19,12 @@
                     {{station.status}}</span>
                 </h3>
                 <h5 id="ors-view-location">
-                    {{station.bodyOfWater}}, {{station.boroughCounty}}<br/>
+                    <span ng-show="station.bodyOfWater && station.boroughCounty">{{station.bodyOfWater}}, {{station.boroughCounty}}<br/></span>
+                    <span ng-show="station.bodyOfWater && !station.boroughCounty">{{station.bodyOfWater}}<br/></span>
+                    <span ng-show="!station.bodyOfWater && station.boroughCounty">{{station.boroughCounty}}<br/></span>
                     <small class="text-muted">{{station.latitude}}, {{station.longitude}}</small>
                 </h5>
+                <p id="ors-view-tag" ng-show="station.tagNumber">Tag #{{station.tagNumber}}</p>
             </div>
             <div class="col-md-3" id="ors-view-owner">
                 <br/>

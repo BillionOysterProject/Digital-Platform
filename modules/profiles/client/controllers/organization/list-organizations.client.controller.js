@@ -20,6 +20,8 @@
     vm.filter = {
       type: '',
       typeName: '',
+      memberFilter: true,
+      memberFilterName: 'My Organizations',
       searchString: '',
       sort: ''
     };
@@ -29,6 +31,8 @@
         type: '',
         typeName: '',
         searchString: '',
+        memberFilter: false,
+        memberFilterName: 'All Organizations',
         sort: ''
       };
       vm.findOrganizations();
@@ -37,6 +41,7 @@
     vm.findOrganizations = function() {
       SchoolOrganizationsService.query({
         type: vm.filter.type,
+        mySchoolOrgs: vm.filter.memberFilter,
         searchString: vm.filter.searchString,
         approvedOnly: true,
         showTeams: true,
@@ -67,6 +72,17 @@
     vm.typeSelected = function(selection) {
       vm.filter.type = (selection) ? selection.value : '';
       vm.filter.typeName = (selection) ? selection.name : '';
+      vm.findOrganizations();
+    };
+
+    vm.memberFilterSelected = function(selection) {
+      if (selection === 'mine') {
+        vm.filter.memberFilter = true;
+        vm.filter.memberFilterName = 'My Organizations';
+      } else {
+        vm.filter.memberFilter = false;
+        vm.filter.memberFilterName = 'All Organizations';
+      }
       vm.findOrganizations();
     };
 

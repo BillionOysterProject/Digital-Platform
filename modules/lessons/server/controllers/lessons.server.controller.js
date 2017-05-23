@@ -65,16 +65,24 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var activity = new LessonActivity({
+          user: req.user,
+          lesson: lesson,
+          activity: 'submitted'
+        });
 
-        email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-          TeamLeadName: req.user.displayName,
-          LessonName: lesson.title,
-          LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
-        }, function(info) {
-          res.json(lesson);
-        }, function(errorMessage) {
-          res.json(lesson);
+        activity.save(function(err) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+            TeamLeadName: req.user.displayName,
+            LessonName: lesson.title,
+            LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
+          }, function(info) {
+            res.json(lesson);
+          }, function(errorMessage) {
+            res.json(lesson);
+          });
         });
       }
     });
@@ -262,7 +270,15 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(lesson);
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: lesson,
+            activity: 'submitted'
+          });
+
+          activity.save(function(err) {
+            res.json(lesson);
+          });
         }
       });
     } else {
@@ -293,20 +309,28 @@ exports.publish = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var activity = new LessonActivity({
+          user: req.user,
+          lesson: lesson,
+          activity: 'published'
+        });
 
-        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-        'lesson_approved', {
-          FirstName: lesson.user.firstName,
-          LessonName: lesson.title,
-          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-        },
-        function(response) {
-          res.json(lesson);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+        activity.save(function(err) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+          'lesson_approved', {
+            FirstName: lesson.user.firstName,
+            LessonName: lesson.title,
+            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          },
+          function(response) {
+            res.json(lesson);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
           });
         });
       }
@@ -334,21 +358,30 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var activity = new LessonActivity({
+          user: req.user,
+          lesson: lesson,
+          activity: 'returned',
+          additionalInfo: req.body.returnedNotes
+        });
 
-        email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-        'lesson_returned', {
-          FirstName: lesson.user.firstName,
-          LessonName: lesson.title,
-          LessonReturnedNote: lesson.returnedNotes,
-          LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-        },
-        function(response) {
-          res.json(lesson);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+        activity.save(function(err) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+          'lesson_returned', {
+            FirstName: lesson.user.firstName,
+            LessonName: lesson.title,
+            LessonReturnedNote: lesson.returnedNotes,
+            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          },
+          function(response) {
+            res.json(lesson);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
           });
         });
       }
@@ -377,8 +410,16 @@ exports.favoriteLesson = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      lesson.saved = true;
-      res.json(lesson);
+      var activity = new LessonActivity({
+        user: req.user,
+        lesson: lesson,
+        activity: 'liked'
+      });
+
+      activity.save(function(err) {
+        lesson.saved = true;
+        res.json(lesson);
+      });
     }
   });
 };
@@ -402,8 +443,16 @@ exports.unfavoriteLesson = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          lesson.saved = false;
-          res.json(lesson);
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: lesson,
+            activity: 'unliked'
+          });
+
+          activity.save(function(err) {
+            lesson.saved = false;
+            res.json(lesson);
+          });
         }
       });
     }
@@ -454,7 +503,15 @@ exports.trackLesson = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(trackedLesson);
+      var activity = new LessonActivity({
+        user: req.user,
+        lesson: lesson,
+        activity: 'taught'
+      });
+
+      activity.save(function(err) {
+        res.json(trackedLesson);
+      });
     }
   });
 };
@@ -608,39 +665,47 @@ exports.lessonFeedback = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-      var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-      var toList = [lesson.user.email, config.mailer.admin];
+      var activity = new LessonActivity({
+        user: req.user,
+        lesson: lesson,
+        activity: 'feedback'
+      });
 
-      email.sendEmailTemplate(toList, subject,
-      'lesson_feedback', {
-        FirstName: req.body.lesson.user.firstName,
-        LessonFeedbackName: req.user.displayName,
-        LessonName: req.body.lesson.title,
-        LessonFeedbackNote: req.body.message,
-        LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
-        LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
-        LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
-        LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
-        HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
-        WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
-        WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
-        LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
-        LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
-        MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
-        Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
-        Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
-        InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
-        Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
-        Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
-        LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-      },
-      function(response) {
-        res.json(lessonFeedback);
-      }, function(errorMessage) {
-        return res.status(400).send({
-          message: errorMessage
+      activity.save(function(err) {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+        var toList = [lesson.user.email, config.mailer.admin];
+
+        email.sendEmailTemplate(toList, subject,
+        'lesson_feedback', {
+          FirstName: req.body.lesson.user.firstName,
+          LessonFeedbackName: req.user.displayName,
+          LessonName: req.body.lesson.title,
+          LessonFeedbackNote: req.body.message,
+          LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
+          LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
+          LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
+          LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
+          HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
+          WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
+          WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
+          LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
+          LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
+          MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
+          Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
+          Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
+          InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
+          Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
+          Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
+          LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+        },
+        function(response) {
+          res.json(lessonFeedback);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
         });
       });
     }
@@ -853,6 +918,12 @@ exports.list = function(req, res) {
     } else if (req.query.status === 'published') {
       and.push({ 'status': 'published' });
     }
+  }
+
+  if (req.query.published === 'true') {
+    and.push({ 'status': 'published' });
+  } else if (req.query.published === 'false') {
+    and.push({ 'status': { '$ne': 'published' } });
   }
 
   var or = [];
