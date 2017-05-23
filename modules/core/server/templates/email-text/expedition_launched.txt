@@ -1,6 +1,14 @@
 Hi <%=FirstName%>,
 
-Congrats, you're a part of a new expedition that was just launched! Your team lead entrusted you with Protocol <%= ProtocolNumbers %> for the expedition <%= ExpeditionName %> taking place on <%= ExpeditionDate %>.
+Congrats! You have been invited by <%=TeamLead%> to join an ORS monitoring expedition. Here are your expedition details:
+
+Expedition: <%= ExpeditionName %>
+ORS: <%= ORSName %>
+On <%= ExpeditionDate %>
+From <%= ExpeditionTimeStart %> to <%= ExpeditionTimeEnd %>
+You have been assigned to Protocol(s) <%= ExpeditionProtocols %>
+Your group members for this expedition are <%= TeamMembers %>
+Special notes: <%= ExpeditionNotes %>
 
 Visit <%= LinkExpedition %> to see your expedition.
 
