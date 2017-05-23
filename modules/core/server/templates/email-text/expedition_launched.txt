@@ -1,0 +1,10 @@
+Hi <%=FirstName%>,
+
+Congrats, you're a part of a new expedition that was just launched! Your team lead entrusted you with Protocol <%= ProtocolNumbers %> for the expedition <%= ExpeditionName %> taking place on <%= ExpeditionDate %>.
+
+Visit <%= LinkExpedition %> to see your expedition.
+
+We're excited to see your work!
+The Billion Oyster Project
+
+You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
