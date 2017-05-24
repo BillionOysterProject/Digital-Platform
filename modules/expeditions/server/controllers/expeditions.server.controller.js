@@ -58,7 +58,7 @@ var findProtocols = function(user, teamLists, callback) {
   if (findUserInTeam(user, teamLists.mobileTrap)) {
     protocols.push('Mobile Trap');
   }
-  if (findUserInTeam(user, teamLists.ettlementTile)) {
+  if (findUserInTeam(user, teamLists.settlementTiles)) {
     protocols.push('Settlement Tiles');
   }
   if (findUserInTeam(user, teamLists.waterQuality)) {
@@ -83,29 +83,26 @@ var getAllAssignedUsers = function(teamLists) {
   userArray = userArray.concat(teamLists.mobileTrap);
   userArray = userArray.concat(teamLists.settlementTiles);
   userArray = userArray.concat(teamLists.waterQuality);
-  userArray = _.uniq(userArray);
+  userArray = _.uniqWith(userArray, function(a, b) {
+    return a._id.toString() === b._id.toString();
+  });
   return userArray;
 };
 
 var sendEmailToAssignedUsers = function(expedition, teamLists, teamLead, subject,
   emailTemplate, emailData, successCallback, errorCallback) {
   var userArray = getAllAssignedUsers(teamLists);
-  console.log('userArray', userArray);
   var teamMembers = _.map(userArray, 'displayName');
   teamMembers[teamMembers.length-1] = 'and ' + teamMembers[teamMembers.length-1];
   emailData.TeamMembers = teamMembers.join(', ');
-  console.log('emailData', emailData);
 
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
   async.forEach(userArray, function(user, callback) {
     findProtocols(user, teamLists, function(protocolList) {
       emailData.ExpeditionProtocols = protocolList;
-      console.log('protocols', protocolList);
       emailData.FirstName = user.firstName;
-      console.log('user', user);
       if (user.email === teamLead.email) {
-        console.log('do not send email to yourself');
         callback();
       } else {
         email.sendEmailTemplateFromUser(user.email, teamLead.email, subject, emailTemplate, emailData,
@@ -134,8 +131,6 @@ exports.create = function (req, res) {
   expedition.teamLead = req.user;
   expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
   expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
-  console.log('station', expedition.station);
-  console.log('siteCondition team', req.body.teamLists.siteCondition);
 
   var siteCondition = new ProtocolSiteCondition({
     collectionTime: expedition.monitoringStartDate,
@@ -233,7 +228,7 @@ exports.create = function (req, res) {
                               ExpeditionDate: moment(expedition.monitoringStartDate).format('MMMM D, YYYY'),
                               ExpeditionTimeStart: moment(expedition.monitoringStartDate).format('HH:mm'),
                               ExpeditionTimeEnd: moment(expedition.monitoringEndDate).format('HH:mm'),
-                              ExpeditionNotes: expedition.notes,
+                              ExpeditionNotes: ((expedition.notes) ? expedition.notes : ''),
                               LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
                               LinkProfile: httpTransport + req.headers.host + '/profiles',
                             }, function(info) {

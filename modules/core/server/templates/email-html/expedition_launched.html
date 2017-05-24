@@ -26,7 +26,7 @@
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Hi <%=FirstName%>,</p>
 
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Congrats! You have been invited by <%=TeamLead%> to join an ORS monitoring expedition. Here are your expedition details:</p>
-        
+
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">
 Expedition: <b><%= ExpeditionName %></b><br/>
 ORS: <b><%= ORSName %></b><br/>
@@ -34,7 +34,9 @@ On <b><%= ExpeditionDate %></b><br/>
 From <b><%= ExpeditionTimeStart %> to <%= ExpeditionTimeEnd %></b><br/>
 You have been assigned to Protocol(s) <b><%= ExpeditionProtocols %></b><br/>
 Your group members for this expedition are <b><%= TeamMembers %></b><br/>
+<% if(ExpeditionNotes !== '') { %>
 Special notes: <b><%= ExpeditionNotes %></b></p>
+<% } %>
         <br/>
 
         <!-- button -->
