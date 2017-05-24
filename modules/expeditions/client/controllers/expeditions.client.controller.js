@@ -82,6 +82,7 @@
           teamId: vm.teamId
         }, function(data) {
           vm.members = data;
+          console.log('members', vm.members);
           vm.memberLists.members = angular.copy(data);
           vm.memberLists.members.push(angular.copy(vm.team.teamLead));
           vm.member = null;
