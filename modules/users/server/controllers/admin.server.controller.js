@@ -243,12 +243,27 @@ exports.deny = function(req, res) {
 exports.list = function (req, res) {
   var query;
   var and = [];
+  var admin = isAdmin(req.user);
 
   if (req.query.role && req.query.role !== undefined && req.query.role !== null && req.query.role !== '') {
-    and.push({ 'roles': req.query.role });
+    if (admin) {
+      if ('team lead') {
+        and.push({ $or: [{ 'roles': 'team lead' }, { 'roles': 'team lead pending' }] });
+      } else if ('team member') {
+        and.push({ $or: [{ 'roles': 'team member' }, { 'roles': 'team member pending' }] });
+      } else {
+        and.push({ 'roles': req.query.role });
+      }
+    } else {
+      and.push({ 'roles': req.query.role });
+    }
   } else {
-    and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' },
-    { 'roles': 'team member' }, { 'roles': 'team member pending' }, { 'roles': 'partner' }] });
+    if (admin) {
+      and.push({ $or: [{ 'roles': 'admin' }, { 'roles': 'team lead' }, { 'roles': 'team lead pending' },
+      { 'roles': 'team member' }, { 'roles': 'team member pending' }, { 'roles': 'partner' }] });
+    } else {
+      and.push({ $or: [{ 'roles': 'team lead' }, { 'roles': 'team member' }, { 'roles': 'partner' }] });
+    }
   }
 
   if (req.query.organizationId) {

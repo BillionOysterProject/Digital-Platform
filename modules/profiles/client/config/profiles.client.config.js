@@ -36,7 +36,7 @@
     });
 
     Menus.addSubMenuItem('topbar', 'profiles', {
-      title: 'Accounts',
+      title: 'People',
       state: 'profiles.admin-users',
       roles: ['team lead', 'team member', 'admin']
     });

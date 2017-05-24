@@ -1,17 +1,54 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>People</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </span>
+                        <input class="form-control" type="text" placeholder="Search"
+                        ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
+                        ng-change="searchChange()" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+<!--TIFF:
+    1) Change page permissions to be visible to all admin/team lead/team members (not pendings). I updated the sidenav permissions but still getting a forbidden
+    2) Can we speed up the initial page load by just pulling in the first page results? Or, alternatively, make "Team Lead" the default filter on initial load -->
 <section class="content">
+<section class="container">
 <div class="row">
-    <div class="col-md-2 col-sm-4">
+    <div class="col-sm-4">
         <div class="form-group">
             <select class="form-control" name="role" id="role" ng-model="filter.role"
             ng-change="fieldChanged()">
                 <option value="">Show all roles</option>
                 <option value="team lead">Team Lead</option>
                 <option value="team member">Team Member</option>
-                <option value="admin">Admin</option>
+                <option value="admin" ng-show="isAdmin">Admin</option>
             </select>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4">
+    <!--TIFF: Wire up this new Team Lead type filter - display only when role "Team Lead" filter is selected --
+    <div class="col-sm-4">
+        <div class="form-group">
+            <select class="form-control" name="role" id="role" ng-model="filter.role"
+            ng-change="fieldChanged()">
+                <option value="">Show all types</option>
+                <option value=""></option>
+                <option value=""></option>
+                <option value=""></option>
+                <option value=""></option>
+            </select>
+        </div>
+    </div>-->
+    <div class="col-sm-4">
         <div class="form-group">
             <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
               ng-change="fieldChanged()">
@@ -19,22 +56,6 @@
                 <option ng-repeat="org in organizations" value="{{org._id}}">{{org.name}}</option>
             </select>
         </div>
-    </div>
-    <div class="col-md-3 col-sm-4">
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                </span>
-                <input class="form-control col-md-4" type="text" placeholder="Search"
-                ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
-                ng-change="searchChange()" />
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 text-right">
-        <!-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a> TODO-->
-        <!-- <a class="btn btn-primary">Import team leads</a> TODO: This should open modal duplicated from "Import Team Members" but with different text-->
     </div>
 </div>
 <div class="alert alert-danger text-center" ng-show="error">
@@ -55,32 +76,43 @@
           <a class="btn btn-sm btn-default" ng-click="openApproveOrganizations()">Respond to Organizations</a></div>
     </div>
 </div>
+<!--TIFF: Only admin should see admin accounts and pending lead/member accounts -->
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-verticalalign table-responsive">
-            <tr ng-repeat="user in pagedItems">
+        <table class="table table-hover table-verticalalign table-responsive">
+            <!--TIFF: Fix click to open user profile modal on this page -->
+            <tr ng-repeat="user in pagedItems" ng-click="vm.openViewUserModal()">
                 <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
-                <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
-                <td>{{user.teamLeadType | teamLeadTypes}}</td>
-                <td>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</td>
-                <td>{{user.roles | roleNormalizer}}</td>
-                <!-- <td>{{listTeams(user)}}</td> -->
-                <td><span ng-repeat="team in user.teams"><a ng-click="openAdminTeam(team)">{{team.name}}</a><span ng-if="!$last">, </span></span></td>
-                <td class="text-right">
-                    <a class="btn btn-default" ng-click="openAdminTeamLeadForm(user)">
-                      <i class="glyphicon glyphicon-edit"></i>
-
-                    </a>
-                    <a class="btn btn-danger" ng-click="openDeleteUser(user)">
-                      <i class="glyphicon glyphicon-trash"></i>
-                    </a>
+                <td>
+                    <h4>{{user.firstName}} {{user.lastName}}</h4><br />
+                    <!--TIFF: Only show 1 main role instead of list (either Admin, Team Lead/Member pending, or Team Lead/Member) -- "user" or "org lead" should never show-->
+                    <h6>{{user.roles | roleNormalizer:true}}
+                      <span ng-show="user.teamLeadType"><br/>{{user.teamLeadType | teamLeadTypes}}</span>
+                    </h6>
                 </td>
+                <td>
+                  <p><b>{{user.username}}</b><br/>{{user.email}}</p>
+                </td>
+                <td>
+                    <h6>Organization</h6>
+                    <p>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</p>
+                    <br/>
+                    <h6><span class="blue" ng-show="{{user.teams.length > 1}}">{{user.teams.length}} </span>{{user.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                    <p ng-repeat="team in user.teams">
+                      {{team.name}}<span ng-if="!$last">,&nbsp;</span>
+                    </p>
+                </td>
+                <!--archived:
+                    ng-click="openAdminTeam(team)"
+                    ng-click="openAdminTeamLeadForm(user)"
+                    ng-click="openDeleteUser(user)"-->
             </tr>
         </table>
 
         <uib-pagination boundary-links="true" max-size="8" items-per-page="itemsPerPage" total-items="filterLength" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
     </div>
 </div>
+</section>
 </section>
 
 <!-- MODALS -->
