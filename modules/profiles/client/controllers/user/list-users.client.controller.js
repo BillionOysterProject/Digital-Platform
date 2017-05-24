@@ -1,9 +1,14 @@
 'use strict';
 
 angular.module('profiles').controller('UserListController', ['$scope', '$filter', 'lodash',
-'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService',
+'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService', 'ExpeditionViewHelper',
   function ($scope, $filter, lodash,
-    Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService) {
+    Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService, ExpeditionViewHelper) {
+    $scope.checkRole = ExpeditionViewHelper.checkRole;
+    $scope.isAdmin = $scope.checkRole('admin');
+    $scope.isTeamLead = $scope.checkRole('team lead');
+    $scope.isTeamMember = $scope.checkRole('team member');
+
     $scope.filter = {
       organizationId: '',
       role: '',
@@ -73,13 +78,13 @@ angular.module('profiles').controller('UserListController', ['$scope', '$filter'
       $scope.figureOutItemsToDisplay();
     };
 
-    $scope.listRoles = function (user) {
-      if (user.roles && user.roles.length > 0) {
-        return user.roles.join(', ');
-      } else {
-        return '';
-      }
-    };
+    // $scope.listRoles = function (user) {
+    //   if (user.roles && user.roles.length > 0) {
+    //     return user.roles.join(', ');
+    //   } else {
+    //     return '';
+    //   }
+    // };
 
     $scope.listTeams = function (user) {
       if (user.teams && user.teams.length) {
