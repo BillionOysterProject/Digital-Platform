@@ -101,6 +101,10 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
   sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback, attachments);
 };
 
+exports.sendEmailTemplateFromUser = function(to, from, subject, bodyTemplate, data, successCallback, errorCallback, attachments) {
+  sendTemplate(to, from, subject, bodyTemplate, data, successCallback, errorCallback, attachments);
+};
+
 exports.sendFeedback = function(to, from, subject, data, template, req, res) {
   if (to && from && subject && template && data) {
     sendTemplate(to, from, subject, template, data,

@@ -1159,7 +1159,6 @@ exports.download = function(req, res) {
 
   activity.save(function(err) {
     if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
-      console.log('downloadImage', research.downloadImage);
       res.setHeader('Content-disposition', 'attachment;');
       res.setHeader('content-type', research.downloadImage.mimetype);
 
