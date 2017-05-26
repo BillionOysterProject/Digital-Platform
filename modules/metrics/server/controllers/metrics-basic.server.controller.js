@@ -32,11 +32,9 @@ exports.getBasicMetrics = function(req, res) {
 
   var allUnitsCountQuery = Unit.count({});
   var allLessonCountQuery = Lesson.count({});
-  var taughtStudentsCountQuery = LessonTracker.aggregate([
-    { $group:
-      { _id: 1, total: { $sum: '$totalNumberOfStudents' }
-    }
-  } ]);
+  var taughtStudentsCountQuery = LessonTracker.aggregate([{
+    $group: { _id: 1, total: { $sum: '$totalNumberOfStudents' } }
+  }]);
 
   var pastEventCountQuery = CalendarEvent.count({
     'dates.startDateTime': { '$lt': new Date() }

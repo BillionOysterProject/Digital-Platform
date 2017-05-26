@@ -6,8 +6,8 @@
     .controller('RestorationStationsDashboardController', RestorationStationsDashboardController);
 
   RestorationStationsDashboardController.$inject = ['$scope', '$rootScope', '$state', '$location', '$http', 'lodash',
-  'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
-  'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
+    'moment', 'Authentication', 'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionsService',
+    'ExpeditionActivitiesService', 'TeamRequestsService', 'SchoolOrganizationsService', 'ExpeditionViewHelper'];
 
   function RestorationStationsDashboardController($scope, $rootScope, $state, $location, $http, lodash,
     moment, Authentication, TeamsService, TeamMembersService, RestorationStationsService, ExpeditionsService,

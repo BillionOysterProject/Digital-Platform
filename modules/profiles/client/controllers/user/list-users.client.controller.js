@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('profiles').controller('UserListController', ['$scope', '$filter', 'lodash',
-'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService',
+  'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService',
   function ($scope, $filter, lodash,
     Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService) {
     $scope.filter = {

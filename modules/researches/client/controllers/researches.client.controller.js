@@ -7,7 +7,7 @@
     .controller('ResearchesController', ResearchesController);
 
   ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', '$location', 'researchResolve', 'lodash', 'moment',
-  'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
+    'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
 
   function ResearchesController ($scope, $state, $http, $timeout, $location, research, lodash, moment,
   Authentication, FileUploader, ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {

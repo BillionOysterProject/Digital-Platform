@@ -6,10 +6,10 @@
     .controller('LessonsController', LessonsController);
 
   LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
-  'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
-  'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
-  'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
-  'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
+    'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
+    'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
+    'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
+    'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
 
   function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
