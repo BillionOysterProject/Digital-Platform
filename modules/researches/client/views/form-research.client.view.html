@@ -97,7 +97,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h3 class="blue">Team</h3>
-                  <select class="form-control" name="team" id="team" ng-model="vm.research.team" ng-change="getTeamLeadNames()"
+                  <select class="form-control" name="team" id="team" ng-model="vm.research.team._id" ng-change="getTeamLeadNames()"
                   ng-options="team._id as team.name for team in vm.myTeams" ng-required="vm.myTeams && vm.myTeams.length > 1"></select>
                   <div ng-messages="vm.form.researchForm.team.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Team is required.</p>
@@ -255,9 +255,9 @@
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.researchForm.$valid)">Save draft</a>
             <a class="btn btn-default" ng-click="vm.saveDraftAndPreview(vm.form.researchForm.$valid)">Preview</a>
-            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid">
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid, 'pending')" ng-disabled="!vm.form.researchForm.$valid" ng-hide="vm.isTeamLead || vm.isAdmin">
               {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Resubmit poster' : 'Submit poster'}}</a>
-            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid)" ng-disabled="!vm.form.researchForm.$valid" ng-show="vm.isTeamLead || vm.isAdmin">
+            <a class="btn btn-primary" ng-click="vm.saveAndSubmit(vm.form.researchForm.$valid, 'published')" ng-disabled="!vm.form.researchForm.$valid" ng-show="vm.isTeamLead || vm.isAdmin">
               {{(vm.research._id && vm.research.submitted && vm.research.submitted.length > 0) ? 'Republish poster' : 'Publish poster'}}</a>
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.research._id" ng-click="vm.openDeleteResearch()">Delete</a>
@@ -271,7 +271,7 @@
 
 
 <!--MODALS-->
-  <saved-research-modal team-leads="{{}}"></saved-research-modal>
+  <saved-research-modal team-leads="{{vm.teamLeads}}" is-team-member="{{vm.isTeamMember}}"></saved-research-modal>
   <updated-research-modal></updated-research-modal>
   <delete-research-modal close-function="vm.confirmDeleteResearch"></delete-research-modal>
   <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>

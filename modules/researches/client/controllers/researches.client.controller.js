@@ -46,6 +46,11 @@
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
     vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+    if (vm.research && !vm.research.team) {
+      vm.research.team = {
+        _id: null
+      };
+    }
 
     vm.headerImageUploader = new FileUploader({
       alias: 'newHeaderImage',
@@ -99,8 +104,8 @@
         vm.myTeams = data;
         if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) {
           vm.research.team = vm.myTeams[0];
-          getTeamLeadNames();
         }
+        getTeamLeadNames();
       });
     }
 
@@ -183,6 +188,7 @@
       }
       vm.saving = true;
       vm.research.status = status;
+      vm.research.team = vm.research.team._id;
 
       vm.finishedSaving = 0;
       $timeout(function() {
@@ -271,8 +277,8 @@
       vm.save(true, 'draft', true, true);
     };
 
-    vm.saveAndSubmit = function(isValid) {
-      vm.save(isValid, null, false, false);
+    vm.saveAndSubmit = function(isValid, status) {
+      vm.save(isValid, status, false, false);
     };
 
     vm.favoriteResearch = function() {

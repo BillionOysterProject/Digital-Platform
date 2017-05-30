@@ -1159,7 +1159,6 @@ exports.download = function(req, res) {
 
   activity.save(function(err) {
     if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
-      console.log('downloadImage', research.downloadImage);
       res.setHeader('Content-disposition', 'attachment;');
       res.setHeader('content-type', research.downloadImage.mimetype);
 
@@ -1246,7 +1245,7 @@ exports.researchByID = function(req, res, next, id) {
   }
 
   Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg roles')
-  .populate('team', 'name schoolOrg photo').exec(function (err, research) {
+  .populate('team', 'name schoolOrg photo teamLead teamLeads').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {
@@ -1255,16 +1254,20 @@ exports.researchByID = function(req, res, next, id) {
       });
     }
     if (req.query.full) {
-      SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+      User.populate(research.team, { 'path': 'teamLead', 'select': 'displayName' }, function(err, output) {
+        User.populate(research.team, { 'path': 'teamLeads', 'select': 'displayName' }, function(err, output) {
+          SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.research = research;
+              req.researchSaved = (savedResearch) ? true : false;
+              next();
+            }
           });
-        } else {
-          req.research = research;
-          req.researchSaved = (savedResearch) ? true : false;
-          next();
-        }
+        });
       });
     } else {
       req.research = research;
