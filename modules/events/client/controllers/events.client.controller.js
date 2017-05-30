@@ -7,7 +7,7 @@
     .controller('EventsController', EventsController);
 
   EventsController.$inject = ['$scope', '$rootScope', '$state', '$window', '$http', '$location', '$timeout',
-  'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'EventTypesService', 'moment', 'lodash'];
+    'Authentication', 'eventResolve', 'EventHelper', 'FileUploader', 'EventTypesService', 'moment', 'lodash'];
 
   function EventsController ($scope, $rootScope, $state, $window, $http, $location, $timeout,
     Authentication, event, EventHelper, FileUploader, EventTypesService, moment, lodash) {

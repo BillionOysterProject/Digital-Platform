@@ -6,8 +6,8 @@
     .controller('ProtocolSiteConditionsController', ProtocolSiteConditionsController);
 
   ProtocolSiteConditionsController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
-  'lodash', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
-  'WaterFlowService', 'ShorelineTypesService', 'ExpeditionViewHelper'];
+    'lodash', 'ProtocolSiteConditionsService', 'WeatherConditionsService', 'WaterColorsService',
+    'WaterFlowService', 'ShorelineTypesService', 'ExpeditionViewHelper'];
 
   function ProtocolSiteConditionsController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     lodash, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,

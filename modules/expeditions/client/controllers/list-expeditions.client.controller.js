@@ -6,7 +6,7 @@
     .controller('ExpeditionsListController', ExpeditionsListController);
 
   ExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication', 'ExpeditionsService', 'TeamsService', 'ExpeditionViewHelper',
-  'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope', '$stateParams'];
+    'SchoolOrganizationsService', 'RestorationStationsService', 'TeamLeads', '$timeout', '$rootScope', '$scope', '$stateParams'];
 
   function ExpeditionsListController(moment, lodash, Authentication, ExpeditionsService, TeamsService, ExpeditionViewHelper,
     SchoolOrganizationsService, RestorationStationsService, TeamLeads, $timeout, $rootScope, $scope, $stateParams) {

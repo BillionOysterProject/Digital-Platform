@@ -6,7 +6,7 @@
     .controller('StationMetricsController', StationMetricsController);
 
   StationMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment', 'ChartJs',
-  'MetricsStationService', 'MetricsStationActivityService', 'MetricsExpeditionActivityService'];
+    'MetricsStationService', 'MetricsStationActivityService', 'MetricsExpeditionActivityService'];
 
   function StationMetricsController($scope, $rootScope, $timeout, moment, ChartJsProvider,
     MetricsStationService, MetricsStationActivityService, MetricsExpeditionActivityService) {
