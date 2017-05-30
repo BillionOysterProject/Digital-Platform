@@ -319,6 +319,7 @@ var setOwnership = function(user, research, fullPage, callback) {
     }
   };
 
+
   if (!research.isCurrentUserOwner) {
     if (fullPage) {
       setTeam();
@@ -1186,19 +1187,16 @@ exports.download = function(req, res) {
 var uploadFileSuccess = function(research, res) {
   research.save(function(saveError) {
     if (saveError) {
-      console.log('saving research error', saveError);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(saveError)
       });
     } else {
-      console.log('successfully saved research', research);
       res.json(research);
     }
   });
 };
 
 var uploadFileError = function(research, errorMessage, res) {
-  console.log('error saving image', errorMessage);
   return res.status(400).send({
     message: errorMessage
   });
@@ -1218,15 +1216,11 @@ exports.uploadHeaderImage = function (req, res) {
     function(fileInfo) {
       research.headerImage = fileInfo;
 
-      console.log('successfully added image', fileInfo);
       uploadFileSuccess(research, res);
     }, function(errorMessage) {
-      console.log('error adding image', errorMessage);
       uploadFileError(research, errorMessage, res);
     });
-    console.log('uploaded');
   } else {
-    console.log('could not find research');
     res.status(400).send({
       message: 'Research does not exist'
     });
@@ -1252,7 +1246,7 @@ exports.researchByID = function(req, res, next, id) {
   }
 
   Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg roles')
-  .populate('team', 'name schoolOrg photo').exec(function (err, research) {
+  .populate('team', 'name schoolOrg photo teamLead teamLeads').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {
@@ -1261,16 +1255,20 @@ exports.researchByID = function(req, res, next, id) {
       });
     }
     if (req.query.full) {
-      SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
+      User.populate(research.team, { 'path': 'teamLead', 'select': 'displayName' }, function(err, output) {
+        User.populate(research.team, { 'path': 'teamLeads', 'select': 'displayName' }, function(err, output) {
+          SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.research = research;
+              req.researchSaved = (savedResearch) ? true : false;
+              next();
+            }
           });
-        } else {
-          req.research = research;
-          req.researchSaved = (savedResearch) ? true : false;
-          next();
-        }
+        });
       });
     } else {
       req.research = research;

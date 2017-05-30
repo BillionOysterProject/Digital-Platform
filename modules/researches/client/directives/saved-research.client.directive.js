@@ -8,7 +8,8 @@
         restrict: 'E',
         templateUrl: 'modules/researches/client/views/saved-research.client.view.html',
         scope: {
-          teamLeads: '@'
+          teamLeads: '@',
+          isTeamMember: '@'
         }
       };
     });
