@@ -6,7 +6,7 @@
     .controller('ProtocolWaterQualityController', ProtocolWaterQualityController);
 
   ProtocolWaterQualityController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', '$timeout',
-  'lodash', 'ProtocolWaterQualityService', 'ExpeditionViewHelper'];
+    'lodash', 'ProtocolWaterQualityService', 'ExpeditionViewHelper'];
 
   function ProtocolWaterQualityController($scope, $rootScope, $state, $stateParams, $http, moment, $timeout,
     lodash, ProtocolWaterQualityService, ExpeditionViewHelper) {

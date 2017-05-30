@@ -1159,7 +1159,6 @@ exports.download = function(req, res) {
 
   activity.save(function(err) {
     if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
-      console.log('downloadImage', research.downloadImage);
       res.setHeader('Content-disposition', 'attachment;');
       res.setHeader('content-type', research.downloadImage.mimetype);
 
@@ -1187,16 +1186,19 @@ exports.download = function(req, res) {
 var uploadFileSuccess = function(research, res) {
   research.save(function(saveError) {
     if (saveError) {
+      console.log('saving research error', saveError);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(saveError)
       });
     } else {
+      console.log('successfully saved research', research);
       res.json(research);
     }
   });
 };
 
 var uploadFileError = function(research, errorMessage, res) {
+  console.log('error saving image', errorMessage);
   return res.status(400).send({
     message: errorMessage
   });
@@ -1216,11 +1218,15 @@ exports.uploadHeaderImage = function (req, res) {
     function(fileInfo) {
       research.headerImage = fileInfo;
 
+      console.log('successfully added image', fileInfo);
       uploadFileSuccess(research, res);
     }, function(errorMessage) {
+      console.log('error adding image', errorMessage);
       uploadFileError(research, errorMessage, res);
     });
+    console.log('uploaded');
   } else {
+    console.log('could not find research');
     res.status(400).send({
       message: 'Research does not exist'
     });

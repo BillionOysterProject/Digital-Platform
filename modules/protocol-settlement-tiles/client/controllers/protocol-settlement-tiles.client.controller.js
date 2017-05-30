@@ -6,7 +6,7 @@
     .controller('ProtocolSettlementTilesController', ProtocolSettlementTilesController);
 
   ProtocolSettlementTilesController.$inject = ['$scope', '$rootScope', '$state', '$http', 'moment', '$stateParams', '$timeout',
-  'lodash', 'ProtocolSettlementTilesService', 'SessileOrganismsService'];
+    'lodash', 'ProtocolSettlementTilesService', 'SessileOrganismsService'];
 
   function ProtocolSettlementTilesController($scope, $rootScope, $state, $http, moment, $stateParams, $timeout,
     lodash, ProtocolSettlementTilesService, SessileOrganismsService) {

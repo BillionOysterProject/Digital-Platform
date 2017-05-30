@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('users').controller('AuthenticationController', ['$scope', '$rootScope', '$state', '$http',
-'$location', '$window', 'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
+  '$location', '$window', 'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;

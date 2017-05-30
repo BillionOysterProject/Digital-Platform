@@ -35,22 +35,22 @@ var path = require('path'),
   json2csv = require('json2csv');
 
 var userCountQuery = User.count({
-  $or: [ { pending: false }, { pending: { $exists: false } } ] }
-);
+  $or: [ { pending: false }, { pending: { $exists: false } } ]
+});
 
 var teamLeadCountQuery = User.count({
   $and: [
     { roles: 'team lead' },
     { $or: [ { pending: false }, { pending: { $exists: false } } ] }
-  ] }
-);
+  ]
+});
 
 var teamMemberCountQuery = User.count({
   $and: [
     { roles: 'team member' },
     { $or: [ { pending: false }, { pending: { $exists: false } } ] }
-  ] }
-);
+  ]
+});
 
 var largestTeamsQuery = Team.aggregate([
   { $match: { teamMembers: { $exists: true } } },
@@ -789,13 +789,13 @@ exports.getEventMetrics = function(req, res) {
     { $project: { _id: 1, registrants: 1, registrantCount: { $size: '$registrants' } } },
     { $match: { 'registrantCount': { '$gt': 0 } } },
     { $project: { _id: 1, registrants: 1, registrantCount: 1,
-        registrantsAttended: {
-          $filter: {
-            input: '$registrants',
-            as: 'registrant',
-            cond: '$$registrant.attended'
-          }
+      registrantsAttended: {
+        $filter: {
+          input: '$registrants',
+          as: 'registrant',
+          cond: '$$registrant.attended'
         }
+      }
     } },
     { $project: { _id: 1, registrants: 1, registrantCount: 1, attendedCount: { $size: '$registrantsAttended' } } },
    { $project: { _id: 1, attendanceRate: { $divide: [ '$attendedCount', '$registrantCount' ] } } },
@@ -956,13 +956,14 @@ exports.getEventActivity = function(req, res) {
     { $project: { _id: 1, title: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
       startDate: 1, endDate: 1, registrantsAttended: 1, attendedCount: { $size: '$registrantsAttended' } } },
     { $project: { _id: 1, title: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
-       startDate: 1, endDate: 1, registrantsAttended: 1, attendedCount: 1,
-    attendanceRate: {
-      $cond: { if: { $gt: [ '$registrantCount', 0] }, then: { $divide: [ '$attendedCount', '$registrantCount' ] }, else: 0 }
-    },
-    registrationRate: {
-      $cond: { if: { $gt: [ '$maximumCapacity', 0] }, then: { $divide: [ '$registrantCount', '$maximumCapacity' ] }, else: 0 }
-    } } },
+      startDate: 1, endDate: 1, registrantsAttended: 1, attendedCount: 1,
+      attendanceRate: {
+        $cond: { if: { $gt: [ '$registrantCount', 0] }, then: { $divide: [ '$attendedCount', '$registrantCount' ] }, else: 0 }
+      },
+      registrationRate: {
+        $cond: { if: { $gt: [ '$maximumCapacity', 0] }, then: { $divide: [ '$registrantCount', '$maximumCapacity' ] }, else: 0 }
+      }
+    } },
     sort,
     { $limit: 10 }
   ]);
@@ -1220,7 +1221,8 @@ exports.downloadZip = function(req, res) {
   //stuff is integrated
   var teamSizesQuery = Team.aggregate([
     { $project: { id: 1, name: 1, teamLead: 1, schoolOrg: 1,
-        teamMemberCount: { $cond: { if: { teamMembers: { $gt: [ { $size: '$teamMembers' }, 0 ] } }, then: { $size: '$teamMembers' }, else: 0 } } } },
+      teamMemberCount: { $cond: { if: { teamMembers: { $gt: [ { $size: '$teamMembers' }, 0 ] } }, then: { $size: '$teamMembers' }, else: 0 } } }
+    },
     { $sort: { teamMemberCount: -1 } },
     { $lookup: { from: 'schoolorgs', localField: 'schoolOrg', foreignField: '_id', as: 'schoolOrgs' } },
     { $match: { 'schoolOrgs.0': { $exists: true } } },
@@ -1263,9 +1265,9 @@ exports.downloadZip = function(req, res) {
     { $lookup: { from: 'teams', localField: 'team', foreignField: '_id', as: 'teams' } },
     { $match: { 'teams.0': { $exists: true } } },
     { $project: { _id: 1, name: 1, monitoringStartDate: 1, monitoringEndDate: 1,
-        teamLead: { $arrayElemAt: ['$teamLeads', 0] },
-        team: { $arrayElemAt: ['$teams', 0] },
-        station: { $arrayElemAt: ['$stations', 0] }
+      teamLead: { $arrayElemAt: ['$teamLeads', 0] },
+      team: { $arrayElemAt: ['$teams', 0] },
+      station: { $arrayElemAt: ['$stations', 0] }
     } },
     { $sort: { monitoringStartDate: 1 } }
   ]);
@@ -1277,29 +1279,30 @@ exports.downloadZip = function(req, res) {
       maximumCapacity: 1, startDate: '$dates.startDateTime', endDate: '$dates.endDateTime', user: 1, eventType: '$category.type'
     } },
     { $project: { _id: 1, title: 1, description: 1, registrants: 1, registrantCount: 1, deadlineToRegister: 1,
-        maximumCapacity: 1, startDate: 1, endDate: 1, user: 1, eventType: 1,
-        registrantsAttended: {
-          $filter: {
-            input: '$registrants',
-            as: 'registrant',
-            cond: '$$registrant.attended'
-          }
+      maximumCapacity: 1, startDate: 1, endDate: 1, user: 1, eventType: 1,
+      registrantsAttended: {
+        $filter: {
+          input: '$registrants',
+          as: 'registrant',
+          cond: '$$registrant.attended'
         }
+      }
     } },
     { $project: { _id: 1, title: 1, description: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
-        startDate: 1, endDate: 1, attendedCount: { $size: '$registrantsAttended' } , user: 1, eventType: 1 } },
+      startDate: 1, endDate: 1, attendedCount: { $size: '$registrantsAttended' } , user: 1, eventType: 1 }
+    },
     { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'users' } },
     { $lookup: { from: 'metaeventtypes', localField: 'eventType', foreignField: '_id', as: 'eventTypes' } },
     { $project: { _id: 1, title: 1, description: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
-        startDate: 1, endDate: 1, attendedCount: 1,
-        user: { $arrayElemAt: ['$users', 0] },
-        type: { $arrayElemAt: ['$eventTypes', 0] }
-     } },
-     { $project: { _id: 1, title: 1, description: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
-        startDate: 1, endDate: 1, attendedCount: 1,
-        user: '$user.displayName',
-        type: '$type.type'
-     } }
+      startDate: 1, endDate: 1, attendedCount: 1,
+      user: { $arrayElemAt: ['$users', 0] },
+      type: { $arrayElemAt: ['$eventTypes', 0] }
+    } },
+    { $project: { _id: 1, title: 1, description: 1, registrantCount: 1, deadlineToRegister: 1, maximumCapacity: 1,
+      startDate: 1, endDate: 1, attendedCount: 1,
+      user: '$user.displayName',
+      type: '$type.type'
+    } }
   ]);
 
   teamSizesQuery.exec(function(err, teamSizeData) {

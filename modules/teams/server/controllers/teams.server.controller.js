@@ -429,8 +429,8 @@ exports.listMembers = function (req, res) {
     queryTeam = Team.find();
   }
 
-  queryTeam.populate('teamLead', 'displayName')
-  .populate('teamLeads', 'displayName').exec(function (err, teams) {
+  queryTeam.populate('teamLead', 'displayName firstName email')
+  .populate('teamLeads', 'displayName firstName email').exec(function (err, teams) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -497,36 +497,24 @@ exports.listMembers = function (req, res) {
           query.limit(limit2);
         }
 
-        query.populate('teamLead', 'displayName')
-        .populate('teamLeads', 'displayName').exec(function (err, members) {
+        query.populate('teamLead', 'displayName firstName email')
+        .populate('teamLeads', 'displayName firstName email').exec(function (err, members) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
           } else if(members && members.length > 0) {
-            var findTeams = function(user, callback) {
-              var queryTeam = Team.find({ 'teamMembers': user });
-              queryTeam.exec(function(err, teams) {
-                callback(teams);
+            var usersWithTeam = [];
+            async.forEach(members, function(member, callback) {
+              Team.find({ 'teamMembers': member }).exec(function(err, teams) {
+                var memberJSON = member.toJSON();
+                if (teams && teams.length > 0) {
+                  memberJSON.team = teams[0];
+                }
+                usersWithTeam.push(memberJSON);
+                callback();
               });
-            };
-
-            var findTeamsForUsers = function(index, users, usersWithTeam, callback) {
-              if (index < users.length) {
-                findTeams(users[index], function(teams) {
-                  var user = users[index] ? users[index].toJSON() : {};
-                  if (teams && teams.length) {
-                    user.team = teams[0];
-                  }
-                  usersWithTeam.push(user);
-                  findTeamsForUsers(index+1, users, usersWithTeam, callback);
-                });
-              } else {
-                callback(usersWithTeam);
-              }
-            };
-
-            findTeamsForUsers(0, members, [], function(usersWithTeam) {
+            }, function(err) {
               res.json(usersWithTeam);
             });
           } else {

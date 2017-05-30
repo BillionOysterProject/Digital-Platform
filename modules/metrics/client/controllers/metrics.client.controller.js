@@ -6,7 +6,7 @@
     .controller('MetricsController', MetricsController);
 
   MetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment', 'lodash',
-  'ChartJs', 'Authentication'];
+    'ChartJs', 'Authentication'];
 
   function MetricsController($scope, $rootScope, $timeout, moment, lodash,
     ChartJsProvider, Authentication) {

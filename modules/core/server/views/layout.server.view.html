@@ -36,7 +36,7 @@
 
   <!-- Application CSS Files -->
   {% for cssFile in cssFiles %}
-    {% if cssFile != 'modules/core/client/css/full-page.css' %}<link rel="stylesheet" href="{{cssFile}}">{% endif %}
+    {% if !cssFile.includes('skip.css') %}<link rel="stylesheet" href="{{cssFile}}">{% endif %}
   {% endfor %}
 </head>
 
@@ -78,4 +78,5 @@
   {% endif %}
 
 </body>
+
 </html>

@@ -68,68 +68,68 @@
             });
           },
           controller: ['$scope',
-          function ($scope) {
-            $scope.content = 'orsView';
-            $scope.user = {};
-
-            $scope.openViewRestorationStation = function() {
-              $scope.$broadcast('orsView');
+            function ($scope) {
               $scope.content = 'orsView';
-            };
+              $scope.user = {};
 
-            $scope.closeViewRestorationStation = function() {
-              $scope.closeFunction($scope.refresh);
-            };
+              $scope.openViewRestorationStation = function() {
+                $scope.$broadcast('orsView');
+                $scope.content = 'orsView';
+              };
 
-            $scope.openFormRestorationStation = function() {
-              $scope.$broadcast('orsForm');
-              $scope.content = 'orsForm';
-            };
+              $scope.closeViewRestorationStation = function() {
+                $scope.closeFunction($scope.refresh);
+              };
 
-            $scope.closeFormRestorationStation = function(refresh) {
-              if ($scope.initial === 'orsForm') {
-                $scope.closeFunction(refresh);
-              } else {
-                $scope.refresh = true;
-                $scope.openViewRestorationStation();
-              }
-            };
+              $scope.openFormRestorationStation = function() {
+                $scope.$broadcast('orsForm');
+                $scope.content = 'orsForm';
+              };
 
-            $scope.deleteRestorationStation = function() {
-              $scope.closeFunction(true);
-            };
+              $scope.closeFormRestorationStation = function(refresh) {
+                if ($scope.initial === 'orsForm') {
+                  $scope.closeFunction(refresh);
+                } else {
+                  $scope.refresh = true;
+                  $scope.openViewRestorationStation();
+                }
+              };
 
-            $scope.openRestorationStationStatus = function() {
-              $scope.content = 'orsStatus';
-              $scope.$broadcast('orsStatus');
-            };
+              $scope.deleteRestorationStation = function() {
+                $scope.closeFunction(true);
+              };
 
-            $scope.closeRestorationStationStatus = function(refresh) {
-              if ($scope.initial === 'orsStatus') {
-                $scope.closeFunction(refresh);
-              } else {
-                $scope.refresh = true;
-                $scope.openViewRestorationStation();
-              }
-            };
+              $scope.openRestorationStationStatus = function() {
+                $scope.content = 'orsStatus';
+                $scope.$broadcast('orsStatus');
+              };
 
-            $scope.openTeamLeadView = function(teamLead) {
-              $scope.user = teamLead;
-              $scope.content = 'userView';
-              $scope.$broadcast('userCrudShown', {
-                view: $scope.content
-              });
-            };
+              $scope.closeRestorationStationStatus = function(refresh) {
+                if ($scope.initial === 'orsStatus') {
+                  $scope.closeFunction(refresh);
+                } else {
+                  $scope.refresh = true;
+                  $scope.openViewRestorationStation();
+                }
+              };
 
-            $scope.closeTeamLeadView = function(refresh) {
-              if ($scope.initial === 'userView') {
-                $scope.closeFunction();
-              } else {
-                $scope.user = {};
-                $scope.openViewRestorationStation();
-              }
-            };
-          }]
+              $scope.openTeamLeadView = function(teamLead) {
+                $scope.user = teamLead;
+                $scope.content = 'userView';
+                $scope.$broadcast('userCrudShown', {
+                  view: $scope.content
+                });
+              };
+
+              $scope.closeTeamLeadView = function(refresh) {
+                if ($scope.initial === 'userView') {
+                  $scope.closeFunction();
+                } else {
+                  $scope.user = {};
+                  $scope.openViewRestorationStation();
+                }
+              };
+            }]
         };
       }
     ]);
