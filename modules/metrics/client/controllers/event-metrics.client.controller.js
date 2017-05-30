@@ -116,7 +116,7 @@
         return label.label;
       }
     };
-  
+    
     $scope.getEventMetrics();
     $scope.getMonthlyEventActivity();
   }
