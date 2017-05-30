@@ -6,12 +6,12 @@
     .factory('ExpeditionViewHelper', ExpeditionViewHelper);
 
   ExpeditionViewHelper.$inject = ['WeatherConditionsService', 'WaterColorsService',
-  'WaterFlowService', 'ShorelineTypesService', 'MobileOrganismsService', 'SessileOrganismsService',
-  'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
-  'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
-  'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
-  'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService', 'AmmoniaUnitsService', 'NitrateUnitsService',
-  'Authentication', 'lodash', 'moment'];
+    'WaterFlowService', 'ShorelineTypesService', 'MobileOrganismsService', 'SessileOrganismsService',
+    'GarbageExtentsService', 'WindDirectionsService', 'TrueFalsesService', 'WaterTemperatureMethodsService',
+    'DissolvedOxygenMethodsService', 'SalinityMethodsService', 'PhMethodsService', 'TurbidityMethodsService',
+    'AmmoniaMethodsService', 'NitrateMethodsService', 'WaterTemperatureUnitsService', 'DissolvedOxygenUnitsService',
+    'SalinityUnitsService', 'PhUnitsService', 'TurbidityUnitsService', 'AmmoniaUnitsService', 'NitrateUnitsService',
+    'Authentication', 'lodash', 'moment'];
 
   function ExpeditionViewHelper(WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, MobileOrganismsService, SessileOrganismsService,

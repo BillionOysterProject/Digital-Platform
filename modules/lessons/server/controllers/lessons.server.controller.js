@@ -193,7 +193,6 @@ exports.incrementalSave = function(req, res) {
 
   if (lesson) {
     lesson = _.extend(lesson, req.body);
-    // console.log('lesson.materialsResources.vocabulary', lesson.materialsResources.vocabulary);
     lesson.returnedNotes = '';
     if (!req.body.initial) lesson.status = 'draft';
 

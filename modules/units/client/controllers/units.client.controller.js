@@ -6,7 +6,7 @@
     .controller('UnitsController', UnitsController);
 
   UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', '$location', 'unitResolve', 'Authentication',
-  'UnitsService', 'UnitLessonsService'];
+    'UnitsService', 'UnitLessonsService'];
 
   function UnitsController($scope, $state, $http, $interval, $timeout, $location, unit, Authentication,
     UnitsService, UnitLessonsService) {

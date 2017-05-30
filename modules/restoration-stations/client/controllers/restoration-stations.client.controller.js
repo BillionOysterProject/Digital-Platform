@@ -6,8 +6,8 @@
     .controller('RestorationStationsController', RestorationStationsController);
 
   RestorationStationsController.$inject = ['$scope', '$http','$timeout', 'lodash', 'FileUploader',
-  'BodiesOfWaterService', 'BoroughsCountiesService', 'ShorelineTypesService', 'SiteCoordinatorsService',
-  'PropertyOwnersService', 'ExpeditionViewHelper', 'RestorationStationsService'];
+    'BodiesOfWaterService', 'BoroughsCountiesService', 'ShorelineTypesService', 'SiteCoordinatorsService',
+    'PropertyOwnersService', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function RestorationStationsController($scope, $http, $timeout, lodash, FileUploader,
   BodiesOfWaterService, BoroughsCountiesService, ShorelineTypesService, SiteCoordinatorsService,

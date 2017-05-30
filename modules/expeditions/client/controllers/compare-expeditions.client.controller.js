@@ -6,8 +6,8 @@
     .controller('ExpeditionsCompareController', ExpeditionsCompareController);
 
   ExpeditionsCompareController.$inject = ['Authentication', 'ExpeditionsService', 'TeamsService', 'SchoolOrganizationsService',
-  'ExpeditionViewHelper', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
-  '$http', '$location', '$anchorScroll', '$timeout', '$window', 'lodash', 'moment'];
+    'ExpeditionViewHelper', 'RestorationStationsService', 'TeamLeads', '$rootScope', '$scope', '$stateParams',
+    '$http', '$location', '$anchorScroll', '$timeout', '$window', 'lodash', 'moment'];
 
   function ExpeditionsCompareController(Authentication, ExpeditionsService, TeamsService, SchoolOrganizationsService,
     ExpeditionViewHelper, RestorationStationsService, TeamLeads, $rootScope, $scope, $stateParams,
