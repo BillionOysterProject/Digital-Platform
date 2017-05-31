@@ -14,6 +14,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   _ = require('lodash'),
   queryString = require('query-string'),
+  async = require('async'),
   crypto = require('crypto');
 
 /**
@@ -242,6 +243,7 @@ exports.deny = function(req, res) {
  */
 exports.list = function (req, res) {
   var query;
+  var queryCount;
   var and = [];
   var admin = isAdmin(req.user);
 
@@ -264,6 +266,10 @@ exports.list = function (req, res) {
     } else {
       and.push({ $or: [{ 'roles': 'team lead' }, { 'roles': 'team member' }, { 'roles': 'partner' }] });
     }
+  }
+
+  if (req.query.teamLeadType) {
+    and.push({ 'teamLeadType': req.query.teamLeadType });
   }
 
   if (req.query.organizationId) {
@@ -292,80 +298,81 @@ exports.list = function (req, res) {
 
   if (and.length === 1) {
     query = User.find(and[0], '-salt -password');
+    queryCount = User.find(and[0], '-salt -password');
   } else if (and.length > 0) {
     query = User.find({ $and: and }, '-salt -password');
+    queryCount = User.find({ $and: and }, '-salt -password');
   } else {
     query = User.find({}, '-salt -password');
+    queryCount = User.find({}, '-salt -password');
   }
 
-  if (req.query.sort) {
-    if (req.query.sort === 'firstName') {
-      query.sort({ 'firstName': 1 });
-    } else if (req.query.sort === 'lastName') {
-      query.sort({ 'lastName': 1 });
-    }
-  } else {
-    query.sort('-create');
-  }
-
-  if (req.query.limit) {
-    var limit = Number(req.query.limit);
-    if (req.query.page) {
-      var page = Number(req.query.page);
-      query.skip(limit*(page-1)).limit(limit);
-    } else {
-      query.limit(limit);
-    }
-  }
-
-  query.populate('user', 'displayName email roles profileImageURL')
-  .populate('schoolOrg', 'name pending streetAddress city state description').exec(function (err, users) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-    if (req.query.showTeams) {
-      if (users && users.length > 0) {
-        var findTeams = function(user, callback) {
-          var queryTeam;
-          if (hasRole(user, 'team member')) {
-            queryTeam = Team.find({ 'teamMembers': user });
-          } else {
-            queryTeam = Team.find({ 'teamLead': user });
-          }
-          queryTeam.populate('teamMembers', 'displayName profileImageURL email username')
-          .populate('teamLead', 'displayName profileImageURL email')
-          .populate('schoolOrg', 'name')
-          .exec(function(err, teams) {
-            callback(teams);
-          });
-        };
-
-        var findTeamsForUsers = function(index, users, updatedUsers, callback) {
-          if (index < users.length) {
-            findTeams(users[index], function(teams) {
-              var user = users[index] ? users[index].toJSON() : {};
-              if (teams && teams.length) {
-                user.teams = teams;
-              }
-              updatedUsers.push(user);
-              findTeamsForUsers(index+1, users, updatedUsers, callback);
-            });
-          } else {
-            callback(updatedUsers);
-          }
-        };
-
-        findTeamsForUsers(0, users, [], function(updatedUsers) {
-          res.json(updatedUsers);
-        });
-      } else {
-        res.json(users);
+  queryCount.count().exec(function(err, count) {
+    if (req.query.sort) {
+      if (req.query.sort === 'firstName') {
+        query.sort({ 'firstName': 1 });
+      } else if (req.query.sort === 'lastName') {
+        query.sort({ 'lastName': 1 });
       }
     } else {
-      res.json(users);
+      query.sort('-create');
     }
+
+    if (req.query.limit) {
+      var limit = Number(req.query.limit);
+      if (req.query.page) {
+        var page = Number(req.query.page);
+        query.skip(limit*(page-1)).limit(limit);
+      } else {
+        query.limit(limit);
+      }
+    }
+
+    query.populate('user', 'displayName email roles profileImageURL')
+    .populate('schoolOrg', 'name pending streetAddress city state description').exec(function (err, users) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      if (req.query.showTeams) {
+        if (users && users.length > 0) {
+          var updatedUsers = [];
+          async.forEach(users, function(user, callback) {
+            var queryTeam;
+            var userJSON = user ? user.toJSON() : {};
+            if (hasRole(userJSON, 'team member')) {
+              queryTeam = Team.find({ 'teamMembers': userJSON });
+            } else {
+              queryTeam = Team.find({ 'teamLead': userJSON });
+            }
+            queryTeam.populate('teamMembers', 'displayName profileImageURL email username')
+            .populate('teamLead', 'displayName profileImageURL email')
+            .populate('schoolOrg', 'name')
+            .exec(function(err, teams) {
+              userJSON.teams = teams;
+              updatedUsers.push(userJSON);
+              callback();
+            });
+          }, function(err) {
+            res.json({
+              totalCount: count,
+              users: updatedUsers
+            });
+          });
+        } else {
+          res.json({
+            totalCount: count,
+            users: users
+          });
+        }
+      } else {
+        res.json({
+          totalCount: count,
+          users: users
+        });
+      }
+    });
   });
 };
 

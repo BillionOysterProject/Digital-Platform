@@ -6,7 +6,7 @@
     .controller('SubmittedExpeditionsListController', SubmittedExpeditionsListController);
 
   SubmittedExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication',
-  'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService', 'ExpeditionViewHelper'];
+    'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService', 'ExpeditionViewHelper'];
 
   function SubmittedExpeditionsListController(moment, lodash, Authentication,
     ExpeditionsService, ExpeditionActivitiesService, TeamsService, ExpeditionViewHelper) {

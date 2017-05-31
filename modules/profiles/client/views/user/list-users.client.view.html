@@ -18,9 +18,6 @@
     </section>
 </div>
 
-<!--TIFF:
-    1) Change page permissions to be visible to all admin/team lead/team members (not pendings). I updated the sidenav permissions but still getting a forbidden
-    2) Can we speed up the initial page load by just pulling in the first page results? Or, alternatively, make "Team Lead" the default filter on initial load -->
 <section class="content">
 <section class="container">
 <div class="row">
@@ -35,19 +32,15 @@
             </select>
         </div>
     </div>
-    <!--TIFF: Wire up this new Team Lead type filter - display only when role "Team Lead" filter is selected --
-    <div class="col-sm-4">
+    <div class="col-sm-4" ng-show="filter.role === 'team lead'">
         <div class="form-group">
-            <select class="form-control" name="role" id="role" ng-model="filter.role"
+            <select class="form-control" name="type" id="type" ng-model="filter.teamLeadType"
             ng-change="fieldChanged()">
                 <option value="">Show all types</option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
+                <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
             </select>
         </div>
-    </div>-->
+    </div>
     <div class="col-sm-4">
         <div class="form-group">
             <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
@@ -76,16 +69,13 @@
           <a class="btn btn-sm btn-default" ng-click="openApproveOrganizations()">Respond to Organizations</a></div>
     </div>
 </div>
-<!--TIFF: Only admin should see admin accounts and pending lead/member accounts -->
 <div class="row">
     <div class="col-md-12">
         <table class="table table-hover table-verticalalign table-responsive">
-            <!--TIFF: Fix click to open user profile modal on this page -->
-            <tr ng-repeat="user in pagedItems" ng-click="vm.openViewUserModal()">
+            <tr ng-repeat="user in users" ng-click="openViewUserModal(user)">
                 <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
                 <td>
                     <h4>{{user.firstName}} {{user.lastName}}</h4><br />
-                    <!--TIFF: Only show 1 main role instead of list (either Admin, Team Lead/Member pending, or Team Lead/Member) -- "user" or "org lead" should never show-->
                     <h6>{{user.roles | roleNormalizer:true}}
                       <span ng-show="user.teamLeadType"><br/>{{user.teamLeadType | teamLeadTypes}}</span>
                     </h6>
@@ -102,10 +92,6 @@
                       {{team.name}}<span ng-if="!$last">,&nbsp;</span>
                     </p>
                 </td>
-                <!--archived:
-                    ng-click="openAdminTeam(team)"
-                    ng-click="openAdminTeamLeadForm(user)"
-                    ng-click="openDeleteUser(user)"-->
             </tr>
         </table>
 
@@ -116,11 +102,7 @@
 </section>
 
 <!-- MODALS -->
-<form-admin-team-lead-modal user="formUser" organizations="organizations" save-function="saveAdminTeamLeadForm" close-function="cancelAdminTeamLeadForm"></form-admin-team-lead-modal>
-<delete-user-modal user="userToDelete" can-be-deleted-function="canBeDeleted" delete-function="deleteUser" close-function="cancelDeleteUser"></delete-user-modal>
 <approve-team-leads-modal lead-requests="leadRequests" cancel-function="closeApproveTeamLeads"></approve-team-leads-modal>
 <approve-school-org-modal org-requests="leadRequestsOrgPending" cancel-function="closeApproveOrganizations"></approve-school-org-modal>
-<view-admin-team-modal team="team" delete-team-function="openDeleteTeam" delete-team-error="deleteTeamError"
-  delete-team-member-function="openDeleteTeamMember" delete-team-member-error="deleteTeamMemberError"
-  close-function="closeAdminTeam"></view-admin-team-modal>
+<view-user-modal user="userToOpen" initial="initial" close-function="closeViewUserModal"></view-user-modal>
 <!-- END MODALS -->

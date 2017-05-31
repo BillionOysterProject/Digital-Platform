@@ -40,6 +40,87 @@ var checkRole = function(user, role) {
   return (index > -1) ? true : false;
 };
 
+var findUserInTeam = function(user, team) {
+  var index = _.findIndex(team, function(u) {
+    return u._id === user._id;
+  });
+  return (index > -1) ? true : false;
+};
+
+var findProtocols = function(user, teamLists, callback) {
+  var protocols = [];
+  if (findUserInTeam(user, teamLists.siteCondition)) {
+    protocols.push('Site Condition');
+  }
+  if (findUserInTeam(user, teamLists.oysterMeasurement)) {
+    protocols.push('Oyster Measurements');
+  }
+  if (findUserInTeam(user, teamLists.mobileTrap)) {
+    protocols.push('Mobile Trap');
+  }
+  if (findUserInTeam(user, teamLists.settlementTiles)) {
+    protocols.push('Settlement Tiles');
+  }
+  if (findUserInTeam(user, teamLists.waterQuality)) {
+    protocols.push('Water Quality');
+  }
+  if (protocols.length < 1) {
+    callback(null);
+  } else if (protocols.length === 1) {
+    callback(protocols[0]);
+  } else if (protocols.length === 2) {
+    callback(protocols.join(' and '));
+  } else {
+    protocols[protocols.length-1] = 'and ' + protocols[protocols.length-1];
+    callback(protocols.join(', '));
+  }
+};
+
+var getAllAssignedUsers = function(teamLists) {
+  var userArray = [];
+  userArray = userArray.concat(teamLists.siteCondition);
+  userArray = userArray.concat(teamLists.oysterMeasurement);
+  userArray = userArray.concat(teamLists.mobileTrap);
+  userArray = userArray.concat(teamLists.settlementTiles);
+  userArray = userArray.concat(teamLists.waterQuality);
+  userArray = _.uniqWith(userArray, function(a, b) {
+    return a._id.toString() === b._id.toString();
+  });
+  return userArray;
+};
+
+var sendEmailToAssignedUsers = function(expedition, teamLists, teamLead, subject,
+  emailTemplate, emailData, successCallback, errorCallback) {
+  var userArray = getAllAssignedUsers(teamLists);
+  var teamMembers = _.map(userArray, 'displayName');
+  teamMembers[teamMembers.length-1] = 'and ' + teamMembers[teamMembers.length-1];
+  emailData.TeamMembers = teamMembers.join(', ');
+
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+  async.forEach(userArray, function(user, callback) {
+    findProtocols(user, teamLists, function(protocolList) {
+      emailData.ExpeditionProtocols = protocolList;
+      emailData.FirstName = user.firstName;
+      if (user.email === teamLead.email) {
+        callback();
+      } else {
+        email.sendEmailTemplateFromUser(user.email, teamLead.email, subject, emailTemplate, emailData,
+        function(info) {
+          callback();
+        }, function(errorMessages) {
+          callback(errorMessages);
+        });
+      }
+    });
+  }, function(err) {
+    if (err) {
+      errorCallback(err);
+    } else {
+      successCallback(null, expedition);
+    }
+  });
+};
 
 /**
  * Create a expedition
@@ -136,7 +217,25 @@ exports.create = function (req, res) {
                             message: errorHandler.getErrorMessage(err)
                           });
                         } else {
-                          res.json(expedition);
+                          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+                          sendEmailToAssignedUsers(expedition, req.body.teamLists, req.user,
+                            'You have been invited to join an ORS monitoring expedition',
+                            'expedition_launched', {
+                              TeamLead: req.user.displayName,
+                              ExpeditionName: expedition.name,
+                              ORSName: req.body.station.name,
+                              ExpeditionDate: moment(expedition.monitoringStartDate).format('MMMM D, YYYY'),
+                              ExpeditionTimeStart: moment(expedition.monitoringStartDate).format('HH:mm'),
+                              ExpeditionTimeEnd: moment(expedition.monitoringEndDate).format('HH:mm'),
+                              ExpeditionNotes: ((expedition.notes) ? expedition.notes : ''),
+                              LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
+                              LinkProfile: httpTransport + req.headers.host + '/profiles',
+                            }, function(info) {
+                              res.json(expedition);
+                            }, function(errorMessage) {
+                              res.json(expedition);
+                            });
                         }
                       });
                     }
@@ -708,7 +807,7 @@ exports.list = function (req, res) {
               if (err) throw err;
 
               User.populate(item.team, { 'path': 'teamLeads' }, function(err,output) {
-                if (err) throw err; 
+                if (err) throw err;
                 callback();
               });
             });
@@ -777,11 +876,11 @@ exports.expeditionByID = function (req, res, next, id) {
   .populate('team.schoolOrg', 'name')
   .populate('team.teamLeads', 'email distplayName firstName profileImageURL')
   .populate('station')
-  .populate('teamLists.siteCondition', 'email displayName username profileImageURL')
-  .populate('teamLists.oysterMeasurement', 'email displayName username profileImageURL')
-  .populate('teamLists.mobileTrap', 'email displayName username profileImageURL')
-  .populate('teamLists.settlementTiles', 'email displayName username profileImageURL')
-  .populate('teamLists.waterQuality', 'email displayName username profileImageURL');
+  .populate('teamLists.siteCondition', 'email displayName firstName username profileImageURL')
+  .populate('teamLists.oysterMeasurement', 'email displayName firstName username profileImageURL')
+  .populate('teamLists.mobileTrap', 'email displayName firstName username profileImageURL')
+  .populate('teamLists.settlementTiles', 'email displayName firstName username profileImageURL')
+  .populate('teamLists.waterQuality', 'email displayName firstName username profileImageURL');
 
   if (req.query.full) {
     query.populate('protocols.siteCondition')
