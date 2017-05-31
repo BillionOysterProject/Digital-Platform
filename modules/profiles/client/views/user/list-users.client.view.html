@@ -21,7 +21,7 @@
 <section class="content">
 <section class="container">
 <div class="row">
-    <div class="col-sm-4">
+    <div ng-class="{'col-sm-4': filter.role === 'team lead','col-sm-6': filter.role !== 'team lead'}">
         <div class="form-group">
             <select class="form-control" name="role" id="role" ng-model="filter.role"
             ng-change="fieldChanged()">
@@ -41,7 +41,7 @@
             </select>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div ng-class="{'col-sm-4': filter.role === 'team lead','col-sm-6': filter.role !== 'team lead'}">
         <div class="form-group">
             <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
               ng-change="fieldChanged()">
