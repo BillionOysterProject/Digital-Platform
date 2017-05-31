@@ -3,80 +3,42 @@
         <section class="container">
             <div class="row">
                 <div class="col-md-4 col-sm-6 box text-center" style="color: {{vm.unit.color}}">
-                    <h1><i class="fa-2x {{vm.unit.icon}}"></i></h1>
+                    <h1><i class="{{vm.unit.icon}}"></i></h1>
                     <h2>{{vm.unit.title}}</h2>
                     <h6>5 Lessons | 14 Sub Units</h6>
+                </div>
+                <div class="col-md-8 col-sm-6">
+                    <br/><br/><br/>
+                    <h4 class="white">Sub unit of <br/>
+                        <b class="h3"><a href="#" class="white">Tree Unit</a></b> and 
+                        <b class="h3"><a href="#" class="white">Plant Unit</a></b>
+                    </h4>
                 </div>
             </div>
         </section>
     </section>
 </div>
 
-<section class="content">
-    <section class="container">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="alert alert-info">This unit is a sub unit of <a href="#"><b>Tree Unit</b></a> and <a href="#"><b>Plant Unit</b></a></div>
-                <!--
-                <h5 ng-show="vm.unit.user">
-                    <img ng-show="vm.unit.user.profileImageURL" ng-src="{{vm.unit.user.profileImageURL}}" alt="{{vm.unit.user.displayName}}" class="header-profile-image" />
-                    <b><a ng-click="vm.openViewUserModal()">{{vm.unit.user.displayName}}</a></b><br>
-                    <a href="mailto:{{vm.unit.user.email}}">{{vm.unit.user.email}}</a>
-                </h5>
-                <p ng-bind="vm.unit.created | date:'mediumDate'"></p>
-                -->
-            </div>
-            <div class="col-sm-4 text-right">
-                <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">
-                    {{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
-                <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
-                <!-- TODO: Wire up download 
-                <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>-->
-            </div>
-        </div>
-    </section>
-</section>
+<!--
+<h5 ng-show="vm.unit.user">
+    <img ng-show="vm.unit.user.profileImageURL" ng-src="{{vm.unit.user.profileImageURL}}" alt="{{vm.unit.user.displayName}}" class="header-profile-image" />
+    <b><a ng-click="vm.openViewUserModal()">{{vm.unit.user.displayName}}</a></b><br>
+    <a href="mailto:{{vm.unit.user.email}}">{{vm.unit.user.email}}</a>
+</h5>
+<p ng-bind="vm.unit.created | date:'mediumDate'"></p>
+-->
 
 <section class="content">
     <section class="container">
+        <nav class="nav nav-default text-right">
+            <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">
+                {{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
+            <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
+            <!-- TODO: Wire up download 
+            <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>-->
+        </nav>
+        
         <div class="row">
-            <div class="col-sm-8" ng-show="vm.lessons.length > 1">
-                <h3 class="blue">Lessons</h3><br/>
-                <table class="table table-hover table-condensed table-responsive">
-                    <tr ng-repeat="lesson in vm.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
-                      <td><h4 class="blue"><b>1</b></h4></td>
-                      <td>
-                        <h4>{{lesson.title}}</h4><br/>
-                        <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
-                        {{lesson.user.displayName}}
-                      </td>
-                      <td>
-                        <b>Setting:</b> {{lesson.lessonOverview.setting}}<br/><b>Grade:</b> {{lesson.lessonOverview.grade}}
-                      </td>
-                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
-                      <td>
-                        <ul class="list-inline">
-                            <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                                <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
-                                class="label label-default"></span>
-                            </li>
-                        </ul>
-                      </td>
-                    </tr>
-                </table>
-                
-                <h3 class="blue">Sub Units</h3><br/><!-- ng-show="vm.subunits.length > 1"-->
-                <table class="table table-hover table-responsive">
-                    <tr ui-sref="unit.view({ unitId: unit._id })">
-                      <td><h4 class="blue"><b>1</b></h4></td>
-                      <td>
-                        <h4><i class="fa fa-tree green"></i> Unit Title</h4>
-                      </td>
-                      <td><b>5</b> Lessons</td>
-                    </tr>
-                </table>
-            </div>
-            
             <div class="col-md-4">
                 <h3>Highlights</h3>
                 <p>This should be a text box like the Background in the Lesson Plan Template -- needs full WYSIWYG editor.</p>
@@ -217,7 +179,49 @@
                     </ul>
                   </div>
                 </div>
-            </div><!--end col-md-4-->
+            </div>
+            
+            <div class="col-sm-8">
+                <h3>Lessons</h3><br/>
+                <div class="alert alert-info" ng-show="vm.lessons.length < 1">
+                    Whoops, this unit doesn't have any lessons yet! Check back for updates.
+                </div>
+                <table class="table table-hover table-responsive" ng-show="vm.lessons.length > 1">
+                    <tr ng-repeat="lesson in vm.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
+                      <td><h4 class="blue"><b>1</b></h4></td>
+                      <td>
+                        <h4>{{lesson.title}}</h4>
+                      </td>
+                      <td>
+                        <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
+                        {{lesson.user.displayName}}
+                      </td>
+                      <td><b>{{lesson.lessonOverview.setting}}</b> setting</td>
+                      <td><b>{{lesson.lessonOverview.grade}}</b> grade</td>
+                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
+                      <td>
+                        <ul class="list-inline">
+                            <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                                <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                                class="label label-default"></span>
+                            </li>
+                        </ul>
+                      </td>
+                    </tr>
+                </table>
+                
+                <h3>Sub Units</h3><br/><!-- ng-show="vm.subunits.length > 1"-->
+                <table class="table table-hover table-responsive">
+                    <tr ui-sref="unit.view({ unitId: unit._id })">
+                      <td><h4 class="blue"><b>1</b></h4></td>
+                      <td>
+                        <h4><i class="fa fa-tree green"></i> Unit Title</h4>
+                      </td>
+                      <td><b>15</b> Lessons</td>
+                      <td><b>8</b> Sub Units</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </section>
 </section>
