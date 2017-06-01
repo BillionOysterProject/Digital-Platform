@@ -73,7 +73,7 @@ exports.create = function (req, res) {
 
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
   var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
-  var profileLink = httpTransport + req.headers.host + '/settings/profile';
+  var profileLink = httpTransport + req.headers.host + '/profiles';
 
   if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
     station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
@@ -152,7 +152,7 @@ exports.update = function (req, res) {
 
     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
     var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
-    var profileLink = httpTransport + req.headers.host + '/settings/profile';
+    var profileLink = httpTransport + req.headers.host + '/profiles';
 
     if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
       if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
@@ -745,7 +745,7 @@ exports.sendORSStatusEmail = function(req, res) {
           ORSDescription: statusHistory.description,
           LinkORSPhoto: (statusHistory.photo) ? statusHistory.photo.path : '',
           LinkORSForm: httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
         }, function(info) {
           res.json(station);
         }, function(errorMessage) {

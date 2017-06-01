@@ -70,7 +70,7 @@ exports.signup = function (req, res) {
               FirstName: user.firstName,
               OrgName: createdOrg.name,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function(info) {
               sendAdminNewOrganizationEmail(function() {
                 orgCallback();
@@ -170,7 +170,7 @@ exports.signup = function (req, res) {
                   FirstName: teamLead.firstName,
                   TeamMemberName: user.displayName,
                   LinkMemberRequest: httpTransport + req.headers.host + '/settings/members',
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
                 }, function(info) {
                   loginNewUser();
                 }, function(errorMessage) {
@@ -187,7 +187,7 @@ exports.signup = function (req, res) {
               email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
                 TeamLeadName: user.displayName,
                 LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users',
-                LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
@@ -199,7 +199,7 @@ exports.signup = function (req, res) {
               FirstName: user.firstName,
               TeamMemberName: user.displayName,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function(info) {
               sendAdminNewTeamLeadEmail(loginNewUser());
             }, function(errorMessage) {

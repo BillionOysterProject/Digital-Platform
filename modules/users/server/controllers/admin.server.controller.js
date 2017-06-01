@@ -203,7 +203,7 @@ exports.approve = function (req, res) {
         'lead_approved', {
           FirstName: user.firstName,
           LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
         }, function(info) {
           res.json(user);
         }, function(errorMessage) {
@@ -840,7 +840,7 @@ var sendReminderInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOr
     TeamOrOrgName: teamOrOrgName,
     Username: user.username,
     LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token + '?' + usernameParams,
-    LinkProfile: httpTransport + host + '/settings/profile'
+    LinkProfile: httpTransport + host + '/profiles'
   }, function(info) {
     successCallback();
   }, function(errorMessage) {

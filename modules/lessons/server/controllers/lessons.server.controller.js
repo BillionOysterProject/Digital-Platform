@@ -78,7 +78,7 @@ exports.create = function(req, res) {
             TeamLeadName: req.user.displayName,
             LessonName: lesson.title,
             LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           }, function(info) {
             res.json(lesson);
           }, function(errorMessage) {
@@ -323,7 +323,7 @@ exports.publish = function(req, res) {
             FirstName: lesson.user.firstName,
             LessonName: lesson.title,
             LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(response) {
             res.json(lesson);
@@ -374,7 +374,7 @@ exports.return = function(req, res) {
             LessonName: lesson.title,
             LessonReturnedNote: lesson.returnedNotes,
             LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(response) {
             res.json(lesson);
@@ -698,7 +698,7 @@ exports.lessonFeedback = function(req, res) {
           Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
           Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
           LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
         },
         function(response) {
           res.json(lessonFeedback);
