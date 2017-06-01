@@ -76,12 +76,11 @@
                 <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
                 <td>
                     <h4>{{user.firstName}} {{user.lastName}}</h4><br />
-                    <h6>{{user.roles | roleNormalizer:true}}
-                      <span ng-show="user.teamLeadType"><br/>{{user.teamLeadType | teamLeadTypes}}</span>
-                    </h6>
+                    <h6>{{user.roles | roleNormalizer:true}}</h6>
+                    <span class="text-muted" ng-show="user.teamLeadType"><br/>{{user.teamLeadType | teamLeadTypes}}</span>
                 </td>
                 <td>
-                  <p><b>{{user.username}}</b><br/>{{user.email}}</p>
+                    <p><b>{{user.username}}</b><br/>{{user.email}}</p>
                 </td>
                 <td>
                     <h6>Organization</h6>
