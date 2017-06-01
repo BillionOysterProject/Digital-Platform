@@ -77,7 +77,8 @@ exports.create = function(req, res) {
           email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
             TeamLeadName: req.user.displayName,
             LessonName: lesson.title,
-            LinkLessonRequest: httpTransport + req.headers.host + '/library/user'
+            LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
           }, function(info) {
             res.json(lesson);
           }, function(errorMessage) {

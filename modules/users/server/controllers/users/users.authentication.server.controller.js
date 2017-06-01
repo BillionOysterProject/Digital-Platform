@@ -186,7 +186,8 @@ exports.signup = function (req, res) {
             var sendAdminNewTeamLeadEmail = function(callback) {
               email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
                 TeamLeadName: user.displayName,
-                LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users'
+                LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users',
+                LinkProfile: httpTransport + req.headers.host + '/settings/profile'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
