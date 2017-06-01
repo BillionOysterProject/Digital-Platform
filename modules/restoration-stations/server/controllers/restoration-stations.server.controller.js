@@ -76,7 +76,7 @@ exports.create = function (req, res) {
   var profileLink = httpTransport + req.headers.host + '/settings/profile';
 
   if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
-    station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+    station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
     station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
     station.siteCoordinator = undefined;
 
@@ -156,13 +156,13 @@ exports.update = function (req, res) {
 
     if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
       if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
-        station.otherSiteCoordinator.name !== req.body.siteCoordinator.name ||
+        station.otherSiteCoordinator.name !== req.body.siteCoordinator.displayName ||
         station.otherSiteCoordinator.email !== req.body.siteCoordinator.email) {
         sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
-          station.name, req.user.displayName, req.body.siteCoordinator.name, req.body.siteCoordinator.email, orsFormLink, profileLink,
+          station.name, req.user.displayName, req.body.siteCoordinator.displayName, req.body.siteCoordinator.email, orsFormLink, profileLink,
           function() {});
       }
-      station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
+      station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
       station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
       station.siteCoordinator = undefined ;
     } else {
