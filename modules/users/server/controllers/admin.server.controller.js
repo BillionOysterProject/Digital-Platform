@@ -839,7 +839,8 @@ var sendReminderInviteEmail = function(user, host, leadName, teamOrOrg, teamOrOr
     TeamOrOrg: teamOrOrg,
     TeamOrOrgName: teamOrOrgName,
     Username: user.username,
-    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token + '?' + usernameParams
+    LinkCreateAccount: httpTransport + host + '/api/auth/claim-user/' + token + '?' + usernameParams,
+    LinkProfile: httpTransport + host + '/settings/profile'
   }, function(info) {
     successCallback();
   }, function(errorMessage) {

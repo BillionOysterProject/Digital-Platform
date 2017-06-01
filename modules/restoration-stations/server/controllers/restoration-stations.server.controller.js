@@ -34,13 +34,14 @@ var path = require('path'),
 
 var SITE_COORDINATOR = 'site coordinator';
 
-var sendAdminEmailOther = function(subject, emailName, stationName, userName, otherName, otherEmail, link, callback) {
+var sendAdminEmailOther = function(subject, emailName, stationName, userName, otherName, otherEmail, formLink, profileLink, callback) {
   email.sendEmailTemplate(config.mailer.admin, subject, emailName, {
     ORSName: stationName,
     TeamLeadName: userName,
     OtherName: otherName || '',
     OtherEmail: otherEmail || '',
-    LinkORSForm: link
+    LinkORSForm: formLink,
+    LinkProfile: profileLink
   }, function(info) {
     callback();
   }, function(errorMessage) {
@@ -72,6 +73,7 @@ exports.create = function (req, res) {
 
   var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
   var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
+  var profileLink = httpTransport + req.headers.host + '/settings/profile';
 
   if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
     station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
@@ -79,7 +81,7 @@ exports.create = function (req, res) {
     station.siteCoordinator = undefined;
 
     sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
-      station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink,
+      station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink, profileLink,
       function() {
       });
   } else {
@@ -92,7 +94,7 @@ exports.create = function (req, res) {
     station.propertyOwner = undefined;
 
     sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
-      station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink,
+      station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink, profileLink,
       function() {
       });
   } else {
@@ -150,13 +152,14 @@ exports.update = function (req, res) {
 
     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
     var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
+    var profileLink = httpTransport + req.headers.host + '/settings/profile';
 
     if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
       if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
         station.otherSiteCoordinator.name !== req.body.siteCoordinator.name ||
         station.otherSiteCoordinator.email !== req.body.siteCoordinator.email) {
         sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
-          station.name, req.user.displayName, req.body.siteCoordinator.name, req.body.siteCoordinator.email, orsFormLink,
+          station.name, req.user.displayName, req.body.siteCoordinator.name, req.body.siteCoordinator.email, orsFormLink, profileLink,
           function() {});
       }
       station.otherSiteCoordinator.name = req.body.siteCoordinator.name;
@@ -171,7 +174,7 @@ exports.update = function (req, res) {
         station.otherPropertyOwner.name !== req.body.propertyOwner.name ||
         station.otherPropertyOwner.email !== req.body.propertyOwner.email) {
         sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
-          station.name, req.user.displayName, req.body.propertyOwner.name, req.body.propertyOwner.email, orsFormLink,
+          station.name, req.user.displayName, req.body.propertyOwner.name, req.body.propertyOwner.email, orsFormLink, profileLink,
           function() {
           });
       }
@@ -741,7 +744,8 @@ exports.sendORSStatusEmail = function(req, res) {
           ORSStatus: statusHistory.status,
           ORSDescription: statusHistory.description,
           LinkORSPhoto: (statusHistory.photo) ? statusHistory.photo.path : '',
-          LinkORSForm: httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id
+          LinkORSForm: httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id,
+          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
         }, function(info) {
           res.json(station);
         }, function(errorMessage) {

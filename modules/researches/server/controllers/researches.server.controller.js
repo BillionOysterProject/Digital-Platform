@@ -191,7 +191,8 @@ var alertTeamLeads = function(research, user, host, callback) {
                 FirstName: item.firstName,
                 TeamMemberName: user.displayName,
                 PosterName: research.title,
-                LinkPosterRequest: httpTransport + host + '/research/user'
+                LinkPosterRequest: httpTransport + host + '/research/user',
+                LinkProfile: httpTransport + host + '/settings/profile'
               }, function(info) {
                 callback();
               }, function(errorMessage) {
