@@ -258,6 +258,7 @@ exports.list = function (req, res) {
       }
     } else {
       and.push({ 'roles': req.query.role });
+      and.push({ 'roles': { $nin: ['admin', 'team lead pending', 'team member pending'] } });
     }
   } else {
     if (admin) {
@@ -265,6 +266,7 @@ exports.list = function (req, res) {
       { 'roles': 'team member' }, { 'roles': 'team member pending' }, { 'roles': 'partner' }] });
     } else {
       and.push({ $or: [{ 'roles': 'team lead' }, { 'roles': 'team member' }, { 'roles': 'partner' }] });
+      and.push({ 'roles': { $nin: ['admin', 'team lead pending', 'team member pending'] } });
     }
   }
 
