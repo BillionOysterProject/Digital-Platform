@@ -188,11 +188,21 @@ exports.deleteMember = function (req, res) {
     });
   };
 
-  if(team === undefined || team === null) {
-    return res.status(400).send({
-      message: 'Team was not specified'
-    });
-  }
+  var findAndRemoveMemberFromTeam = function(team, member, callback) {
+    // Remove the user from the team
+    var mIndex = memberIndex(member, team);
+    if (mIndex > -1) {
+      removeMemberFromTeam(team, mIndex, function(err) {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, member);
+        }
+      });
+    } else {
+      callback('Member was not found in team');
+    }
+  };
 
   if(member === undefined || member === null) {
     return res.status(400).send({
@@ -200,33 +210,32 @@ exports.deleteMember = function (req, res) {
     });
   }
 
-  // Remove the user from the team
-  var mIndex = memberIndex(member, team);
-  if (mIndex > -1) {
-    removeMemberFromTeam(team, mIndex, function(err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+  Team.find({ $or:[{ 'teamMembers': member }, { 'teamLeads': member }] }).populate('teamMembers', 'displayName').exec(function(err, teams) {
+    if (err) {
+      return res.status(400).send({
+        message: 'Member not found in a team'
+      });
+    } else {
+      if(team === undefined || team === null) {
+        async.forEach(teams, function(item, callback) {
+          findAndRemoveMemberFromTeam(item, member, function(err, member) {
+            callback();
+          });
+        }, function(err) {
+          deleteUser();
         });
       } else {
-        Team.find({ $or:[{ 'teamMembers': member }, { 'teamLeads': member }] }).exec(function(err, teams) {
-          if (err) {
-            return res.status(400).send({
-              message: errorHandler.getErrorMessage(err)
-            });
-          } else if (teams && teams.length > 0) {
-            res.json(member);
-          } else {
+        findAndRemoveMemberFromTeam(team, member, function(err, member) {
+          if (!teams || (teams.length === 1 && team._id && teams[0]._id && team._id.toString() === teams[0]._id.toString())) {
             deleteUser();
+          } else {
+            res.json(member);
           }
         });
       }
-    });
-  } else {
-    return res.status(400).send({
-      message: 'Member was not found in team'
-    });
-  }
+    }
+  });
+
 };
 
 /**
