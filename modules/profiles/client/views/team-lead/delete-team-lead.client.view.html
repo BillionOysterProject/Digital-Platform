@@ -11,7 +11,7 @@
                 <p>Although they will be removed from managing this team, they will still have a team lead account inside the <b>{{organization.name}}</b> organization to create and manage other teams.</p>
                 <div class="form-group">
                     <label for="">Select the team lead to remove</label>
-                    <input type="text" ng-model="teamLead" placeholder="Team Leads" id="teamLead" name="teamLead"
+                    <input type="text" ng-model="teamLead" placeholder="Team Leads" id="teamLead" name="teamLead" autocomplete="off"
                     uib-typeahead="teamLead as teamLead.displayName for teamLead in team.teamLeads | filter:{displayName:$viewValue}"
                     class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
                 </div>
