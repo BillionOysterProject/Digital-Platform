@@ -23,7 +23,7 @@
                     <div class="form-group" ng-show="isAdmin && !team._id">
                         <label for="schoolOrg" ng-class="{'required': isAdmin}">Team Organization *</label>
                         <input type="text" ng-model="editTeam.schoolOrg" placeholder="Team Organization" id="schoolOrg" name="schoolOrg"
-                        uib-typeahead="org as org.name for org in organizations | filter:{name:$viewValue}"
+                        uib-typeahead="org as org.name for org in organizations | filter:{name:$viewValue}" autocomplete="off"
                         class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                         ng-disabled="!isAdmin" ng-required="isAdmin">
                     </div>

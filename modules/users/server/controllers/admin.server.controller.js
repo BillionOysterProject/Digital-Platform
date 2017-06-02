@@ -495,6 +495,7 @@ exports.userByID = function (req, res, next, id) {
 var createUserInternal = function(userJSON, schoolOrg, role, successCallback, errorCallback) {
   User.findOne({ 'email': userJSON.email }).exec(function(userErr, user) {
     if (userErr) {
+      console.log('finding a user', userErr);
       errorCallback(errorHandler.getErrorMessage(userErr));
     } else if (user) {
       //if the user doesn't have the role specified, add it
@@ -512,6 +513,7 @@ var createUserInternal = function(userJSON, schoolOrg, role, successCallback, er
         user.roles.push(role);
         user.save(function (err) {
           if (err) {
+            console.log('user saver err', err);
             errorCallback(errorHandler.getErrorMessage(err));
           } else {
             successCallback(user);
@@ -535,6 +537,7 @@ var createUserInternal = function(userJSON, schoolOrg, role, successCallback, er
         // Then save the user
         user.save(function (err) {
           if (err) {
+            console.log('create new user save err', err);
             errorCallback(errorHandler.getErrorMessage(err));
           } else {
             successCallback(user, token);
@@ -613,6 +616,7 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
     var teamId = (team && team._id) ? team._id : team;
     Team.findById(teamId).exec(function(err, team) {
       if (err) {
+        console.log('find team err', err);
         errorCallback(err);
       } else {
         var memberIndex = function(member, team) {
@@ -639,6 +643,7 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
           }
           team.save(function(err) {
             if (err) {
+              console.log('team saving err', err);
               errorCallback(err);
             }
             successCallback(team, schoolOrg);
@@ -650,6 +655,7 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
     var schoolOrgId = (schoolOrg && schoolOrg._id) ? schoolOrg._id : schoolOrg;
     SchoolOrg.findById(schoolOrgId).exec(function(err, schoolOrg) {
       if (err) {
+        console.log('find org err', err);
         errorCallback(err);
       } else {
         var leadIndex = function(user, org) {
@@ -665,6 +671,7 @@ var addToTeamOrOrg = function(user, team, schoolOrg, role, teamOrOrg, successCal
           schoolOrg.orgLeads.push(user);
           schoolOrg.save(function(err) {
             if (err) {
+              console.log('org save err', err);
               errorCallback(err);
             }
             successCallback(null, schoolOrg);
@@ -749,11 +756,13 @@ exports.createUser = function (req, res) {
               });
           }
         }, function(errorMessage) {
+          console.log('addToTeamOrOrg', errorMessage);
           return res.status(400).send({
             message: errorMessage
           });
         });
     }, function(errorMessage) {
+      console.log('createUserInternal', errorMessage);
       return res.status(400).send({
         message: errorMessage
       });
