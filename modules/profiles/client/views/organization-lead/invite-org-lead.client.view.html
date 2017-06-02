@@ -32,6 +32,7 @@
                 <div class="form-group" show-errors>
                     <label for="email" class="control-label">Email address</label>
                     <input type="text" class="form-control" id="email" name="email" ng-model="newTeamLead.email"
+                      ng-pattern="/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/"
                       ng-disabled="existingTeamLead"></input>
                 </div>
                 <div ng-show="error" class="alert alert-danger">

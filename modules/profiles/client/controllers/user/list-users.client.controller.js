@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('profiles').controller('UserListController', ['$scope', '$filter', 'lodash',
-  'Admin', 'SchoolOrganizationsService', 'TeamsService', 'TeamMembersDeleteService', 'ExpeditionViewHelper',
+  'Admin', 'SchoolOrganizationsService', 'TeamsService', 'ExpeditionViewHelper',
   function ($scope, $filter, lodash,
-    Admin, SchoolOrganizationsService, TeamsService, TeamMembersDeleteService, ExpeditionViewHelper) {
+    Admin, SchoolOrganizationsService, TeamsService, ExpeditionViewHelper) {
     $scope.checkRole = ExpeditionViewHelper.checkRole;
     $scope.isAdmin = $scope.checkRole('admin');
     $scope.isTeamLead = $scope.checkRole('team lead');
