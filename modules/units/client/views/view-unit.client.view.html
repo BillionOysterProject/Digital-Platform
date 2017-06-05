@@ -198,7 +198,6 @@
                       </td>
                       <td><b>{{lesson.lessonOverview.setting}}</b> setting</td>
                       <td><b>{{lesson.lessonOverview.grade}}</b> grade</td>
-                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
                       <td>
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
@@ -207,6 +206,12 @@
                             </li>
                         </ul>
                       </td>
+                      <td>
+                      <!--TODO: set the bootstrap tooltip to "html" for these two instances -->
+                        <a data-toggle="tooltip" title="{{lesson.lessonOverview.lessonSummary}}">Summary</a><br/>
+                        <a data-toggle="tooltip" title="{{lesson.lessonObjectives}}">Objectives</a>
+                      </td>
+                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
                     </tr>
                 </table>
                 
@@ -226,8 +231,10 @@
     </section>
 </section>
 
-    
-<!--
+
+<!-- ARCHIVED UNIT VIEW -- DELETE WHEN YOU WIRE UP NEW:
+                    
+                    
 <section class="content">
     <section class="container">
         <h2>Stage 1: Desired Results</h2>
