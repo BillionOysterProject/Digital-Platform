@@ -37,7 +37,7 @@
         controller: 'UserListController',
         data: {
           pageTitle: 'Users List',
-          roles: ['admin']
+          roles: ['admin','team member','team lead']
         }
       })
       .state('profiles.team', {

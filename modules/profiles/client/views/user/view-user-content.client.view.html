@@ -28,8 +28,9 @@
       </div>
       <div class="col-md-4">
         <h3>{{user.displayName}}</h3>
-        <h6>{{roles | roleNormalizer}}<br/><span class="blue" ng-show="user.teamLeadType">{{user.teamLeadType | teamLeadTypes}}</span></h6>
+        <h6>{{roles | roleNormalizer}}</h6>
         <p class="text-muted">
+          <span ng-show="user.teamLeadType">{{user.teamLeadType | teamLeadTypes}}<br/></span>
           <b>{{user.username}}</b><br/>
           <a href="mailto:{{user.email}}">{{user.email}}</a>
         </p>

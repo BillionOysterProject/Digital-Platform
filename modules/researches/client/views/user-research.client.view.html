@@ -38,7 +38,7 @@
                         <p>{{vm.getLongDate(createdResearch.created)}}</p>
                         <h4>{{createdResearch.title | sanitize}}</h4>
                         <!-- <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small> -->
-                        <img ng-show="createdResearch.headerImage" ng-src="{{createdResearch.headerImage.path}}" class="img-responsive" />
+                        <img ng-show="createdResearch.downloadImage" ng-src="{{createdResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <h6 ng-show="createdResearch.status === 'published'">Published</h6>

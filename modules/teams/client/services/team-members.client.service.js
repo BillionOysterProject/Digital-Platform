@@ -14,6 +14,9 @@
       update: {
         method: 'PUT'
       },
+      remove: {
+        method: 'DELETE'
+      },
       query: {
         method: 'GET',
         params: {

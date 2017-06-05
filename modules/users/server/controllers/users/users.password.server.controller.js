@@ -60,7 +60,7 @@ exports.forgot = function (req, res, next) {
       email.sendEmailTemplate(user.email, 'Password Reset', 'password_request', {
         FirstName: user.firstName,
         LinkResetPassword: httpTransport + req.headers.host + '/api/auth/reset/' + token,
-        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+        LinkProfile: httpTransport + req.headers.host + '/profiles'
       }, function(info) {
         res.send({
           message: 'An email has been sent to the provided email with further instructions.'
@@ -157,7 +157,7 @@ exports.reset = function (req, res, next) {
       email.sendEmailTemplate(user.email, 'Your password has been changed', 'reset_password', {
         FirstName: user.firstName,
         LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+        LinkProfile: httpTransport + req.headers.host + '/profiles'
       }, function(info) {
         res.json(user);
         done();

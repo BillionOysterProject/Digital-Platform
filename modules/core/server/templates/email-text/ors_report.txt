@@ -11,3 +11,4 @@ The status of <%= ORSName %> will not change in the platform until you update it
 Thanks!
 The Billion Oyster Project
 
+Need help? Just respond to this email and we'll get back to you.

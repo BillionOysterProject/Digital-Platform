@@ -12,7 +12,7 @@
                   <b>{{organization.name}}</b> organization to create and manage other teams and orgs.</p>
                 <div class="form-group">
                     <label for="orgLead">Select the organization lead to remove</label>
-                    <input type="text" ng-model="orgLead" placeholder="Organization Leads" id="orgLead" name="orgLead"
+                    <input type="text" ng-model="orgLead" placeholder="Organization Leads" id="orgLead" name="orgLead" autocomplete="off"
                     uib-typeahead="orgLead as orgLead.displayName for orgLead in organization.orgLeads | filter:{displayName:$viewValue}"
                     class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true">
                 </div>

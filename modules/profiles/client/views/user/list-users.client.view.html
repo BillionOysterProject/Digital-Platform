@@ -1,17 +1,47 @@
+<div class="jumbotron text-center">
+    <section class="content">
+        <section class="container-fluid">
+            <h2>People</h2>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </span>
+                        <input class="form-control" type="text" placeholder="Search"
+                        ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
+                        ng-change="searchChange()" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
 <section class="content">
+<section class="container">
 <div class="row">
-    <div class="col-md-2 col-sm-4">
+    <div ng-class="{'col-sm-4': filter.role === 'team lead','col-sm-6': filter.role !== 'team lead'}">
         <div class="form-group">
             <select class="form-control" name="role" id="role" ng-model="filter.role"
             ng-change="fieldChanged()">
                 <option value="">Show all roles</option>
                 <option value="team lead">Team Lead</option>
                 <option value="team member">Team Member</option>
-                <option value="admin">Admin</option>
+                <option value="admin" ng-show="isAdmin">Admin</option>
             </select>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4">
+    <div class="col-sm-4" ng-show="filter.role === 'team lead'">
+        <div class="form-group">
+            <select class="form-control" name="type" id="type" ng-model="filter.teamLeadType"
+            ng-change="fieldChanged()">
+                <option value="">Show all types</option>
+                <option ng-repeat="type in teamLeadType" value="{{type.value}}">{{type.label}}</option>
+            </select>
+        </div>
+    </div>
+    <div ng-class="{'col-sm-4': filter.role === 'team lead','col-sm-6': filter.role !== 'team lead'}">
         <div class="form-group">
             <select class="form-control" name="schoolOrg" id="schoolOrg" ng-model="filter.organizationId"
               ng-change="fieldChanged()">
@@ -20,22 +50,6 @@
             </select>
         </div>
     </div>
-    <div class="col-md-3 col-sm-4">
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                </span>
-                <input class="form-control col-md-4" type="text" placeholder="Search"
-                ng-model="filter.searchString" ng-model-options='{ debounce: 400 }'
-                ng-change="searchChange()" />
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 text-right">
-        <!-- <a class="btn btn-primary" data-toggle="modal" data-target="#modal-team-lead-editadd">Add team lead</a> TODO-->
-        <!-- <a class="btn btn-primary">Import team leads</a> TODO: This should open modal duplicated from "Import Team Members" but with different text-->
-    </div>
 </div>
 <div class="alert alert-danger text-center" ng-show="error">
   <p ng-bind="error"></p>
@@ -43,13 +57,13 @@
 <div class="alert alert-info text-center" ng-show="(pagedItems.length === 0 && !error)">
     Sorry, no results found for that search term
 </div>
-<div class="row" ng-show="leadRequests && leadRequests.length > 0">
+<div class="row" ng-show="leadRequests && leadRequests.length > 0 && isAdmin">
     <div class="col-md-12">
         <div class="alert alert-success" role="alert">You have <b>{{leadRequests.length}}</b> new team lead requests.
           <a class="btn btn-sm btn-default" ng-click="openApproveTeamLeads()">Respond</a></div>
     </div>
 </div>
-<div class="row" ng-show="leadRequestsOrgPending && leadRequestsOrgPending.length > 0">
+<div class="row" ng-show="leadRequestsOrgPending && leadRequestsOrgPending.length > 0 && isAdmin">
     <div class="col-md-12">
         <div class="alert alert-success" role="alert">You have <b>{{leadRequestsOrgPending.length}}</b> new team lead requests that have organization request that must be approved before they can be approved.
           <a class="btn btn-sm btn-default" ng-click="openApproveOrganizations()">Respond to Organizations</a></div>
@@ -57,23 +71,25 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-verticalalign table-responsive">
-            <tr ng-repeat="user in pagedItems">
+        <table class="table table-hover table-verticalalign table-responsive">
+            <tr ng-repeat="user in users" ng-click="openViewUserModal(user)">
                 <td><img ng-src="{{user.profileImageURL}}" class="profile-image"></td>
-                <td><h4>{{user.firstName}} {{user.lastName}}</h4><br /><span class="text-muted">{{user.username}}&nbsp;&nbsp;|&nbsp;&nbsp;{{user.email}}</span></td>
-                <td>{{user.teamLeadType | teamLeadTypes}}</td>
-                <td>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</td>
-                <td>{{listRoles(user)}}</td>
-                <!-- <td>{{listTeams(user)}}</td> -->
-                <td><span ng-repeat="team in user.teams"><a ng-click="openAdminTeam(team)">{{team.name}}</a><span ng-if="!$last">, </span></span></td>
-                <td class="text-right">
-                    <a class="btn btn-default" ng-click="openAdminTeamLeadForm(user)">
-                      <i class="glyphicon glyphicon-edit"></i>
-
-                    </a>
-                    <a class="btn btn-danger" ng-click="openDeleteUser(user)">
-                      <i class="glyphicon glyphicon-trash"></i>
-                    </a>
+                <td>
+                    <h4>{{user.firstName}} {{user.lastName}}</h4><br />
+                    <h6>{{user.roles | roleNormalizer:true}}</h6>
+                    <span class="text-muted" ng-show="user.teamLeadType"><br/>{{user.teamLeadType | teamLeadTypes}}</span>
+                </td>
+                <td>
+                    <p><b>{{user.username}}</b><br/>{{user.email}}</p>
+                </td>
+                <td>
+                    <h6>Organization</h6>
+                    <p>{{(user.schoolOrg) ? user.schoolOrg.name : ''}}</p>
+                    <br/>
+                    <h6><span class="blue" ng-show="{{user.teams.length > 1}}">{{user.teams.length}} </span>{{user.teams.length > 1 ? 'Teams' : 'Team'}}</h6>
+                    <p ng-repeat="team in user.teams">
+                      {{team.name}}<span ng-if="!$last">,&nbsp;</span>
+                    </p>
                 </td>
             </tr>
         </table>
@@ -82,13 +98,10 @@
     </div>
 </div>
 </section>
+</section>
 
 <!-- MODALS -->
-<form-admin-team-lead-modal user="formUser" organizations="organizations" save-function="saveAdminTeamLeadForm" close-function="cancelAdminTeamLeadForm"></form-admin-team-lead-modal>
-<delete-user-modal user="userToDelete" can-be-deleted-function="canBeDeleted" delete-function="deleteUser" close-function="cancelDeleteUser"></delete-user-modal>
 <approve-team-leads-modal lead-requests="leadRequests" cancel-function="closeApproveTeamLeads"></approve-team-leads-modal>
 <approve-school-org-modal org-requests="leadRequestsOrgPending" cancel-function="closeApproveOrganizations"></approve-school-org-modal>
-<view-admin-team-modal team="team" delete-team-function="openDeleteTeam" delete-team-error="deleteTeamError"
-  delete-team-member-function="openDeleteTeamMember" delete-team-member-error="deleteTeamMemberError"
-  close-function="closeAdminTeam"></view-admin-team-modal>
+<view-user-modal user="userToOpen" initial="initial" close-function="closeViewUserModal"></view-user-modal>
 <!-- END MODALS -->

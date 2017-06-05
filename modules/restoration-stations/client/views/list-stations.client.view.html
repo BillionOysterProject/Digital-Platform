@@ -32,7 +32,7 @@
 
           <div class="form-group col-md-4 col-sm-6">
               <label for="">Organization</label>
-              <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization"
+              <input type="text" ng-model="vm.filter.organizationObj" placeholder="Organization" autocomplete="off"
               uib-typeahead="org as org.name for org in vm.organizations | filter:{name:$viewValue}"
               class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
               typeahead-on-select="vm.organizationSelected()">
@@ -40,7 +40,7 @@
 
           <div class="form-group col-md-4 col-sm-6">
               <label for="">Team Lead</label>
-              <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead"
+              <input type="text" ng-model="vm.filter.teamLeadObj" placeholder="Team Lead" autocomplete="off"
               uib-typeahead="lead as lead.displayName for lead in vm.teamLeads | filter:{displayName:$viewValue}"
               class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
               typeahead-on-select="vm.teamLeadSelected()">

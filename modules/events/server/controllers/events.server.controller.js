@@ -463,7 +463,7 @@ exports.register = function(req, res) {
                   EventName: calendarEventJSON.title,
                   EventDate: eventDate,
                   LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
                 }, function(info) {
                   callback();
                 }, function(errorMessage) {
@@ -479,7 +479,7 @@ exports.register = function(req, res) {
               FirstName: req.user.firstName,
               EventDate: eventDate,
               LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function (info) {
               sendEventFullEmail(function () {
                 res.json(calendarEventJSON);
@@ -676,7 +676,7 @@ exports.emailRegistrants = function(req, res) {
       EventName: calendarEvent.title,
       EventDate: eventDate,
       LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEvent._id,
-      LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+      LinkProfile: httpTransport + req.headers.host + '/profiles'
     }, function (info) {
       res.json(calendarEvent);
     }, function (errorMessage) {
