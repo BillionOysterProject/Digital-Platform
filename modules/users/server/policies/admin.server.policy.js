@@ -56,6 +56,9 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['team lead'],
     allows: [{
+      resources: '/api/users',
+      permissions: ['get']
+    }, {
       resources: '/api/users/leaders',
       permissions: '*'
     }, {
@@ -77,6 +80,9 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['org lead'],
     allows: [{
+      resources: '/api/users',
+      permissions: ['get']
+    }, {
       resources: '/api/users/leaders',
       permissions: '*'
     }, {
@@ -96,7 +102,19 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }]
   }, {
-    roles: ['team member', 'team member pending', 'team lead pending'],
+    roles: ['team member'],
+    allows: [{
+      resources: '/api/users',
+      permissions: ['get']
+    }, {
+      resources: '/api/users/leaders/:userId',
+      permissions: ['put']
+    }, {
+      resources: '/api/users/teamleads',
+      permissions: ['get']
+    }]
+  }, {
+    roles: ['team member pending', 'team lead pending'],
     allows: [{
       resources: '/api/users/leaders/:userId',
       permissions: ['put']
@@ -104,9 +122,6 @@ exports.invokeRolesPolicies = function () {
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/users/teamleads',
-      permissions: ['get']
-    }, {
       resources: '/api/users/username',
       permissions: ['get']
     }, {

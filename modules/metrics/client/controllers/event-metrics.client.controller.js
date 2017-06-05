@@ -6,7 +6,7 @@
     .controller('EventMetricsController', EventMetricsController);
 
   EventMetricsController.$inject = ['$scope', '$rootScope', '$timeout', 'moment',
-  'MetricsEventService', 'MetricsEventActvityService', 'MetricsEventStatisticsService'];
+    'MetricsEventService', 'MetricsEventActvityService', 'MetricsEventStatisticsService'];
 
   function EventMetricsController($scope, $rootScope, $timeout, moment, MetricsEventService,
     MetricsEventActvityService, MetricsEventStatisticsService) {

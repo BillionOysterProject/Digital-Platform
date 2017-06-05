@@ -157,7 +157,7 @@ exports.approve = function (req, res) {
           FirstName: schoolOrg.creator.firstName,
           OrgName: schoolOrg.name,
           LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
         }, function(info) {
           res.json(schoolOrg);
         }, function(errorMessage) {

@@ -8,32 +8,37 @@
 <section class="content">
   <section class="container-fluid">
     <div>
-      <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member">
+      <a class="btn btn-default pull-right" ui-sref="researches.create" view-permissions="team member,team lead,admin">
         <i class="glyphicon glyphicon-plus"></i> Create new poster
       </a>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" view-permissions="team member" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
+        <li role="presentation" view-permissions="team member,team lead,admin" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
           <a href="#created" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('created')">Created Posters</a>
         </li>
+        <li role="presentation" view-permissions="team member,team lead,admin,team lead pending,team member pending,partner"
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && vm.savedResearches && vm.savedResearches.length > 0}">
+          <a href="#saved" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('saved')">Favorite Posters</a>
+        </li>
         <li role="presentation" view-permissions="admin,team lead"
-          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (!vm.savedResearches || vm.savedResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
           <a href="#submitted" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('submitted')">Submitted Posters</a>
         </li>
-        <li role="presentation" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
+        <li role="presentation" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (!vm.savedResearches || vm.savedResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
           <a href="#teamposters" aria-controls="grid" role="tab" data-toggle="tab" ng-click="vm.switchTab('teamposters')">
             {{(vm.isAdmin || vm.isTeamLead) ? 'Team Members' : 'Teammate'}} Posters</a>
         </li>
       </ul>
       <div class="tab-content">
         <br />
-        <div role="tabpanel" class="tab-pane" id="created" view-permissions="team member" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
+        <div role="tabpanel" class="tab-pane" id="created" view-permissions="team member,team lead,admin" ng-class="{active: (vm.createdResearches && vm.createdResearches.length > 0)}">
           <div isotope-container="isotope-container" images-loaded>
             <div ng-repeat="createdResearch in vm.createdResearches track by createdResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: createdResearch._id })">
                     <div class="panel-body">
                         <p>{{vm.getLongDate(createdResearch.created)}}</p>
                         <h4>{{createdResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="createdResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <img ng-show="createdResearch.downloadImage" ng-src="{{createdResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <h6 ng-show="createdResearch.status === 'published'">Published</h6>
@@ -44,12 +49,38 @@
                 </div>
             </div>
           </div>
-          <div class="alert alert-info text-center" ng-if="vm.createdResearches.$resolved && vm.createdResearches.length == 0" view-permissions="team member">
+          <div class="alert alert-info text-center" ng-if="!vm.createdResearches || (vm.createdResearches.$resolved && vm.createdResearches.length == 0)" view-permissions="team member,team lead,admin">
               No research posters yet, why don't you <a ui-sref="researches.create">create one</a>?
           </div>
         </div>
+        <div role="tabpanel" class="tab-pane" id="saved" view-permissions="team member,team lead,admin,team lead pending,team member pending,partner"
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && vm.savedResearches && vm.savedResearches.length > 0}">
+          <div isotope-container="isotope-container" images-loaded>
+            <div ng-repeat="savedResearch in vm.savedResearches track by savedResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
+                <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: savedResearch._id })">
+                    <div class="panel-body">
+                        <p>{{vm.getLongDate(savedResearch.created)}}</p>
+                        <h4>{{savedResearch.title | sanitize}}</h4>
+                        <!-- <small ng-bind-html="savedResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <!-- <img ng-show="savedResearch.headerImage" ng-src="{{savedResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="savedResearch.downloadImage" ng-src="{{savedResearch.downloadImage.path}}" class="img-responsive" />
+                    </div>
+                    <div class="panel-footer">
+                        <img class="header-profile-image" ng-show="savedResearch.user && savedResearch.user.profileImageURL"
+                          ng-src="{{savedResearch.user.profileImageURL}}"/> {{savedResearch.user.displayName}}
+                        <br/><small>{{savedResearch.team.name}}
+                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span>
+                          {{savedResearch.team.schoolOrg.name}}</small>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="alert alert-info text-center" ng-if="!vm.savedResearches || (vm.savedResearches.$resolved && vm.savedResearches.length == 0)">
+          No favorite posters yet! When viewing a poster, click the heart in the title to save your favorites here.
+          </div>
+        </div>
         <div role="tabpanel" class="tab-pane" id="submitted" view-permissions="admin,team lead"
-          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
+          ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (!vm.savedResearches || vm.savedResearches.length === 0) && (vm.isAdmin || vm.isTeamLead)}">
           <div isotope-container="isotope-container" images-loaded>
             <div ng-repeat="pendingResearch in vm.pendingResearches track by pendingResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel-overlay">
@@ -64,42 +95,46 @@
                     <div class="panel-body">
                         <p>{{vm.getLongDate(pendingResearch.created)}}</p>
                         <h4>{{pendingResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="pendingResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <!-- <img ng-show="pendingResearch.headerImage" ng-src="{{pendingResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="pendingResearch.downloadImage" ng-src="{{pendingResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="pendingResearch.user && pendingResearch.user.profileImageURL"
                           ng-src="{{pendingResearch.user.profileImageURL}}"/> {{pendingResearch.user.displayName}}
                         <br/><small>{{pendingResearch.team.name}}
-                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span> 
+                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span>
                           {{pendingResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>
           </div>
-          <div class="alert alert-info text-center" ng-if="vm.pendingResearches.$resolved && vm.pendingResearches.length == 0" view-permissions="admin,team lead">
-              No posters waiting for approval! As soon as your team members submits them, they'll show up here.
+          <div class="alert alert-info text-center" ng-if="!vm.pendingResearches || (vm.pendingResearches.$resolved && vm.pendingResearches.length == 0)" view-permissions="admin,team lead">
+              No posters waiting for approval! As soon as your team members submit them, they'll show up here.
           </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
+        <div role="tabpanel" class="tab-pane" id="teamposters" ng-class="{active: (!vm.createdResearches || vm.createdResearches.length === 0) && (!vm.savedResearches || vm.savedResearches.length === 0) && !vm.isAdmin && !vm.isTeamLead}">
           <div isotope-container="isotope-container" images-loaded>
             <div ng-repeat="teamResearch in vm.teamResearches track by teamResearch._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" data-category="transition" ui-sref="researches.view({ researchId: teamResearch._id })">
                     <div class="panel-body">
                         <p>{{vm.getLongDate(teamResearch.created)}}</p>
                         <h4>{{teamResearch.title | sanitize}}</h4>
-                        <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small>
+                        <!-- <small ng-bind-html="teamResearch.intro | limitTo:200 | sanitize"></small> -->
+                        <!-- <img ng-show="teamResearch.headerImage" ng-src="{{teamResearch.headerImage.path}}" class="img-responsive" /> -->
+                        <img ng-show="teamResearch.downloadImage" ng-src="{{teamResearch.downloadImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
                         <img class="header-profile-image" ng-show="teamResearch.user && teamResearch.user.profileImageURL"
                           ng-src="{{teamResearch.user.profileImageURL}}"/> {{teamResearch.user.displayName}}
                         <br/><small>{{teamResearch.team.name}}
-                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span> 
+                          <span ng-show="pendingResearch.team.schoolOrg.name">,</span>
                           {{teamResearch.team.schoolOrg.name}}</small>
                     </div>
                 </div>
             </div>
           </div>
-          <div class="alert alert-info text-center" ng-if="vm.teamResearches.$resolved && vm.teamResearches.length == 0">
+          <div class="alert alert-info text-center" ng-if="!vm.teamResearches || (vm.teamResearches.$resolved && vm.teamResearches.length == 0)">
               None of your {{(vm.isAdmin || vm.isTeamLead) ? 'team members' : 'teammates'}} have any posters yet! As soon as they create them, they'll show up here.
           </div>
         </div>

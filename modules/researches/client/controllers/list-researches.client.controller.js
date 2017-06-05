@@ -5,9 +5,9 @@
     .module('researches')
     .controller('ResearchesListController', ResearchesListController);
 
-  ResearchesListController.$inject = ['$scope', '$timeout', '$rootScope', 'ResearchesService', 'moment', 'lodash', 'Authentication'];
+  ResearchesListController.$inject = ['$scope', '$timeout', '$rootScope', 'ResearchesService', 'SavedResearchesService', 'moment', 'lodash', 'Authentication'];
 
-  function ResearchesListController($scope, $timeout, $rootScope, ResearchesService, moment, lodash, Authentication) {
+  function ResearchesListController($scope, $timeout, $rootScope, ResearchesService, SavedResearchesService, moment, lodash, Authentication) {
     var vm = this;
     var user = Authentication.user;
 
@@ -68,7 +68,7 @@
     };
 
     vm.findResearchByCreator = function() {
-      if (vm.isTeamMember) {
+      if (vm.isTeamMember || vm.isTeamLead || vm.isAdmin) {
         ResearchesService.query({
           byCreator: true
         }, function(data) {
@@ -81,6 +81,18 @@
       }
     };
     vm.findResearchByCreator();
+
+    vm.findSavedResearch = function() {
+      SavedResearchesService.query({
+      }, function(data) {
+        vm.savedResearches = data;
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+        $timeout(function() {
+          $rootScope.$broadcast('iso-method', { name:null, params:null });
+        }, 200);
+      });
+    };
+    vm.findSavedResearch();
 
     vm.findSubmittedResearch = function() {
       if (vm.isAdmin || vm.isTeamLead) {
@@ -115,6 +127,8 @@
     vm.switchTab = function(tab) {
       if (tab === 'created') {
         vm.findResearchByCreator();
+      } else if (tab === 'saved') {
+        vm.findSavedResearch();
       } else if (tab === 'submitted') {
         vm.findSubmittedResearch();
       } else if (tab === 'teamposters') {

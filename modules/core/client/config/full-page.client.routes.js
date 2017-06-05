@@ -29,7 +29,8 @@
 
   function getResearch($stateParams, ResearchesService) {
     return ResearchesService.get({
-      researchId: $stateParams.researchId
+      researchId: $stateParams.researchId,
+      fullPage: true
     }).$promise;
   }
 }());

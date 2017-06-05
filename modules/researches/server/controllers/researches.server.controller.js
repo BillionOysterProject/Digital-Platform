@@ -6,7 +6,9 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Research = mongoose.model('Research'),
+  ResearchActivity = mongoose.model('ResearchActivity'),
   ResearchFeedback = mongoose.model('ResearchFeedback'),
+  SavedResearch = mongoose.model('SavedResearch'),
   Team = mongoose.model('Team'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   User = mongoose.model('User'),
@@ -21,11 +23,20 @@ var path = require('path'),
   multer = require('multer'),
   async = require('async'),
   moment = require('moment'),
-  wkhtmltopdf = require('wkhtmltopdf'),
+  wkhtmltoimage = require('wkhtmltoimage'),
+  exec = require('child_process').exec,
   config = require(path.resolve('./config/config'));
 
 var validateResearch = function(research, successCallback, errorCallback) {
   var errorMessages = [];
+
+  if (!research.title) {
+    errorMessages.push('Poster title is required');
+  }
+
+  if (!research.color) {
+    errorMessages.push('Poster color is required');
+  }
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
@@ -52,6 +63,8 @@ var getTeammates = function(user, callback) {
     } else {
       var teammates = [];
       for (var i = 0; i < teams.length; i++) {
+        teammates.push(teams[i].teamLead);
+        teammates = teammates.concat(teams[i].teamLeads);
         teammates = teammates.concat(teams[i].teamMembers);
       }
       teammates = _.uniqWith(teammates, _.isEqual);
@@ -158,6 +171,89 @@ var getTeamIdsByTeamLeadName = function(searchRe, callback) {
   });
 };
 
+var alertTeamLeads = function(research, user, host, callback) {
+  if (research.status === 'pending' || research.status === 'published') {
+    var activity = new ResearchActivity({
+      user: user,
+      research: research,
+      activity: (research.status === 'pending') ? 'submitted' : 'published'
+    });
+
+    activity.save(function(err) {
+      if (research.status === 'pending') {
+        var teamId = (research.team && research.team._id) ? research.team._id : research.team;
+        if (teamId) {
+          Team.findById(teamId).populate('teamLeads', 'firstName email').exec(function(err, team) {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+            async.forEach(team.teamLeads, function(item,callback) {
+              email.sendEmailTemplate(item.email, 'A new poster is pending approval', 'poster_waiting', {
+                FirstName: item.firstName,
+                TeamMemberName: user.displayName,
+                PosterName: research.title,
+                LinkPosterRequest: httpTransport + host + '/research/user',
+                LinkProfile: httpTransport + host + '/profiles'
+              }, function(info) {
+                callback();
+              }, function(errorMessage) {
+                callback();
+              });
+            }, function(err) {
+              callback(research);
+            });
+          });
+        } else {
+          callback(research);
+        }
+      } else {
+        callback(research);
+      }
+    });
+  } else {
+    callback(research);
+  }
+};
+
+var setImageToDownload = function(host, research, callback) {
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var input = httpTransport + host + '/full-page/research/' + research._id;
+  var filename = research._id + '.png';
+  var mimetype = 'image/png';
+
+  exec('wkhtmltoimage -f png ' + input + ' ' + path.resolve(config.uploads.researchDownloadImageUpload.dest) + '/' + filename, function(error, stdout, stderr) {
+    if (error) {
+      console.log('wkhtmltoimage error: ', error);
+      callback(error);
+    } else {
+      console.log('wkhmtltoimage stderr: ', stderr);
+      console.log('wkhtmltoimage stdout: ', stdout);
+      var uploadRemote = new UploadRemote();
+      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.researchDownloadImageUpload,
+      function(fileInfo) {
+        research.downloadImage = fileInfo;
+        research.save(function(err) {
+          if (err) {
+            console.log('save file info error: ', err);
+            callback(err);
+          }
+          callback(null, fileInfo);
+        });
+      }, function(errorMessage) {
+        console.log('save image remotely error: ', errorMessage);
+        callback(errorMessage);
+      });
+    }
+  });
+};
+
+exports.saveResearchAsImage = function(req, res) {
+  var research = req.research;
+  setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+    if (fileInfo) research.downloadImage = fileInfo;
+    res.json(fileInfo);
+  });
+};
+
 /**
  * Create a Research
  */
@@ -165,13 +261,19 @@ exports.create = function(req, res) {
   validateResearch(req.body,
   function(researchJSON) {
     var research = new Research(researchJSON);
-
     research.user = req.user;
-    research.status = researchJSON.status || 'pending';
 
-    if (research.status === 'pending') {
+    if (checkRole(req.user, 'team lead') || checkRole(req.user, 'admin')) {
+      research.status = researchJSON.status || 'published';
       if (!research.submitted) research.submitted = [];
-      research.submitted.push(Date.now());
+      if (!research.published) research.published = [];
+      research.published.push(Date.now());
+    } else {
+      research.status = researchJSON.status || 'pending';
+      if (research.status === 'pending') {
+        if (!research.submitted) research.submitted = [];
+        research.submitted.push(Date.now());
+      }
     }
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -185,29 +287,9 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        if (research.status === 'pending') {
-          var teamId = (research.team && research.team._id) ? research.team._id : research.team;
-          Team.findById(teamId).populate('teamLeads', 'firstName email').exec(function(err, team) {
-            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-
-            async.forEach(team.teamLeads, function(item,callback) {
-              email.sendEmailTemplate(item.email, 'A new poster is pending approval', 'poster_waiting', {
-                FirstName: item.firstName,
-                TeamMemberName: req.user.displayName,
-                PosterName: research.title,
-                LinkPosterRequest: httpTransport + req.headers.host + '/research/user'
-              }, function(info) {
-                callback();
-              }, function(errorMessage) {
-                callback();
-              });
-            }, function(err) {
-              res.json(research);
-            });
-          });
-        } else {
+        alertTeamLeads(research, req.user, req.headers.host, function(research) {
           res.json(research);
-        }
+        });
       }
     });
   }, function(errorMessages) {
@@ -217,21 +299,42 @@ exports.create = function(req, res) {
   });
 };
 
-var setOwnership = function(user, research, callback) {
+var setOwnership = function(user, research, fullPage, callback) {
   // Add a custom field to the Article, for determining if the current User is the "owner".
   // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   research.isCurrentUserOwner = user && research.user && research.user._id.toString() === user._id.toString();
 
-  if (checkRole(user, 'team lead') && research.team._id) {
-    Team.findOne({ '_id': research.team._id, 'teamLeads': user }).exec(function(err, team) {
-      research.isCurrentUserTeamLead = (team) ? true : false;
+  var setTeam = function() {
+    if (checkRole(user, 'team lead') && research.team && research.team._id) {
+      Team.findOne({ '_id': research.team._id, 'teamLeads': user }).exec(function(err, team) {
+        research.isCurrentUserTeamLead = (team) ? true : false;
+        callback(research);
+      });
+    } else if (checkRole(user, 'team member') && research.team && research.team._id) {
+      Team.findOne({ '_id': research.team._id, 'teamMembers': user }).exec(function(err, team) {
+        research.isCurrentUserTeammate = (team) ? true : false;
+        callback(research);
+      });
+    } else {
       callback(research);
-    });
-  } else if (checkRole(user, 'team member') && research.team._id) {
-    Team.findOne({ '_id': research.team._id, 'teamMembers': user }).exec(function(err, team) {
-      research.isCurrentUserTeammate = (team) ? true : false;
-      callback(research);
-    });
+    }
+  };
+
+
+  if (!research.isCurrentUserOwner) {
+    if (fullPage) {
+      setTeam();
+    } else {
+      var activity = new ResearchActivity({
+        user: user,
+        research: research,
+        activity: 'viewed'
+      });
+
+      activity.save(function(err) {
+        setTeam();
+      });
+    }
   } else {
     callback(research);
   }
@@ -244,6 +347,10 @@ exports.read = function(req, res) {
   // convert mongoose document to JSON
   var research = req.research ? req.research.toJSON() : {};
 
+  if (req.researchSaved) {
+    research.saved = req.researchSaved;
+  }
+
   if (research.team) {
     SchoolOrg.populate(research.team, { 'path': 'schoolOrg' }, function(err, output) {
       if (err) {
@@ -251,7 +358,7 @@ exports.read = function(req, res) {
           message: err
         });
       } else {
-        setOwnership(req.user, research, function(updatedResearch) {
+        setOwnership(req.user, research, req.query.fullPage, function(updatedResearch) {
           res.jsonp(updatedResearch);
         });
       }
@@ -263,13 +370,94 @@ exports.read = function(req, res) {
           message: err
         });
       } else {
-        setOwnership(req.user, research, function(updatedResearch) {
+        setOwnership(req.user, research, req.query.fullPage, function(updatedResearch) {
           res.jsonp(updatedResearch);
         });
       }
     });
   } else {
-    res.jsonp(research);
+    setOwnership(req.user, research, req.query.fullPage, function(updatedResearch) {
+      res.jsonp(updatedResearch);
+    });
+  }
+};
+
+/**
+ * Update a Research
+ */
+exports.update = function(req, res) {
+  var research = req.research;
+  validateResearch(req.body,
+  function(researchJSON) {
+    if (research) {
+      research = _.extend(research, researchJSON);
+      research.returnedNotes = '';
+
+      if (checkRole(req.user, 'team lead') || checkRole(req.user, 'admin')) {
+        research.status = researchJSON.status || 'published';
+        if (!research.submitted) research.submitted = [];
+        if (!research.published) research.published = [];
+        research.published.push(Date.now());
+      } else {
+        research.status = researchJSON.status || 'pending';
+        if (research.status === 'pending') {
+          if (!research.submitted) research.submitted = [];
+          research.submitted.push(Date.now());
+        }
+      }
+
+      var pattern = /^data:image\/[a-z]*;base64,/i;
+      if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
+        research.headerImage.path = '';
+      }
+
+      if (!research.updated) research.updated = [];
+      research.updated.push(Date.now());
+
+      research.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          alertTeamLeads(research, req.user, req.headers.host, function(research) {
+            res.json(research);
+          });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        message: 'Cannot update the research'
+      });
+    }
+  }, function(errorMessages) {
+    return res.status(400).send({
+      message: errorMessages
+    });
+  });
+};
+
+/**
+ * Saves activity for sharing
+ */
+exports.share = function(req, res) {
+  var research = req.research;
+
+  if (research) {
+    var activity = new ResearchActivity({
+      user: req.user,
+      research: research,
+      activity: 'shared',
+      additionalInfo: req.query.site
+    });
+
+    activity.save(function(err) {
+      res.json(research);
+    });
+  } else {
+    return res.status(400).send({
+      message: 'No poster found'
+    });
   }
 };
 
@@ -292,20 +480,28 @@ exports.publish = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var activity = new ResearchActivity({
+          user: req.user,
+          research: research,
+          activity: 'published'
+        });
 
-        email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been approved',
-        'poster_approved', {
-          FirstName: research.user.firstName,
-          PosterName: research.title,
-          LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-        },
-        function(response) {
-          res.json(research);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+        activity.save(function(err) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been approved',
+          'poster_approved', {
+            FirstName: research.user.firstName,
+            PosterName: research.title,
+            LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
+          },
+          function(response) {
+            res.json(research);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
           });
         });
       }
@@ -333,21 +529,30 @@ exports.return = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var activity = new ResearchActivity({
+          user: req.user,
+          research: research,
+          activity: 'returned',
+          additionalInfo: req.body.returnedNotes
+        });
 
-        email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been returned',
-        'poster_returned', {
-          FirstName: research.user.firstName,
-          PosterName: research.title,
-          PosterReturnedNote: research.returnedNotes,
-          LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-        },
-        function(response) {
-          res.json(research);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+        activity.save(function(err) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been returned',
+          'poster_returned', {
+            FirstName: research.user.firstName,
+            PosterName: research.title,
+            PosterReturnedNote: research.returnedNotes,
+            LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
+          },
+          function(response) {
+            res.json(research);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
           });
         });
       }
@@ -360,48 +565,100 @@ exports.return = function(req, res) {
 };
 
 /**
- * Update a Research
+ * Saved research methods
  */
-exports.update = function(req, res) {
+exports.favoriteResearch = function(req, res) {
   var research = req.research;
-  validateResearch(req.body,
-  function(researchJSON) {
-    if (research) {
-      research = _.extend(research, researchJSON);
-      research.returnedNotes = '';
-      research.status = req.body.status || 'pending';
 
-      var pattern = /^data:image\/[a-z]*;base64,/i;
-      if (research.headerImage && research.headerImage.path && pattern.test(research.headerImage.path)) {
-        research.headerImage.path = '';
-      }
+  var savedResearch = new SavedResearch({
+    user: req.user,
+    research: research
+  });
 
-      if (!research.updated) research.updated = [];
-      research.updated.push(Date.now());
+  savedResearch.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var activity = new ResearchActivity({
+        user: req.user,
+        research: research,
+        activity: 'liked'
+      });
 
-      if (research.status === 'pending') {
-        if (!research.submitted) research.submitted = [];
-        research.submitted.push(Date.now());
-      }
+      activity.save(function(err) {
+        research.saved = true;
+        res.json(research);
+      });
+    }
+  });
+};
 
-      research.save(function(err) {
+exports.unfavoriteResearch = function(req, res) {
+  var research = req.research;
+
+  SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (!savedResearch) {
+      return res.status(400).send({
+        message: 'Saved research not found'
+      });
+    } else {
+      savedResearch.remove(function(err) {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.jsonp(research);
+          var activity = new ResearchActivity({
+            user: req.user,
+            research: research,
+            activity: 'unliked'
+          });
+
+          activity.save(function(err) {
+            research.saved = false;
+            res.json(research);
+          });
         }
       });
-    } else {
-      return res.status(400).send({
-        message: 'Cannot update the research'
-      });
     }
-  }, function(errorMessages) {
-    return res.status(400).send({
-      message: errorMessages
-    });
+  });
+};
+
+exports.listFavorites = function(req, res) {
+  SavedResearch.find({ user: req.user }).exec(function(err, savedResearch) {
+    if (err) {
+      console.log('err', err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var researchIds = [];
+      for (var i = 0; i < savedResearch.length; i++) {
+        researchIds.push(savedResearch[i].research);
+      }
+      if (researchIds && researchIds.length > 0) {
+        Research.find({ _id: { $in: researchIds } })
+        .populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg roles')
+        .populate('team', 'name schoolOrg photo').exec(function (err, research) {
+          if (err) {
+            console.log('err2', err);
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(research);
+          }
+        });
+      } else {
+        res.json([]);
+      }
+    }
   });
 };
 
@@ -422,52 +679,60 @@ exports.researchFeedback = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-      var subject = 'Feedback from ' + req.user.displayName + ' about your poster ' + research.title;
-      var toList = [research.user.email, config.mailer.admin];
+      var activity = new ResearchActivity({
+        user: req.user,
+        research: research,
+        activity: 'feedback'
+      });
 
-      email.sendEmailTemplate(toList, subject,
-      'poster_feedback', {
-        FirstName: research.user.firstName,
-        PosterFeedbackName: req.user.displayName,
-        PosterName: research.title,
-        TitleCreativeYNS: researchFeedback.title.creativeToThePoint,
-        TitleAttentionYNS: researchFeedback.title.attentionGrabbing,
-        TitleFeedback: researchFeedback.title.feedbackSuggestions,
-        IntroHookYNS: researchFeedback.introduction.hookTheAudience,
-        IntroCiteYNS: researchFeedback.introduction.citeThreeSources,
-        IntroHypothesisYNS: researchFeedback.introduction.clearHypothesis,
-        IntroVisualYNS: researchFeedback.introduction.includeOneVisual,
-        IntroFeedback: researchFeedback.introduction.feedbackSuggestions,
-        MaterialsExplainYNS: researchFeedback.materialMethods.clearExplanation,
-        MaterialsAnalysisYNS: researchFeedback.materialMethods.describeAnalysis,
-        MaterialsIllustrationsYNS: researchFeedback.materialMethods.includeVisuals,
-        MaterialsFeedback: researchFeedback.materialMethods.feedbackSuggestions,
-        ResultsWorkYNS: researchFeedback.results.stateConclusion,
-        ResultsSurprisesYNS: researchFeedback.results.describeSurprises,
-        ResultsAnalysisYNS: researchFeedback.results.quantitativeAnalysis,
-        ResultsChartYNS: researchFeedback.results.includeOneVisual,
-        ResultsChartSpeaksYNS: researchFeedback.results.understandableVisuals,
-        ResultsFeedback: researchFeedback.results.feedbackSuggestions,
-        DiscussionSignificanceYNS: researchFeedback.discussionConclusions.significancePresent,
-        DiscussionProblemsYNS: researchFeedback.discussionConclusions.discussProblems,
-        DiscussionConvinceYNS: researchFeedback.discussionConclusions.interestingImportant,
-        DiscussionEcologyYNS: researchFeedback.discussionConclusions.significantToEcology,
-        DiscussionStepsYNS: researchFeedback.discussionConclusions.explainsNextSteps,
-        DiscussionFeedback: researchFeedback.discussionConclusions.feedbackSuggestions,
-        CitedThreeYNS: researchFeedback.literatureCited.citeThreeSourcesCorrectly,
-        CitedFeedback: researchFeedback.literatureCited.feedbackSuggestions,
-        AcknowledgmentsFeedback: researchFeedback.acknowledgments.feedbackSuggestions,
-        OtherFeedback: researchFeedback.other.feedbackSuggestions,
-        GeneralFeedback: researchFeedback.generalComments,
-        LinkPoster: httpTransport + req.headers.host + '/researches/' + research._id,
-        LinkProfile: httpTransport + req.headers.host + '/settings/profile'
-      },
-      function(response) {
-        res.json(researchFeedback);
-      }, function(errorMessage) {
-        return res.status(400).send({
-          message: errorMessage
+      activity.save(function(err) {
+        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+        var subject = 'Feedback from ' + req.user.displayName + ' about your poster ' + research.title;
+        var toList = [research.user.email, config.mailer.admin];
+
+        email.sendEmailTemplate(toList, subject,
+        'poster_feedback', {
+          FirstName: research.user.firstName,
+          PosterFeedbackName: req.user.displayName,
+          PosterName: research.title,
+          TitleCreativeYNS: researchFeedback.title.creativeToThePoint,
+          TitleAttentionYNS: researchFeedback.title.attentionGrabbing,
+          TitleFeedback: researchFeedback.title.feedbackSuggestions,
+          IntroHookYNS: researchFeedback.introduction.hookTheAudience,
+          IntroCiteYNS: researchFeedback.introduction.citeThreeSources,
+          IntroHypothesisYNS: researchFeedback.introduction.clearHypothesis,
+          IntroVisualYNS: researchFeedback.introduction.includeOneVisual,
+          IntroFeedback: researchFeedback.introduction.feedbackSuggestions,
+          MaterialsExplainYNS: researchFeedback.materialMethods.clearExplanation,
+          MaterialsAnalysisYNS: researchFeedback.materialMethods.describeAnalysis,
+          MaterialsIllustrationsYNS: researchFeedback.materialMethods.includeVisuals,
+          MaterialsFeedback: researchFeedback.materialMethods.feedbackSuggestions,
+          ResultsWorkYNS: researchFeedback.results.stateConclusion,
+          ResultsSurprisesYNS: researchFeedback.results.describeSurprises,
+          ResultsAnalysisYNS: researchFeedback.results.quantitativeAnalysis,
+          ResultsChartYNS: researchFeedback.results.includeOneVisual,
+          ResultsChartSpeaksYNS: researchFeedback.results.understandableVisuals,
+          ResultsFeedback: researchFeedback.results.feedbackSuggestions,
+          DiscussionSignificanceYNS: researchFeedback.discussionConclusions.significancePresent,
+          DiscussionProblemsYNS: researchFeedback.discussionConclusions.discussProblems,
+          DiscussionConvinceYNS: researchFeedback.discussionConclusions.interestingImportant,
+          DiscussionEcologyYNS: researchFeedback.discussionConclusions.significantToEcology,
+          DiscussionStepsYNS: researchFeedback.discussionConclusions.explainsNextSteps,
+          DiscussionFeedback: researchFeedback.discussionConclusions.feedbackSuggestions,
+          CitedThreeYNS: researchFeedback.literatureCited.citeThreeSourcesCorrectly,
+          CitedFeedback: researchFeedback.literatureCited.feedbackSuggestions,
+          AcknowledgmentsFeedback: researchFeedback.acknowledgments.feedbackSuggestions,
+          OtherFeedback: researchFeedback.other.feedbackSuggestions,
+          GeneralFeedback: researchFeedback.generalComments,
+          LinkPoster: httpTransport + req.headers.host + '/researches/' + research._id,
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
+        },
+        function(response) {
+          res.json(researchFeedback);
+        }, function(errorMessage) {
+          return res.status(400).send({
+            message: errorMessage
+          });
         });
       });
     }
@@ -743,6 +1008,12 @@ exports.list = function(req, res) {
       }
     }
 
+    if (req.query.published === 'true') {
+      and.push({ 'status': 'published' });
+    } else if (req.query.published === 'false') {
+      and.push({ 'status': { '$ne': 'published' } });
+    }
+
     if (and.length === 1) {
       query = Research.find(and[0]);
     } else if (and.length > 0) {
@@ -778,19 +1049,23 @@ exports.list = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        async.forEach(researches, function(item,callback) {
-          SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
-            if (err) {
-              return res.status(400).send({
-                message: err
-              });
-            } else {
-              callback();
-            }
+        if (researches && researches.length > 0) {
+          async.forEach(researches, function(item,callback) {
+            SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
+              if (err) {
+                return res.status(400).send({
+                  message: err
+                });
+              } else {
+                callback();
+              }
+            });
+          }, function(err) {
+            res.json(researches);
           });
-        }, function(err) {
-          res.json(researches);
-        });
+        } else {
+          res.json([]);
+        }
       }
     });
   };
@@ -876,32 +1151,35 @@ exports.list = function(req, res) {
  * Downloads
  */
 exports.download = function(req, res) {
-  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var research = req.research;
 
-  var input = httpTransport + req.headers.host + '/full-page/research/' + req.research._id;
+  var activity = new ResearchActivity({
+    user: req.user,
+    research: req.research,
+    activity: 'downloaded'
+  });
 
-  wkhtmltopdf(input, {
-    customHeader : [
-      ['Content-Type', 'application/pdf, application/octet-stream'],
-      ['Content-Disposition', 'attachment; filename=' + req.query.filename]
-    ],
-    cookie : [
-      ['sessionId', req.cookies.sessionId]
-    ],
-    title: req.query.title,
-    quiet: true,
-    marginBottom: '5mm',
-    marginLeft: '5mm',
-    marginRight: '5mm',
-    marginTop: '5mm',
-    orientation: 'Landscape',
-    //pageSize: 'letter',
-    enableSmartShrinking: true,
-    //disableSmartShrinking: true,
-    // zoom: 1.5,
-    // debugJavascript: true,
-    ignore: [/QFont::setPixelSize/]
-  }).pipe(res);
+  activity.save(function(err) {
+    if (research.downloadImage && research.downloadImage.mimetype && research.downloadImage.path) {
+      res.setHeader('Content-disposition', 'attachment;');
+      res.setHeader('content-type', research.downloadImage.mimetype);
+
+      request(research.downloadImage.path).pipe(res);
+    } else {
+      setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          res.setHeader('Content-disposition', 'attachment;');
+          res.setHeader('content-type', fileInfo.mimetype);
+
+          request(fileInfo.path).pipe(res);
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -969,7 +1247,7 @@ exports.researchByID = function(req, res, next, id) {
   }
 
   Research.findById(id).populate('user', 'displayName firstName lastName email profileImageURL username schoolOrg roles')
-  .populate('team', 'name schoolOrg photo').exec(function (err, research) {
+  .populate('team', 'name schoolOrg photo teamLead teamLeads').exec(function (err, research) {
     if (err) {
       return next(err);
     } else if (!research) {
@@ -977,7 +1255,25 @@ exports.researchByID = function(req, res, next, id) {
         message: 'No Research with that identifier has been found'
       });
     }
-    req.research = research;
-    next();
+    if (req.query.full) {
+      User.populate(research.team, { 'path': 'teamLead', 'select': 'displayName' }, function(err, output) {
+        User.populate(research.team, { 'path': 'teamLeads', 'select': 'displayName' }, function(err, output) {
+          SavedResearch.findOne({ research: research, user: req.user }).exec(function(err, savedResearch) {
+            if (err) {
+              return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+              });
+            } else {
+              req.research = research;
+              req.researchSaved = (savedResearch) ? true : false;
+              next();
+            }
+          });
+        });
+      });
+    } else {
+      req.research = research;
+      next();
+    }
   });
 };

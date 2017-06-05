@@ -22,6 +22,10 @@
           });
           scope.$watch('organization', function(newValue, oldValue) {
             scope.organization = newValue;
+            scope.existingTeamLead = '';
+            scope.newTeamLead = {};
+            scope.error = null;
+            scope.form.inviteOrgLead.$setPristine();
             scope.findTeamLeads();
           });
         }

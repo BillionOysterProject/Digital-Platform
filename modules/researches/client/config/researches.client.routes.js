@@ -83,7 +83,8 @@
 
   function getResearch($stateParams, ResearchesService) {
     return ResearchesService.get({
-      researchId: $stateParams.researchId
+      researchId: $stateParams.researchId,
+      full: true
     }).$promise;
   }
 

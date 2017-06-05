@@ -24,12 +24,27 @@ module.exports = function(app) {
   app.route('/api/research/:researchId/return').all(researchesPolicy.isAllowed)
     .post(researches.return);
 
+  app.route('/api/research/:researchId/favorite').all(researchesPolicy.isAllowed)
+    .post(researches.favoriteResearch);
+
+  app.route('/api/research/:researchId/unfavorite').all(researchesPolicy.isAllowed)
+    .post(researches.unfavoriteResearch);
+
+  app.route('/api/research/favorites').all(researchesPolicy.isAllowed)
+    .get(researches.listFavorites);
+
   app.route('/api/research/:researchId/feedback-list').all(researchesPolicy.isAllowed)
     .get(researches.listFeedbackForResearch);
 
   app.route('/api/research/:researchId/feedback').all(researchesPolicy.isAllowed)
     .post(researches.researchFeedback)
     .get(researches.feedbackForResearch);
+
+  app.route('/api/research/:researchId/share').all(researchesPolicy.isAllowed)
+    .get(researches.share);
+
+  app.route('/api/research/:researchId/saveAsImage').all(researchesPolicy.isAllowed)
+    .put(researches.saveResearchAsImage);
 
   app.route('/api/research/:researchId').all(researchesPolicy.isAllowed)
     .get(researches.read)

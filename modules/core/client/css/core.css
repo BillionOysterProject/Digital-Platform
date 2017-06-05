@@ -561,6 +561,11 @@ a {
     .badge-warning, .panel-default > .panel-heading .badge-warning { background: #FF9501; }
     .badge-danger, .panel-default > .panel-heading .badge-danger { background: #ea6158; }
 
+    .btn .badge {
+        background: #fff;
+        color: #426ca9;
+    }
+    
 
 /* ALERT COLORS */
 

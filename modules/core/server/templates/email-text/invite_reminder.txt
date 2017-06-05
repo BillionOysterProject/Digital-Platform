@@ -2,8 +2,12 @@ Hi <%= FirstName %>,
 
 Your invite is waiting from <%= LeadName %> to join the <%= TeamOrOrg %> <%= TeamOrOrgName %> at the Billion Oyster Project.
 
+Your initial username is <%= Username %>, but it can be changed when you claim your account.
+
 Visit <%= LinkCreateAccount %> to join the <%= TeamOrOrg %>.
 
 So glad to have you on board!
 
 The Billion Oyster Project
+
+Need help? Just respond to this email and we'll get back to you.

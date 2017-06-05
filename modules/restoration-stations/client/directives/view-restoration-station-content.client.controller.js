@@ -29,7 +29,7 @@
 
             if (scope.station && !scope.station.propertyOwner && lodash.isEmpty(scope.station.otherPropertyOwner)) {
               scope.station.propertyOwner = {};
-            } else if (scope.station && lodash.isEmpty(scope.station.propertyOwner) && 
+            } else if (scope.station && lodash.isEmpty(scope.station.propertyOwner) &&
               scope.station.otherPropertyOwner && !lodash.isEmpty(scope.station.otherPropertyOwner)) {
               scope.station.propertyOwner = { _id: '-1' };
               scope.station.propertyOwner.name = scope.station.otherPropertyOwner.name;

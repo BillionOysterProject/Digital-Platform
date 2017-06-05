@@ -6,11 +6,11 @@
     .controller('UserProfileController', UserProfileController);
 
   UserProfileController.$inject = ['$scope', '$http', '$timeout', 'lodash', 'ExpeditionViewHelper',
-    'TeamMembersService', 'TeamsService', 'Admin', 'Users', 'ExpeditionsService', 'UserLessonsListService',
+    'TeamMembersService', 'TeamsService', 'Admin', 'Users', 'ExpeditionsService', 'ResearchesService', 'UserLessonsListService',
     'SchoolOrganizationsService', 'RestorationStationsService', 'EventsService', 'Authentication', 'LessonsService'];
 
   function UserProfileController($scope, $http, $timeout, lodash, ExpeditionViewHelper,
-    TeamMembersService, TeamsService, Admin, Users, ExpeditionsService, UserLessonsListService,
+    TeamMembersService, TeamsService, Admin, Users, ExpeditionsService, ResearchesService, UserLessonsListService,
     SchoolOrganizationsService, RestorationStationsService, EventsService, Authentication, LessonsService) {
     $scope.currentUser = Authentication.user;
     $scope.checkRole = ExpeditionViewHelper.checkRole;
@@ -53,12 +53,13 @@
 
         $scope.findTeams(function() {
           $scope.canSeePending = $scope.pendingVisible();
-          $scope.roles = $scope.findUserRoles();
+          $scope.roles = $scope.user.roles;
           $scope.loaded = true;
           $scope.loading = false;
         });
 
         $scope.findExpeditions();
+        $scope.findResearch();
         $scope.findOrganization();
         $scope.findRestorationStations();
         $scope.findEvents();
@@ -101,6 +102,7 @@
         }, function(data) {
           $scope.userTeams = data;
           $scope.isCurrentUserUsersTeamLead = $scope.checkCurrentUserTeamLead();
+          $scope.isCurrentUserUsersTeamMember = $scope.checkCurrentUserTeamMember();
           if (callback) callback();
         });
       } else {
@@ -112,24 +114,6 @@
       return ($scope.isUserAdmin && $scope.isCurrentUserAdmin) ||
       (($scope.isUserTeamMember || $scope.isUserTeamLead) &&
       ($scope.isCurrentUserAdmin || $scope.isCurrentUserUsersTeamLead));
-    };
-
-    $scope.findUserRoles = function() {
-      var roles = ($scope.user) ? $scope.user.roles : [];
-      lodash.remove(roles, function(n) {
-        return n === 'user';
-      });
-      if (!$scope.canSeePending && roles && roles.length > 0) {
-        for (var i = 0; i < roles.length; i++) {
-          if (roles[i] === 'team lead pending') {
-            roles[i] = 'team lead';
-          } else if (roles[i] === 'team member pending') {
-            roles[i] = 'team member';
-          }
-        }
-        roles = lodash.uniq(roles);
-      }
-      return (roles && roles.length > 0) ? roles.join(', ') : '';
     };
 
     $scope.checkViewedUserRole = function(role) {
@@ -165,6 +149,24 @@
           return l.username === $scope.currentUser.username;
         });
         return (leadIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
+    };
+
+    $scope.checkCurrentUserTeamMember = function() {
+      if ($scope.userTeams && $scope.currentUser) {
+        var allTeamMembers = [];
+        for (var i = 0; i < $scope.userTeams.length; i++) {
+          allTeamMembers.push($scope.userTeams[i].teamLead);
+          allTeamMembers = allTeamMembers.concat($scope.userTeams[i].teamLeads);
+          allTeamMembers = allTeamMembers.concat($scope.userTeams[i].teamMembers);
+        }
+
+        var memberIndex = lodash.findIndex(allTeamMembers, function(m) {
+          return m.username === $scope.currentUser.username;
+        });
+        return (memberIndex > -1) ? true : false;
       } else {
         return false;
       }
@@ -209,10 +211,38 @@
 
         ExpeditionsService.query({
           byOwner: byOwner,
+          published: true,
           byMember: byMember,
           userId : $scope.user._id
         }, function(data) {
           $scope.expeditions = data;
+        });
+
+        ExpeditionsService.query({
+          byOwner: byOwner,
+          published: false,
+          byMember: byMember,
+          userId: $scope.user._id
+        }, function(data) {
+          $scope.launchedExpeditions = data;
+        });
+      }
+    };
+
+    $scope.findResearch = function() {
+      if ($scope.currentUser && $scope.user) {
+        ResearchesService.query({
+          published: true,
+          byCreator: $scope.user._id
+        }, function(data) {
+          $scope.publishedResearch = data;
+        });
+
+        ResearchesService.query({
+          published: false,
+          byCreator: $scope.user._id
+        }, function(data) {
+          $scope.pendingResearch = data;
         });
       }
     };
@@ -259,9 +289,17 @@
     $scope.findCreatedLessons = function() {
       if ($scope.currentUser && $scope.user) {
         LessonsService.query({
+          published: true,
           byCreator: $scope.user._id
         }, function(data) {
           $scope.createdLessons = data;
+        });
+
+        LessonsService.query({
+          published: false,
+          byCreator: $scope.user._id
+        }, function(data) {
+          $scope.draftLessons = data;
         });
       }
     };

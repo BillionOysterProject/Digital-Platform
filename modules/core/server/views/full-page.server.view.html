@@ -33,13 +33,37 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Lobster|Oswald" rel="stylesheet">
-  <link href="/modules/core/client/css/full-page.css" rel="stylesheet">
+  <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="lib/leaflet/dist/leaflet.css" rel="stylesheet">
+  <link href="lib/angular-chart.js/dist/angular-chart.min.css" rel="stylesheet">
+  <link href="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" rel="stylesheet">
+  <link href="lib/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css" rel="stylesheet">
+
+  <style>
+    .content-fixed {
+      width: 100%;
+    }
+    .content {
+      width: 100%;
+      font-family: 'Roboto', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Calibri, Arial, sans-serif;
+    }
+    .container {
+      width: 100%;
+    }
+  </style>
 
   <!-- Application CSS Files -->
   <!-- {% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %} -->
 </head>
 
 <body class="ng-cloak" width="100%">
+  <!--Embedding The User Object-->
+  <script type="text/javascript">
+    var user = {{ user | json | safe }};
+  </script>
+
   {% block content %}
   <section ui-view width="100%"></section>
   {% endblock %}

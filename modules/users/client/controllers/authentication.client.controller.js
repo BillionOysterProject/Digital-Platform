@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('users').controller('AuthenticationController', ['$scope', '$rootScope', '$state', '$http',
-'$location', '$window', 'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
+  '$location', '$window', 'lodash', 'Authentication', 'PasswordValidator', 'SchoolOrganizationsService',
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
@@ -112,7 +112,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       { label: 'Citizen Scientist', value: 'citizen scientist' },
       { label: 'Professional Scientist', value: 'professional scientist' },
       { label: 'Site Coordinator', value: 'site coordinator' },
-      { label: 'Property Owner', value: 'property owner' },
       { label: 'Other', value: 'other' }
     ];
 

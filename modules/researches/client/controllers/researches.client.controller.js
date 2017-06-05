@@ -7,7 +7,7 @@
     .controller('ResearchesController', ResearchesController);
 
   ResearchesController.$inject = ['$scope', '$state', '$http', '$timeout', '$location', 'researchResolve', 'lodash', 'moment',
-  'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
+    'Authentication', 'FileUploader','ExpeditionViewHelper', 'TeamsService', 'ResearchesService', 'ResearchFeedbackService'];
 
   function ResearchesController ($scope, $state, $http, $timeout, $location, research, lodash, moment,
   Authentication, FileUploader, ExpeditionViewHelper, TeamsService, ResearchesService, ResearchFeedbackService) {
@@ -15,7 +15,10 @@
     var toGoState = null;
     var toGoParams = null;
 
-    vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
+    vm.authentication = Authentication;
+    vm.user = Authentication.user;
+    vm.error = [];
+    vm.form = {};
 
     vm.research = research;
     vm.research.organization = null;
@@ -28,10 +31,12 @@
     vm.source = $location.protocol() + '://'+ $location.host() +':'+ $location.port();
     vm.url = $location.absUrl();
 
-    vm.authentication = Authentication;
-    vm.user = Authentication.user;
-    vm.error = [];
-    vm.form = {};
+    vm.facebookAppId = document.querySelector('meta[property="fb:app_id"]').content;
+    vm.subject = ((vm.user) ? vm.user.displayName : 'Someone') + ' has shared a research poster with you';
+    vm.message = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
+    vm.text = 'View the research poster ' + vm.research.title + ' at the Billion Oyster Project';
+    vm.hastags = 'BillionOysterProject';
+
     vm.saving = false;
     vm.valid = (vm.research.status === 'published') ? true : false;
     vm.getDate = ExpeditionViewHelper.getDate;
@@ -40,28 +45,25 @@
     vm.research.font = 'Roboto';
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
+    vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+    if (vm.research && !vm.research.team) {
+      vm.research.team = {
+        _id: null
+      };
+    }
 
     vm.headerImageUploader = new FileUploader({
       alias: 'newHeaderImage',
       queueLimit: 2
     });
 
-    if (vm.user) {
-      TeamsService.query({
-        byMember: true
-      }, function(data) {
-        vm.myTeams = data;
-        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) vm.research.team = vm.myTeams[0];
-      });
-    }
-
-    if (vm.research && vm.research._id) {
+    var getResearchFeedback = function() {
       ResearchFeedbackService.get({
         researchId: vm.research._id
       }, function(data) {
         vm.feedback = data;
       });
-    }
+    };
 
     vm.checkRole = function(role) {
       if (vm.user) {
@@ -73,6 +75,43 @@
         return false;
       }
     };
+    vm.isTeamLead = vm.checkRole('team lead');
+    vm.isTeamMember = vm.checkRole('team member');
+    vm.isAdmin = vm.checkRole('admin');
+
+    var getTeamLeadNames = function() {
+      vm.teamLeads = [];
+      if (vm.research.team) {
+        vm.teamLeads.push(vm.research.team.teamLead.displayName);
+        for(var i = 0; i < vm.research.team.teamLeads.length; i++) {
+          vm.teamLeads.push(vm.research.team.teamLeads[i].displayName);
+        }
+        vm.teamLeads = lodash.uniq(vm.teamLeads);
+      }
+    };
+
+    if (vm.user) {
+      var byOwner, byMember;
+      if (vm.isTeamLead || vm.isAdmin) {
+        byOwner = true;
+      } else {
+        byMember = true;
+      }
+      TeamsService.query({
+        byOwner: byOwner,
+        byMember: byMember
+      }, function(data) {
+        vm.myTeams = data;
+        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) {
+          vm.research.team = vm.myTeams[0];
+        }
+        getTeamLeadNames();
+      });
+    }
+
+    if (vm.research && vm.research._id) {
+      getResearchFeedback();
+    }
 
     vm.changeColor = function(color) {
       vm.research.color = color;
@@ -116,27 +155,44 @@
       }
     };
 
-    var updateResearchObject = function(researchId) {
+    var saveResearchAsImage = function(researchId, saveAsCallback) {
+      $scope.savingStatus = 'Finalizing Poster';
+      $http.put('api/research/' + researchId + '/saveAsImage')
+      .success(function(data, status, headers, config) {
+        vm.research.downloadImage = data;
+        vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+        saveAsCallback();
+      })
+      .error(function(data, status, headers, config) {
+        console.log('error', data);
+        saveAsCallback(data);
+      });
+    };
+
+    var updateResearchObject = function(researchId, callback) {
       ResearchesService.get({
         researchId: researchId
       }, function(data) {
         vm.research = data;
         vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
+        vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+        if (callback) callback();
       });
     };
 
     // Save Research
-    vm.save = function(isValid, status, stayOnPage) {
+    vm.save = function(isValid, status, stayOnPage, preview) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
         return false;
       }
       vm.saving = true;
-      vm.research.status = status || 'pending';
+      vm.research.status = status;
+      vm.research.team = vm.research.team._id;
 
       vm.finishedSaving = 0;
       $timeout(function() {
-        if (status === 'draft') {
+        if (status === 'draft' || status === null) {
           $scope.savingStatus = 'Saving Poster Draft';
           vm.modal = angular.element('#modal-save-draft-progress-bar');
         } else {
@@ -154,28 +210,37 @@
 
       function successCallback(res) {
         var researchId = res._id;
+        vm.downloadImageURL = (res && res.downloadImage) ? res.downloadImage.path : '';
 
-        vm.finishedSaving = 50;
+        vm.finishedSaving = 33;
         $timeout(function () {
+
           uploadHeaderImage(researchId, function() {
-            vm.saving = false;
-            if (vm.modal) {
-              vm.modal.bind('hidden.bs.modal', function() {
-                vm.finishedSaving = 100;
+            vm.finishedSaving = 66;
+            saveResearchAsImage(researchId, function() {
+              vm.saving = false;
+              if (vm.modal) {
+                vm.modal.bind('hidden.bs.modal', function() {
+                  vm.finishedSaving = 100;
+                  if (stayOnPage) {
+                    updateResearchObject(researchId, function() {
+                      if (preview) vm.openResearchPreviewModal();
+                    });
+                  } else {
+                    vm.goToView(researchId);
+                  }
+                });
+                vm.modal.modal('hide');
+              } else {
                 if (stayOnPage) {
-                  updateResearchObject(researchId);
+                  updateResearchObject(researchId, function() {
+                    if (preview) vm.openResearchPreviewModal();
+                  });
                 } else {
                   vm.goToView(researchId);
                 }
-              });
-              vm.modal.modal('hide');
-            } else {
-              if (stayOnPage) {
-                updateResearchObject(researchId);
-              } else {
-                vm.goToView(researchId);
               }
-            }
+            });
           });
         }, 500);
       }
@@ -202,27 +267,47 @@
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
       }
-      vm.save(true, 'draft', true);
+      vm.save(true, 'draft', true, false);
     };
 
     vm.saveDraftAndPreview = function(isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.researchForm');
       }
-      vm.save(true, 'draft', false);
+      vm.save(true, 'draft', true, true);
     };
 
-    vm.saveAndSubmit = function(isValid) {
-      vm.save(isValid, 'pending', false);
+    vm.saveAndSubmit = function(isValid, status) {
+      vm.save(isValid, status, false, false);
+    };
+
+    vm.favoriteResearch = function() {
+      $http.post('api/research/'+vm.research._id+'/favorite', {})
+      .success(function(data, status, headers, config) {
+        vm.research.saved = true;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
+    };
+
+    vm.unfavoriteResearch = function() {
+      $http.post('api/research/'+vm.research._id+'/unfavorite', {})
+      .success(function(data, status, headers, config) {
+        vm.research.saved = false;
+      })
+      .error(function(data, status, headers, config) {
+
+      });
     };
 
     vm.downloadResearch = function() {
-      var filename = lodash.replace(vm.research.title.trim() + '.pdf', /\s/g, '_');
+      var filename = lodash.replace(vm.research.title.trim() + '.png', /\s/g, '_');
       $http.get('/api/research/' + vm.research._id + '/download?filename=' + filename + '&title=' + vm.research.title, {
         responseType: 'arraybuffer'
       }).
         success(function(data, status, headers, config) {
-          var blob = new Blob([data], { type: 'application/pdf' });
+          var blob = new Blob([data], { type: 'image/png' });
           var url = (window.URL || window.webkitURL).createObjectURL(blob);
 
           var anchor = angular.element('<a/>');
@@ -233,8 +318,26 @@
           })[0].click();
         }).
         error(function(data, status, headers, config) {
-
+          console.log('error', data);
         });
+    };
+
+    vm.share = function(site) {
+      $http.get('/api/research/' + vm.research._id + '/share?site=' + site, {})
+      .success(function(data, status, headers, config) {
+      })
+      .error(function(data, status, headers, config) {
+      });
+    };
+
+    vm.openEmailShare = function() {
+      angular.element('#modal-share-email').modal('show');
+    };
+
+    vm.closeEmailShare = function(sent) {
+      if (sent) {
+        vm.share('email');
+      }
     };
 
     vm.openViewUserModal = function() {
@@ -251,7 +354,7 @@
 
     vm.closeResearchFeedbackModal = function(refresh) {
       angular.element('#modal-research-feedback').modal('hide');
-      if (refresh) console.log('reload feedback');
+      if (refresh) getResearchFeedback();
     };
 
     vm.openResearchFeedbackView = function() {
@@ -260,7 +363,15 @@
 
     vm.closeResearchFeedbackView = function(refresh) {
       angular.element('#modal-research-view-feedback').modal('hide');
-      if (refresh) console.log('reload feedback view');
+      if (refresh) getResearchFeedback();
+    };
+
+    vm.openResearchPreviewModal = function() {
+      angular.element('#modal-preview-poster').modal('show');
+    };
+
+    vm.closeResearchPreviewModal = function() {
+      angular.element('#modal-preview-poster').modal('hide');
     };
 
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {

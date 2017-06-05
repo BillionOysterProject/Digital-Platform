@@ -70,7 +70,6 @@
               - Published Expedition View
               - Compare Expedition View (only display protocols available even if protocols are checked as parameters?)
               ... anywhere else all 5 protocols are listed
-
             -->
 
             <h4>Select protocols to include:</h4>
@@ -199,6 +198,10 @@
     </section>
     <section class="content shaded">
         <section class="container">
+            <div class="form-group" ng-show="vm.expedition._id">
+              <input type="checkbox" ng-model="vm.expedition.sendUpdatedEmail"/>
+              <label class="control-label">Send another email to team members?</label>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" id="launchexpedition">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
                 <button type="button" class="btn btn-danger pull-right" ng-show="vm.expedition._id" ng-click="vm.openDeleteExpedition()">Delete</button>

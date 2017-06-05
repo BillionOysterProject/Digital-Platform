@@ -223,7 +223,11 @@ exports.read = function(req, res) {
 
     // is the current user registered for the event
     var index = _.findIndex(calendarEvent.registrants, function(r) {
-      return r.user._id.toString() === req.user._id.toString();
+      if (r && r.user && r.user._id && req.user && req.user._id) {
+        return r.user._id.toString() === req.user._id.toString();
+      } else {
+        return false;
+      }
     });
     calendarEvent.isRegistered = (index > -1) ? true : false;
   }
@@ -459,7 +463,7 @@ exports.register = function(req, res) {
                   EventName: calendarEventJSON.title,
                   EventDate: eventDate,
                   LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
                 }, function(info) {
                   callback();
                 }, function(errorMessage) {
@@ -475,7 +479,7 @@ exports.register = function(req, res) {
               FirstName: req.user.firstName,
               EventDate: eventDate,
               LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEventJSON._id,
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function (info) {
               sendEventFullEmail(function () {
                 res.json(calendarEventJSON);
@@ -672,7 +676,7 @@ exports.emailRegistrants = function(req, res) {
       EventName: calendarEvent.title,
       EventDate: eventDate,
       LinkEvent: httpTransport + req.headers.host + '/events/' + calendarEvent._id,
-      LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+      LinkProfile: httpTransport + req.headers.host + '/profiles'
     }, function (info) {
       res.json(calendarEvent);
     }, function (errorMessage) {

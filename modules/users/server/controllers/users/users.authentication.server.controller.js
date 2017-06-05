@@ -14,7 +14,8 @@ var path = require('path'),
   SchoolOrg = mongoose.model('SchoolOrg'),
   async = require('async'),
   Team = mongoose.model('Team'),
-  TeamRequest = mongoose.model('TeamRequest');
+  TeamRequest = mongoose.model('TeamRequest'),
+  queryString = require('query-string');
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -69,7 +70,7 @@ exports.signup = function (req, res) {
               FirstName: user.firstName,
               OrgName: createdOrg.name,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function(info) {
               sendAdminNewOrganizationEmail(function() {
                 orgCallback();
@@ -169,7 +170,7 @@ exports.signup = function (req, res) {
                   FirstName: teamLead.firstName,
                   TeamMemberName: user.displayName,
                   LinkMemberRequest: httpTransport + req.headers.host + '/settings/members',
-                  LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
                 }, function(info) {
                   loginNewUser();
                 }, function(errorMessage) {
@@ -185,7 +186,8 @@ exports.signup = function (req, res) {
             var sendAdminNewTeamLeadEmail = function(callback) {
               email.sendEmailTemplate(config.mailer.admin, 'A new team lead is pending approval', 'lead_waiting', {
                 TeamLeadName: user.displayName,
-                LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users'
+                LinkTeamLeadRequest: httpTransport + req.headers.host + '/profiles/users',
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
               }, function(info) {
                 if (callback) callback();
               }, function(errorMessage) {
@@ -197,7 +199,7 @@ exports.signup = function (req, res) {
               FirstName: user.firstName,
               TeamMemberName: user.displayName,
               LinkLogin: httpTransport + req.headers.host + '/authentication/signin',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             }, function(info) {
               sendAdminNewTeamLeadEmail(loginNewUser());
             }, function(errorMessage) {
@@ -232,7 +234,9 @@ exports.validateNewUserToken = function (req, res) {
       return res.redirect('/claim-user/invalid');
     }
 
-    res.redirect('/claim-user/' + req.params.token);
+    var usernameParams = queryString.stringify({ username: user.username });
+
+    res.redirect('/claim-user/' + req.params.token + '?' + usernameParams);
   });
 };
 

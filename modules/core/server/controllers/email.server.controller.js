@@ -101,6 +101,10 @@ exports.sendEmailTemplate = function(to, subject, bodyTemplate, data, successCal
   sendTemplate(to, defaultFrom, subject, bodyTemplate, data, successCallback, errorCallback, attachments);
 };
 
+exports.sendEmailTemplateFromUser = function(to, from, subject, bodyTemplate, data, successCallback, errorCallback, attachments) {
+  sendTemplate(to, from, subject, bodyTemplate, data, successCallback, errorCallback, attachments);
+};
+
 exports.sendFeedback = function(to, from, subject, data, template, req, res) {
   if (to && from && subject && template && data) {
     sendTemplate(to, from, subject, template, data,
@@ -161,7 +165,19 @@ exports.sendUnitFeedback = function(req, res) {
     UnitName: req.body.unit.title,
     UnitFeedbackNote: req.body.message,
     LinkUnit: httpTransport + req.headers.host + '/units/' + req.body.unit._id,
-    LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+    LinkProfile: httpTransport + req.headers.host + '/profiles'
   };
   exports.sendFeedback(req.body.unit.user.email, req.user.email, subject, data, 'unit_feedback', req, res);
+};
+
+exports.sendShare = function(req, res) {
+  var subject = req.body.subject;
+  var data = {
+    ShareSubject: subject,
+    ShareToName: req.body.toName,
+    ShareMessage: req.body.message,
+    ShareLink: req.body.link,
+    ShareFromName: req.user.displayName
+  };
+  exports.sendFeedback(req.body.toEmail, req.user.email, subject, data, 'share', req, res);
 };

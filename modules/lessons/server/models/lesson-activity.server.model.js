@@ -22,8 +22,11 @@ var LessonActivitySchema = new Schema({
   },
   activity: {
     type: String,
-    enum: ['viewed', 'downloaded', 'duplicated', 'liked', 'disliked'],
+    enum: ['viewed', 'downloaded', 'shared', 'duplicated', 'liked', 'unliked', 'taught', 'feedback', 'submitted', 'published', 'returned'],
     required: true
+  },
+  additionalInfo: {
+    type: String,
   },
   created: {
     type: Date,

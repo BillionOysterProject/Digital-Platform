@@ -7,10 +7,10 @@
         <h2 id="lesson-title">{{vm.lesson.title}}
           <small>
             <a ng-click="vm.favoriteLesson()" ng-hide="vm.lesson.saved">
-              <i class="glyphicon glyphicon-star-empty"></i>
+              <i class="fa fa-heart-o"></i>
             </a>
             <a ng-click="vm.unfavoriteLesson()" ng-show="vm.lesson.saved">
-              <i class="glyphicon glyphicon-star red"></i>
+              <i class="fa fa-heart red"></i>
             </a>
           </small>
         </h2>
@@ -26,7 +26,7 @@
         <a class="btn btn-default" ng-show="(vm.checkRole('admin') || vm.checkRole('team lead')) && vm.feedback &&
           vm.feedback.lessonAlignWithCurriculumnAvg && vm.feedback.lessonEffectiveAvg &&
           vm.feedback.lessonPreparesStudentsAvg && vm.feedback.lessonSupportScientificPracticeAvg"
-          ng-click="vm.openLessonFeedbackView()">View feedback</a>
+          ng-click="vm.openLessonFeedbackView()">View feedback<!-- &nbsp;&nbsp;<span class="badge">{{vm.feedback.feedbackCount}}</span>--></a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.openLessonLog()">Log teaching</a>
         <a class="btn btn-default" view-permissions="team lead,admin" ng-click="vm.duplicateLesson()">Duplicate</a>
         <a class="btn btn-default" ng-click="vm.openDownloadLesson()">Download</a>

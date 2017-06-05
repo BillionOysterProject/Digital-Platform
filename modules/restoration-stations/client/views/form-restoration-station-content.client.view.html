@@ -29,13 +29,13 @@
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="required" for="bodyOfWater">Body of Water *</label>
-                <input type="text" ng-model="station.bodyOfWater" placeholder="Body of Water"
+                <input type="text" ng-model="station.bodyOfWater" placeholder="Body of Water" autocomplete="off"
                 uib-typeahead="bodyOfWater.name as bodyOfWater.name for bodyOfWater in bodiesOfWater | filter:{name:$viewValue}"
                 class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
             </div>
             <div class="form-group col-sm-3">
                 <label class="required" for="boroughCounty">Borough/County *</label>
-                <input type="text" ng-model="station.boroughCounty" placeholder="Borough/County"
+                <input type="text" ng-model="station.boroughCounty" placeholder="Borough/County" autocomplete="off"
                 uib-typeahead="boroughCounty.name as boroughCounty.name for boroughCounty in boroughsCounties | filter:{name:$viewValue}"
                 class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
             </div>
@@ -70,7 +70,7 @@
                 <div class="row" ng-show="station.siteCoordinator._id === '-1'">
                     <div class="form-group col-sm-6">
                         <label>Site Coordinator Name</label>
-                        <input class="form-control" type="text" ng-model="station.siteCoordinator.name"/>
+                        <input class="form-control" type="text" ng-model="station.siteCoordinator.displayName"/>
                     </div>
                     <div class="form-group col-sm-6">
                       <label>Site Coordinator Email</label>

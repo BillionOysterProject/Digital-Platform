@@ -3,7 +3,10 @@
 /**
  * Module dependencies
  */
-var acl = require('acl');
+var acl = require('acl'),
+  _ = require('lodash'),
+  path = require('path'),
+  authHelper = require(path.resolve('./modules/core/server/helpers/auth.server.helper'));
 
 // Using the memory backend
 acl = new acl(new acl.memoryBackend());
@@ -13,9 +16,12 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['admin'],
+    roles: ['admin', 'team lead'],
     allows: [{
       resources: '/api/research',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/saveAsImage',
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/upload-header-image',
@@ -31,37 +37,22 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/feedback-list',
-      permissions: ['*']
+      permissions: '*'
     }, {
       resources: '/api/research/:researchId/feedback',
-      permissions: ['*']
-    }, {
-      resources: '/api/research/:researchId',
-      permissions: '*'
-    }]
-  }, {
-    roles: ['team lead'],
-    allows: [{
-      resources: '/api/research',
       permissions: '*'
     }, {
-      resources: '/api/research/:researchId/upload-header-image',
+      resources: '/api/research/:researchId/favorite',
       permissions: '*'
     }, {
-      resources: '/api/research/:researchId/download',
+      resources: '/api/research/:researchId/unfavorite',
       permissions: '*'
     }, {
-      resources: '/api/research/:researchId/publish',
+      resources: '/api/research/favorites',
       permissions: '*'
     }, {
-      resources: '/api/research/:researchId/return',
+      resources: '/api/research/:researchId/share',
       permissions: '*'
-    }, {
-      resources: '/api/research/:researchId/feedback-list',
-      permissions: ['*']
-    }, {
-      resources: '/api/research/:researchId/feedback',
-      permissions: ['*']
     }, {
       resources: '/api/research/:researchId',
       permissions: '*'
@@ -72,6 +63,9 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research',
       permissions: '*'
     }, {
+      resources: '/api/research/:researchId/saveAsImage',
+      permissions: '*'
+    }, {
       resources: '/api/research/:researchId/upload-header-image',
       permissions: '*'
     }, {
@@ -79,10 +73,22 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/research/:researchId/feedback-list',
-      permissions: ['*']
+      permissions: '*'
     }, {
       resources: '/api/research/:researchId/feedback',
-      permissions: ['*']
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/favorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/unfavorite',
+      permissions: '*'
+    }, {
+      resources: '/api/research/favorites',
+      permissions: '*'
+    }, {
+      resources: '/api/research/:researchId/share',
+      permissions: '*'
     }, {
       resources: '/api/research/:researchId',
       permissions: '*'
@@ -93,13 +99,25 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research',
       permissions: ['get']
     }, {
+      resources: '/api/research/:researchId/download',
+      permissions: ['get']
+    }, {
       resources: '/api/research/:researchId/feedback-list',
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId/feedback',
       permissions: ['get']
     }, {
-      resources: '/api/research/:researchId/download',
+      resources: '/api/research/:researchId/favorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/research/:researchId/unfavorite',
+      permissions: ['post']
+    }, {
+      resources: '/api/research/favorites',
+      permissions: ['get']
+    }, {
+      resources: '/api/research/:researchId/share',
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId',
@@ -111,13 +129,13 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/research',
       permissions: ['get']
     }, {
+      resources: '/api/research/:researchId/download',
+      permissions: ['get']
+    }, {
       resources: '/api/research/:researchId/feedback-list',
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId/feedback',
-      permissions: ['get']
-    }, {
-      resources: '/api/research/:researchId/download',
       permissions: ['get']
     }, {
       resources: '/api/research/:researchId',
