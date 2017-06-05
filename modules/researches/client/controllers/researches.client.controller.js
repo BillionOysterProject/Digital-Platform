@@ -82,13 +82,11 @@
     var getTeamLeadNames = function() {
       vm.teamLeads = [];
       if (vm.research.team) {
-        console.log('team', vm.research.team);
         vm.teamLeads.push(vm.research.team.teamLead.displayName);
         for(var i = 0; i < vm.research.team.teamLeads.length; i++) {
           vm.teamLeads.push(vm.research.team.teamLeads[i].displayName);
         }
         vm.teamLeads = lodash.uniq(vm.teamLeads);
-        console.log('team leads', vm.teamLeads);
       }
     };
 
@@ -234,7 +232,6 @@
                 });
                 vm.modal.modal('hide');
               } else {
-                console.log('no modal');
                 if (stayOnPage) {
                   updateResearchObject(researchId, function() {
                     if (preview) vm.openResearchPreviewModal();

@@ -402,7 +402,29 @@ exports.update = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(expedition);
+        if (req.body.sendUpdatedEmail) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+          sendEmailToAssignedUsers(expedition, req.body.teamLists, req.user,
+            'Your expedition has been updated!',
+            'expedition_launched', {
+              TeamLead: req.user.displayName,
+              ExpeditionName: expedition.name,
+              ORSName: req.body.station.name,
+              ExpeditionDate: moment(expedition.monitoringStartDate).format('MMMM D, YYYY'),
+              ExpeditionTimeStart: moment(expedition.monitoringStartDate).format('HH:mm'),
+              ExpeditionTimeEnd: moment(expedition.monitoringEndDate).format('HH:mm'),
+              ExpeditionNotes: ((expedition.notes) ? expedition.notes : ''),
+              LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
+              LinkProfile: httpTransport + req.headers.host + '/profiles',
+            }, function(info) {
+              res.json(expedition);
+            }, function(errorMessage) {
+              res.json(expedition);
+            });
+        } else {
+          res.json(expedition);
+        }
       }
     });
   } else {
@@ -490,7 +512,7 @@ exports.submit = function (req, res) {
                 FirstName: expedition.teamLead.firstName,
                 ExpeditionName: expedition.name,
                 LinkPublishExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
-                LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
               },
               function(info) {
                 res.json(expedition);
@@ -511,7 +533,7 @@ exports.submit = function (req, res) {
             FirstName: expedition.teamLead.firstName,
             ExpeditionName: expedition.name,
             LinkViewExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(info) {
             res.json(expedition);
@@ -581,7 +603,7 @@ exports.publish = function (req, res) {
               TeamName: expedition.team.name,
               ExpeditionName: expedition.name,
               LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             },
             function(info) {
               res.json(expedition);
@@ -684,7 +706,7 @@ exports.return = function (req, res) {
               ExpeditionName: expedition.name,
               ExpeditionReturnedNote: expedition.returnedNotes,
               LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id + '/protocols',
-              LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
             },
             function(info) {
               res.json(expedition);

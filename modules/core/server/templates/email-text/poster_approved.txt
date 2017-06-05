@@ -8,3 +8,4 @@ Thanks for your contribution!
 The Billion Oyster Project
 
 You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
+Need help? Just respond to this email and we'll get back to you.

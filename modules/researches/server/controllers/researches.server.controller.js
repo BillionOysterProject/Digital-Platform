@@ -191,7 +191,8 @@ var alertTeamLeads = function(research, user, host, callback) {
                 FirstName: item.firstName,
                 TeamMemberName: user.displayName,
                 PosterName: research.title,
-                LinkPosterRequest: httpTransport + host + '/research/user'
+                LinkPosterRequest: httpTransport + host + '/research/user',
+                LinkProfile: httpTransport + host + '/profiles'
               }, function(info) {
                 callback();
               }, function(errorMessage) {
@@ -493,7 +494,7 @@ exports.publish = function(req, res) {
             FirstName: research.user.firstName,
             PosterName: research.title,
             LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(response) {
             res.json(research);
@@ -544,7 +545,7 @@ exports.return = function(req, res) {
             PosterName: research.title,
             PosterReturnedNote: research.returnedNotes,
             LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-            LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(response) {
             res.json(research);
@@ -724,7 +725,7 @@ exports.researchFeedback = function(req, res) {
           OtherFeedback: researchFeedback.other.feedbackSuggestions,
           GeneralFeedback: researchFeedback.generalComments,
           LinkPoster: httpTransport + req.headers.host + '/researches/' + research._id,
-          LinkProfile: httpTransport + req.headers.host + '/settings/profile'
+          LinkProfile: httpTransport + req.headers.host + '/profiles'
         },
         function(response) {
           res.json(researchFeedback);

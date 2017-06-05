@@ -12,7 +12,7 @@
                 <p>If they already have a team lead account in the <b>{{organization.name}}</b> organization, select their name below.</p>
                 <div class="form-group">
                   <label for="teamLead">Team Leads in the <span class="red">{{organization.name}}</span> organization</label>
-                  <input type="text" ng-model="existingTeamLead" placeholder="Team Leads" id="teamLead" name="teamLead"
+                  <input type="text" ng-model="existingTeamLead" placeholder="Team Leads" id="teamLead" name="teamLead" autocomplete="off"
                   uib-typeahead="teamLead as teamLead.displayName for teamLead in teamLeads | filter:{displayName:$viewValue}"
                   class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true"
                     ng-disabled="newTeamLead.firstName || newTeamLead.lastName || newTeamLead.email">
@@ -32,6 +32,7 @@
                 <div class="form-group" show-errors>
                     <label for="email" class="control-label">Email address</label>
                     <input type="text" class="form-control" id="email" name="email" ng-model="newTeamLead.email"
+                      ng-pattern="/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/"
                       ng-disabled="existingTeamLead"></input>
                 </div>
                 <div ng-show="error" class="alert alert-danger">

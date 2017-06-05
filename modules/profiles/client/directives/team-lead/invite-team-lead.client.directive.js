@@ -18,14 +18,22 @@
           element.bind('show.bs.modal', function() {
             scope.existingTeamLead = '';
             scope.newTeamLead = {};
-
+            scope.error = null;
             scope.form.inviteTeamLead.$setPristine();
           });
           scope.$watch('team', function(newValue, oldValue) {
             scope.team = newValue;
+            scope.existingTeamLead = '';
+            scope.newTeamLead = {};
+            scope.error = null;
+            scope.form.inviteTeamLead.$setPristine();
           });
           scope.$watch('organization', function(newValue, oldValue) {
             scope.organization = newValue;
+            scope.existingTeamLead = '';
+            scope.newTeamLead = {};
+            scope.error = null;
+            scope.form.inviteTeamLead.$setPristine();
             scope.findTeamLeads();
           });
         }
