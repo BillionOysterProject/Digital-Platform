@@ -61,7 +61,7 @@
     <section class="content">
         <section class="container">
             <!--TODO: Wire up code. All should be selected on default. Unselecting checkboxes should instantly remove the corresponding "assign to protocol" columns
-            
+
             Other places that should also be updated with the less-than-5 protocol feature:
               - Expedition View
               - Protocol Tabs in Expedition Protocol Form
@@ -70,8 +70,8 @@
               - Published Expedition View
               - Compare Expedition View (only display protocols available even if protocols are checked as parameters?)
               ... anywhere else all 5 protocols are listed
-              
-              
+
+
             <h4>Select protocols to include:</h4>
             <div class="row">
                 <div class="col-sm-2">
@@ -102,8 +102,8 @@
             </div>
             <hr/>
             -->
-            
-            <h4>Assign members to protocols * 
+
+            <h4>Assign members to protocols *
                 <!--TODO: Doesn't seem like this button should be distributing the team lead's name.. -->
                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.autoAssign()" id="autoassign">Auto Assign</button>
             </h4>
@@ -199,6 +199,10 @@
     </section>
     <section class="content shaded">
         <section class="container">
+            <div class="form-group" ng-show="vm.expedition._id">
+              <input type="checkbox" ng-model="vm.expedition.sendUpdatedEmail"/>
+              <label class="control-label">Send another email to team members?</label>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" id="launchexpedition">{{vm.expedition._id ? 'Update' : 'Launch'}}</button>
                 <button type="button" class="btn btn-danger pull-right" ng-show="vm.expedition._id" ng-click="vm.openDeleteExpedition()">Delete</button>

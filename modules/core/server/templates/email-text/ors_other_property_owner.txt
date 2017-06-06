@@ -9,3 +9,5 @@ To edit the ORS, visit <%= LinkORSForm %>.
 
 Thanks!
 The Billion Oyster Project
+
+Need help? Just respond to this email and we'll get back to you.

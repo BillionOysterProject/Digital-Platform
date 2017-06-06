@@ -8,7 +8,9 @@ On <%= ExpeditionDate %>
 From <%= ExpeditionTimeStart %> to <%= ExpeditionTimeEnd %>
 You have been assigned to Protocol(s) <%= ExpeditionProtocols %>
 Your group members for this expedition are <%= TeamMembers %>
+<% if(ExpeditionNotes !== '') { %>
 Special notes: <%= ExpeditionNotes %>
+<% } %>
 
 Visit <%= LinkExpedition %> to see your expedition.
 

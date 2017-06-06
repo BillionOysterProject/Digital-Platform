@@ -42,13 +42,14 @@ angular.module('users.admin').factory('Admin', ['$resource',
         method: 'GET',
         params: {
           role: '@role',
+          teamLeadType: '@teamLeadType',
           organizationId: '@organizationId',
           searchString: '@searchString',
           sort: '@sort',
           limit: '@limit',
           page: '@page'
         },
-        isArray: true
+        isArray: false
       }
     });
   }
