@@ -122,6 +122,106 @@ var sendEmailToAssignedUsers = function(expedition, teamLists, teamLead, subject
   });
 };
 
+var createSiteCondition = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var siteCondition = new ProtocolSiteCondition({
+      collectionTime: collectionTime,
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    siteCondition.save(function (err) {
+      if (err) {
+        callback('Could not create a site condition protocol');
+      } else {
+        callback(null, siteCondition);
+      }
+    });
+  } else {
+    callback();
+  }
+};
+
+var createOysterMeasurement = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var oysterMeasurement = new ProtocolOysterMeasurement({
+      collectionTime: collectionTime,
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    oysterMeasurement.save(function (err) {
+      if (err) {
+        callback('Could not create an oyster measurement protocol');
+      } else {
+        callback(null, oysterMeasurement);
+      }
+    });
+  } else {
+    callback();
+  }
+};
+
+var createMobileTrap = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var mobileTrap = new ProtocolMobileTrap({
+      collectionTime: collectionTime,
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    mobileTrap.save(function (err) {
+      if (err) {
+        callback('Could not create a mobile trap protocol');
+      } else {
+        callback(null, mobileTrap);
+      }
+    });
+  } else {
+    callback();
+  }
+};
+
+var createSettlementTiles = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var settlementTiles = new ProtocolSettlementTile({
+      collectionTime: collectionTime,
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    settlementTiles.save(function (err) {
+      if (err) {
+        callback('Could not create a settlement tiles protocol');
+      } else {
+        callback(null, settlementTiles);
+      }
+    });
+  } else {
+    callback();
+  }
+};
+
+var createWaterQuality = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var waterQuality = new ProtocolWaterQuality({
+      collectionTime: collectionTime,
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    waterQuality.save(function (err) {
+      if (err) {
+        callback('Could not create a water quality protocol');
+      } else {
+        callback(null, waterQuality);
+      }
+    });
+  } else {
+    callback();
+  }
+};
+
 /**
  * Create a expedition
  */
@@ -132,123 +232,16 @@ exports.create = function (req, res) {
   expedition.monitoringStartDate = moment(req.body.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
   expedition.monitoringEndDate = moment(req.body.monitoringEndDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toDate();
 
-  var siteCondition, oysterMeasurement, mobileTrap, settlementTiles, waterQuality;
-  if (req.body.teamLists.siteCondition && req.body.teamLists.siteCondition.length > 0) {
-    siteCondition = new ProtocolSiteCondition({
-      collectionTime: expedition.monitoringStartDate,
-      latitude: req.body.station.latitude,
-      longitude: req.body.station.longitude,
-      teamMembers: req.body.teamLists.siteCondition
-    });
-  }
-  if (req.body.teamLists.oysterMeasurement && req.body.teamLists.oysterMeasurement.length > 0) {
-    oysterMeasurement = new ProtocolOysterMeasurement({
-      collectionTime: expedition.monitoringStartDate,
-      latitude: req.body.station.latitude,
-      longitude: req.body.station.longitude,
-      teamMembers: req.body.teamLists.oysterMeasurement
-    });
-  }
-  if (req.body.teamLists.mobileTrap && req.body.teamLists.mobileTrap.length > 0) {
-    mobileTrap = new ProtocolMobileTrap({
-      collectionTime: expedition.monitoringStartDate,
-      latitude: req.body.station.latitude,
-      longitude: req.body.station.longitude,
-      teamMembers: req.body.teamLists.mobileTrap
-    });
-  }
-  if (req.body.teamLists.settlementTiles && req.body.teamLists.settlementTiles.length > 0) {
-    settlementTiles = new ProtocolSettlementTile({
-      collectionTime: expedition.monitoringStartDate,
-      latitude: req.body.station.latitude,
-      longitude: req.body.station.longitude,
-      teamMembers: req.body.teamLists.settlementTiles
-    });
-  }
-  if (req.body.teamLists.waterQuality && req.body.teamLists.waterQuality.length > 0) {
-    waterQuality = new ProtocolWaterQuality({
-      collectionTime: expedition.monitoringStartDate,
-      latitude: req.body.station.latitude,
-      longitude: req.body.station.longitude,
-      teamMembers: req.body.teamLists.waterQuality
-    });
-  }
-
-  var saveSiteCondiction = function(callback) {
-    if (siteCondition) {
-      siteCondition.save(function (err) {
-        if (err) {
-          callback('Could not create a site condition protocol');
-        } else {
-          callback();
-        }
-      });
-    } else {
-      callback();
-    }
-  };
-
-  var saveOysterMeasurement = function(callback) {
-    if (oysterMeasurement) {
-      oysterMeasurement.save(function (err) {
-        if (err) {
-          callback('Could not create an oyster measurement protocol');
-        } else {
-          callback();
-        }
-      });
-    } else {
-      callback();
-    }
-  };
-
-  var saveMobileTrap = function(callback) {
-    if (mobileTrap) {
-      mobileTrap.save(function (err) {
-        if (err) {
-          callback('Could not create a mobile trap protocol');
-        } else {
-          callback();
-        }
-      });
-    } else {
-      callback();
-    }
-  };
-
-  var saveSettlementTiles = function(callback) {
-    if (settlementTiles) {
-      settlementTiles.save(function (err) {
-        if (err) {
-          callback('Could not create a settlement tiles protocol');
-        } else {
-          callback();
-        }
-      });
-    } else {
-      callback();
-    }
-  };
-
-  var saveWaterQuality = function(callback) {
-    if (waterQuality) {
-      waterQuality.save(function (err) {
-        if (err) {
-          callback('Could not create a water quality protocol');
-        } else {
-          callback();
-        }
-      });
-    } else {
-      callback();
-    }
-  };
-
-  saveSiteCondiction(function(siteConditionErr) {
-    saveOysterMeasurement(function(oysterMeasurementErr) {
-      saveMobileTrap(function(mobileTrapErr) {
-        saveSettlementTiles(function(settlementTilesErr) {
-          saveWaterQuality(function(waterQualityErr) {
+  createSiteCondition(expedition.collectionTime, req.body.station.latitude, req.body.station.longitude, req.body.teamLists.siteCondition,
+  function(siteConditionErr, siteCondition) {
+    createOysterMeasurement(expedition.monitoringStartDate, req.body.station.latitude, req.body.station.longitude, req.body.teamLists.oysterMeasurement,
+    function(oysterMeasurementErr, oysterMeasurement) {
+      createMobileTrap(expedition.monitoringStartDate, req.body.station.latitude, req.body.station.longitude, req.body.teamLists.mobileTrap,
+      function(mobileTrapErr, mobileTrap) {
+        createSettlementTiles(expedition.monitoringStartDate, req.body.station.latitude, req.body.station.longitude, req.body.teamLists.settlementTiles,
+        function(settlementTilesErr, settlementTiles) {
+          createWaterQuality(expedition.monitoringStartDate, req.body.station.latitude, req.body.station.longitude, req.body.teamLists.waterQuality,
+          function(waterQualityErr, waterQuality) {
             if (siteConditionErr || oysterMeasurementErr || mobileTrapErr ||
             settlementTilesErr || waterQualityErr) {
               if (siteCondition && !siteConditionErr) siteCondition.remove();
@@ -279,53 +272,25 @@ exports.create = function (req, res) {
                     message: errorHandler.getErrorMessage(err)
                   });
                 } else {
-                  waterQuality.save(function (err) {
-                    if (err) {
-                      siteCondition.remove();
-                      oysterMeasurement.remove();
-                      mobileTrap.remove();
-                      settlementTiles.remove();
-                      return res.status(400).send({
-                        message: 'Could not create a water quality protocol'
-                      });
-                    } else {
-                      expedition.protocols = {
-                        siteCondition: siteCondition,
-                        oysterMeasurement: oysterMeasurement,
-                        mobileTrap: mobileTrap,
-                        settlementTiles: settlementTiles,
-                        waterQuality: waterQuality
-                      };
+                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-                      expedition.save(function (err) {
-                        if (err) {
-                          return res.status(400).send({
-                            message: errorHandler.getErrorMessage(err)
-                          });
-                        } else {
-                          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-
-                          sendEmailToAssignedUsers(expedition, req.body.teamLists, req.user,
-                            'You have been invited to join an ORS monitoring expedition',
-                            'expedition_launched', {
-                              TeamLead: req.user.displayName,
-                              ExpeditionName: expedition.name,
-                              ORSName: req.body.station.name,
-                              ExpeditionDate: moment(expedition.monitoringStartDate).format('MMMM D, YYYY'),
-                              ExpeditionTimeStart: moment(expedition.monitoringStartDate).format('HH:mm'),
-                              ExpeditionTimeEnd: moment(expedition.monitoringEndDate).format('HH:mm'),
-                              ExpeditionNotes: ((expedition.notes) ? expedition.notes : ''),
-                              LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
-                              LinkProfile: httpTransport + req.headers.host + '/profiles',
-                            }, function(info) {
-                              res.json(expedition);
-                            }, function(errorMessage) {
-                              res.json(expedition);
-                            });
-                        }
-                      });
-                    }
-                  });
+                  sendEmailToAssignedUsers(expedition, req.body.teamLists, req.user,
+                    'You have been invited to join an ORS monitoring expedition',
+                    'expedition_launched', {
+                      TeamLead: req.user.displayName,
+                      ExpeditionName: expedition.name,
+                      ORSName: req.body.station.name,
+                      ExpeditionDate: moment(expedition.monitoringStartDate).format('MMMM D, YYYY'),
+                      ExpeditionTimeStart: moment(expedition.monitoringStartDate).format('HH:mm'),
+                      ExpeditionTimeEnd: moment(expedition.monitoringEndDate).format('HH:mm'),
+                      ExpeditionNotes: ((expedition.notes) ? expedition.notes : ''),
+                      LinkExpedition: httpTransport + req.headers.host + '/expeditions/' + expedition._id,
+                      LinkProfile: httpTransport + req.headers.host + '/profiles',
+                    }, function(info) {
+                      res.json(expedition);
+                    }, function(errorMessage) {
+                      res.json(expedition);
+                    });
                 }
               });
             }
