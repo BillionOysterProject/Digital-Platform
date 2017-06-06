@@ -220,31 +220,30 @@ var setImageToDownload = function(host, research, callback) {
   var filename = research._id + '.png';
   var mimetype = 'image/png';
 
-  // exec('wkhtmltoimage -f png ' + input + ' ' + path.resolve(config.uploads.researchDownloadImageUpload.dest) + '/' + filename, function(error, stdout, stderr) {
-  //   if (error) {
-  //     console.log('wkhtmltoimage error: ', error);
-  //     callback(error);
-  //   } else {
-  //     console.log('wkhmtltoimage stderr: ', stderr);
-  //     console.log('wkhtmltoimage stdout: ', stdout);
-  //     var uploadRemote = new UploadRemote();
-  //     uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.researchDownloadImageUpload,
-  //     function(fileInfo) {
-  //       research.downloadImage = fileInfo;
-  //       research.save(function(err) {
-  //         if (err) {
-  //           console.log('save file info error: ', err);
-  //           callback(err);
-  //         }
-  //         callback(null, fileInfo);
-  //       });
-  //     }, function(errorMessage) {
-  //       console.log('save image remotely error: ', errorMessage);
-  //       callback(errorMessage);
-  //     });
-  //   }
-  // });
-  callback(null, null);
+  exec('wkhtmltoimage -f png ' + input + ' ' + path.resolve(config.uploads.researchDownloadImageUpload.dest) + '/' + filename, function(error, stdout, stderr) {
+    if (error) {
+      console.log('wkhtmltoimage error: ', error);
+      callback(error);
+    } else {
+      console.log('wkhmtltoimage stderr: ', stderr);
+      console.log('wkhtmltoimage stdout: ', stdout);
+      var uploadRemote = new UploadRemote();
+      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.researchDownloadImageUpload,
+      function(fileInfo) {
+        research.downloadImage = fileInfo;
+        research.save(function(err) {
+          if (err) {
+            console.log('save file info error: ', err);
+            callback(err);
+          }
+          callback(null, fileInfo);
+        });
+      }, function(errorMessage) {
+        console.log('save image remotely error: ', errorMessage);
+        callback(errorMessage);
+      });
+    }
+  });
 };
 
 exports.saveResearchAsImage = function(req, res) {
