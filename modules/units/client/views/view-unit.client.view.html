@@ -5,13 +5,23 @@
                 <div class="col-md-4 col-sm-6 box text-center" style="color: {{vm.unit.color}}">
                     <h1><i class="{{vm.unit.icon}}"></i></h1>
                     <h2>{{vm.unit.title}}</h2>
-                    <h6>5 Lessons | 14 Sub Units</h6>
+                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && vm.unit.subUnits && vm.units.subUnits.length > 0">
+                      {{vm.unit.lessons.length}} Lessons | {{vm.unit.subUnits.length}} Sub Units
+                    </h6>
+                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && (!vm.unit.subUnits || vm.units.subUnits.length <= 0)">
+                      {{vm.unit.lessons.length}} Lessons
+                    </h6>
+                    <h6 ng-show="(!vm.unit.lessons || vm.unit.lessons.length <= 0) && vm.unit.subUnits && vm.units.subUnits.length > 0">
+                      {{vm.unit.subUnits.length}} Sub Units
+                    </h6>
                 </div>
-                <div class="col-md-8 col-sm-6">
+                <div class="col-md-8 col-sm-6" ng-show="vm.unit.parentUnits">
                     <br/><br/><br/>
                     <h4 class="white">Sub unit of <br/>
-                        <b class="h3"><a href="#" class="white">Tree Unit</a></b> and 
-                        <b class="h3"><a href="#" class="white">Plant Unit</a></b>
+                        <span ng-repeat="parent in vm.unit.parentUnits">
+                          <b class="h3"><a ui-sref="units.view({ unitId: parent._id })" class="white">{{parent.title}}</a></b>
+                          <span ng-show="!$last"> and</span>
+                        </span>
                     </h4>
                 </div>
             </div>
@@ -34,144 +44,144 @@
             <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">
                 {{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
             <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
-            <!-- TODO: Wire up download 
+            <!-- TODO: Wire up download
             <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>-->
         </nav>
-        
+
         <div class="row">
             <div class="col-md-4">
                 <h3>Highlights</h3>
-                <p>This should be a text box like the Background in the Lesson Plan Template -- needs full WYSIWYG editor.</p>
-                
+                <div ng-bind-html="vm.unit.highlights | sanitize"></div>
+
                 <h3>Rationale</h3>
-                <p>This should be a text box like the Background in the Lesson Plan Template -- needs full WYSIWYG editor.</p>
-            
-                <hr ng-show="(vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) ||
-                      (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) ||
-                      (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) ||
-                      (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) ||
-                      (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
-                      (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) ||
-                      (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
-                      (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) ||
-                      (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)"/>
+                <div ng-bind-html="vm.unit.rationale | sanitize"></div>
+
+                <hr ng-show="(vm.unit.standards.nycsssUnits && vm.unit.standards.nycsssUnits.length > 0) ||
+                      (vm.unit.standards.nysssKeyIdeas && vm.unit.standards.nysssKeyIdeas.length > 0) ||
+                      (vm.unit.standards.nysssMajorUnderstandings && vm.unit.standards.nysssMajorUnderstandings.length > 0) ||
+                      (vm.unit.standards.nysssMst && vm.unit.standards.nysssMst.length > 0) ||
+                      (vm.unit.standards.ngssDisciplinaryCoreIdeas && vm.unit.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
+                      (vm.unit.standards.ngssScienceEngineeringPractices && vm.unit.standards.ngssScienceEngineeringPractices.length > 0) ||
+                      (vm.unit.standards.ngssCrossCuttingConcepts && vm.unit.standards.ngssCrossCuttingConcepts.length > 0) ||
+                      (vm.unit.standards.cclsMathematics && vm.unit.standards.cclsMathematics.length > 0) ||
+                      (vm.unit.standards.cclsElaScienceTechnicalSubjects && vm.unit.standards.cclsElaScienceTechnicalSubjects.length > 0)"/>
 
                 <div class="row">
-                  <div class="col-sm-12" id="lesson-standards"
-                    ng-show="(vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) ||
-                          (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) ||
-                          (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) ||
-                          (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) ||
-                          (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
-                          (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) ||
-                          (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
-                          (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) ||
-                          (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)">
+                  <div class="col-sm-12" id="unit-standards"
+                    ng-show="(vm.unit.standards.nycsssUnits && vm.unit.standards.nycsssUnits.length > 0) ||
+                          (vm.unit.standards.nysssKeyIdeas && vm.unit.standards.nysssKeyIdeas.length > 0) ||
+                          (vm.unit.standards.nysssMajorUnderstandings && vm.unit.standards.nysssMajorUnderstandings.length > 0) ||
+                          (vm.unit.standards.nysssMst && vm.unit.standards.nysssMst.length > 0) ||
+                          (vm.unit.standards.ngssDisciplinaryCoreIdeas && vm.unit.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
+                          (vm.unit.standards.ngssScienceEngineeringPractices && vm.unit.standards.ngssScienceEngineeringPractices.length > 0) ||
+                          (vm.unit.standards.ngssCrossCuttingConcepts && vm.unit.standards.ngssCrossCuttingConcepts.length > 0) ||
+                          (vm.unit.standards.cclsMathematics && vm.unit.standards.cclsMathematics.length > 0) ||
+                          (vm.unit.standards.cclsElaScienceTechnicalSubjects && vm.unit.standards.cclsElaScienceTechnicalSubjects.length > 0)">
                     <h3>Standards
                       {{vm.standardCount}}</h3>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.nycsssUnits && vm.unit.standards.nycsssUnits.length > 0">
                     <b>NYC Science Scope &amp; Sequence - Units</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.lesson.standards.nycScienceScopeSequence}}</a></span> -->
+                    <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{vm.unit.standards.nycScienceScopeSequence}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.nycsssUnits">
+                      <li ng-repeat="standard in vm.unit.standards.nycsssUnits">
                         <span>{{standard.header}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.nysssKeyIdeas && vm.unit.standards.nysssKeyIdeas.length > 0">
                     <b>NYS Science Standards - Key Ideas</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.lesson.standards.ngssStandards}}</a></span> -->
+                    <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{vm.unit.standards.ngssStandards}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.nysssKeyIdeas">
+                      <li ng-repeat="standard in vm.unit.standards.nysssKeyIdeas">
                         <span>{{standard.header}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.nysssMajorUnderstandings && vm.unit.standards.nysssMajorUnderstandings.length > 0">
                     <b>NYS Science Standards - Major Understandings</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreEla}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreEla}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.nysssMajorUnderstandings">
+                      <li ng-repeat="standard in vm.unit.standards.nysssMajorUnderstandings">
                         <span>{{standard.code}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.nysssMst && vm.unit.standards.nysssMst.length > 0">
                     <b>NYS Science Standards - MST</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.nysssMst">
+                      <li ng-repeat="standard in vm.unit.standards.nysssMst">
                         <span>{{standard.code}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.ngssDisciplinaryCoreIdeas && vm.unit.standards.ngssDisciplinaryCoreIdeas.length > 0">
                     <b>NGSS - Disciplinary Core Ideas</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.ngssDisciplinaryCoreIdeas">
+                      <li ng-repeat="standard in vm.unit.standards.ngssDisciplinaryCoreIdeas">
                         <span>{{standard.header}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.ngssScienceEngineeringPractices && vm.unit.standards.ngssScienceEngineeringPractices.length > 0">
                     <b>NGSS - Science and Engineering Practices</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.ngssScienceEngineeringPractices">
+                      <li ng-repeat="standard in vm.unit.standards.ngssScienceEngineeringPractices">
                         <span>{{standard.header}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.ngssCrossCuttingConcepts && vm.unit.standards.ngssCrossCuttingConcepts.length > 0">
                     <b>NGSS - Cross-Cutting Concepts</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.ngssCrossCuttingConcepts">
+                      <li ng-repeat="standard in vm.unit.standards.ngssCrossCuttingConcepts">
                         <span>{{standard.header}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.cclsMathematics && vm.unit.standards.cclsMathematics.length > 0">
                     <b>CCLS - Mathematics</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.cclsMathematics">
+                      <li ng-repeat="standard in vm.unit.standards.cclsMathematics">
                         <span>{{standard.code}}
                           -
                           {{standard.description}}</span>
                       </li>
                     </ul>
                   </div>
-                  <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0">
+                  <div class="{{vm.standardClass}}" ng-show="vm.unit.standards.cclsElaScienceTechnicalSubjects && vm.unit.standards.cclsElaScienceTechnicalSubjects.length > 0">
                     <b>CCLS - ELA Science &amp; Technical Subjects</b>
                     <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
-                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.lesson.standards.commonCoreMath}}</a></span> -->
+                    <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{vm.unit.standards.commonCoreMath}}</a></span> -->
                     <ul>
-                      <li ng-repeat="standard in vm.lesson.standards.cclsElaScienceTechnicalSubjects">
+                      <li ng-repeat="standard in vm.unit.standards.cclsElaScienceTechnicalSubjects">
                         <span>{{standard.code}}
                           -
                           {{standard.description}}</span>
@@ -180,14 +190,14 @@
                   </div>
                 </div>
             </div>
-            
+
             <div class="col-sm-8">
                 <h3>Lessons</h3><br/>
-                <div class="alert alert-info" ng-show="vm.lessons.length < 1">
+                <div class="alert alert-info" ng-show="!vm.unit.lessons || vm.unit.lessons.length < 1">
                     Whoops, this unit doesn't have any lessons yet! Check back for updates.
                 </div>
-                <table class="table table-hover table-responsive" ng-show="vm.lessons.length > 1">
-                    <tr ng-repeat="lesson in vm.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
+                <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 1">
+                    <tr ng-repeat="lesson in vm.unit.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
                       <td><h4 class="blue"><b>1</b></h4></td>
                       <td>
                         <h4>{{lesson.title}}</h4>
@@ -214,13 +224,14 @@
                       <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
                     </tr>
                 </table>
-                
-                <h3>Sub Units</h3><br/><!-- ng-show="vm.subunits.length > 1"-->
-                <table class="table table-hover table-responsive">
+
+                <h3 ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">Sub Units</h3><br/>
+                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0"
+                  ng-repeat="unit in vm.unit.subUnits">
                     <tr ui-sref="unit.view({ unitId: unit._id })">
                       <td><h4 class="blue"><b>1</b></h4></td>
                       <td>
-                        <h4><i class="fa fa-tree green"></i> Unit Title</h4>
+                        <h4><i class="fa fa-tree green"></i> {{unit.title}}</h4>
                       </td>
                       <td><b>15</b> Lessons</td>
                       <td><b>8</b> Sub Units</td>
@@ -230,54 +241,6 @@
         </div>
     </section>
 </section>
-
-
-<!-- ARCHIVED UNIT VIEW -- DELETE WHEN YOU WIRE UP NEW:
-                    
-                    
-<section class="content">
-    <section class="container">
-        <h2>Stage 1: Desired Results</h2>
-        <h3>Enduring Understandings</h3>
-        <b>Field Work</b>
-        <p ng-bind="vm.unit.stageOne.enduringUnderstandings.fieldWork"></p>
-        <b>Science Content</b>
-        <p ng-bind="vm.unit.stageOne.enduringUnderstandings.scienceContent"></p>
-        <h3>Essential Questions</h3>
-        <ul ng-repeat="question in vm.unit.stageOne.essentialQuestions">
-            <li ng-bind="question"></li>
-        </ul>
-        <h3>Acquisition</h3>
-        <b>Science Content/Skills</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.content.science | sanitize"></p>
-        <b>Math Content/Skills</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.content.math | sanitize"></p>
-        <b>Field Content/Skills</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.content.field | sanitize"></p>
-        <b>Science Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.science | sanitize"></p>
-        <b>Math Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.math | sanitize"></p>
-        <b>Field Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.field | sanitize"></p>
-        <h2>Stage 2: Evidence</h2>
-        <h3>Expectations</h3>
-        <ul ng-repeat="expectation in vm.unit.stageTwo.evidence.expectations">
-            <li ng-bind="expectation | numberExpectations"></li>
-        </ul>
-        <p><b>Science and Engineering</b> <span ng-bind-html="vm.unit.stageTwo.evidence.scienceAndEngineering | sanitize"></span></p>
-        <p><b>Disciplinary Core Ideas</b> <span ng-bind-html="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas | sanitize"></span></p>
-        <p><b>Cross-Cutting Concepts</b> <span ng-bind-html="vm.unit.stageTwo.evidence.crossCuttingConcepts | sanitize"></span></p>
-        <h3>Assessment Evidence</h3>
-        <b>Research Projects</b>
-        <ul ng-repeat="project in vm.unit.stageTwo.assessmentEvidence.researchProjects">
-            <li ng-bind="project | researchProjects"></li>
-        </ul>
-        <p><b>Extensions</b> <span ng-bind-html="vm.unit.stageTwo.assessmentEvidence.extentions | sanitize"></span></p>
-    </section>
-</section>
--->
-
 
 
 <!--MODALS-->

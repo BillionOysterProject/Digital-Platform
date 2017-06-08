@@ -13,6 +13,7 @@
     var vm = this;
 
     vm.unit = unit;
+    console.log('unit', unit);
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};

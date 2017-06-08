@@ -81,88 +81,20 @@ var UnitSchema = new Schema({
     }]
   },
   lessons: [{
-    type: Schema.ObjectId,
-    ref: 'Lesson'
+    lesson: {
+      type: Schema.ObjectId,
+      ref: 'Lesson'
+    },
+    order: Number
   }],
   subUnits: [{
     type: Schema.ObjectId,
     ref: 'Unit'
   }],
-  parentUnit: [{
+  parentUnits: [{
     type: Schema.ObjectId,
     ref: 'Unit'
   }],
-  stageOne: {
-    enduringUnderstandings: {
-      fieldWork: {
-        type: String,
-        default: '',
-        trim: true
-      },
-      scienceContent: {
-        type: String,
-        default: '',
-        trim: true
-      }
-    },
-    essentialQuestions: [{
-      type: String,
-      trim: true,
-      default: []
-    }],
-    acquisition: {
-      content: {
-        science: {
-          type: String
-        },
-        math: {
-          type: String
-        },
-        field: {
-          type: String
-        },
-      },
-      lessons: {
-        science: {
-          type: String
-        },
-        math: {
-          type: String
-        },
-        field: {
-          type: String
-        }
-      }
-    }
-  },
-  stageTwo: {
-    evidence: {
-      expectations: [{
-        type: String,
-      }],
-      scienceAndEngineering: {
-        type: String,
-        trim: true
-      },
-      disciplinaryCoreIdeas: {
-        type: String,
-        trim: true
-      },
-      crossCuttingConcepts: {
-        type: String,
-        trim: true
-      }
-    },
-    assessmentEvidence: {
-      researchProjects: [{
-        type: String
-      }],
-      extentions: {
-        type: String,
-        trim: true
-      }
-    }
-  },
   user: {
     type: Schema.ObjectId,
     ref: 'User',

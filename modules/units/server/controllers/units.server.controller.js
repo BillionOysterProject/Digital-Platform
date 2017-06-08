@@ -9,6 +9,7 @@ var path = require('path'),
   UnitActivity = mongoose.model('UnitActivity'),
   Lesson = mongoose.model('Lesson'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  async = require('async'),
   _ = require('lodash');
 
 var validateUnit = function(unit, successCallback, errorCallback) {
@@ -248,8 +249,20 @@ exports.unitByID = function (req, res, next, id) {
     });
   }
 
-  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username')
-  .exec(function (err, unit) {
+  var query = Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username');
+  if (req.query.full) {
+    query.populate('standards.nycsssUnits', 'header description')
+    .populate('standards.nysssKeyIdeas', 'header description')
+    .populate('standards.nysssMajorUnderstandings', 'code description')
+    .populate('standards.nysssMst', 'code description')
+    .populate('standards.ngssDisciplinaryCoreIdeas', 'header description')
+    .populate('standards.ngssScienceEngineeringPractices', 'header description')
+    .populate('standards.ngssCrossCuttingConcepts', 'header description')
+    .populate('standards.cclsMathematics', 'code description')
+    .populate('standards.cclsElaScienceTechnicalSubjects', 'code description');
+  }
+
+  query.exec(function (err, unit) {
     if (err) {
       return next(err);
     } else if (!unit && id !== '000000000000000000000000') {
@@ -257,7 +270,27 @@ exports.unitByID = function (req, res, next, id) {
         message: 'No unit with that identifier has been found'
       });
     }
-    req.unit = unit;
-    next();
+    if(req.query.full) {
+      async.forEach(unit.lessons, function(lesson, lessonCallback) {
+
+        Lesson.populate(lesson.lesson, { path: 'title' }, function(err, output) {
+          lessonCallback();
+        });
+      }, function(lessonErr) {
+        async.forEach(unit.parentUnits, function(parent, parentCallback) {
+          parentCallback();
+        }, function(parentErr) {
+          async.forEach(unit.subUnits, function(child, childCallback) {
+            childCallback();
+          }, function(childErr) {
+            req.unit = unit;
+            next();
+          });
+        });
+      });
+    } else {
+      req.unit = unit;
+      next();
+    }
   });
 };
