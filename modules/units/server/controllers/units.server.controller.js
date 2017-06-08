@@ -197,11 +197,14 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var query;
 
-  if (req.query.published) {
+  if (req.query.publishedStatus === 'published') {
     query = Unit.find({ status: 'published' });
+  } else if (req.query.publishedStatus === 'drafts') {
+    query = Unit.find({ status: 'draft' });
   } else {
     query = Unit.find();
   }
+
   query.sort('title').populate('user', 'displayName').exec(function (err, units) {
     if (err) {
       return res.status(400).send({

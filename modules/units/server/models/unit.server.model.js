@@ -32,6 +32,66 @@ var UnitSchema = new Schema({
     default: '',
     trim: true
   },
+  highlights: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  rationale: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  standards: {
+    cclsElaScienceTechnicalSubjects: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsElaScienceTechnicalSubject'
+    }],
+    cclsMathematics: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsMathematics'
+    }],
+    ngssCrossCuttingConcepts: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssCrossCuttingConcept'
+    }],
+    ngssDisciplinaryCoreIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssDisciplinaryCoreIdea'
+    }],
+    ngssScienceEngineeringPractices: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssScienceEngineeringPractice'
+    }],
+    nycsssUnits: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNycssUnit'
+    }],
+    nysssKeyIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssKeyIdea'
+    }],
+    nysssMajorUnderstandings: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMajorUnderstanding'
+    }],
+    nysssMst: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMst'
+    }]
+  },
+  lessons: [{
+    type: Schema.ObjectId,
+    ref: 'Lesson'
+  }],
+  subUnits: [{
+    type: Schema.ObjectId,
+    ref: 'Unit'
+  }],
+  parentUnit: [{
+    type: Schema.ObjectId,
+    ref: 'Unit'
+  }],
   stageOne: {
     enduringUnderstandings: {
       fieldWork: {
