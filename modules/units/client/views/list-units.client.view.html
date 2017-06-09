@@ -36,7 +36,7 @@
                         <h1 ng-show="unit.icon"><i class="{{unit.icon}}"></i></h1>
                         <h2>{{unit.title}}</h2>
                         <!--TODO: Wire up lesson/subunit #s-->
-                        <h6>{{unit.lessons}} Lessons<span ng-show="unit.subunits > 0"> | {{unit.subunits}} Sub Units</span></h6>
+                        <h6>{{unit.lessons.length}} Lessons<span ng-show="unit.subUnits.length > 0"> | {{unit.subUnits.length}} Sub Units</span></h6>
                     </div>
                     <div class="panel-footer">
                     <!--TODO: only show footer if either it's a subunit and/or a draft (if neither, hide footer)-->
