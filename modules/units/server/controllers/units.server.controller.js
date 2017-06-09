@@ -8,6 +8,9 @@ var path = require('path'),
   Unit = mongoose.model('Unit'),
   UnitActivity = mongoose.model('UnitActivity'),
   Lesson = mongoose.model('Lesson'),
+  LessonTracker = mongoose.model('LessonTracker'),
+  User = mongoose.model('User'),
+  SubjectArea = mongoose.model('MetaSubjectArea'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   async = require('async'),
   _ = require('lodash');
@@ -79,7 +82,8 @@ exports.create = function (req, res) {
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  var unit = req.unit ? req.unit.toJSON() : {};
+  // var unit = req.unit ? req.unit.toJSON() : {};
+  var unit = req.unit;
 
   unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true : false;
 
@@ -259,7 +263,10 @@ exports.unitByID = function (req, res, next, id) {
     .populate('standards.ngssScienceEngineeringPractices', 'header description')
     .populate('standards.ngssCrossCuttingConcepts', 'header description')
     .populate('standards.cclsMathematics', 'code description')
-    .populate('standards.cclsElaScienceTechnicalSubjects', 'code description');
+    .populate('standards.cclsElaScienceTechnicalSubjects', 'code description')
+    .populate('lessons', 'title lessonOverview lessonObjectives user')
+    .populate('parentUnits', 'title')
+    .populate('subUnits', 'title lessons subUnits');
   }
 
   query.exec(function (err, unit) {
@@ -271,19 +278,27 @@ exports.unitByID = function (req, res, next, id) {
       });
     }
     if(req.query.full) {
-      async.forEach(unit.lessons, function(lesson, lessonCallback) {
-
-        Lesson.populate(lesson.lesson, { path: 'title' }, function(err, output) {
-          lessonCallback();
+      var unitJSON = unit ? unit.toJSON() : {};
+      async.forEach(unitJSON.lessons, function(lesson, lessonCallback) {
+        LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err2, teamLeads) {
+          lesson.stats = {
+            teamLeadCount: (teamLeads) ? teamLeads.length : 0
+          };
+          SubjectArea.populate(lesson, { path: 'lessonOverview.subjectAreas' }, function(err, output) {
+            User.populate(lesson, { path: 'user', select: 'profileImageURL displayName' }, function(err, output) {
+              console.log('output', output);
+              lessonCallback();
+            });
+          });
         });
       }, function(lessonErr) {
-        async.forEach(unit.parentUnits, function(parent, parentCallback) {
+        async.forEach(unitJSON.parentUnits, function(parent, parentCallback) {
           parentCallback();
         }, function(parentErr) {
-          async.forEach(unit.subUnits, function(child, childCallback) {
+          async.forEach(unitJSON.subUnits, function(child, childCallback) {
             childCallback();
           }, function(childErr) {
-            req.unit = unit;
+            req.unit = unitJSON;
             next();
           });
         });

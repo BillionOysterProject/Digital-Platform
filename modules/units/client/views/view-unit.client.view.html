@@ -5,13 +5,13 @@
                 <div class="col-md-4 col-sm-6 box text-center" style="color: {{vm.unit.color}}">
                     <h1><i class="{{vm.unit.icon}}"></i></h1>
                     <h2>{{vm.unit.title}}</h2>
-                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && vm.unit.subUnits && vm.units.subUnits.length > 0">
+                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && vm.unit.subUnits && vm.unit.subUnits.length > 0">
                       {{vm.unit.lessons.length}} Lessons | {{vm.unit.subUnits.length}} Sub Units
                     </h6>
-                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && (!vm.unit.subUnits || vm.units.subUnits.length <= 0)">
+                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && (!vm.unit.subUnits || vm.unit.subUnits.length <= 0)">
                       {{vm.unit.lessons.length}} Lessons
                     </h6>
-                    <h6 ng-show="(!vm.unit.lessons || vm.unit.lessons.length <= 0) && vm.unit.subUnits && vm.units.subUnits.length > 0">
+                    <h6 ng-show="(!vm.unit.lessons || vm.unit.lessons.length <= 0) && vm.unit.subUnits && vm.unit.subUnits.length > 0">
                       {{vm.unit.subUnits.length}} Sub Units
                     </h6>
                 </div>
@@ -198,7 +198,7 @@
                 </div>
                 <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 1">
                     <tr ng-repeat="lesson in vm.unit.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
-                      <td><h4 class="blue"><b>1</b></h4></td>
+                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td>
                         <h4>{{lesson.title}}</h4>
                       </td>
@@ -226,15 +226,14 @@
                 </table>
 
                 <h3 ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">Sub Units</h3><br/>
-                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0"
-                  ng-repeat="unit in vm.unit.subUnits">
-                    <tr ui-sref="unit.view({ unitId: unit._id })">
-                      <td><h4 class="blue"><b>1</b></h4></td>
+                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
+                    <tr ng-repeat="unit in vm.unit.subUnits" ui-sref="units.view({ unitId: unit._id })">
+                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td>
                         <h4><i class="fa fa-tree green"></i> {{unit.title}}</h4>
                       </td>
-                      <td><b>15</b> Lessons</td>
-                      <td><b>8</b> Sub Units</td>
+                      <td><b>{{unit.lessons.length}}</b> Lessons</td>
+                      <td><b>{{unit.subUnits.length}}</b> Sub Units</td>
                     </tr>
                 </table>
             </div>

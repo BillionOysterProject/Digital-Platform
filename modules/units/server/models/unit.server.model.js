@@ -81,19 +81,19 @@ var UnitSchema = new Schema({
     }]
   },
   lessons: [{
-    lesson: {
-      type: Schema.ObjectId,
-      ref: 'Lesson'
-    },
-    order: Number
+    type: Schema.ObjectId,
+    ref: 'Lesson',
+    default: []
   }],
   subUnits: [{
     type: Schema.ObjectId,
-    ref: 'Unit'
+    ref: 'Unit',
+    default: []
   }],
   parentUnits: [{
     type: Schema.ObjectId,
-    ref: 'Unit'
+    ref: 'Unit',
+    default: []
   }],
   user: {
     type: Schema.ObjectId,
