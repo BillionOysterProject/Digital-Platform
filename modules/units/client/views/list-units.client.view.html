@@ -36,18 +36,11 @@
                     <div class="panel-body text-center" style="color: {{unit.color}}">
                         <h1 ng-show="unit.icon"><i class="{{unit.icon}}"></i></h1>
                         <h2>{{unit.title}}</h2>
-                        <h6 ng-show="unit.lessons && unit.lessons.length > 0 && unit.subUnits && unit.subUnits.length > 0">
-                          {{unit.lessons.length}} Lessons | {{unit.subUnits.length}} Sub Units
-                        </h6>
-                        <h6 ng-show="unit.lessons && unit.lessons.length > 0 && (!unit.subUnits || unit.subUnits.length <= 0)">
-                          {{unit.lessons.length}} Lessons
-                        </h6>
-                        <h6 ng-show="(!unit.lessons || unit.lessons.length <= 0) && unit.subUnits && unit.subUnits.length > 0">
-                          {{unit.subUnits.length}} Sub Units
+                        <h6>
+                          {{unit.lessons.length}} Lessons<span ng-show="unit.subUnits && unit.subUnits.length > 0"> | {{unit.subUnits.length}} Sub Units</span>
                         </h6>
                     </div>
                     <div class="panel-footer" ng-show="(unit.parentUnits && unit.parentUnits.length > 0) || unit.status === 'draft'">
-                        {{unit.parentUnits}}
                         <h4 class="text-center" ng-show="unit.parentUnits && unit.parentUnits.length > 0">
                             <small class="text-muted">sub unit of</small><br/>
                             <div ng-repeat="parent in unit.parentUnits" style="color: {{parent.color}}">

@@ -17,14 +17,23 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="unitTitle" class="control-label required">Unit Title *</label>
                                         <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title"
                                         ng-blur="vm.saveOnBlur(true)" required/>
-                                        <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alrt">
+                                        <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alert">
                                             <p class="help-block error-text" ng-message="required">Unit title is required.</p>
                                         </div>
+                                    </div>
+                                </div>
+                                <!--TODO: Wire up parent unit -- not required but is a multi-select-->
+                                <div class="col-md-3">
+                                    <div class="form-group" show-errors>
+                                        <label for="unitTitle" class="control-label required">Parent Unit(s)</label>
+                                        <select class="form-control">
+                                          <!--multi select here with all units in system-->
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
