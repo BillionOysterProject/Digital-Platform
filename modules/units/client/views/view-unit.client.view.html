@@ -230,7 +230,7 @@
                     <tr ng-repeat="unit in vm.unit.subUnits" ui-sref="units.view({ unitId: unit._id })">
                       <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td>
-                        <h4><i class="fa fa-tree green"></i> {{unit.title}}</h4>
+                        <h4><i class="{{unit.icon}} {{unit.color}}"></i> {{unit.title}}</h4>
                       </td>
                       <td><b>{{unit.lessons.length}}</b> Lessons</td>
                       <td><b>{{unit.subUnits.length}}</b> Sub Units</td>

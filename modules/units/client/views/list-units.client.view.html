@@ -26,27 +26,35 @@
         <div class="row" isotope-container="isotope-container">
             <div ng-repeat="unit in vm.units track by unit._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
                 <div class="panel" ui-sref="units.view({ unitId: unit._id })">
-                    <!--<div class="panel-heading" style="background-color: #f4f7f8">
+                    <!-- <div class="panel-heading" style="background-color: #f4f7f8">
                       <span class="text-muted">subunit of
-                          <span style="color: {{unit.color}}"><i class="{{unit.icon}}"></i> <b>Other Unit</b></span>,
-                          <span style="color: {{unit.color}}"><i class="{{unit.icon}}"></i> <b>Other Unit</b></span>
+                          <span ng-repeat="parent in unit.parentUnits" style="color: {{parent.color}}">
+                            <i class="{{parent.icon}}"></i> <b>{{parent.title}}</b></span>
+                            <span ng-show="!$last">,</span>
                       </span>
-                    </div>-->
+                    </div> -->
                     <div class="panel-body text-center" style="color: {{unit.color}}">
                         <h1 ng-show="unit.icon"><i class="{{unit.icon}}"></i></h1>
                         <h2>{{unit.title}}</h2>
-                        <!--TODO: Wire up lesson/subunit #s-->
-                        <h6>{{unit.lessons}} Lessons<span ng-show="unit.subunits > 0"> | {{unit.subunits}} Sub Units</span></h6>
+                        <h6 ng-show="unit.lessons && unit.lessons.length > 0 && unit.subUnits && unit.subUnits.length > 0">
+                          {{unit.lessons.length}} Lessons | {{unit.subUnits.length}} Sub Units
+                        </h6>
+                        <h6 ng-show="unit.lessons && unit.lessons.length > 0 && (!unit.subUnits || unit.subUnits.length <= 0)">
+                          {{unit.lessons.length}} Lessons
+                        </h6>
+                        <h6 ng-show="(!unit.lessons || unit.lessons.length <= 0) && unit.subUnits && unit.subUnits.length > 0">
+                          {{unit.subUnits.length}} Sub Units
+                        </h6>
                     </div>
-                    <div class="panel-footer">
-                    <!--TODO: only show footer if either it's a subunit and/or a draft (if neither, hide footer)-->
-                        <h4 class="text-center">
+                    <div class="panel-footer" ng-show="(unit.parentUnits && unit.parentUnits.length > 0) || unit.status === 'draft'">
+                        {{unit.parentUnits}}
+                        <h4 class="text-center" ng-show="unit.parentUnits && unit.parentUnits.length > 0">
                             <small class="text-muted">sub unit of</small><br/>
-                            <div style="color: {{parentunit.color}}">
-                                <i class="{{parentunit.icon}}"></i> <b>Other Unit</b>
+                            <div ng-repeat="parent in unit.parentUnits" style="color: {{parent.color}}">
+                                <i class="{{parent.icon}}"></i> <b>{{parent.title}}</b>
                             </div>
                         </h4>
-                        <h6 class="text-center" ng-show="false">Draft</h6>
+                        <h6 class="text-center" ng-show="unit.status === 'draft'">Draft</h6>
                     </div>
                 </div>
             </div>

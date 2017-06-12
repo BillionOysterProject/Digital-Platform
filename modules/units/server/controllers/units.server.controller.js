@@ -210,7 +210,11 @@ exports.list = function (req, res) {
     query = Unit.find();
   }
 
-  query.sort('title').populate('user', 'displayName').exec(function (err, units) {
+  query.sort('title').populate('user', 'displayName')
+  .populate('parentUnits', 'title icon color')
+  .populate('lessons', 'title')
+  .populate('subUnits', 'title')
+  .exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
