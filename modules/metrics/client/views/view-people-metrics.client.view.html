@@ -1,51 +1,76 @@
 <section class="content">
   <section class="container-fluid">
       <div class="row">
-          <div class="col-md-4 text-center" ng-show="isAdmin">
+          <div class="col-md-3 text-center" ng-show="isAdmin">
               <div class="row">
                   <div class="col-xs-6">
-                      <h1 class="red">{{metrics.userCounts.total}} <i class="glyphicon glyphicon-user gray"></i></h1>
+                      <h1 class="red">{{metrics.userCounts.total}} <i class="fa fa-user gray"></i></h1>
                       <h6>Total Users</h6>
                   </div>
+                  <!--TODO: Wire up org count
                   <div class="col-xs-6">
+                      <h1 class="red">{{metrics.orgs.total}} <i class="fa fa-building gray"></i></h1>
+                      <h6>Organizations</h6>
+                  </div>-->
+              </div>
+              <div class="row">
+                  <div class="col-xs-4">
                       <h2 class="red">{{metrics.userCounts.admin}}</h2>
                       <h6>Admin</h6>
                   </div>
-              </div>
-              <div class="row">
-                  <div class="col-xs-6">
+                  <div class="col-xs-4">
                       <h2 class="red">{{metrics.userCounts.teamLead}}</h2>
                       <h6>Team Leads</h6>
                   </div>
-                  <div class="col-xs-6">
+                  <div class="col-xs-4">
                       <h2 class="red">{{metrics.userCounts.teamMember}}</h2>
                       <h6>Team Members</h6>
                   </div>
               </div>
           </div>
-          <div class="col-md-4 text-center" ng-show="!isAdmin">
+          <div class="col-md-3 text-center" ng-show="!isAdmin">
               <div class="row">
-                  <div class="col-xs-4">
-                      <h1 class="red">{{metrics.userCounts.total}} <i class="glyphicon glyphicon-user gray"></i></h1>
+                  <div class="col-xs-6">
+                      <h1 class="red">{{metrics.userCounts.total}} <i class="fa fa-user gray"></i></h1>
                       <h6>Total Users</h6>
                   </div>
-                  <div class="col-xs-4">
+                  <!--TODO: Wire up org count
+                  <div class="col-xs-6">
+                      <h1 class="red">{{metrics.orgs.total}} <i class="fa fa-building gray"></i></h1>
+                      <h6>Organizations</h6>
+                  </div>-->
+              </div>
+              <div class="row">
+                  <div class="col-xs-6">
                       <h2 class="red">{{metrics.userCounts.teamLead}}</h2>
                       <h6>Team Leads</h6>
                   </div>
-                  <div class="col-xs-4">
+                  <div class="col-xs-6">
                       <h2 class="red">{{metrics.userCounts.teamMember}}</h2>
                       <h6>Team Members</h6>
                   </div>
               </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
               <h4>Roles</h4>
               <canvas id="pie" class="chart chart-pie" chart-data="rolesPieData"
                   chart-labels="rolesPielabels" chart-legend="true">
               </canvas>
           </div>
-
+          <!--TODO: Wire up with data for team lead types (also add team lead type data to download)
+          <div class="col-md-3">
+              <h4>Team Lead Types</h4>
+              <canvas id="pie" class="chart chart-pie" chart-data="____PieData"
+                  chart-labels="____Pielabels" chart-legend="true">
+              </canvas>
+          </div>-->
+          <!--TODO: Wire up with data for org types (also add org type data to download)
+          <div class="col-md-3">
+              <h4>Organization Types</h4>
+              <canvas id="pie" class="chart chart-pie" chart-data="____PieData"
+                  chart-labels="____Pielabels" chart-legend="true">
+              </canvas>
+          </div>-->
       </div>
   </section>
 </section>
