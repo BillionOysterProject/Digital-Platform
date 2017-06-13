@@ -14,8 +14,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-4">
-                        <h3 class="red">{{metrics.lessonCounts.saved}} <i class="glyphicon glyphicon-star gray"></i></h3>
-                        <h6>Starred Lessons</h6>
+                        <h3 class="red">{{metrics.lessonCounts.saved}} <i class="fa fa-heart gray"></i></h3>
+                        <h6>Favorited Lessons</h6>
                     </div>
                     <div class="col-xs-4">
                         <h3 class="red">{{metrics.lessonCounts.duplicated}} <i class="glyphicon glyphicon-duplicate gray"></i></h3>
@@ -32,6 +32,17 @@
                         <h6>Glossary Terms</h6>
                     </div>
                 </div>
+                <!--TODO: Wire up (also add lesson taught stats to metrics download csv)
+                <div ng-show="vm.lessonStats.taughtCount > 0">
+                    <hr/>
+                    <p class="text-muted">Lessons have been taught a total of <b class="blue">{{vm.lessonStats.taughtCount}}</b>
+                      times by <b class="blue">{{vm.lessonStats.teamLeadCount}}</b> teachers to a total of
+                      <b class="blue">{{vm.lessonStats.studentCount}}</b> students in
+                      <b class="blue">{{vm.lessonStats.classesOrSectionsCount}}</b> classes over
+                      <b class="blue">{{vm.lessonStats.periodsOrSessionsCount}}</b> sessions
+                    </p>
+                    <hr/>
+                </div>-->
             </div>
             <div class="col-md-4">
                 <h4>Timeline</h4>
