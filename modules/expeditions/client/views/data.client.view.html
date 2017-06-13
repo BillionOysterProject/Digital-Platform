@@ -26,11 +26,11 @@
                     <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
                         <td>
                             <h4>{{expedition.name}}</h4><br />
-                            <p>{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
-                            {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</p>
+                            <small class="text-muted">{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                            {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</small>
                         </td>
                         <td>
-                            <p ng-show="expedition.station.name"><i class="fa fa-map-marker fa-2x gray"></i> {{expedition.station.name}}</p>
+                            <p ng-show="expedition.station.name"><i class="fa fa-map-marker gray"></i> {{expedition.station.name}}</p>
                         </td>
                         <td>
                             <p class="text-muted"><b>Notes:</b> {{expedition.notes}}</p>
