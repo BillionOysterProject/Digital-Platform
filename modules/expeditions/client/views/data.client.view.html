@@ -22,7 +22,33 @@
         <section class="content">
           <section class="container-fluid">
                 <filter-expeditions></filter-expeditions>
-                <hr/>
+                <table class="table table-hover table-verticalalign table-responsive">
+                    <tr ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                        <td>
+                            <h4>{{expedition.name}}</h4><br />
+                            <p>{{vm.getExpeditionDate(expedition.monitoringStartDate)}},
+                            {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}</p>
+                        </td>
+                        <td>
+                            <p ng-show="expedition.station.name"><i class="fa fa-map-marker fa-2x gray"></i> {{expedition.station.name}}</p>
+                        </td>
+                        <td>
+                            <p class="text-muted"><b>Notes:</b> {{expedition.notes}}</p>
+                        </td>
+                        <td>
+                            <h6>Team</h6><br/>
+                            <p>{{expedition.team.name}}</p><br/>
+                            <span class="text-muted" ng-repeat="teamLead in expedition.team.teamLeads">
+                              {{teamLead.displayName}}{{$last ? '' : ', '}}</span>
+                        </td>
+                        <td>
+                            <h6>Organization</h6><br/>
+                            <p>{{expedition.team.schoolOrg.name}}</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!--TILE VIEW:
                 <div class="row" isotope-container="isotope-container">
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
                       ng-repeat="expedition in vm.published" ui-sref="expeditions.view({ expeditionId: expedition._id })">
@@ -47,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
           </section>
         </section>
     </div>
