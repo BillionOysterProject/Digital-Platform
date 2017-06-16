@@ -352,7 +352,7 @@
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
-              {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</a>
           </div>
