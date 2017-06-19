@@ -158,10 +158,10 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var station = req.station;
-  station.team = null;
 
   if (station) {
     station = _.extend(station, req.body);
+    station.team = null;
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
