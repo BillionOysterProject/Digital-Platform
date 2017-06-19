@@ -47,7 +47,9 @@
                         </td>
                     </tr>
                 </table>
-                
+
+                <uib-pagination boundary-links="true" max-size="8" items-per-page="vm.itemsPerPage" total-items="vm.filterLength" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+
                 <!--TILE VIEW:
                 <div class="row" isotope-container="isotope-container">
                     <div isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"

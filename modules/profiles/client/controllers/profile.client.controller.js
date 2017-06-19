@@ -106,7 +106,7 @@
         team: teamId,
         published: true
       }, function(data) {
-        if (callback) callback(data);
+        if (callback) callback(data.expeditions);
       });
     };
 

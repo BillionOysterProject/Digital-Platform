@@ -60,7 +60,9 @@
       teamLeadName: 'All',
       startDate: '',
       endDate: '',
-      searchString: ''
+      searchString: '',
+      limit: 15,
+      page: 1
     };
 
     vm.findCompareExpeditions = function(callback) {
@@ -73,15 +75,25 @@
         teamLead: vm.filter.teamLead,
         startDate: vm.filter.startDate,
         endDate: vm.filter.endDate,
-        searchString: vm.filter.searchString
+        searchString: vm.filter.searchString,
+        limit: vm.filter.limit,
+        page: vm.filter.page
       }, function(data) {
-        vm.expeditions = data;
+        console.log('expeditions', data.expeditions);
+        vm.filterLength = data.totalCount;
+        vm.itemsPerPage = vm.filter.limit;
+        vm.expeditions = data.expeditions;
         if (vm.filtered) vm.compare();
         vm.error = null;
         callback();
       }, function(error) {
         vm.error = error.data.message;
       });
+    };
+
+    vm.pageChanged = function() {
+      vm.filter.page = vm.currentPage;
+      vm.findCompareExpeditions();
     };
 
     vm.resetFilters = function() {
@@ -109,7 +121,9 @@
         teamLeadName: 'All',
         startDate: '',
         endDate: '',
-        searchString: ''
+        searchString: '',
+        limit: 15,
+        page: 1
       };
       vm.parameters = {
         protocol1all: '',

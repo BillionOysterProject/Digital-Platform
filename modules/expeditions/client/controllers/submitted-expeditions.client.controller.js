@@ -6,10 +6,10 @@
     .controller('SubmittedExpeditionsListController', SubmittedExpeditionsListController);
 
   SubmittedExpeditionsListController.$inject = ['moment', 'lodash', 'Authentication',
-    'ExpeditionsService', 'ExpeditionActivitiesService', 'TeamsService', 'ExpeditionViewHelper'];
+    'ExpeditionActivitiesService', 'TeamsService', 'ExpeditionViewHelper'];
 
   function SubmittedExpeditionsListController(moment, lodash, Authentication,
-    ExpeditionsService, ExpeditionActivitiesService, TeamsService, ExpeditionViewHelper) {
+    ExpeditionActivitiesService, TeamsService, ExpeditionViewHelper) {
     var vm = this;
     vm.user = Authentication.user;
 
