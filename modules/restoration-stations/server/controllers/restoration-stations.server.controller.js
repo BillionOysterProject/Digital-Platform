@@ -106,7 +106,6 @@ var setUpPropertyOwner = function(req, station, callback) {
  */
 exports.create = function (req, res) {
   var station = new RestorationStation(req.body);
-
   station.team = null;
   station.schoolOrg = req.user.schoolOrg;
   station.teamLead = req.user;
@@ -159,6 +158,7 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var station = req.station;
+  station.team = null;
 
   if (station) {
     station = _.extend(station, req.body);
