@@ -108,9 +108,16 @@
         vm.filterLength = data.totalCount;
         vm.itemsPerPage = vm.filter.limit;
         vm.myExpeditions = data.expeditions;
+        $timeout(function() {
+        });
       });
     };
     vm.findMyExpeditions();
+
+    vm.pageChanged = function() {
+      vm.filter.page = vm.currentPage;
+      vm.findMyExpeditions();
+    };
 
     vm.findPublishedExpeditions = function() {
       ExpeditionsService.query({
@@ -144,12 +151,6 @@
         $rootScope.$broadcast('iso-method', { name:null, params:null });
       });
     });
-
-    vm.pageChanged = function() {
-      vm.filter.page = vm.currentPage;
-      vm.findMyExpeditions();
-      vm.findPublishedExpeditions();
-    };
 
     vm.switchTabs = function() {
       vm.filter.page = 1;

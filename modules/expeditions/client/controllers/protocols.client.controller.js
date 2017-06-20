@@ -248,35 +248,17 @@
 
     // Check the status of the protocols visible to the user to see if at least one is incomplete
     vm.checkStatusIncomplete = function() {
-      var protocolsIncomplete = true;
-      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'incomplete') protocolsIncomplete = false;
-      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'incomplete') protocolsIncomplete = false;
-      return vm.expedition.status === 'incomplete';// && protocolsIncomplete;
+      ExpeditionViewHelper.checkStatusIncomplete(vm.expedition);
     };
 
     // Check the status of the protocols visible to the user to see if they are all submitted
     vm.checkStatusPending = function() {
-      var protocolsSubmitted = true;
-      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'submitted') protocolsSubmitted = false;
-      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'submitted') protocolsSubmitted = false;
-      return vm.expedition.status === 'pending';// || (protocolsSubmitted && vm.expedition.status !== 'published');
+      ExpeditionViewHelper.checkStatusPending(vm.expedition);
     };
 
     // Check the status of the protocols visible to the user to see if they are all returned
     vm.checkStatusReturned = function() {
-      var protocolsReturned = true;
-      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status !== 'returned') protocolsReturned = false;
-      if (vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status !== 'returned') protocolsReturned = false;
-      if (vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status !== 'returned') protocolsReturned = false;
-      if (vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status !== 'returned') protocolsReturned = false;
-      if (vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status !== 'returned') protocolsReturned = false;
-      return vm.expedition.status === 'returned';// && protocolsReturned;
+      ExpeditionViewHelper.checkStatusReturned(vm.expedition);
     };
 
     vm.checkAllSubmitted = function(status) {
@@ -318,7 +300,7 @@
     };
 
     vm.checkAllStatus = function(status) {
-      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === status &&
+      if ((vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === status) &&
           vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status === status &&
           vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status === status &&
           vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status === status &&

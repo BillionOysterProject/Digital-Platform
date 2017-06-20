@@ -1,0 +1,27 @@
+<div class="modal fade" id="modal-sequence-subunits" tabindex="-1" role="dialog">
+<!--TODO: Wire up to enable drag and drop -- numbers should automatically update. Shouldn't save until "Save" button is clicked-->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit sub unit sequence</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
+                    <tr ng-repeat="unit in vm.unit.subUnits" ui-sref="units.view({ unitId: unit._id })">
+                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
+                      <td>
+                        <h4><i class="fa fa-tree green"></i> {{unit.title}}</h4>
+                      </td>
+                      <td><b>{{unit.lessons.length}}</b> Lessons</td>
+                      <td><b>{{unit.subUnits.length}}</b> Sub Units</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

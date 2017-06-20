@@ -13,7 +13,6 @@
     var vm = this;
 
     vm.unit = unit;
-    console.log('unit', unit);
     vm.authentication = Authentication;
     vm.error = null;
     vm.form = {};
@@ -22,27 +21,27 @@
     vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
     vm.editLink = (vm.unit.status === 'draft') ? 'units.draft({ unitId: vm.unit._id })' : 'units.edit({ unitId: vm.unit._id })';
 
-    vm.numberExpectations = [
-      { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
-      { name: 'K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.', value: 'kps22' }
-    ];
-    vm.numberExpectationsSelectConfig = {
-      mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.numberExpectations
-    };
-
-    vm.researchProjects = [
-      { name: 'Project 1', value: 'project1' },
-      { name: 'Project 2', value: 'project2' }
-    ];
-    vm.researchProjectsSelectConfig = {
-      mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.researchProjects
-    };
+    // vm.numberExpectations = [
+    //   { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
+    //   { name: 'K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.', value: 'kps22' }
+    // ];
+    // vm.numberExpectationsSelectConfig = {
+    //   mode: 'tags-id',
+    //   id: 'value',
+    //   text: 'name',
+    //   options: vm.numberExpectations
+    // };
+    //
+    // vm.researchProjects = [
+    //   { name: 'Project 1', value: 'project1' },
+    //   { name: 'Project 2', value: 'project2' }
+    // ];
+    // vm.researchProjectsSelectConfig = {
+    //   mode: 'tags-id',
+    //   id: 'value',
+    //   text: 'name',
+    //   options: vm.researchProjects
+    // };
 
     if (vm.unit._id) {
       vm.lessons = UnitLessonsService.query({
@@ -50,34 +49,7 @@
       });
     }
 
-    // Incremental saving
-    var save;
-    var stopIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) {
-        $interval.cancel(save);
-        save = undefined;
-      }
-    };
 
-    var startIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) return;
-
-      save = $interval(function() {
-        vm.saveOnBlur();
-      }, 15000);
-    };
-
-    var startSaving = function() {
-      vm.saving = true;
-      stopIncrementalSavingLoop();
-    };
-
-    var stopSaving = function() {
-      $timeout(function() {
-        vm.saving = false;
-      }, 2000);
-      startIncrementalSavingLoop();
-    };
 
     vm.saveOnBlur = function(force, callback) {
       var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
@@ -264,6 +236,22 @@
 
     vm.closeViewUserModal = function(refresh) {
       angular.element('#modal-profile-user').modal('hide');
+    };
+
+    vm.openSequenceLessons = function() {
+      angular.element('#modal-sequence-lesson').modal('show');
+    };
+
+    vm.closeSequenceLessons = function(refresh) {
+      angular.element('#modal-sequence-lesson').modal('hide');
+    };
+
+    vm.openSequenceSubUnits = function() {
+      angular.element('#modal-sequence-subunits').modal('show');
+    };
+
+    vm.closeSequenceSubUnits = function(refresh) {
+      angular.element('#modal-sequence-subunits').modal('hide');
     };
 
     $scope.$on('$locationChangeStart', function(event) {

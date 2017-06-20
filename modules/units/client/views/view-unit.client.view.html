@@ -193,7 +193,7 @@
 
             <div class="col-sm-8">
                 <h3><!--TODO: Only show buttons to admin -->
-                    <a class="btn btn-default pull-right" data-toggle="modal" data-modal="#modal-sequence-lessons" ng-show="vm.unit.lessons.length > 1">Edit sequence</a><!--TODO: wire up to go to LESSON sequence modal-->
+                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceLessons()" ng-show="vm.unit.lessons.length > 1">Edit sequence</a>
                     <a class="btn btn-default pull-right">Add lesson</a><!--TODO: wire up to go to new lesson form with unit prepopulated with this unit?-->
                     Lessons
                 </h3><br/>
@@ -222,16 +222,17 @@
                       </td>
                       <td>
                       <!--TIFF: check to make sure these popovers are wired up correctly -->
-                        
+
                         <a href="#" uib-popover="{{lesson.lessonOverview.lessonSummary}}" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
                         <a href="#" uib-popover="{{lesson.lessonObjectives}}" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
                       </td>
                       <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
+                      <td ng-show="lesson.stats.teamLeadCount <= 0">&nbsp;<td/>
                     </tr>
                 </table>
 
                 <h3 ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                    <a class="btn btn-default pull-right" data-toggle="modal" data-modal="#modal-sequence-subunits">Edit sequence</a><!--TODO: wire up to go to SUBUNIT sequence modal-->
+                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceSubUnits()">Edit sequence</a>
                     <a class="btn btn-default pull-right">Add sub unit</a> <!--TODO: wire up to go to new unit form with parent unit prepopulated with this unit?-->
                     Sub Units
                 </h3><br/>
@@ -252,80 +253,8 @@
 
 
 <!--MODALS-->
-<div class="modal fade" id="modal-sequence-lesson" tabindex="-1" role="dialog">
-<!--TODO: Wire up to enable drag and drop -- numbers should automatically update. Shouldn't save until "Save" button is clicked-->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Edit lesson sequence</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 1">
-                    <tr ng-repeat="lesson in vm.unit.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
-                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
-                      <td>
-                        <h4>{{lesson.title}}</h4>
-                      </td>
-                      <td>
-                        <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
-                        {{lesson.user.displayName}}
-                      </td>
-                      <td><b>{{lesson.lessonOverview.setting}}</b> setting</td>
-                      <td><b>{{lesson.lessonOverview.grade}}</b> grade</td>
-                      <td>
-                        <ul class="list-inline">
-                            <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
-                                <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
-                                class="label label-default"></span>
-                            </li>
-                        </ul>
-                      </td>
-                      <td>
-                      <!--TIFF: check to make sure these popovers are wired up correctly -->
-                        
-                        <a href="#" uib-popover="{{lesson.lessonOverview.lessonSummary}}" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
-                        <a href="#" uib-popover="{{lesson.lessonObjectives}}" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
-                      </td>
-                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-sequence-subunits" tabindex="-1" role="dialog">
-<!--TODO: Wire up to enable drag and drop -- numbers should automatically update. Shouldn't save until "Save" button is clicked-->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Edit sub unit sequence</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                    <tr ng-repeat="unit in vm.unit.subUnits" ui-sref="units.view({ unitId: unit._id })">
-                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
-                      <td>
-                        <h4><i class="fa fa-tree green"></i> {{unit.title}}</h4>
-                      </td>
-                      <td><b>{{unit.lessons.length}}</b> Lessons</td>
-                      <td><b>{{unit.subUnits.length}}</b> Sub Units</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="modal-download" tabindex="-1" role="dialog"><!--TODO: Wire up modal-->
+<!--TODO: Wire up modal-->
+<!-- <div class="modal fade" id="modal-download" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -336,8 +265,8 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <div class="checkbox"><!--TODO: Pull in all lesson names inside the unit-->
-                                <label><input type="checkbox" value="" checked> Lesson #1</label>
+                            <div class="checkbox">--><!--TODO: Pull in all lesson names inside the unit-->
+                                <!-- <label><input type="checkbox" value="" checked> Lesson #1</label>
                             </div>
                             <div class="checkbox">
                                 <label><input type="checkbox" value="" checked> Lesson #2</label>
@@ -366,7 +295,9 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+<sequence-lessons-modal unit="vm.unit" close-function="vm.closeSequenceLessons"></sequence-lessons-modal>
+<sequence-sub-unit-modal unit="vm.unit" close-function="vm.closeSequenceSubUnits"></sequence-sub-unit-modal>
 <unit-feedback-modal unit="vm.unit" close-function="vm.closeUnitFeedback"></unit-feedback-modal>
 <view-user-modal user="vm.unit.user" close-function="vm.closeViewUserModal"></view-user-modal>
 <!-- END MODALS -->

@@ -11,7 +11,7 @@
     Menus.addSubMenuItem('topbar', 'curriculum', {
       title: 'Units',
       state: 'units.list',
-      roles: ['admin', 'team lead', 'team lead pending', 'partner'],
+      roles: ['admin'], //'team lead', 'team lead pending', 'partner'
       position: 3
     });
   }
