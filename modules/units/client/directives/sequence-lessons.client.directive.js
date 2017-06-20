@@ -15,17 +15,17 @@
         controller: function($scope, $http) {
           $scope.selected = null;
 
-          $scope.onDrop = function(item) {
-            console.log('drop', item);
-          };
-
-          $scope.move = function(index){
-            console.log('move', index);
-            $scope.unit.lessons.splice(index, 1);
-          };
-
           $scope.save = function() {
-            $scope.closeFunction(true);
+            $http.post('/api/units/' + $scope.unit._id + '/lessons', {
+              lessons: $scope.lessons
+            })
+            .success(function(data, status, headers, config) {
+              $scope.error = null;
+              $scope.closeFunction(true);
+            })
+            .error(function(data, status, headers, config) {
+              $scope.error = data.message;
+            });
           };
 
           $scope.close = function() {
@@ -33,7 +33,9 @@
           };
         },
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function() {
+            scope.lessons = angular.copy(scope.unit.lessons);
+          });
         }
       };
     });

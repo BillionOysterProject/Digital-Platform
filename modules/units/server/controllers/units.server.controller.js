@@ -132,6 +132,54 @@ exports.update = function(req, res) {
 };
 
 /**
+ * Update an unit's lessons
+ */
+exports.updateLessons = function(req, res) {
+  var unit = req.unit;
+  if (unit) {
+    unit.lessons = req.body.lessons;
+
+    unit.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Could not update unit'
+    });
+  }
+};
+
+/**
+ * Update an unit's sub units
+ */
+exports.updateSubUnits = function(req, res) {
+  var unit = req.unit;
+  if (unit) {
+    unit.subUnits = req.body.subUnits;
+
+    unit.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Could not update unit'
+    });
+  }
+};
+
+/**
  * Delete an unit
  */
 exports.delete = function (req, res) {

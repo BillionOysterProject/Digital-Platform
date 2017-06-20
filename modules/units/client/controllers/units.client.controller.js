@@ -237,6 +237,14 @@
 
     vm.closeSequenceLessons = function(refresh) {
       angular.element('#modal-sequence-lesson').modal('hide');
+      if (refresh) {
+        UnitsService.get({
+          unitId: vm.unit._id,
+          full: true
+        }, function(data) {
+          vm.unit = data;
+        });
+      }
     };
 
     vm.openSequenceSubUnits = function() {

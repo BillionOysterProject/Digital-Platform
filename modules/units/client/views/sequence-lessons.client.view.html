@@ -7,10 +7,10 @@
                 <h4 class="modal-title">Edit lesson sequence</h4>
             </div>
             <div class="modal-body">
-              <ol dnd-list="unit.lessons" class="dnd row">
-                <li ng-repeat="lesson in unit.lessons"
+              <ol dnd-list="lessons" class="dnd row">
+                <li ng-repeat="lesson in lessons"
                 dnd-draggable="lesson"
-                dnd-moved="unit.lessons.splice($index, 1)"
+                dnd-moved="lessons.splice($index, 1)"
                 dnd-effect-allowed="move"
                 dnd-selected="selected = lesson"
                 ng-class="{'selected': selected === lesson}"
@@ -34,6 +34,12 @@
                 <div class="col-md-1" ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</div>
               </li>
             </ol>
+            <div class="alert alert-danger" ng-show="error.length > 0">
+                <h4>Sorry, you can't submit just yet!</h4>
+                <ul class="list-unstyled">
+                  <li ng-repeat="e in error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
+                </ul>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="close()">Close</button>
