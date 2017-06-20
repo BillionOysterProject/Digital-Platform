@@ -49,13 +49,63 @@ var sendAdminEmailOther = function(subject, emailName, stationName, userName, ot
   });
 };
 
+var setUpSiteCoordinator = function(req, station, callback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+  var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
+  var profileLink = httpTransport + req.headers.host + '/profiles';
+
+  if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+    if ((req.body.siteCoordinator.displayName !== station.otherSiteCoordinator.name) &&
+    (req.body.siteCoordinator.email !== station.otherSiteCoordinator.email)) {
+      station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
+      station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
+      station.siteCoordinator = undefined;
+
+      sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
+        station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink, profileLink,
+        function() {
+          callback();
+        });
+    } else {
+      callback();
+    }
+  } else {
+    station.otherSiteCoordinator = {};
+    callback();
+  }
+};
+
+var setUpPropertyOwner = function(req, station, callback) {
+  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+  var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
+  var profileLink = httpTransport + req.headers.host + '/profiles';
+
+  if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+    if ((req.body.propertyOwner.name !== station.otherPropertyOwner.name) &&
+    (req.body.propertyOwner.email !== station.otherPropertyOwner.email)) {
+      station.otherPropertyOwner.name = req.body.propertyOwner.name;
+      station.otherPropertyOwner.email = req.body.propertyOwner.email;
+      station.propertyOwner = undefined;
+
+      sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
+        station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink, profileLink,
+        function() {
+          callback();
+        });
+    } else {
+      callback();
+    }
+  } else {
+    station.otherPropertyOwner = {};
+    callback();
+  }
+};
+
 /**
  * Create a restoration station
  */
 exports.create = function (req, res) {
   var station = new RestorationStation(req.body);
-
-  // getTeam(req.body.team, function(team) {
   station.team = null;
   station.schoolOrg = req.user.schoolOrg;
   station.teamLead = req.user;
@@ -71,44 +121,18 @@ exports.create = function (req, res) {
     station.baseline['substrateShell'+i] = [];
   }
 
-  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-  var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
-  var profileLink = httpTransport + req.headers.host + '/profiles';
-
-  if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
-    station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
-    station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
-    station.siteCoordinator = undefined;
-
-    sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
-      station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink, profileLink,
-      function() {
+  setUpSiteCoordinator(req, station, function() {
+    setUpPropertyOwner(req, station, function() {
+      station.save(function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(station);
+        }
       });
-  } else {
-    station.otherSiteCoordinator = {};
-  }
-
-  if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
-    station.otherPropertyOwner.name = req.body.propertyOwner.name;
-    station.otherPropertyOwner.email = req.body.propertyOwner.email;
-    station.propertyOwner = undefined;
-
-    sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
-      station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink, profileLink,
-      function() {
-      });
-  } else {
-    station.otherPropertyOwner = {};
-  }
-
-  station.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(station);
-    }
+    });
   });
 };
 
@@ -137,63 +161,26 @@ exports.update = function (req, res) {
 
   if (station) {
     station = _.extend(station, req.body);
-    // if (!req.body.photo) {
-    //   delete station.photo;
-    // }
+    station.team = null;
+
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (station.photo && station.photo.path && pattern.test(station.photo.path)) {
       station.photo.path = '';
     }
 
-    // getTeam(req.body.team, function(team) {
-    station.team = null;
-    station.schoolOrg = req.user.schoolOrg;
-    station.teamLead = req.user;
-
-    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-    var orsFormLink = httpTransport + req.headers.host + '/restoration?openORSForm=' + station._id;
-    var profileLink = httpTransport + req.headers.host + '/profiles';
-
-    if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
-      if (!station.otherSiteCoordinator || !station.otherSiteCoordinator.name ||
-        station.otherSiteCoordinator.name !== req.body.siteCoordinator.displayName ||
-        station.otherSiteCoordinator.email !== req.body.siteCoordinator.email) {
-        sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
-          station.name, req.user.displayName, req.body.siteCoordinator.displayName, req.body.siteCoordinator.email, orsFormLink, profileLink,
-          function() {});
-      }
-      station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
-      station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
-      station.siteCoordinator = undefined ;
-    } else {
-      station.otherSiteCoordinator = {};
-    }
-
-    if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
-      if (!station.otherPropertyOwner || !station.otherPropertyOwner.name ||
-        station.otherPropertyOwner.name !== req.body.propertyOwner.name ||
-        station.otherPropertyOwner.email !== req.body.propertyOwner.email) {
-        sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
-          station.name, req.user.displayName, req.body.propertyOwner.name, req.body.propertyOwner.email, orsFormLink, profileLink,
-          function() {
-          });
-      }
-      station.otherPropertyOwner.name = req.body.propertyOwner.name;
-      station.otherPropertyOwner.email = req.body.propertyOwner.email;
-      station.propertyOwner = undefined;
-    } else {
-      station.otherPropertyOwner = {};
-    }
-
-    station.save(function(err) {
-      if (err) {
-        console.log('err', err);
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
+    setUpSiteCoordinator(req, station, function() {
+      setUpPropertyOwner(req, station, function() {
+        station.save(function(err) {
+          if (err) {
+            console.log('err', err);
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(station);
+          }
         });
-      } else {
-        res.json(station);
-      }
+      });
     });
   }
 };

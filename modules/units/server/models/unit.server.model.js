@@ -32,77 +32,69 @@ var UnitSchema = new Schema({
     default: '',
     trim: true
   },
-  stageOne: {
-    enduringUnderstandings: {
-      fieldWork: {
-        type: String,
-        default: '',
-        trim: true
-      },
-      scienceContent: {
-        type: String,
-        default: '',
-        trim: true
-      }
-    },
-    essentialQuestions: [{
-      type: String,
-      trim: true,
-      default: []
+  highlights: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  rationale: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  standards: {
+    cclsElaScienceTechnicalSubjects: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsElaScienceTechnicalSubject'
     }],
-    acquisition: {
-      content: {
-        science: {
-          type: String
-        },
-        math: {
-          type: String
-        },
-        field: {
-          type: String
-        },
-      },
-      lessons: {
-        science: {
-          type: String
-        },
-        math: {
-          type: String
-        },
-        field: {
-          type: String
-        }
-      }
-    }
+    cclsMathematics: [{
+      type: Schema.ObjectId,
+      ref: 'MetaCclsMathematics'
+    }],
+    ngssCrossCuttingConcepts: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssCrossCuttingConcept'
+    }],
+    ngssDisciplinaryCoreIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssDisciplinaryCoreIdea'
+    }],
+    ngssScienceEngineeringPractices: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNgssScienceEngineeringPractice'
+    }],
+    nycsssUnits: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNycssUnit'
+    }],
+    nysssKeyIdeas: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssKeyIdea'
+    }],
+    nysssMajorUnderstandings: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMajorUnderstanding'
+    }],
+    nysssMst: [{
+      type: Schema.ObjectId,
+      ref: 'MetaNysssMst'
+    }]
   },
-  stageTwo: {
-    evidence: {
-      expectations: [{
-        type: String,
-      }],
-      scienceAndEngineering: {
-        type: String,
-        trim: true
-      },
-      disciplinaryCoreIdeas: {
-        type: String,
-        trim: true
-      },
-      crossCuttingConcepts: {
-        type: String,
-        trim: true
-      }
-    },
-    assessmentEvidence: {
-      researchProjects: [{
-        type: String
-      }],
-      extentions: {
-        type: String,
-        trim: true
-      }
-    }
-  },
+  lessons: [{
+    type: Schema.ObjectId,
+    ref: 'Lesson',
+    default: []
+  }],
+  subUnits: [{
+    type: Schema.ObjectId,
+    ref: 'Unit',
+    default: []
+  }],
+  parentUnits: [{
+    type: Schema.ObjectId,
+    ref: 'Unit',
+    default: []
+  }],
   user: {
     type: Schema.ObjectId,
     ref: 'User',

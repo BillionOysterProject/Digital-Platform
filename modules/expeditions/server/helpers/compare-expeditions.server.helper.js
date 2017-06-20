@@ -44,6 +44,7 @@ var buildSearchQuery = function (req, callback) {
     mobileTrapIds, settlementTileIds, waterQualityIds) {
     var user = (req.query.userId ? req.query.userId : req.user);
     var query;
+    var queryCount;
     var and = [];
 
     // My Expedition Search
@@ -135,13 +136,16 @@ var buildSearchQuery = function (req, callback) {
 
     if (and.length === 1) {
       query = Expedition.find(and[0]);
+      queryCount = Expedition.find(and[0]);
     } else if (and.length > 0) {
       query = Expedition.find({ $and : and });
+      queryCount = Expedition.find({ $and : and });
     } else {
       query = Expedition.find();
+      queryCount = Expedition.find();
     }
 
-    callback(null, query);
+    callback(null, query, queryCount);
   }
 
   var findTeamIds = function(callback) {

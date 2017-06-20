@@ -80,6 +80,7 @@ body {
     .jumbotron .box {
         background: #fff;
         margin-bottom: -45px;
+        min-height: 110px;
     }
 
 .navbar-default {
@@ -379,6 +380,10 @@ a {
     a:hover, a:focus, .nav-tabs a:hover, .nav-tabs a:focus, .nav-pills a:hover, .nav-pills a:focus {
         text-decoration: none;
         color: #ea6158;
+    }
+
+    a.white:hover, a.white:focus {
+        color: #eee;
     }
 
 .nav-tabs a, .nav-pills a {
