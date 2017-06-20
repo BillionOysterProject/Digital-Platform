@@ -27,6 +27,11 @@
     } else if (!vm.research.team && vm.research.user && vm.research.user.schoolOrg && vm.research.user.schoolOrg._id) {
       vm.research.organization = vm.research.user.schoolOrg;
     }
+    if (vm.research && !vm.research.team) {
+      vm.research.team = {
+        _id: null
+      };
+    }
 
     vm.source = $location.protocol() + '://'+ $location.host() +':'+ $location.port();
     vm.url = $location.absUrl();
@@ -46,11 +51,6 @@
 
     vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
     vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
-    if (vm.research && !vm.research.team) {
-      vm.research.team = {
-        _id: null
-      };
-    }
 
     vm.headerImageUploader = new FileUploader({
       alias: 'newHeaderImage',
@@ -81,7 +81,7 @@
 
     var getTeamLeadNames = function() {
       vm.teamLeads = [];
-      if (vm.research.team) {
+      if (vm.research.team && (vm.research.team.teamLead || vm.research.team.teamLeads)) {
         vm.teamLeads.push(vm.research.team.teamLead.displayName);
         for(var i = 0; i < vm.research.team.teamLeads.length; i++) {
           vm.teamLeads.push(vm.research.team.teamLeads[i].displayName);
@@ -102,8 +102,11 @@
         byMember: byMember
       }, function(data) {
         vm.myTeams = data;
-        if (vm.myTeams && vm.myTeams.length === 1 && !vm.research.team) {
+        console.log('data', data);
+        console.log('team', vm.research.team);
+        if (vm.myTeams && vm.myTeams.length === 1 && (!vm.research.team || vm.research.team._id === null)) {
           vm.research.team = vm.myTeams[0];
+          console.log('team', vm.research.team);
         }
         getTeamLeadNames();
       });
@@ -176,6 +179,7 @@
         vm.research = data;
         vm.headerImageURL = (vm.research && vm.research.headerImage) ? vm.research.headerImage.path : '';
         vm.downloadImageURL = (vm.research && vm.research.downloadImage) ? vm.research.downloadImage.path : '';
+        $location.path('/research/' + researchId + '/edit', false);
         if (callback) callback();
       });
     };

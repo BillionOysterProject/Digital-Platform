@@ -283,6 +283,7 @@ exports.create = function(req, res) {
 
     research.save(function(err) {
       if (err) {
+        console.log('err', err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
@@ -293,6 +294,7 @@ exports.create = function(req, res) {
       }
     });
   }, function(errorMessages) {
+    console.log('errorMessages', errorMessages);
     return res.status(400).send({
       message: errorMessages
     });

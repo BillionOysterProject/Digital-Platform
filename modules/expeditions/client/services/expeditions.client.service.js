@@ -29,7 +29,7 @@
           limit: '@limit',
           page: '@page'
         },
-        isArray: true
+        isArray: false
       }
     });
   }

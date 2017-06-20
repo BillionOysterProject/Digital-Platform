@@ -172,7 +172,7 @@
     };
 
     UnitsService.query({
-      published: true
+      publishedStatus: 'published'
     }, function(data) {
       vm.units = data;
     });

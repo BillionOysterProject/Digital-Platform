@@ -173,7 +173,7 @@
         byMember: byMember,
         limit: 5
       }, function(data) {
-        vm.expeditions = data;
+        vm.expeditions = data.expeditions;
       });
 
       ExpeditionActivitiesService.query({
@@ -195,7 +195,7 @@
       sort: 'startDate',
       limit: 5
     }, function(data) {
-      vm.published = data;
+      vm.published = data.expeditions;
     });
 
     if (vm.isTeamLead || vm.isTeamLeadPending || vm.isTeamMember || vm.isAdmin) {

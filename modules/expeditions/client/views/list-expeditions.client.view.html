@@ -15,39 +15,43 @@
         <!-- MY EXPEDITIONS -->
         <div role="tabpanel" class="tab-pane" id="myexpeditions" ng-class="{active: vm.activeTab === 'myexpeditions'}"
           view-permissions="admin,team lead,team member,partner">
-            <table class="table table-hover" ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
-              <thead>
-                <tr>
-                  <th>Expedition</th>
-                  <th ng-show="vm.isTeamMember">Assignment</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Location</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="expedition in vm.myExpeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
-                    <td>
-                        <h4>{{expedition.name}}</h4><br/>
-                        <p class="text-muted">{{expedition.team.name}}</p>
-                    </td>
-                    <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
-                    <td>
-                        <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
-                          ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Protocols Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
-                        <span class="label label-info" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
-                        <span class="label label-info" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
-                        <span class="label label-success" ng-show="expedition.status === 'published'">Expedition Published</span>
-                        &nbsp; <span class="label label-default" ng-show="expedition.status !== 'published'">Expedition Unpublished</span>
-                    </td>
-                    <td>
-                        <b>{{vm.getExpeditionDate(expedition.monitoringStartDate)}}</b><br/>
-                        {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}
-                    </td>
-                    <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div ng-show="vm.myExpeditions && vm.myExpeditions.length > 0">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Expedition</th>
+                    <th ng-show="vm.isTeamMember">Assignment</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="expedition in vm.myExpeditions" ui-sref="expeditions.view({ expeditionId: expedition._id })">
+                      <td>
+                          <h4>{{expedition.name}}</h4><br/>
+                          <p class="text-muted">{{expedition.team.name}}</p>
+                      </td>
+                      <td ng-show="vm.isTeamMember">{{vm.displayAssignedProtocols(expedition)}}</td>
+                      <td>
+                          <span class="label label-danger" ng-show="((((vm.checkStatusIncomplete(expedition) || vm.checkStatusReturned(expedition)) && vm.isTeamMember) ||
+                            ((expedition.status === 'incomplete' || expedition.status === 'returned') && (vm.isTeamLead || vm.isAdmin))))">Protocols Incomplete</span><!--&& !vm.isUpcoming(expedition)-->
+                          <span class="label label-info" ng-show="vm.checkStatusPending(expedition) && vm.isTeamMember">Protocols Submitted</span>
+                          <span class="label label-info" ng-show="expedition.status === 'pending' && (vm.isTeamLead || vm.isAdmin) && !vm.isTeamMember">Protocols Need Review</span>
+                          <span class="label label-success" ng-show="expedition.status === 'published'">Expedition Published</span>
+                          &nbsp; <span class="label label-default" ng-show="expedition.status !== 'published'">Expedition Unpublished</span>
+                      </td>
+                      <td>
+                          <b>{{vm.getExpeditionDate(expedition.monitoringStartDate)}}</b><br/>
+                          {{vm.getExpeditionTimeRange(expedition.monitoringStartDate, expedition.monitoringEndDate)}}
+                      </td>
+                      <td><i class="glyphicon glyphicon-map-marker"></i> {{expedition.station.name}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <uib-pagination boundary-links="true" max-size="8" items-per-page="vm.itemsPerPage" total-items="vm.filterLength" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+            </div>
             <div class="alert" ng-show="vm.myExpeditions && vm.myExpeditions.length === 0 && vm.teams && vm.teams.length > 0 && (vm.isTeamLead || vm.isAdmin)">
                 No team expeditions yet! Why don't you <a ui-sref="expeditions.create">create one</a>?
             </div>

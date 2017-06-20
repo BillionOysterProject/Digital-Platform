@@ -8,7 +8,11 @@ var path = require('path'),
   Unit = mongoose.model('Unit'),
   UnitActivity = mongoose.model('UnitActivity'),
   Lesson = mongoose.model('Lesson'),
+  LessonTracker = mongoose.model('LessonTracker'),
+  User = mongoose.model('User'),
+  SubjectArea = mongoose.model('MetaSubjectArea'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  async = require('async'),
   _ = require('lodash');
 
 var validateUnit = function(unit, successCallback, errorCallback) {
@@ -22,13 +26,6 @@ var validateUnit = function(unit, successCallback, errorCallback) {
   }
   if (!unit.icon) {
     errorMessages.push('Icon is required');
-  }
-
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.fieldWork) {
-    errorMessages.push('Field work is required');
-  }
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.scienceContent) {
-    errorMessages.push('Science content is required');
   }
 
   if (errorMessages.length > 0) {
@@ -46,7 +43,6 @@ exports.create = function (req, res) {
   function(unitJSON) {
     var unit = new Unit(unitJSON);
     unit.user = req.user;
-    unit.status = 'published';
 
     unit.validate(function (err) {
       if (err) {
@@ -78,7 +74,8 @@ exports.create = function (req, res) {
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  var unit = req.unit ? req.unit.toJSON() : {};
+  // var unit = req.unit ? req.unit.toJSON() : {};
+  var unit = req.unit;
 
   unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true : false;
 
@@ -102,45 +99,6 @@ exports.read = function (req, res) {
 };
 
 /**
- * Incrementally save a unit
- */
-exports.incrementalSave = function(req, res) {
-  console.log('incrementalSave');
-  var unit = req.unit;
-
-  if (unit) {
-    unit = _.extend(unit, req.body);
-    if (!req.body.initial) unit.status = 'draft';
-  } else {
-    unit = new Unit(req.body);
-    unit.user = req.user;
-    unit.status = 'draft';
-  }
-
-  unit.save(function(err) {
-    if (err) {
-      console.log('save err', err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      validateUnit(unit,
-      function(unitJSON) {
-        res.json({
-          unit: unit,
-          successful: true
-        });
-      }, function(errorMessages) {
-        res.json({
-          unit: unit,
-          errors: errorMessages
-        });
-      });
-    }
-  });
-};
-
-/**
  * Update an unit
  */
 exports.update = function(req, res) {
@@ -151,7 +109,6 @@ exports.update = function(req, res) {
       unit = _.extend(unit, unitJSON);
       if (!unit.updated) unit.updated = [];
       unit.updated.push(Date.now());
-      unit.status = 'published';
 
       unit.save(function(err) {
         if (err) {
@@ -197,12 +154,19 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var query;
 
-  if (req.query.published) {
+  if (req.query.publishedStatus === 'published') {
     query = Unit.find({ status: 'published' });
+  } else if (req.query.publishedStatus === 'drafts') {
+    query = Unit.find({ status: 'draft' });
   } else {
     query = Unit.find();
   }
-  query.sort('title').populate('user', 'displayName').exec(function (err, units) {
+
+  query.sort('title').populate('user', 'displayName')
+  .populate('parentUnits', 'title icon color')
+  .populate('lessons', 'title')
+  .populate('subUnits', 'title')
+  .exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -245,8 +209,23 @@ exports.unitByID = function (req, res, next, id) {
     });
   }
 
-  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username')
-  .exec(function (err, unit) {
+  var query = Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username');
+  if (req.query.full) {
+    query.populate('standards.nycsssUnits', 'header description')
+    .populate('standards.nysssKeyIdeas', 'header description')
+    .populate('standards.nysssMajorUnderstandings', 'code description')
+    .populate('standards.nysssMst', 'code description')
+    .populate('standards.ngssDisciplinaryCoreIdeas', 'header description')
+    .populate('standards.ngssScienceEngineeringPractices', 'header description')
+    .populate('standards.ngssCrossCuttingConcepts', 'header description')
+    .populate('standards.cclsMathematics', 'code description')
+    .populate('standards.cclsElaScienceTechnicalSubjects', 'code description')
+    .populate('lessons', 'title lessonOverview lessonObjectives user')
+    .populate('parentUnits', 'title color icon')
+    .populate('subUnits', 'title lessons subUnits');
+  }
+
+  query.exec(function (err, unit) {
     if (err) {
       return next(err);
     } else if (!unit && id !== '000000000000000000000000') {
@@ -254,7 +233,35 @@ exports.unitByID = function (req, res, next, id) {
         message: 'No unit with that identifier has been found'
       });
     }
-    req.unit = unit;
-    next();
+    if(req.query.full) {
+      var unitJSON = unit ? unit.toJSON() : {};
+      async.forEach(unitJSON.lessons, function(lesson, lessonCallback) {
+        LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err2, teamLeads) {
+          lesson.stats = {
+            teamLeadCount: (teamLeads) ? teamLeads.length : 0
+          };
+          SubjectArea.populate(lesson, { path: 'lessonOverview.subjectAreas' }, function(err, output) {
+            User.populate(lesson, { path: 'user', select: 'profileImageURL displayName' }, function(err, output) {
+              console.log('output', output);
+              lessonCallback();
+            });
+          });
+        });
+      }, function(lessonErr) {
+        async.forEach(unitJSON.parentUnits, function(parent, parentCallback) {
+          parentCallback();
+        }, function(parentErr) {
+          async.forEach(unitJSON.subUnits, function(child, childCallback) {
+            childCallback();
+          }, function(childErr) {
+            req.unit = unitJSON;
+            next();
+          });
+        });
+      });
+    } else {
+      req.unit = unit;
+      next();
+    }
   });
 };

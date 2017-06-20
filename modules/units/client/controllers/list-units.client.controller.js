@@ -11,18 +11,30 @@
     var vm = this;
     vm.user = Authentication.user;
 
+    vm.filter = {
+      publishedStatus: 'published'
+    };
+
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;
       });
       return (roleIndex > -1) ? true : false;
     };
+    vm.isAdmin = checkRole('admin');
 
-    var published = (checkRole('admin')) ? null : true;
-    UnitsService.query({
-      published: published
-    }, function(data) {
-      vm.units = data;
-    });
+    vm.findUnits = function() {
+      UnitsService.query({
+        publishedStatus: vm.filter.publishedStatus
+      }, function(data) {
+        vm.units = data;
+      });
+    };
+    vm.findUnits();
+
+    vm.publishedStatusSelected = function(status) {
+      vm.filter.publishedStatus = status;
+      vm.findUnits();
+    };
   }
 })();

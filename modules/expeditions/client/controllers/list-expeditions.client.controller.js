@@ -82,7 +82,9 @@
       teamLeadName: 'All',
       startDate: '',
       endDate: '',
-      searchString: ''
+      searchString: '',
+      limit: 15,
+      page: 1
     };
 
     TeamLeads.query({
@@ -96,12 +98,26 @@
       vm.filter.teamLeadObj = vm.teamLeads[0];
     });
 
-    ExpeditionsService.query({
-      byOwner: byOwner,
-      byMember: byMember,
-    }, function(data) {
-      vm.myExpeditions = data;
-    });
+    vm.findMyExpeditions = function() {
+      ExpeditionsService.query({
+        byOwner: byOwner,
+        byMember: byMember,
+        limit: vm.filter.limit,
+        page: vm.filter.page
+      }, function(data) {
+        vm.filterLength = data.totalCount;
+        vm.itemsPerPage = vm.filter.limit;
+        vm.myExpeditions = data.expeditions;
+        $timeout(function() {
+        });
+      });
+    };
+    vm.findMyExpeditions();
+
+    vm.pageChanged = function() {
+      vm.filter.page = vm.currentPage;
+      vm.findMyExpeditions();
+    };
 
     vm.findPublishedExpeditions = function() {
       ExpeditionsService.query({
@@ -113,9 +129,13 @@
         teamLead: vm.filter.teamLead,
         startDate: vm.filter.startDate,
         endDate: vm.filter.endDate,
-        searchString: vm.filter.searchString
+        searchString: vm.filter.searchString,
+        limit: vm.filter.limit,
+        page: vm.filter.page
       }, function(data) {
-        vm.published = data;
+        vm.filterLength = data.totalCount;
+        vm.itemsPerPage = vm.filter.limit;
+        vm.published = data.expeditions;
         vm.error = null;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
@@ -133,6 +153,7 @@
     });
 
     vm.switchTabs = function() {
+      vm.filter.page = 1;
       $timeout(function() {
         $rootScope.$broadcast('iso-method', { name:null, params:null });
       });
@@ -162,7 +183,9 @@
         teamLeadName: 'All',
         startDate: '',
         endDate: '',
-        searchString: ''
+        searchString: '',
+        limit: 15,
+        page: 1
       };
       vm.findPublishedExpeditions();
     };

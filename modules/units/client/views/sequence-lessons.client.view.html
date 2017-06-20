@@ -1,0 +1,44 @@
+<div class="modal fade" id="modal-sequence-lesson" tabindex="-1" role="dialog">
+<!--TODO: Wire up to enable drag and drop -- numbers should automatically update. Shouldn't save until "Save" button is clicked-->
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit lesson sequence</h4>
+            </div>
+            <div class="modal-body">
+              <ol dnd-list="unit.lessons" class="dnd row">
+                <li ng-repeat="lesson in unit.lessons"
+                dnd-draggable="lesson"
+                dnd-moved="unit.lessons.splice($index, 1)"
+                dnd-effect-allowed="move"
+                dnd-selected="selected = lesson"
+                ng-class="{'selected': selected === lesson}"
+                class="col-md-12">
+                <div class="col-md-2"><h4>{{lesson.title}}</h4></div>
+                <div class="col-md-3">
+                  <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
+                  {{lesson.user.displayName}}
+                </div>
+                <div class="col-md-1"><b>{{lesson.lessonOverview.setting}}</b> setting</div>
+                <div class="col-md-1"><b>{{lesson.lessonOverview.grade}}</b> grade</div>
+                <div class="col-md-2">
+                  <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                    ng-repeat="subject in lesson.lessonOverview.subjectAreas"
+                    class="label label-default"></span>
+                </div>
+                <div class="col-md-2">
+                  <a href="#" uib-popover="{{lesson.lessonOverview.lessonSummary}}" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
+                  <a href="#" uib-popover="{{lesson.lessonObjectives}}" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
+                </div>
+                <div class="col-md-1" ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</div>
+              </li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+          </div>
+        </div>
+    </div>
+</div>

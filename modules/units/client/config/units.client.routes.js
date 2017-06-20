@@ -82,7 +82,8 @@
 
   function getUnit($stateParams, UnitsService) {
     return UnitsService.get({
-      unitId: $stateParams.unitId
+      unitId: $stateParams.unitId,
+      full: true
     }).$promise;
   }
 
