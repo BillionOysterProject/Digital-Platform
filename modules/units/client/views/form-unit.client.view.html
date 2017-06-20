@@ -1,6 +1,6 @@
 <section class="content shaded">
     <section class="container">
-        <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid)" novalidate>
+        <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid, false)" novalidate>
             <fieldset>
                 <div class="container-fluid">
                     <div class="page-header">
@@ -21,7 +21,7 @@
                                     <div class="form-group" show-errors>
                                         <label for="unitTitle" class="control-label required">Unit Title *</label>
                                         <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title"
-                                        ng-blur="vm.saveOnBlur(true)" required/>
+                                        required/>
                                         <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alert">
                                             <p class="help-block error-text" ng-message="required">Unit title is required.</p>
                                         </div>
@@ -31,8 +31,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="unitTitle" class="control-label required">Parent Unit(s)</label>
-                                        <select class="form-control">
-                                          <!--multi select here with all units in system-->
+                                        <select class="form-control" name="parentUnits" id="parentUnits" ng-model="vm.unit.parentUnits"
+                                        ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true">
                                         </select>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                     </div>
                     <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
                     <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-                    <a href="#" class="btn btn-default" type="button" ng-click="vm.saveDraft()">Save draft</a>
+                    <a href="#" class="btn btn-default" type="button" ng-click="vm.save(vm.form.unitForm.$valid, true)">Save draft</a>
                     <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
                       {{vm.editing ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
                     <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>

@@ -28,13 +28,6 @@ var validateUnit = function(unit, successCallback, errorCallback) {
     errorMessages.push('Icon is required');
   }
 
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.fieldWork) {
-    errorMessages.push('Field work is required');
-  }
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.scienceContent) {
-    errorMessages.push('Science content is required');
-  }
-
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
   } else {
@@ -50,7 +43,6 @@ exports.create = function (req, res) {
   function(unitJSON) {
     var unit = new Unit(unitJSON);
     unit.user = req.user;
-    unit.status = 'published';
 
     unit.validate(function (err) {
       if (err) {
@@ -107,45 +99,6 @@ exports.read = function (req, res) {
 };
 
 /**
- * Incrementally save a unit
- */
-exports.incrementalSave = function(req, res) {
-  console.log('incrementalSave');
-  var unit = req.unit;
-
-  if (unit) {
-    unit = _.extend(unit, req.body);
-    if (!req.body.initial) unit.status = 'draft';
-  } else {
-    unit = new Unit(req.body);
-    unit.user = req.user;
-    unit.status = 'draft';
-  }
-
-  unit.save(function(err) {
-    if (err) {
-      console.log('save err', err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      validateUnit(unit,
-      function(unitJSON) {
-        res.json({
-          unit: unit,
-          successful: true
-        });
-      }, function(errorMessages) {
-        res.json({
-          unit: unit,
-          errors: errorMessages
-        });
-      });
-    }
-  });
-};
-
-/**
  * Update an unit
  */
 exports.update = function(req, res) {
@@ -156,7 +109,6 @@ exports.update = function(req, res) {
       unit = _.extend(unit, unitJSON);
       if (!unit.updated) unit.updated = [];
       unit.updated.push(Date.now());
-      unit.status = 'published';
 
       unit.save(function(err) {
         if (err) {
@@ -269,7 +221,7 @@ exports.unitByID = function (req, res, next, id) {
     .populate('standards.cclsMathematics', 'code description')
     .populate('standards.cclsElaScienceTechnicalSubjects', 'code description')
     .populate('lessons', 'title lessonOverview lessonObjectives user')
-    .populate('parentUnits', 'title')
+    .populate('parentUnits', 'title color icon')
     .populate('subUnits', 'title lessons subUnits');
   }
 

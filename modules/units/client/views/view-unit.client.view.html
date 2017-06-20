@@ -41,7 +41,7 @@
 <section class="content">
     <section class="container">
         <nav class="nav nav-default text-right">
-            <a class="btn btn-primary" ui-sref="{{vm.editLink}}" ng-show="vm.unit.isCurrentUserOwner">
+            <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })" ng-show="vm.unit.isCurrentUserOwner">
                 {{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
             <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
             <!-- TODO: Wire up download
