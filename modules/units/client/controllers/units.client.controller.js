@@ -253,6 +253,14 @@
 
     vm.closeSequenceSubUnits = function(refresh) {
       angular.element('#modal-sequence-subunits').modal('hide');
+      if (refresh) {
+        UnitsService.get({
+          unitId: vm.unit._id,
+          full: true
+        }, function(data) {
+          vm.unit = data;
+        });
+      }
     };
   }
 })();
