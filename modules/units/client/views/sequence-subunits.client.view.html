@@ -6,28 +6,31 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit sub unit sequence</h4>
             </div>
-            <div class="modal-body">
-              <ol dnd-list="subUnits" class="dnd row">
-                <li ng-repeat="sub in subUnits"
-                  dnd-draggable="sub"
-                  dnd-moved="subUnits.splice($index, 1)"
-                  dnd-effect-allowed="move"
-                  dnd-selected="selected = sub"
-                  ng-class="{'selected': selected === sub}"
-                  class="col-md-12">
-                  <div class="col-md-6">
-                    <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
+            <div class="modal-body dnd">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ul dnd-list="subUnits">
+                        <li ng-repeat="sub in subUnits"
+                          dnd-draggable="sub"
+                          dnd-moved="subUnits.splice($index, 1)"
+                          dnd-effect-allowed="move"
+                          dnd-selected="selected = sub"
+                          ng-class="{'selected': selected === sub}">
+                          <div class="col-md-6">
+                            <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
+                          </div>
+                          <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
+                          <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
+                        </li>
+                      </ul>
                   </div>
-                  <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
-                  <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
-                </li>
-              </ol>
-              <div class="alert alert-danger" ng-show="error.length > 0">
+                </div>
+              <!--<div class="alert alert-danger" ng-show="error.length > 0">
                   <h4>Sorry, you can't submit just yet!</h4>
                   <ul class="list-unstyled">
                     <li ng-repeat="e in error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
                   </ul>
-              </div>
+              </div>-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" ng-click="close()">Close</button>

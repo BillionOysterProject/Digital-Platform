@@ -197,8 +197,11 @@
                     <a class="btn btn-default pull-right">Add lesson</a><!--TODO: wire up to go to new lesson form with unit prepopulated with this unit?-->
                     Lessons
                 </h3><br/>
-                <div class="alert alert-info" ng-show="!vm.unit.lessons || vm.unit.lessons.length < 1">
+                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && !vm.unit.isCurrentUserOwner">
                     Whoops, this unit doesn't have any lessons yet! Check back for updates.
+                </div>
+                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && vm.unit.isCurrentUserOwner">
+                    This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
                 <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 1">
                     <tr ng-repeat="lesson in vm.unit.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
@@ -210,8 +213,10 @@
                         <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
                         {{lesson.user.displayName}}
                       </td>
-                      <td><b>{{lesson.lessonOverview.setting}}</b> setting</td>
-                      <td><b>{{lesson.lessonOverview.grade}}</b> grade</td>
+                      <td>
+                          <b>{{lesson.lessonOverview.setting}}</b> setting<br/>
+                          <b>{{lesson.lessonOverview.grade}}</b> grade
+                      </td>
                       <td>
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
