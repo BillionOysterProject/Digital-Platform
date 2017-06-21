@@ -49,6 +49,10 @@ var LessonSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Unit'
   },
+  units: [{
+    type: Schema.ObjectId,
+    ref: 'Unit'
+  }],
   featuredImage: {
     originalname: String,
     mimetype: String,

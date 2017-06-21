@@ -5,13 +5,13 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
+  LessonsController.$inject = ['$scope', '$rootScope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
     'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
     'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
     'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
     'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
 
-  function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
+  function LessonsController($scope, $rootScope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
@@ -34,6 +34,17 @@
     vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
     vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
     vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
+
+    console.log('standards', vm.lesson.standards);
+    if ($rootScope.unit) {
+      if (!vm.lesson.units) {
+        vm.lesson.units = [];
+      }
+      vm.lesson.units.push($rootScope.unit);
+      console.log('unit.standards', $rootScope.unit.standards);
+      vm.lesson.standards = $rootScope.unit.standards;
+      $rootScope.unit = null;
+    }
 
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
@@ -178,20 +189,24 @@
     });
 
     var getLessonStats = function() {
-      LessonTrackerStatsService.get({
-        lessonId: vm.lesson._id
-      }, function(data) {
-        vm.lessonStats = data;
-      });
+      if (vm.lesson._id) {
+        LessonTrackerStatsService.get({
+          lessonId: vm.lesson._id
+        }, function(data) {
+          vm.lessonStats = data;
+        });
+      }
     };
     getLessonStats();
 
     var getLessonFeedback = function() {
-      LessonFeedbackService.get({
-        lessonId: vm.lesson._id
-      }, function(data) {
-        vm.feedback = data;
-      });
+      if (vm.lesson._id) {
+        LessonFeedbackService.get({
+          lessonId: vm.lesson._id
+        }, function(data) {
+          vm.feedback = data;
+        });
+      }
     };
     getLessonFeedback();
 

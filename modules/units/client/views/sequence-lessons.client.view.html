@@ -32,8 +32,10 @@
                                 class="label label-default"></span>
                             </div>
                             <div class="col-md-1">
-                              <a href="#" uib-popover="{{lesson.lessonOverview.lessonSummary}}" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
-                              <a href="#" uib-popover="{{lesson.lessonObjectives}}" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
+                              <a uib-popover-html="lesson.lessonOverview.lessonSummary | sanitize"
+                                popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
+                              <a uib-popover-html="lesson.lessonObjectives | sanitize"
+                                popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
                             </div>
                             <div class="col-md-1" ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</div>
                         </li>

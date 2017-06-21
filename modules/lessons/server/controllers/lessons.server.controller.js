@@ -12,6 +12,7 @@ var path = require('path'),
   SavedLesson = mongoose.model('SavedLesson'),
   MetaSubjectArea = mongoose.model('MetaSubjectArea'),
   Team = mongoose.model('Team'),
+  Unit = mongoose.model('Unit'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -24,6 +25,7 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   moment = require('moment'),
+  async = require('async'),
   config = require(path.resolve('./config/config'));
 
 var validateLesson = function(lesson, successCallback, errorCallback) {
@@ -38,6 +40,58 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
   } else {
     successCallback(lesson);
   }
+};
+
+var addLessonToUnits = function(lesson, callback) {
+  console.log('lesson.units', lesson.units);
+  async.forEach(lesson.units, function(unit, unitCallback) {
+    Unit.findOne({ _id: unit._id }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        console.log('unitObj.lessons', unitObj.lessons);
+        var index = _.findIndex(unitObj.lessons, function(l) {
+          return l === lesson._id;
+        });
+        if (index === -1) {
+          unitObj.lessons.push(lesson);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  });
+};
+
+var removeLessonFromUnits = function(lesson, callback) {
+  console.log('lesson.units', lesson.units);
+  async.forEach(lesson.units, function(unit, unitCallback) {
+    Unit.findOne({ _id: unit._id }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        console.log('unitObj.lessons', unitObj.lessons);
+        var index = _.findIndex(unitObj.lessons, function(l) {
+          return l === lesson._id;
+        });
+        if (index > -1) {
+          unitObj.lessons.splice(index, 1);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  });
 };
 
 /**
@@ -72,17 +126,19 @@ exports.create = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          addLessonToUnits(lesson, function() {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-            TeamLeadName: req.user.displayName,
-            LessonName: lesson.title,
-            LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          }, function(info) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            res.json(lesson);
+            email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+              TeamLeadName: req.user.displayName,
+              LessonName: lesson.title,
+              LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
+            }, function(info) {
+              res.json(lesson);
+            }, function(errorMessage) {
+              res.json(lesson);
+            });
           });
         });
       }
@@ -277,7 +333,9 @@ exports.update = function(req, res) {
           });
 
           activity.save(function(err) {
-            res.json(lesson);
+            addLessonToUnits(lesson, function() {
+              res.json(lesson);
+            });
           });
         }
       });

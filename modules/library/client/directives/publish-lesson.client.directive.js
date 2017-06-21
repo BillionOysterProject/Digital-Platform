@@ -11,8 +11,7 @@
         controllerAs: 'vm',
         scope: {
           lesson: '=',
-          saveFunction: '=',
-          cancelFunction: '='
+          closeFunction: '='
         }
       };
     });

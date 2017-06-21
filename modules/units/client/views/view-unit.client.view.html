@@ -41,7 +41,7 @@
 <section class="content">
     <section class="container">
         <nav class="nav nav-default text-right">
-            <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })" ng-show="vm.unit.isCurrentUserOwner">
+            <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })" ng-show="vm.isAdmin">
                 {{vm.unit.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
             <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
             <!-- TODO: Wire up download
@@ -193,31 +193,29 @@
 
             <div class="col-sm-8">
                 <h3><!--TODO: Only show buttons to admin -->
-                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceLessons()" ng-show="vm.unit.lessons.length > 1">Edit sequence</a>
-                    <a class="btn btn-default pull-right">Add lesson</a><!--TODO: wire up to go to new lesson form with unit prepopulated with this unit?-->
+                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceLessons()" ng-show="vm.lessons.length > 0 && vm.isAdmin">Edit sequence</a>
+                    <a class="btn btn-default pull-right" ng-click="vm.createNewLesson()" ng-show="vm.isAdmin">Add lesson</a>
                     Lessons
                 </h3><br/>
-                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && !vm.unit.isCurrentUserOwner">
+                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 0) && !vm.isAdmin">
                     Whoops, this unit doesn't have any lessons yet! Check back for updates.
                 </div>
-                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && vm.unit.isCurrentUserOwner">
+                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 0) && vm.isAdmin">
                     This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
-                <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 1">
-                    <tr ng-repeat="lesson in vm.unit.lessons" ui-sref="lessons.view({ lessonId: lesson._id })">
-                      <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
-                      <td>
-                        <h4>{{lesson.title}}</h4>
-                      </td>
-                      <td>
+                <table class="table table-hover table-responsive" ng-show="vm.lessons.length > 0">
+                    <tr ng-repeat="lesson in vm.lessons">
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4>{{lesson.title}}</h4></td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })">
                         <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
                         {{lesson.user.displayName}}
                       </td>
-                      <td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })">
                           <b>{{lesson.lessonOverview.setting}}</b> setting<br/>
                           <b>{{lesson.lessonOverview.grade}}</b> grade
                       </td>
-                      <td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })">
                         <ul class="list-inline">
                             <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
                                 <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
@@ -225,30 +223,41 @@
                             </li>
                         </ul>
                       </td>
-                      <td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })">
                       <!--TIFF: check to make sure these popovers are wired up correctly -->
 
-                        <a href="#" uib-popover="{{lesson.lessonOverview.lessonSummary}}" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
-                        <a href="#" uib-popover="{{lesson.lessonObjectives}}" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
+                        <a uib-popover-html="lesson.lessonOverview.lessonSummary | sanitize"
+                          popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
+                        <a uib-popover-html="lesson.lessonObjectives | sanitize"
+                          popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
                       </td>
-                      <td ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers<td/>
-                      <td ng-show="lesson.stats.teamLeadCount <= 0">&nbsp;<td/>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })">
+                        <span ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</span>
+                      </td>
+                      <td ui-sref="lessons.view({ lessonId: lesson._id })" ng-show="vm.isAdmin">{{lesson.status | capitalize}}</td>
+                      <td ng-show="vm.isAdmin">
+                        <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openReturnModal(lesson)" ng-show="lesson.status === 'pending'">
+                            <i class="glyphicon glyphicon-remove"></i></a>
+                        <a class="btn btn-sm btn-success pull-right" ng-click="vm.openPublishModal(lesson)" ng-show="lesson.status === 'pending'">
+                            <i class="glyphicon glyphicon-ok"></i></a>
+                      </td>
                     </tr>
                 </table>
 
-                <h3 ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceSubUnits()">Edit sequence</a>
-                    <a class="btn btn-default pull-right">Add sub unit</a> <!--TODO: wire up to go to new unit form with parent unit prepopulated with this unit?-->
+                <h3 ng-show="vm.subUnits && vm.subUnits.length > 0">
+                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceSubUnits()" ng-show="vm.isAdmin">Edit sequence</a>
+                    <a class="btn btn-default pull-right" ng-show="vm.isAdmin">Add sub unit</a> <!--TODO: wire up to go to new unit form with parent unit prepopulated with this unit?-->
                     Sub Units
                 </h3><br/>
-                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                    <tr ng-repeat="unit in vm.unit.subUnits" ui-sref="units.view({ unitId: unit._id })">
+                <table class="table table-hover table-responsive" ng-show="vm.subUnits && vm.subUnits.length > 0">
+                    <tr ng-repeat="sub in vm.subUnits" ui-sref="units.view({ unitId: sub._id })">
                       <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td>
-                        <h4><i class="{{unit.icon}} {{unit.color}}"></i> {{unit.title}}</h4>
+                        <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
                       </td>
-                      <td><b>{{unit.lessons.length}}</b> Lessons</td>
-                      <td><b>{{unit.subUnits.length}}</b> Sub Units</td>
+                      <td><b>{{sub.lessons.length}}</b> Lessons</td>
+                      <td><b>{{sub.subUnits.length}}</b> Sub Units</td>
+                      <td ng-show="vm.isAdmin">{{sub.status | capitalize}}</td>
                     </tr>
                 </table>
             </div>
@@ -305,4 +314,6 @@
 <sequence-sub-unit-modal unit="vm.unit" close-function="vm.closeSequenceSubUnits"></sequence-sub-unit-modal>
 <unit-feedback-modal unit="vm.unit" close-function="vm.closeUnitFeedback"></unit-feedback-modal>
 <view-user-modal user="vm.unit.user" close-function="vm.closeViewUserModal"></view-user-modal>
+<return-lesson lesson="vm.lesson" close-function="vm.closeReturnModal"></return-lesson>
+<publish-lesson lesson="vm.lesson" close-function="vm.closePublishModal"></publish-lesson>
 <!-- END MODALS -->

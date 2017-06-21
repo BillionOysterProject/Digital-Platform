@@ -5,13 +5,13 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', '$location', 'unitResolve', 'Authentication',
-    'UnitsService', 'UnitLessonsService', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
+  UnitsController.$inject = ['$scope', '$rootScope', '$state', '$http', '$interval', '$timeout', '$location', '$sce', 'lodash', 'unitResolve', 'Authentication',
+    'UnitsService', 'UnitLessonsService', 'LessonsService', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
     'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
     'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
 
-  function UnitsController($scope, $state, $http, $interval, $timeout, $location, unit, Authentication,
-    UnitsService, UnitLessonsService, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
+  function UnitsController($scope, $rootScope, $state, $http, $interval, $timeout, $location, $sce, lodash, unit, Authentication,
+    UnitsService, UnitLessonsService, LessonsService, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService) {
     var vm = this;
@@ -29,6 +29,49 @@
         unitId: vm.unit._id
       });
     }
+
+    vm.checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
+    vm.isAdmin = vm.checkRole('admin');
+
+    var setupLessonsAndSubUnits = function() {
+      if (vm.isAdmin) {
+        vm.lessons = vm.unit.lessons;
+        vm.subUnits = vm.unit.subUnits;
+      } else {
+        vm.lessons = [];
+        for (var i = 0; i < vm.unit.lessons.length; i++) {
+          if (vm.unit.lessons[i].status === 'published') {
+            vm.lessons.push(vm.unit.lessons[i]);
+          }
+        }
+        console.log('unit.lessons', vm.unit.lessons);
+        console.log('lessons', vm.lessons);
+
+        vm.subUnits = [];
+        for (var j = 0; j < vm.unit.subUnits.length; j++) {
+          if (vm.unit.subUnits[j].status === 'published') {
+            vm.subUnits.push(vm.unit.subUnits[j]);
+          }
+        }
+      }
+    };
+    setupLessonsAndSubUnits();
+
+    var refreshUnit = function(callback) {
+      UnitsService.get({
+        unitId: vm.unit._id,
+        full: true
+      }, function(data) {
+        vm.unit = data;
+        setupLessonsAndSubUnits();
+        if (callback) callback();
+      });
+    };
 
     vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
       mode: 'tags-id',
@@ -172,12 +215,7 @@
         $timeout(function() {
           vm.saving = false;
           if (draft) {
-            UnitsService.get({
-              unitId: res._id,
-              full: true
-            }, function(data) {
-              vm.unit = data;
-              console.log('parentUnits', vm.unit.parentUnits);
+            refreshUnit(function() {
               $location.path('/units/' + vm.unit._id + '/edit', false);
             });
           } else {
@@ -231,20 +269,18 @@
       angular.element('#modal-profile-user').modal('hide');
     };
 
+    vm.createNewLesson = function() {
+      $rootScope.unit = unit;
+      $state.go('lessons.create');
+    };
+
     vm.openSequenceLessons = function() {
       angular.element('#modal-sequence-lesson').modal('show');
     };
 
     vm.closeSequenceLessons = function(refresh) {
       angular.element('#modal-sequence-lesson').modal('hide');
-      if (refresh) {
-        UnitsService.get({
-          unitId: vm.unit._id,
-          full: true
-        }, function(data) {
-          vm.unit = data;
-        });
-      }
+      if (refresh) refreshUnit();
     };
 
     vm.openSequenceSubUnits = function() {
@@ -253,14 +289,30 @@
 
     vm.closeSequenceSubUnits = function(refresh) {
       angular.element('#modal-sequence-subunits').modal('hide');
-      if (refresh) {
-        UnitsService.get({
-          unitId: vm.unit._id,
-          full: true
-        }, function(data) {
-          vm.unit = data;
-        });
-      }
+      if (refresh) refreshUnit();
+    };
+
+    vm.openReturnModal = function(lesson) {
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-return').modal('show');
+    };
+
+    vm.closeReturnModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-return').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openPublishModal = function(lesson) {
+      console.log('lesson', lesson);
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-accept').modal('show');
+    };
+
+    vm.closePublishModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-accept').modal('hide');
+      if (refresh) refreshUnit();
     };
   }
 })();

@@ -268,9 +268,9 @@ exports.unitByID = function (req, res, next, id) {
     .populate('standards.ngssCrossCuttingConcepts', 'header description')
     .populate('standards.cclsMathematics', 'code description')
     .populate('standards.cclsElaScienceTechnicalSubjects', 'code description')
-    .populate('lessons', 'title lessonOverview lessonObjectives user')
-    .populate('parentUnits', 'title color icon')
-    .populate('subUnits', 'title lessons subUnits');
+    .populate('lessons', 'title lessonOverview lessonObjectives user status')
+    .populate('parentUnits', 'title color icon status')
+    .populate('subUnits', 'title lessons subUnits status');
   }
 
   query.exec(function (err, unit) {
