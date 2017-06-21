@@ -16,11 +16,12 @@
                           dnd-effect-allowed="move"
                           dnd-selected="selected = sub"
                           ng-class="{'selected': selected === sub}">
-                          <div class="col-md-6">
+                          <div class="col-md-5">
                             <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
                           </div>
                           <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
                           <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
+                          <div class="col-md-1">{{sub.status | capitalize}}</div>
                         </li>
                       </ul>
                   </div>
