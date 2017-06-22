@@ -208,8 +208,18 @@
                     This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
                 <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 0">
-                    <tr ng-repeat="lesson in vm.unit.lessons" uib-popover-html="lesson.lessonOverview.lessonSummary | sanitize" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">
-                        <!-- uib-popover-html="lesson.lessonObjectives | sanitize" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top" -->
+                    <tr ng-repeat="lesson in vm.unit.lessons" uib-popover-template="vm.lessonPopoverTemplate" popover-trigger="mouseenter" popover-placement="top">
+                      <script type="text/ng-template" id="lessonPopover.html">
+                        <div>
+                          <h3>Summary</h3>
+                          <div ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></div>
+                          <h3>Objectives</h3>
+                          <div ng-bind-html="lesson.lessonObjectives | sanitize"></div>
+                        </div>
+                      </script>
+                      <!-- uib-popover-template="modules/lessons/client/views/lesson-popover.client.view.html" popover-trigger="mouseenter" popover-placement="top" -->
+                      <!-- uib-popover-html="lesson.lessonOverview.lessonSummary | sanitize" popover-title="Summary" popover-trigger="mouseenter" popover-placement="top" -->
+                      <!-- uib-popover-html="lesson.lessonObjectives | sanitize" popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top" -->
                       <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4>{{lesson.title}}</h4></td>
                       <td ui-sref="lessons.view({ lessonId: lesson._id })">
@@ -229,7 +239,11 @@
                         </ul>
                       </td>
                       <td ui-sref="lessons.view({ lessonId: lesson._id })">
-                          <span class="label label-default">{{lesson.status | capitalize}}</span>
+                          <span class="label"
+                            ng-class="{'label-success': lesson.status === 'published', 'label-info': lesson.status === 'pending',
+                            'label-default': lesson.status === 'draft', 'label-danger': lesson.status === 'returned'}">
+                            {{lesson.status | capitalize}}
+                          </span>
                       </td>
                       <td ng-show="vm.isAdmin" class="text-right" style="min-width:80px;">
                         <a class="btn btn-sm btn-danger pull-right" ng-click="vm.openReturnModal(lesson)" ng-show="lesson.status === 'pending'">
@@ -255,7 +269,10 @@
                       <td><b>{{sub.lessons.length}}</b> Lessons</td>
                       <td><b>{{sub.subUnits.length}}</b> Sub Units</td>
                       <td ng-show="vm.isAdmin" class="text-right">
-                          <span class="label label-default">{{sub.status | capitalize}}</span>
+                          <span class="label"
+                            ng-class="{'label-success': sub.status === 'published','label-default': sub.status === 'draft'}">
+                            {{sub.status | capitalize}}
+                          </span>
                       </td>
                     </tr>
                 </table>

@@ -23,6 +23,7 @@
     vm.form = {};
     vm.saving = false;
     vm.valid = true;
+    vm.lessonPopoverTemplate = 'lessonPopover.html';
 
     if (vm.unit._id) {
       vm.lessons = UnitLessonsService.query({
