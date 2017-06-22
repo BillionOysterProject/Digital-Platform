@@ -38,11 +38,20 @@
     };
     vm.isAdmin = vm.checkRole('admin');
 
+    console.log('parentUnits', vm.unit.parentUnits);
     var setupLessonsAndSubUnits = function() {
       if (vm.isAdmin) {
+        vm.parentUnits = vm.unit.parentUnits;
         vm.lessons = vm.unit.lessons;
         vm.subUnits = vm.unit.subUnits;
       } else {
+        vm.parentUnits = [];
+        for (var h = 0; h < vm.unit.parentUnits.length; h++) {
+          if (vm.unit.parentUnits[h].status === 'published') {
+            vm.parentUnits.push(vm.unit.parentUnits[h]);
+          }
+        }
+
         vm.lessons = [];
         for (var i = 0; i < vm.unit.lessons.length; i++) {
           if (vm.unit.lessons[i].status === 'published') {
@@ -61,6 +70,7 @@
     setupLessonsAndSubUnits();
 
     var refreshUnit = function(callback) {
+      console.log('unit', vm.unit._id);
       UnitsService.get({
         unitId: vm.unit._id,
         full: true
@@ -76,74 +86,73 @@
         vm.unit.parentUnits = [];
       }
       vm.unit.parentUnits.push($rootScope.unit);
-      // if ($rootScope.unit.standards) {
-      //   var getIds = function(standards) {
-      //     var ids = [];
-      //     for (var i = 0; i < standards.length; i++) {
-      //       if (standards[i]._id) ids.push(standards[i]._id);
-      //     }
-      //     return ids;
-      //   };
-      //   if (!vm.lesson.standards) {
-      //     vm.lesson.standards = {};
-      //   }
-      //
-      //   if (!vm.lesson.standards.cclsElaScienceTechnicalSubjects) {
-      //     vm.lesson.standards.cclsElaScienceTechnicalSubjects = [];
-      //   }
-      //   vm.lesson.standards.cclsElaScienceTechnicalSubjects =
-      //     vm.lesson.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
-      //
-      //   if (!vm.lesson.standards.cclsMathematics) {
-      //     vm.lesson.standards.cclsMathematics = [];
-      //   }
-      //   vm.lesson.standards.cclsMathematics =
-      //     vm.lesson.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
-      //
-      //   if (!vm.lesson.standards.ngssCrossCuttingConcepts) {
-      //     vm.lesson.standards.ngssCrossCuttingConcepts = [];
-      //   }
-      //   vm.lesson.standards.ngssCrossCuttingConcepts =
-      //     vm.lesson.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
-      //
-      //   if (!vm.lesson.standards.ngssDisciplinaryCoreIdeas) {
-      //     vm.lesson.standards.ngssDisciplinaryCoreIdeas = [];
-      //   }
-      //   vm.lesson.standards.ngssDisciplinaryCoreIdeas =
-      //     vm.lesson.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
-      //
-      //   if (!vm.lesson.standards.ngssScienceEngineeringPractices) {
-      //     vm.lesson.standards.ngssScienceEngineeringPractices = [];
-      //   }
-      //   vm.lesson.standards.ngssScienceEngineeringPractices =
-      //     vm.lesson.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
-      //
-      //   if (!vm.lesson.standards.nycsssUnits) {
-      //     vm.lesson.standards.nycsssUnits = [];
-      //   }
-      //   vm.lesson.standards.nycsssUnits =
-      //     vm.lesson.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
-      //
-      //   if (!vm.lesson.standards.nysssKeyIdeas) {
-      //     vm.lesson.standards.nysssKeyIdeas = [];
-      //   }
-      //   vm.lesson.standards.nysssKeyIdeas =
-      //     vm.lesson.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
-      //
-      //   if (!vm.lesson.standards.nysssMajorUnderstandings) {
-      //     vm.lesson.standards.nysssMajorUnderstandings = [];
-      //   }
-      //   vm.lesson.standards.nysssMajorUnderstandings =
-      //     vm.lesson.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
-      //
-      //   if (!vm.lesson.standards.nysssMst) {
-      //     vm.lesson.standards.nysssMst = [];
-      //   }
-      //   vm.lesson.standards.nysssMst =
-      //     vm.lesson.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
-      //
-      // }
-      vm.unit.standards = $rootScope.unit.standards;
+      if ($rootScope.unit.standards) {
+        var getIds = function(standards) {
+          var ids = [];
+          for (var i = 0; i < standards.length; i++) {
+            if (standards[i]._id) ids.push(standards[i]._id);
+          }
+          return ids;
+        };
+        if (!vm.unit.standards) {
+          vm.unit.standards = {};
+        }
+
+        if (!vm.unit.standards.cclsElaScienceTechnicalSubjects) {
+          vm.unit.standards.cclsElaScienceTechnicalSubjects = [];
+        }
+        vm.unit.standards.cclsElaScienceTechnicalSubjects =
+          vm.unit.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+        if (!vm.unit.standards.cclsMathematics) {
+          vm.unit.standards.cclsMathematics = [];
+        }
+        vm.unit.standards.cclsMathematics =
+          vm.unit.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+        if (!vm.unit.standards.ngssCrossCuttingConcepts) {
+          vm.unit.standards.ngssCrossCuttingConcepts = [];
+        }
+        vm.unit.standards.ngssCrossCuttingConcepts =
+          vm.unit.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+        if (!vm.unit.standards.ngssDisciplinaryCoreIdeas) {
+          vm.unit.standards.ngssDisciplinaryCoreIdeas = [];
+        }
+        vm.unit.standards.ngssDisciplinaryCoreIdeas =
+          vm.unit.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+        if (!vm.unit.standards.ngssScienceEngineeringPractices) {
+          vm.unit.standards.ngssScienceEngineeringPractices = [];
+        }
+        vm.unit.standards.ngssScienceEngineeringPractices =
+          vm.unit.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+        if (!vm.unit.standards.nycsssUnits) {
+          vm.unit.standards.nycsssUnits = [];
+        }
+        vm.unit.standards.nycsssUnits =
+          vm.unit.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+        if (!vm.unit.standards.nysssKeyIdeas) {
+          vm.unit.standards.nysssKeyIdeas = [];
+        }
+        vm.unit.standards.nysssKeyIdeas =
+          vm.unit.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+        if (!vm.unit.standards.nysssMajorUnderstandings) {
+          vm.unit.standards.nysssMajorUnderstandings = [];
+        }
+        vm.unit.standards.nysssMajorUnderstandings =
+          vm.unit.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+        if (!vm.unit.standards.nysssMst) {
+          vm.unit.standards.nysssMst = [];
+        }
+        vm.unit.standards.nysssMst =
+          vm.unit.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+      }
       $rootScope.unit = null;
     }
 

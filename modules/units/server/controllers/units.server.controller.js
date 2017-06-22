@@ -35,6 +35,58 @@ var validateUnit = function(unit, successCallback, errorCallback) {
   }
 };
 
+var addUnitToUnits = function(unit, callback) {
+  async.forEach(unit.parentUnits, function(parent, unitCallback) {
+    Unit.findOne({ _id: parent }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.subUnits, function(s) {
+          return s === unit._id;
+        });
+        if (index === -1) {
+          unitObj.subUnits.push(unit);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  }, function(err) {
+    callback();
+  });
+};
+
+var removeUnitFromUnits = function(unit, callback) {
+  async.forEach(unit.parentUnits, function(parent, unitCallback) {
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.subUnits, function(s) {
+          return s === unit._id;
+        });
+        if (index > -1) {
+          unitObj.subUnits.splice(index, 1);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  }, function(err) {
+    callback();
+  });
+};
+
 /**
  * Create an unit
  */
@@ -57,7 +109,9 @@ exports.create = function (req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            res.json(unit);
+            addUnitToUnits(unit, function() {
+              res.json(unit);
+            });
           }
         });
       }
@@ -116,7 +170,9 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(unit);
+          addUnitToUnits(unit, function() {
+            res.json(unit);
+          });
         }
       });
     } else {
@@ -185,14 +241,16 @@ exports.updateSubUnits = function(req, res) {
 exports.delete = function (req, res) {
   var unit = req.unit;
 
-  unit.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(unit);
-    }
+  removeUnitFromUnits(unit, function() {
+    unit.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
   });
 };
 
@@ -211,9 +269,9 @@ exports.list = function (req, res) {
   }
 
   query.sort('title').populate('user', 'displayName')
-  .populate('parentUnits', 'title icon color')
-  .populate('lessons', 'title')
-  .populate('subUnits', 'title')
+  .populate('parentUnits', 'title icon color status')
+  .populate('lessons', 'title status')
+  .populate('subUnits', 'title status')
   .exec(function (err, units) {
     if (err) {
       return res.status(400).send({
@@ -259,18 +317,20 @@ exports.unitByID = function (req, res, next, id) {
 
   var query = Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username');
   if (req.query.full) {
-    query.populate('standards.nycsssUnits', 'header description')
-    .populate('standards.nysssKeyIdeas', 'header description')
-    .populate('standards.nysssMajorUnderstandings', 'code description')
-    .populate('standards.nysssMst', 'code description')
-    .populate('standards.ngssDisciplinaryCoreIdeas', 'header description')
-    .populate('standards.ngssScienceEngineeringPractices', 'header description')
-    .populate('standards.ngssCrossCuttingConcepts', 'header description')
-    .populate('standards.cclsMathematics', 'code description')
-    .populate('standards.cclsElaScienceTechnicalSubjects', 'code description')
+    query.populate('standards.cclsElaScienceTechnicalSubjects')
+    .populate('standards.cclsMathematics')
+    .populate('standards.ngssCrossCuttingConcepts')
+    .populate('standards.ngssDisciplinaryCoreIdeas')
+    .populate('standards.ngssScienceEngineeringPractices')
+    .populate('standards.nycsssUnits')
+    .populate('standards.nysssKeyIdeas')
+    .populate('standards.nysssMajorUnderstandings')
+    .populate('standards.nysssMst')
     .populate('lessons', 'title lessonOverview lessonObjectives user status')
     .populate('parentUnits', 'title color icon status')
     .populate('subUnits', 'title lessons subUnits status');
+  } else {
+    query.populate('parentUnits', 'title');
   }
 
   query.exec(function (err, unit) {
