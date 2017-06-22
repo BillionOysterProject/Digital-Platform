@@ -29,36 +29,24 @@
 
     sub.openReturnModal = function(lesson) {
       sub.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
-
       angular.element('#modal-return').modal('show');
     };
 
-    sub.returnModal = function() {
+    sub.closeReturnModal = function(refresh) {
       sub.lesson = {};
       angular.element('#modal-return').modal('hide');
-      sub.findSubmittedLessons();
-    };
-
-    sub.closeReturnModal = function() {
-      sub.lesson = {};
-      angular.element('#modal-return').modal('hide');
+      if (refresh) sub.findSubmittedLessons();
     };
 
     sub.openPublishModal = function(lesson) {
       sub.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
-
       angular.element('#modal-accept').modal('show');
     };
 
-    sub.publishModal = function() {
+    sub.closePublishModal = function(refresh) {
       sub.lesson = {};
       angular.element('#modal-accept').modal('hide');
-      sub.findSubmittedLessons();
-    };
-
-    sub.closePublishModal = function() {
-      sub.lesson = {};
-      angular.element('#modal-accept').modal('hide');
+      if (refresh) sub.findSubmittedLessons();
     };
   }
 })();

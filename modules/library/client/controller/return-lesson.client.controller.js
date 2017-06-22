@@ -19,7 +19,7 @@
       })
       .success(function(data, status, headers, config) {
         $scope.form.returnLessonForm.$setPristine();
-        $scope.saveFunction(true);
+        $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {
         $scope.error = data.message;
@@ -29,7 +29,7 @@
     $scope.cancel = function() {
       $scope.form.returnLessonForm.$setPristine();
       $scope.lesson.returnedNotes = '';
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
   }
 })();

@@ -31,11 +31,10 @@
                       <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
                     </div>
                   </div>
-                  <!--TODO: change to multi select so that lessons can be inside multiple units -->
                   <div class="form-group" show-errors>
-                    <label for="unit" class="control-label">Unit</label>
-                    <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit._id"
-                    ng-options="unit._id as unit.title for unit in vm.units"></select>
+                    <label for="units" class="control-label">Units *</label>
+                    <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
+                    ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
                   </div>
                 </div>
                 <div class="col-md-4">

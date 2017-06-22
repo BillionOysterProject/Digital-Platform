@@ -12,6 +12,7 @@ var path = require('path'),
   SavedLesson = mongoose.model('SavedLesson'),
   MetaSubjectArea = mongoose.model('MetaSubjectArea'),
   Team = mongoose.model('Team'),
+  Unit = mongoose.model('Unit'),
   Glossary = mongoose.model('Glossary'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -24,6 +25,7 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   moment = require('moment'),
+  async = require('async'),
   config = require(path.resolve('./config/config'));
 
 var validateLesson = function(lesson, successCallback, errorCallback) {
@@ -38,6 +40,56 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
   } else {
     successCallback(lesson);
   }
+};
+
+var addLessonToUnits = function(lesson, callback) {
+  async.forEach(lesson.units, function(unit, unitCallback) {
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.lessons, function(l) {
+          return l === lesson._id;
+        });
+        if (index === -1) {
+          unitObj.lessons.push(lesson);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  }, function(err) {
+    callback();
+  });
+};
+
+var removeLessonFromUnits = function(lesson, callback) {
+  async.forEach(lesson.units, function(unit, unitCallback) {
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.lessons, function(l) {
+          return l === lesson._id;
+        });
+        if (index > -1) {
+          unitObj.lessons.splice(index, 1);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  });
 };
 
 /**
@@ -72,17 +124,19 @@ exports.create = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          addLessonToUnits(lesson, function() {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-            TeamLeadName: req.user.displayName,
-            LessonName: lesson.title,
-            LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          }, function(info) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            res.json(lesson);
+            email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+              TeamLeadName: req.user.displayName,
+              LessonName: lesson.title,
+              LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
+            }, function(info) {
+              res.json(lesson);
+            }, function(errorMessage) {
+              res.json(lesson);
+            });
           });
         });
       }
@@ -277,7 +331,9 @@ exports.update = function(req, res) {
           });
 
           activity.save(function(err) {
-            res.json(lesson);
+            addLessonToUnits(lesson, function() {
+              res.json(lesson);
+            });
           });
         }
       });
@@ -471,7 +527,8 @@ exports.listFavorites = function(req, res) {
         lessonIds.push(savedLessons[i].lesson);
       }
       Lesson.find({ _id: { $in: lessonIds } }).populate('user', 'displayName email team profileImageURL')
-      .populate('unit', 'title color icon').populate('lessonOverview.subjectAreas', 'subject color')
+      .populate('unit', 'title color icon').populate('units', 'title color icon')
+      .populate('lessonOverview.subjectAreas', 'subject color')
       .exec(function(err, lessons) {
         if (err) {
           return res.status(400).send({
@@ -847,12 +904,14 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     var uploadRemote = new UploadRemote();
     uploadRemote.deleteRemote(filesToDelete,
     function() {
-      lesson.remove(function(err) {
-        if (err) {
-          errorCallback(errorHandler.getErrorMessage(err));
-        } else {
-          successCallback(lesson);
-        }
+      removeLessonFromUnits(lesson, function() {
+        lesson.remove(function(err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(lesson);
+          }
+        });
       });
     }, function(err) {
       errorCallback(err);
@@ -970,7 +1029,8 @@ exports.list = function(req, res) {
     }
   }
 
-  query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
+  query.populate('user', 'displayName email team profileImageURL')
+  .populate('unit', 'title color icon').populate('units', 'title color icon')
   .populate('lessonOverview.subjectAreas', 'subject color').exec(function(err, lessons) {
     if (err) {
       console.log(err);
@@ -1282,14 +1342,20 @@ exports.lessonByID = function(req, res, next, id) {
   }
 
   var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL username')
-  .populate('unit', 'title color icon');
+  .populate('unit', 'title color icon').populate('units', 'title color icon');
 
   if (req.query.full) {
-    query.populate('standards.cclsElaScienceTechnicalSubjects').populate('standards.cclsMathematics')
-    .populate('standards.ngssCrossCuttingConcepts').populate('standards.ngssDisciplinaryCoreIdeas')
-    .populate('standards.ngssScienceEngineeringPractices').populate('standards.nycsssUnits')
-    .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst')
-    .populate('materialsResources.vocabulary').populate('lessonOverview.subjectAreas');
+    query.populate('standards.cclsElaScienceTechnicalSubjects')
+    .populate('standards.cclsMathematics')
+    .populate('standards.ngssCrossCuttingConcepts')
+    .populate('standards.ngssDisciplinaryCoreIdeas')
+    .populate('standards.ngssScienceEngineeringPractices')
+    .populate('standards.nycsssUnits')
+    .populate('standards.nysssKeyIdeas')
+    .populate('standards.nysssMajorUnderstandings')
+    .populate('standards.nysssMst')
+    .populate('materialsResources.vocabulary')
+    .populate('lessonOverview.subjectAreas');
   }
 
   query.exec(function(err, lesson) {

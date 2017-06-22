@@ -12,11 +12,11 @@
               <i class="glyphicon glyphicon-pencil"></i></a>
         </div>
         <div class="panel" ui-sref="lessons.view({ lessonId: created._id })">
-            <div class="panel-heading" style="background: {{created.unit.color}}">
+            <div class="panel-heading" ng-repeat="unit in created.units" style="background: {{unit.color}}">
                 <span class="pull-right" ng-show="created.lessonOverview.grade">{{created.lessonOverview.grade}}</span>
-                <h3 class="panel-title" ng-show="created.unit">
-                    <i class="{{created.unit.icon}}"></i>
-                    {{created.unit.title}}
+                <h3 class="panel-title"  ng-show="unit">
+                    <i class="{{unit.icon}}"></i>
+                    {{unit.title}}
                 </h3>
             </div>
             <div class="panel-body">
