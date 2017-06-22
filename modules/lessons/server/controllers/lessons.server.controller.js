@@ -45,7 +45,8 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
 var addLessonToUnits = function(lesson, callback) {
   console.log('lesson.units', lesson.units);
   async.forEach(lesson.units, function(unit, unitCallback) {
-    Unit.findOne({ _id: unit._id }).exec(function(err, unitObj) {
+    console.log('unit', unit);
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
       if (err) {
         unitCallback();
       } else if (unitObj) {
@@ -54,6 +55,7 @@ var addLessonToUnits = function(lesson, callback) {
           return l === lesson._id;
         });
         if (index === -1) {
+          console.log('add lesson to unit');
           unitObj.lessons.push(lesson);
           unitObj.save(function(err) {
             unitCallback();
@@ -65,13 +67,15 @@ var addLessonToUnits = function(lesson, callback) {
         unitCallback();
       }
     });
+  }, function(err) {
+    callback();
   });
 };
 
 var removeLessonFromUnits = function(lesson, callback) {
   console.log('lesson.units', lesson.units);
   async.forEach(lesson.units, function(unit, unitCallback) {
-    Unit.findOne({ _id: unit._id }).exec(function(err, unitObj) {
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
       if (err) {
         unitCallback();
       } else if (unitObj) {
@@ -905,12 +909,14 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     var uploadRemote = new UploadRemote();
     uploadRemote.deleteRemote(filesToDelete,
     function() {
-      lesson.remove(function(err) {
-        if (err) {
-          errorCallback(errorHandler.getErrorMessage(err));
-        } else {
-          successCallback(lesson);
-        }
+      removeLessonFromUnits(lesson, function() {
+        lesson.remove(function(err) {
+          if (err) {
+            errorCallback(errorHandler.getErrorMessage(err));
+          } else {
+            successCallback(lesson);
+          }
+        });
       });
     }, function(err) {
       errorCallback(err);

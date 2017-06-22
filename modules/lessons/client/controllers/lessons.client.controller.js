@@ -35,14 +35,78 @@
     vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
     vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
 
-    console.log('standards', vm.lesson.standards);
     if ($rootScope.unit) {
       if (!vm.lesson.units) {
         vm.lesson.units = [];
       }
       vm.lesson.units.push($rootScope.unit);
-      console.log('unit.standards', $rootScope.unit.standards);
-      vm.lesson.standards = $rootScope.unit.standards;
+      if ($rootScope.unit.standards) {
+        var getIds = function(standards) {
+          var ids = [];
+          for (var i = 0; i < standards.length; i++) {
+            if (standards[i]._id) ids.push(standards[i]._id);
+          }
+          return ids;
+        };
+        if (!vm.lesson.standards) {
+          vm.lesson.standards = {};
+        }
+
+        if (!vm.lesson.standards.cclsElaScienceTechnicalSubjects) {
+          vm.lesson.standards.cclsElaScienceTechnicalSubjects = [];
+        }
+        vm.lesson.standards.cclsElaScienceTechnicalSubjects =
+          vm.lesson.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+        if (!vm.lesson.standards.cclsMathematics) {
+          vm.lesson.standards.cclsMathematics = [];
+        }
+        vm.lesson.standards.cclsMathematics =
+          vm.lesson.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+        if (!vm.lesson.standards.ngssCrossCuttingConcepts) {
+          vm.lesson.standards.ngssCrossCuttingConcepts = [];
+        }
+        vm.lesson.standards.ngssCrossCuttingConcepts =
+          vm.lesson.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+        if (!vm.lesson.standards.ngssDisciplinaryCoreIdeas) {
+          vm.lesson.standards.ngssDisciplinaryCoreIdeas = [];
+        }
+        vm.lesson.standards.ngssDisciplinaryCoreIdeas =
+          vm.lesson.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+        if (!vm.lesson.standards.ngssScienceEngineeringPractices) {
+          vm.lesson.standards.ngssScienceEngineeringPractices = [];
+        }
+        vm.lesson.standards.ngssScienceEngineeringPractices =
+          vm.lesson.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+        if (!vm.lesson.standards.nycsssUnits) {
+          vm.lesson.standards.nycsssUnits = [];
+        }
+        vm.lesson.standards.nycsssUnits =
+          vm.lesson.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+        if (!vm.lesson.standards.nysssKeyIdeas) {
+          vm.lesson.standards.nysssKeyIdeas = [];
+        }
+        vm.lesson.standards.nysssKeyIdeas =
+          vm.lesson.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+        if (!vm.lesson.standards.nysssMajorUnderstandings) {
+          vm.lesson.standards.nysssMajorUnderstandings = [];
+        }
+        vm.lesson.standards.nysssMajorUnderstandings =
+          vm.lesson.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+        if (!vm.lesson.standards.nysssMst) {
+          vm.lesson.standards.nysssMst = [];
+        }
+        vm.lesson.standards.nysssMst =
+          vm.lesson.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+      }
       $rootScope.unit = null;
     }
 
