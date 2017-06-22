@@ -18,28 +18,21 @@
                         dnd-selected="selected = lesson"
                         ng-class="{'selected': selected === lesson}">
                             <div class="col-md-3"><h4>{{lesson.title}}</h4></div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                               <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
                               {{lesson.user.displayName}}
-                            </div>
-                            <div class="col-md-2">
-                                <b>{{lesson.lessonOverview.setting}}</b> setting<br/>
-                                <b>{{lesson.lessonOverview.grade}}</b> grade
                             </div>
                             <div class="col-md-2">
                               <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
                                 ng-repeat="subject in lesson.lessonOverview.subjectAreas"
                                 class="label label-default"></span>
                             </div>
-                            <div class="col-md-1">
-                              <a uib-popover-html="lesson.lessonOverview.lessonSummary | sanitize"
-                                popover-title="Summary" popover-trigger="mouseenter" popover-placement="top">Summary</a><br/>
-                              <a uib-popover-html="lesson.lessonObjectives | sanitize"
-                                popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
+                            <div class="col-md-2">
+                                <small class="text-muted">
+                                  <span ng-show="lesson.lessonOverview.setting"><b>{{lesson.lessonOverview.setting}}</b> setting</span><br/>
+                                  <span ng-show="lesson.lessonOverview.grade"><b>{{lesson.lessonOverview.grade}}</b> grade</span>
+                                </small>
                             </div>
-                            <!--<div class="col-md-1">
-                              <span ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</span>
-                            </div>-->
                             <div class="col-md-2 text-right">
                                 <span class="label label-default">{{lesson.status | capitalize}}</span>
                             </div>
