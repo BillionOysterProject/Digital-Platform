@@ -366,5 +366,9 @@
       angular.element('#modal-accept').modal('hide');
       if (refresh) refreshUnit();
     };
+
+    vm.removeAllParentUnits = function() {
+      vm.unit.parentUnits = [];
+    };
   }
 })();

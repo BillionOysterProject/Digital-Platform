@@ -208,12 +208,13 @@
                     This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
                 <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 0">
-                    <tr ng-repeat="lesson in vm.unit.lessons" uib-popover-template="vm.lessonPopoverTemplate" popover-trigger="mouseenter" popover-placement="top">
+                    <tr ng-repeat="lesson in vm.unit.lessons" uib-popover-template="vm.lessonPopoverTemplate" popover-trigger="mouseenter"
+                      popover-enable="lesson.lessonOverview.lessonSummary || lesson.lessonObjectives" popover-placement="top">
                       <script type="text/ng-template" id="lessonPopover.html">
                         <div>
-                          <h3>Summary</h3>
+                          <h3 ng-show="lesson.lessonOverview.lessonSummary">Summary</h3>
                           <div ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></div>
-                          <h3>Objectives</h3>
+                          <h3 ng-show="lesson.lessonObjectives">Objectives</h3>
                           <div ng-bind-html="lesson.lessonObjectives | sanitize"></div>
                         </div>
                       </script>

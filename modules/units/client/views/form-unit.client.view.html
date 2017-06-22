@@ -34,6 +34,7 @@
                                         <select class="form-control" name="parentUnits" id="parentUnits" ng-model="vm.unit.parentUnits"
                                         ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true">
                                         </select>
+                                        <span class="help-block"><a ng-click="vm.removeAllParentUnits()"><i class="fa fa-times"></i> Remove all</a></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">

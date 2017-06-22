@@ -32,9 +32,9 @@
                     </div>
                   </div>
                   <div class="form-group" show-errors>
-                    <label for="units" class="control-label">Units</label>
+                    <label for="units" class="control-label">Units *</label>
                     <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
-                    ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true"></select>
+                    ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
                   </div>
                 </div>
                 <div class="col-md-4">
