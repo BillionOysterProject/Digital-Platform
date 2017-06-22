@@ -38,45 +38,12 @@
     };
     vm.isAdmin = vm.checkRole('admin');
 
-    console.log('parentUnits', vm.unit.parentUnits);
-    var setupLessonsAndSubUnits = function() {
-      if (vm.isAdmin) {
-        vm.parentUnits = vm.unit.parentUnits;
-        vm.lessons = vm.unit.lessons;
-        vm.subUnits = vm.unit.subUnits;
-      } else {
-        vm.parentUnits = [];
-        for (var h = 0; h < vm.unit.parentUnits.length; h++) {
-          if (vm.unit.parentUnits[h].status === 'published') {
-            vm.parentUnits.push(vm.unit.parentUnits[h]);
-          }
-        }
-
-        vm.lessons = [];
-        for (var i = 0; i < vm.unit.lessons.length; i++) {
-          if (vm.unit.lessons[i].status === 'published') {
-            vm.lessons.push(vm.unit.lessons[i]);
-          }
-        }
-
-        vm.subUnits = [];
-        for (var j = 0; j < vm.unit.subUnits.length; j++) {
-          if (vm.unit.subUnits[j].status === 'published') {
-            vm.subUnits.push(vm.unit.subUnits[j]);
-          }
-        }
-      }
-    };
-    setupLessonsAndSubUnits();
-
     var refreshUnit = function(callback) {
-      console.log('unit', vm.unit._id);
       UnitsService.get({
         unitId: vm.unit._id,
         full: true
       }, function(data) {
         vm.unit = data;
-        setupLessonsAndSubUnits();
         if (callback) callback();
       });
     };
