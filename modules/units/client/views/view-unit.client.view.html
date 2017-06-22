@@ -196,10 +196,10 @@
                     <a class="btn btn-default pull-right" ng-click="vm.createNewLesson()" ng-show="vm.isAdmin">Add lesson</a>
                     Lessons
                 </h3><br/>
-                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 0) && !vm.isAdmin">
+                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 1) && !vm.isAdmin">
                     Whoops, this unit doesn't have any lessons yet! Check back for updates.
                 </div>
-                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 0) && vm.isAdmin">
+                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 1) && vm.isAdmin">
                     This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
                 <table class="table table-hover table-responsive" ng-show="vm.lessons.length > 0">

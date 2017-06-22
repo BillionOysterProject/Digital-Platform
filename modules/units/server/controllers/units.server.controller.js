@@ -35,6 +35,23 @@ var validateUnit = function(unit, successCallback, errorCallback) {
   }
 };
 
+var checkRole = function(user, role) {
+  var roleIndex = _.findIndex(user.roles, function(o) {
+    return o === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
+var onlyShowStatus = function(array, status) {
+  var hidden = [];
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].status === status) {
+      hidden.push(array[i]);
+    }
+  }
+  return hidden;
+};
+
 var addUnitToUnits = function(unit, callback) {
   async.forEach(unit.parentUnits, function(parent, unitCallback) {
     Unit.findOne({ _id: parent }).exec(function(err, unitObj) {
@@ -278,6 +295,13 @@ exports.list = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      for (var i = 0; i < units.length; i++) {
+        if (!checkRole(req.user, 'admin')) {
+          units[i].lessons = onlyShowStatus(units[i].lessons, 'published');
+          units[i].parentUnits = onlyShowStatus(units[i].parentUnits, 'published');
+          units[i].subUnits = onlyShowStatus(units[i].subUnits, 'published');
+        }
+      }
       res.json(units);
     }
   });
@@ -343,6 +367,12 @@ exports.unitByID = function (req, res, next, id) {
     }
     if(req.query.full) {
       var unitJSON = unit ? unit.toJSON() : {};
+      if (!checkRole(req.user, 'admin')) {
+        unitJSON.lessons = onlyShowStatus(unitJSON.lessons, 'published');
+        unitJSON.parentUnits = onlyShowStatus(unitJSON.parentUnits, 'published');
+        unitJSON.subUnits = onlyShowStatus(unitJSON.subUnits, 'published');
+      }
+
       async.forEach(unitJSON.lessons, function(lesson, lessonCallback) {
         LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err2, teamLeads) {
           lesson.stats = {
@@ -350,7 +380,6 @@ exports.unitByID = function (req, res, next, id) {
           };
           SubjectArea.populate(lesson, { path: 'lessonOverview.subjectAreas' }, function(err, output) {
             User.populate(lesson, { path: 'user', select: 'profileImageURL displayName' }, function(err, output) {
-              console.log('output', output);
               lessonCallback();
             });
           });
