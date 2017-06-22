@@ -5,6 +5,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit sub unit sequence</h4>
+                <p>Drag and drop the rows to change the order of the sub units in this unit. Unpublished sub units will not show and their number will be skipped in the published unit's list of sub units.</p>
             </div>
             <div class="modal-body dnd">
                 <div class="row">
@@ -16,12 +17,14 @@
                           dnd-effect-allowed="move"
                           dnd-selected="selected = sub"
                           ng-class="{'selected': selected === sub}">
-                          <div class="col-md-5">
+                          <div class="col-md-4">
                             <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
                           </div>
                           <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
                           <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
-                          <div class="col-md-1">{{sub.status | capitalize}}</div>
+                          <div class="col-md-2 text-right">
+                              <span class="label label-default">{{sub.status | capitalize}}</span>
+                          </div>
                         </li>
                       </ul>
                   </div>
