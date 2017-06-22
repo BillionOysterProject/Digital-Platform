@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Edit lesson sequence</h4>
-                <p>Drag and drop the rows to change the order of the lessons in this unit.</p>
+                <p>Drag and drop the rows to change the order of the lessons in this unit. Unpublished lessons will not show and their number will be skipped in the published unit's list of lessons.</p>
             </div>
             <div class="modal-body dnd">
                 <div class="row">
@@ -17,7 +17,7 @@
                         dnd-effect-allowed="move"
                         dnd-selected="selected = lesson"
                         ng-class="{'selected': selected === lesson}">
-                            <div class="col-md-2"><h4>{{lesson.title}}</h4></div>
+                            <div class="col-md-3"><h4>{{lesson.title}}</h4></div>
                             <div class="col-md-2">
                               <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
                               {{lesson.user.displayName}}
@@ -37,10 +37,12 @@
                               <a uib-popover-html="lesson.lessonObjectives | sanitize"
                                 popover-title="Objectives" popover-trigger="mouseenter" popover-placement="top">Objectives</a>
                             </div>
-                            <div class="col-md-1">
+                            <!--<div class="col-md-1">
                               <span ng-show="lesson.stats.teamLeadCount > 0"><i class="fa fa-check"></i> Taught by <b>{{lesson.stats.teamLeadCount}}</b> teachers</span>
+                            </div>-->
+                            <div class="col-md-2 text-right">
+                                <span class="label label-default">{{lesson.status | capitalize}}</span>
                             </div>
-                            <div class="col-md-1">{{lesson.status | capitalize}}</div>
                         </li>
                     </ul>
                   </div>
