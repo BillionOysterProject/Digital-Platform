@@ -296,9 +296,9 @@ exports.list = function (req, res) {
       });
     } else {
       for (var i = 0; i < units.length; i++) {
+        units[i].parentUnits = onlyShowStatus(units[i].parentUnits, 'published');
         if (!checkRole(req.user, 'admin')) {
           units[i].lessons = onlyShowStatus(units[i].lessons, 'published');
-          units[i].parentUnits = onlyShowStatus(units[i].parentUnits, 'published');
           units[i].subUnits = onlyShowStatus(units[i].subUnits, 'published');
         }
       }
@@ -367,9 +367,9 @@ exports.unitByID = function (req, res, next, id) {
     }
     if(req.query.full) {
       var unitJSON = unit ? unit.toJSON() : {};
+      unitJSON.parentUnits = onlyShowStatus(unitJSON.parentUnits, 'published');
       if (!checkRole(req.user, 'admin')) {
         unitJSON.lessons = onlyShowStatus(unitJSON.lessons, 'published');
-        unitJSON.parentUnits = onlyShowStatus(unitJSON.parentUnits, 'published');
         unitJSON.subUnits = onlyShowStatus(unitJSON.subUnits, 'published');
       }
 
