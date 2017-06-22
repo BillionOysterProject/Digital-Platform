@@ -15,10 +15,10 @@
                       {{vm.unit.subUnits.length}} Sub Units
                     </h6>
                 </div>
-                <div class="col-md-8 col-sm-6" ng-show="vm.parentUnits.length > 0">
+                <div class="col-md-8 col-sm-6" ng-show="vm.unit.parentUnits.length > 0">
                     <br/><br/><br/>
                     <h4 class="white">Sub unit of <br/>
-                        <span ng-repeat="parent in vm.parentUnits">
+                        <span ng-repeat="parent in vm.unit.parentUnits">
                           <b class="h3"><a ui-sref="units.view({ unitId: parent._id })" class="white">{{parent.title}}</a></b>
                           <span ng-show="!$last"> and</span>
                         </span>
@@ -192,18 +192,18 @@
 
             <div class="col-sm-8">
                 <h3><!--TODO: Only show buttons to admin -->
-                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceLessons()" ng-show="vm.lessons.length > 0 && vm.isAdmin">Edit sequence</a>
+                    <a class="btn btn-default pull-right" ng-click="vm.openSequenceLessons()" ng-show="vm.unit.lessons.length > 0 && vm.isAdmin">Edit sequence</a>
                     <a class="btn btn-default pull-right" ng-click="vm.createNewLesson()" ng-show="vm.isAdmin">Add lesson</a>
                     Lessons
                 </h3><br/>
-                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 1) && !vm.isAdmin">
+                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && !vm.isAdmin">
                     Whoops, this unit doesn't have any lessons yet! Check back for updates.
                 </div>
-                <div class="alert alert-info" ng-show="(!vm.lessons || vm.lessons.length < 1) && vm.isAdmin">
+                <div class="alert alert-info" ng-show="(!vm.unit.lessons || vm.unit.lessons.length < 1) && vm.isAdmin">
                     This unit doesn't have any lessons yet! You can add lessons to this unit either by editing existing lessons, or by creating new lessons above.
                 </div>
-                <table class="table table-hover table-responsive" ng-show="vm.lessons.length > 0">
-                    <tr ng-repeat="lesson in vm.lessons">
+                <table class="table table-hover table-responsive" ng-show="vm.unit.lessons.length > 0">
+                    <tr ng-repeat="lesson in vm.unit.lessons">
                       <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td ui-sref="lessons.view({ lessonId: lesson._id })"><h4>{{lesson.title}}</h4></td>
                       <td ui-sref="lessons.view({ lessonId: lesson._id })">
@@ -243,13 +243,13 @@
                     </tr>
                 </table>
 
-                <h3 ng-show="vm.subUnits && vm.subUnits.length > 0">
+                <h3 ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
                     <a class="btn btn-default pull-right" ng-click="vm.openSequenceSubUnits()" ng-show="vm.isAdmin">Edit sequence</a>
                     <a class="btn btn-default pull-right" ng-show="vm.isAdmin" ng-click="vm.createNewSubUnit()">Add sub unit</a> <!--TODO: wire up to go to new unit form with parent unit prepopulated with this unit?-->
                     Sub Units
                 </h3><br/>
-                <table class="table table-hover table-responsive" ng-show="vm.subUnits && vm.subUnits.length > 0">
-                    <tr ng-repeat="sub in vm.subUnits" ui-sref="units.view({ unitId: sub._id })">
+                <table class="table table-hover table-responsive" ng-show="vm.unit.subUnits && vm.unit.subUnits.length > 0">
+                    <tr ng-repeat="sub in vm.unit.subUnits" ui-sref="units.view({ unitId: sub._id })">
                       <td><h4 class="blue"><b>{{($index+1)}}</b></h4></td>
                       <td>
                         <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
