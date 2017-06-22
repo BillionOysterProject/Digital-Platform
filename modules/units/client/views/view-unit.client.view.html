@@ -50,11 +50,11 @@
         </nav>
 
         <div class="row">
-            <div class="col-md-4">
-                <h3>Highlights</h3>
+            <div class="col-md-4" ng-show="vm.unit.highlights || vm.unit.rationale">
+                <h3 ng-show="vm.unit.highlights">Highlights</h3>
                 <div ng-bind-html="vm.unit.highlights | sanitize"></div>
 
-                <h3>Rationale</h3>
+                <h3 ng-show="vm.unit.rationale">Rationale</h3>
                 <div ng-bind-html="vm.unit.rationale | sanitize"></div>
 
                 <hr ng-show="(vm.unit.standards.nycsssUnits && vm.unit.standards.nycsssUnits.length > 0) ||
@@ -192,7 +192,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-8">
+            <div class="{{vm.unit.highlights || vm.unit.rationale ? 'col-sm-8' : 'col-sm-12' }}">
                 <div class="row">
                     <hr ng-show="vm.isAdmin" />
                     <h3 class="col-xs-6">Lessons</h3>

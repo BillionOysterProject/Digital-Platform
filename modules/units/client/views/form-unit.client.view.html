@@ -10,7 +10,7 @@
                             <h6 class="navbar-text" ng-show="vm.unit.status === 'draft'">Draft</h6>
                             <h6 class="navbar-text" ng-show="vm.unit.status === 'published'">Published</h6>
                         </div>
-                        <h1>{{vm.editing ? 'Edit unit' : 'Create new unit'}}</h1>
+                        <h1>{{vm.unit.status === 'published' ? 'Edit unit' : 'Create new unit' }}</h1>
                     </div>
 
                     <!-- Unit -->
@@ -141,7 +141,7 @@
                     </div>
                     <div class="alert alert-danger" ng-show="(vm.form.unitForm.$dirty || vm.form.unitForm.$submitted) &&
                     (vm.form.unitForm.$invalid || !vm.valid) && (vm.form.unitForm.$error || vm.error.length > 0)">
-                        <h4>Sorry, you can't submit just yet!</h4>
+                        <h4>Sorry, you can't publish just yet!</h4>
                         <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.unitForm.$error track by $index">
                             <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
                         </ul>
@@ -149,12 +149,21 @@
                           <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
                         </ul>
                     </div>
-                    <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
-                    <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-                    <a href="#" class="btn btn-default" type="button" ng-click="vm.save(vm.form.unitForm.$valid, true)">Save draft</a>
-                    <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
-                      {{vm.editing ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
-                    <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'draft'">Draft</h6>
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'published'">Published</h6>
+                            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-default" type="button" ng-click="vm.save(vm.form.unitForm.$valid, true)">{{vm.unit.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+                    
+                    <button class="btn {{vm.unit.status === 'published' ? 'btn-primary' : 'btn-success' }}" type="submit" ng-disabled="!vm.valid && !vm.saving">{{vm.unit.status === 'published' ? 'Update unit' : 'Publish unit' }}</button>
+                    
+                    <button class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</button>
+                    <hr/>
                 </div>
             </fieldset>
         </form>
