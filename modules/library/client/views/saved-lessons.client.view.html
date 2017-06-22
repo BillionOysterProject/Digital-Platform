@@ -2,11 +2,11 @@
     <div ng-repeat="saved in sv.savedLessons track by saved._id" isotope-item="isotope-item-saved"
     class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
         <div class="panel" ui-sref="lessons.view({ lessonId: saved._id })">
-            <div class="panel-heading" style="background: {{saved.unit.color}}">
+            <div class="panel-heading" ng-repeat="unit in saved.units" style="background: {{unit.color}}">
                 <span class="pull-right" ng-show="saved.lessonOverview.grade">{{saved.lessonOverview.grade}}</span>
-                <h3 class="panel-title" ng-show="saved.unit">
-                    <i class="{{saved.unit.icon}}"></i>
-                    {{saved.unit.title}}
+                <h3 class="panel-title" ng-show="unit">
+                    <i class="{{unit.icon}}"></i>
+                    {{unit.title}}
                 </h3>
             </div>
             <div class="panel-body">

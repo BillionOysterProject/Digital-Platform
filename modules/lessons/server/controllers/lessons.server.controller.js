@@ -43,19 +43,15 @@ var validateLesson = function(lesson, successCallback, errorCallback) {
 };
 
 var addLessonToUnits = function(lesson, callback) {
-  console.log('lesson.units', lesson.units);
   async.forEach(lesson.units, function(unit, unitCallback) {
-    console.log('unit', unit);
     Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
       if (err) {
         unitCallback();
       } else if (unitObj) {
-        console.log('unitObj.lessons', unitObj.lessons);
         var index = _.findIndex(unitObj.lessons, function(l) {
           return l === lesson._id;
         });
         if (index === -1) {
-          console.log('add lesson to unit');
           unitObj.lessons.push(lesson);
           unitObj.save(function(err) {
             unitCallback();
@@ -73,13 +69,11 @@ var addLessonToUnits = function(lesson, callback) {
 };
 
 var removeLessonFromUnits = function(lesson, callback) {
-  console.log('lesson.units', lesson.units);
   async.forEach(lesson.units, function(unit, unitCallback) {
     Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
       if (err) {
         unitCallback();
       } else if (unitObj) {
-        console.log('unitObj.lessons', unitObj.lessons);
         var index = _.findIndex(unitObj.lessons, function(l) {
           return l === lesson._id;
         });
@@ -533,7 +527,8 @@ exports.listFavorites = function(req, res) {
         lessonIds.push(savedLessons[i].lesson);
       }
       Lesson.find({ _id: { $in: lessonIds } }).populate('user', 'displayName email team profileImageURL')
-      .populate('unit', 'title color icon').populate('lessonOverview.subjectAreas', 'subject color')
+      .populate('unit', 'title color icon').populate('units', 'title color icon')
+      .populate('lessonOverview.subjectAreas', 'subject color')
       .exec(function(err, lessons) {
         if (err) {
           return res.status(400).send({
@@ -1034,7 +1029,8 @@ exports.list = function(req, res) {
     }
   }
 
-  query.populate('user', 'displayName email team profileImageURL').populate('unit', 'title color icon')
+  query.populate('user', 'displayName email team profileImageURL')
+  .populate('unit', 'title color icon').populate('units', 'title color icon')
   .populate('lessonOverview.subjectAreas', 'subject color').exec(function(err, lessons) {
     if (err) {
       console.log(err);
@@ -1346,14 +1342,20 @@ exports.lessonByID = function(req, res, next, id) {
   }
 
   var query = Lesson.findById(id).populate('user', 'firstName displayName email profileImageURL username')
-  .populate('unit', 'title color icon');
+  .populate('unit', 'title color icon').populate('units', 'title color icon');
 
   if (req.query.full) {
-    query.populate('standards.cclsElaScienceTechnicalSubjects').populate('standards.cclsMathematics')
-    .populate('standards.ngssCrossCuttingConcepts').populate('standards.ngssDisciplinaryCoreIdeas')
-    .populate('standards.ngssScienceEngineeringPractices').populate('standards.nycsssUnits')
-    .populate('standards.nysssKeyIdeas').populate('standards.nysssMajorUnderstandings').populate('standards.nysssMst')
-    .populate('materialsResources.vocabulary').populate('lessonOverview.subjectAreas');
+    query.populate('standards.cclsElaScienceTechnicalSubjects')
+    .populate('standards.cclsMathematics')
+    .populate('standards.ngssCrossCuttingConcepts')
+    .populate('standards.ngssDisciplinaryCoreIdeas')
+    .populate('standards.ngssScienceEngineeringPractices')
+    .populate('standards.nycsssUnits')
+    .populate('standards.nysssKeyIdeas')
+    .populate('standards.nysssMajorUnderstandings')
+    .populate('standards.nysssMst')
+    .populate('materialsResources.vocabulary')
+    .populate('lessonOverview.subjectAreas');
   }
 
   query.exec(function(err, lesson) {

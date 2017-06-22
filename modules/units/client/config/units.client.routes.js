@@ -69,7 +69,7 @@
         controller: 'UnitsController',
         controllerAs: 'vm',
         resolve: {
-          unitResolve: getUnit
+          unitResolve: getUnitFull
         },
         data:{
           roles: ['admin', 'team lead', 'team lead pending', 'partner'],
@@ -81,6 +81,14 @@
   getUnit.$inject = ['$stateParams', 'UnitsService'];
 
   function getUnit($stateParams, UnitsService) {
+    return UnitsService.get({
+      unitId: $stateParams.unitId
+    }).$promise;
+  }
+
+  getUnitFull.$inject = ['$stateParams', 'UnitsService'];
+
+  function getUnitFull($stateParams, UnitsService) {
     return UnitsService.get({
       unitId: $stateParams.unitId,
       full: true
