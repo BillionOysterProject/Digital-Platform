@@ -23,7 +23,10 @@
                           <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
                           <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
                           <div class="col-md-2 text-right">
-                              <span class="label label-default">{{sub.status | capitalize}}</span>
+                            <span class="label"
+                              ng-class="{'label-success': sub.status === 'published','label-default': sub.status === 'draft'}">
+                              {{sub.status | capitalize}}
+                            </span>
                           </div>
                         </li>
                       </ul>
