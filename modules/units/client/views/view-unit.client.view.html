@@ -41,6 +41,8 @@
 <section class="content">
     <section class="container">
         <nav class="nav nav-default text-right">
+            <h6 ng-show="vm.unit.status === 'draft' && vm.isAdmin">Draft</h6>
+            <h6 ng-show="vm.unit.status === 'published' && vm.isAdmin">Published</h6>
             <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })" ng-show="vm.isAdmin">Edit</a>
             <a class="btn btn-default" ng-click="vm.openUnitFeedback()" ng-hide="vm.unit.isCurrentUserOwner">Send feedback</a>
             <!-- TODO: Wire up download
@@ -191,7 +193,8 @@
             </div>
 
             <div class="col-sm-8">
-                <div class="row"><hr/>
+                <div class="row">
+                    <hr ng-show="vm.isAdmin" />
                     <h3 class="col-xs-6">Lessons</h3>
                     <div class="col-xs-6 text-right">
                         <a class="btn btn-default" ng-click="vm.openSequenceLessons()" ng-show="vm.lessons.length > 0 && vm.isAdmin">Edit sequence</a>
