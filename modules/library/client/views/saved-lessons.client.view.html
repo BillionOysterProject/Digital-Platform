@@ -2,16 +2,19 @@
     <div ng-repeat="saved in sv.savedLessons track by saved._id" isotope-item="isotope-item-saved"
     class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item">
         <div class="panel" ui-sref="lessons.view({ lessonId: saved._id })">
-            <div class="panel-heading" ng-repeat="unit in saved.units" style="background: {{unit.color}}">
-                <span class="pull-right" ng-show="saved.lessonOverview.grade">{{saved.lessonOverview.grade}}</span>
-                <h3 class="panel-title" ng-show="unit">
+            <div class="panel-heading" style="background: #fcfcfc; border-bottom-color: #ddd;">
+                <p class="panel-title" style="color: {{unit.color}}" ng-repeat="unit in saved.units" ng-show="unit">
                     <i class="{{unit.icon}}"></i>
-                    {{unit.title}}
-                </h3>
+                    <b>{{unit.title}}</b>
+                </p>
             </div>
             <div class="panel-body">
-                <small ng-show="saved.lessonOverview.setting">{{saved.lessonOverview.setting}}</small>
                 <h4><b>{{saved.title}}</b></h4>
+                <p class="text-muted">
+                    <small ng-show="saved.lessonOverview.setting"><b>{{saved.lessonOverview.setting}}</b> setting</small>
+                    <small ng-show="saved.lessonOverview.setting && saved.lessonOverview.grade" class="gray">&nbsp;&nbsp;|&nbsp;&nbsp;</small>
+                    <small ng-show="saved.lessonOverview.grade"><b>{{saved.lessonOverview.grade}}</b> grade</small>
+                </p>
                 <p ng-bind-html="saved.lessonOverview.lessonSummary | sanitize | limitTo:200"></p>
                 <img ng-show="saved.featuredImage" ng-src="{{saved.featuredImage.path}}" class="img-responsive" />
             </div>

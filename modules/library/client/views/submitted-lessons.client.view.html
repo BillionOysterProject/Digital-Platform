@@ -11,16 +11,19 @@
                 <i class="glyphicon glyphicon-ok"></i></a>
         </div>
         <div class="panel" ui-sref="lessons.view({ lessonId: submitted._id })">
-            <div class="panel-heading" ng-repeat="unit in submitted.units" style="background: {{unit.color}}">
-                <span class="pull-right" ng-show="submitted.lessonOverview.grade">{{submitted.lessonOverview.grade}}</span>
-                <h3 class="panel-title" ng-show="unit">
+            <div class="panel-heading" style="background: #fcfcfc; border-bottom-color: #ddd;">
+                <p class="panel-title" style="color: {{unit.color}}" ng-repeat="unit in submitted.units" ng-show="unit">
                     <i class="{{unit.icon}}"></i>
-                    {{unit.title}}
-                </h3>
+                    <b>{{unit.title}}</b>
+                </p>
             </div>
             <div class="panel-body">
-                <small ng-show="submitted.lessonOverview.setting">{{submitted.lessonOverview.setting}}</small>
                 <h4><b>{{submitted.title}}</b></h4>
+                <p class="text-muted">
+                    <small ng-show="submitted.lessonOverview.setting"><b>{{submitted.lessonOverview.setting}}</b> setting</small>
+                    <small ng-show="submitted.lessonOverview.setting && submitted.lessonOverview.grade" class="gray">&nbsp;&nbsp;|&nbsp;&nbsp;</small>
+                    <small ng-show="submitted.lessonOverview.grade"><b>{{submitted.lessonOverview.grade}}</b> grade</small>
+                </p>
                 <p ng-bind-html="submitted.lessonOverview.lessonSummary | sanitize | limitTo:200 "></p>
                 <img ng-show="submitted.featuredImage" ng-src="{{submitted.featuredImage.path}}" class="img-responsive" />
             </div>

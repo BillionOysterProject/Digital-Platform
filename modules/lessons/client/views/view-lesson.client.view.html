@@ -51,15 +51,15 @@
       vm.lesson.lessonOverview.setting || (vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0)"/>
 
     <div class="row">
-      <div class="col-sm-6" ng-show="vm.lesson.unit">
-        <h4>
-          <b>Unit:</b>
-          <!--TODO<a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">-->{{vm.lesson.unit.title}}<!--</a>-->
+      <div class="col-sm-3" ng-show="vm.lesson.unit">
+        <b>{{vm.lesson.units.length > 1 ? 'Units' : 'Unit' }}</b> <!-- If more than one unit, text should be "Units" -->
+        <h4 style="color: {{vm.lesson.unit.color}}" ng-repeat="unit in vm.lesson.units">
+            <!-- <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })"> -->
+                <i class="{{vm.lesson.unit.icon}}"></i>
+                <b>{{vm.lesson.unit.title}}</b>
+            <!-- </a> -->
         </h4>
       </div>
-    </div>
-
-    <div class="row">
       <div class="col-sm-2" ng-show="vm.lesson.lessonOverview.grade">
         <b>Grade</b>
         <p ng-bind="vm.lesson.lessonOverview.grade"></p>
@@ -72,7 +72,7 @@
         <b>Setting</b>
         <p ng-bind="vm.lesson.lessonOverview.setting"></p>
       </div>
-      <div class="col-sm-6" ng-show="vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0">
+      <div class="col-sm-3" ng-show="vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0">
         <b>Subject Areas</b>
         <ul class="list-inline">
           <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
