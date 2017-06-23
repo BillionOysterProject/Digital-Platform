@@ -133,23 +133,6 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group" id="vocabulary">
-                    <label for="vocabulary" class="control-label">Vocabulary</label>
-                    <div class="input-group">
-                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary-select" id="vocabulary-select"
-                      ng-model="vm.lesson.materialsResources.vocabulary" class="form-control col-md-10"></div>
-                      <div class="input-group-btn">
-                        <a class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- <select-tags outer-column="col-md-12" name="vocabulary" id="vocabulary"
-                  in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
-                  label-class="control-label" select-config="vm.vocabularySelectConfig"></select-tags> -->
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
                   <div class="form-group">
                     <label for="handouts" class="control-label">Handouts</label>
                     <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"
@@ -157,8 +140,9 @@
                   </div>
                 </div>
                 <div class="col-md-6">
+                    <hr/>
                     <div class="form-group">
-                        <label for="vocabulary" class="control-label">Lesson Resources</label>
+                        <label for="vocabulary" class="control-label">Teacher Resources</label>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
                     </div>
                     <table class="table">
@@ -173,12 +157,13 @@
                         <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                         <td></td>
                         <td id="lesson-teach-resource-files">
-                          <a ng-click="vm.deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i>
+                            <a ng-click="vm.deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr>
                     </table>
                 </div>
               </div>
+              <hr/>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
@@ -187,6 +172,21 @@
                     <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
                     id="lesson-state-test-questions-files"></multiple-file-drop-zone>
                   </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group" id="vocabulary">
+                    <label for="vocabulary" class="control-label">Vocabulary</label>
+                    <div class="input-group">
+                      <div aa-select2="vm.vocabularySelectConfig" name="vocabulary-select" id="vocabulary-select"
+                      ng-model="vm.lesson.materialsResources.vocabulary" class="form-control col-md-10"></div>
+                      <div class="input-group-btn">
+                        <a class="btn btn-default" type="button" title="Add term" ng-click="vm.openAdd()"><i class="glyphicon glyphicon-plus"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <select-tags outer-column="col-md-12" name="vocabulary" id="vocabulary"
+                  in-title="Vocabulary" ng-model="vm.lesson.materialsResources.vocabulary"
+                  label-class="control-label" select-config="vm.vocabularySelectConfig"></select-tags> -->
                 </div>
               </div>
             </div>
