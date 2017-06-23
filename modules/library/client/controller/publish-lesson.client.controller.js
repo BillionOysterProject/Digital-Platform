@@ -17,7 +17,7 @@
       $http.post('api/lessons/'+$scope.lesson._id+'/publish', {})
       .success(function(data, status, headers, config) {
         $scope.form.publishLessonForm.$setPristine();
-        $scope.saveFunction(true);
+        $scope.closeFunction(true);
       })
       .error(function(data, status, headers, config) {
         $scope.error = data.message;
@@ -26,7 +26,7 @@
 
     $scope.cancel = function() {
       $scope.form.publishLessonForm.$setPristine();
-      $scope.cancelFunction();
+      $scope.closeFunction();
     };
   }
 })();

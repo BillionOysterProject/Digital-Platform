@@ -8,7 +8,11 @@ var path = require('path'),
   Unit = mongoose.model('Unit'),
   UnitActivity = mongoose.model('UnitActivity'),
   Lesson = mongoose.model('Lesson'),
+  LessonTracker = mongoose.model('LessonTracker'),
+  User = mongoose.model('User'),
+  SubjectArea = mongoose.model('MetaSubjectArea'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  async = require('async'),
   _ = require('lodash');
 
 var validateUnit = function(unit, successCallback, errorCallback) {
@@ -24,18 +28,80 @@ var validateUnit = function(unit, successCallback, errorCallback) {
     errorMessages.push('Icon is required');
   }
 
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.fieldWork) {
-    errorMessages.push('Field work is required');
-  }
-  if (!unit.stageOne || !unit.stageOne.enduringUnderstandings || !unit.stageOne.enduringUnderstandings.scienceContent) {
-    errorMessages.push('Science content is required');
-  }
-
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
   } else {
     successCallback(unit);
   }
+};
+
+var checkRole = function(user, role) {
+  var roleIndex = _.findIndex(user.roles, function(o) {
+    return o === role;
+  });
+  return (roleIndex > -1) ? true : false;
+};
+
+var onlyShowStatus = function(array, status) {
+  var hidden = [];
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].status === status) {
+      hidden.push(array[i]);
+    }
+  }
+  return hidden;
+};
+
+var addUnitToUnits = function(unit, callback) {
+  async.forEach(unit.parentUnits, function(parent, unitCallback) {
+    Unit.findOne({ _id: parent }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.subUnits, function(s) {
+          return s === unit._id;
+        });
+        if (index === -1) {
+          unitObj.subUnits.push(unit);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  }, function(err) {
+    callback();
+  });
+};
+
+var removeUnitFromUnits = function(unit, callback) {
+  async.forEach(unit.parentUnits, function(parent, unitCallback) {
+    Unit.findOne({ _id: unit }).exec(function(err, unitObj) {
+      if (err) {
+        unitCallback();
+      } else if (unitObj) {
+        var index = _.findIndex(unitObj.subUnits, function(s) {
+          return s === unit._id;
+        });
+        if (index > -1) {
+          unitObj.subUnits.splice(index, 1);
+          unitObj.save(function(err) {
+            unitCallback();
+          });
+        } else {
+          unitCallback();
+        }
+      } else {
+        unitCallback();
+      }
+    });
+  }, function(err) {
+    callback();
+  });
 };
 
 /**
@@ -46,7 +112,6 @@ exports.create = function (req, res) {
   function(unitJSON) {
     var unit = new Unit(unitJSON);
     unit.user = req.user;
-    unit.status = 'published';
 
     unit.validate(function (err) {
       if (err) {
@@ -61,7 +126,9 @@ exports.create = function (req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            res.json(unit);
+            addUnitToUnits(unit, function() {
+              res.json(unit);
+            });
           }
         });
       }
@@ -78,7 +145,8 @@ exports.create = function (req, res) {
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
-  var unit = req.unit ? req.unit.toJSON() : {};
+  // var unit = req.unit ? req.unit.toJSON() : {};
+  var unit = req.unit;
 
   unit.isCurrentUserOwner = req.user && unit.user && unit.user._id.toString() === req.user._id.toString() ? true : false;
 
@@ -102,45 +170,6 @@ exports.read = function (req, res) {
 };
 
 /**
- * Incrementally save a unit
- */
-exports.incrementalSave = function(req, res) {
-  console.log('incrementalSave');
-  var unit = req.unit;
-
-  if (unit) {
-    unit = _.extend(unit, req.body);
-    if (!req.body.initial) unit.status = 'draft';
-  } else {
-    unit = new Unit(req.body);
-    unit.user = req.user;
-    unit.status = 'draft';
-  }
-
-  unit.save(function(err) {
-    if (err) {
-      console.log('save err', err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      validateUnit(unit,
-      function(unitJSON) {
-        res.json({
-          unit: unit,
-          successful: true
-        });
-      }, function(errorMessages) {
-        res.json({
-          unit: unit,
-          errors: errorMessages
-        });
-      });
-    }
-  });
-};
-
-/**
  * Update an unit
  */
 exports.update = function(req, res) {
@@ -151,7 +180,6 @@ exports.update = function(req, res) {
       unit = _.extend(unit, unitJSON);
       if (!unit.updated) unit.updated = [];
       unit.updated.push(Date.now());
-      unit.status = 'published';
 
       unit.save(function(err) {
         if (err) {
@@ -159,7 +187,9 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          res.json(unit);
+          addUnitToUnits(unit, function() {
+            res.json(unit);
+          });
         }
       });
     } else {
@@ -175,19 +205,69 @@ exports.update = function(req, res) {
 };
 
 /**
+ * Update an unit's lessons
+ */
+exports.updateLessons = function(req, res) {
+  var unit = req.unit;
+  if (unit) {
+    unit.lessons = req.body.lessons;
+
+    unit.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Could not update unit'
+    });
+  }
+};
+
+/**
+ * Update an unit's sub units
+ */
+exports.updateSubUnits = function(req, res) {
+  var unit = req.unit;
+  if (unit) {
+    unit.subUnits = req.body.subUnits;
+
+    unit.save(function(err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
+  } else {
+    return res.status(400).send({
+      message: 'Could not update unit'
+    });
+  }
+};
+
+/**
  * Delete an unit
  */
 exports.delete = function (req, res) {
   var unit = req.unit;
 
-  unit.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(unit);
-    }
+  removeUnitFromUnits(unit, function() {
+    unit.remove(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(unit);
+      }
+    });
   });
 };
 
@@ -197,17 +277,31 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var query;
 
-  if (req.query.published) {
+  if (req.query.publishedStatus === 'published') {
     query = Unit.find({ status: 'published' });
+  } else if (req.query.publishedStatus === 'drafts') {
+    query = Unit.find({ status: 'draft' });
   } else {
     query = Unit.find();
   }
-  query.sort('title').populate('user', 'displayName').exec(function (err, units) {
+
+  query.sort('title').populate('user', 'displayName')
+  .populate('parentUnits', 'title icon color status')
+  .populate('lessons', 'title status')
+  .populate('subUnits', 'title status')
+  .exec(function (err, units) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      for (var i = 0; i < units.length; i++) {
+        units[i].parentUnits = onlyShowStatus(units[i].parentUnits, 'published');
+        if (!checkRole(req.user, 'admin')) {
+          units[i].lessons = onlyShowStatus(units[i].lessons, 'published');
+          units[i].subUnits = onlyShowStatus(units[i].subUnits, 'published');
+        }
+      }
       res.json(units);
     }
   });
@@ -245,8 +339,25 @@ exports.unitByID = function (req, res, next, id) {
     });
   }
 
-  Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username')
-  .exec(function (err, unit) {
+  var query = Unit.findById(id).populate('user', 'firstName displayName email team profileImageURL username');
+  if (req.query.full) {
+    query.populate('standards.cclsElaScienceTechnicalSubjects')
+    .populate('standards.cclsMathematics')
+    .populate('standards.ngssCrossCuttingConcepts')
+    .populate('standards.ngssDisciplinaryCoreIdeas')
+    .populate('standards.ngssScienceEngineeringPractices')
+    .populate('standards.nycsssUnits')
+    .populate('standards.nysssKeyIdeas')
+    .populate('standards.nysssMajorUnderstandings')
+    .populate('standards.nysssMst')
+    .populate('lessons', 'title lessonOverview lessonObjectives user status')
+    .populate('parentUnits', 'title color icon status')
+    .populate('subUnits', 'title lessons subUnits status');
+  } else {
+    query.populate('parentUnits', 'title');
+  }
+
+  query.exec(function (err, unit) {
     if (err) {
       return next(err);
     } else if (!unit && id !== '000000000000000000000000') {
@@ -254,7 +365,40 @@ exports.unitByID = function (req, res, next, id) {
         message: 'No unit with that identifier has been found'
       });
     }
-    req.unit = unit;
-    next();
+    if(req.query.full) {
+      var unitJSON = unit ? unit.toJSON() : {};
+      unitJSON.parentUnits = onlyShowStatus(unitJSON.parentUnits, 'published');
+      if (!checkRole(req.user, 'admin')) {
+        unitJSON.lessons = onlyShowStatus(unitJSON.lessons, 'published');
+        unitJSON.subUnits = onlyShowStatus(unitJSON.subUnits, 'published');
+      }
+
+      async.forEach(unitJSON.lessons, function(lesson, lessonCallback) {
+        LessonTracker.find({ lesson: lesson._id }).distinct('user', function(err2, teamLeads) {
+          lesson.stats = {
+            teamLeadCount: (teamLeads) ? teamLeads.length : 0
+          };
+          SubjectArea.populate(lesson, { path: 'lessonOverview.subjectAreas' }, function(err, output) {
+            User.populate(lesson, { path: 'user', select: 'profileImageURL displayName' }, function(err, output) {
+              lessonCallback();
+            });
+          });
+        });
+      }, function(lessonErr) {
+        async.forEach(unitJSON.parentUnits, function(parent, parentCallback) {
+          parentCallback();
+        }, function(parentErr) {
+          async.forEach(unitJSON.subUnits, function(child, childCallback) {
+            childCallback();
+          }, function(childErr) {
+            req.unit = unitJSON;
+            next();
+          });
+        });
+      });
+    } else {
+      req.unit = unit;
+      next();
+    }
   });
 };

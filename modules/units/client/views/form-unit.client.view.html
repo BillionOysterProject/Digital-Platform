@@ -1,32 +1,40 @@
 <section class="content shaded">
     <section class="container">
-        <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid)" novalidate>
+        <form name="vm.form.unitForm" ng-submit="vm.save(vm.form.unitForm.$valid, false)" novalidate>
             <fieldset>
                 <div class="container-fluid">
                     <div class="page-header">
                         <div class="pull-right">
-                            <!-- Show saving when saving -->
                             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
 
-                            <!-- TODO: Show status -->
                             <h6 class="navbar-text" ng-show="vm.unit.status === 'draft'">Draft</h6>
                             <h6 class="navbar-text" ng-show="vm.unit.status === 'published'">Published</h6>
                         </div>
-                        <h1>{{vm.editing ? 'Edit unit' : 'Create new unit'}}</h1>
+                        <h1>{{vm.unit.status === 'published' ? 'Edit unit' : 'Create new unit' }}</h1>
                     </div>
 
                     <!-- Unit -->
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group" show-errors>
                                         <label for="unitTitle" class="control-label required">Unit Title *</label>
                                         <input class="form-control" name="unitTitle" id="unitTitle" ng-model="vm.unit.title"
-                                        ng-blur="vm.saveOnBlur(true)" required/>
-                                        <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alrt">
+                                        required/>
+                                        <div ng-messages="vm.form.unitForm.unitTitle.$error" role="alert">
                                             <p class="help-block error-text" ng-message="required">Unit title is required.</p>
                                         </div>
+                                    </div>
+                                </div>
+                                <!--TODO: Wire up parent unit -- not required but is a multi-select-->
+                                <div class="col-md-3">
+                                    <div class="form-group" show-errors>
+                                        <label for="unitTitle" class="control-label required">Parent Unit(s)</label>
+                                        <select class="form-control" name="parentUnits" id="parentUnits" ng-model="vm.unit.parentUnits"
+                                        ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true">
+                                        </select>
+                                        <span class="help-block"><a ng-click="vm.removeAllParentUnits()"><i class="fa fa-times"></i> Remove all</a></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -34,7 +42,6 @@
                                         <label for="color" class="control-label required">Color *</label>
                                         <input colorpicker colorpicker-size="200" type="text" class="form-control"
                                         placeholder="#426ca9" name="color" id="color" ng-model="vm.unit.color" required />
-                                        <span class="help-block">Hint: Pick a dark color so it can be used as a background for white text</span>
                                         <div ng-messages="vm.form.unitForm.color.$error" role="alrt">
                                             <p class="help-block error-text" ng-message="required">Color is required.</p>
                                         </div>
@@ -60,161 +67,82 @@
                         </div>
                     </div>
 
-                    <!-- Stage 1: Desired Results -->
-                    <h3>Stage 1: Desired Results</h3>
+                    <!-- Highlights -->
+                    <h4>Highlights</h4>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h4>Enduring Understandings</h4>
-                            <p>The concepts and skills students will understand and be able to use several years into the future.</p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" show-errors>
-                                        <label for="fieldWork" class="control-label required">Field Work *</label>
-                                        <input type="text" class="form-control" name="fieldWork" id="fieldWork" ng-model="vm.unit.stageOne.enduringUnderstandings.fieldWork" required/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" show-errors>
-                                        <label form="scienceContentEU" class="control-label required">Science Content *</label>
-                                        <input type="text" class="form-control" name="scienceContentEU" id="scienceContentEU" ng-model="vm.unit.stageOne.enduringUnderstandings.scienceContent" required/>
-                                    </div>
-                                </div>
-                            </div>
+                          <div class="row">
+                            <wysiwyg-editor outer-column="col-md-12" name="highlights" in-title=""
+                            ng-model="vm.unit.highlights" label-class="control-label"></wysiwyg-editor>
+                          </div>
                         </div>
                     </div>
+
+                    <!-- Rationale -->
+                    <h4>Rationale</h4>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h4>Essential Questions</h4>
-                            <p>Open-ended question(s) that stimulate thought and inquiry linked to the content of the enduring understanding.</p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group" show-errors>
-                                        <label for="essentialQuestion1" class="control-label">Question 1</label>
-                                        <input type="text" class="form-control" name="essentialQuestion1" id="essentialQuestion1" ng-model="vm.unit.stageOne.essentialQuestions[0]">
-                                    </div>
-                                    <div class="form-group" show-errors>
-                                        <label for="essentialQuestion2" class="control-label">Question 2</label>
-                                        <input type="text" class="form-control" name="essentialQuestion2" id="essentialQuestion2" ng-model="vm.unit.stageOne.essentialQuestions[1]">
-                                    </div>
-                                    <div class="form-group" show-errors>
-                                        <label for="essetialQuestion3" class="control-label">Question 3</label>
-                                        <input type="text" class="form-control" name="essentialQuestion3" id="essentialQuestion3" ng-model="vm.unit.stageOne.essentialQuestions[2]">
-                                    </div>
-                                </div>
-                            </div>
+                          <div class="row">
+                            <wysiwyg-editor outer-column="col-md-12" name="rationale" in-title=""
+                            ng-model="vm.unit.rationale" label-class="control-label"></wysiwyg-editor>
+                          </div>
                         </div>
                     </div>
+
+                    <!-- Standards -->
+                    <h4>Standards</h4>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h4>Acquisition</h4>
-                            <p>What knowledge and skills will students acquire?</p>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <ul class="nav nav-tabs nav-justified" role="tablist">
-                                        <li role="presentation" class="active"><a href="#science-cs" data-toggle="tab" aria-controls="science-cs" role="tab">Science Content/Skills</a></li>
-                                        <li role="presentation"><a href="#math-cs" data-toggle="tab" aria-controls="math-cs" role="tab">Math Content/Skills</a></li>
-                                        <li role="presentation"><a href="#field-cs" data-toggle="tab" aria-controls="field-cs" role="tab">Field Content/Skills</a></li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="science-cs">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceContent" ng-model="vm.unit.stageOne.acquisition.content.science" label-class="control-label"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="math-cs">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathContent" ng-model="vm.unit.stageOne.acquisition.content.math"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="field-cs">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldContent" ng-model="vm.unit.stageOne.acquisition.content.field"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>How will students acquire knowledge and skills?</p>
-                            <div class="row"><!--TODO: Make these fields save as WYSIWYGs-->
-                                <div class="col-lg-12">
-                                    <ul class="nav nav-tabs nav-justified" role="tablist">
-                                        <li role="presentation" class="active"><a href="#science-l" data-toggle="tab" aria-controls="science-l" role="tab">Science Lessons</a></li>
-                                        <li role="presentation"><a href="#math-l" data-toggle="tab" aria-controls="math-l" role="tab">Math Lessons</a></li>
-                                        <li role="presentation"><a href="#field-l" data-toggle="tab" aria-controls="field-l" role="tab">Field Lessons</a></li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="science-l">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceLessons" ng-model="vm.unit.stageOne.acquisition.lessons.science" label-class="control-label"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="math-l">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="mathLessons" ng-model="vm.unit.stageOne.acquisition.lessons.math"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="field-l">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="fieldLessons" ng-model="vm.unit.stageOne.acquisition.lessons.field"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Stage 2: Evidence -->
-                    <h3>Stage 2: Evidence</h3>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="row">
-                                <select-tags outer-column="col-md-12" name="numberExpectation"
-                                in-title="Performance Expectation" ng-model="vm.unit.stageTwo.evidence.expectations"
-                                label-class="control-label" select-config="vm.numberExpectationsSelectConfig"></select-tags>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="nav nav-tabs nav-justified" role="tablist">
-                                        <li role="presentation" class="active"><a href="#scieng" data-toggle="tab" aria-controls="scieng" role="tab">Science and Engineering</a></li>
-                                        <li role="presentation"><a href="#disciplinary" data-toggle="tab" aria-controls="disciplinary" role="tab">Disciplinary Core Ideas</a></li>
-                                        <li role="presentation"><a href="#crosscutting" data-toggle="tab" aria-controls="crosscutting" role="tab">Cross-Cutting Concepts</a></li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="scieng">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="scienceAndEngineering" ng-model="vm.unit.stageTwo.evidence.scienceAndEngineering"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="disciplinary">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="disciplinaryCoreIdeas" ng-model="vm.unit.stageTwo.evidence.disciplinaryCoreIdeas"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="crosscutting">
-                                            <div class="row">
-                                                <wysiwyg-editor outer-column="col-md-12 form-group" name="crossCuttingConcepts" ng-model="vm.unit.stageTwo.evidence.crossCuttingConcepts"></wysiwyg-editor>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <h4>Assessment Evidence</h4>
-                            <p>How will students show their learning?</p>
-                            <div class="row">
-                                <select-tags outer-column="col-md-12" name="researchProject" in-title="Research Project"
-                                ng-model="vm.unit.stageTwo.assessmentEvidence.researchProjects"
-                                label-class="control-label" select-config="vm.researchProjectsSelectConfig"></select-tags>
-                                <wysiwyg-editor outer-column="col-md-12 form-group" name="extentions" in-title="Extensions" ng-model="vm.unit.stageTwo.assessmentEvidence.extentions"></wysiwyg-editor>
-                            </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="nycsssUnits" id="nycsssUnits"
+                            in-title="NYC Science Scope &amp; Sequence - Units" ng-model="vm.unit.standards.nycsssUnits"
+                            label-class="control-label" select-config="vm.nycsssUnitsSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="nysssKeyIdeas" id="nysssKeyIdeas"
+                            in-title="NYS Science Standards - Key Ideas" ng-model="vm.unit.standards.nysssKeyIdeas"
+                            label-class="control-label" select-config="vm.nysssKeyIdeasSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="nysssMajorUnderstandings" id="nysssMajorUnderstandings"
+                            in-title="NYS Science Standards - Major Understandings" ng-model="vm.unit.standards.nysssMajorUnderstandings"
+                            label-class="control-label" select-config="vm.nysssMajorUnderstandingsSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="nysssMst" id="nysssMst"
+                            in-title="NYS Science Standards - MST" ng-model="vm.unit.standards.nysssMst"
+                            label-class="control-label" select-config="vm.nysssMstSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="ngssDisciplinaryCoreIdeas" id="ngssDisciplinaryCoreIdeas"
+                            in-title="NGSS - Disciplinary Core Ideas" ng-model="vm.unit.standards.ngssDisciplinaryCoreIdeas"
+                            label-class="control-label" select-config="vm.ngssDisciplinaryCoreIdeasSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="ngssScienceEngineeringPractices" id="ngssScienceEngineeringPractices"
+                            in-title="NGSS - Science and Engineering Practices" ng-model="vm.unit.standards.ngssScienceEngineeringPractices"
+                            label-class="control-label" select-config="vm.ngssScienceEngineeringPracticesSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="ngssCrossCuttingConcepts" id="ngssCrossCuttingConcepts"
+                            in-title="NGSS - Cross-Cutting Concepts" ng-model="vm.unit.standards.ngssCrossCuttingConcepts"
+                            label-class="control-label" select-config="vm.ngssCrossCuttingConceptsSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="cclsMathematics" id="cclsMathematics"
+                            in-title="CCLS - Mathematics" ng-model="vm.unit.standards.cclsMathematics"
+                            label-class="control-label" select-config="vm.cclsMathematicsSelectConfig"></select-tags>
+                          </div>
+                          <div class="row">
+                            <select-tags outer-column="col-md-12" name="cclsElaScienceTechnicalSubjects" id="cclsElaScienceTechnicalSubjects"
+                            in-title="CCLS - ELA Science & Technical Subjects" ng-model="vm.unit.standards.cclsElaScienceTechnicalSubjects"
+                            label-class="control-label" select-config="vm.cclsElaScienceTechnicalSubjectsSelectConfig"></select-tags>
+                          </div>
                         </div>
                     </div>
                     <div class="alert alert-danger" ng-show="(vm.form.unitForm.$dirty || vm.form.unitForm.$submitted) &&
                     (vm.form.unitForm.$invalid || !vm.valid) && (vm.form.unitForm.$error || vm.error.length > 0)">
-                        <h4>Sorry, you can't submit just yet!</h4>
+                        <h4>Sorry, you can't publish just yet!</h4>
                         <ul class="list-unstyled" ng-repeat="(key, errors) in vm.form.unitForm.$error track by $index">
                             <li ng-repeat="e in errors"><i class="glyphicon glyphicon-remove-sign"></i> <b>{{ e.$name }}</b> is {{ key }}</li>
                         </ul>
@@ -222,12 +150,21 @@
                           <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
                         </ul>
                     </div>
-                    <!--<button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>-->
-                    <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-                    <a href="#" class="btn btn-default" type="button" ng-click="vm.saveDraft()">Save draft</a>
-                    <button class="btn btn-primary" type="submit" ng-disabled="!vm.valid && !vm.saving">
-                      {{vm.editing ? 'Update unit' : 'Publish unit'}}</button><!-- ng-disabled="!vm.form.unitForm.$valid" -->
-                    <a href="#" class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</a>
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'draft'">Draft</h6>
+                            <h6 class="navbar-text" ng-show="vm.unit.status === 'published'">Published</h6>
+                            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-default" type="button" ng-click="vm.save(vm.form.unitForm.$valid, true)">{{vm.unit.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+                    
+                    <button class="btn {{vm.unit.status === 'published' ? 'btn-primary' : 'btn-success' }}" type="submit" ng-disabled="!vm.valid && !vm.saving">{{vm.unit.status === 'published' ? 'Update unit' : 'Publish unit' }}</button>
+                    
+                    <button class="btn btn-danger pull-right" ng-click="vm.openDeleteUnit()" ng-disabled="vm.unit.hasLessons === true" title="{{(vm.unit.hasLessons === true) ? 'This Unit cannot be deleted because it has Lessons' : ''}}" ng-show="vm.unit._id">Delete</button>
+                    <hr/>
                 </div>
             </fieldset>
         </form>

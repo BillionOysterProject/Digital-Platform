@@ -823,71 +823,75 @@ exports.delete = function (req, res) {
  * List of Expeditions
  */
 exports.list = function (req, res) {
-  compareHelper.buildSearchQuery(req, function(error, query) {
+  compareHelper.buildSearchQuery(req, function(error, query, queryCount) {
     if (error) {
       return res.status(400).send({
         message: error
       });
     } else {
-
-      if (req.query.sort) {
-        if (req.query.sort === 'startDate') {
-          query.sort('monitoringStartDate');
-        } else if (req.query.sort === 'startDateRev') {
-          query.sort('-monitoringStartDate');
-        } else if (req.query.sort === 'endDate') {
-          query.sort('monitoringEndDate');
-        } else if (req.query.sort === 'name') {
-          query.sort('name');
-        } else if (req.query.sort === 'status') {
-          query.sort('status');
-        }
-      } else {
-        query.sort('-created');
-      }
-
-      if (req.query.limit) {
-        var limit = Number(req.query.limit);
-        if (req.query.page) {
-          var page = Number(req.query.page);
-          query.skip(limit*(page-1)).limit(limit);
+      queryCount.count().exec(function(err, count) {
+        if (req.query.sort) {
+          if (req.query.sort === 'startDate') {
+            query.sort('monitoringStartDate');
+          } else if (req.query.sort === 'startDateRev') {
+            query.sort('-monitoringStartDate');
+          } else if (req.query.sort === 'endDate') {
+            query.sort('monitoringEndDate');
+          } else if (req.query.sort === 'name') {
+            query.sort('name');
+          } else if (req.query.sort === 'status') {
+            query.sort('status');
+          }
         } else {
-          query.limit(limit);
+          query.sort('-created');
         }
-      }
 
-      query.populate('team', 'name schoolOrg teamLeads')
-      .populate('teamLead', 'displayName username profileImageURL')
-      .populate('station', 'name')
-      .populate('teamLists.siteCondition', 'displayName username profileImageURL')
-      .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
-      .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
-      .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
-      .populate('teamLists.waterQuality', 'displayName username profileImageURL')
-      .populate('protocols.siteCondition', 'status')
-      .populate('protocols.oysterMeasurement', 'status')
-      .populate('protocols.mobileTrap', 'status')
-      .populate('protocols.settlementTiles', 'status')
-      .populate('protocols.waterQuality', 'status')
-      .exec(function (err, expeditions) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          async.forEach(expeditions, function(item,callback) {
-            SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
-              if (err) throw err;
+        if (req.query.limit) {
+          var limit = Number(req.query.limit);
+          if (req.query.page) {
+            var page = Number(req.query.page);
+            query.skip(limit*(page-1)).limit(limit);
+          } else {
+            query.limit(limit);
+          }
+        }
 
-              User.populate(item.team, { 'path': 'teamLeads' }, function(err,output) {
+        query.populate('team', 'name schoolOrg teamLeads')
+        .populate('teamLead', 'displayName username profileImageURL')
+        .populate('station', 'name')
+        .populate('teamLists.siteCondition', 'displayName username profileImageURL')
+        .populate('teamLists.oysterMeasurement', 'displayName username profileImageURL')
+        .populate('teamLists.mobileTrap', 'displayName username profileImageURL')
+        .populate('teamLists.settlementTiles', 'displayName username profileImageURL')
+        .populate('teamLists.waterQuality', 'displayName username profileImageURL')
+        .populate('protocols.siteCondition', 'status')
+        .populate('protocols.oysterMeasurement', 'status')
+        .populate('protocols.mobileTrap', 'status')
+        .populate('protocols.settlementTiles', 'status')
+        .populate('protocols.waterQuality', 'status')
+        .exec(function (err, expeditions) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            async.forEach(expeditions, function(item,callback) {
+              SchoolOrg.populate(item.team, { 'path': 'schoolOrg' }, function(err, output) {
                 if (err) throw err;
-                callback();
+
+                User.populate(item.team, { 'path': 'teamLeads' }, function(err,output) {
+                  if (err) throw err;
+                  callback();
+                });
+              });
+            }, function(err) {
+              res.json({
+                totalCount: count,
+                expeditions: expeditions
               });
             });
-          }, function(err) {
-            res.json(expeditions);
-          });
-        }
+          }
+        });
       });
     }
   });

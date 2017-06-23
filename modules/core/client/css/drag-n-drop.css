@@ -1,0 +1,62 @@
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+.dnd ul {
+  list-style-type: none;
+}
+
+.dnd ul[dnd-list] {
+    min-height: 100px;
+    padding-left: 0px;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+.dnd ul[dnd-list] .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+.dnd ul[dnd-list] .dndPlaceholder {
+    background-color: #ddd;
+    display: block;
+    min-height: 100px;
+}
+
+.dnd ul[dnd-list] li {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-left-color: #fff;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    display: block;
+    width: 100%;
+    float: left;
+    clear: both;
+    padding: 15px 5px;
+    margin-bottom: -1px;
+}
+
+.dnd ul[dnd-list] li:hover {
+    border: 2px dashed #333;
+    cursor: move;
+}
+
+/**
+ * Show selected elements in green
+ */
+.dnd ul[dnd-list] li.selected {
+    background-color: #dff0d8;
+    color: #3c763d;
+}

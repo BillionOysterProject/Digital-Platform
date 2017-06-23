@@ -32,9 +32,9 @@
                     </div>
                   </div>
                   <div class="form-group" show-errors>
-                    <label for="unit" class="control-label">Unit</label>
-                    <select class="form-control" name="unit" id="unit" ng-model="vm.lesson.unit._id"
-                    ng-options="unit._id as unit.title for unit in vm.units"></select>
+                    <label for="units" class="control-label">Units *</label>
+                    <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
+                    ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -351,7 +351,7 @@
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
             <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
-              {{vm.lesson._id ? 'Update lesson' : 'Publish lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+              {{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 
             <a type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</a>
           </div>

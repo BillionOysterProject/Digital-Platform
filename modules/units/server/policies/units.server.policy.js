@@ -23,7 +23,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/units/:unitId/lessons',
       permissions: '*'
     }, {
-      resources: '/api/units/:unitId/incremental-save',
+      resources: '/api/units/:unitId/sub-units',
       permissions: '*'
     }, {
       resources: '/api/units/:unitId',

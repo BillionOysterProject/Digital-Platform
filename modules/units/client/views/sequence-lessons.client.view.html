@@ -1,0 +1,60 @@
+<div class="modal fade" id="modal-sequence-lesson" tabindex="-1" role="dialog">
+<!--TODO: Wire up to enable drag and drop -- numbers should automatically update. Shouldn't save until "Save" button is clicked-->
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit lesson sequence</h4>
+                <p>Drag and drop the rows to change the order of the lessons in this unit. Unpublished lessons will not show and their number will be skipped in the published unit's list of lessons.</p>
+            </div>
+            <div class="modal-body dnd">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <ul dnd-list="lessons">
+                        <li ng-repeat="lesson in lessons"
+                        dnd-draggable="lesson"
+                        dnd-moved="lessons.splice($index, 1)"
+                        dnd-effect-allowed="move"
+                        dnd-selected="selected = lesson"
+                        ng-class="{'selected': selected === lesson}">
+                            <div class="col-md-3"><h4>{{lesson.title}}</h4></div>
+                            <div class="col-md-3">
+                              <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
+                              {{lesson.user.displayName}}
+                            </div>
+                            <div class="col-md-2">
+                              <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                                ng-repeat="subject in lesson.lessonOverview.subjectAreas"
+                                class="label label-default"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <small class="text-muted">
+                                  <span ng-show="lesson.lessonOverview.setting"><b>{{lesson.lessonOverview.setting}}</b> setting</span><br/>
+                                  <span ng-show="lesson.lessonOverview.grade"><b>{{lesson.lessonOverview.grade}}</b> grade</span>
+                                </small>
+                            </div>
+                            <div class="col-md-2 text-right">
+                              <span class="label"
+                                ng-class="{'label-success': lesson.status === 'published', 'label-info': lesson.status === 'pending',
+                                'label-default': lesson.status === 'draft', 'label-danger': lesson.status === 'returned'}">
+                                {{lesson.status | capitalize}}
+                              </span>
+                            </div>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+                <!--<div class="alert alert-danger" ng-show="error.length > 0">
+                    <h4>Sorry, you can't submit just yet!</h4>
+                    <ul class="list-unstyled">
+                      <li ng-repeat="e in error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
+                    </ul>
+                </div>-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+          </div>
+        </div>
+    </div>
+</div>

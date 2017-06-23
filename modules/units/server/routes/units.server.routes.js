@@ -14,11 +14,12 @@ module.exports = function (app) {
 
   // Lessons by Unit collection routes
   app.route('/api/units/:unitId/lessons').all(unitsPolicy.isAllowed)
-    .get(units.listLessons);
+    .get(units.listLessons)
+    .post(units.updateLessons);
 
-  // Unit incremental save
-  app.route('/api/units/:unitId/incremental-save').all(unitsPolicy.isAllowed)
-    .post(units.incrementalSave);
+  // Update unit's sub units
+  app.route('/api/units/:unitId/sub-units').all(unitsPolicy.isAllowed)
+    .post(units.updateSubUnits);
 
   // Single unit routes
   app.route('/api/units/:unitId').all(unitsPolicy.isAllowed)

@@ -5,43 +5,25 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', '$location', 'unitResolve', 'Authentication',
-    'UnitsService', 'UnitLessonsService'];
+  UnitsController.$inject = ['$scope', '$rootScope', '$state', '$http', '$interval', '$timeout', '$location', '$sce', 'lodash', 'unitResolve', 'Authentication',
+    'UnitsService', 'UnitLessonsService', 'LessonsService', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
+    'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
+    'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
 
-  function UnitsController($scope, $state, $http, $interval, $timeout, $location, unit, Authentication,
-    UnitsService, UnitLessonsService) {
+  function UnitsController($scope, $rootScope, $state, $http, $interval, $timeout, $location, $sce, lodash, unit, Authentication,
+    UnitsService, UnitLessonsService, LessonsService, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
+    NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
+    NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService) {
     var vm = this;
 
-    vm.unit = unit;
     vm.authentication = Authentication;
-    vm.error = null;
+    vm.user = Authentication.user;
+    vm.unit = unit;
+    vm.error = [];
     vm.form = {};
     vm.saving = false;
-    vm.valid = false;
-    vm.editing = ($location.path().split(/[\s/]+/).pop() === 'edit') ? true : false;
-    vm.editLink = (vm.unit.status === 'draft') ? 'units.draft({ unitId: vm.unit._id })' : 'units.edit({ unitId: vm.unit._id })';
-
-    vm.numberExpectations = [
-      { name: 'K-PS2-1 Plan and conduct an investigation to compare the effects of different strengths or different directions of pushes and pulls on the motion of an object.', value: 'kps21' },
-      { name: 'K-PS2-2 Analyze data to determine if a design solution works as intended to change the speed or direction of an object with a push or a pull.', value: 'kps22' }
-    ];
-    vm.numberExpectationsSelectConfig = {
-      mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.numberExpectations
-    };
-
-    vm.researchProjects = [
-      { name: 'Project 1', value: 'project1' },
-      { name: 'Project 2', value: 'project2' }
-    ];
-    vm.researchProjectsSelectConfig = {
-      mode: 'tags-id',
-      id: 'value',
-      text: 'name',
-      options: vm.researchProjects
-    };
+    vm.valid = true;
+    vm.lessonPopoverTemplate = 'lessonPopover.html';
 
     if (vm.unit._id) {
       vm.lessons = UnitLessonsService.query({
@@ -49,132 +31,211 @@
       });
     }
 
-    // Incremental saving
-    var save;
-    var stopIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) {
-        $interval.cancel(save);
-        save = undefined;
-      }
+    vm.checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
     };
+    vm.isAdmin = vm.checkRole('admin');
 
-    var startIncrementalSavingLoop = function() {
-      if (angular.isDefined(save)) return;
-
-      save = $interval(function() {
-        vm.saveOnBlur();
-      }, 15000);
-    };
-
-    var startSaving = function() {
-      vm.saving = true;
-      stopIncrementalSavingLoop();
-    };
-
-    var stopSaving = function() {
-      $timeout(function() {
-        vm.saving = false;
-      }, 2000);
-      startIncrementalSavingLoop();
-    };
-
-    vm.saveOnBlur = function(force, callback) {
-      var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
-
-      if (!vm.unit._id || force || (vm.form.unitForm && !vm.form.unitForm.$pristine && vm.form.unitForm.$dirty)) {
-        startSaving();
-        $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
-        .success(function(data, status, headers, config) {
-          if (!vm.unit._id) {
-            vm.unit._id = data.unit._id;
-            $location.path('/units/' + vm.unit._id + '/draft', false);
-          }
-          vm.unit.status = 'draft';
-          if (data.errors) {
-            vm.error = data.errors;
-            vm.valid = false;
-            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-          } else if (data.successful) {
-            vm.error = null;
-            vm.valid = true;
-            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-          }
-          stopSaving();
-          if (callback) callback();
-        })
-        .error(function(data, status, headers, config) {
-          vm.error = data.message;
-          vm.valid = false;
-          if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-          stopSaving();
-          if (callback) callback();
-        });
-      } else {
-        startIncrementalSavingLoop();
-      }
-    };
-
-    vm.saveDraft = function() {
-      stopIncrementalSavingLoop();
-      var unitId = (vm.unit._id) ? vm.unit._id : '000000000000000000000000';
-      vm.unit.status = 'draft';
-      $http.post('api/units/' + unitId + '/incremental-save', vm.unit)
-      .success(function(data, status, headers, config) {
-        $state.go('units.view', {
-          unitId: unitId
-        });
-      })
-      .error(function(data, status, headers, config) {
-        vm.error = data.message;
-        vm.valid = false;
-        if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-        stopSaving();
+    var refreshUnit = function(callback) {
+      UnitsService.get({
+        unitId: vm.unit._id,
+        full: true
+      }, function(data) {
+        vm.unit = data;
+        if (callback) callback();
       });
     };
 
-    vm.initialSaveDraft = function() {
-      console.log('initialSaveDraft');
-      if (vm.unit._id) {
-        var unit = angular.copy(vm.unit);
-        unit.initial = true;
-        $http.post('api/units/' + vm.unit._id + '/incremental-save', unit)
-        .success(function(data, status, headers, config) {
-          if (data.errors) {
-            vm.error = data.errors;
-            vm.valid = false;
-            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-          } else if (data.successful) {
-            vm.error = null;
-            vm.valid = true;
-            if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
+    if ($rootScope.unit) {
+      if (!vm.unit.parentUnits) {
+        vm.unit.parentUnits = [];
+      }
+      vm.unit.parentUnits.push($rootScope.unit);
+      if ($rootScope.unit.standards) {
+        var getIds = function(standards) {
+          var ids = [];
+          for (var i = 0; i < standards.length; i++) {
+            if (standards[i]._id) ids.push(standards[i]._id);
           }
-          startIncrementalSavingLoop();
-        })
-        .error(function(data, status, headers, config) {
-          vm.error = data.message;
-          vm.valid = false;
-          if (vm.form.unitForm) vm.form.unitForm.$setSubmitted(true);
-          startIncrementalSavingLoop();
-        });
-      } else {
-        startIncrementalSavingLoop();
+          return ids;
+        };
+        if (!vm.unit.standards) {
+          vm.unit.standards = {};
+        }
+
+        if (!vm.unit.standards.cclsElaScienceTechnicalSubjects) {
+          vm.unit.standards.cclsElaScienceTechnicalSubjects = [];
+        }
+        vm.unit.standards.cclsElaScienceTechnicalSubjects =
+          vm.unit.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+        if (!vm.unit.standards.cclsMathematics) {
+          vm.unit.standards.cclsMathematics = [];
+        }
+        vm.unit.standards.cclsMathematics =
+          vm.unit.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+        if (!vm.unit.standards.ngssCrossCuttingConcepts) {
+          vm.unit.standards.ngssCrossCuttingConcepts = [];
+        }
+        vm.unit.standards.ngssCrossCuttingConcepts =
+          vm.unit.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+        if (!vm.unit.standards.ngssDisciplinaryCoreIdeas) {
+          vm.unit.standards.ngssDisciplinaryCoreIdeas = [];
+        }
+        vm.unit.standards.ngssDisciplinaryCoreIdeas =
+          vm.unit.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+        if (!vm.unit.standards.ngssScienceEngineeringPractices) {
+          vm.unit.standards.ngssScienceEngineeringPractices = [];
+        }
+        vm.unit.standards.ngssScienceEngineeringPractices =
+          vm.unit.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+        if (!vm.unit.standards.nycsssUnits) {
+          vm.unit.standards.nycsssUnits = [];
+        }
+        vm.unit.standards.nycsssUnits =
+          vm.unit.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+        if (!vm.unit.standards.nysssKeyIdeas) {
+          vm.unit.standards.nysssKeyIdeas = [];
+        }
+        vm.unit.standards.nysssKeyIdeas =
+          vm.unit.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+        if (!vm.unit.standards.nysssMajorUnderstandings) {
+          vm.unit.standards.nysssMajorUnderstandings = [];
+        }
+        vm.unit.standards.nysssMajorUnderstandings =
+          vm.unit.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+        if (!vm.unit.standards.nysssMst) {
+          vm.unit.standards.nysssMst = [];
+        }
+        vm.unit.standards.nysssMst =
+          vm.unit.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+      }
+      $rootScope.unit = null;
+    }
+
+    vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsElaScienceTechnicalSubjectsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return CclsElaScienceTechnicalSubjectsService.query({ select: true, searchString: searchText });
       }
     };
 
-    vm.saveAfterTitle = function() {
-      if (vm.unit.title && vm.unit.color && vm.unit.icon) {
-        vm.saveOnBlur(true);
+    vm.cclsMathematicsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return CclsMathematicsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return CclsMathematicsService.query({ select: true, searchString: searchText });
       }
     };
 
-    $timeout(function() {
-      if (vm.form.unitForm && vm.unit._id && vm.unit.title &&
-      ($location.path().split(/[\s/]+/).pop() === 'edit' ||
-      $location.path().split(/[\s/]+/).pop() === 'draft' ||
-      $location.path().split(/[\s/]+/).pop() === 'create')) {
-        console.log('$location.path().split(/[\s/]+/).pop()', $location.path().split(/[\s/]+/).pop());
-        vm.initialSaveDraft();
+    vm.ngssCrossCuttingConceptsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssCrossCuttingConceptsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssCrossCuttingConceptsService.query({ select: true, searchString: searchText });
       }
+    };
+
+    vm.ngssDisciplinaryCoreIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssDisciplinaryCoreIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssDisciplinaryCoreIdeasService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    vm.ngssScienceEngineeringPracticesSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NgssScienceEngineeringPracticesService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NgssScienceEngineeringPracticesService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    vm.nycsssUnitsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NycsssUnitsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NycsssUnitsService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    vm.nysssKeyIdeasSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssKeyIdeasService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssKeyIdeasService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    vm.nysssMajorUnderstandingsSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMajorUnderstandingsService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMajorUnderstandingsService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    vm.nysssMstSelectConfig = {
+      mode: 'tags-id',
+      id: '_id',
+      text: 'value',
+      textLookup: function(id) {
+        return NysssMstService.get({ standardId: id, select: true }).$promise;
+      },
+      options: function(searchText) {
+        return NysssMstService.query({ select: true, searchString: searchText });
+      }
+    };
+
+    UnitsService.query({
+      publishedStatus: 'published'
+    }, function(data) {
+      vm.units = data;
     });
 
     // Remove existing Unit
@@ -183,52 +244,44 @@
     };
 
     // Save Unit
-    vm.save = function(isValid) {
-      stopIncrementalSavingLoop();
-      // vm.unit.stageOne.essentialQuestions = [];
-      // angular.forEach(vm.essentialQuestions, function(question) {
-      //   if (question && question !== '') {
-      //     vm.unit.stageOne.essentialQuestions.push(question);
-      //   }
-      // });
-      // console.log('essentialQuestions');
-      // console.log(vm.unit.stageOne.essentialQuestions);
-
+    vm.save = function(isValid, draft) {
+      vm.saving = true;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.unitForm');
         return false;
       }
 
+      vm.unit.status = (draft) ? 'draft' : 'published';
+
       // TODO: move create/update logic to service
       if (vm.unit._id) {
-        console.log('updating unit');
         vm.unit.$update(successCallback, errorCallback);
       } else {
-        console.log('saving unit');
         vm.unit.$save(successCallback, errorCallback);
       }
 
       function successCallback(res) {
-        stopIncrementalSavingLoop();
-        $state.go('units.view', {
-          unitId: res._id
-        });
+        $timeout(function() {
+          vm.saving = false;
+          if (draft) {
+            refreshUnit(function() {
+              $location.path('/units/' + vm.unit._id + '/edit', false);
+            });
+          } else {
+            $state.go('units.view', {
+              unitId: res._id
+            });
+          }
+        }, 500);
       }
 
       function errorCallback(res) {
         vm.error = res.data.message;
-        startIncrementalSavingLoop();
       }
     };
 
     vm.cancel = function() {
-      stopIncrementalSavingLoop();
       $state.go('units.view');
-    };
-
-    vm.addQuestion = function(element) {
-      console.log('element');
-      console.log(element);
     };
 
     vm.openDeleteUnit = function() {
@@ -245,7 +298,6 @@
 
     //$('#iconpicker').iconpicker();
     vm.iconChanged = function(dataIcon) {
-      console.log('dataIcon', dataIcon);
       angular.element('#iconpicker').iconpicker();
     };
 
@@ -265,8 +317,58 @@
       angular.element('#modal-profile-user').modal('hide');
     };
 
-    $scope.$on('$locationChangeStart', function(event) {
-      stopIncrementalSavingLoop();
-    });
+    vm.createNewLesson = function() {
+      $rootScope.unit = unit;
+      $state.go('lessons.create');
+    };
+
+    vm.createNewSubUnit = function() {
+      $rootScope.unit = unit;
+      $state.go('units.create');
+    };
+
+    vm.openSequenceLessons = function() {
+      angular.element('#modal-sequence-lesson').modal('show');
+    };
+
+    vm.closeSequenceLessons = function(refresh) {
+      angular.element('#modal-sequence-lesson').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openSequenceSubUnits = function() {
+      angular.element('#modal-sequence-subunits').modal('show');
+    };
+
+    vm.closeSequenceSubUnits = function(refresh) {
+      angular.element('#modal-sequence-subunits').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openReturnModal = function(lesson) {
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-return').modal('show');
+    };
+
+    vm.closeReturnModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-return').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openPublishModal = function(lesson) {
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-accept').modal('show');
+    };
+
+    vm.closePublishModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-accept').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.removeAllParentUnits = function() {
+      vm.unit.parentUnits = [];
+    };
   }
 })();

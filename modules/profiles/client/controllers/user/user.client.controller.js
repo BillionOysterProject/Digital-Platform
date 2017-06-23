@@ -215,7 +215,7 @@
           byMember: byMember,
           userId : $scope.user._id
         }, function(data) {
-          $scope.expeditions = data;
+          $scope.expeditions = data.expeditions;
         });
 
         ExpeditionsService.query({
@@ -224,7 +224,7 @@
           byMember: byMember,
           userId: $scope.user._id
         }, function(data) {
-          $scope.launchedExpeditions = data;
+          $scope.launchedExpeditions = data.expeditions;
         });
       }
     };
