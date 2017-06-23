@@ -161,10 +161,9 @@
       </div>
 
       <div ng-class="{ 'col-sm-9': vm.showSidebar, 'col-sm-12': !vm.showSidebar }">
-        <!-- <h3>Lesson Overview</h3> -->
         <div class="row">
           <div class="col-sm-12" ng-show="vm.lesson.lessonOverview.lessonSummary">
-            <h3>Lesson Summary</h3>
+            <h3>Summary</h3>
             <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
           </div>
           <div

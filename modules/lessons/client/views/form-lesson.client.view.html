@@ -5,11 +5,8 @@
         <div class="container-fluid">
           <div class="page-header">
             <div class="pull-right">
-                <!-- Show saving when saving -->
                 <h6 class="navbar-text green" ng-show="vm.saving">
                   <i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-
-                <!-- Show status -->
                 <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
                 <h6 class="navbar-text blue" ng-show="vm.lesson.status === 'pending'">Awaiting Approval</h6>
                 <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
@@ -32,7 +29,7 @@
                     </div>
                   </div>
                   <div class="form-group" show-errors>
-                    <label for="units" class="control-label">Units *</label>
+                    <label for="units" class="control-label">Unit(s) *</label>
                     <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
                     ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
                   </div>
@@ -49,7 +46,7 @@
           </div>
 
           <!-- Lesson Overview -->
-          <h4>Lesson Summary</h4>
+          <h4>Lesson Overview</h4>
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
@@ -114,19 +111,12 @@
               <div class="row">
                 <div class="form-group col-sm-12" show-errors>
                     <wysiwyg-editor name="lessonSummary"
-                    in-title="Lesson Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
+                    in-title="Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lesson Objectives -->
-          <h4>Lesson Objectives</h4>
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="row">
-                <wysiwyg-editor outer-column="col-md-12" name="lessonObjectives"
-                in-title="Objectives" ng-model="vm.lesson.lessonObjectives" label-class="control-label"></wysiwyg-editor>
+                <div class="form-group col-sm-12">
+                    <wysiwyg-editor name="lessonObjectives"
+                    in-title="Objectives" ng-model="vm.lesson.lessonObjectives" label-class="control-label"></wysiwyg-editor>
+                </div>
               </div>
             </div>
           </div>
