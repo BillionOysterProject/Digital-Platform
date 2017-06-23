@@ -135,11 +135,11 @@
         vm.leadRequests = [];
         vm.leadRequestsOrgPending = [];
 
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].schoolOrg && data[i].schoolOrg.pending) {
-            vm.leadRequestsOrgPending.push(data[i]);
+        for (var i = 0; i < data.users.length; i++) {
+          if (data.users[i].schoolOrg && data.users[i].schoolOrg.pending) {
+            vm.leadRequestsOrgPending.push(data.users[i]);
           } else {
-            vm.leadRequests.push(data[i]);
+            vm.leadRequests.push(data.users[i]);
           }
         }
       });

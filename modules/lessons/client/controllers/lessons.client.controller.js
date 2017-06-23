@@ -5,13 +5,13 @@
     .module('lessons')
     .controller('LessonsController', LessonsController);
 
-  LessonsController.$inject = ['$scope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
+  LessonsController.$inject = ['$scope', '$rootScope', '$state', '$http', '$timeout', '$interval', '$location', 'lessonResolve', 'Authentication',
     'UnitsService', 'TeamsService', 'FileUploader', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
     'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
     'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService', 'GlossaryService',
     'SubjectAreasService', 'LessonsService', 'LessonTrackerStatsService', 'LessonFeedbackService', 'lodash'];
 
-  function LessonsController($scope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
+  function LessonsController($scope, $rootScope, $state, $http, $timeout, $interval, $location, lesson, Authentication,
     UnitsService, TeamsService, FileUploader, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService, GlossaryService,
@@ -34,6 +34,81 @@
     vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
     vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
     vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
+
+    if ($rootScope.unit) {
+      if (!vm.lesson.units) {
+        vm.lesson.units = [];
+      }
+      vm.lesson.units.push($rootScope.unit);
+      if ($rootScope.unit.standards) {
+        var getIds = function(standards) {
+          var ids = [];
+          for (var i = 0; i < standards.length; i++) {
+            if (standards[i]._id) ids.push(standards[i]._id);
+          }
+          return ids;
+        };
+        if (!vm.lesson.standards) {
+          vm.lesson.standards = {};
+        }
+
+        if (!vm.lesson.standards.cclsElaScienceTechnicalSubjects) {
+          vm.lesson.standards.cclsElaScienceTechnicalSubjects = [];
+        }
+        vm.lesson.standards.cclsElaScienceTechnicalSubjects =
+          vm.lesson.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+        if (!vm.lesson.standards.cclsMathematics) {
+          vm.lesson.standards.cclsMathematics = [];
+        }
+        vm.lesson.standards.cclsMathematics =
+          vm.lesson.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+        if (!vm.lesson.standards.ngssCrossCuttingConcepts) {
+          vm.lesson.standards.ngssCrossCuttingConcepts = [];
+        }
+        vm.lesson.standards.ngssCrossCuttingConcepts =
+          vm.lesson.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+        if (!vm.lesson.standards.ngssDisciplinaryCoreIdeas) {
+          vm.lesson.standards.ngssDisciplinaryCoreIdeas = [];
+        }
+        vm.lesson.standards.ngssDisciplinaryCoreIdeas =
+          vm.lesson.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+        if (!vm.lesson.standards.ngssScienceEngineeringPractices) {
+          vm.lesson.standards.ngssScienceEngineeringPractices = [];
+        }
+        vm.lesson.standards.ngssScienceEngineeringPractices =
+          vm.lesson.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+        if (!vm.lesson.standards.nycsssUnits) {
+          vm.lesson.standards.nycsssUnits = [];
+        }
+        vm.lesson.standards.nycsssUnits =
+          vm.lesson.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+        if (!vm.lesson.standards.nysssKeyIdeas) {
+          vm.lesson.standards.nysssKeyIdeas = [];
+        }
+        vm.lesson.standards.nysssKeyIdeas =
+          vm.lesson.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+        if (!vm.lesson.standards.nysssMajorUnderstandings) {
+          vm.lesson.standards.nysssMajorUnderstandings = [];
+        }
+        vm.lesson.standards.nysssMajorUnderstandings =
+          vm.lesson.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+        if (!vm.lesson.standards.nysssMst) {
+          vm.lesson.standards.nysssMst = [];
+        }
+        vm.lesson.standards.nysssMst =
+          vm.lesson.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+      }
+      $rootScope.unit = null;
+    }
 
     vm.subjectAreasSelectConfig = {
       mode: 'tags-id',
@@ -178,20 +253,24 @@
     });
 
     var getLessonStats = function() {
-      LessonTrackerStatsService.get({
-        lessonId: vm.lesson._id
-      }, function(data) {
-        vm.lessonStats = data;
-      });
+      if (vm.lesson._id) {
+        LessonTrackerStatsService.get({
+          lessonId: vm.lesson._id
+        }, function(data) {
+          vm.lessonStats = data;
+        });
+      }
     };
     getLessonStats();
 
     var getLessonFeedback = function() {
-      LessonFeedbackService.get({
-        lessonId: vm.lesson._id
-      }, function(data) {
-        vm.feedback = data;
-      });
+      if (vm.lesson._id) {
+        LessonFeedbackService.get({
+          lessonId: vm.lesson._id
+        }, function(data) {
+          vm.feedback = data;
+        });
+      }
     };
     getLessonFeedback();
 

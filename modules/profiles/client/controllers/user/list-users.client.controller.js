@@ -92,11 +92,11 @@ angular.module('profiles').controller('UserListController', ['$scope', '$filter'
         $scope.leadRequests = [];
         $scope.leadRequestsOrgPending = [];
 
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].schoolOrg && data[i].schoolOrg.pending) {
-            $scope.leadRequestsOrgPending.push(data[i]);
+        for (var i = 0; i < data.users.length; i++) {
+          if (data.users[i].schoolOrg && data.users[i].schoolOrg.pending) {
+            $scope.leadRequestsOrgPending.push(data.users[i]);
           } else {
-            $scope.leadRequests.push(data[i]);
+            $scope.leadRequests.push(data.users[i]);
           }
         }
       });

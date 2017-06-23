@@ -13,8 +13,19 @@
         },
         replace: true,
         controller: function($scope, $http) {
+          $scope.selected = null;
+
           $scope.save = function() {
-            $scope.closeFunction(true);
+            $http.post('/api/units/' + $scope.unit._id + '/sub-units', {
+              subUnits: $scope.subUnits
+            })
+            .success(function(data, status, headers, config) {
+              $scope.error = null;
+              $scope.closeFunction(true);
+            })
+            .error(function(data, status, headers, config) {
+              $scope.error = data.message;
+            });
           };
 
           $scope.close = function() {
@@ -22,7 +33,9 @@
           };
         },
         link: function(scope, element, attrs) {
-
+          element.bind('show.bs.modal', function() {
+            scope.subUnits = angular.copy(scope.unit.subUnits);
+          });
         }
       };
     });

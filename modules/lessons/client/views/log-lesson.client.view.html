@@ -41,17 +41,17 @@
               <div class="form-group">
                 <label for="totalNumberOfStudents" class="control-label required">Total number of students *</label>
                 <input type="number" class="form-control" name="totalNumberOfStudents" id="totalNumberOfStudents"
-                  ng-model="tracker.totalNumberOfStudents" required/>
+                  ng-model="tracker.totalNumberOfStudents" min="0" required/>
               </div>
               <div class="form-group">
                 <label for="totalNumberOfClassesOrSections" class="control-label required">Total number of classes/sections *</label>
                 <input type="number" class="form-control" name="totalNumberOfClassesOrSections" id="totalNumberOfClassesOrSections"
-                  ng-model="tracker.totalNumberOfClassesOrSections" required/>
+                  ng-model="tracker.totalNumberOfClassesOrSections" min="0" required/>
               </div>
               <div class="form-group">
                 <label for="classPeriodsOrSessionsNeededToComplete" class="control-label required">How many class periods/sessions were needed to complete this lesson? *</label>
                 <input type="number" class="form-control" name="classPeriodsOrSessionsNeededToComplete" id="classPeriodsOrSessionsNeededToComplete"
-                  ng-model="tracker.classPeriodsOrSessionsNeededToComplete" required/>
+                  ng-model="tracker.classPeriodsOrSessionsNeededToComplete" min="0" required/>
               </div>
             </div>
           </div>

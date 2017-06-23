@@ -5,13 +5,13 @@
     .module('units')
     .controller('UnitsController', UnitsController);
 
-  UnitsController.$inject = ['$scope', '$state', '$http', '$interval', '$timeout', '$location', 'unitResolve', 'Authentication',
-    'UnitsService', 'UnitLessonsService', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
+  UnitsController.$inject = ['$scope', '$rootScope', '$state', '$http', '$interval', '$timeout', '$location', '$sce', 'lodash', 'unitResolve', 'Authentication',
+    'UnitsService', 'UnitLessonsService', 'LessonsService', 'CclsElaScienceTechnicalSubjectsService', 'CclsMathematicsService',
     'NgssCrossCuttingConceptsService', 'NgssDisciplinaryCoreIdeasService', 'NgssScienceEngineeringPracticesService',
     'NycsssUnitsService', 'NysssKeyIdeasService', 'NysssMajorUnderstandingsService', 'NysssMstService'];
 
-  function UnitsController($scope, $state, $http, $interval, $timeout, $location, unit, Authentication,
-    UnitsService, UnitLessonsService, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
+  function UnitsController($scope, $rootScope, $state, $http, $interval, $timeout, $location, $sce, lodash, unit, Authentication,
+    UnitsService, UnitLessonsService, LessonsService, CclsElaScienceTechnicalSubjectsService, CclsMathematicsService,
     NgssCrossCuttingConceptsService, NgssDisciplinaryCoreIdeasService, NgssScienceEngineeringPracticesService,
     NycsssUnitsService, NysssKeyIdeasService, NysssMajorUnderstandingsService, NysssMstService) {
     var vm = this;
@@ -23,11 +23,105 @@
     vm.form = {};
     vm.saving = false;
     vm.valid = true;
+    vm.lessonPopoverTemplate = 'lessonPopover.html';
 
     if (vm.unit._id) {
       vm.lessons = UnitLessonsService.query({
         unitId: vm.unit._id
       });
+    }
+
+    vm.checkRole = function(role) {
+      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
+        return o === role;
+      });
+      return (roleIndex > -1) ? true : false;
+    };
+    vm.isAdmin = vm.checkRole('admin');
+
+    var refreshUnit = function(callback) {
+      UnitsService.get({
+        unitId: vm.unit._id,
+        full: true
+      }, function(data) {
+        vm.unit = data;
+        if (callback) callback();
+      });
+    };
+
+    if ($rootScope.unit) {
+      if (!vm.unit.parentUnits) {
+        vm.unit.parentUnits = [];
+      }
+      vm.unit.parentUnits.push($rootScope.unit);
+      if ($rootScope.unit.standards) {
+        var getIds = function(standards) {
+          var ids = [];
+          for (var i = 0; i < standards.length; i++) {
+            if (standards[i]._id) ids.push(standards[i]._id);
+          }
+          return ids;
+        };
+        if (!vm.unit.standards) {
+          vm.unit.standards = {};
+        }
+
+        if (!vm.unit.standards.cclsElaScienceTechnicalSubjects) {
+          vm.unit.standards.cclsElaScienceTechnicalSubjects = [];
+        }
+        vm.unit.standards.cclsElaScienceTechnicalSubjects =
+          vm.unit.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+        if (!vm.unit.standards.cclsMathematics) {
+          vm.unit.standards.cclsMathematics = [];
+        }
+        vm.unit.standards.cclsMathematics =
+          vm.unit.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+        if (!vm.unit.standards.ngssCrossCuttingConcepts) {
+          vm.unit.standards.ngssCrossCuttingConcepts = [];
+        }
+        vm.unit.standards.ngssCrossCuttingConcepts =
+          vm.unit.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+        if (!vm.unit.standards.ngssDisciplinaryCoreIdeas) {
+          vm.unit.standards.ngssDisciplinaryCoreIdeas = [];
+        }
+        vm.unit.standards.ngssDisciplinaryCoreIdeas =
+          vm.unit.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+        if (!vm.unit.standards.ngssScienceEngineeringPractices) {
+          vm.unit.standards.ngssScienceEngineeringPractices = [];
+        }
+        vm.unit.standards.ngssScienceEngineeringPractices =
+          vm.unit.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+        if (!vm.unit.standards.nycsssUnits) {
+          vm.unit.standards.nycsssUnits = [];
+        }
+        vm.unit.standards.nycsssUnits =
+          vm.unit.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+        if (!vm.unit.standards.nysssKeyIdeas) {
+          vm.unit.standards.nysssKeyIdeas = [];
+        }
+        vm.unit.standards.nysssKeyIdeas =
+          vm.unit.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+        if (!vm.unit.standards.nysssMajorUnderstandings) {
+          vm.unit.standards.nysssMajorUnderstandings = [];
+        }
+        vm.unit.standards.nysssMajorUnderstandings =
+          vm.unit.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+        if (!vm.unit.standards.nysssMst) {
+          vm.unit.standards.nysssMst = [];
+        }
+        vm.unit.standards.nysssMst =
+          vm.unit.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+      }
+      $rootScope.unit = null;
     }
 
     vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
@@ -161,10 +255,8 @@
 
       // TODO: move create/update logic to service
       if (vm.unit._id) {
-        console.log('updating unit');
         vm.unit.$update(successCallback, errorCallback);
       } else {
-        console.log('saving unit');
         vm.unit.$save(successCallback, errorCallback);
       }
 
@@ -172,12 +264,7 @@
         $timeout(function() {
           vm.saving = false;
           if (draft) {
-            UnitsService.get({
-              unitId: res._id,
-              full: true
-            }, function(data) {
-              vm.unit = data;
-              console.log('parentUnits', vm.unit.parentUnits);
+            refreshUnit(function() {
               $location.path('/units/' + vm.unit._id + '/edit', false);
             });
           } else {
@@ -211,7 +298,6 @@
 
     //$('#iconpicker').iconpicker();
     vm.iconChanged = function(dataIcon) {
-      console.log('dataIcon', dataIcon);
       angular.element('#iconpicker').iconpicker();
     };
 
@@ -231,12 +317,23 @@
       angular.element('#modal-profile-user').modal('hide');
     };
 
+    vm.createNewLesson = function() {
+      $rootScope.unit = unit;
+      $state.go('lessons.create');
+    };
+
+    vm.createNewSubUnit = function() {
+      $rootScope.unit = unit;
+      $state.go('units.create');
+    };
+
     vm.openSequenceLessons = function() {
       angular.element('#modal-sequence-lesson').modal('show');
     };
 
     vm.closeSequenceLessons = function(refresh) {
       angular.element('#modal-sequence-lesson').modal('hide');
+      if (refresh) refreshUnit();
     };
 
     vm.openSequenceSubUnits = function() {
@@ -245,6 +342,33 @@
 
     vm.closeSequenceSubUnits = function(refresh) {
       angular.element('#modal-sequence-subunits').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openReturnModal = function(lesson) {
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-return').modal('show');
+    };
+
+    vm.closeReturnModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-return').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.openPublishModal = function(lesson) {
+      vm.lesson = (lesson) ? new LessonsService(lesson) : new LessonsService();
+      angular.element('#modal-accept').modal('show');
+    };
+
+    vm.closePublishModal = function(refresh) {
+      vm.lesson = {};
+      angular.element('#modal-accept').modal('hide');
+      if (refresh) refreshUnit();
+    };
+
+    vm.removeAllParentUnits = function() {
+      vm.unit.parentUnits = [];
     };
   }
 })();
