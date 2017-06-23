@@ -51,13 +51,13 @@
       vm.lesson.lessonOverview.setting || (vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0)"/>
 
     <div class="row">
-      <div class="col-sm-3" ng-show="vm.lesson.unit">
-        <b>{{vm.lesson.units.length > 1 ? 'Units' : 'Unit' }}</b> <!-- If more than one unit, text should be "Units" -->
-        <h4 style="color: {{vm.lesson.unit.color}}" ng-repeat="unit in vm.lesson.units">
-            <!-- <a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })"> -->
-                <i class="{{vm.lesson.unit.icon}}"></i>
-                <b>{{vm.lesson.unit.title}}</b>
-            <!-- </a> -->
+      <div class="col-sm-3" ng-show="vm.lesson.units">
+        <b>{{vm.lesson.units.length > 1 ? 'Units' : 'Unit' }}</b>
+        <h4 ng-repeat="unit in vm.lesson.units" style="color: {{unit.color}}">
+            <a href="#" ui-sref="units.view({ unitId: unit._id })" style="color: {{unit.color}}">
+                <i class="{{unit.icon}}"></i>
+                <b>{{unit.title}}</b>
+            </a>
         </h4>
       </div>
       <div class="col-sm-2" ng-show="vm.lesson.lessonOverview.grade">
@@ -161,7 +161,7 @@
             <img ng-src="{{file.path}}" class="img-responsive" id="img-{{file.originalname}}"/>
           </li>
         </ul>
-        <br/>  
+        <br/>
         <ul class="list-unstyled" id="lesson-vocabulary" ng-show="vm.lesson.materialsResources.vocabulary && vm.lesson.materialsResources.vocabulary.length > 0">
             <b>Vocabulary</b>
             <li ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
@@ -173,15 +173,15 @@
       </div>
 
       <div ng-class="{ 'col-sm-9': vm.showSidebar, 'col-sm-12': !vm.showSidebar }">
-        
+
         <h4 ng-show="vm.lesson.lessonOverview.lessonSummary">Summary</h4>
         <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div><br/>
-           
+
         <h4 ng-show="vm.lesson.lessonObjectives">Objectives</h4>
         <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
-        
+
         <hr ng-show="vm.lesson.materialsResources.teacherTips || vm.lesson.preparation || vm.lesson.background" />
-          
+
         <div class="row">
           <div class="col-sm-12">
             <h3 class="blue" ng-show="vm.lesson.materialsResources.teacherTips || vm.lesson.preparation || vm.lesson.background">Before you get started</h3>
