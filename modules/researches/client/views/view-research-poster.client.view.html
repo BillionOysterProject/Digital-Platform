@@ -141,6 +141,9 @@
       border: 1px solid #f0f0f0;
       padding: 5px
     }
+    .nobreak {
+      word-break: break-word;
+    }
   </style>
 
   <div class="poster-header">
@@ -170,7 +173,7 @@
     </div>
     <div class="col-md-3">
       <h3>Literature Cited</h3>
-      <div ng-bind-html="research.cited | sanitize"></div>
+      <div class="nobreak" ng-bind-html="research.cited | sanitize"></div>
 
       <h3>Acknowledgments</h3>
       <div ng-bind-html="research.acknowledgments | sanitize"></div>
