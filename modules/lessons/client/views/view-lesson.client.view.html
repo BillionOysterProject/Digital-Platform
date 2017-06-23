@@ -188,17 +188,24 @@
             <h3>Supplies</h3>
             <div ng-bind-html="vm.lesson.materialsResources.supplies | sanitize"></div>
           </div>
-          <div class="col-sm-12" ng-show="vm.lesson.preparation">
-            <h3>Preparation</h3>
-            <div ng-bind-html="vm.lesson.preparation | sanitize"></div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.background">
-            <h3>Background</h3>
-            <div ng-bind-html="vm.lesson.background | sanitize"></div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.materialsResources.teacherTips">
-            <h3>Teacher Tips</h3>
-            <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div>
+        </div>
+        
+        <hr/>
+        <div class="row">
+          <div class="col-sm-12">
+              <h3 class="blue">Before you get started</h3>
+              <div class="col-sm-12" ng-show="vm.lesson.materialsResources.teacherTips">
+                <h4>Tips for Teachers</h4>
+                <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div>
+              </div>
+              <div class="col-sm-12" ng-show="vm.lesson.preparation">
+                <h4>Preparation</h4>
+                <div ng-bind-html="vm.lesson.preparation | sanitize"></div>
+              </div>
+              <div class="col-sm-12" ng-show="vm.lesson.background">
+                <h4>Background</h4>
+                <div ng-bind-html="vm.lesson.background | sanitize"></div>
+              </div>
           </div>
         </div>
 
@@ -212,7 +219,7 @@
           ng-show="vm.lesson.instructionPlan.engage ||
                   vm.lesson.instructionPlan.explore || vm.lesson.instructionPlan.explain ||
                   vm.lesson.instructionPlan.elaborate || vm.lesson.instructionPlan.evaluate">
-            <h3>Instruction Plan</h3>
+            <h3 class="blue">Instruction Plan</h3>
             <div>
               <div class="col-sm-12" ng-show="vm.lesson.instructionPlan.engage">
                 <h4>Engage</h4>
@@ -261,7 +268,7 @@
                   (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
                   (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) ||
                   (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)">
-            <h3>Standards
+            <h3 class="blue">Standards
               {{vm.standardCount}}</h3>
           </div>
           <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0">

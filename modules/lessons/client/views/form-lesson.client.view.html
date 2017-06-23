@@ -182,12 +182,6 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <wysiwyg-editor name="teacherTips"
-                    in-title="Teacher Tips" ng-model="vm.lesson.materialsResources.teacherTips" label-class="control-label"></wysiwyg-editor>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
                     <label for="stateTestQuestions" class="control-label">State Test Questions</label>
                     <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
                     <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
@@ -198,21 +192,18 @@
             </div>
           </div>
 
-          <!-- Preparation -->
-          <h4>Preparation</h4>
+          <!-- Before you get started -->
+          <h4>Before you get started</h4>
           <div class="panel panel-default">
             <div class="panel-body">
+              <div class="form-group">
+                <wysiwyg-editor name="teacherTips"
+                in-title="Tips for Teachers" ng-model="vm.lesson.materialsResources.teacherTips" label-class="control-label"></wysiwyg-editor>
+              </div>
               <div class="row">
                 <wysiwyg-editor outer-column="col-md-12" name="preparation" in-title="Preparation"
                 ng-model="vm.lesson.preparation" label-class="control-label"></wysiwyg-editor>
               </div>
-            </div>
-          </div>
-
-          <!-- Background -->
-          <h4>Background</h4>
-          <div class="panel panel-default">
-            <div class="panel-body">
               <div class="row">
                 <wysiwyg-editor outer-column="col-md-12" name="background" in-title="Background"
                 ng-model="vm.lesson.background" label-class="control-label"></wysiwyg-editor>
