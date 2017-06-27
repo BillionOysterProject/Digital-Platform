@@ -14,8 +14,7 @@ module.exports = function (app) {
   // Single Protocol Water Quality routes
   app.route('/api/protocol-water-quality/:waterQualityId').all(waterQualitiesPolicy.isAllowed)
     .get(waterQualities.read)
-    .put(waterQualities.update)
-    .delete(waterQualities.delete);
+    .put(waterQualities.update);
 
   // Finish by binding the protocol water quality midleware
   app.param('waterQualityId', waterQualities.waterQualityByID);

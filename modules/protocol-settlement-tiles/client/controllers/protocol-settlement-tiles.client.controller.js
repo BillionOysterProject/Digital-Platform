@@ -90,7 +90,7 @@
           grid25: { notes: '' }
         });
       }
-      $http.post('/api/protocol-settlement-tiles/' + $scope.settlementTiles._id + '/incremental-save',
+      $http.put('/api/protocol-settlement-tiles/' + $scope.settlementTiles._id,
         $scope.settlementTiles)
         .success(function (data, status, headers, config) {
         })

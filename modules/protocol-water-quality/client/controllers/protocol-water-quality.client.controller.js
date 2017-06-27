@@ -188,7 +188,7 @@
         $scope.$broadcast('show-errors-check-validity', '$scope.form.waterQualityForm.$valid');
       }
 
-      $http.post('/api/protocol-water-quality/' + $scope.waterQuality._id + '/incremental-save',
+      $http.put('/api/protocol-water-quality/' + $scope.waterQuality._id,
         $scope.waterQuality)
         .success(function (data, status, headers, config) {
           if (data.errors) {

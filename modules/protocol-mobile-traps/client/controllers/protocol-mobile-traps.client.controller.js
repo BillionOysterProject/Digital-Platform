@@ -239,7 +239,7 @@
 
       var mobileTrapId = $scope.mobileTrap._id;
 
-      $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+      $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
         $scope.mobileTrap)
         .success(function (data, status, headers, config) {
           saveImages(function() {
