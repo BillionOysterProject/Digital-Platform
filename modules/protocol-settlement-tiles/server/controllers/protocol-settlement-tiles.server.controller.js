@@ -29,7 +29,7 @@ var checkRole = function(role, user) {
   return (roleIndex > -1) ? true : false;
 };
 
-var validateSettlementTiles = function(settlementTiles, successCallback, errorCallback) {
+var validate = function(settlementTiles, successCallback, errorCallback) {
   var errorMessages = [];
 
   if (!settlementTiles.settlementTiles || settlementTiles.settlementTiles.length < 1) {
@@ -113,32 +113,32 @@ var validateSettlementTiles = function(settlementTiles, successCallback, errorCa
 //   return settlementTiles;
 // };
 
-/**
- * Create a protocol settlement tiles
- */
-exports.create = function (req, res) {
-  validateSettlementTiles(req.body,
-  function(settlementTilesJSON) {
-    //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
-    var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-    settlementTiles.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
-    settlementTiles.scribeMember = req.user;
-
-    settlementTiles.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(settlementTiles);
-      }
-    });
-  }, function(errorMessages) {
-    return res.status(400).send({
-      message: errorMessages
-    });
-  });
-};
+// /**
+//  * Create a protocol settlement tiles
+//  */
+// exports.create = function (req, res) {
+//   validateSettlementTiles(req.body,
+//   function(settlementTilesJSON) {
+//     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
+//     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
+//     settlementTiles.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
+//     settlementTiles.scribeMember = req.user;
+//
+//     settlementTiles.save(function (err) {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         });
+//       } else {
+//         res.json(settlementTiles);
+//       }
+//     });
+//   }, function(errorMessages) {
+//     return res.status(400).send({
+//       message: errorMessages
+//     });
+//   });
+// };
 
 /**
  * Show the current protocol settlement tiles
@@ -178,7 +178,7 @@ exports.read = function (req, res) {
 
 exports.validate = function (req, res) {
   var settlementTiles = req.body;
-  validateSettlementTiles(settlementTiles,
+  validate(settlementTiles,
   function(settlementTilesJSON) {
     res.json({
       settlementTiles: settlementTiles,
@@ -192,64 +192,84 @@ exports.validate = function (req, res) {
   });
 };
 
-exports.incrementalSave = function (req, res) {
-  var settlementTiles = req.settlementTiles;
+// exports.incrementalSave = function (req, res) {
+//   var settlementTiles = req.settlementTiles;
+//
+//   if (settlementTiles) {
+//     settlementTiles = _.extend(settlementTiles, req.body);
+//     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+//     settlementTiles.scribeMember = req.user;
+//
+//     // remove base64 text
+//     var pattern = /^data:image\/[a-z]*;base64,/i;
+//     if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
+//       for (var j = 0; j < settlementTiles.settlementTiles.length; j++) {
+//         if (settlementTiles.settlementTiles[j].tilePhoto &&
+//         settlementTiles.settlementTiles[j].tilePhoto.path &&
+//         pattern.test(settlementTiles.settlementTiles[j].tilePhoto.path)) {
+//           settlementTiles.settlementTiles[j].tilePhoto.path = '';
+//         }
+//       }
+//     }
+//
+//     settlementTiles.save(function (err) {
+//       if (err) {
+//         return res.status(400).send({
+//           message: errorHandler.getErrorMessage(err)
+//         });
+//       } else {
+//         validateSettlementTiles(settlementTiles,
+//         function(settlementTilesJSON) {
+//           res.json({
+//             settlementTiles: settlementTiles,
+//             successful: true
+//           });
+//         }, function(errorMessages) {
+//           res.json({
+//             settlementTiles: settlementTiles,
+//             errors: errorMessages
+//           });
+//         });
+//       }
+//     });
+//   } else {
+//     return res.status(400).send({
+//       message: 'Protocol settlement tiles not found'
+//     });
+//   }
+// };
 
-  if (settlementTiles) {
-    settlementTiles = _.extend(settlementTiles, req.body);
-    settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    settlementTiles.scribeMember = req.user;
-
-    // remove base64 text
-    var pattern = /^data:image\/[a-z]*;base64,/i;
-    if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
-      for (var j = 0; j < settlementTiles.settlementTiles.length; j++) {
-        if (settlementTiles.settlementTiles[j].tilePhoto &&
-        settlementTiles.settlementTiles[j].tilePhoto.path &&
-        pattern.test(settlementTiles.settlementTiles[j].tilePhoto.path)) {
-          settlementTiles.settlementTiles[j].tilePhoto.path = '';
-        }
-      }
-    }
-
-    settlementTiles.save(function (err) {
+exports.createInternal = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var settlementTiles = new ProtocolSettlementTile({
+      collectionTime: moment(collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate(),
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
+    settlementTiles.save(function(err) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback('Could not create a settlement tile protocol');
       } else {
-        validateSettlementTiles(settlementTiles,
-        function(settlementTilesJSON) {
-          res.json({
-            settlementTiles: settlementTiles,
-            successful: true
-          });
-        }, function(errorMessages) {
-          res.json({
-            settlementTiles: settlementTiles,
-            errors: errorMessages
-          });
-        });
+        callback(null, settlementTiles);
       }
     });
   } else {
-    return res.status(400).send({
-      message: 'Protocol settlement tiles not found'
-    });
+    callback();
   }
 };
 
 /**
  * Update a protocol settlement tiles
  */
-exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, validate, successCallback, errorCallback) {
+exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, validate, callback) {
   var save = function(settlementTilesJSON) {
     var settlementTiles = settlementTilesReq;
 
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
-      settlementTiles.collectionTime = moment(settlementTilesBody.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
+      settlementTiles.collectionTime = moment(settlementTilesBody.collectionTime).startOf('minute').toDate();
       settlementTiles.scribeMember = user;
       settlementTiles.submitted = new Date();
 
@@ -267,22 +287,22 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
 
       settlementTiles.save(function (err) {
         if (err) {
-          errorCallback(errorHandler.getErrorMessage(err));
+          callback(errorHandler.getErrorMessage(err));
         } else {
-          successCallback(settlementTiles);
+          callback(null, settlementTiles);
         }
       });
     } else {
-      errorCallback('Protocol settlement tiles not found');
+      callback('Protocol settlement tiles not found');
     }
   };
 
   if (validate) {
-    validateSettlementTiles(settlementTilesBody,
+    validate(settlementTilesBody,
     function(settlementTilesJSON) {
       save(settlementTilesJSON);
     }, function(errorMessages) {
-      errorCallback(errorMessages);
+      callback(null, null, errorMessages);
     });
   } else {
     save(settlementTilesBody);
@@ -291,69 +311,103 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
 
 exports.update = function (req, res) {
   var settlementTilesBody = req.body;
-  settlementTilesBody.status = 'submitted';
   exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
-  function(settlementTiles) {
-    res.json(settlementTiles);
-  }, function(errorMessage) {
-    return res.status(400).send({
-      message: errorMessage
-    });
-  });
-};
-
-exports.updateTeamMembers = function(settlementTiles, list, successCallback, errorCallback) {
-  settlementTiles.teamMembers = list;
-  settlementTiles.save(function (err) {
+  function(err, settlementTiles, errorMessages) {
     if (err) {
-      errorCallback(errorHandler.getErrorMessage(err));
+      return res.status(400).send({
+        message: err
+      });
     } else {
-      successCallback(settlementTiles);
+      var result = {
+        settlementTiles: settlementTiles
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
     }
   });
 };
 
+// exports.updateTeamMembers = function(settlementTiles, list, successCallback, errorCallback) {
+//   settlementTiles.teamMembers = list;
+//   settlementTiles.save(function (err) {
+//     if (err) {
+//       errorCallback(errorHandler.getErrorMessage(err));
+//     } else {
+//       successCallback(settlementTiles);
+//     }
+//   });
+// };
+
 /**
  * Delete a protocol settlement tiles
  */
-var deleteInternal = function(settlementTiles, successCallback, errorCallback) {
-  var filesToDelete = [];
+exports.deleteInternal = function(settlementTiles, callback) {
   if (settlementTiles) {
+    var filesToDelete = [];
     if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
       for (var i = 0; i < settlementTiles.settlementTiles.length; i++) {
         filesToDelete.push(settlementTiles.settlementTiles[i].tilePhoto.path);
       }
     }
 
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      settlementTiles.remove(function (err) {
+        if (err) {
+          callback(errorHandler.getErrorMessage(err));
+        } else {
+          callback(null, settlementTiles);
+        }
+      });
+    }, function(err) {
+      callback(err);
+    });
+  } else {
+    callback();
   }
+};
 
-  var uploadRemote = new UploadRemote();
-  uploadRemote.deleteRemote(filesToDelete,
-  function() {
-    settlementTiles.remove(function (err) {
-      if (err) {
-        errorCallback(errorHandler.getErrorMessage(err));
+exports.updateFromExpedition = function(existing, updated, user, callback) {
+  if (!existing.protocols.waterQuality && updated.protocols.waterQuality) {
+    exports.createInternal(updated.monitoringStartDate, updated.station.latitude, updated.station.longitude,
+      updated.teamLists.waterQuality, function(err, waterQuality) {
+        callback(err, waterQuality);
+      });
+  } else if (existing.protocols.waterQuality && !updated.protocols.waterQuality) {
+    exports.deleteInternal(existing.protocols.waterQuality, function(err, waterQuality) {
+      callback(err, waterQuality);
+    });
+  } else if (existing.protocols.waterQuality && updated.protocols.waterQuality) {
+    existing.protocols.waterQuality.teamMembers = existing.teamLists.waterQuality;
+    exports.updateInternal(existing, updated, user, false, function(err, waterQuality, errorMessages) {
+      if (errorMessages) {
+        callback(errorMessages, waterQuality);
       } else {
-        successCallback(settlementTiles);
+        callback(err, waterQuality);
       }
     });
-  }, function(err) {
-    errorCallback(err);
-  });
+  } else {
+    callback(null, existing.protocols.waterQuality);
+  }
 };
 
-exports.delete = function (req, res) {
-  var settlementTiles = req.settlementTiles;
-
-  deleteInternal(settlementTiles,
-  function(settlementTiles) {
-    res.json(settlementTiles);
-  }, function (err) {
-    return res.status(400).send({
-      message: errorHandler.getErrorMessage(err)
-    });
-  });
-};
+// exports.delete = function (req, res) {
+//   var settlementTiles = req.settlementTiles;
+//
+//   deleteInternal(settlementTiles,
+//   function(settlementTiles) {
+//     res.json(settlementTiles);
+//   }, function (err) {
+//     return res.status(400).send({
+//       message: errorHandler.getErrorMessage(err)
+//     });
+//   });
+// };
 
 var uploadFileSuccess = function(settlementTiles, res) {
   settlementTiles.save(function (saveError) {
@@ -368,7 +422,7 @@ var uploadFileSuccess = function(settlementTiles, res) {
 };
 
 var uploadFileError = function(settlementTiles, errorMessage, res) {
-  deleteInternal(settlementTiles,
+  exports.deleteInternal(settlementTiles,
   function(settlementTiles) {
     return res.status(400).send({
       message: errorMessage

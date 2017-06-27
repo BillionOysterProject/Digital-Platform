@@ -190,7 +190,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Site Condition';
-        $http.post('/api/protocol-site-conditions/' + siteConditionId + '/incremental-save',
+        $http.put('/api/protocol-site-conditions/' + siteConditionId,
         $scope.siteCondition)
         .success(function (data, status, headers, config) {
           if (data.errors) {

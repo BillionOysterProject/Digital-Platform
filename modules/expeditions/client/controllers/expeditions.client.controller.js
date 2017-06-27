@@ -165,6 +165,8 @@
         return false;
       }
 
+
+
       // set team
       var teamIndex = lodash.findIndex(vm.teams, function(t) {
         return t._id === vm.teamId;

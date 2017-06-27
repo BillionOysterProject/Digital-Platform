@@ -50,7 +50,7 @@
           done: false
         });
       }
-      $http.post('/api/protocol-oyster-measurements/' + $scope.oysterMeasurement._id + '/incremental-save',
+      $http.put('/api/protocol-oyster-measurements/' + $scope.oysterMeasurement._id,
         $scope.oysterMeasurement)
         .success(function (data, status, headers, config) {
           if (callback) callback();

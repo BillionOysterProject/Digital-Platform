@@ -76,7 +76,7 @@
         $scope.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
       }
       if (save) {
-        $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (callback) callback();

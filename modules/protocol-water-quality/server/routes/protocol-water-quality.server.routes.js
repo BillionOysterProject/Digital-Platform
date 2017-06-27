@@ -7,13 +7,6 @@ var waterQualitiesPolicy = require('../policies/protocol-water-quality.server.po
   waterQualities = require('../controllers/protocol-water-quality.server.controller');
 
 module.exports = function (app) {
-  // Protocol Water Quality collection routes
-  app.route('/api/protocol-water-quality').all(waterQualitiesPolicy.isAllowed)
-    // .get(waterQualities.list)
-    .post(waterQualities.create);
-
-  app.route('/api/protocol-water-quality/:waterQualityId/incremental-save').all(waterQualitiesPolicy.isAllowed)
-    .post(waterQualities.incrementalSave);
 
   app.route('/api/protocol-water-quality/:waterQualityId/validate').all(waterQualitiesPolicy.isAllowed)
     .post(waterQualities.validate);
