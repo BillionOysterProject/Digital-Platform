@@ -20,7 +20,8 @@ var UnitSchema = new Schema({
   title: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
+    required: true
   },
   color: {
     type: String,
@@ -99,12 +100,6 @@ var UnitSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User',
     required: true
-  },
-  permissions: {
-    type: [{
-      type: String
-    }],
-    default: ['admin']
   },
   updated: {
     type: Array

@@ -6,7 +6,8 @@ var should = require('should'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   Research = mongoose.model('Research'),
-  express = require(path.resolve('./config/lib/express'));
+  express = require(path.resolve('./config/lib/express')),
+  async = require('async');
 
 /**
  * Globals
@@ -404,8 +405,14 @@ describe('Research CRUD tests', function () {
   });
 
   afterEach(function (done) {
-    User.remove().exec(function () {
-      Research.remove().exec(done);
+    Research.find({ 'title': research.title }).exec(function(err, researches) {
+      async.forEach(researches, function(research, callback) {
+        research.remove().exec(function() {
+          callback();
+        });
+      }, function(err) {
+        done();
+      });
     });
   });
 });

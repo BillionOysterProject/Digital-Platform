@@ -59,7 +59,11 @@ var addUnitToUnits = function(unit, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.subUnits, function(s) {
-          return s === unit._id;
+          if (s && unit && unit._id) {
+            return s.toString() === unit._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index === -1) {
           unitObj.subUnits.push(unit);
@@ -85,7 +89,11 @@ var removeUnitFromUnits = function(unit, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.subUnits, function(s) {
-          return s === unit._id;
+          if (s && unit && unit._id) {
+            return s.toString() === unit._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index > -1) {
           unitObj.subUnits.splice(index, 1);
