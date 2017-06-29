@@ -5,15 +5,9 @@
                 <div class="col-md-4 col-sm-6 box text-center" style="color: {{vm.unit.color}}">
                     <h1><i class="{{vm.unit.icon}}"></i></h1>
                     <h2>{{vm.unit.title}}</h2>
-                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                      {{vm.unit.lessons.length}} Lessons | {{vm.unit.subUnits.length}} Sub Units
-                    </h6>
-                    <h6 ng-show="vm.unit.lessons && vm.unit.lessons.length > 0 && (!vm.unit.subUnits || vm.unit.subUnits.length <= 0)">
-                      {{vm.unit.lessons.length}} Lessons
-                    </h6>
-                    <h6 ng-show="(!vm.unit.lessons || vm.unit.lessons.length <= 0) && vm.unit.subUnits && vm.unit.subUnits.length > 0">
-                      {{vm.unit.subUnits.length}} Sub Units
-                    </h6>
+                        <h6>
+                          {{vm.unit.lessons.length}} Lessons<span ng-show="unit.subUnits && unit.subUnits.length > 0"> | {{vm.unit.subUnits.length}} Sub Units</span>
+                        </h6>
                 </div>
                 <div class="col-md-8 col-sm-6" ng-show="vm.unit.parentUnits.length > 0">
                     <br/><br/><br/>
@@ -199,12 +193,27 @@
                       popover-enable="lesson.lessonOverview.lessonSummary || lesson.lessonObjectives" popover-placement="top">
                       <script type="text/ng-template" id="lessonPopover.html">
                         <div>
-                          <h6 ng-show="lesson.lessonOverview.lessonSummary">Summary</h6>
-                          <p class="small text-muted" ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                          <div class="row" ng-show="lesson.lessonOverview.lessonSummary">
+                              <div class="col-sm-12">
+                                <h6>Summary</h6>
+                              </div>
+                          </div>
+                          <div class="row" ng-show="lesson.lessonOverview.lessonSummary">
+                            <div class="col-sm-12">
+                                <p class="small text-muted" ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
+                            </div>
+                          </div>
                           <br ng-show="lesson.lessonOverview.lessonSummary && lesson.lessonObjectives" />
-                          <br ng-show="lesson.lessonOverview.lessonSummary && lesson.lessonObjectives" />
-                          <h6 ng-show="lesson.lessonObjectives">Objectives</h6>
-                          <p class="small text-muted" ng-bind-html="lesson.lessonObjectives | sanitize"></p>
+                          <div class="row" ng-show="lesson.lessonObjectives">
+                            <div class="col-sm-12">
+                                <h6>Objectives</h6>
+                            </div>
+                          </div>
+                          <div class="row" ng-show="lesson.lessonObjectives">
+                            <div class="col-sm-12">
+                                <p class="small text-muted" ng-bind-html="lesson.lessonObjectives | sanitize"></p>
+                            </div>
+                          </div>
                         </div>
                       </script>
                       <!-- uib-popover-template="modules/lessons/client/views/lesson-popover.client.view.html" popover-trigger="mouseenter" popover-placement="top" -->
