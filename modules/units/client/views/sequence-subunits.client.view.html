@@ -17,11 +17,14 @@
                           dnd-effect-allowed="move"
                           dnd-selected="selected = sub"
                           ng-class="{'selected': selected === sub}">
-                          <div class="col-md-4">
-                            <h4><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
+                          <div class="col-md-1">
+                            <h4 ng-class="{'blue': sub.status === 'published', 'gray': sub.status !== 'published'}"><b>{{($index+1)}}</b></h4>
                           </div>
-                          <div class="col-md-3"><b>{{sub.lessons.length}}</b> Lessons</div>
-                          <div class="col-md-3"><b>{{sub.subUnits.length}}</b> Sub Units</div>
+                          <div class="col-md-3">
+                            <h4 ng-class="{'text-muted': sub.status !== 'published'}"><i class="{{sub.icon}} {{sub.color}}"></i> {{sub.title}}</h4>
+                          </div>
+                          <div class="col-md-3" ng-class="{'text-muted': sub.status !== 'published'}"><b>{{sub.lessons.length}}</b> Lessons</div>
+                          <div class="col-md-3" ng-class="{'text-muted': sub.status !== 'published'}"><b>{{sub.subUnits.length}}</b> Sub Units</div>
                           <div class="col-md-2 text-right">
                             <span class="label"
                               ng-class="{'label-success': sub.status === 'published','label-default': sub.status === 'draft'}">
