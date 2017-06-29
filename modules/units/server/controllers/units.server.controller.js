@@ -358,7 +358,7 @@ exports.unitByID = function (req, res, next, id) {
     .populate('standards.nysssKeyIdeas')
     .populate('standards.nysssMajorUnderstandings')
     .populate('standards.nysssMst')
-    .populate('lessons', 'title lessonOverview lessonObjectives user status')
+    .populate('lessons', 'title lessonOverview lessonObjectives user featuredImage status')
     .populate('parentUnits', 'title color icon status')
     .populate('subUnits', 'title lessons subUnits status');
   } else {
