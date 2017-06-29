@@ -41,8 +41,8 @@ describe('Calendar Event Model Unit Tests:', function() {
           endDateTime: moment().toDate()
         }],
         category: {
-          type: 'field training',
-        }, 
+          type: '5833bfa1957940604da50cd0',
+        },
         deadlineToRegister: moment().toDate(),
         location: {
           addressString: '123 Main St, New York, New York',
