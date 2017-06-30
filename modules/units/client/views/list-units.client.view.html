@@ -40,14 +40,14 @@
                           {{unit.lessons.length}} Lessons<span ng-show="unit.subUnits && unit.subUnits.length > 0"> | {{unit.subUnits.length}} Sub Units</span>
                         </h6>
                     </div>
-                    <div class="panel-footer" ng-show="(unit.parentUnits && unit.parentUnits.length > 0) || unit.status === 'draft'">
-                        <h4 class="text-center" ng-show="unit.parentUnits && unit.parentUnits.length > 0">
+                    <div class="panel-footer" ng-show="unit.status === 'draft'"><!--(unit.parentUnits && unit.parentUnits.length > 0) || -->
+                        <!--<h4 class="text-center" ng-show="unit.parentUnits && unit.parentUnits.length > 0">
                             <small class="text-muted">sub unit of</small><br/>
                             <div ng-repeat="parent in unit.parentUnits" style="color: {{parent.color}}">
                                 <i class="{{parent.icon}}"></i> <b>{{parent.title}}</b>
                             </div>
-                        </h4>
-                        <h6 class="text-center" ng-show="unit.status === 'draft'">Draft</h6>
+                        </h4>-->
+                        <h6 class="text-center">Draft</h6>
                     </div>
                 </div>
             </div>

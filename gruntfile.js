@@ -331,7 +331,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'copy:fonts', 'copy:images', 'cssmin']);
 
   // Run the project tests
-  grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'dropdb', 'run:testDBload', 'server', 'mochaTest', 'protractor']); //, 'karma:unit'
+  grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'dropdb', 'run:testDBload', 'server', 'mochaTest']); //'protractor', 'karma:unit'
   grunt.registerTask('test:server', ['env:test', 'lint', 'dropdb', 'run:testDBload', 'server', 'mochaTest']);
   grunt.registerTask('test:client', ['env:test', 'lint', 'dropdb', 'run:testDBload']); //, 'karma:unit'
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'run:testDBload', 'server', 'protractor']);

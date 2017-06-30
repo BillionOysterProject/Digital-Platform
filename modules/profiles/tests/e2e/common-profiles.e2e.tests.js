@@ -49,7 +49,7 @@ var assertORSProfile = function(values, teamLead, organization, isAdmin, isOwner
 
   // Info
   expect(element(by.id('ors-view-info')).getText()).toEqual(values.name + '    ' + values.statusText);
-  expect(element(by.id('ors-view-location')).getText()).toEqual(values.bodyOfWater + ', ' + values.boroughCounty + '\n' +
+  expect(element(by.id('ors-view-location')).getText()).toEqual(values.bodyOfWater + ', ' + values.boroughCounty + '\n\n\n' +
     values.location.latitude + ', ' + values.location.longitude);
 
   // Owner
@@ -87,7 +87,7 @@ var assertORSProfile = function(values, teamLead, organization, isAdmin, isOwner
   var extras = element(by.id('ors-view-extra'));
   var extraText = 'Site Coordinator\n';
   if (values.siteCoordinatorName) extraText += ((values.siteCoordinatorName === 'Other' && values.otherSiteCoordinator) ?
-    values.otherSiteCoordinator.name : values.siteCoordinatorName) + '\n';
+    values.otherSiteCoordinator.displayName : values.siteCoordinatorName) + '\n';
   extraText += 'Property Owner\n';
   if (values.propertyOwnerName) extraText += ((values.propertyOwnerName === 'Other' && values.otherPropertyOwner) ?
     values.otherPropertyOwner.name : values.propertyOwnerName) + '\n';

@@ -55,11 +55,11 @@ var setUpSiteCoordinator = function(req, station, callback) {
   var profileLink = httpTransport + req.headers.host + '/profiles';
 
   if (req.body.siteCoordinator && req.body.siteCoordinator._id === '-1') {
+    station.siteCoordinator = undefined;
     if ((req.body.siteCoordinator.displayName !== station.otherSiteCoordinator.name) &&
     (req.body.siteCoordinator.email !== station.otherSiteCoordinator.email)) {
       station.otherSiteCoordinator.name = req.body.siteCoordinator.displayName;
       station.otherSiteCoordinator.email = req.body.siteCoordinator.email;
-      station.siteCoordinator = undefined;
 
       sendAdminEmailOther('Unlisted Site Coordinator Added for ORS ' + station.name, 'ors_other_site_coordinator',
         station.name, req.user.displayName, station.otherSiteCoordinator.name, station.otherSiteCoordinator.email, orsFormLink, profileLink,
@@ -81,11 +81,11 @@ var setUpPropertyOwner = function(req, station, callback) {
   var profileLink = httpTransport + req.headers.host + '/profiles';
 
   if (req.body.propertyOwner && req.body.propertyOwner._id === '-1') {
+    station.propertyOwner = undefined;
     if ((req.body.propertyOwner.name !== station.otherPropertyOwner.name) &&
     (req.body.propertyOwner.email !== station.otherPropertyOwner.email)) {
       station.otherPropertyOwner.name = req.body.propertyOwner.name;
       station.otherPropertyOwner.email = req.body.propertyOwner.email;
-      station.propertyOwner = undefined;
 
       sendAdminEmailOther('Unlisted Property Owner Added for ORS ' + station.name, 'ors_other_property_owner',
         station.name, req.user.displayName, station.otherPropertyOwner.name, station.otherPropertyOwner.email, orsFormLink, profileLink,

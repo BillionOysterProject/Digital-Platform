@@ -51,15 +51,15 @@
       vm.lesson.lessonOverview.setting || (vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0)"/>
 
     <div class="row">
-      <div class="col-sm-6" ng-show="vm.lesson.unit">
-        <h4>
-          <b>Unit:</b>
-          <!--TODO<a href="#" ui-sref="units.view({ unitId: vm.lesson.unit._id })">-->{{vm.lesson.unit.title}}<!--</a>-->
+      <div class="col-sm-3" ng-show="vm.lesson.units">
+        <b>{{vm.lesson.units.length > 1 ? 'Units' : 'Unit' }}</b>
+        <h4 ng-repeat="unit in vm.lesson.units" style="color: {{unit.color}}">
+            <a href="#" ui-sref="units.view({ unitId: unit._id })" style="color: {{unit.color}}">
+                <i class="{{unit.icon}}"></i>
+                <b>{{unit.title}}</b>
+            </a>
         </h4>
       </div>
-    </div>
-
-    <div class="row">
       <div class="col-sm-2" ng-show="vm.lesson.lessonOverview.grade">
         <b>Grade</b>
         <p ng-bind="vm.lesson.lessonOverview.grade"></p>
@@ -72,7 +72,7 @@
         <b>Setting</b>
         <p ng-bind="vm.lesson.lessonOverview.setting"></p>
       </div>
-      <div class="col-sm-6" ng-show="vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0">
+      <div class="col-sm-3" ng-show="vm.lesson.lessonOverview.subjectAreas && vm.lesson.lessonOverview.subjectAreas.length > 0">
         <b>Subject Areas</b>
         <ul class="list-inline">
           <li ng-repeat="subject in vm.lesson.lessonOverview.subjectAreas">
@@ -119,14 +119,27 @@
 
     <div class="row">
       <div class="col-sm-3" ng-show="vm.showSidebar">
-        <ul
-          class="list-unstyled"
-          id="lesson-resources"
+        <div ng-show="vm.lesson.materialsResources.supplies">
+            <b>Supplies</b><br/>
+            <span ng-bind-html="vm.lesson.materialsResources.supplies | sanitize"></span>
+        </div>
+        <br/>
+        <ul class="list-unstyled" id="lesson-handouts" ng-show="vm.lesson.materialsResources.handoutsFileInput &&
+                vm.lesson.materialsResources.handoutsFileInput.length > 0">
+          <b>Handouts</b>
+          <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
+            <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+              <i class="glyphicon glyphicon-file"></i>
+              {{file.originalname}}</a>
+          </li>
+        </ul>
+        <br/>
+        <ul class="list-unstyled" id="lesson-resources"
           ng-show="(vm.lesson.materialsResources.teacherResourcesFiles &&
                 vm.lesson.materialsResources.teacherResourcesFiles.length > 0) ||
                 (vm.lesson.materialsResources.teacherResourcesLinks &&
                 vm.lesson.materialsResources.teacherResourcesLinks.length > 0)">
-          <b>Lesson Resources</b>
+          <b>Teacher Resources</b>
           <li ng-repeat="file in vm.lesson.materialsResources.teacherResourcesFiles">
             <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
               <i class="glyphicon glyphicon-file"></i>
@@ -141,16 +154,6 @@
           <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
         </ul>
         <br/>
-        <ul class="list-unstyled" id="lesson-handouts" ng-show="vm.lesson.materialsResources.handoutsFileInput &&
-                vm.lesson.materialsResources.handoutsFileInput.length > 0">
-          <b>Hand Outs</b>
-          <li ng-repeat="file in vm.lesson.materialsResources.handoutsFileInput">
-            <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
-              <i class="glyphicon glyphicon-file"></i>
-              {{file.originalname}}</a>
-          </li>
-        </ul>
-        <br/>
         <ul class="list-unstyled" id="lesson-state-test-questions" ng-show="vm.lesson.materialsResources.stateTestQuestions &&
                 vm.lesson.materialsResources.stateTestQuestions.length > 0">
           <b>State Test Questions</b>
@@ -158,54 +161,48 @@
             <img ng-src="{{file.path}}" class="img-responsive" id="img-{{file.originalname}}"/>
           </li>
         </ul>
-      </div>
-
-      <div ng-class="{ 'col-sm-9': vm.showSidebar, 'col-sm-12': !vm.showSidebar }">
-        <!-- <h3>Lesson Overview</h3> -->
-        <div class="row">
-          <div class="col-sm-12" ng-show="vm.lesson.lessonOverview.lessonSummary">
-            <h3>Lesson Summary</h3>
-            <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div>
-          </div>
-          <div
-            ng-show="vm.lesson.lessonObjectives"
-            ng-class="{ 'col-sm-6': (vm.lesson.materialsResources.vocabulary &&
-                    vm.lesson.materialsResources.vocabulary.length > 0),
-                    'col-sm-12': (!vm.lesson.materialsResources.vocabulary ||
-                    vm.lesson.materialsResources.vocabulary.length === 0)}">
-            <h3>Objectives</h3>
-            <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
-          </div>
-          <div id="lesson-vocabulary" ng-show="vm.lesson.materialsResources.vocabulary &&
-                    vm.lesson.materialsResources.vocabulary.length > 0" ng-class="{ 'col-sm-6': vm.lesson.lessonObjectives, 'col-sm-12': !vm.lesson.lessonObjectives}">
-            <h3>Vocabulary</h3>
-            <div ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
+        <br/>
+        <ul class="list-unstyled" id="lesson-vocabulary" ng-show="vm.lesson.materialsResources.vocabulary && vm.lesson.materialsResources.vocabulary.length > 0">
+            <b>Vocabulary</b>
+            <li ng-repeat="vocabulary in vm.lesson.materialsResources.vocabulary">
               <a href="#" uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}" popover-trigger="mouseenter" popover-placement="top">
                 <i class="glyphicon glyphicon-comment"></i>
                 {{vocabulary.term}}</a>
+            </li>
+        </ul>
+      </div>
+
+      <div ng-class="{ 'col-sm-9': vm.showSidebar, 'col-sm-12': !vm.showSidebar }">
+
+        <h4 ng-show="vm.lesson.lessonOverview.lessonSummary">Summary</h4>
+        <div ng-bind-html="vm.lesson.lessonOverview.lessonSummary | sanitize"></div><br/>
+
+        <h4 ng-show="vm.lesson.lessonObjectives">Objectives</h4>
+        <div ng-bind-html="vm.lesson.lessonObjectives | sanitize"></div>
+
+        <hr ng-show="vm.lesson.materialsResources.teacherTips || vm.lesson.preparation || vm.lesson.background" />
+
+        <div class="row">
+          <div class="col-sm-12">
+            <h3 class="blue" ng-show="vm.lesson.materialsResources.teacherTips || vm.lesson.preparation || vm.lesson.background">Before you get started</h3>
+            <div class="col-sm-12" ng-show="vm.lesson.materialsResources.teacherTips">
+                <h4>Tips for Teachers</h4>
+                <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div><br/>
             </div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.materialsResources.supplies">
-            <h3>Supplies</h3>
-            <div ng-bind-html="vm.lesson.materialsResources.supplies | sanitize"></div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.preparation">
-            <h3>Preparation</h3>
-            <div ng-bind-html="vm.lesson.preparation | sanitize"></div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.background">
-            <h3>Background</h3>
-            <div ng-bind-html="vm.lesson.background | sanitize"></div>
-          </div>
-          <div class="col-sm-12" ng-show="vm.lesson.materialsResources.teacherTips">
-            <h3>Teacher Tips</h3>
-            <div ng-bind-html="vm.lesson.materialsResources.teacherTips | sanitize"></div>
+            <div class="col-sm-12" ng-show="vm.lesson.preparation">
+                <h4>Preparation</h4>
+                <div ng-bind-html="vm.lesson.preparation | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-show="vm.lesson.background">
+                <h4>Background</h4>
+                <div ng-bind-html="vm.lesson.background | sanitize"></div><br/>
+            </div>
           </div>
         </div>
 
         <hr ng-show="vm.lesson.instructionPlan.engage ||
                 vm.lesson.instructionPlan.explore || vm.lesson.instructionPlan.explain ||
-                vm.lesson.instructionPlan.elaborate || vm.lesson.instructionPlan.evaluate"/>
+                vm.lesson.instructionPlan.elaborate || vm.lesson.instructionPlan.evaluate" />
 
         <div class="row">
           <div class="col-sm-12"
@@ -213,7 +210,7 @@
           ng-show="vm.lesson.instructionPlan.engage ||
                   vm.lesson.instructionPlan.explore || vm.lesson.instructionPlan.explain ||
                   vm.lesson.instructionPlan.elaborate || vm.lesson.instructionPlan.evaluate">
-            <h3>Instruction Plan</h3>
+            <h3 class="blue">Instruction Plan</h3>
             <div>
               <div class="col-sm-12" ng-show="vm.lesson.instructionPlan.engage">
                 <h4>Engage</h4>
@@ -262,7 +259,7 @@
                   (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
                   (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) ||
                   (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)">
-            <h3>Standards
+            <h3 class="blue">Standards
               {{vm.standardCount}}</h3>
           </div>
           <div class="{{vm.standardClass}}" ng-show="vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0">

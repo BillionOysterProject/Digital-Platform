@@ -70,17 +70,23 @@
         <div class="row" isotope-container="isotope-container" id="lesson-list-isotope-container" images-loaded>
             <div ng-repeat="lesson in vm.lessons track by lesson._id" isotope-item="isotope-item" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.unit}}">
                 <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-                    <div class="panel-heading" ng-repeat="unit in lesson.units" style="background: {{unit.color}}">
-                        <span class="pull-right" ng-show="lesson.lessonOverview.grade">{{lesson.lessonOverview.grade}}</span>
-                        <h3 class="panel-title" ng-show="unit">
+                    <div class="panel-heading" style="background: #fcfcfc; border-bottom-color: #ddd;">
+                        <p class="panel-title" ng-show="unit" style="color: {{unit.color}}" ng-repeat="unit in lesson.units">
                             <i class="{{unit.icon}}"></i>
-                            {{unit.title}}
-                        </h3>
+                            <b>{{unit.title}}</b>
+                        </p>
                     </div>
                     <div class="panel-body">
-                        <small ng-show="lesson.lessonOverview.setting">{{lesson.lessonOverview.setting}}</small>
                         <h4><b>{{lesson.title}}</b></h4>
-                        <p class="small" ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                        <p class="text-muted">
+                            <small ng-show="lesson.lessonOverview.setting"><b>{{lesson.lessonOverview.setting}}</b> setting</small>
+                            <small ng-show="lesson.lessonOverview.setting && lesson.lessonOverview.grade" class="gray">&nbsp;&nbsp;|&nbsp;&nbsp;</small>
+                            <small ng-show="lesson.lessonOverview.grade"><b>{{lesson.lessonOverview.grade}}</b> grade</small>
+                        </p>
+                        <p class="small">
+                            <span ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></span>
+                            <span ng-show="lesson.lessonOverview.lessonSummary.length > 200">...</span>
+                        </p>
                         <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">
