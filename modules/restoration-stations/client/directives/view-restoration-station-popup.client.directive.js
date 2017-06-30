@@ -87,6 +87,7 @@
               };
 
               $scope.closeFormRestorationStation = function(refresh) {
+                console.log('refresh', refresh);
                 if ($scope.initial === 'orsForm') {
                   $scope.closeFunction(refresh);
                 } else {

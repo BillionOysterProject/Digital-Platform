@@ -49,7 +49,11 @@ var addLessonToUnits = function(lesson, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.lessons, function(l) {
-          return l === lesson._id;
+          if (l && lesson && lesson._id) {
+            return l.toString() === lesson._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index === -1) {
           unitObj.lessons.push(lesson);
@@ -75,7 +79,11 @@ var removeLessonFromUnits = function(lesson, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.lessons, function(l) {
-          return l === lesson._id;
+          if (l && lesson && lesson._id) {
+            return l.toString() === lesson._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index > -1) {
           unitObj.lessons.splice(index, 1);
@@ -278,16 +286,18 @@ exports.incrementalSave = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      validateLesson(lesson,
-      function(lessonJSON) {
-        res.json({
-          lesson: lesson,
-          successful: true
-        });
-      }, function (errorMessages) {
-        res.json({
-          lesson: lesson,
-          errors: errorMessages
+      addLessonToUnits(lesson, function() {
+        validateLesson(lesson,
+        function(lessonJSON) {
+          res.json({
+            lesson: lesson,
+            successful: true
+          });
+        }, function (errorMessages) {
+          res.json({
+            lesson: lesson,
+            errors: errorMessages
+          });
         });
       });
     }
