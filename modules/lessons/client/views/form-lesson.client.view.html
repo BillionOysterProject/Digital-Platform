@@ -1,6 +1,6 @@
 <section class="content shaded">
   <section class="container">
-    <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid)" novalidate>
+    <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid, false)" novalidate>
       <fieldset>
         <div class="container-fluid">
           <div class="page-header">
@@ -330,7 +330,7 @@
           <div>
             <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
             <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
-            <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
+            <a class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">Save draft</a>
             <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
               {{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
 

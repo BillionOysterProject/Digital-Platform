@@ -97,6 +97,8 @@ var removeLessonFromUnits = function(lesson, callback) {
         unitCallback();
       }
     });
+  }, function(err) {
+    callback();
   });
 };
 
@@ -112,7 +114,6 @@ exports.create = function(req, res) {
     lesson.materialsResources.handoutsFileInput = [];
     lesson.materialsResources.teacherResourcesFiles = [];
     lesson.materialsResources.stateTestQuestions = [];
-    lesson.status = 'pending';
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
@@ -125,28 +126,32 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var activity = new LessonActivity({
-          user: req.user,
-          lesson: lesson,
-          activity: 'submitted'
-        });
+        if (lesson.status === 'pending') {
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: lesson,
+            activity: 'submitted'
+          });
 
-        activity.save(function(err) {
-          addLessonToUnits(lesson, function() {
-            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          activity.save(function(err) {
+            addLessonToUnits(lesson, function() {
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-            email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-              TeamLeadName: req.user.displayName,
-              LessonName: lesson.title,
-              LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-              LinkProfile: httpTransport + req.headers.host + '/profiles'
-            }, function(info) {
-              res.json(lesson);
-            }, function(errorMessage) {
-              res.json(lesson);
+              email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+                TeamLeadName: req.user.displayName,
+                LessonName: lesson.title,
+                LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
+              }, function(info) {
+                res.json(lesson);
+              }, function(errorMessage) {
+                res.json(lesson);
+              });
             });
           });
-        });
+        } else {
+          res.json(lesson);
+        }
       }
     });
   }, function(errorMessages) {
@@ -249,62 +254,6 @@ var updateQuestions = function(lesson) {
 };
 
 /**
- * Incrementally save a lesson
- */
-exports.incrementalSave = function(req, res) {
-  var lesson = req.lesson;
-
-  if (lesson) {
-    lesson = _.extend(lesson, req.body);
-    lesson.returnedNotes = '';
-    if (!req.body.initial) lesson.status = 'draft';
-
-    lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
-    lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
-    lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
-  } else {
-    lesson = new Lesson(req.body);
-
-    lesson.user = req.user;
-    lesson.materialsResources.handoutsFileInput = [];
-    lesson.materialsResources.teacherResourcesFiles = [];
-    lesson.materialsResources.stateTestQuestions = [];
-    lesson.status = 'draft';
-  }
-
-  var pattern = /^data:image\/[a-z]*;base64,/i;
-  if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
-    lesson.featuredImage.path = '';
-  }
-
-  if (!lesson.updated) lesson.updated = [];
-  lesson.updated.push(Date.now());
-
-  lesson.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      addLessonToUnits(lesson, function() {
-        validateLesson(lesson,
-        function(lessonJSON) {
-          res.json({
-            lesson: lesson,
-            successful: true
-          });
-        }, function (errorMessages) {
-          res.json({
-            lesson: lesson,
-            errors: errorMessages
-          });
-        });
-      });
-    }
-  });
-};
-
-/**
  * Update a lesson
  */
 exports.update = function(req, res) {
@@ -314,7 +263,6 @@ exports.update = function(req, res) {
     if (lesson) {
       lesson = _.extend(lesson, lessonJSON);
       lesson.returnedNotes = '';
-      lesson.status = 'pending';
 
       lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
       lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
@@ -334,17 +282,34 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          var activity = new LessonActivity({
-            user: req.user,
-            lesson: lesson,
-            activity: 'submitted'
-          });
-
-          activity.save(function(err) {
-            addLessonToUnits(lesson, function() {
-              res.json(lesson);
+          if (lesson.status === 'pending') {
+            var activity = new LessonActivity({
+              user: req.user,
+              lesson: lesson,
+              activity: 'submitted'
             });
-          });
+
+            activity.save(function(err) {
+              removeLessonFromUnits(req.lesson, function() {
+                addLessonToUnits(lesson, function() {
+                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+                  email.sendEmailTemplate(config.mailer.admin, 'An updated lesson is pending approval', 'lesson_waiting', {
+                    TeamLeadName: req.user.displayName,
+                    LessonName: lesson.title,
+                    LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                    LinkProfile: httpTransport + req.headers.host + '/profiles'
+                  }, function(info) {
+                    res.json(lesson);
+                  }, function(errorMessage) {
+                    res.json(lesson);
+                  });
+                });
+              });
+            });
+          } else {
+            res.json(lesson);
+          }
         }
       });
     } else {
@@ -382,20 +347,24 @@ exports.publish = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          removeLessonFromUnits(req.lesson, function() {
+            addLessonToUnits(lesson, function() {
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-          'lesson_approved', {
-            FirstName: lesson.user.firstName,
-            LessonName: lesson.title,
-            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+              email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+              'lesson_approved', {
+                FirstName: lesson.user.firstName,
+                LessonName: lesson.title,
+                LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
+              },
+              function(response) {
+                res.json(lesson);
+              }, function(errorMessage) {
+                return res.status(400).send({
+                  message: errorMessage
+                });
+              });
             });
           });
         });
@@ -432,21 +401,25 @@ exports.return = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          removeLessonFromUnits(req.lesson, function() {
+            addLessonToUnits(lesson, function() {
+              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-          'lesson_returned', {
-            FirstName: lesson.user.firstName,
-            LessonName: lesson.title,
-            LessonReturnedNote: lesson.returnedNotes,
-            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+              email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+              'lesson_returned', {
+                FirstName: lesson.user.firstName,
+                LessonName: lesson.title,
+                LessonReturnedNote: lesson.returnedNotes,
+                LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                LinkProfile: httpTransport + req.headers.host + '/profiles'
+              },
+              function(response) {
+                res.json(lesson);
+              }, function(errorMessage) {
+                return res.status(400).send({
+                  message: errorMessage
+                });
+              });
             });
           });
         });

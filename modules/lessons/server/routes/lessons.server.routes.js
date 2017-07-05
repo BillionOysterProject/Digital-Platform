@@ -16,10 +16,6 @@ module.exports = function (app) {
   app.route('/api/lessons/download-file').all(lessonsPolicy.isAllowed)
     .get(lessons.downloadFile);
 
-  // Lesson incremental save
-  app.route('/api/lessons/:lessonId/incremental-save').all(lessonsPolicy.isAllowed)
-    .post(lessons.incrementalSave);
-
   // Upload featured image route
   app.route('/api/lessons/:lessonId/upload-featured-image').all(lessonsPolicy.isAllowed)
     .post(lessons.uploadFeaturedImage);
@@ -58,7 +54,7 @@ module.exports = function (app) {
 
   app.route('/api/lessons/tracked-list').all(lessonsPolicy.isAllowed)
     .get(lessons.listTrackedLessonsForUser);
-    
+
   app.route('/api/lessons/:lessonId/tracked-list').all(lessonsPolicy.isAllowed)
     .get(lessons.listTrackedForLessonAndUser);
 
