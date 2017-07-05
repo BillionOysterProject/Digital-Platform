@@ -39,90 +39,94 @@
     };
     vm.isAdmin = vm.checkRole('admin');
 
+    var populateFields = function() {
+      if ($rootScope.unit) {
+        if (!vm.unit.parentUnits) {
+          vm.unit.parentUnits = [];
+        }
+        vm.unit.parentUnits.push($rootScope.unit);
+        if ($rootScope.unit.standards) {
+          var getIds = function(standards) {
+            var ids = [];
+            for (var i = 0; i < standards.length; i++) {
+              if (standards[i]._id) ids.push(standards[i]._id);
+            }
+            return ids;
+          };
+          if (!vm.unit.standards) {
+            vm.unit.standards = {};
+          }
+
+          if (!vm.unit.standards.cclsElaScienceTechnicalSubjects) {
+            vm.unit.standards.cclsElaScienceTechnicalSubjects = [];
+          }
+          vm.unit.standards.cclsElaScienceTechnicalSubjects =
+            vm.unit.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
+
+          if (!vm.unit.standards.cclsMathematics) {
+            vm.unit.standards.cclsMathematics = [];
+          }
+          vm.unit.standards.cclsMathematics =
+            vm.unit.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
+
+          if (!vm.unit.standards.ngssCrossCuttingConcepts) {
+            vm.unit.standards.ngssCrossCuttingConcepts = [];
+          }
+          vm.unit.standards.ngssCrossCuttingConcepts =
+            vm.unit.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
+
+          if (!vm.unit.standards.ngssDisciplinaryCoreIdeas) {
+            vm.unit.standards.ngssDisciplinaryCoreIdeas = [];
+          }
+          vm.unit.standards.ngssDisciplinaryCoreIdeas =
+            vm.unit.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
+
+          if (!vm.unit.standards.ngssScienceEngineeringPractices) {
+            vm.unit.standards.ngssScienceEngineeringPractices = [];
+          }
+          vm.unit.standards.ngssScienceEngineeringPractices =
+            vm.unit.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
+
+          if (!vm.unit.standards.nycsssUnits) {
+            vm.unit.standards.nycsssUnits = [];
+          }
+          vm.unit.standards.nycsssUnits =
+            vm.unit.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
+
+          if (!vm.unit.standards.nysssKeyIdeas) {
+            vm.unit.standards.nysssKeyIdeas = [];
+          }
+          vm.unit.standards.nysssKeyIdeas =
+            vm.unit.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
+
+          if (!vm.unit.standards.nysssMajorUnderstandings) {
+            vm.unit.standards.nysssMajorUnderstandings = [];
+          }
+          vm.unit.standards.nysssMajorUnderstandings =
+            vm.unit.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
+
+          if (!vm.unit.standards.nysssMst) {
+            vm.unit.standards.nysssMst = [];
+          }
+          vm.unit.standards.nysssMst =
+            vm.unit.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
+
+        }
+        $rootScope.unit = null;
+      }
+    };
+    populateFields();
+
     var refreshUnit = function(callback) {
       UnitsService.get({
         unitId: vm.unit._id,
         full: true
       }, function(data) {
         vm.unit = data;
+        populateFields();
         if (callback) callback();
       });
     };
-
-    if ($rootScope.unit) {
-      if (!vm.unit.parentUnits) {
-        vm.unit.parentUnits = [];
-      }
-      vm.unit.parentUnits.push($rootScope.unit);
-      if ($rootScope.unit.standards) {
-        var getIds = function(standards) {
-          var ids = [];
-          for (var i = 0; i < standards.length; i++) {
-            if (standards[i]._id) ids.push(standards[i]._id);
-          }
-          return ids;
-        };
-        if (!vm.unit.standards) {
-          vm.unit.standards = {};
-        }
-
-        if (!vm.unit.standards.cclsElaScienceTechnicalSubjects) {
-          vm.unit.standards.cclsElaScienceTechnicalSubjects = [];
-        }
-        vm.unit.standards.cclsElaScienceTechnicalSubjects =
-          vm.unit.standards.cclsElaScienceTechnicalSubjects.concat(getIds($rootScope.unit.standards.cclsElaScienceTechnicalSubjects));
-
-        if (!vm.unit.standards.cclsMathematics) {
-          vm.unit.standards.cclsMathematics = [];
-        }
-        vm.unit.standards.cclsMathematics =
-          vm.unit.standards.cclsMathematics.concat(getIds($rootScope.unit.standards.cclsMathematics));
-
-        if (!vm.unit.standards.ngssCrossCuttingConcepts) {
-          vm.unit.standards.ngssCrossCuttingConcepts = [];
-        }
-        vm.unit.standards.ngssCrossCuttingConcepts =
-          vm.unit.standards.ngssCrossCuttingConcepts.concat(getIds($rootScope.unit.standards.ngssCrossCuttingConcepts));
-
-        if (!vm.unit.standards.ngssDisciplinaryCoreIdeas) {
-          vm.unit.standards.ngssDisciplinaryCoreIdeas = [];
-        }
-        vm.unit.standards.ngssDisciplinaryCoreIdeas =
-          vm.unit.standards.ngssDisciplinaryCoreIdeas.concat(getIds($rootScope.unit.standards.ngssDisciplinaryCoreIdeas));
-
-        if (!vm.unit.standards.ngssScienceEngineeringPractices) {
-          vm.unit.standards.ngssScienceEngineeringPractices = [];
-        }
-        vm.unit.standards.ngssScienceEngineeringPractices =
-          vm.unit.standards.ngssScienceEngineeringPractices.concat(getIds($rootScope.unit.standards.ngssScienceEngineeringPractices));
-
-        if (!vm.unit.standards.nycsssUnits) {
-          vm.unit.standards.nycsssUnits = [];
-        }
-        vm.unit.standards.nycsssUnits =
-          vm.unit.standards.nycsssUnits.concat(getIds($rootScope.unit.standards.nycsssUnits));
-
-        if (!vm.unit.standards.nysssKeyIdeas) {
-          vm.unit.standards.nysssKeyIdeas = [];
-        }
-        vm.unit.standards.nysssKeyIdeas =
-          vm.unit.standards.nysssKeyIdeas.concat(getIds($rootScope.unit.standards.nysssKeyIdeas));
-
-        if (!vm.unit.standards.nysssMajorUnderstandings) {
-          vm.unit.standards.nysssMajorUnderstandings = [];
-        }
-        vm.unit.standards.nysssMajorUnderstandings =
-          vm.unit.standards.nysssMajorUnderstandings.concat(getIds($rootScope.unit.standards.nysssMajorUnderstandings));
-
-        if (!vm.unit.standards.nysssMst) {
-          vm.unit.standards.nysssMst = [];
-        }
-        vm.unit.standards.nysssMst =
-          vm.unit.standards.nysssMst.concat(getIds($rootScope.unit.standards.nysssMst));
-
-      }
-      $rootScope.unit = null;
-    }
 
     vm.cclsElaScienceTechnicalSubjectsSelectConfig = {
       mode: 'tags-id',
@@ -245,11 +249,14 @@
 
     // Save Unit
     vm.save = function(isValid, draft) {
-      vm.saving = true;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.unitForm');
         return false;
       }
+
+      vm.saving = true;
+      vm.error = [];
+      vm.valid = true;
 
       vm.unit.status = (draft) ? 'draft' : 'published';
 
