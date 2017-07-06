@@ -23,9 +23,6 @@
           openViewUserModal: '=',
         },
         controller: function($scope, $location, lodash) {
-          $scope.unitLink = $location.protocol() + '://'+ $location.host() +':'+ $location.port() + '/units/' + $scope.lesson.unit._id;
-          $scope.lessonEditLink = $location.protocol() + '://'+ $location.host() +':'+ $location.port() + '/lessons/' + $scope.lesson._id + '/edit';
-
           $scope.checkRole = function(role) {
             var roleIndex = lodash.findIndex($scope.user.roles, function(o) {
               return o === role;
