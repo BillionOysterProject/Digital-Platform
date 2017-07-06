@@ -287,8 +287,9 @@
     getLessonFeedback();
 
     if (vm.lesson.user && vm.lesson.user.team) {
+      var teamId = (vm.lesson.user.team._id) ? vm.lesson.user.team._id : vm.lesson.user.team;
       TeamsService.get({
-        teamId: vm.lesson.user.team
+        teamId: teamId
       }, function(team) {
         vm.lesson.user.team = team;
       });
@@ -424,6 +425,7 @@
       vm.valid = true;
 
       vm.lesson.status = (draft) ? 'draft' : 'pending';
+      console.log('status', vm.lesson.status);
 
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
