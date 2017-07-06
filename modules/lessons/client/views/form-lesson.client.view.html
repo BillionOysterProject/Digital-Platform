@@ -350,7 +350,7 @@
 
           <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
 
-          <a class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</a>
+          <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
 
           <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
           {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>
