@@ -288,9 +288,10 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        res.json(research);
         setImageToDownload(req.headers.host, research, function(err, fileInfo) {
           alertTeamLeads(research, req.user, req.headers.host, function(research) {
-            res.json(research);
+            // res.json(research);
           });
         });
       }
@@ -424,9 +425,10 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
+          res.json(research);
           setImageToDownload(req.headers.host, research, function(err, fileInfo) {
             alertTeamLeads(research, req.user, req.headers.host, function(research) {
-              res.json(research);
+              // res.json(research);
             });
           });
         }
@@ -493,6 +495,7 @@ exports.publish = function(req, res) {
         });
 
         activity.save(function(err) {
+          res.json(research);
           setImageToDownload(req.headers.host, research, function(err, fileInfo) {
             var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -504,11 +507,11 @@ exports.publish = function(req, res) {
               LinkProfile: httpTransport + req.headers.host + '/profiles'
             },
             function(response) {
-              res.json(research);
+              // res.json(research);
             }, function(errorMessage) {
-              return res.status(400).send({
-                message: errorMessage
-              });
+              // return res.status(400).send({
+              //   message: errorMessage
+              // });
             });
           });
         });
@@ -545,6 +548,7 @@ exports.return = function(req, res) {
         });
 
         activity.save(function(err) {
+          res.json(research);
           setImageToDownload(req.headers.host, research, function(err, fileInfo) {
             var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -557,11 +561,11 @@ exports.return = function(req, res) {
               LinkProfile: httpTransport + req.headers.host + '/profiles'
             },
             function(response) {
-              res.json(research);
+              // res.json(research);
             }, function(errorMessage) {
-              return res.status(400).send({
-                message: errorMessage
-              });
+              // return res.status(400).send({
+              //   message: errorMessage
+              // });
             });
           });
         });

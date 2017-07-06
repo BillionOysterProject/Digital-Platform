@@ -206,16 +206,16 @@
         </div>
       </div>
 
-      <hr ng-show="lesson.instructionPlan.engage ||
-              lesson.instructionPlan.explore || lesson.instructionPlan.explain ||
-              lesson.instructionPlan.elaborate || lesson.instructionPlan.evaluate" />
+      <hr ng-show="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
+              lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
+              lesson.instructionPlan.evaluate || lesson.instructionPlan.extend" />
 
       <div class="row">
         <div class="col-sm-12"
         id="lesson-instruction-plan"
-        ng-show="lesson.instructionPlan.engage ||
-                lesson.instructionPlan.explore || lesson.instructionPlan.explain ||
-                lesson.instructionPlan.elaborate || lesson.instructionPlan.evaluate">
+        ng-show="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
+                lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
+                lesson.instructionPlan.evaluate || lesson.instructionPlan.extend">
           <h3 class="blue">Instruction Plan</h3>
           <div>
             <div class="col-sm-12" ng-show="lesson.instructionPlan.engage">
@@ -237,6 +237,10 @@
             <div class="col-sm-12" ng-show="lesson.instructionPlan.evaluate">
               <h4>Evaluate</h4>
               <div ng-bind-html="lesson.instructionPlan.evaluate | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-show="lesson.instructionPlan.extend">
+              <h4>Extend</h4>
+              <div ng-bind-html="lesson.instructionPlan.extend | sanitize"></div><br/>
             </div>
           </div>
         </div>
