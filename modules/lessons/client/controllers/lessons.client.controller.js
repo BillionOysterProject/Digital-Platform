@@ -29,10 +29,12 @@
 
     var populateFields = function() {
       vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
-      vm.handouts = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [];
-      vm.resourceFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [];
-      vm.resourceLinks = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [];
-      vm.stateTestQuestionsFiles = (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [];
+      vm.resources = {
+        handouts: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [],
+        resourceFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [],
+        resourceLinks: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [],
+        stateTestQuestionsFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : []
+      };
 
       if ($rootScope.unit) {
         if (!vm.lesson.units) {
@@ -321,13 +323,6 @@
       }]
     });
 
-    vm.checkRole = function(role) {
-      var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
-        return o === role;
-      });
-      return (roleIndex > -1) ? true : false;
-    };
-
     // Remove existing Lesson
     vm.remove = function() {
       vm.lesson.$remove($state.go('lessons.list'));
@@ -427,16 +422,16 @@
 
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
-          handoutsFileInput: vm.handouts,
-          teacherResourcesFiles: vm.resourceFiles,
-          teacherResourcesLinks: vm.resourceLinks,
-          stateTestQuestions: vm.stateTestQuestionsFiles
+          handoutsFileInput: vm.resources.handouts,
+          teacherResourcesFiles: vm.resources.resourceFiles,
+          teacherResourcesLinks: vm.resources.resourceLinks,
+          stateTestQuestions: vm.resources.stateTestQuestionsFiles
         };
       } else {
-        vm.lesson.materialsResources.handoutsFileInput = vm.handouts;
-        vm.lesson.materialsResources.teacherResourcesFiles = vm.resourceFiles;
-        vm.lesson.materialsResources.teacherResourcesLinks = vm.resourceLinks;
-        vm.lesson.materialsResources.stateTestQuestions = vm.stateTestQuestionsFiles;
+        vm.lesson.materialsResources.handoutsFileInput = vm.resources.handouts;
+        vm.lesson.materialsResources.teacherResourcesFiles = vm.resources.resourceFiles;
+        vm.lesson.materialsResources.teacherResourcesLinks = vm.resources.resourceLinks;
+        vm.lesson.materialsResources.stateTestQuestions = vm.resources.stateTestQuestionsFiles;
       }
 
       // angular.element('#modal-save-draft-progress-bar').modal('show');
@@ -516,51 +511,6 @@
       }
     };
 
-    var shouldShowSidebar = function() {
-      return vm.lesson && vm.lesson.materialsResources &&
-      ((vm.lesson.materialsResources.teacherResourcesFiles &&
-      vm.lesson.materialsResources.teacherResourcesFiles.length > 0) ||
-      (vm.lesson.materialsResources.teacherResourcesLinks &&
-      vm.lesson.materialsResources.teacherResourcesLinks.length > 0) ||
-      (vm.lesson.materialsResources.handoutsFileInput &&
-      vm.lesson.materialsResources.handoutsFileInput.length > 0) ||
-      (vm.lesson.materialsResources.stateTestQuestions &&
-      vm.lesson.materialsResources.stateTestQuestions.length > 0));
-    };
-    vm.showSidebar = shouldShowSidebar();
-
-    var getStandardCount = function() {
-      var count = 0;
-      if (vm.lesson && vm.lesson.standards) {
-        if (vm.lesson.standards.nycsssUnits && vm.lesson.standards.nycsssUnits.length > 0) count++;
-        if (vm.lesson.standards.nysssKeyIdeas && vm.lesson.standards.nysssKeyIdeas.length > 0) count++;
-        if (vm.lesson.standards.nysssMajorUnderstandings && vm.lesson.standards.nysssMajorUnderstandings.length > 0) count++;
-        if (vm.lesson.standards.nysssMst && vm.lesson.standards.nysssMst.length > 0) count++;
-        if (vm.lesson.standards.ngssDisciplinaryCoreIdeas && vm.lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) count++;
-        if (vm.lesson.standards.ngssScienceEngineeringPractices && vm.lesson.standards.ngssScienceEngineeringPractices.length > 0) count++;
-        if (vm.lesson.standards.ngssCrossCuttingConcepts && vm.lesson.standards.ngssCrossCuttingConcepts.length > 0) count++;
-        if (vm.lesson.standards.cclsMathematics && vm.lesson.standards.cclsMathematics.length > 0) count++;
-        if (vm.lesson.standards.cclsElaScienceTechnicalSubjects && vm.lesson.standards.cclsElaScienceTechnicalSubjects.length > 0) count++;
-      }
-      return count;
-    };
-
-    var getStandardsClass = function() {
-      var count = getStandardCount();
-      if (count === 1) {
-        return 'col-sm-12';
-      } else if (count === 2) {
-        return 'col-sm-6';
-      } else if (count === 3) {
-        return 'col-sm-4';
-      } else if (count === 4) {
-        return 'col-sm-3';
-      } else {
-        return 'col-sm-4';
-      }
-    };
-    vm.standardClass = getStandardsClass();
-
     vm.toggleVocabularyModal = function() {
       vm.showVocabularyModal = !vm.showVocabularyModal;
     };
@@ -569,11 +519,11 @@
       if (file.index !== undefined && file.index > -1) {
         vm.teacherResourceFilesUploader.removeFromQueue(file.index);
       }
-      vm.resourceFiles.splice(index,1);
+      vm.resources.resourceFiles.splice(index,1);
     };
 
     vm.deleteTeacherResourceLink = function(index) {
-      vm.resourceLinks.splice(index, 1);
+      vm.resources.resourceLinks.splice(index, 1);
     };
 
     vm.openDeleteLesson = function() {

@@ -17,7 +17,6 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
-  docx = require(path.resolve('./modules/core/server/controllers/docx.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   archiver = require('archiver'),
@@ -25,6 +24,8 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   moment = require('moment'),
+  wkhtmltopdf = require('wkhtmltopdf'),
+  exec = require('child_process').exec,
   async = require('async'),
   config = require(path.resolve('./config/config'));
 
@@ -1183,12 +1184,57 @@ exports.downloadFile = function(req, res){
   request(req.query.path).pipe(res);
 };
 
+var setPdfToDownload = function(host, cookies, lesson, callback) {
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
+  var filename = _.replace(lesson.title + '.pdf', /\s/, '_');
+  var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
+  var mimetype = 'application/pdf';
+
+  // _ga: 'GA1.1.1312864663.1479251906',
+  //     _gid: 'GA1.1.488649070.1499269174',
+  //     _gat: '1',
+  //     sessionId: 's:i4_cV7jB26pdZ6fX6LxiAMKr6EsRVY1G.EMPtZ5TiRwUryRMat08SRgobIDTaYW0VlfZZO+7D1qQ' }
+  console.log('sessionId', cookies.sessionId);
+  console.log('input', input);
+  console.log('output', output);
+
+  wkhtmltopdf(input, {
+    cookie: [
+      ['sessionId', cookies.sessionId]
+    ],
+    pageSize: 'letter',
+    output: output,
+    ignore: [/QFont::setPixelSize/],
+    disableExternalLinks: true
+  }, function(error, stream) {
+  // exec('wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output, function(error, stdout, stderr) {
+    if (error) {
+      console.log('wkhtmltopdf error: ', error);
+      callback(error);
+    } else {
+      var uploadRemote = new UploadRemote();
+      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.lessonDownloadPdfUpload,
+      function(fileInfo) {
+        lesson.downloadPdf = fileInfo;
+        lesson.save(function(err) {
+          if (err) {
+            console.log('save file info error: ', err);
+            callback(err);
+          }
+          callback(null, fileInfo);
+        });
+      }, function(errorMessage) {
+        console.log('save image remotely error: ', errorMessage);
+        callback(errorMessage);
+      });
+    }
+  });
+};
+
 exports.downloadZip = function(req, res) {
   var lesson = req.lesson;
-
   var archive = archiver('zip');
-
-  var lessonDocxFilepath = '';
 
   archive.on('error', function(err) {
     return res.status(500).send({
@@ -1198,13 +1244,6 @@ exports.downloadZip = function(req, res) {
 
   //on stream closed we can end the request
   archive.on('end', function() {
-    if (lessonDocxFilepath && lessonDocxFilepath !== '') {
-      fs.exists(lessonDocxFilepath, function(exists) {
-        if (exists) {
-          fs.unlink(lessonDocxFilepath);
-        }
-      });
-    }
     console.log('Archive wrote %d bytes', archive.pointer());
   });
 
@@ -1218,17 +1257,19 @@ exports.downloadZip = function(req, res) {
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
       if (req.query.content === 'YES') {
-        docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson.docx'), lesson,
-        function(filepath) {
-          var filename = _.replace(lesson.title + '.docx', /\s/, '_');
-          lessonDocxFilepath = path.resolve(filepath);
-          archive.file(lessonDocxFilepath, { name: filename });
+        if (lesson.downloadPdf && lesson.downloadPdf.path && lesson.downloadPdf.originalname) {
+          var lessonPdfFilepath = path.resolve(lesson.downloadPdf.path);
+          archive.file(lessonPdfFilepath, { name: lesson.downloadPdf.originalname });
           lessonCallback();
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+        } else {
+          setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+            if (fileInfo) {
+              var lessonPdfFilepath = path.resolve(fileInfo.path);
+              archive.file(lessonPdfFilepath, { name: fileInfo.originalname });
+            }
+            lessonCallback();
           });
-        });
+        }
       } else {
         lessonCallback();
       }

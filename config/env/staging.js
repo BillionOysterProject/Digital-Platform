@@ -251,6 +251,13 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    lessonDownloadPdfUpload: {
+      s3dest: 'uploads/lessons/img/downloads/',
+      dest: '/tmp/',
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     teamPhotoUpload: {
       s3dest: 'uploads/teams/img/team/',
       dest: './modules/teams/client/img/team/uploads/', // Lesson upload destination path
