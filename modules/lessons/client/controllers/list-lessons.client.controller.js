@@ -83,6 +83,7 @@
 
     vm.settingSelected = function(selection) {
       vm.filter.setting = selection;
+      console.log('selection', selection);
       vm.findLessons();
     };
 

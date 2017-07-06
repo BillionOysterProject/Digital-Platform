@@ -988,8 +988,16 @@ exports.list = function(req, res) {
     and.push({ 'lessonOverview.subjectAreas' : req.query.subjectArea });
   }
 
+  var settingsRe;
   if (req.query.setting) {
-    and.push({ 'lessonOverview.setting' : req.query.setting });
+    try {
+      settingsRe = new RegExp(req.query.setting, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Setting is invalid'
+      });
+    }
+    and.push({ 'lessonOverview.setting' : settingsRe });
   }
 
   if (req.query.unit) {
