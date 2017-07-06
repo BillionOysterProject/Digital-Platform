@@ -1191,15 +1191,6 @@ var setPdfToDownload = function(host, cookies, lesson, callback) {
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
-  // wkhtmltopdf(input, {
-  //   cookie: [
-  //     ['sessionId', cookies.sessionId]
-  //   ],
-  //   pageSize: 'letter',
-  //   output: output,
-  //   ignore: [/QFont::setPixelSize/],
-  //   disableExternalLinks: true
-  // }, function(error, stream) {
   var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
   exec(command, function(error, stdout, stderr) {
     if (error) {
