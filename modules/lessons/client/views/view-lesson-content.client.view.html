@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-4">
       <h2 id="lesson-title">{{lesson.title}}
-        <small ng-show="favoriteLesson && unfavoriteLesson">
+        <small ng-show="favoriteLesson && unfavoriteLesson" ng-hide="fullPage">
           <a ng-click="favoriteLesson()" ng-hide="lesson.saved">
             <i class="fa fa-heart-o"></i>
           </a>
@@ -12,22 +12,22 @@
         </small>
       </h2>
     </div>
-    <div class="col-sm-8 text-right">
+    <div class="col-sm-8 text-right" ng-hide="fullPage">
       <h6 id="status-draft" ng-show="lesson.status === 'draft'">Draft</h6>
       <h6 id="status-pending" ng-show="lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
       <h6 id="status-returned" ng-show="lesson.status === 'returned'" class="red">Returned</h6>
       <h6 id="status-published" ng-show="lesson.isCurrentUserOwner && lesson.status === 'published'">Published</h6>
-      <a class="btn btn-primary" ng-show="lesson.isCurrentUserOwner && lesson.status !== 'pending' && !fullPage"
-        ui-sref="lessons.edit({ lessonId: lesson._id })">{{lesson.status === 'published' ? 'Unpublish and edit' : 'Edit'}}</a>
-      <a class="btn btn-default" ng-click="openLessonFeedback()" ng-hide="lesson.isCurrentUserOwner || fullPage">Send feedback</a>
+      <a class="btn btn-primary" ng-show="lesson.isCurrentUserOwner && lesson.status !== 'pending'"
+        ui-sref="lessons.edit({ lessonId: lesson._id })">Edit</a>
+      <a class="btn btn-default" ng-click="openLessonFeedback()" ng-hide="lesson.isCurrentUserOwner">Send feedback</a>
 
       <a class="btn btn-default" ng-show="(checkRole('admin') || checkRole('team lead')) && feedback &&
         feedback.lessonAlignWithCurriculumnAvg && feedback.lessonEffectiveAvg &&
-        feedback.lessonPreparesStudentsAvg && feedback.lessonSupportScientificPracticeAvg && !fullPage"
+        feedback.lessonPreparesStudentsAvg && feedback.lessonSupportScientificPracticeAvg"
         ng-click="openLessonFeedbackView()">View feedback<!-- &nbsp;&nbsp;<span class="badge">{{feedback.feedbackCount}}</span>--></a>
-      <a class="btn btn-default" view-permissions="team lead,admin" ng-show="openLessonLog && !fullPage" ng-click="openLessonLog()">Log teaching</a>
-      <a class="btn btn-default" view-permissions="team lead,admin" ng-show="duplicateLesson && !fullPage" ng-click="duplicateLesson()">Duplicate</a>
-      <a class="btn btn-default" ng-show="openDownloadLesson && !fullPage" ng-click="openDownloadLesson()">Download</a>
+      <a class="btn btn-default" view-permissions="team lead,admin" ng-show="openLessonLog" ng-click="openLessonLog()">Log teaching</a>
+      <a class="btn btn-default" view-permissions="team lead,admin" ng-show="duplicateLesson" ng-click="duplicateLesson()">Duplicate</a>
+      <a class="btn btn-default" ng-show="openDownloadLesson" ng-click="openDownloadLesson()">Download</a>
     </div>
   </div>
 
