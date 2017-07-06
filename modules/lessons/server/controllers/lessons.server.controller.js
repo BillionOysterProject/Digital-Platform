@@ -103,6 +103,40 @@ var removeLessonFromUnits = function(lesson, callback) {
   });
 };
 
+var setPdfToDownload = function(host, cookies, lesson, callback) {
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
+  var filename = _.replace(lesson.title + '.pdf', /\s/, '_');
+  var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
+  var mimetype = 'application/pdf';
+
+  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
+  exec(command, function(error, stdout, stderr) {
+    if (error) {
+      console.log('wkhtmltopdf error: ', error);
+      callback(error);
+    } else {
+      console.log('wkhmtltopdf stderr: ', stderr);
+      console.log('wkhtmltopdf stdout: ', stdout);
+      var uploadRemote = new UploadRemote();
+      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.lessonDownloadPdfUpload,
+      function(fileInfo) {
+        lesson.downloadPdf = fileInfo;
+        lesson.save(function(err) {
+          if (err) {
+            console.log('save file info error: ', err);
+            callback(err);
+          }
+          callback(null, fileInfo);
+        });
+      }, function(errorMessage) {
+        console.log('save image remotely error: ', errorMessage);
+        callback(errorMessage);
+      });
+    }
+  });
+};
+
 /**
  * Create a Lesson
  */
@@ -136,17 +170,19 @@ exports.create = function(req, res) {
 
           activity.save(function(err) {
             addLessonToUnits(lesson, function() {
-              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-              email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-                TeamLeadName: req.user.displayName,
-                LessonName: lesson.title,
-                LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-                LinkProfile: httpTransport + req.headers.host + '/profiles'
-              }, function(info) {
-                res.json(lesson);
-              }, function(errorMessage) {
-                res.json(lesson);
+                email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+                  TeamLeadName: req.user.displayName,
+                  LessonName: lesson.title,
+                  LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                }, function(info) {
+                  res.json(lesson);
+                }, function(errorMessage) {
+                  res.json(lesson);
+                });
               });
             });
           });
@@ -293,17 +329,19 @@ exports.update = function(req, res) {
             activity.save(function(err) {
               removeLessonFromUnits(req.lesson, function() {
                 addLessonToUnits(lesson, function() {
-                  var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+                  setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-                  email.sendEmailTemplate(config.mailer.admin, 'An updated lesson is pending approval', 'lesson_waiting', {
-                    TeamLeadName: req.user.displayName,
-                    LessonName: lesson.title,
-                    LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-                    LinkProfile: httpTransport + req.headers.host + '/profiles'
-                  }, function(info) {
-                    res.json(lesson);
-                  }, function(errorMessage) {
-                    res.json(lesson);
+                    email.sendEmailTemplate(config.mailer.admin, 'An updated lesson is pending approval', 'lesson_waiting', {
+                      TeamLeadName: req.user.displayName,
+                      LessonName: lesson.title,
+                      LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                      LinkProfile: httpTransport + req.headers.host + '/profiles'
+                    }, function(info) {
+                      res.json(lesson);
+                    }, function(errorMessage) {
+                      res.json(lesson);
+                    });
                   });
                 });
               });
@@ -350,20 +388,22 @@ exports.publish = function(req, res) {
         activity.save(function(err) {
           removeLessonFromUnits(req.lesson, function() {
             addLessonToUnits(lesson, function() {
-              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-              email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-              'lesson_approved', {
-                FirstName: lesson.user.firstName,
-                LessonName: lesson.title,
-                LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-                LinkProfile: httpTransport + req.headers.host + '/profiles'
-              },
-              function(response) {
-                res.json(lesson);
-              }, function(errorMessage) {
-                return res.status(400).send({
-                  message: errorMessage
+                email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+                'lesson_approved', {
+                  FirstName: lesson.user.firstName,
+                  LessonName: lesson.title,
+                  LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                },
+                function(response) {
+                  res.json(lesson);
+                }, function(errorMessage) {
+                  return res.status(400).send({
+                    message: errorMessage
+                  });
                 });
               });
             });
@@ -404,21 +444,23 @@ exports.return = function(req, res) {
         activity.save(function(err) {
           removeLessonFromUnits(req.lesson, function() {
             addLessonToUnits(lesson, function() {
-              var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-              email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-              'lesson_returned', {
-                FirstName: lesson.user.firstName,
-                LessonName: lesson.title,
-                LessonReturnedNote: lesson.returnedNotes,
-                LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-                LinkProfile: httpTransport + req.headers.host + '/profiles'
-              },
-              function(response) {
-                res.json(lesson);
-              }, function(errorMessage) {
-                return res.status(400).send({
-                  message: errorMessage
+                email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+                'lesson_returned', {
+                  FirstName: lesson.user.firstName,
+                  LessonName: lesson.title,
+                  LessonReturnedNote: lesson.returnedNotes,
+                  LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                },
+                function(response) {
+                  res.json(lesson);
+                }, function(errorMessage) {
+                  return res.status(400).send({
+                    message: errorMessage
+                  });
                 });
               });
             });
@@ -713,39 +755,41 @@ exports.lessonFeedback = function(req, res) {
       });
 
       activity.save(function(err) {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-        var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-        var toList = [lesson.user.email, config.mailer.admin];
+        setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+          var toList = [lesson.user.email, config.mailer.admin];
 
-        email.sendEmailTemplate(toList, subject,
-        'lesson_feedback', {
-          FirstName: req.body.lesson.user.firstName,
-          LessonFeedbackName: req.user.displayName,
-          LessonName: req.body.lesson.title,
-          LessonFeedbackNote: req.body.message,
-          LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
-          LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
-          LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
-          LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
-          HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
-          WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
-          WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
-          LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
-          LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
-          MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
-          Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
-          Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
-          InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
-          Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
-          Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
-          LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/profiles'
-        },
-        function(response) {
-          res.json(lessonFeedback);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+          email.sendEmailTemplate(toList, subject,
+          'lesson_feedback', {
+            FirstName: req.body.lesson.user.firstName,
+            LessonFeedbackName: req.user.displayName,
+            LessonName: req.body.lesson.title,
+            LessonFeedbackNote: req.body.message,
+            LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
+            LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
+            LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
+            LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
+            HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
+            WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
+            WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
+            LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
+            LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
+            MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
+            Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
+            Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
+            InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
+            Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
+            Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
+            LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
+          },
+          function(response) {
+            res.json(lessonFeedback);
+          }, function(errorMessage) {
+            return res.status(400).send({
+              message: errorMessage
+            });
           });
         });
       });
@@ -864,6 +908,9 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
   if (lesson) {
     if (lesson.featuredImage && lesson.featuredImage.path) {
       filesToDelete.push(lesson.featuredImage.path);
+    }
+    if (lesson.downloadPdf && lesson.downloadPdf.path) {
+      filesToDelete.push(lesson.downloadPdf.path);
     }
     if (lesson.materialsResources) {
       if (lesson.materialsResources.teacherResourcesFiles && lesson.materialsResources.teacherResourcesFiles.path) {
@@ -1182,40 +1229,6 @@ exports.downloadFile = function(req, res){
   res.setHeader('content-type', req.query.mimetype);
 
   request(req.query.path).pipe(res);
-};
-
-var setPdfToDownload = function(host, cookies, lesson, callback) {
-  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
-  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
-  var filename = _.replace(lesson.title + '.pdf', /\s/, '_');
-  var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
-  var mimetype = 'application/pdf';
-
-  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
-  exec(command, function(error, stdout, stderr) {
-    if (error) {
-      console.log('wkhtmltopdf error: ', error);
-      callback(error);
-    } else {
-      console.log('wkhmtltopdf stderr: ', stderr);
-      console.log('wkhtmltopdf stdout: ', stdout);
-      var uploadRemote = new UploadRemote();
-      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.lessonDownloadPdfUpload,
-      function(fileInfo) {
-        lesson.downloadPdf = fileInfo;
-        lesson.save(function(err) {
-          if (err) {
-            console.log('save file info error: ', err);
-            callback(err);
-          }
-          callback(null, fileInfo);
-        });
-      }, function(errorMessage) {
-        console.log('save image remotely error: ', errorMessage);
-        callback(errorMessage);
-      });
-    }
-  });
 };
 
 exports.downloadZip = function(req, res) {

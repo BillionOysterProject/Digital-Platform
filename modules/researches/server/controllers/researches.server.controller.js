@@ -288,8 +288,10 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        alertTeamLeads(research, req.user, req.headers.host, function(research) {
-          res.json(research);
+        setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+          alertTeamLeads(research, req.user, req.headers.host, function(research) {
+            res.json(research);
+          });
         });
       }
     });
@@ -422,8 +424,10 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          alertTeamLeads(research, req.user, req.headers.host, function(research) {
-            res.json(research);
+          setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+            alertTeamLeads(research, req.user, req.headers.host, function(research) {
+              res.json(research);
+            });
           });
         }
       });
@@ -489,20 +493,22 @@ exports.publish = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been approved',
-          'poster_approved', {
-            FirstName: research.user.firstName,
-            PosterName: research.title,
-            LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(research);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+            email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been approved',
+            'poster_approved', {
+              FirstName: research.user.firstName,
+              PosterName: research.title,
+              LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
+            },
+            function(response) {
+              res.json(research);
+            }, function(errorMessage) {
+              return res.status(400).send({
+                message: errorMessage
+              });
             });
           });
         });
@@ -539,21 +545,23 @@ exports.return = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          setImageToDownload(req.headers.host, research, function(err, fileInfo) {
+            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been returned',
-          'poster_returned', {
-            FirstName: research.user.firstName,
-            PosterName: research.title,
-            PosterReturnedNote: research.returnedNotes,
-            LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(research);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+            email.sendEmailTemplate(research.user.email, 'Your poster ' + research.title + ' has been returned',
+            'poster_returned', {
+              FirstName: research.user.firstName,
+              PosterName: research.title,
+              PosterReturnedNote: research.returnedNotes,
+              LinkPoster: httpTransport + req.headers.host + '/research/' + research._id,
+              LinkProfile: httpTransport + req.headers.host + '/profiles'
+            },
+            function(response) {
+              res.json(research);
+            }, function(errorMessage) {
+              return res.status(400).send({
+                message: errorMessage
+              });
             });
           });
         });
