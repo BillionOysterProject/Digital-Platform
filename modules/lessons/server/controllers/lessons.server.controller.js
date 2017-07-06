@@ -1191,28 +1191,23 @@ var setPdfToDownload = function(host, cookies, lesson, callback) {
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
-  // _ga: 'GA1.1.1312864663.1479251906',
-  //     _gid: 'GA1.1.488649070.1499269174',
-  //     _gat: '1',
-  //     sessionId: 's:i4_cV7jB26pdZ6fX6LxiAMKr6EsRVY1G.EMPtZ5TiRwUryRMat08SRgobIDTaYW0VlfZZO+7D1qQ' }
-  console.log('sessionId', cookies.sessionId);
-  console.log('input', input);
-  console.log('output', output);
-
-  wkhtmltopdf(input, {
-    cookie: [
-      ['sessionId', cookies.sessionId]
-    ],
-    pageSize: 'letter',
-    output: output,
-    ignore: [/QFont::setPixelSize/],
-    disableExternalLinks: true
-  }, function(error, stream) {
-  // exec('wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output, function(error, stdout, stderr) {
+  // wkhtmltopdf(input, {
+  //   cookie: [
+  //     ['sessionId', cookies.sessionId]
+  //   ],
+  //   pageSize: 'letter',
+  //   output: output,
+  //   ignore: [/QFont::setPixelSize/],
+  //   disableExternalLinks: true
+  // }, function(error, stream) {
+  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
+  exec(command, function(error, stdout, stderr) {
     if (error) {
       console.log('wkhtmltopdf error: ', error);
       callback(error);
     } else {
+      console.log('wkhmtltopdf stderr: ', stderr);
+      console.log('wkhtmltopdf stdout: ', stdout);
       var uploadRemote = new UploadRemote();
       uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.lessonDownloadPdfUpload,
       function(fileInfo) {
@@ -1256,18 +1251,30 @@ exports.downloadZip = function(req, res) {
 
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
+      var attachLessonPdf = function(path, name) {
+        var requestSettings = {
+          method: 'GET',
+          url: path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: name });
+          }
+          lessonCallback();
+        });
+      };
+
       if (req.query.content === 'YES') {
         if (lesson.downloadPdf && lesson.downloadPdf.path && lesson.downloadPdf.originalname) {
-          var lessonPdfFilepath = path.resolve(lesson.downloadPdf.path);
-          archive.file(lessonPdfFilepath, { name: lesson.downloadPdf.originalname });
-          lessonCallback();
+          attachLessonPdf(lesson.downloadPdf.path, lesson.downloadPdf.originalname);
         } else {
           setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
             if (fileInfo) {
-              var lessonPdfFilepath = path.resolve(fileInfo.path);
-              archive.file(lessonPdfFilepath, { name: fileInfo.originalname });
+              attachLessonPdf(fileInfo.path, fileInfo.originalname);
+            } else {
+              lessonCallback();
             }
-            lessonCallback();
           });
         }
       } else {

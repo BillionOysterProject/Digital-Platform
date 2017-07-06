@@ -130,10 +130,10 @@
               lesson.materialsResources.handoutsFileInput.length > 0">
         <b>Handouts</b>
         <li ng-repeat="file in lesson.materialsResources.handoutsFileInput">
-          <a ng-hide="fullPage" class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
             <i class="glyphicon glyphicon-file"></i>
             {{file.originalname}}</a>
-          <span ng-show="fullPage">{{file.originalname}}</span>
+          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
       </ul>
       <br/>
@@ -144,16 +144,16 @@
               lesson.materialsResources.teacherResourcesLinks.length > 0)">
         <b>Teacher Resources</b>
         <li ng-repeat="file in lesson.materialsResources.teacherResourcesFiles">
-          <a ng-hide="fullPage" class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
             <i class="glyphicon glyphicon-file"></i>
             {{file.originalname}}</a>
-          <span ng-show="fullPage">{{file.originalname}}</span>
+          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
         <li ng-repeat="link in lesson.materialsResources.teacherResourcesLinks">
-          <a ng-hide="fullPage" class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
             <i class="glyphicon glyphicon-link"></i>
             {{link.name}}</a>
-          <span ng-show="fullPage">{{link.link | urlNormalizer}}</span>
+          <!-- <span ng-show="fullPage">{{link.link | urlNormalizer}}</span> -->
         </li>
         <!-- TODO: VIDEO: Should open modal and play video on click -->
         <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->

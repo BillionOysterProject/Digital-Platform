@@ -15,7 +15,7 @@
                         <!-- If never submitted (Status: Incomplete) --->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusIncomplete() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-incomplete">Submit Protocols</button>
+                        ng-show="vm.checkStatusIncomplete() && (vm.isTeamMember || vm.isTeamLead || vm.isAdmin)" id="submit-exp-incomplete">Submit Protocols</button>
 
                         <!--If submitted by team member (Status: Under Review) -->
                         <!-- Show if team lead: -->
