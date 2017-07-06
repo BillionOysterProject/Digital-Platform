@@ -327,15 +327,28 @@
               <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
             </ul>
           </div>
-          <div>
-            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-            <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
-            <a class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">Save draft</a>
-            <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
-              {{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
-
-            <a type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</a>
+          <div class="row">
+            <div class="col-sm-12">
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
+                <h6 class="navbar-text blue" ng-show="vm.lesson.status === 'pending'">Awaiting Approval</h6>
+                <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
+                <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+            </div>
           </div>
+            
+          <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+          
+          <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+            
+          <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
+          {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>
+          <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+
+          <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
+
+          <hr/>
+            
         </div>
       </fieldset>
     </form>
