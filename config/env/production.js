@@ -244,6 +244,13 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    lessonDownloadPdfUpload: {
+      s3dest: 'uploads/lessons/img/downloads/',
+      dest: '/tmp/',
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     organizationPhotoUpload: {
       s3dest: 'uploads/school-orgs/img/organization/',
       dest: './modules/school-orgs/client/img/organization/uploads/',

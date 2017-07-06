@@ -36,9 +36,9 @@
                 </div>
                 <div class="col-md-4">
                   <div class="form-group" show-errors>
-                    <label for="image" class="control-label">Featured Image</label>
+                    <label for="lesson-featured-image" class="control-label">Featured Image</label>
                     <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
-                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
+                    image-alt="Featured Image" id="lesson-featured-image" name="lesson-featured-image"></single-image-drop-zone>
                   </div>
                 </div>
               </div>
@@ -109,7 +109,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-sm-12" show-errors>
+                <div class="form-group col-sm-12">
                     <wysiwyg-editor name="lessonSummary"
                     in-title="Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
                 </div>
@@ -127,7 +127,7 @@
             <div class="panel-body">
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group" show-errors>
+                  <div class="form-group">
                     <wysiwyg-editor name="supplies"
                     in-title="Supplies" ng-model="vm.lesson.materialsResources.supplies" label-class="control-label"></wysiwyg-editor>
                   </div>
@@ -135,7 +135,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="handouts" class="control-label">Handouts</label>
-                    <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"
+                    <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.resources.handouts"
                     id="lesson-handout-files"></multiple-file-drop-zone>
                   </div>
                 </div>
@@ -146,14 +146,14 @@
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
                     </div>
                     <table class="table">
-                      <tr ng-repeat="link in vm.resourceLinks">
+                      <tr ng-repeat="link in vm.resources.resourceLinks">
                         <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
                         <td>{{link.link}}</td>
                         <td>
                           <a ng-click="vm.deleteTeacherResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr>
-                      <tr ng-repeat="file in vm.resourceFiles">
+                      <tr ng-repeat="file in vm.resources.resourceFiles">
                         <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                         <td></td>
                         <td id="lesson-teach-resource-files">
@@ -169,7 +169,7 @@
                   <div class="form-group">
                     <label for="stateTestQuestions" class="control-label">State Test Questions</label>
                     <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
-                    <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
+                    <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.resources.stateTestQuestionsFiles"
                     id="lesson-state-test-questions-files"></multiple-file-drop-zone>
                   </div>
                 </div>
@@ -336,11 +336,11 @@
                 <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
             </div>
           </div>
-            
+
           <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
-          
+
           <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
-            
+
           <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
           {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>
           <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
@@ -348,7 +348,7 @@
           <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
 
           <hr/>
-            
+
         </div>
       </fieldset>
     </form>
@@ -359,7 +359,7 @@
   <saved-lesson-modal></saved-lesson-modal>
   <updated-lesson-modal></updated-lesson-modal>
   <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
-  resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+  resource-files="vm.resources.resourceFiles" resource-links="vm.resources.resourceLinks"
   resource-dropzone-id="lesson-resources-file-dropzone"
   close-function=""></resource-upload-modal>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
