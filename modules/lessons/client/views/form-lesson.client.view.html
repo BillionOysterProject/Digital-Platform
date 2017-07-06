@@ -233,6 +233,9 @@
                     <li role="presentation">
                       <a href="#evaluate" data-toggle="tab" aria-controls="evaluate" role="tab">Evaluate</a>
                     </li>
+                    <li role="presentation">
+                      <a href="#extend" data-toggle="tab" aria-controls="extend" role="tab">Extend</a>
+                    </li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="engage">
@@ -258,6 +261,11 @@
                     <div role="tabpanel" class="tab-pane" id="evaluate">
                       <div class="row">
                         <wysiwyg-editor outer-column="col-md-12" name="evaluate" ng-model="vm.lesson.instructionPlan.evaluate" label-class="control-label"></wysiwyg-editor>
+                      </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="extend">
+                      <div class="row">
+                        <wysiwyg-editor outer-column="col-md-12" name="extend" ng-model="vm.lesson.instructionPlan.extend" label-class="control-label"></wysiwyg-editor>
                       </div>
                     </div>
                   </div>
@@ -339,7 +347,7 @@
 
           <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
 
-          <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+          <a class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</a>
 
           <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
           {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>

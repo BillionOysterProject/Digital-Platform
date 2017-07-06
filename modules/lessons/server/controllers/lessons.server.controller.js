@@ -106,7 +106,7 @@ var removeLessonFromUnits = function(lesson, callback) {
 var setPdfToDownload = function(host, cookies, lesson, callback) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
   var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
-  var filename = _.replace(lesson.title + '.pdf', /\s/, '_');
+  var filename = _.replace(lesson.title + '.pdf', /\s/g, '_');
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
@@ -170,6 +170,7 @@ exports.create = function(req, res) {
 
           activity.save(function(err) {
             addLessonToUnits(lesson, function() {
+              res.json(lesson);
               setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
                 var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -179,9 +180,9 @@ exports.create = function(req, res) {
                   LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
                   LinkProfile: httpTransport + req.headers.host + '/profiles'
                 }, function(info) {
-                  res.json(lesson);
+                  // res.json(lesson);
                 }, function(errorMessage) {
-                  res.json(lesson);
+                  // res.json(lesson);
                 });
               });
             });
@@ -329,6 +330,7 @@ exports.update = function(req, res) {
             activity.save(function(err) {
               removeLessonFromUnits(req.lesson, function() {
                 addLessonToUnits(lesson, function() {
+                  res.json(lesson);
                   setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
                     var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -338,9 +340,9 @@ exports.update = function(req, res) {
                       LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
                       LinkProfile: httpTransport + req.headers.host + '/profiles'
                     }, function(info) {
-                      res.json(lesson);
+                      // res.json(lesson);
                     }, function(errorMessage) {
-                      res.json(lesson);
+                      // res.json(lesson);
                     });
                   });
                 });
@@ -388,6 +390,7 @@ exports.publish = function(req, res) {
         activity.save(function(err) {
           removeLessonFromUnits(req.lesson, function() {
             addLessonToUnits(lesson, function() {
+              res.json(lesson);
               setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
                 var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -399,11 +402,11 @@ exports.publish = function(req, res) {
                   LinkProfile: httpTransport + req.headers.host + '/profiles'
                 },
                 function(response) {
-                  res.json(lesson);
+                  // res.json(lesson);
                 }, function(errorMessage) {
-                  return res.status(400).send({
-                    message: errorMessage
-                  });
+                  // return res.status(400).send({
+                  //   message: errorMessage
+                  // });
                 });
               });
             });
@@ -444,6 +447,7 @@ exports.return = function(req, res) {
         activity.save(function(err) {
           removeLessonFromUnits(req.lesson, function() {
             addLessonToUnits(lesson, function() {
+              res.json(lesson);
               setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
                 var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
@@ -456,11 +460,11 @@ exports.return = function(req, res) {
                   LinkProfile: httpTransport + req.headers.host + '/profiles'
                 },
                 function(response) {
-                  res.json(lesson);
+                  // res.json(lesson);
                 }, function(errorMessage) {
-                  return res.status(400).send({
-                    message: errorMessage
-                  });
+                  // return res.status(400).send({
+                  //   message: errorMessage
+                  // });
                 });
               });
             });
@@ -594,6 +598,7 @@ exports.trackLesson = function(req, res) {
 
       activity.save(function(err) {
         res.json(trackedLesson);
+        setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {});
       });
     }
   });
@@ -755,6 +760,7 @@ exports.lessonFeedback = function(req, res) {
       });
 
       activity.save(function(err) {
+        res.json(lessonFeedback);
         setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
           var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
           var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
@@ -785,11 +791,11 @@ exports.lessonFeedback = function(req, res) {
             LinkProfile: httpTransport + req.headers.host + '/profiles'
           },
           function(response) {
-            res.json(lessonFeedback);
+            // res.json(lessonFeedback);
           }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
-            });
+            // return res.status(400).send({
+            //   message: errorMessage
+            // });
           });
         });
       });

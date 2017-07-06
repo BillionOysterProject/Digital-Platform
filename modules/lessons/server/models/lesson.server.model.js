@@ -31,6 +31,10 @@ var instructionPlans = {
   evaluate: {
     type: String,
     trim: true
+  },
+  extend: {
+    type: String,
+    trim: true
   }
 };
 
