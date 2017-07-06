@@ -420,7 +420,6 @@
       vm.valid = true;
 
       vm.lesson.status = (draft) ? 'draft' : 'pending';
-      console.log('status', vm.lesson.status);
 
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
@@ -446,7 +445,6 @@
       }
 
       function successCallback(res) {
-        console.log('res', res);
         vm.error = [];
         vm.valid = true;
         if (vm.form.lessonForm) vm.form.lessonForm.$setSubmitted(true);
