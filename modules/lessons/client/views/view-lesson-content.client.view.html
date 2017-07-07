@@ -12,6 +12,9 @@
         </small>
       </h2>
     </div>
+    <div class="col-sm-4 pull-right text-right" ng-show="fullPage">
+        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" width="80" />  
+    </div>
     <div class="col-sm-8 text-right" ng-hide="fullPage">
       <h6 id="status-draft" ng-show="lesson.status === 'draft'">Draft</h6>
       <h6 id="status-pending" ng-show="lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
@@ -32,16 +35,16 @@
   </div>
 
   <div class="row text-muted">
-    <div class="col-sm-10">
+    <div class="col-sm-12">
       <h5 id="lesson-author-info" ng-show="lesson.user">
-        <img ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3">
+        <img ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3" ng-hide="fullPage">
         <b><a ng-click="openViewUserModal()">{{lesson.user.displayName}}</a></b><br>
-        <a href="mailto:{{lesson.user.email}}">{{lesson.user.email}}</a>
+        <a href="mailto:{{lesson.user.email}}">{{lesson.user.email}}</a><br/>
+        <span ng-bind="lesson.created | date:'mediumDate'"></span>
       </h5>
-      <h5 ng-hide="lesson.user">Deleted User</h5>
-    </div>
-    <div class="col-sm-2 text-right" id="lesson-created-date">
-      <p ng-bind="lesson.created | date:'mediumDate'"></p>
+      <h5 ng-hide="lesson.user">Deleted User<br/>
+        <span ng-bind="lesson.created | date:'mediumDate'"></span>
+      </h5>
     </div>
   </div>
 
