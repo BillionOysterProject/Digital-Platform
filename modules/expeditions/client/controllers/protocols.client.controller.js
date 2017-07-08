@@ -33,7 +33,14 @@
     };
 
     var checkTeamLead = function() {
-      return (checkRole('team lead') && vm.user.username === vm.team.teamLead.username) ? true : false;
+      if (checkRole('team lead')) {
+        var teamLeadIndex = lodash.findIndex(vm.team.teamLeads, function(l) {
+          return l.username === vm.user.username;
+        });
+        return (teamLeadIndex > -1) ? true : false;
+      } else {
+        return false;
+      }
     };
 
     var checkTeamMember = function() {
@@ -248,17 +255,17 @@
 
     // Check the status of the protocols visible to the user to see if at least one is incomplete
     vm.checkStatusIncomplete = function() {
-      ExpeditionViewHelper.checkStatusIncomplete(vm.expedition);
+      return ExpeditionViewHelper.checkStatusIncomplete(vm.expedition);
     };
 
     // Check the status of the protocols visible to the user to see if they are all submitted
     vm.checkStatusPending = function() {
-      ExpeditionViewHelper.checkStatusPending(vm.expedition);
+      return ExpeditionViewHelper.checkStatusPending(vm.expedition);
     };
 
     // Check the status of the protocols visible to the user to see if they are all returned
     vm.checkStatusReturned = function() {
-      ExpeditionViewHelper.checkStatusReturned(vm.expedition);
+      return ExpeditionViewHelper.checkStatusReturned(vm.expedition);
     };
 
     vm.checkAllSubmitted = function(status) {
