@@ -10,8 +10,8 @@
       <small>{{oysterMeasurement.latitude}}, {{oysterMeasurement.longitude}}</small>
     </h4>
   </div>
-  <div class="col-sm-3" ng-repeat="member in oysterMeasurement.teamMembers">
-        <h5 ng-show="{{member.count > 0}}">
+  <div class="col-sm-3" ng-repeat="member in oysterMeasurement.teamMembers" ng-show="{{member.count > 0}}">
+        <h5>
             <a ng-click="vm.openViewUserModal(member)">
                 <img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}
             </a>
