@@ -32,6 +32,7 @@
                     <label for="units" class="control-label">Unit(s) *</label>
                     <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
                     ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
+                    <span class="help-block">To select multiple units, press and hold the Ctrl key (Windows) or Command key (Mac).</span>
                   </div>
                 </div>
                 <div class="col-md-4">
