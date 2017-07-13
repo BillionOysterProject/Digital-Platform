@@ -11,9 +11,11 @@
         </h4>
     </div>
     <div class="col-sm-3" ng-repeat="member in siteCondition.teamMembers">
-      <h5><a ng-click="vm.openViewUserModal(member)">
-        <img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}
-      </a></h5>
+        <h5 ng-show="{{member.count > 0}}">
+            <a ng-click="vm.openViewUserModal(member)">
+                <img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}
+            </a>
+        </h5>
     </div>
     <div class="col-sm-6" ng-show="siteCondition.notes">
         <p><b>Notes:</b> {{siteCondition.notes}}</p>
