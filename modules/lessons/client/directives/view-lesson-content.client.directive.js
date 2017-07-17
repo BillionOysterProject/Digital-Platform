@@ -9,6 +9,7 @@
         templateUrl: 'modules/lessons/client/views/view-lesson-content.client.view.html',
         scope: {
           lesson: '=',
+          lessonStats: '=',
           user: '=',
           resources: '=',
           feedback: '=',
