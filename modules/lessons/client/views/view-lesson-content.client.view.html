@@ -27,7 +27,7 @@
       <a class="btn btn-default" ng-show="(checkRole('admin') || checkRole('team lead')) && feedback &&
         feedback.lessonAlignWithCurriculumnAvg && feedback.lessonEffectiveAvg &&
         feedback.lessonPreparesStudentsAvg && feedback.lessonSupportScientificPracticeAvg"
-        ng-click="openLessonFeedbackView()">View feedback<!-- &nbsp;&nbsp;<span class="badge">{{feedback.feedbackCount}}</span>--></a>
+        ng-click="openLessonFeedbackView()">View feedback &nbsp;&nbsp;<span class="badge">{{feedback.feedbackCount}}</span></a>
       <a class="btn btn-default" view-permissions="team lead,admin" ng-show="openLessonLog" ng-click="openLessonLog()">Log teaching</a>
       <a class="btn btn-default" view-permissions="team lead,admin" ng-show="duplicateLesson" ng-click="duplicateLesson()">Duplicate</a>
       <a class="btn btn-default" ng-show="openDownloadLesson" ng-click="openDownloadLesson()">Download</a>
@@ -97,11 +97,11 @@
         <b class="blue">{{lessonStats.periodsOrSessionsCount}}</b> sessions
       </h4>
       <div class="row">
-          <!--
+
           {{lessonStats.avgStudentsPerClass | number:2}}
           {{lessonStats.avgClassesOrSections | number:2}}
           {{lessonStats.avgPeriodsOrSessions | number:2}}
-          -->
+
 
           <div class="col-sm-6">
               <small>Subject Areas of classes</small>
@@ -131,29 +131,18 @@
 
       <br/>
 
-      <!--TODO: Change to display both links and files (copy Teacher Resources)-->
-      <ul class="list-unstyled" id="lesson-handouts" ng-show="lesson.materialsResources.handoutsFileInput &&
-              lesson.materialsResources.handoutsFileInput.length > 0">
+      <ul class="list-unstyled" id="lesson-handouts"
+        ng-show="(lesson.materialsResources.handoutsFileInput &&
+            lesson.materialsResources.handoutsFileInput.length > 0) ||
+            (lesson.materialsResources.handoutLinks &&
+            lesson.materialsResources.handoutLinks.length > 0)">
         <b>Handouts</b>
         <li ng-repeat="file in lesson.materialsResources.handoutsFileInput">
           <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
             <i class="glyphicon glyphicon-file"></i>
             {{file.originalname}}</a>
-          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
-      </ul>
-
-      <br/>
-
-      <!--TODO: Wire up new field:
-      <ul class="list-unstyled" id="lesson-materials" ng-show="false">
-        <b>Materials</b>
-        <li ng-repeat="file in lesson.materialsResources.teacherResourcesFiles">
-          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
-            <i class="glyphicon glyphicon-file"></i>
-            {{file.originalname}}</a>
-        </li>
-        <li ng-repeat="link in lesson.materialsResources.teacherResourcesLinks">
+        <li ng-repeat="link in lesson.materialsResources.handoutLinks">
           <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
             <i class="glyphicon glyphicon-link"></i>
             {{link.name}}</a>
@@ -161,7 +150,27 @@
       </ul>
 
       <br/>
-      -->
+
+      <!--TODO: Wire up new field: -->
+      <ul class="list-unstyled" id="lesson-materials"
+      ng-show="(lesson.materialsResources.lessonMaterialFiles &&
+            lesson.materialsResources.lessonMaterialFiles.length > 0) ||
+            (lesson.materialsResources.lessonMaterialLinks &&
+            lesson.materialsResources.lessonMaterialLinks.length > 0)">
+        <b>Materials</b>
+        <li ng-repeat="file in lesson.materialsResources.lessonMaterialFiles">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.lessonMaterialLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+        </li>
+      </ul>
+
+      <br/>
 
       <ul class="list-unstyled" id="lesson-resources"
         ng-show="(lesson.materialsResources.teacherResourcesFiles &&
@@ -173,13 +182,11 @@
           <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
             <i class="glyphicon glyphicon-file"></i>
             {{file.originalname}}</a>
-          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
         <li ng-repeat="link in lesson.materialsResources.teacherResourcesLinks">
           <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
             <i class="glyphicon glyphicon-link"></i>
             {{link.name}}</a>
-          <!-- <span ng-show="fullPage">{{link.link | urlNormalizer}}</span> -->
         </li>
         <!-- TODO: VIDEO: Should open modal and play video on click -->
         <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
@@ -188,20 +195,21 @@
       <br/>
 
       <!--TODO: Change to display both links and files (copy Teacher Resources)-->
-      <ul class="list-unstyled" id="lesson-state-test-questions" ng-show="lesson.materialsResources.stateTestQuestions &&
-              lesson.materialsResources.stateTestQuestions.length > 0">
+      <ul class="list-unstyled" id="lesson-state-test-questions"
+      ng-show="(lesson.materialsResources.stateTestQuestions &&
+          lesson.materialsResources.stateTestQuestions.length > 0) ||
+          (lesson.materialsResources.stateTestQuestionLinks &&
+          lesson.materialsResources.stateTestQuestionLinks.length > 0)">
         <b>State Test Questions</b>
         <li ng-repeat="file in lesson.materialsResources.stateTestQuestions">
           <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
             <i class="glyphicon glyphicon-file"></i>
             {{file.originalname}}</a>
-          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
         <li ng-repeat="link in lesson.materialsResources.stateTestQuestionLinks">
           <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
             <i class="glyphicon glyphicon-link"></i>
             {{link.name}}</a>
-          <!-- <span ng-show="fullPage">{{link.link | urlNormalizer}}</span> -->
         </li>
       </ul>
 

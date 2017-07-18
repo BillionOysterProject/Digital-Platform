@@ -466,15 +466,23 @@
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
           handoutsFileInput: vm.resources.handouts,
+          handoutLinks: vm.resources.handoutLinks,
           teacherResourcesFiles: vm.resources.resourceFiles,
           teacherResourcesLinks: vm.resources.resourceLinks,
-          stateTestQuestions: vm.resources.stateTestQuestionsFiles
+          lessonMaterialFiles: vm.resources.materialFiles,
+          lessonMaterialLinks: vm.resources.materialLinks,
+          stateTestQuestions: vm.resources.stateTestQuestionsFiles,
+          stateTestQuestionLinks: vm.resources.stateTestQuestionLinks
         };
       } else {
         vm.lesson.materialsResources.handoutsFileInput = vm.resources.handouts;
+        vm.lesson.materialsResources.handoutLinks = vm.resources.handoutLinks;
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resources.resourceFiles;
         vm.lesson.materialsResources.teacherResourcesLinks = vm.resources.resourceLinks;
+        vm.lesson.materialsResources.lessonMaterialFiles = vm.resources.materialFiles;
+        vm.lesson.materialsResources.lessonMaterialLinks = vm.resources.materialLinks;
         vm.lesson.materialsResources.stateTestQuestions = vm.resources.stateTestQuestionsFiles;
+        vm.lesson.materialsResources.tateTestQuestionLinks = vm.resources.stateTestQuestionLinks;
       }
 
       // angular.element('#modal-save-draft-progress-bar').modal('show');

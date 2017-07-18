@@ -13,6 +13,7 @@
           resourceFiles: '=',
           resourceLinks: '=',
           resourceDropzoneId: '@',
+          modalTitleText: '@',
           controlLabelText: '@',
           helpBlockText: '@',
           addButtonText: '@'
@@ -22,7 +23,6 @@
         },
         controller: function($scope) {
           $scope.openAddModal = function() {
-            console.log('test open', $scope.index);
             angular.element('#modal-resources'+$scope.index).modal('show');
           };
 

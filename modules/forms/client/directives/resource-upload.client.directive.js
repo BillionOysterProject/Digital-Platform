@@ -25,7 +25,6 @@
           });
 
           scope.$watch('resourceFilesUploader', function(newValue, oldValue) {
-            console.log('resourceFilesUploader', scope.resourceFilesUploader);
             scope.resourceFilesUploader = newValue;
           });
 
