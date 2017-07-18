@@ -108,11 +108,38 @@ var LessonSchema = new Schema({
       filename: String,
       path: String
     }],
+    lessonMaterialLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
+    }],
+    lessonMaterialFiles: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
+    handoutLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
+    }],
     handoutsFileInput: [{
       originalname: String,
       mimetype: String,
       filename: String,
       path: String
+    }],
+    stateTestQuestionLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
     }],
     stateTestQuestions: [{
       originalname: String,

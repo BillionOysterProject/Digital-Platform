@@ -8,6 +8,8 @@
         restrict: 'AE',
         templateUrl: 'modules/forms/client/views/resource-upload.client.view.html',
         scope: {
+          index: '@?',
+          modalTitleText: '@',
           resourceFilesUploader: '=',
           resourceFiles: '=',
           resourceLinks: '=',
@@ -20,6 +22,23 @@
             scope.tempResourceLink = '';
 
             scope.tempResourceFiles = [];
+          });
+
+          scope.$watch('resourceFilesUploader', function(newValue, oldValue) {
+            console.log('resourceFilesUploader', scope.resourceFilesUploader);
+            scope.resourceFilesUploader = newValue;
+          });
+
+          scope.$watch('resourceFiles', function(newValue, oldValue) {
+            scope.resourceFiles = newValue;
+          });
+
+          scope.$watch('resourceLinks', function(newValue, oldValue) {
+            scope.resourceLinks = newValue;
+          });
+
+          scope.$watch('resourceDropzoneId', function(newValue, oldValue) {
+            scope.resourceDropzoneId = newValue;
           });
         },
         controller: 'ResourceUploadController',

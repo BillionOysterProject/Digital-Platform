@@ -13,7 +13,7 @@
       </h2>
     </div>
     <div class="col-sm-4 pull-right text-right" ng-show="fullPage">
-        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" width="80" />  
+        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" width="80" />
     </div>
     <div class="col-sm-8 text-right" ng-hide="fullPage">
       <h6 id="status-draft" ng-show="lesson.status === 'draft'">Draft</h6>
@@ -128,9 +128,9 @@
           <b>Supplies</b><br/>
           <span ng-bind-html="lesson.materialsResources.supplies | sanitize"></span>
       </div>
-        
+
       <br/>
-      
+
       <!--TODO: Change to display both links and files (copy Teacher Resources)-->
       <ul class="list-unstyled" id="lesson-handouts" ng-show="lesson.materialsResources.handoutsFileInput &&
               lesson.materialsResources.handoutsFileInput.length > 0">
@@ -142,10 +142,10 @@
           <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
         </li>
       </ul>
-        
+
       <br/>
-      
-      <!--TODO: Wire up new field: 
+
+      <!--TODO: Wire up new field:
       <ul class="list-unstyled" id="lesson-materials" ng-show="false">
         <b>Materials</b>
         <li ng-repeat="file in lesson.materialsResources.teacherResourcesFiles">
@@ -159,10 +159,10 @@
             {{link.name}}</a>
         </li>
       </ul>
-        
+
       <br/>
       -->
-        
+
       <ul class="list-unstyled" id="lesson-resources"
         ng-show="(lesson.materialsResources.teacherResourcesFiles &&
               lesson.materialsResources.teacherResourcesFiles.length > 0) ||
@@ -184,20 +184,29 @@
         <!-- TODO: VIDEO: Should open modal and play video on click -->
         <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
       </ul>
-        
+
       <br/>
-        
+
       <!--TODO: Change to display both links and files (copy Teacher Resources)-->
       <ul class="list-unstyled" id="lesson-state-test-questions" ng-show="lesson.materialsResources.stateTestQuestions &&
               lesson.materialsResources.stateTestQuestions.length > 0">
         <b>State Test Questions</b>
         <li ng-repeat="file in lesson.materialsResources.stateTestQuestions">
-          <img ng-src="{{file.path}}" class="img-responsive" id="img-{{file.originalname}}"/>
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+          <!-- <span ng-show="fullPage">{{file.originalname}}</span> -->
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.stateTestQuestionLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+          <!-- <span ng-show="fullPage">{{link.link | urlNormalizer}}</span> -->
         </li>
       </ul>
-        
+
       <br/>
-        
+
       <ul class="list-unstyled" id="lesson-vocabulary" ng-show="lesson.materialsResources.vocabulary && lesson.materialsResources.vocabulary.length > 0">
           <b>Vocabulary</b>
           <li ng-repeat="vocabulary in lesson.materialsResources.vocabulary">

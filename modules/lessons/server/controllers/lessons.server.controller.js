@@ -148,6 +148,7 @@ exports.create = function(req, res) {
     lesson.user = req.user;
     lesson.materialsResources.handoutsFileInput = [];
     lesson.materialsResources.teacherResourcesFiles = [];
+    lesson.materialsResources.lessonMaterialFiles = [];
     lesson.materialsResources.stateTestQuestions = [];
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -275,6 +276,22 @@ var updateResources = function(lesson) {
   return existingResources;
 };
 
+var updateMaterials = function(lesson) {
+  var existingMaterials = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.lessonMaterialFiles) {
+    for (var j = 0; j < lesson.materialsResources.lessonMaterialFiles.length; j++) {
+      var resource = lesson.materialsResources.lessonMaterialFiles[j];
+      if (resource.path !== undefined && resource.path !== '' &&
+        resource.originalname !== undefined && resource.originalname !== '' &&
+        resource.filename !== undefined && resource.filename !== '' &&
+        resource.mimetype !== undefined && resource.mimetype !== '') {
+        existingMaterials.push(resource);
+      }
+    }
+  }
+  return existingMaterials;
+};
+
 var updateQuestions = function(lesson) {
   var existingQuestions = [];
   if (lesson && lesson.materialsResources && lesson.materialsResources.stateTestQuestions) {
@@ -304,6 +321,7 @@ exports.update = function(req, res) {
 
       lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
       lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
+      lesson.materialsResources.lessonMaterialFiles = updateMaterials(req.body);
       lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
 
       var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -1215,6 +1233,29 @@ exports.uploadTeacherResources = function (req, res) {
   }
 };
 
+exports.uploadLessonMaterialFiles = function (req, res) {
+  var lesson = req.lesson;
+  var upload = multer(config.uploads.lessonTeacherResourcesUpload).single('newTeacherResourceFile', 20);
+
+  var resourceUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
+  upload.fileFilter = resourceUploadFileFilter;
+
+  if (lesson) {
+    var uploadRemote = new UploadRemote();
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonTeacherResourcesUpload,
+    function(fileInfo) {
+      lesson.materialsResources.teacherResourcesFiles.push(fileInfo);
+      uploadFileSuccess(lesson, res);
+    }, function(errorMessage) {
+      uploadFileError(lesson, errorMessage, res);
+    });
+  } else {
+    res.status(400).send({
+      message: 'Lesson does not exist'
+    });
+  }
+};
+
 exports.uploadStateTestQuestions = function (req, res) {
   var lesson = req.lesson;
   var upload = multer(config.uploads.lessonStateTestQuestionsUpload).single('newStateTestQuestions', 20);
@@ -1356,17 +1397,47 @@ exports.downloadZip = function(req, res) {
       }
     };
 
+    var getMaterialContent = function(index, list, materialCallback) {
+      if (index < list.length) {
+        var resource = list[index];
+        var requestSettings = {
+          method: 'GET',
+          url: resource.path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: resource.originalname });
+          }
+          getMaterialContent(index+1, list, materialCallback);
+        });
+      } else {
+        materialCallback();
+      }
+    };
+
+    var getMaterials = function(materialCallback) {
+      if (req.query.materials === 'YES') {
+        var resources = lesson.materialsResources.lessonMaterialFiles;
+        getMaterialContent(0, resources, materialCallback);
+      } else {
+        materialCallback();
+      }
+    };
+
     getLessonContent(function() {
       getHandouts(function() {
         getResources(function() {
-          var activity = new LessonActivity({
-            user: req.user,
-            lesson: req.lesson,
-            activity: 'downloaded'
-          });
+          getMaterials(function() {
+            var activity = new LessonActivity({
+              user: req.user,
+              lesson: req.lesson,
+              activity: 'downloaded'
+            });
 
-          activity.save(function(err) {
-            archive.finalize();
+            activity.save(function(err) {
+              archive.finalize();
+            });
           });
         });
       });

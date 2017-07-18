@@ -19,6 +19,9 @@
                             <div class="checkbox" ng-show="lesson.materialsResources.teacherResourcesFiles.length > 0">
                                 <label><input type="checkbox" ng-model="download.resources" ng-true-value="'YES'" ng-false-value="'NO'"> Teacher Resources</label>
                             </div>
+                            <div class="checkbox" ng-show="lesson.materialsResources.lessonMaterialFiles.length > 0">
+                                <label><input type="checkbox" ng-model="download.materials" ng-true-value="'YES'" ng-false-value="'NO'"> Lesson Materials</label>
+                            </div>
                         </div>
                         <!-- TODO: Uncomment when unit download is wired up
                         <p>To download other associated lessons in the unit, or the entire unit, visit
