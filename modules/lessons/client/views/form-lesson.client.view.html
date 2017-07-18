@@ -1,6 +1,6 @@
 <section class="content shaded">
   <section class="container">
-    <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid)" novalidate>
+    <form name="vm.form.lessonForm" ng-submit="vm.save(vm.form.lessonForm.$valid, false)" novalidate>
       <fieldset>
         <div class="container-fluid">
           <div class="page-header">
@@ -14,6 +14,7 @@
             </div>
             <h1 id="lesson-header">{{vm.lesson._id ? 'Edit lesson' : 'Create new lesson'}}</h1>
           </div>
+          <div class="alert alert-info"><b>Note:</b> This form does NOT save automatically, so please click the Save Draft button frequently (located at the bottom of the page).</div>
 
           <!-- Lesson -->
           <div class="panel panel-default">
@@ -32,13 +33,14 @@
                     <label for="units" class="control-label">Unit(s) *</label>
                     <select class="form-control" name="units" id="units" ng-model="vm.lesson.units"
                     ng-options="unit as unit.title for unit in vm.units track by unit._id" multiple="true" required></select>
+                    <span class="help-block">To select multiple units, press and hold the Ctrl key (Windows) or Command key (Mac).</span>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group" show-errors>
-                    <label for="image" class="control-label">Featured Image</label>
+                    <label for="lesson-featured-image" class="control-label">Featured Image</label>
                     <single-image-drop-zone uploader="vm.featuredImageUploader" image-url="vm.featuredImageURL"
-                    image-alt="Featured Image" id="lesson-featured-image"></single-image-drop-zone>
+                    image-alt="Featured Image" id="lesson-featured-image" name="lesson-featured-image"></single-image-drop-zone>
                   </div>
                 </div>
               </div>
@@ -57,6 +59,7 @@
                         <label for="grade" class="control-label">Grade</label>
                         <select class="form-control" name="grade" id="grade" ng-model="vm.lesson.lessonOverview.grade">
                           <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
+                          <option>Elementary</option>
                           <option>6-8th</option>
                           <option>6th</option>
                           <option>7th</option>
@@ -72,8 +75,9 @@
                     <div class="col-md-4">
                       <div class="form-group" show-errors>
                         <label for="classPeriods" class="control-label">Class Periods</label>
-                        <select class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods">
-                          <!-- These will probably change, haven't gotten customer feedback on what options should be available -->
+                        <input class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods"
+                        required/>
+                        <!-- <select class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods">
                           <option>1</option>
                           <option>2</option>
                           <option>3</option>
@@ -83,7 +87,7 @@
                           <option>7</option>
                           <option>8</option>
                           <option>9</option>
-                        </select>
+                        </select> -->
                       </div>
                     </div>
                     <div class="col-md-4">
@@ -92,6 +96,7 @@
                         <select class="form-control" name="settings" id="settings" ng-model="vm.lesson.lessonOverview.setting">
                           <option>Classroom</option>
                           <option>Field</option>
+                          <option>Classroom & Field</option>
                         </select>
                       </div>
                     </div>
@@ -109,7 +114,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-sm-12" show-errors>
+                <div class="form-group col-sm-12">
                     <wysiwyg-editor name="lessonSummary"
                     in-title="Summary" ng-model="vm.lesson.lessonOverview.lessonSummary" label-class="control-label"></wysiwyg-editor>
                 </div>
@@ -126,34 +131,91 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group" show-errors>
-                    <wysiwyg-editor name="supplies"
-                    in-title="Supplies" ng-model="vm.lesson.materialsResources.supplies" label-class="control-label"></wysiwyg-editor>
-                  </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="form-group">
-                    <label for="handouts" class="control-label">Handouts</label>
-                    <multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.handouts"
-                    id="lesson-handout-files"></multiple-file-drop-zone>
+                    <label class="control-label">Supplies</label>
+                    <span class="help-block"><i class="fa fa-info-circle"></i> Bulleted list of physical materials needed to execute the lesson.</span>
+                    <wysiwyg-editor name="supplies" ng-model="vm.lesson.materialsResources.supplies"></wysiwyg-editor>
                   </div>
                 </div>
+              </div>
+              <div class="row">
                 <div class="col-md-6">
-                    <hr/>
+										<!-- OLD HANDOUTS (DELETE)-->
                     <div class="form-group">
-                        <label for="vocabulary" class="control-label">Teacher Resources</label>
+                      <label for="handouts" class="control-label">Handouts</label>
+                      <span class="help-block"><i class="fa fa-info-circle"></i> Documents designed to be printed and distributed to students during the lesson.</span>
+											<multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.resources.handouts"
+											id="lesson-handout-files"></multiple-file-drop-zone>
+										</div>
+                    <!-- END OLD HANDOUTS (DELETE)-->
+                  
+                    <!-- TODO: WIRE UP NEW HANDOUT MODAL/TABLE BELOW: 
+                    <div class="form-group">
+                        <label class="control-label">Handouts</label>
+                        <span class="help-block"><i class="fa fa-info-circle"></i> Documents designed to be printed and distributed to students during the lesson.</span>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-handouts">Add Handout</a>
+                    </div>
+                    <table class="table">
+                      <tr ng-repeat="link in vm.handouts.handoutLinks">
+                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
+                        <td>{{link.link}}</td>
+                        <td>
+                          <a ng-click="vm.deleteHandoutLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                      <tr ng-repeat="file in vm.handouts.handoutFiles">
+                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
+                        <td></td>
+                        <td id="lesson-handout-files">
+                            <a ng-click="vm.deleteHandoutFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                    </table>
+                    -->
+                    
+                    <!-- TODO: WIRE UP NEW "MATERIALS" FIELD/MODAL/TABLE BELOW:
+                    
+                    <hr/>
+
+                    <div class="form-group">
+                        <label class="control-label">Materials</label>
+                        <span class="help-block"><i class="fa fa-info-circle"></i> Shared class resources, such as PowerPoints or websites, that the teacher must use to execute the lesson.</span>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Material</a>
+                    </div>
+                    <table class="table">
+                      <tr ng-repeat="link in vm.materials.materialLinks">
+                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
+                        <td>{{link.link}}</td>
+                        <td>
+                          <a ng-click="vm.deleteMaterialLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                      <tr ng-repeat="file in vm.materials.materialFiles">
+                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
+                        <td></td>
+                        <td id="lesson-material-files">
+                            <a ng-click="vm.deleteMaterialFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                    </table>
+                    -->
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">Teacher Resources</label>
+                        <span class="help-block"><i class="fa fa-info-circle"></i> Optional background reading, like articles or websites, that can help inform the teacher before teaching the lesson.</span>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
                     </div>
                     <table class="table">
-                      <tr ng-repeat="link in vm.resourceLinks">
+                      <tr ng-repeat="link in vm.resources.resourceLinks">
                         <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
                         <td>{{link.link}}</td>
                         <td>
                           <a ng-click="vm.deleteTeacherResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                       </tr>
-                      <tr ng-repeat="file in vm.resourceFiles">
+                      <tr ng-repeat="file in vm.resources.resourceFiles">
                         <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
                         <td></td>
                         <td id="lesson-teach-resource-files">
@@ -161,19 +223,46 @@
                         </td>
                       </tr>
                     </table>
+                    
+                    <hr/>
+                    
+										<!-- OLD STATE QUESTIONS (DELETE)-->
+                    <div class="form-group">
+                        <label for="stateTestQuestions" class="control-label">State Test Questions</label>
+                        <span class="help-block"><i class="fa fa-info-circle"></i> State test questions that connect to this lesson.</span>
+                        <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.resources.stateTestQuestionsFiles"
+                        id="lesson-state-test-questions-files"></multiple-file-drop-zone>
+                    </div>
+										<!-- END OLD STATE QUESTIONS (DELETE)-->
+                  
+                    <!-- TODO: WIRE UP NEW STATE TEST QUESTIONS MODAL/TABLE BELOW:
+                    <div class="form-group">
+                        <label class="control-label">State Test Questions</label>
+                        <span class="help-block"><i class="fa fa-info-circle"></i> State test questions that connect to this lesson.</span>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Questions</a>
+                    </div>
+                    <table class="table">
+                      <tr ng-repeat="link in vm.questions.questionLinks">
+                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
+                        <td>{{link.link}}</td>
+                        <td>
+                          <a ng-click="vm.deleteQUestionLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                      <tr ng-repeat="file in vm.questions.questionFiles">
+                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
+                        <td></td>
+                        <td id="lesson-question-files">
+                            <a ng-click="vm.deleteQuestionFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                      </tr>
+                    </table>
+                    -->
                 </div>
               </div>
               <hr/>
               <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="stateTestQuestions" class="control-label">State Test Questions</label>
-                    <span class="help-block">Take a screenshot of any state test questions that connect to this lesson and upload the file</span>
-                    <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.stateTestQuestionsFiles"
-                    id="lesson-state-test-questions-files"></multiple-file-drop-zone>
-                  </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="form-group" id="vocabulary">
                     <label for="vocabulary" class="control-label">Vocabulary</label>
                     <div class="input-group">
@@ -233,6 +322,9 @@
                     <li role="presentation">
                       <a href="#evaluate" data-toggle="tab" aria-controls="evaluate" role="tab">Evaluate</a>
                     </li>
+                    <li role="presentation">
+                      <a href="#extend" data-toggle="tab" aria-controls="extend" role="tab">Extend</a>
+                    </li>
                   </ul>
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="engage">
@@ -258,6 +350,11 @@
                     <div role="tabpanel" class="tab-pane" id="evaluate">
                       <div class="row">
                         <wysiwyg-editor outer-column="col-md-12" name="evaluate" ng-model="vm.lesson.instructionPlan.evaluate" label-class="control-label"></wysiwyg-editor>
+                      </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="extend">
+                      <div class="row">
+                        <wysiwyg-editor outer-column="col-md-12" name="extend" ng-model="vm.lesson.instructionPlan.extend" label-class="control-label"></wysiwyg-editor>
                       </div>
                     </div>
                   </div>
@@ -327,15 +424,28 @@
               <li ng-repeat="e in vm.error"><i class="glyphicon glyphicon-remove-sign"></i> {{ e }}</li>
             </ul>
           </div>
-          <div>
-            <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
-            <a class="btn btn-danger" ng-click="vm.cancel()">Cancel</a>
-            <a class="btn btn-default" ng-click="vm.saveDraft(vm.form.lessonForm.$valid)">Save draft</a>
-            <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
-              {{vm.lesson._id ? 'Update lesson' : 'Submit lesson'}}</button><!-- ng-disabled="!vm.form.lessonForm.$valid" -->
-
-            <a type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</a>
+          <div class="row">
+            <div class="col-sm-12">
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'draft'">Draft</h6>
+                <h6 class="navbar-text blue" ng-show="vm.lesson.status === 'pending'">Awaiting Approval</h6>
+                <h6 class="navbar-text red" ng-show="vm.lesson.status === 'returned'">Returned</h6>
+                <h6 class="navbar-text" ng-show="vm.lesson.status === 'published'">Published</h6>
+                <h6 class="navbar-text green" ng-show="vm.saving"><i class="fa fa-circle-o-notch fa-spin fa-fw green"></i> Saving</h6>
+            </div>
           </div>
+
+          <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+
+          <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+
+          <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
+          {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>
+          <!-- ng-disabled="!vm.form.lessonForm.$valid" -->
+
+          <button type="button" class="btn btn-danger pull-right" ng-show="vm.lesson._id" ng-click="vm.openDeleteLesson()">Delete</button>
+
+          <hr/>
+
         </div>
       </fieldset>
     </form>
@@ -346,7 +456,7 @@
   <saved-lesson-modal></saved-lesson-modal>
   <updated-lesson-modal></updated-lesson-modal>
   <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
-  resource-files="vm.resourceFiles" resource-links="vm.resourceLinks"
+  resource-files="vm.resources.resourceFiles" resource-links="vm.resources.resourceLinks"
   resource-dropzone-id="lesson-resources-file-dropzone"
   close-function=""></resource-upload-modal>
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>

@@ -31,6 +31,10 @@ var instructionPlans = {
   evaluate: {
     type: String,
     trim: true
+  },
+  extend: {
+    type: String,
+    trim: true
   }
 };
 
@@ -193,6 +197,12 @@ var LessonSchema = new Schema({
   },
   returnedNotes: {
     type: String
+  },
+  downloadPdf: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
   }
 });
 

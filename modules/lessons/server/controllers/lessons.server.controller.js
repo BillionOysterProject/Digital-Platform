@@ -17,7 +17,6 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
-  docx = require(path.resolve('./modules/core/server/controllers/docx.server.controller')),
   _ = require('lodash'),
   fs = require('fs'),
   archiver = require('archiver'),
@@ -25,6 +24,8 @@ var path = require('path'),
   path = require('path'),
   multer = require('multer'),
   moment = require('moment'),
+  wkhtmltopdf = require('wkhtmltopdf'),
+  exec = require('child_process').exec,
   async = require('async'),
   config = require(path.resolve('./config/config'));
 
@@ -97,6 +98,42 @@ var removeLessonFromUnits = function(lesson, callback) {
         unitCallback();
       }
     });
+  }, function(err) {
+    callback();
+  });
+};
+
+var setPdfToDownload = function(host, cookies, lesson, callback) {
+  var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
+  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
+  var filename = _.replace(lesson.title + '.pdf', /\s/g, '_');
+  var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
+  var mimetype = 'application/pdf';
+
+  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
+  exec(command, function(error, stdout, stderr) {
+    if (error) {
+      console.log('wkhtmltopdf error: ', error);
+      callback(error);
+    } else {
+      console.log('wkhmtltopdf stderr: ', stderr);
+      console.log('wkhtmltopdf stdout: ', stdout);
+      var uploadRemote = new UploadRemote();
+      uploadRemote.saveLocalAndRemote(filename, mimetype, config.uploads.lessonDownloadPdfUpload,
+      function(fileInfo) {
+        lesson.downloadPdf = fileInfo;
+        lesson.save(function(err) {
+          if (err) {
+            console.log('save file info error: ', err);
+            callback(err);
+          }
+          callback(null, fileInfo);
+        });
+      }, function(errorMessage) {
+        console.log('save image remotely error: ', errorMessage);
+        callback(errorMessage);
+      });
+    }
   });
 };
 
@@ -112,7 +149,6 @@ exports.create = function(req, res) {
     lesson.materialsResources.handoutsFileInput = [];
     lesson.materialsResources.teacherResourcesFiles = [];
     lesson.materialsResources.stateTestQuestions = [];
-    lesson.status = 'pending';
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
@@ -125,28 +161,35 @@ exports.create = function(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var activity = new LessonActivity({
-          user: req.user,
-          lesson: lesson,
-          activity: 'submitted'
-        });
+        if (lesson.status === 'pending') {
+          var activity = new LessonActivity({
+            user: req.user,
+            lesson: lesson,
+            activity: 'submitted'
+          });
 
-        activity.save(function(err) {
-          addLessonToUnits(lesson, function() {
-            var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          activity.save(function(err) {
+            addLessonToUnits(lesson, function() {
+              res.json(lesson);
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-            email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
-              TeamLeadName: req.user.displayName,
-              LessonName: lesson.title,
-              LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
-              LinkProfile: httpTransport + req.headers.host + '/profiles'
-            }, function(info) {
-              res.json(lesson);
-            }, function(errorMessage) {
-              res.json(lesson);
+                email.sendEmailTemplate(config.mailer.admin, 'A new lesson is pending approval', 'lesson_waiting', {
+                  TeamLeadName: req.user.displayName,
+                  LessonName: lesson.title,
+                  LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                }, function(info) {
+                  // res.json(lesson);
+                }, function(errorMessage) {
+                  // res.json(lesson);
+                });
+              });
             });
           });
-        });
+        } else {
+          res.json(lesson);
+        }
       }
     });
   }, function(errorMessages) {
@@ -249,62 +292,6 @@ var updateQuestions = function(lesson) {
 };
 
 /**
- * Incrementally save a lesson
- */
-exports.incrementalSave = function(req, res) {
-  var lesson = req.lesson;
-
-  if (lesson) {
-    lesson = _.extend(lesson, req.body);
-    lesson.returnedNotes = '';
-    if (!req.body.initial) lesson.status = 'draft';
-
-    lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
-    lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
-    lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
-  } else {
-    lesson = new Lesson(req.body);
-
-    lesson.user = req.user;
-    lesson.materialsResources.handoutsFileInput = [];
-    lesson.materialsResources.teacherResourcesFiles = [];
-    lesson.materialsResources.stateTestQuestions = [];
-    lesson.status = 'draft';
-  }
-
-  var pattern = /^data:image\/[a-z]*;base64,/i;
-  if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
-    lesson.featuredImage.path = '';
-  }
-
-  if (!lesson.updated) lesson.updated = [];
-  lesson.updated.push(Date.now());
-
-  lesson.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      addLessonToUnits(lesson, function() {
-        validateLesson(lesson,
-        function(lessonJSON) {
-          res.json({
-            lesson: lesson,
-            successful: true
-          });
-        }, function (errorMessages) {
-          res.json({
-            lesson: lesson,
-            errors: errorMessages
-          });
-        });
-      });
-    }
-  });
-};
-
-/**
  * Update a lesson
  */
 exports.update = function(req, res) {
@@ -314,7 +301,6 @@ exports.update = function(req, res) {
     if (lesson) {
       lesson = _.extend(lesson, lessonJSON);
       lesson.returnedNotes = '';
-      lesson.status = 'pending';
 
       lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
       lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
@@ -334,17 +320,37 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          var activity = new LessonActivity({
-            user: req.user,
-            lesson: lesson,
-            activity: 'submitted'
-          });
-
-          activity.save(function(err) {
-            addLessonToUnits(lesson, function() {
-              res.json(lesson);
+          if (lesson.status === 'pending') {
+            var activity = new LessonActivity({
+              user: req.user,
+              lesson: lesson,
+              activity: 'submitted'
             });
-          });
+
+            activity.save(function(err) {
+              removeLessonFromUnits(req.lesson, function() {
+                addLessonToUnits(lesson, function() {
+                  res.json(lesson);
+                  setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                    var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+
+                    email.sendEmailTemplate(config.mailer.admin, 'An updated lesson is pending approval', 'lesson_waiting', {
+                      TeamLeadName: req.user.displayName,
+                      LessonName: lesson.title,
+                      LinkLessonRequest: httpTransport + req.headers.host + '/library/user',
+                      LinkProfile: httpTransport + req.headers.host + '/profiles'
+                    }, function(info) {
+                      // res.json(lesson);
+                    }, function(errorMessage) {
+                      // res.json(lesson);
+                    });
+                  });
+                });
+              });
+            });
+          } else {
+            res.json(lesson);
+          }
         }
       });
     } else {
@@ -382,20 +388,27 @@ exports.publish = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          removeLessonFromUnits(req.lesson, function() {
+            addLessonToUnits(lesson, function() {
+              res.json(lesson);
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
-          'lesson_approved', {
-            FirstName: lesson.user.firstName,
-            LessonName: lesson.title,
-            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+                email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been approved',
+                'lesson_approved', {
+                  FirstName: lesson.user.firstName,
+                  LessonName: lesson.title,
+                  LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                },
+                function(response) {
+                  // res.json(lesson);
+                }, function(errorMessage) {
+                  // return res.status(400).send({
+                  //   message: errorMessage
+                  // });
+                });
+              });
             });
           });
         });
@@ -432,21 +445,28 @@ exports.return = function(req, res) {
         });
 
         activity.save(function(err) {
-          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          removeLessonFromUnits(req.lesson, function() {
+            addLessonToUnits(lesson, function() {
+              res.json(lesson);
+              setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+                var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
-          email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
-          'lesson_returned', {
-            FirstName: lesson.user.firstName,
-            LessonName: lesson.title,
-            LessonReturnedNote: lesson.returnedNotes,
-            LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
-            LinkProfile: httpTransport + req.headers.host + '/profiles'
-          },
-          function(response) {
-            res.json(lesson);
-          }, function(errorMessage) {
-            return res.status(400).send({
-              message: errorMessage
+                email.sendEmailTemplate(lesson.user.email, 'Your lesson ' + lesson.title + ' has been returned',
+                'lesson_returned', {
+                  FirstName: lesson.user.firstName,
+                  LessonName: lesson.title,
+                  LessonReturnedNote: lesson.returnedNotes,
+                  LinkLesson: httpTransport + req.headers.host + '/lessons/' + lesson._id,
+                  LinkProfile: httpTransport + req.headers.host + '/profiles'
+                },
+                function(response) {
+                  // res.json(lesson);
+                }, function(errorMessage) {
+                  // return res.status(400).send({
+                  //   message: errorMessage
+                  // });
+                });
+              });
             });
           });
         });
@@ -578,6 +598,7 @@ exports.trackLesson = function(req, res) {
 
       activity.save(function(err) {
         res.json(trackedLesson);
+        setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {});
       });
     }
   });
@@ -739,39 +760,42 @@ exports.lessonFeedback = function(req, res) {
       });
 
       activity.save(function(err) {
-        var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
-        var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
-        var toList = [lesson.user.email, config.mailer.admin];
+        res.json(lessonFeedback);
+        setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+          var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
+          var subject = 'Feedback from ' + req.user.displayName + ' about your lesson ' + req.body.lesson.title;
+          var toList = [lesson.user.email, config.mailer.admin];
 
-        email.sendEmailTemplate(toList, subject,
-        'lesson_feedback', {
-          FirstName: req.body.lesson.user.firstName,
-          LessonFeedbackName: req.user.displayName,
-          LessonName: req.body.lesson.title,
-          LessonFeedbackNote: req.body.message,
-          LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
-          LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
-          LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
-          LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
-          HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
-          WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
-          WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
-          LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
-          LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
-          MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
-          Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
-          Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
-          InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
-          Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
-          Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
-          LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
-          LinkProfile: httpTransport + req.headers.host + '/profiles'
-        },
-        function(response) {
-          res.json(lessonFeedback);
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
+          email.sendEmailTemplate(toList, subject,
+          'lesson_feedback', {
+            FirstName: req.body.lesson.user.firstName,
+            LessonFeedbackName: req.user.displayName,
+            LessonName: req.body.lesson.title,
+            LessonFeedbackNote: req.body.message,
+            LessonEffective: (lessonFeedback.lessonEffective) ? lessonFeedback.lessonEffective : 0,
+            LessonAlignWithCurriculumn: (lessonFeedback.lessonAlignWithCurriculumn) ? lessonFeedback.lessonAlignWithCurriculumn : 0,
+            LessonSupportScientificPractice: (lessonFeedback.lessonSupportScientificPractice) ? lessonFeedback.lessonSupportScientificPractice : 0,
+            LessonPreparesStudents: (lessonFeedback.lessonPreparesStudents) ? lessonFeedback.lessonPreparesStudents : 0,
+            HowLessonTaught: (lessonFeedback.howLessonTaught) ? lessonFeedback.howLessonTaught : '',
+            WhyLessonTaughtNow: (lessonFeedback.whyLessonTaughtNow) ? lessonFeedback.whyLessonTaughtNow : '',
+            WillTeachLessonAgain: (lessonFeedback.willTeachLessonAgain) ? lessonFeedback.willTeachLessonAgain : '',
+            LessonSummary: (lessonFeedback.additionalFeedback.lessonSummary) ? lessonFeedback.additionalFeedback.lessonSummary : '',
+            LessonObjectives: (lessonFeedback.additionalFeedback.lessonObjectives) ? lessonFeedback.additionalFeedback.lessonObjectives : '',
+            MaterialsResources: (lessonFeedback.additionalFeedback.materialsResources) ? lessonFeedback.additionalFeedback.materialsResources : '',
+            Preparation: (lessonFeedback.additionalFeedback.preparation) ? lessonFeedback.additionalFeedback.preparation : '',
+            Background: (lessonFeedback.additionalFeedback.background) ? lessonFeedback.additionalFeedback.background : '',
+            InstructionPlan: (lessonFeedback.additionalFeedback.instructionPlan) ? lessonFeedback.additionalFeedback.instructionPlan : '',
+            Standards: (lessonFeedback.additionalFeedback.standards) ? lessonFeedback.additionalFeedback.standards : '',
+            Other: (lessonFeedback.additionalFeedback.other) ? lessonFeedback.additionalFeedback.other : '',
+            LinkLesson: httpTransport + req.headers.host + '/lessons/' + req.body.lesson._id,
+            LinkProfile: httpTransport + req.headers.host + '/profiles'
+          },
+          function(response) {
+            // res.json(lessonFeedback);
+          }, function(errorMessage) {
+            // return res.status(400).send({
+            //   message: errorMessage
+            // });
           });
         });
       });
@@ -891,6 +915,9 @@ var deleteInternal = function(lesson, successCallback, errorCallback) {
     if (lesson.featuredImage && lesson.featuredImage.path) {
       filesToDelete.push(lesson.featuredImage.path);
     }
+    if (lesson.downloadPdf && lesson.downloadPdf.path) {
+      filesToDelete.push(lesson.downloadPdf.path);
+    }
     if (lesson.materialsResources) {
       if (lesson.materialsResources.teacherResourcesFiles && lesson.materialsResources.teacherResourcesFiles.path) {
         for (var i = 0; i < lesson.materialsResources.teacherResourcesFiles.length; i++) {
@@ -961,8 +988,16 @@ exports.list = function(req, res) {
     and.push({ 'lessonOverview.subjectAreas' : req.query.subjectArea });
   }
 
+  var settingsRe;
   if (req.query.setting) {
-    and.push({ 'lessonOverview.setting' : req.query.setting });
+    try {
+      settingsRe = new RegExp(req.query.setting, 'i');
+    } catch(e) {
+      return res.status(400).send({
+        message: 'Setting is invalid'
+      });
+    }
+    and.push({ 'lessonOverview.setting' : settingsRe });
   }
 
   if (req.query.unit) {
@@ -1212,10 +1247,7 @@ exports.downloadFile = function(req, res){
 
 exports.downloadZip = function(req, res) {
   var lesson = req.lesson;
-
   var archive = archiver('zip');
-
-  var lessonDocxFilepath = '';
 
   archive.on('error', function(err) {
     return res.status(500).send({
@@ -1225,13 +1257,6 @@ exports.downloadZip = function(req, res) {
 
   //on stream closed we can end the request
   archive.on('end', function() {
-    if (lessonDocxFilepath && lessonDocxFilepath !== '') {
-      fs.exists(lessonDocxFilepath, function(exists) {
-        if (exists) {
-          fs.unlink(lessonDocxFilepath);
-        }
-      });
-    }
     console.log('Archive wrote %d bytes', archive.pointer());
   });
 
@@ -1244,18 +1269,32 @@ exports.downloadZip = function(req, res) {
 
   if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
     var getLessonContent = function(lessonCallback) {
-      if (req.query.content === 'YES') {
-        docx.createLessonDocx(path.resolve('./modules/lessons/server/templates/lesson.docx'), lesson,
-        function(filepath) {
-          var filename = _.replace(lesson.title + '.docx', /\s/, '_');
-          lessonDocxFilepath = path.resolve(filepath);
-          archive.file(lessonDocxFilepath, { name: filename });
+      var attachLessonPdf = function(path, name) {
+        var requestSettings = {
+          method: 'GET',
+          url: path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: name });
+          }
           lessonCallback();
-        }, function(errorMessage) {
-          return res.status(400).send({
-            message: errorMessage
-          });
         });
+      };
+
+      if (req.query.content === 'YES') {
+        if (lesson.downloadPdf && lesson.downloadPdf.path && lesson.downloadPdf.originalname) {
+          attachLessonPdf(lesson.downloadPdf.path, lesson.downloadPdf.originalname);
+        } else {
+          setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+            if (fileInfo) {
+              attachLessonPdf(fileInfo.path, fileInfo.originalname);
+            } else {
+              lessonCallback();
+            }
+          });
+        }
       } else {
         lessonCallback();
       }

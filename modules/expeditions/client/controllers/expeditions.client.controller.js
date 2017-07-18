@@ -6,10 +6,10 @@
     .controller('ExpeditionsController', ExpeditionsController);
 
   ExpeditionsController.$inject = ['$scope', '$rootScope', '$state', 'moment', 'lodash', 'expeditionResolve', 'Authentication',
-    'TeamsService', 'TeamMembersService', 'RestorationStationsService'];
+    'TeamsService', 'TeamMembersService', 'RestorationStationsService', 'ExpeditionViewHelper'];
 
   function ExpeditionsController($scope, $rootScope, $state, moment, lodash, expedition, Authentication,
-  TeamsService, TeamMembersService, RestorationStationsService) {
+  TeamsService, TeamMembersService, RestorationStationsService, ExpeditionViewHelper) {
     var vm = this;
 
     vm.expedition = expedition;

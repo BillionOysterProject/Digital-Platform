@@ -21,6 +21,18 @@
           data: {
             pageTitle: 'Research'
           }
+        })
+        .state('full-page.lesson-view', {
+          url: '/lessons/:lessonId',
+          templateUrl: 'modules/lessons/client/views/full-page-lesson.client.view.html',
+          controller: 'LessonsController',
+          controllerAs: 'vm',
+          resolve: {
+            lessonResolve: getLesson
+          },
+          data: {
+            pageTitle: 'Lesson'
+          }
         });
     }
   ]);
@@ -30,6 +42,16 @@
   function getResearch($stateParams, ResearchesService) {
     return ResearchesService.get({
       researchId: $stateParams.researchId,
+      fullPage: true
+    }).$promise;
+  }
+
+  getLesson.$inject = ['$stateParams', 'LessonsService'];
+
+  function getLesson($stateParams, LessonsService) {
+    return LessonsService.get({
+      lessonId: $stateParams.lessonId,
+      full: true,
       fullPage: true
     }).$promise;
   }

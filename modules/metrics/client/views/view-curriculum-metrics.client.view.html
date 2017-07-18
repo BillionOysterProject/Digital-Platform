@@ -126,7 +126,7 @@
                 <h4>Most Viewed Units</h4>
                 <table class="table">
                     <tr ng-repeat="unitViewItem in metrics.unitViewData | orderBy: '-viewCount'">
-                        <td><!--TODO<a ui-sref="units.view({ unitId: unitViewItem.unit._id })">--><b>{{unitViewItem.unit.title}}</b><!--</a>--></td>
+                        <td><a ui-sref="units.view({ unitId: unitViewItem.unit._id })"><b>{{unitViewItem.unit.title}}</b></a></td>
                         <td><p class="text-muted"><b class="red">{{unitViewItem.viewCount}}</b> views</p></td>
                     </tr>
                 </table>
