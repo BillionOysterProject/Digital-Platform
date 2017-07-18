@@ -22,6 +22,9 @@
                             <div class="checkbox" ng-show="lesson.materialsResources.lessonMaterialFiles.length > 0">
                                 <label><input type="checkbox" ng-model="download.materials" ng-true-value="'YES'" ng-false-value="'NO'"> Lesson Materials</label>
                             </div>
+                            <div class="checkbox" ng-show="lesson.materialsResources.stateTestQuestions.length > 0">
+                                <label><input type="checkbox" ng-model="download.questions" ng-true-value="'YES'" ng-false-value="'NO'"> State Test Questions</label>
+                            </div>
                         </div>
                         <!-- TODO: Uncomment when unit download is wired up
                         <p>To download other associated lessons in the unit, or the entire unit, visit
@@ -32,7 +35,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelFunction()">Close</button>
                 <a class="btn btn-default" ng-click="downloadFunction()" download="{{lesson.filename}}" target="_blank"
-                ng-href="api/lessons/{{lesson._id}}/download?content={{download.content}}&handout={{download.handout}}&resources={{download.resources}}&full=true&filename={{lesson.filename}}">Download</a>
+                ng-href="api/lessons/{{lesson._id}}/download?content={{download.content}}&handout={{download.handout}}&resources={{download.resources}}&materials={{download.materials}}&questions={{download.questions}}&full=true&filename={{lesson.filename}}">Download</a>
             </div>
         </div>
     </div>

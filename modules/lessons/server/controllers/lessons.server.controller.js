@@ -246,11 +246,9 @@ exports.read = function(req, res) {
 
 var updateHandouts = function(lesson) {
   var existingHandouts = [];
-  console.log('handouts', lesson.materialsResources.handoutsFileInput);
   if (lesson && lesson.materialsResources && lesson.materialsResources.handoutsFileInput) {
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
       var handout = lesson.materialsResources.handoutsFileInput[i];
-      console.log('handout', handout);
       if (handout.path !== undefined && handout.path !== '' &&
         handout.originalname !== undefined && handout.originalname !== '' &&
         handout.filename !== undefined && handout.filename !== '' &&
@@ -283,7 +281,6 @@ var updateMaterials = function(lesson) {
   if (lesson && lesson.materialsResources && lesson.materialsResources.lessonMaterialFiles) {
     for (var j = 0; j < lesson.materialsResources.lessonMaterialFiles.length; j++) {
       var resource = lesson.materialsResources.lessonMaterialFiles[j];
-      console.log('resource', resource);
       if (resource.path !== undefined && resource.path !== '' &&
         resource.originalname !== undefined && resource.originalname !== '' &&
         resource.filename !== undefined && resource.filename !== '' &&
@@ -1311,7 +1308,8 @@ exports.downloadZip = function(req, res) {
   //this is the streaming magic
   archive.pipe(res);
 
-  if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.resources === 'YES') {
+  if (req.query.content === 'YES' || req.query.handout === 'YES' || req.query.materials === 'YES' ||
+    req.query.resources === 'YES' || req.query.questions === 'YES') {
     var getLessonContent = function(lessonCallback) {
       var attachLessonPdf = function(path, name) {
         var requestSettings = {
@@ -1428,18 +1426,48 @@ exports.downloadZip = function(req, res) {
       }
     };
 
+    var getStateTestQuestionContent = function(index, list, stateTestCallback) {
+      if (index < list.length) {
+        var resource = list[index];
+        var requestSettings = {
+          method: 'GET',
+          url: resource.path,
+          encoding: null
+        };
+        request(requestSettings, function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            archive.append(body, { name: resource.originalname });
+          }
+          getStateTestQuestionContent(index+1, list, stateTestCallback);
+        });
+      } else {
+        stateTestCallback();
+      }
+    };
+
+    var getStateTestQuestions = function(stateTestCallback) {
+      if (req.query.questions === 'YES') {
+        var resources = lesson.materialsResources.stateTestQuestions;
+        getStateTestQuestionContent(0, resources, stateTestCallback);
+      } else {
+        stateTestCallback();
+      }
+    };
+
     getLessonContent(function() {
       getHandouts(function() {
         getResources(function() {
           getMaterials(function() {
-            var activity = new LessonActivity({
-              user: req.user,
-              lesson: req.lesson,
-              activity: 'downloaded'
-            });
+            getStateTestQuestions(function() {
+              var activity = new LessonActivity({
+                user: req.user,
+                lesson: req.lesson,
+                activity: 'downloaded'
+              });
 
-            activity.save(function(err) {
-              archive.finalize();
+              activity.save(function(err) {
+                archive.finalize();
+              });
             });
           });
         });
