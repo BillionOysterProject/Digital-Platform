@@ -1326,17 +1326,17 @@ exports.downloadZip = function(req, res) {
       };
 
       if (req.query.content === 'YES') {
-        // if (lesson.downloadPdf && lesson.downloadPdf.path && lesson.downloadPdf.originalname) {
-        //   attachLessonPdf(lesson.downloadPdf.path, lesson.downloadPdf.originalname);
-        // } else {
-        setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
-          if (fileInfo) {
-            attachLessonPdf(fileInfo.path, fileInfo.originalname);
-          } else {
-            lessonCallback();
-          }
-        });
-        // }
+        if (lesson.downloadPdf && lesson.downloadPdf.path && lesson.downloadPdf.originalname) {
+          attachLessonPdf(lesson.downloadPdf.path, lesson.downloadPdf.originalname);
+        } else {
+          setPdfToDownload(req.headers.host, req.cookies, lesson, function(err, fileInfo) {
+            if (fileInfo) {
+              attachLessonPdf(fileInfo.path, fileInfo.originalname);
+            } else {
+              lessonCallback();
+            }
+          });
+        }
       } else {
         lessonCallback();
       }
