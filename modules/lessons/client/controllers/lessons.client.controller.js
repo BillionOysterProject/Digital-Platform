@@ -465,7 +465,7 @@
 
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
-          handoutsFileInput: vm.resources.handouts,
+          handoutsFileInput: vm.resources.handoutFiles,
           handoutLinks: vm.resources.handoutLinks,
           teacherResourcesFiles: vm.resources.resourceFiles,
           teacherResourcesLinks: vm.resources.resourceLinks,
@@ -475,7 +475,7 @@
           stateTestQuestionLinks: vm.resources.stateTestQuestionLinks
         };
       } else {
-        vm.lesson.materialsResources.handoutsFileInput = vm.resources.handouts;
+        vm.lesson.materialsResources.handoutsFileInput = vm.resources.handoutFiles;
         vm.lesson.materialsResources.handoutLinks = vm.resources.handoutLinks;
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resources.resourceFiles;
         vm.lesson.materialsResources.teacherResourcesLinks = vm.resources.resourceLinks;

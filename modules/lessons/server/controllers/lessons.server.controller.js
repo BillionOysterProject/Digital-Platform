@@ -246,9 +246,11 @@ exports.read = function(req, res) {
 
 var updateHandouts = function(lesson) {
   var existingHandouts = [];
+  console.log('handouts', lesson.materialsResources.handoutsFileInput);
   if (lesson && lesson.materialsResources && lesson.materialsResources.handoutsFileInput) {
     for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
       var handout = lesson.materialsResources.handoutsFileInput[i];
+      console.log('handout', handout);
       if (handout.path !== undefined && handout.path !== '' &&
         handout.originalname !== undefined && handout.originalname !== '' &&
         handout.filename !== undefined && handout.filename !== '' &&
@@ -281,6 +283,7 @@ var updateMaterials = function(lesson) {
   if (lesson && lesson.materialsResources && lesson.materialsResources.lessonMaterialFiles) {
     for (var j = 0; j < lesson.materialsResources.lessonMaterialFiles.length; j++) {
       var resource = lesson.materialsResources.lessonMaterialFiles[j];
+      console.log('resource', resource);
       if (resource.path !== undefined && resource.path !== '' &&
         resource.originalname !== undefined && resource.originalname !== '' &&
         resource.filename !== undefined && resource.filename !== '' &&
@@ -1235,16 +1238,16 @@ exports.uploadTeacherResources = function (req, res) {
 
 exports.uploadLessonMaterialFiles = function (req, res) {
   var lesson = req.lesson;
-  var upload = multer(config.uploads.lessonTeacherResourcesUpload).single('newTeacherResourceFile', 20);
+  var upload = multer(config.uploads.lessonMaterialFilesUpload).single('newLessonMaterialResourceFile', 20);
 
   var resourceUploadFileFilter = require(path.resolve('./config/lib/multer')).fileUploadFileFilter;
   upload.fileFilter = resourceUploadFileFilter;
 
   if (lesson) {
     var uploadRemote = new UploadRemote();
-    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonTeacherResourcesUpload,
+    uploadRemote.uploadLocalAndRemote(req, res, upload, config.uploads.lessonMaterialFilesUpload,
     function(fileInfo) {
-      lesson.materialsResources.teacherResourcesFiles.push(fileInfo);
+      lesson.materialsResources.lessonMaterialFiles.push(fileInfo);
       uploadFileSuccess(lesson, res);
     }, function(errorMessage) {
       uploadFileError(lesson, errorMessage, res);

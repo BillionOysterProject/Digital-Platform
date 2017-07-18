@@ -149,6 +149,13 @@ module.exports = {
         fileSize: 20*1024*1024
       }
     },
+    lessonMaterialFilesUpload: {
+      s3dest: 'uploads/lessons/files/lesson-material/',
+      dest: './modules/lessons/client/files/lesson-material/uploads/', // Lesson upload destination path
+      limits: {
+        fileSize: 20*1024*1024
+      }
+    },
     lessonStateTestQuestionsUpload: {
       s3dest: 'uploads/lessons/img/state-test-questions/',
       dest: './modules/lessons/client/img/state-test-questions/uploads/', // Lesson upload destination path
