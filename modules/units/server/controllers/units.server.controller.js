@@ -59,7 +59,11 @@ var addUnitToUnits = function(unit, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.subUnits, function(s) {
-          return s === unit._id;
+          if (s && unit && unit._id) {
+            return s.toString() === unit._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index === -1) {
           unitObj.subUnits.push(unit);
@@ -85,7 +89,11 @@ var removeUnitFromUnits = function(unit, callback) {
         unitCallback();
       } else if (unitObj) {
         var index = _.findIndex(unitObj.subUnits, function(s) {
-          return s === unit._id;
+          if (s && unit && unit._id) {
+            return s.toString() === unit._id.toString();
+          } else {
+            return false;
+          }
         });
         if (index > -1) {
           unitObj.subUnits.splice(index, 1);
@@ -187,8 +195,10 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          addUnitToUnits(unit, function() {
-            res.json(unit);
+          removeUnitFromUnits(req.unit, function() {
+            addUnitToUnits(unit, function() {
+              res.json(unit);
+            });
           });
         }
       });
@@ -350,7 +360,7 @@ exports.unitByID = function (req, res, next, id) {
     .populate('standards.nysssKeyIdeas')
     .populate('standards.nysssMajorUnderstandings')
     .populate('standards.nysssMst')
-    .populate('lessons', 'title lessonOverview lessonObjectives user status')
+    .populate('lessons', 'title lessonOverview lessonObjectives user featuredImage status')
     .populate('parentUnits', 'title color icon status')
     .populate('subUnits', 'title lessons subUnits status');
   } else {

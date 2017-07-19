@@ -43,7 +43,7 @@ describe('Restoration Station E2E Tests', function() {
     siteCoordinator: 3,
     siteCoordinatorName: 'Other',
     otherSiteCoordinator: {
-      name: 'Other Coordinator',
+      displayName: 'Other Coordinator',
       email: 'otherCoordinator@localhost.com'
     },
     propertyOwner: 3,
@@ -117,7 +117,7 @@ describe('Restoration Station E2E Tests', function() {
     element(by.model('vm.selectedPlace')).sendKeys(protractor.Key.ENTER);
     element(by.model('station.siteCoordinator._id')).all(by.tagName('option')).get(values.siteCoordinator).click();
     if (values.siteCoordinatorName === 'Other') {
-      element(by.model('station.siteCoordinator.name')).clear().sendKeys(values.otherSiteCoordinator.name).click();
+      element(by.model('station.siteCoordinator.displayName')).clear().sendKeys(values.otherSiteCoordinator.displayName).click();
       element(by.model('station.siteCoordinator.email')).clear().sendKeys(values.otherSiteCoordinator.email).click();
     }
     element(by.model('station.propertyOwner._id')).all(by.tagName('option')).get(values.propertyOwner).click();
@@ -146,8 +146,9 @@ describe('Restoration Station E2E Tests', function() {
       browser.sleep(500);
 
       fillInORS(station3, false);
-      browser.sleep(1000);
+      browser.sleep(2000);
 
+      browser.get('http://localhost:8081/restoration');
       orses = element.all(by.repeater('station in vm.stations'));
       expect(orses.count()).toEqual(3);
       var ors = orses.get(0);

@@ -249,11 +249,14 @@ exports.list = function (req, res) {
 
   if (req.query.role && req.query.role !== undefined && req.query.role !== null && req.query.role !== '') {
     if (admin) {
-      if ('team lead') {
+      if (req.query.role === 'team lead') {
+        console.log('team lead');
         and.push({ $or: [{ 'roles': 'team lead' }, { 'roles': 'team lead pending' }] });
-      } else if ('team member') {
+      } else if (req.query.role === 'team member') {
+        console.log('team member');
         and.push({ $or: [{ 'roles': 'team member' }, { 'roles': 'team member pending' }] });
       } else {
+        console.log('role', req.query.role);
         and.push({ 'roles': req.query.role });
       }
     } else {

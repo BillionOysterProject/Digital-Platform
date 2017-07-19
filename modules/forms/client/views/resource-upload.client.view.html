@@ -1,25 +1,25 @@
-<div class="modal fade" id="modal-resources" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal-resources{{index}}" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="closeFunction()">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title">Add a resource</h4>
+        <h4 class="modal-title">{{modalTitleText}}</h4>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active">
-                <a href="#link" data-toggle="tab" aria-controls="link" role="tab">Link</a>
+                <a href="#link{{index}}" data-toggle="tab" aria-controls="link" role="tab">Link</a>
               </li>
               <li role="presentation">
-                <a href="#upload" data-toggle="tab" aria-controls="upload" role="tab">Upload</a>
+                <a href="#upload{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Upload</a>
               </li>
             </ul>
             <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="link">
+              <div role="tabpanel" class="tab-pane active" id="link{{index}}">
                 <br/>
                 <div class="form-group">
                   <label>Name</label>
@@ -30,7 +30,7 @@
                   <input type="text" class="form-control" ng-model="tempResourceLink"/>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="upload">
+              <div role="tabpanel" class="tab-pane" id="upload{{index}}">
                 <br/>
                 <multiple-file-drop-zone uploader="resourceFilesUploader" files="tempResourceFiles"
                 id="{{resourceDropzoneId}}"></multiple-file-drop-zone>
@@ -40,8 +40,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancelResources()">Cancel</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addResources()">Add</button>
+        <button type="button" class="btn btn-default" ng-click="cancelResources()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="addResources()">Add</button>
       </div>
     </div>
   </div>

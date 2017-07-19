@@ -1066,8 +1066,6 @@ describe('Compare Expedition routes tests', function() {
 
             var csv = downloadRes.body;
 
-            console.log('csv', downloadRes.res.text);
-
             done();
           });
       });

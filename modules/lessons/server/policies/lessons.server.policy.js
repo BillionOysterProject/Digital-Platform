@@ -24,9 +24,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/download-file',
       permissions: ['*']
     }, {
-      resources: '/api/lessons/:lessonId/incremental-save',
-      permissions: ['*']
-    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: ['*']
     }, {
@@ -34,6 +31,9 @@ exports.invokeRolesPolicies = function () {
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/upload-teacher-resources',
+      permissions: ['*']
+    }, {
+      resources: '/api/lessons/:lessonId/upload-lesson-materials',
       permissions: ['*']
     }, {
       resources: '/api/lessons/:lessonId/upload-state-test-questions',
@@ -81,9 +81,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/lessons/download-file',
       permissions: '*'
     }, {
-      resources: '/api/lessons/:lessonId/incremental-save',
-      permissions: ['*']
-    }, {
       resources: '/api/lessons/:lessonId/upload-featured-image',
       permissions: '*'
     }, {
@@ -91,6 +88,9 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-teacher-resources',
+      permissions: '*'
+    }, {
+      resources: '/api/lessons/:lessonId/upload-lesson-materials',
       permissions: '*'
     }, {
       resources: '/api/lessons/:lessonId/upload-state-test-questions',

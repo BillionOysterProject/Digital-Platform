@@ -17,21 +17,35 @@
                         dnd-effect-allowed="move"
                         dnd-selected="selected = lesson"
                         ng-class="{'selected': selected === lesson}">
-                            <div class="col-md-3"><h4>{{lesson.title}}</h4></div>
-                            <div class="col-md-3">
+                            <div class="col-md-1">
+                                <h4 ng-class="{'blue': lesson.status === 'published', 'gray': lesson.status !== 'published'}"><b>{{($index+1)}}</b></h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 ng-class="{'text-muted': lesson.status !== 'published'}">{{lesson.title}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-thumbnail" />
+                            </div>
+                            <!--<div class="col-md-3">
                               <img ng-show="lesson.user.profileImageURL" ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="header-profile-image" />
                               {{lesson.user.displayName}}
-                            </div>
+                            </div>-->
                             <div class="col-md-2">
-                              <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
-                                ng-repeat="subject in lesson.lessonOverview.subjectAreas"
-                                class="label label-default"></span>
+                                <span ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+                                    <span ng-show="lesson.status === 'published'" ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject"
+                                    class="label label-default"></span>
+                                    <span ng-show="lesson.status !== 'published'" ng-bind="subject.subject"
+                                    class="label label-default"></span>
+                                </span>
                             </div>
-                            <div class="col-md-2">
-                                <small class="text-muted">
-                                  <span ng-show="lesson.lessonOverview.setting"><b>{{lesson.lessonOverview.setting}}</b> setting</span><br/>
-                                  <span ng-show="lesson.lessonOverview.grade"><b>{{lesson.lessonOverview.grade}}</b> grade</span>
-                                </small>
+                            <div class="col-md-1">
+                                <p ng-class="{'text-muted': lesson.status !== 'published'}">{{lesson.lessonOverview.grade}}</p>
+                            </div>
+                            <div class="col-md-1">
+                                <p ng-class="{'text-muted': lesson.status !== 'published'}">{{lesson.lessonOverview.classPeriods}}</p>
+                            </div>
+                            <div class="col-md-1">
+                                <p ng-class="{'text-muted': lesson.status !== 'published'}">{{lesson.lessonOverview.setting}}</p>
                             </div>
                             <div class="col-md-2 text-right">
                               <span class="label"

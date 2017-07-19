@@ -15,7 +15,10 @@
                     <small ng-show="saved.lessonOverview.setting && saved.lessonOverview.grade" class="gray">&nbsp;&nbsp;|&nbsp;&nbsp;</small>
                     <small ng-show="saved.lessonOverview.grade"><b>{{saved.lessonOverview.grade}}</b> grade</small>
                 </p>
-                <p ng-bind-html="saved.lessonOverview.lessonSummary | sanitize | limitTo:200"></p>
+                <p class="small">
+                    <span ng-bind-html="saved.lessonOverview.lessonSummary | limitTo:200 | sanitize"></span>
+                    <span ng-show="saved.lessonOverview.lessonSummary.length > 200">...</span>
+                </p>
                 <img ng-show="saved.featuredImage" ng-src="{{saved.featuredImage.path}}" class="img-responsive" />
             </div>
             <div class="panel-footer">

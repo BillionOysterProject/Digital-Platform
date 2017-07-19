@@ -49,6 +49,7 @@
                        <li><a ok-sel="*" ng-click="vm.settingSelected()">Show all</a></li>
                        <li><a ok-sel=".Classroom" ng-click="vm.settingSelected('Classroom')">Classroom</a></li>
                        <li><a ok-sel=".Field" ng-click="vm.settingSelected('Field')">Field</a></li>
+                       <li><a ok-sel=".Both" ng-click="vm.settingSelected('Classroom & Field')">Classroom & Field</a></li>
                     </ul>
                 </li>
                 <li class="dropdown" id="unitSelection">
@@ -83,7 +84,10 @@
                             <small ng-show="lesson.lessonOverview.setting && lesson.lessonOverview.grade" class="gray">&nbsp;&nbsp;|&nbsp;&nbsp;</small>
                             <small ng-show="lesson.lessonOverview.grade"><b>{{lesson.lessonOverview.grade}}</b> grade</small>
                         </p>
-                        <p class="small" ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></p>
+                        <p class="small">
+                            <span ng-bind-html="lesson.lessonOverview.lessonSummary | limitTo:200 | sanitize"></span>
+                            <span ng-show="lesson.lessonOverview.lessonSummary.length > 200">...</span>
+                        </p>
                         <img ng-show="lesson.featuredImage" ng-src="{{lesson.featuredImage.path}}" class="img-responsive" />
                     </div>
                     <div class="panel-footer">

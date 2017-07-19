@@ -42,6 +42,9 @@
   <link href="lib/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css" rel="stylesheet">
 
   <style>
+    body {
+      text-rendering: geometricPrecision;
+    }
     .content-fixed {
       width: 100%;
     }
@@ -55,7 +58,7 @@
   </style>
 
   <!-- Application CSS Files -->
-  <!-- {% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %} -->
+  {% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
 </head>
 
 <body class="ng-cloak" width="100%">

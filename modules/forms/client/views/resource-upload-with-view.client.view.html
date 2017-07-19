@@ -1,0 +1,27 @@
+<div id="resources-list{{index}}">
+  <div class="form-group">
+      <label class="control-label">{{controlLabelText}}</label>
+      <span class="help-block"><i class="fa fa-info-circle"></i> {{helpBlockText}}</span>
+      <a class="btn btn-default btn-block"
+      ng-click="openAddModal()">{{addButtonText}}</a>
+  </div>
+  <table class="table">
+    <tr ng-repeat="link in resourceLinks">
+      <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
+      <td>{{link.link}}</td>
+      <td>
+        <a ng-click="deleteResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
+      </td>
+    </tr>
+    <tr ng-repeat="file in resourceFiles">
+      <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
+      <td></td>
+      <td id="lesson-teach-resource-files">
+          <a ng-click="deleteResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<resource-upload-modal index="{{index}}" modal-title-text="{{modalTitleText}}" resource-files-uploader="resourceFilesUploader" resource-files="resourceFiles" resource-links="resourceLinks"
+resource-dropzone-id="{{resourceDropzoneId}}" close-function="closeFunction"></resource-upload-modal>
