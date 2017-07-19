@@ -471,8 +471,8 @@
           teacherResourcesLinks: vm.resources.resourceLinks,
           lessonMaterialFiles: vm.resources.materialFiles,
           lessonMaterialLinks: vm.resources.materialLinks,
-          stateTestQuestions: vm.resources.stateTestQuestionsFiles,
-          stateTestQuestionLinks: vm.resources.stateTestQuestionLinks
+          stateTestQuestionLinks: vm.resources.stateTestQuestionLinks,
+          stateTestQuestions: vm.resources.stateTestQuestionsFiles
         };
       } else {
         vm.lesson.materialsResources.handoutsFileInput = vm.resources.handoutFiles;

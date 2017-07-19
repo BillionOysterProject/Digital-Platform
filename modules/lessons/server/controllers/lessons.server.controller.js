@@ -110,7 +110,8 @@ var setPdfToDownload = function(host, cookies, lesson, callback) {
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
-  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' ' + input + ' ' + output;
+  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' --page-width 800px --page-height 1200px --viewport-size \'800x1200\' ' + input + ' ' + output;
+  console.log('command', command);
   exec(command, function(error, stdout, stderr) {
     if (error) {
       console.log('wkhtmltopdf error: ', error);
