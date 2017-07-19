@@ -1,0 +1,433 @@
+<div>
+  <div class="row">
+    <div class="col-sm-4">
+      <h2 id="lesson-title">{{lesson.title}}
+        <small ng-if="!fullPage && favoriteLesson && unfavoriteLesson">
+          <a ng-click="favoriteLesson()" ng-if="!lesson.saved">
+            <i class="fa fa-heart-o"></i>
+          </a>
+          <a ng-click="unfavoriteLesson()" ng-if="lesson.saved">
+            <i class="fa fa-heart red"></i>
+          </a>
+        </small>
+      </h2>
+    </div>
+    <!-- <div class="col-sm-4 pull-right text-right" ng-if="fullPage">
+        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
+    </div> -->
+    <div class="col-sm-8 text-right" ng-if="!fullPage">
+      <h6 id="status-draft" ng-if="lesson.status === 'draft'">Draft</h6>
+      <h6 id="status-pending" ng-if="lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
+      <h6 id="status-returned" ng-if="lesson.status === 'returned'" class="red">Returned</h6>
+      <h6 id="status-published" ng-if="lesson.isCurrentUserOwner && lesson.status === 'published'">Published</h6>
+      <a class="btn btn-primary" ng-if="lesson.isCurrentUserOwner && lesson.status !== 'pending'"
+        ui-sref="lessons.edit({ lessonId: lesson._id })">Edit</a>
+      <a class="btn btn-default" ng-click="openLessonFeedback()" ng-if="!lesson.isCurrentUserOwner">Send feedback</a>
+
+      <a class="btn btn-default" ng-if="(checkRole('admin') || checkRole('team lead')) && feedback &&
+        feedback.lessonAlignWithCurriculumnAvg && feedback.lessonEffectiveAvg &&
+        feedback.lessonPreparesStudentsAvg && feedback.lessonSupportScientificPracticeAvg"
+        ng-click="openLessonFeedbackView()">View feedback &nbsp;&nbsp;<span class="badge">{{feedback.feedbackCount}}</span></a>
+      <a class="btn btn-default" view-permissions="team lead,admin" ng-if="openLessonLog" ng-click="openLessonLog()">Log teaching</a>
+      <a class="btn btn-default" view-permissions="team lead,admin" ng-if="duplicateLesson" ng-click="duplicateLesson()">Duplicate</a>
+      <a class="btn btn-default" ng-if="openDownloadLesson" ng-click="openDownloadLesson()">Download</a>
+    </div>
+  </div>
+
+  <div class="row text-muted">
+    <div class="col-sm-12">
+      <h5 id="lesson-author-info" ng-if="lesson.user">
+        <img ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3" ng-if="!fullPage">
+        <b><a ng-click="openViewUserModal()">{{lesson.user.displayName}}</a></b><br>
+        <a href="mailto:{{lesson.user.email}}">{{lesson.user.email}}</a><br/>
+        <span ng-bind="lesson.created | date:'mediumDate'"></span>
+      </h5>
+      <h5 ng-if="!lesson.user">Deleted User<br/>
+        <span ng-bind="lesson.created | date:'mediumDate'"></span>
+      </h5>
+    </div>
+  </div>
+
+  <hr ng-if="lesson.unit || lesson.lessonOverview.grade || lesson.lessonOverview.classPeriods ||
+    lesson.lessonOverview.setting || (lesson.lessonOverview.subjectAreas && lesson.lessonOverview.subjectAreas.length > 0)"/>
+
+  <div class="row">
+    <div class="col-sm-3" ng-if="lesson.units">
+      <b>{{lesson.units.length > 1 ? 'Units' : 'Unit' }}</b>
+      <h4 ng-repeat="unit in lesson.units" style="color: {{unit.color}}">
+          <a ng-if="!fullPage" ui-sref="units.view({ unitId: unit._id })" style="color: {{unit.color}}">
+              <i class="{{unit.icon}}"></i>
+              <b>{{unit.title}}</b>
+          </a>
+          <span ng-if="fullPage" style="color: {{unit.color}}">
+            <i class="{{unit.icon}}"></i>
+            <b>{{unit.title}}</b>
+          </span>
+      </h4>
+    </div>
+    <div class="col-sm-2" ng-if="lesson.lessonOverview.grade">
+      <b>Grade</b>
+      <p ng-bind="lesson.lessonOverview.grade"></p>
+    </div>
+    <div class="col-sm-2" ng-if="lesson.lessonOverview.classPeriods">
+      <b>Class Periods</b>
+      <p ng-bind="lesson.lessonOverview.classPeriods"></p>
+    </div>
+    <div class="col-sm-2" ng-if="lesson.lessonOverview.setting">
+      <b>Setting</b>
+      <p ng-bind="lesson.lessonOverview.setting"></p>
+    </div>
+    <div class="col-sm-3" ng-if="lesson.lessonOverview.subjectAreas && lesson.lessonOverview.subjectAreas.length > 0">
+      <b>Subject Areas</b>
+      <ul class="list-inline">
+        <li ng-repeat="subject in lesson.lessonOverview.subjectAreas">
+          <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="well" ng-if="lessonStats.taughtCount > 0">
+     <h4>This lesson has been taught <b class="blue">{{lessonStats.taughtCount}}</b>
+        times by <b class="blue">{{lessonStats.teamLeadCount}}</b> teachers to a total of
+        <b class="blue">{{lessonStats.studentCount}}</b> students in
+        <b class="blue">{{lessonStats.classesOrSectionsCount}}</b> classes over
+        <b class="blue">{{lessonStats.periodsOrSessionsCount}}</b> sessions
+      </h4>
+      <div class="row">
+
+          <!--{{lessonStats.avgStudentsPerClass | number:2}}
+          {{lessonStats.avgClassesOrSections | number:2}}
+          {{lessonStats.avgPeriodsOrSessions | number:2}}-->
+
+          <div class="col-sm-6">
+              <small>Subject Areas of classes</small>
+              <ul class="list-inline">
+                <li ng-repeat="subject in lessonStats.subjects">
+                  <span ng-style="{'background-color':'{{subject.color}}'}" ng-bind="subject.subject" class="label label-default"></span>
+                </li>
+              </ul>
+          </div>
+          <div class="col-sm-6">
+              <small>Grades of students</small>
+              <ul class="list-inline">
+                <li ng-repeat="grade in lessonStats.grades">
+                  <span class="label label-success" ng-bind="grade"></span>
+                </li>
+              </ul>
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3" ng-if="showSidebar">
+      <div ng-if="lesson.materialsResources.supplies">
+          <b>Supplies</b><br/>
+          <span ng-bind-html="lesson.materialsResources.supplies | sanitize"></span>
+      </div>
+
+      <br/>
+
+      <ul class="list-unstyled" id="lesson-handouts"
+        ng-if="(lesson.materialsResources.handoutsFileInput &&
+            lesson.materialsResources.handoutsFileInput.length > 0) ||
+            (lesson.materialsResources.handoutLinks &&
+            lesson.materialsResources.handoutLinks.length > 0)">
+        <b>Handouts</b>
+        <li ng-repeat="file in lesson.materialsResources.handoutsFileInput">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.handoutLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+        </li>
+      </ul>
+
+      <br/>
+
+      <!--TODO: Wire up new field: -->
+      <ul class="list-unstyled" id="lesson-materials"
+      ng-if="(lesson.materialsResources.lessonMaterialFiles &&
+            lesson.materialsResources.lessonMaterialFiles.length > 0) ||
+            (lesson.materialsResources.lessonMaterialLinks &&
+            lesson.materialsResources.lessonMaterialLinks.length > 0)">
+        <b>Materials</b>
+        <li ng-repeat="file in lesson.materialsResources.lessonMaterialFiles">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.lessonMaterialLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+        </li>
+      </ul>
+
+      <br/>
+
+      <ul class="list-unstyled" id="lesson-resources"
+        ng-if="(lesson.materialsResources.teacherResourcesFiles &&
+              lesson.materialsResources.teacherResourcesFiles.length > 0) ||
+              (lesson.materialsResources.teacherResourcesLinks &&
+              lesson.materialsResources.teacherResourcesLinks.length > 0)">
+        <b>Teacher Resources</b>
+        <li ng-repeat="file in lesson.materialsResources.teacherResourcesFiles">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.teacherResourcesLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+        </li>
+        <!-- TODO: VIDEO: Should open modal and play video on click -->
+        <!-- <li><a href="#" aria-hidden="true" data-toggle="modal" data-target="#modal-video"><i class="glyphicon glyphicon-play"></i> Harbor Video</a></li> -->
+      </ul>
+
+      <br/>
+
+      <!--TODO: Change to display both links and files (copy Teacher Resources)-->
+      <ul class="list-unstyled" id="lesson-state-test-questions"
+      ng-if="(lesson.materialsResources.stateTestQuestions &&
+          lesson.materialsResources.stateTestQuestions.length > 0) ||
+          (lesson.materialsResources.stateTestQuestionLinks &&
+          lesson.materialsResources.stateTestQuestionLinks.length > 0)">
+        <b>State Test Questions</b>
+        <li ng-repeat="file in lesson.materialsResources.stateTestQuestions">
+          <a class="break" download="{{file.originalname}}" target="_blank" ng-href="/api/lessons/download-file?mimetype={{file.mimetype}}&path={{file.path}}">
+            <i class="glyphicon glyphicon-file"></i>
+            {{file.originalname}}</a>
+        </li>
+        <li ng-repeat="link in lesson.materialsResources.stateTestQuestionLinks">
+          <a class="break" href="{{link.link | urlNormalizer}}" target="_blank">
+            <i class="glyphicon glyphicon-link"></i>
+            {{link.name}}</a>
+        </li>
+      </ul>
+
+      <br/>
+
+      <ul class="list-unstyled" id="lesson-vocabulary" ng-if="lesson.materialsResources.vocabulary && lesson.materialsResources.vocabulary.length > 0">
+          <b>Vocabulary</b>
+          <li ng-repeat="vocabulary in lesson.materialsResources.vocabulary">
+            <a href="#" ng-if="!fullPage" uib-popover="{{vocabulary.definition}}" popover-title="{{vocabulary.term}}" popover-trigger="mouseenter" popover-placement="top">
+              <i class="glyphicon glyphicon-comment"></i>
+              {{vocabulary.term}}</a>
+            <span ng-if="fullPage">{{vocabulary.term}}</span>
+          </li>
+      </ul>
+    </div>
+
+    <div ng-class="{ 'col-sm-9': showSidebar, 'col-sm-12': !showSidebar }">
+
+      <h4 ng-if="lesson.lessonOverview.lessonSummary">Summary</h4>
+      <div ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></div><br/>
+
+      <h4 ng-if="lesson.lessonObjectives">Objectives</h4>
+      <div ng-bind-html="lesson.lessonObjectives | sanitize"></div>
+
+      <hr ng-if="lesson.materialsResources.teacherTips || lesson.preparation || lesson.background" />
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h3 class="blue" ng-if="lesson.materialsResources.teacherTips || lesson.preparation || lesson.background">Before you get started</h3>
+          <div class="col-sm-12" ng-if="lesson.materialsResources.teacherTips">
+              <h4>Tips for Teachers</h4>
+              <div ng-bind-html="lesson.materialsResources.teacherTips | sanitize"></div><br/>
+          </div>
+          <div class="col-sm-12" ng-if="lesson.preparation">
+              <h4>Preparation</h4>
+              <div ng-bind-html="lesson.preparation | sanitize"></div><br/>
+          </div>
+          <div class="col-sm-12" ng-if="lesson.background">
+              <h4>Background</h4>
+              <div ng-bind-html="lesson.background | sanitize"></div><br/>
+          </div>
+        </div>
+      </div>
+
+      <hr ng-if="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
+              lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
+              lesson.instructionPlan.evaluate || lesson.instructionPlan.extend" />
+
+      <div class="row">
+        <div class="col-sm-12"
+        id="lesson-instruction-plan"
+        ng-if="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
+                lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
+                lesson.instructionPlan.evaluate || lesson.instructionPlan.extend">
+          <h3 class="blue">Instruction Plan</h3>
+          <div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.engage">
+              <h4>Engage</h4>
+              <div ng-bind-html="lesson.instructionPlan.engage | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.explore">
+              <h4>Explore</h4>
+              <div ng-bind-html="lesson.instructionPlan.explore | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.explain">
+              <h4>Explain</h4>
+              <div ng-bind-html="lesson.instructionPlan.explain | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.elaborate">
+              <h4>Elaborate</h4>
+              <div ng-bind-html="lesson.instructionPlan.elaborate | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.evaluate">
+              <h4>Evaluate</h4>
+              <div ng-bind-html="lesson.instructionPlan.evaluate | sanitize"></div><br/>
+            </div>
+            <div class="col-sm-12" ng-if="lesson.instructionPlan.extend">
+              <h4>Extend</h4>
+              <div ng-bind-html="lesson.instructionPlan.extend | sanitize"></div><br/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr ng-if="(lesson.standards.nycsssUnits && lesson.standards.nycsssUnits.length > 0) ||
+            (lesson.standards.nysssKeyIdeas && lesson.standards.nysssKeyIdeas.length > 0) ||
+            (lesson.standards.nysssMajorUnderstandings && lesson.standards.nysssMajorUnderstandings.length > 0) ||
+            (lesson.standards.nysssMst && lesson.standards.nysssMst.length > 0) ||
+            (lesson.standards.ngssDisciplinaryCoreIdeas && lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
+            (lesson.standards.ngssScienceEngineeringPractices && lesson.standards.ngssScienceEngineeringPractices.length > 0) ||
+            (lesson.standards.ngssCrossCuttingConcepts && lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
+            (lesson.standards.cclsMathematics && lesson.standards.cclsMathematics.length > 0) ||
+            (lesson.standards.cclsElaScienceTechnicalSubjects && lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)"/>
+
+      <div class="row">
+        <div
+          class="col-sm-12"
+          id="lesson-standards"
+          ng-if="(lesson.standards.nycsssUnits && lesson.standards.nycsssUnits.length > 0) ||
+                (lesson.standards.nysssKeyIdeas && lesson.standards.nysssKeyIdeas.length > 0) ||
+                (lesson.standards.nysssMajorUnderstandings && lesson.standards.nysssMajorUnderstandings.length > 0) ||
+                (lesson.standards.nysssMst && lesson.standards.nysssMst.length > 0) ||
+                (lesson.standards.ngssDisciplinaryCoreIdeas && lesson.standards.ngssDisciplinaryCoreIdeas.length > 0) ||
+                (lesson.standards.ngssScienceEngineeringPractices && lesson.standards.ngssScienceEngineeringPractices.length > 0) ||
+                (lesson.standards.ngssCrossCuttingConcepts && lesson.standards.ngssCrossCuttingConcepts.length > 0) ||
+                (lesson.standards.cclsMathematics && lesson.standards.cclsMathematics.length > 0) ||
+                (lesson.standards.cclsElaScienceTechnicalSubjects && lesson.standards.cclsElaScienceTechnicalSubjects.length > 0)">
+          <h3 class="blue">Standards
+            {{standardCount}}</h3>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.nycsssUnits && lesson.standards.nycsssUnits.length > 0">
+          <b>NYC Science Scope &amp; Sequence - Units</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="https://www.engageny.org/sites/default/files/resource/attachments/8m4.2.pdf" target="_blank">{{lesson.standards.nycScienceScopeSequence}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.nycsssUnits">
+              <span>{{standard.header}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.nysssKeyIdeas && lesson.standards.nysssKeyIdeas.length > 0">
+          <b>NYS Science Standards - Key Ideas</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.nextgenscience.org/next-generation-science-standards" target="_blank">{{lesson.standards.ngssStandards}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.nysssKeyIdeas">
+              <span>{{standard.header}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.nysssMajorUnderstandings && lesson.standards.nysssMajorUnderstandings.length > 0">
+          <b>NYS Science Standards - Major Understandings</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreEla}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.nysssMajorUnderstandings">
+              <span>{{standard.code}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.nysssMst && lesson.standards.nysssMst.length > 0">
+          <b>NYS Science Standards - MST</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.nysssMst">
+              <span>{{standard.code}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.ngssDisciplinaryCoreIdeas && lesson.standards.ngssDisciplinaryCoreIdeas.length > 0">
+          <b>NGSS - Disciplinary Core Ideas</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.ngssDisciplinaryCoreIdeas">
+              <span>{{standard.header}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.ngssScienceEngineeringPractices && lesson.standards.ngssScienceEngineeringPractices.length > 0">
+          <b>NGSS - Science and Engineering Practices</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.ngssScienceEngineeringPractices">
+              <span>{{standard.header}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.ngssCrossCuttingConcepts && lesson.standards.ngssCrossCuttingConcepts.length > 0">
+          <b>NGSS - Cross-Cutting Concepts</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.ngssCrossCuttingConcepts">
+              <span>{{standard.header}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.cclsMathematics && lesson.standards.cclsMathematics.length > 0">
+          <b>CCLS - Mathematics</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.cclsMathematics">
+              <span>{{standard.code}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="{{standardClass}}" ng-if="lesson.standards.cclsElaScienceTechnicalSubjects && lesson.standards.cclsElaScienceTechnicalSubjects.length > 0">
+          <b>CCLS - ELA Science &amp; Technical Subjects</b>
+          <!-- TODO: this needs to hold a title and pdf, but right now it's just a string -->
+          <!-- <span><a href="http://www.corestandards.org/ELA-Literacy/" target="_blank">{{lesson.standards.commonCoreMath}}</a></span> -->
+          <ul>
+            <li ng-repeat="standard in lesson.standards.cclsElaScienceTechnicalSubjects">
+              <span>{{standard.code}}
+                -
+                {{standard.description}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

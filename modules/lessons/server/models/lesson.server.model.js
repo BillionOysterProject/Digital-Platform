@@ -31,6 +31,10 @@ var instructionPlans = {
   evaluate: {
     type: String,
     trim: true
+  },
+  extend: {
+    type: String,
+    trim: true
   }
 };
 
@@ -104,11 +108,38 @@ var LessonSchema = new Schema({
       filename: String,
       path: String
     }],
+    lessonMaterialLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
+    }],
+    lessonMaterialFiles: [{
+      originalname: String,
+      mimetype: String,
+      filename: String,
+      path: String
+    }],
+    handoutLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
+    }],
     handoutsFileInput: [{
       originalname: String,
       mimetype: String,
       filename: String,
       path: String
+    }],
+    stateTestQuestionLinks: [{
+      name: String,
+      link: {
+        type: String,
+        trim: true
+      }
     }],
     stateTestQuestions: [{
       originalname: String,
@@ -193,6 +224,12 @@ var LessonSchema = new Schema({
   },
   returnedNotes: {
     type: String
+  },
+  downloadPdf: {
+    originalname: String,
+    mimetype: String,
+    filename: String,
+    path: String
   }
 });
 

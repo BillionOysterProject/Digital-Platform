@@ -44,7 +44,7 @@
     };
 
     var checkTeamMember = function() {
-      if (checkRole('team member')) {
+      if (checkRole('team member') || checkRole('team lead')) {
         var teamMemberIndex = lodash.findIndex(vm.team.teamMembers, function(m) {
           return m.username === vm.user.username;
         });
@@ -59,7 +59,6 @@
       teamId: vm.expedition.team._id
     }, function(data) {
       vm.team = data;
-
       // Determine the users roles
       vm.isTeamLead = checkTeamLead();
       vm.isTeamMember = checkTeamMember();

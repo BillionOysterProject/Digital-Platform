@@ -18,6 +18,7 @@
       $scope.tempResourceLink = '';
 
       $scope.tempResourceFiles = [];
+      $scope.closeFunction();
     };
 
     $scope.addResources = function() {
@@ -33,6 +34,7 @@
         $scope.resourceFiles = $scope.resourceFiles.concat($scope.tempResourceFiles);
         $scope.tempResourceFiles = [];
       }
+      $scope.closeFunction();
     };
   }
 })();

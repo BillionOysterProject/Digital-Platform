@@ -195,8 +195,10 @@ exports.update = function(req, res) {
             message: errorHandler.getErrorMessage(err)
           });
         } else {
-          addUnitToUnits(unit, function() {
-            res.json(unit);
+          removeUnitFromUnits(req.unit, function() {
+            addUnitToUnits(unit, function() {
+              res.json(unit);
+            });
           });
         }
       });
