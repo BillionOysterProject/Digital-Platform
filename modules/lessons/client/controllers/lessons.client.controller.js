@@ -30,10 +30,14 @@
     var populateFields = function() {
       vm.featuredImageURL = (vm.lesson && vm.lesson.featuredImage) ? vm.lesson.featuredImage.path : '';
       vm.resources = {
-        handouts: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [],
+        handoutFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutsFileInput : [],
+        handoutLinks: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.handoutLinks : [],
         resourceFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesFiles : [],
         resourceLinks: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.teacherResourcesLinks : [],
-        stateTestQuestionsFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : []
+        materialFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.lessonMaterialFiles : [],
+        materialLinks: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.lessonMaterialLinks : [],
+        stateTestQuestionsFiles: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestions : [],
+        stateTestQuestionLinks: (vm.lesson && vm.lesson.materialsResources) ? vm.lesson.materialsResources.stateTestQuestionLinks : []
       };
 
       if ($rootScope.unit) {
@@ -302,13 +306,18 @@
       queueLimit: 2
     });
 
-    vm.handoutFilesUploader = new FileUploader({
-      alias: 'newHandouts',
+    vm.teacherResourceFilesUploader = new FileUploader({
+      alias: 'newTeacherResourceFile',
       queueLimit: 20
     });
 
-    vm.teacherResourceFilesUploader = new FileUploader({
-      alias: 'newTeacherResourceFile',
+    vm.lessonMaterialFilesUploader = new FileUploader({
+      alias: 'newLessonMaterialResourceFile',
+      queueLimit: 20
+    });
+
+    vm.handoutFilesUploader = new FileUploader({
+      alias: 'newHandouts',
       queueLimit: 20
     });
 
@@ -327,6 +336,18 @@
     // Remove existing Lesson
     vm.remove = function() {
       vm.lesson.$remove($state.go('lessons.list'));
+    };
+
+    vm.openDeleteLesson = function() {
+      angular.element('#modal-delete-lesson').modal('show');
+    };
+
+    vm.confirmDeleteLesson = function(shouldDelete) {
+      var element = angular.element('#modal-delete-lesson');
+      element.bind('hidden.bs.modal', function () {
+        if (shouldDelete) vm.remove();
+      });
+      element.modal('hide');
     };
 
     var uploadFeaturedImage = function (lessonId, featuredImageCallback) {
@@ -389,6 +410,27 @@
       }
     };
 
+    var uploadLessonMaterialFiles = function (lessonId, materialFileCallback) {
+      if (vm.lessonMaterialFilesUploader.queue.length > 0) {
+        vm.lessonMaterialFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
+          vm.lessonMaterialFilesUploader.removeFromQueue(fileItem);
+          materialFileCallback();
+        };
+
+        vm.lessonMaterialFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
+          materialFileCallback(response.message);
+        };
+
+        vm.lessonMaterialFilesUploader.onBeforeUploadItem = function(item) {
+          item.url = 'api/lessons/' + lessonId + '/upload-lesson-materials';
+        };
+        vm.lessonMaterialFilesUploader.uploadAll();
+      } else {
+        materialFileCallback();
+      }
+    };
+
+
     var uploadStateTestQuestionFiles = function (lessonId, questionFileCallback) {
       if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
         vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
@@ -423,16 +465,24 @@
 
       if (!vm.lesson.materialsResources) {
         vm.lesson.materialsResources = {
-          handoutsFileInput: vm.resources.handouts,
+          handoutsFileInput: vm.resources.handoutFiles,
+          handoutLinks: vm.resources.handoutLinks,
           teacherResourcesFiles: vm.resources.resourceFiles,
           teacherResourcesLinks: vm.resources.resourceLinks,
+          lessonMaterialFiles: vm.resources.materialFiles,
+          lessonMaterialLinks: vm.resources.materialLinks,
+          stateTestQuestionLinks: vm.resources.stateTestQuestionLinks,
           stateTestQuestions: vm.resources.stateTestQuestionsFiles
         };
       } else {
-        vm.lesson.materialsResources.handoutsFileInput = vm.resources.handouts;
+        vm.lesson.materialsResources.handoutsFileInput = vm.resources.handoutFiles;
+        vm.lesson.materialsResources.handoutLinks = vm.resources.handoutLinks;
         vm.lesson.materialsResources.teacherResourcesFiles = vm.resources.resourceFiles;
         vm.lesson.materialsResources.teacherResourcesLinks = vm.resources.resourceLinks;
+        vm.lesson.materialsResources.lessonMaterialFiles = vm.resources.materialFiles;
+        vm.lesson.materialsResources.lessonMaterialLinks = vm.resources.materialLinks;
         vm.lesson.materialsResources.stateTestQuestions = vm.resources.stateTestQuestionsFiles;
+        vm.lesson.materialsResources.tateTestQuestionLinks = vm.resources.stateTestQuestionLinks;
       }
 
       // angular.element('#modal-save-draft-progress-bar').modal('show');
@@ -468,22 +518,29 @@
                     $scope.finishedSaving = 80;
                     $scope.savingStatus = (vm.stateTestQuestionsFilesUploader.queue.length > 0) ? 'Uploading State Questions' : 'Saving Lesson Draft';
                     $timeout(function() {
-                      uploadStateTestQuestionFiles(lessonId, function (uploadStateTestQuestionFilesError) {
-                        if (uploadStateTestQuestionFilesError) vm.error.push(uploadStateTestQuestionFilesError);
+                      uploadLessonMaterialFiles(lessonId, function(uploadLessonMaterialFilesError) {
+                        if (uploadLessonMaterialFilesError) vm.error.push(uploadLessonMaterialFilesError);
+                        $scope.finishedSaving = 100;
+                        $scope.savingStatus = (vm.lessonMaterialFilesUploader.queue.length > 0) ? 'Uploading Lesson Material' : 'Saving Lesson Material';
+                        $timeout(function() {
+                          uploadStateTestQuestionFiles(lessonId, function (uploadStateTestQuestionFilesError) {
+                            if (uploadStateTestQuestionFilesError) vm.error.push(uploadStateTestQuestionFilesError);
 
-                        refreshLesson(function() {
-                          $scope.finishedSaving = 100;
-                          vm.saving = false;
-                          if (draft) {
                             refreshLesson(function() {
-                              $location.path('/lessons/' + vm.lesson._id + '/edit', false);
+                              $scope.finishedSaving = 100;
+                              vm.saving = false;
+                              if (draft) {
+                                refreshLesson(function() {
+                                  $location.path('/lessons/' + vm.lesson._id + '/edit', false);
+                                });
+                              } else {
+                                $state.go('lessons.view', {
+                                  lessonId: res._id
+                                });
+                              }
                             });
-                          } else {
-                            $state.go('lessons.view', {
-                              lessonId: res._id
-                            });
-                          }
-                        });
+                          });
+                        }, 500);
                       });
                     }, 500);
                   });
@@ -513,29 +570,6 @@
 
     vm.toggleVocabularyModal = function() {
       vm.showVocabularyModal = !vm.showVocabularyModal;
-    };
-
-    vm.deleteTeacherResourceFile = function(index, file) {
-      if (file.index !== undefined && file.index > -1) {
-        vm.teacherResourceFilesUploader.removeFromQueue(file.index);
-      }
-      vm.resources.resourceFiles.splice(index,1);
-    };
-
-    vm.deleteTeacherResourceLink = function(index) {
-      vm.resources.resourceLinks.splice(index, 1);
-    };
-
-    vm.openDeleteLesson = function() {
-      angular.element('#modal-delete-lesson').modal('show');
-    };
-
-    vm.confirmDeleteLesson = function(shouldDelete) {
-      var element = angular.element('#modal-delete-lesson');
-      element.bind('hidden.bs.modal', function () {
-        if (shouldDelete) vm.remove();
-      });
-      element.modal('hide');
     };
 
     vm.openAdd = function() {

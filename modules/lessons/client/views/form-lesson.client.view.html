@@ -141,123 +141,30 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-										<!-- OLD HANDOUTS (DELETE)-->
-                    <div class="form-group">
-                      <label for="handouts" class="control-label">Handouts</label>
-                      <span class="help-block"><i class="fa fa-info-circle"></i> Documents designed to be printed and distributed to students during the lesson.</span>
-											<multiple-file-drop-zone uploader="vm.handoutFilesUploader" files="vm.resources.handouts"
-											id="lesson-handout-files"></multiple-file-drop-zone>
-										</div>
-                    <!-- END OLD HANDOUTS (DELETE)-->
-                  
-                    <!-- TODO: WIRE UP NEW HANDOUT MODAL/TABLE BELOW: 
-                    <div class="form-group">
-                        <label class="control-label">Handouts</label>
-                        <span class="help-block"><i class="fa fa-info-circle"></i> Documents designed to be printed and distributed to students during the lesson.</span>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-handouts">Add Handout</a>
-                    </div>
-                    <table class="table">
-                      <tr ng-repeat="link in vm.handouts.handoutLinks">
-                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
-                        <td>{{link.link}}</td>
-                        <td>
-                          <a ng-click="vm.deleteHandoutLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                      <tr ng-repeat="file in vm.handouts.handoutFiles">
-                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
-                        <td></td>
-                        <td id="lesson-handout-files">
-                            <a ng-click="vm.deleteHandoutFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                    </table>
-                    -->
-                    
-                    <!-- TODO: WIRE UP NEW "MATERIALS" FIELD/MODAL/TABLE BELOW:
-                    
-                    <hr/>
+                  <resource-upload-with-view id="handout-files" index="1" modal-title-text="Add a handout" resource-files-uploader="vm.handoutFilesUploader"
+                  resource-files="vm.resources.handoutFiles" resource-links="vm.resources.handoutLinks" resource-dropzone-id="handout-file-dropzone"
+                  control-label-text="Handouts" help-block-text="Documents designed to be printed and distributed to students during the lesson."
+                  add-button-text="Add Handout"></resource-upload-with-view>
 
-                    <div class="form-group">
-                        <label class="control-label">Materials</label>
-                        <span class="help-block"><i class="fa fa-info-circle"></i> Shared class resources, such as PowerPoints or websites, that the teacher must use to execute the lesson.</span>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Material</a>
-                    </div>
-                    <table class="table">
-                      <tr ng-repeat="link in vm.materials.materialLinks">
-                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
-                        <td>{{link.link}}</td>
-                        <td>
-                          <a ng-click="vm.deleteMaterialLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                      <tr ng-repeat="file in vm.materials.materialFiles">
-                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
-                        <td></td>
-                        <td id="lesson-material-files">
-                            <a ng-click="vm.deleteMaterialFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                    </table>
-                    -->
+									<hr/>
+
+                  <resource-upload-with-view id="lesson-materials" index="2" modal-title-text="Add a lesson material" resource-files-uploader="vm.lessonMaterialFilesUploader"
+                  resource-files="vm.resources.materialFiles" resource-links="vm.resources.materialLinks" resource-dropzone-id="lesson-material-file-dropzone"
+                  control-label-text="Materials" help-block-text="Shared class resources, such as PowerPoints or websites, that the teacher must use to execute the lesson."
+                  add-button-text="Add Material"></resource-upload-with-view>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label">Teacher Resources</label>
-                        <span class="help-block"><i class="fa fa-info-circle"></i> Optional background reading, like articles or websites, that can help inform the teacher before teaching the lesson.</span>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Resource</a>
-                    </div>
-                    <table class="table">
-                      <tr ng-repeat="link in vm.resources.resourceLinks">
-                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
-                        <td>{{link.link}}</td>
-                        <td>
-                          <a ng-click="vm.deleteTeacherResourceLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                      <tr ng-repeat="file in vm.resources.resourceFiles">
-                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
-                        <td></td>
-                        <td id="lesson-teach-resource-files">
-                            <a ng-click="vm.deleteTeacherResourceFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                    </table>
-                    
-                    <hr/>
-                    
-										<!-- OLD STATE QUESTIONS (DELETE)-->
-                    <div class="form-group">
-                        <label for="stateTestQuestions" class="control-label">State Test Questions</label>
-                        <span class="help-block"><i class="fa fa-info-circle"></i> State test questions that connect to this lesson.</span>
-                        <multiple-file-drop-zone uploader="vm.stateTestQuestionsFilesUploader" files="vm.resources.stateTestQuestionsFiles"
-                        id="lesson-state-test-questions-files"></multiple-file-drop-zone>
-                    </div>
-										<!-- END OLD STATE QUESTIONS (DELETE)-->
-                  
-                    <!-- TODO: WIRE UP NEW STATE TEST QUESTIONS MODAL/TABLE BELOW:
-                    <div class="form-group">
-                        <label class="control-label">State Test Questions</label>
-                        <span class="help-block"><i class="fa fa-info-circle"></i> State test questions that connect to this lesson.</span>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-resources">Add Questions</a>
-                    </div>
-                    <table class="table">
-                      <tr ng-repeat="link in vm.questions.questionLinks">
-                        <td><i class="glyphicon glyphicon-link text-muted"></i> {{link.name}}</td>
-                        <td>{{link.link}}</td>
-                        <td>
-                          <a ng-click="vm.deleteQUestionLink($index)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                      <tr ng-repeat="file in vm.questions.questionFiles">
-                        <td><i class="glyphicon glyphicon-file text-muted"></i> {{file.originalname}}</td>
-                        <td></td>
-                        <td id="lesson-question-files">
-                            <a ng-click="vm.deleteQuestionFile($index, file)"><i class="glyphicon glyphicon-remove"></i></a>
-                        </td>
-                      </tr>
-                    </table>
-                    -->
+                  <resource-upload-with-view id="lesson-resources" index="3" modal-title-text="Add a teacher resource" resource-files-uploader="vm.teacherResourceFilesUploader"
+                  resource-files="vm.resources.resourceFiles" resource-links="vm.resources.resourceLinks" resource-dropzone-id="lesson-resources-file-dropzone"
+                  control-label-text="Teacher Resources" help-block-text="Optional background reading, like articles or websites, that can help inform the teacher before teaching the lesson."
+                  add-button-text="Add Resource"></resource-upload-with-view>
+
+                  <hr/>
+
+                  <resource-upload-with-view id="state-test-questions" index="4" modal-title-text="Add state test questions" resource-files-uploader="vm.stateTestQuestionsFilesUploader"
+                  resource-files="vm.resources.stateTestQuestionsFiles" resource-links="vm.resources.stateTestQuestionLinks" resource-dropzone-id="state-test-questions-file-dropzone"
+                  control-label-text="State Test Questions" help-block-text="State test questions that connect to this lesson."
+                  add-button-text="Add Questions"></resource-upload-with-view>
                 </div>
               </div>
               <hr/>
@@ -455,10 +362,10 @@
   <!-- MODALS -->
   <saved-lesson-modal></saved-lesson-modal>
   <updated-lesson-modal></updated-lesson-modal>
-  <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
+  <!-- <resource-upload-modal resource-files-uploader="vm.teacherResourceFilesUploader"
   resource-files="vm.resources.resourceFiles" resource-links="vm.resources.resourceLinks"
   resource-dropzone-id="lesson-resources-file-dropzone"
-  close-function=""></resource-upload-modal>
+  close-function=""></resource-upload-modal> -->
   <delete-lesson-modal callback-function="vm.confirmDeleteLesson"></delete-lesson-modal>
   <form-term-modal term="vm.term" save-function="vm.saveTerm" cancel-function="vm.cancelTermAdd"></form-term-modal>
   <save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
