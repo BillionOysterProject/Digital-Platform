@@ -68,7 +68,7 @@
         controller: 'ExpeditionsController',
         controllerAs: 'vm',
         resolve: {
-          expeditionResolve: getFullExpedition
+          expeditionResolve: getExpedition
         },
         data: {
           roles: ['admin', 'team lead'],
