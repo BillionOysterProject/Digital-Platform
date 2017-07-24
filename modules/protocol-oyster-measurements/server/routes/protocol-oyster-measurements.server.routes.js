@@ -7,11 +7,6 @@ var oysterMeasurementsPolicy = require('../policies/protocol-oyster-measurements
   oysterMeasurements = require('../controllers/protocol-oyster-measurements.server.controller');
 
 module.exports = function (app) {
-  // Protocol Oyster Measurements collection routes
-  app.route('/api/protocol-oyster-measurements').all(oysterMeasurementsPolicy.isAllowed)
-    // .get(oysterMeasurements.list)
-    .post(oysterMeasurements.create);
-
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/index/:substrateIndex/upload-outer-substrate').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.uploadOuterSubstratePicture);
 
@@ -21,9 +16,6 @@ module.exports = function (app) {
   // Upload Oyster Cage Condition route
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.uploadOysterCageConditionPicture);
-
-  app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save').all(oysterMeasurementsPolicy.isAllowed)
-    .post(oysterMeasurements.incrementalSave);
 
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId/validate').all(oysterMeasurementsPolicy.isAllowed)
     .post(oysterMeasurements.validate);
@@ -35,8 +27,7 @@ module.exports = function (app) {
   // Single Protocol Oyster Measurements routes
   app.route('/api/protocol-oyster-measurements/:oysterMeasurementId').all(oysterMeasurementsPolicy.isAllowed)
     .get(oysterMeasurements.read)
-    .put(oysterMeasurements.update)
-    .delete(oysterMeasurements.delete);
+    .put(oysterMeasurements.update);
 
   // Finish by binding the protocol oyster measurements middleware
   app.param('oysterMeasurementId', oysterMeasurements.oysterMeasurementByID);

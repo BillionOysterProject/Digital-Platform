@@ -448,11 +448,25 @@ exports.listMembers = function (req, res) {
       var memberIds = [];
       for (var i = 0; i < teams.length; i++) {
         memberIds = memberIds.concat(teams[i].teamMembers);
+        if (req.query.includeLeads) {
+          memberIds.push(teams[i].teamLead);
+          memberIds = memberIds.concat(teams[i].teamLeads);
+        }
       }
 
       if (memberIds.length > 0) {
         var query;
         var and = [];
+
+        memberIds = _.uniqWith(memberIds, function(a, b) {
+          if (a && b) {
+            var aId = (a._id) ? a._id.toString() : a.toString();
+            var bId = (b._id) ? b._id.toString() : b.toString();
+            return aId === bId;
+          } else {
+            return false;
+          }
+        });
 
         and.push({ '_id': { $in: memberIds } });
 
@@ -506,8 +520,7 @@ exports.listMembers = function (req, res) {
           query.limit(limit2);
         }
 
-        query.populate('teamLead', 'displayName firstName email')
-        .populate('teamLeads', 'displayName firstName email').exec(function (err, members) {
+        query.exec(function (err, members) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)

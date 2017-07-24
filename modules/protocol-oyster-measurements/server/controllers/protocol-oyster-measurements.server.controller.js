@@ -30,7 +30,7 @@ var checkRole = function(role, user) {
   return (roleIndex > -1) ? true : false;
 };
 
-var validateOysterMeasurement = function(oysterMeasurement, successCallback, errorCallback) {
+var validate = function(oysterMeasurement, successCallback, errorCallback) {
   var errorMessages = [];
 
   if(!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === undefined ||
@@ -114,32 +114,6 @@ var validateOysterMeasurement = function(oysterMeasurement, successCallback, err
 };
 
 /**
- * Create a protocol oyster oysterMeasurement
- */
-exports.create = function (req, res) {
-  validateOysterMeasurement(req.body,
-  function(oysterMeasurementJSON) {
-    var oysterMeasurement = new ProtocolOysterMeasurement(oysterMeasurementJSON);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    oysterMeasurement.scribeMember = req.user;
-
-    oysterMeasurement.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(oysterMeasurement);
-      }
-    });
-  }, function(errorMessages) {
-    return res.status(400).send({
-      message: errorMessages
-    });
-  });
-};
-
-/**
  * Show the current protocol oyster measurement
  */
 exports.read = function (req, res) {
@@ -151,8 +125,7 @@ exports.read = function (req, res) {
 
 exports.validate = function (req, res) {
   var oysterMeasurement = req.body;
-  validateOysterMeasurement(oysterMeasurement,
-  function(oysterMeasurementJSON) {
+  validate(oysterMeasurement, function(oysterMeasurementJSON) {
     res.json({
       oysterMeasurement: oysterMeasurement,
       successful: true
@@ -165,92 +138,46 @@ exports.validate = function (req, res) {
   });
 };
 
-exports.incrementalSave = function (req, res) {
-  var oysterMeasurement = req.oysterMeasurement;
-
-  if (oysterMeasurement) {
-    oysterMeasurement = _.extend(oysterMeasurement, req.body);
-    oysterMeasurement.collectionTime = moment(req.body.collectionTime,
-      'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-    oysterMeasurement.scribeMember = req.user;
-    for (var i = 0; i < req.body.measuringOysterGrowth.substrateShells.length; i++) {
-      if (req.body.measuringOysterGrowth.substrateShells[i].setDate) {
-        oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-          moment(req.body.measuringOysterGrowth.substrateShells[i].setDate,
-            'YYYY-MM-DD').startOf('day').toDate();
-      }
-    }
-
-    // remove base64 text
-    var pattern = /^data:image\/[a-z]*;base64,/i;
-    if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
-    oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path &&
-    pattern.test(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path)) {
-      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path = '';
-    }
-    if (oysterMeasurement.measuringOysterGrowth && oysterMeasurement.measuringOysterGrowth.substrateShells &&
-    oysterMeasurement.measuringOysterGrowth.substrateShells.length > 0) {
-      for (var j = 0; j < oysterMeasurement.measuringOysterGrowth.substrateShells.length; j++) {
-        if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto &&
-        oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path &&
-        pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path)) {
-          oysterMeasurement.measuringOysterGrowth.substrateShells[j].outerSidePhoto.path = '';
-        }
-        if (oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto &&
-        oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path &&
-        pattern.test(oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path)) {
-          oysterMeasurement.measuringOysterGrowth.substrateShells[j].innerSidePhoto.path = '';
-        }
-      }
-    }
-
+exports.createInternal = function(collectionTime, latitude, longitude, teamList, callback) {
+  if (teamList && teamList.length > 0) {
+    var oysterMeasurement = new ProtocolOysterMeasurement({
+      collectionTime: moment(collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate(),
+      latitude: latitude,
+      longitude: longitude,
+      teamMembers: teamList
+    });
     oysterMeasurement.save(function (err) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        callback('Could not create an oyster measurement protocol');
       } else {
-        validateOysterMeasurement(oysterMeasurement,
-        function(oysterMeasurementJSON) {
-          res.json({
-            oysterMeasurement: oysterMeasurement,
-            successful: true
-          });
-        }, function(errorMessages) {
-          res.json({
-            oysterMeasurement: oysterMeasurement,
-            errors: errorMessages
-          });
-        });
+        callback(null, oysterMeasurement);
       }
     });
   } else {
-    return res.status(400).send({
-      message: 'Protocol oyster measurement not found'
-    });
+    callback();
   }
 };
 
 /**
  * Update a protocol oyster measurement
  */
-exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, validate, successCallback, errorCallback) {
-  var save = function(oysterMeasurementJSON) {
+exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, user, shouldValidate, callback) {
+  var save = function(oysterMeasurementJSON, errorMessages) {
     var oysterMeasurement = oysterMeasurmentReq;
 
     if (oysterMeasurement) {
       oysterMeasurement = _.extend(oysterMeasurement, oysterMeasurementJSON);
-      oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime,
-        'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-      oysterMeasurement.scribeMember = user;
-      for (var i = 0; i < oysterMeasurementBody.measuringOysterGrowth.substrateShells.length; i++) {
-        if (oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate) {
-          oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
-            moment(oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate,
-              'YYYY-MM-DD').startOf('day').toDate();
+      oysterMeasurement.collectionTime = moment(oysterMeasurementBody.collectionTime).startOf('minute').toDate();
+      if (user) oysterMeasurement.scribeMember = user;
+      if (oysterMeasurementBody.measuringOysterGrowth) {
+        for (var i = 0; i < oysterMeasurementBody.measuringOysterGrowth.substrateShells.length; i++) {
+          if (oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate) {
+            oysterMeasurement.measuringOysterGrowth.substrateShells[i].setDate =
+              moment(oysterMeasurementBody.measuringOysterGrowth.substrateShells[i].setDate).startOf('day').toDate();
+          }
         }
       }
-      oysterMeasurement.submitted = new Date();
+      if (oysterMeasurement.status === 'submitted') oysterMeasurement.submitted = new Date();
 
       // remove base64 text
       var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -277,38 +204,50 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
 
       oysterMeasurement.save(function (err) {
         if (err) {
-          errorCallback(errorHandler.getErrorMessage(err));
+          callback(errorHandler.getErrorMessage(err), oysterMeasurement, errorMessages);
         } else {
-          successCallback(oysterMeasurement);
+          callback(null, oysterMeasurement, errorMessages);
         }
       });
     } else {
-      errorCallback('Protocol oyster measurement not found');
+      callback('Protocol oyster measurement not found', oysterMeasurement, errorMessages);
     }
   };
 
-  if (validate) {
-    validateOysterMeasurement(oysterMeasurementBody,
-      function(oysterMeasurementJSON) {
-        save(oysterMeasurementJSON);
-      }, function(errorMessages) {
-        errorCallback(errorMessages);
-      });
+  if (shouldValidate) {
+    validate(oysterMeasurementBody, function(oysterMeasurementJSON) {
+      save(oysterMeasurementJSON, null);
+    }, function(errorMessages) {
+      save(oysterMeasurementBody, errorMessages);
+    });
   } else {
-    save(oysterMeasurementBody);
+    save(oysterMeasurementBody, null);
   }
 };
 
 exports.update = function (req, res) {
   var oysterMeasurementBody = req.body;
-  oysterMeasurementBody.status = 'submitted';
-
-  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user, true,
-  function(oysterMeasurement) {
-    res.json(oysterMeasurement);
-  }, function(errorMessage) {
-    return res.status(400).send({
-      message: errorMessage
+  Expedition.findOne({ 'protocols.oysterMeasurement': req.oysterMeasurement }).exec(function(err, expedition) {
+    expedition.teamLists.oysterMeasurement = req.body.teamMembers;
+    expedition.save(function(err) {
+      exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user, true,
+      function(err, oysterMeasurement, errorMessages) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          var result = {
+            oysterMeasurement: oysterMeasurement
+          };
+          if (errorMessages) {
+            result.errors = errorMessages;
+          } else {
+            result.successful = true;
+          }
+          res.json(result);
+        }
+      });
     });
   });
 };
@@ -316,9 +255,9 @@ exports.update = function (req, res) {
 /**
  * Delete a protocol oyster measurement
  */
-var deleteInternal = function(oysterMeasurement, successCallback, errorCallback) {
-  var filesToDelete = [];
+exports.deleteInternal = function(oysterMeasurement, callback) {
   if (oysterMeasurement) {
+    var filesToDelete = [];
     if (oysterMeasurement.conditionOfOysterCage && oysterMeasurement.conditionOfOysterCage.oysterCagePhoto &&
     oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path) {
       filesToDelete.push(oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
@@ -335,34 +274,51 @@ var deleteInternal = function(oysterMeasurement, successCallback, errorCallback)
         }
       }
     }
-  }
 
-  var uploadRemote = new UploadRemote();
-  uploadRemote.deleteRemote(filesToDelete,
-  function() {
-    oysterMeasurement.remove(function (err) {
-      if (err) {
-        errorCallback(errorHandler.getErrorMessage(err));
-      } else {
-        successCallback(oysterMeasurement);
-      }
+    var uploadRemote = new UploadRemote();
+    uploadRemote.deleteRemote(filesToDelete,
+    function() {
+      oysterMeasurement.remove(function (err) {
+        if (err) {
+          callback(errorHandler.getErrorMessage(err));
+        } else {
+          callback(null, oysterMeasurement);
+        }
+      });
+    }, function(err) {
+      callback(err);
     });
-  }, function(err) {
-    errorCallback(err);
-  });
+  } else {
+    callback();
+  }
 };
 
-exports.delete = function (req, res) {
-  var oysterMeasurement = req.oysterMeasurement;
-
-  deleteInternal(oysterMeasurement,
-  function(oysterMeasurement) {
-    res.json(oysterMeasurement);
-  }, function (err) {
-    return res.status(400).send({
-      message: errorHandler.getErrorMessage(err)
+exports.updateFromExpedition = function(existing, updated, user, callback) {
+  var existingOM = existing.protocols.oysterMeasurement;
+  var updatedOM = updated.protocols.oysterMeasurement;
+  if (!existingOM && updatedOM) {
+    exports.createInternal(updated.monitoringStartDate, updated.station.latitude, updated.station.longitude,
+      updated.teamLists.oysterMeasurement, function(err, oysterMeasurement) {
+        callback(err, oysterMeasurement);
+      });
+  } else if (existingOM && !updatedOM) {
+    exports.deleteInternal(existingOM, function(err, oysterMeasurement) {
+      callback(err, null);
     });
-  });
+  } else if (existingOM && updatedOM) {
+    ProtocolOysterMeasurement.findOne({ _id: existingOM._id }).exec(function(err, databaseOM) {
+      updatedOM.teamMembers = updated.teamLists.oysterMeasurement;
+      exports.updateInternal(databaseOM, updatedOM, user, false, function(err, oysterMeasurement, errorMessages) {
+        if (errorMessages) {
+          callback(errorMessages, oysterMeasurement);
+        } else {
+          callback(err, oysterMeasurement);
+        }
+      });
+    });
+  } else {
+    callback(null, existingOM);
+  }
 };
 
 var uploadFileSuccess = function(oysterMeasurement, res) {
@@ -378,7 +334,7 @@ var uploadFileSuccess = function(oysterMeasurement, res) {
 };
 
 var uploadFileError = function(oysterMeasurement, errorMessage, res) {
-  deleteInternal(oysterMeasurement,
+  exports.deleteInternal(oysterMeasurement,
   function(oysterMeasurement) {
     return res.status(400).send({
       message: errorMessage
@@ -518,21 +474,6 @@ exports.uploadInnerSubstratePicture = function (req, res) {
     });
   }
 };
-
-/**
- * List of protocol oyster measurement
- */
-// exports.list = function(req, res) {
-//   ProtocolOysterMeasurement.find().sort('-created').populate('user', 'displayName').exec(function(err, oysterMeasurement) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       res.json(oysterMeasurement);
-//     }
-//   });
-// };
 
 /**
  * Protocol Oyster Measurement middleware

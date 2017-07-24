@@ -65,41 +65,60 @@
       if (checkRole('team lead') || checkRole('admin')) {
         return true;
       } else {
-        var teamListIndex = lodash.findIndex(teamList, function(m) {
-          return m.username === user.username;
-        });
-        return (teamListIndex > -1) ? true : false;
+        if (teamList && teamList.length > 0) {
+          var teamListIndex = lodash.findIndex(teamList, function(m) {
+            return m.username === user.username;
+          });
+          return (teamListIndex > -1) ? true : false;
+        } else {
+          return false;
+        }
       }
     };
 
     var checkStatusPending = function(expedition) {
       var protocolsComplete = true;
-      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.siteCondition) &&
+        expedition.protocols.siteCondition && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) &&
+        expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) &&
+        expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) &&
+        expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) &&
+        expedition.protocols.waterQuality && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
       return expedition.status === 'pending' ||
         (protocolsComplete && expedition.status !== 'published' && expedition.status !== 'incomplete' && expedition.status !== 'returned');
     };
 
     var checkStatusIncomplete = function(expedition) {
       var protocolsComplete = true;
-      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.siteCondition) &&
+        expedition.protocols.siteCondition && expedition.protocols.siteCondition.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) &&
+        expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) &&
+        expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) &&
+        expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) &&
+        expedition.protocols.waterQuality && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
       return expedition.status === 'incomplete' && !protocolsComplete;
     };
 
     var checkStatusReturned = function(expedition) {
       var protocolsComplete = true;
-      if (checkWrite(expedition.teamLists.siteCondition) && expedition.protocols.siteCondition.status === 'returned') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.oysterMeasurement) && expedition.protocols.oysterMeasurement.status === 'returned') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.mobileTrap) && expedition.protocols.mobileTrap.status === 'returned') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.settlementTiles) && expedition.protocols.settlementTiles.status === 'returned') protocolsComplete = false;
-      if (checkWrite(expedition.teamLists.waterQuality) && expedition.protocols.waterQuality.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.siteCondition) &&
+        expedition.protocols.siteCondition && expedition.protocols.siteCondition.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) &&
+        expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) &&
+        expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) &&
+        expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.status === 'returned') protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) &&
+        expedition.protocols.waterQuality && expedition.protocols.waterQuality.status === 'returned') protocolsComplete = false;
       return expedition.status === 'returned' && !protocolsComplete;
     };
 
@@ -345,19 +364,19 @@
       },
       getDate: function(date) {
         if(date) {
-          return moment(date).format('MMMM D, YYYY');
+          return moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
         } else {
           return '';
         }
       },
       getShortDate: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('M/D/YY');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('M/D/YY');
       },
       getTime: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('h:mma');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma');
       },
       getDateTime: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('MMM D, YYYY, h:mma');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM D, YYYY, h:mma');
       },
       isUpcoming: function(expedition) {
         return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;

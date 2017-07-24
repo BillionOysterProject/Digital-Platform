@@ -76,7 +76,7 @@
         $scope.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
       }
       if (save) {
-        $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (callback) callback();
@@ -89,18 +89,22 @@
       }
     };
 
-    // Set up initial values
-    $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    if ($scope.mobileTrap) {
+      // Set up initial values
+      $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    }
 
     $scope.mobileOrganisms = $scope.findOrganisms(function() {
-      for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
-        $scope.getFoundOrganism($scope.mobileOrganisms[o]);
-      }
+      if ($scope.mobileTrap) {
+        for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
+          $scope.getFoundOrganism($scope.mobileOrganisms[o]);
+        }
 
-      if (!$scope.mobileTrap.mobileOrganisms) {
-        $scope.mobileTrap.mobileOrganisms = [];
-      } else {
-        setupMobileOrganisms(true);
+        if (!$scope.mobileTrap.mobileOrganisms) {
+          $scope.mobileTrap.mobileOrganisms = [];
+        } else {
+          setupMobileOrganisms(true);
+        }
       }
     });
 
@@ -239,7 +243,7 @@
 
       var mobileTrapId = $scope.mobileTrap._id;
 
-      $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+      $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
         $scope.mobileTrap)
         .success(function (data, status, headers, config) {
           saveImages(function() {
@@ -320,7 +324,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Mobile Trap';
-        $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + mobileTrapId,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (data.errors) {

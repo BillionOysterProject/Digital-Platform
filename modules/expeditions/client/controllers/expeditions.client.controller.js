@@ -13,6 +13,7 @@
     var vm = this;
 
     vm.expedition = expedition;
+    if (!vm.expedition.protocols) vm.expedition.protocols = {};
     vm.teamId = '';
     vm.authentication = Authentication;
     vm.user = vm.authentication.user;
@@ -20,6 +21,13 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+
+    vm.protocolsPresent = {};
+    vm.protocolsPresent.siteCondition = (vm.expedition.protocols.siteCondition) ? true : false;
+    vm.protocolsPresent.oysterMeasurement = (vm.expedition.protocols.oysterMeasurement) ? true : false;
+    vm.protocolsPresent.mobileTrap = (vm.expedition.protocols.mobileTrap) ? true : false;
+    vm.protocolsPresent.settlementTiles = (vm.expedition.protocols.settlementTiles) ? true : false;
+    vm.protocolsPresent.waterQuality = (vm.expedition.protocols.waterQuality) ? true : false;
 
     vm.memberLists = {
       'selected': null,
@@ -89,16 +97,7 @@
       }
 
       getORSes();
-
-      if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) {
-        vm.expedition.teamLists = {
-          siteCondition: [],
-          oysterMeasurement: [],
-          mobileTrap: [],
-          settlementTiles: [],
-          waterQuality: [],
-        };
-      }
+      vm.setTeamLists();
     };
 
     var checkRole = function(role) {
@@ -121,13 +120,7 @@
 
     vm.fieldChanged = function(team) {
       vm.team = team;
-      vm.expedition.teamLists = {
-        siteCondition: [],
-        oysterMeasurement: [],
-        mobileTrap: [],
-        settlementTiles: [],
-        waterQuality: [],
-      };
+      vm.setTeamLists();
       vm.findTeamValues();
     };
 
@@ -139,6 +132,18 @@
       });
     }
 
+    var protocolListsValid = function() {
+      if ((vm.protocolsPresent.siteCondition === true && vm.expedition.teamLists.siteCondition && vm.expedition.teamLists.siteCondition.length === 0) ||
+        (vm.protocolsPresent.oysterMeasurement === true && vm.expedition.teamLists.oysterMeasurement && vm.expedition.teamLists.oysterMeasurement.length === 0) ||
+        (vm.protocolsPresent.mobileTrap === true && vm.expedition.teamLists.mobileTrap && vm.expedition.teamLists.mobileTrap.length === 0) ||
+        (vm.protocolsPresent.settlementTiles === true && vm.expedition.teamLists.settlementTiles && vm.expedition.teamLists.settlementTiles.length === 0) ||
+        (vm.protocolsPresent.waterQuality === true && vm.expedition.teamLists.waterQuality && vm.expedition.teamLists.waterQuality.length === 0)) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
     // Save Expedition
     function save(isValid) {
       if (!isValid) {
@@ -147,14 +152,41 @@
       }
 
       // check protocol team lists
-      if (vm.expedition.teamLists.siteCondition.length === 0 ||
-        vm.expedition.teamLists.oysterMeasurement.length === 0 ||
-        vm.expedition.teamLists.mobileTrap.length === 0 ||
-        vm.expedition.teamLists.settlementTiles.length === 0 ||
-        vm.expedition.teamLists.waterQuality.length === 0) {
+      if (!protocolListsValid()) {
         vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
+      }
+
+      if (vm.protocolsPresent.siteCondition && !vm.expedition.protocols.siteCondition) {
+        vm.expedition.protocols.siteCondition = {};
+      } else if (!vm.protocolsPresent.siteCondition && vm.expedition.protocols.siteCondition) {
+        delete(vm.expedition.protocols.siteCondition);
+        delete(vm.expedition.teamLists.siteCondition);
+      }
+      if (vm.protocolsPresent.oysterMeasurement && !vm.expedition.protocols.oysterMeasurement) {
+        vm.expedition.protocols.oysterMeasurement = {};
+      } else if (!vm.protocolsPresent.oysterMeasurement && vm.expedition.protocols.oysterMeasurement) {
+        delete(vm.expedition.protocols.oysterMeasurement);
+        delete(vm.expedition.teamLists.oysterMeasurement);
+      }
+      if (vm.protocolsPresent.mobileTrap && !vm.expedition.protocols.mobileTrap) {
+        vm.expedition.protocols.mobileTrap = {};
+      } else if (!vm.protocolsPresent.mobileTrap && vm.expedition.protocols.mobileTrap) {
+        delete(vm.expedition.protocols.mobileTrap);
+        delete(vm.expedition.teamLists.mobileTrap);
+      }
+      if (vm.protocolsPresent.settlementTiles && !vm.expedition.protocols.settlementTiles) {
+        vm.expedition.protocols.settlementTiles = {};
+      } else if (!vm.protocolsPresent.settlementTiles && vm.expedition.protocols.settlementTiles) {
+        delete(vm.expedition.protocols.settlementTiles);
+        delete(vm.expedition.teamLists.settlementTiles);
+      }
+      if (vm.protocolsPresent.waterQuality && !vm.expedition.protocols.waterQuality) {
+        vm.expedition.protocols.waterQuality = {};
+      } else if (!vm.protocolsPresent.waterQuality && vm.expedition.protocols.waterQuality) {
+        delete(vm.expedition.protocols.waterQuality);
+        delete(vm.expedition.teamLists.waterQuality);
       }
 
       // set team
@@ -196,18 +228,47 @@
       if (!vm.isInList(item, list)) {
         list.push(item);
       }
+
+      if (vm.form.expeditionForm.$valid === false) {
+        if (!protocolListsValid()) {
+          vm.form.expeditionForm.$setValidity('lists', false);
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
+          return false;
+        } else {
+          vm.form.expeditionForm.$setValidity('lists', true);
+        }
+      } else {
+        vm.form.expeditionForm.$setValidity('lists', true);
+      }
+
       return true;
+    };
+
+    vm.changeProtocol = function(protocol) {
+      if (vm.protocolsPresent[protocol]) {
+        vm.expedition.teamLists[protocol] = [];
+      } else {
+        vm.expedition.teamLists[protocol] = undefined;
+      }
+    };
+
+    vm.setTeamLists = function() {
+      if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) vm.expedition.teamLists = {};
+      angular.forEach(vm.protocolsPresent, function(value, key) {
+        if (value) {
+          if (!vm.expedition.teamLists[key] || vm.expedition.teamLists[key] === undefined) {
+            vm.expedition.teamLists[key] = [];
+          }
+        } else {
+          delete vm.expedition.teamLists[key];
+        }
+      });
     };
 
     vm.autoAssign = function() {
       var keys = [];
-      vm.expedition.teamLists = {
-        siteCondition: [],
-        oysterMeasurement: [],
-        mobileTrap: [],
-        settlementTiles: [],
-        waterQuality: [],
-      };
+      vm.expedition.teamLists = {};
+      vm.setTeamLists();
       angular.forEach(vm.expedition.teamLists, function(value, key) {
         keys.push(key);
       });
@@ -255,25 +316,37 @@
       'expeditions.protocols({ expeditionId: expedition._id })';
     };
 
+    var openRestorationStationPopup = function(station, initial) {
+      vm.station = (station) ? new RestorationStationsService(station) : new RestorationStationsService();
+      if (vm.station.latitude && vm.station.longitude) {
+        vm.stationMapPoints = [{
+          lat: vm.station.latitude,
+          lng: vm.station.longitude,
+          icon: {
+            icon: 'glyphicon-map-marker',
+            prefix: 'glyphicon',
+            markerColor: 'blue'
+          },
+        }];
+      }
+
+      vm.initial = initial || 'orsView';
+      angular.element('#modal-station').modal('show');
+    };
+
     vm.openFormRestorationStation = function(station) {
-      vm.station = new RestorationStationsService();
-
-      angular.element('#modal-station-register').modal('show');
+      openRestorationStationPopup(station, 'orsForm');
     };
 
-    vm.saveFormRestorationStation = function() {
-      getORSes(function() {
-        vm.stationId = vm.station._id;
-        vm.station = {};
-
-        angular.element('#modal-station-register').modal('hide');
-      });
+    vm.openViewRestorationStation = function(station) {
+      openRestorationStationPopup(station, 'orsView');
     };
 
-    vm.cancelFormRestorationStation = function() {
+    vm.closeFormRestorationStation = function(refresh) {
+      if (refresh) getORSes();
       vm.station = {};
 
-      angular.element('#modal-station-register').modal('hide');
+      angular.element('#modal-station').modal('hide');
     };
 
     $scope.openViewUserModal = function(user) {

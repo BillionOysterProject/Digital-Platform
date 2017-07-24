@@ -765,8 +765,17 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
   async.parallel([
     // Add header
     function (done) {
-      headers.push(expedition.name+'\r\n'+expedition.station.name+',\r\n'+
-        getExpeditionDate(expedition.monitoringStartDate));
+      if (expedition && expedition.name && expedition.station && expedition.station.name && expedition.monitoringStartDate) {
+        headers.push(expedition.name+'\r\n'+expedition.station.name+',\r\n'+
+          getExpeditionDate(expedition.monitoringStartDate));
+      } else if (expedition && expedition.name && expedition.monitoringStartDate) {
+        headers.push(expedition.name+'\r\n\r\n'+
+          getExpeditionDate(expedition.monitoringStartDate));
+      } else if (expedition && expedition.name) {
+        headers.push(expedition.name+'\r\n\r\n');
+      } else {
+        headers.push('');
+      }
       done(null);
     },
     // Add Weather/Temperature
@@ -1480,7 +1489,6 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       console.log('done err', err);
       callback(err);
     } else {
-      console.log('callback');
       callback();
     }
   });
