@@ -7,6 +7,7 @@ var path = require('path'),
   fs = require('fs'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
+  Expedition = mongoose.model('Expedition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
   _ = require('lodash'),
@@ -311,18 +312,20 @@ exports.createInternal = function(collectionTime, latitude, longitude, teamList,
 /**
  * Update a protocol site condition
  */
-exports.updateInternal = function(siteConditionReq, siteConditionBody, user, validate, callback) {
-  var save = function(siteConditionJSON) {
+exports.updateInternal = function(siteConditionReq, siteConditionBody, user, shouldValidate, callback) {
+  var save = function(siteConditionJSON, errorMessages) {
     var siteCondition = siteConditionReq;
 
     if (siteCondition) {
       siteCondition = _.extend(siteCondition, siteConditionJSON);
       siteCondition.collectionTime = moment(siteConditionBody.collectionTime).startOf('minute').toDate();
-      siteCondition.tideConditions.closestHighTide =
-        moment(siteConditionBody.tideConditions.closestHighTide).startOf('minute').toDate();
-      siteCondition.tideConditions.closestLowTide =
-        moment(siteConditionBody.tideConditions.closestLowTide).startOf('minute').toDate();
-      siteCondition.scribeMember = user;
+      if (siteCondition.tideConditions && siteConditionBody.tideConditions) {
+        siteCondition.tideConditions.closestHighTide =
+          moment(siteConditionBody.tideConditions.closestHighTide).startOf('minute').toDate();
+        siteCondition.tideConditions.closestLowTide =
+          moment(siteConditionBody.tideConditions.closestLowTide).startOf('minute').toDate();
+      }
+      if (user) siteCondition.scribeMember = user;
       if (siteCondition.status === 'submitted') siteCondition.submitted = new Date();
 
       // remove base64 text
@@ -340,64 +343,54 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, val
 
       siteCondition.save(function (err) {
         if (err) {
-          callback(errorHandler.getErrorMessage(err));
+          console.log('siteCondition save', err);
+          callback(errorHandler.getErrorMessage(err), siteCondition, errorMessages);
         } else {
-          callback(null, siteCondition);
+          callback(null, siteCondition, errorMessages);
         }
       });
     } else {
-      callback('Protocol site condition not found');
+      callback('Protocol site condition not found', siteCondition, errorMessages);
     }
   };
 
-  if (validate) {
-    validate(siteConditionBody,
-    function(siteConditionJSON) {
-      save(siteConditionJSON);
+  if (shouldValidate) {
+    validate(siteConditionBody, function(siteConditionJSON) {
+      save(siteConditionJSON, null);
     }, function(errorMessages) {
-      callback(null, null, errorMessages);
+      save(siteConditionBody, errorMessages);
     });
   } else {
-    save(siteConditionBody);
+    save(siteConditionBody, null);
   }
 };
 
 exports.update = function (req, res) {
   var siteConditionBody = req.body;
-  exports.updateInternal(req.siteCondition, siteConditionBody, req.user, true,
-  function(err, siteCondition, errorMessages) {
-    if (err) {
-      return res.status(400).send({
-        message: err
+  Expedition.findOne({ 'protocols.siteCondition': req.siteCondition }).exec(function(err, expedition) {
+    expedition.teamLists.siteCondition = req.body.teamMembers;
+    expedition.save(function(err) {
+      exports.updateInternal(req.siteCondition, siteConditionBody, req.user, true,
+      function(err, siteCondition, errorMessages) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          var result = {
+            siteCondition: siteCondition,
+          };
+          if (errorMessages) {
+            result.errors = errorMessages;
+          } else {
+            result.successful = true;
+          }
+          res.json(result);
+        }
       });
-    } else {
-      var result = {
-        siteCondition: siteCondition,
-      };
-      if (errorMessages) {
-        result.errors = errorMessages;
-      } else {
-        result.successful = true;
-      }
-      res.json(result);
-    }
+    });
   });
 };
-//
-// exports.updateTeamMembers = function(siteCondition, list, successCallback, errorCallback) {
-//   siteCondition.teamMembers = list;
-//   siteCondition.save(function (err) {
-//     if (err) {
-//       errorCallback(errorHandler.getErrorMessage(err));
-//     } else {
-//       successCallback(siteCondition);
-//     }
-//   });
-// };
-
-/**
- * Delete a protocol site condition
- */
 
 exports.deleteInternal = function(siteCondition, callback) {
   if (siteCondition) {
@@ -431,26 +424,30 @@ exports.deleteInternal = function(siteCondition, callback) {
 };
 
 exports.updateFromExpedition = function(existing, updated, user, callback) {
-  if (!existing.protocols.siteCondition && updated.protocols.siteCondition) {
+  var existingSC = existing.protocols.siteCondition;
+  var updatedSC = updated.protocols.siteCondition;
+  if (!existingSC && updatedSC) {
     exports.createInternal(updated.monitoringStartDate, updated.station.latitude, updated.station.longitude,
       updated.teamLists.siteCondition, function(err, siteCondition) {
         callback(err, siteCondition);
       });
-  } else if (existing.protocols.siteCondition && !updated.protocols.siteCondition) {
-    exports.deleteInternal(existing.protocols.siteCondition, function(err, siteCondition) {
-      callback(err, siteCondition);
+  } else if (existingSC && !updatedSC) {
+    exports.deleteInternal(existingSC, function(err, siteCondition) {
+      callback(err, null);
     });
-  } else if (existing.protocols.siteCondition && updated.protocols.siteCondition) {
-    existing.protocols.siteCondition.teamMembers = existing.teamLists.siteCondition;
-    exports.updateInternal(existing, updated, user, false, function(err, siteCondition, errorMessages) {
-      if (errorMessages) {
-        callback(errorMessages, siteCondition);
-      } else {
-        callback(err, siteCondition);
-      }
+  } else if (existingSC && updatedSC) {
+    ProtocolSiteCondition.findOne({ _id: existingSC._id }).exec(function(err, databaseSC) {
+      updatedSC.teamMembers = updated.teamLists.siteCondition;
+      exports.updateInternal(databaseSC, updatedSC, user, false, function(err, siteCondition, errorMessages) {
+        if (errorMessages) {
+          callback(errorMessages, siteCondition);
+        } else {
+          callback(err, siteCondition);
+        }
+      });
     });
   } else {
-    callback(null, existing.protocols.siteCondition);
+    callback(null, existingSC);
   }
 };
 

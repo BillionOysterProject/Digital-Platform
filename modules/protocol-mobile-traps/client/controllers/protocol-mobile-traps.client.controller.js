@@ -89,18 +89,22 @@
       }
     };
 
-    // Set up initial values
-    $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    if ($scope.mobileTrap) {
+      // Set up initial values
+      $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    }
 
     $scope.mobileOrganisms = $scope.findOrganisms(function() {
-      for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
-        $scope.getFoundOrganism($scope.mobileOrganisms[o]);
-      }
+      if ($scope.mobileTrap) {
+        for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
+          $scope.getFoundOrganism($scope.mobileOrganisms[o]);
+        }
 
-      if (!$scope.mobileTrap.mobileOrganisms) {
-        $scope.mobileTrap.mobileOrganisms = [];
-      } else {
-        setupMobileOrganisms(true);
+        if (!$scope.mobileTrap.mobileOrganisms) {
+          $scope.mobileTrap.mobileOrganisms = [];
+        } else {
+          setupMobileOrganisms(true);
+        }
       }
     });
 
@@ -320,7 +324,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Mobile Trap';
-        $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + mobileTrapId,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (data.errors) {

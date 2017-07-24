@@ -6,6 +6,7 @@
 var path = require('path'),
   fs = require('fs'),
   mongoose = require('mongoose'),
+  Expedition = mongoose.model('Expedition'),
   ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   moment = require('moment'),
@@ -61,32 +62,6 @@ var validate = function(waterQuality, successCallback, errorCallback) {
   }
 };
 
-// /**
-//  * Create a protocol water quality
-//  */
-// exports.create = function (req, res) {
-//   validateWaterQuality(req.body,
-//   function(waterQualityJSON) {
-//     var waterQuality = new ProtocolWaterQuality(waterQualityJSON);
-//     waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-//     waterQuality.scribeMember = req.user;
-//
-//     waterQuality.save(function (err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.json(waterQuality);
-//       }
-//     });
-//   }, function(errorMessages) {
-//     return res.status(400).send({
-//       message: errorMessages
-//     });
-//   });
-// };
-
 /**
  * Show the current protocol water quality
  */
@@ -99,8 +74,7 @@ exports.read = function (req, res) {
 
 exports.validate = function (req, res) {
   var waterQuality = req.body;
-  validate(waterQuality,
-  function(waterQualityJSON) {
+  validate(waterQuality, function(waterQualityJSON) {
     res.json({
       waterQuality: waterQuality,
       successful: true
@@ -112,41 +86,6 @@ exports.validate = function (req, res) {
     });
   });
 };
-
-// exports.incrementalSave = function (req, res) {
-//   var waterQuality = req.waterQuality;
-//
-//   if (waterQuality) {
-//     waterQuality = _.extend(waterQuality, req.body);
-//     waterQuality.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-//     waterQuality.scribeMember = req.user;
-//
-//     waterQuality.save(function (err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         validateWaterQuality(waterQuality,
-//         function(waterQualityJSON) {
-//           res.json({
-//             waterQuality: waterQuality,
-//             successful: true
-//           });
-//         }, function (errorMessages) {
-//           res.json({
-//             waterQuality: waterQuality,
-//             errors: errorMessages
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     return res.status(400).send({
-//       message: 'Protocol water quality not found'
-//     });
-//   }
-// };
 
 exports.createInternal = function(collectionTime, latitude, longitude, teamList, callback) {
   if (teamList && teamList.length > 0) {
@@ -171,90 +110,65 @@ exports.createInternal = function(collectionTime, latitude, longitude, teamList,
 /**
  * Update a protocol water quality
  */
-exports.updateInternal = function(waterQualityReq, waterQualityBody, user, validate, callback) {
-  var save = function(waterQualityJSON) {
+exports.updateInternal = function(waterQualityReq, waterQualityBody, user, shouldValidate, callback) {
+  var save = function(waterQualityJSON, errorMessages) {
     var waterQuality = waterQualityReq;
 
     if (waterQuality) {
       waterQuality = _.extend(waterQuality, waterQualityJSON);
       waterQuality.collectionTime = moment(waterQualityBody.collectionTime).startOf('minute').toDate();
-      waterQuality.scribeMember = user;
-      waterQuality.submitted = new Date();
+      if (user) waterQuality.scribeMember = user;
+      if (waterQuality.status === 'submitted') waterQuality.submitted = new Date();
 
       waterQuality.save(function (err) {
         if (err) {
-          callback(errorHandler.getErrorMessage(err));
+          callback(errorHandler.getErrorMessage(err), waterQuality, errorMessages);
         } else {
-          callback(null, waterQuality);
+          callback(null, waterQuality, errorMessages);
         }
       });
     } else {
-      callback('Protocol water quality not found');
+      callback('Protocol water quality not found', waterQuality, errorMessages);
     }
   };
 
-  if (validate) {
-    validate(waterQualityBody,
-    function(waterQualityJSON) {
-      save(waterQualityJSON);
+  if (shouldValidate) {
+    validate(waterQualityBody, function(waterQualityJSON) {
+      save(waterQualityJSON, null);
     }, function(errorMessages) {
-      callback(null, null, errorMessages);
+      save(waterQualityBody, errorMessages);
     });
   } else {
-    save(waterQualityBody);
+    save(waterQualityBody, null);
   }
 };
 
 exports.update = function (req, res) {
   var waterQualityBody = req.body;
-
-  exports.updateInternal(req.waterQuality, waterQualityBody, req.user, true,
-  function(err, waterQuality, errorMessages) {
-    if (err) {
-      return res.status(400).send({
-        message: err
+  Expedition.findOne({ 'protocols.waterQuality': req.waterQuality }).exec(function(err, expedition) {
+    expedition.teamLists.waterQuality = req.body.teamMembers;
+    expedition.save(function(err) {
+      exports.updateInternal(req.waterQuality, waterQualityBody, req.user, true,
+      function(err, waterQuality, errorMessages) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          var result = {
+            waterQuality: waterQuality
+          };
+          if (errorMessages) {
+            result.errors = errorMessages;
+          } else {
+            result.successful = true;
+          }
+          res.json(result);
+        }
       });
-    } else {
-      var result = {
-        waterQuality: waterQuality
-      };
-      if (errorMessages) {
-        result.errors = errorMessages;
-      } else {
-        result.successful = true;
-      }
-      res.json(waterQuality);
-    }
+    });
   });
 };
-
-// exports.updateTeamMembers = function(waterQuality, list, successCallback, errorCallback) {
-//   waterQuality.teamMembers = list;
-//   waterQuality.save(function (err) {
-//     if (err) {
-//       errorCallback(errorHandler.getErrorMessage(err));
-//     } else {
-//       successCallback(waterQuality);
-//     }
-//   });
-// };
-
-// /**
-//  * Delete a protocol water quality
-//  */
-// exports.delete = function (req, res) {
-//   var waterQuality = req.waterQuality;
-//
-//   waterQuality.remove(function (err) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       res.json(waterQuality);
-//     }
-//   });
-// };
 
 exports.deleteInternal = function(waterQuality, callback) {
   if (waterQuality) {
@@ -271,46 +185,33 @@ exports.deleteInternal = function(waterQuality, callback) {
 };
 
 exports.updateFromExpedition = function(existing, updated, user, callback) {
-  if (!existing.protocols.waterQuality && updated.protocols.waterQuality) {
+  var existingWQ = existing.protocols.waterQuality;
+  var updatedWQ = updated.protocols.waterQuality;
+  if (!existingWQ && updatedWQ) {
     exports.createInternal(updated.monitoringStartDate, updated.station.latitude, updated.station.longitude,
       updated.teamLists.waterQuality, function(err, waterQuality) {
         callback(err, waterQuality);
       });
-  } else if (existing.protocols.waterQuality && !updated.protocols.waterQuality) {
-    exports.deleteInternal(existing.protocols.waterQuality, function(err, waterQuality) {
-      callback(err, waterQuality);
+  } else if (existingWQ && !updatedWQ) {
+    exports.deleteInternal(existingWQ, function(err, waterQuality) {
+      callback(err, null);
     });
-  } else if (existing.protocols.waterQuality && updated.protocols.waterQuality) {
-    existing.protocols.waterQuality.teamMembers = existing.teamLists.waterQuality;
-    exports.updateInternal(existing, updated, user, false, function(err, waterQuality, errorMessages) {
-      if (errorMessages) {
-        callback(errorMessages, waterQuality);
-      } else {
-        callback(err, waterQuality);
-      }
+  } else if (existingWQ && updatedWQ) {
+    ProtocolWaterQuality.findOne({ _id: existingWQ._id }).exec(function(err, databaseWQ) {
+      updatedWQ.teamMembers = updated.teamLists.waterQuality;
+      exports.updateInternal(databaseWQ, updatedWQ, user, false, function(err, waterQuality, errorMessages) {
+        if (errorMessages) {
+          callback(errorMessages, waterQuality);
+        } else {
+          callback(err, waterQuality);
+        }
+      });
     });
   } else {
-    callback(null, existing.protocols.waterQuality);
+    callback(null, existingWQ);
   }
 };
-/**
- * List of protocol water quality
- */
-// exports.list = function(req, res) {
-//   ProtocolWaterQuality.find().sort('-created').populate('user', 'displayName').exec(function(err, waterQualities) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       res.json(waterQualities);
-//     }
-//   });
-// };
 
-/**
- * Protocol Water Quality middleware
- */
 exports.waterQualityByID = function (req, res, next, id) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({

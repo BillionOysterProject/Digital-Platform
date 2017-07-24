@@ -13,33 +13,35 @@
     lodash, ProtocolSiteConditionsService, WeatherConditionsService, WaterColorsService,
     WaterFlowService, ShorelineTypesService, ExpeditionViewHelper) {
 
-    // Set up initial values
-    $scope.siteCondition.collectionTime = moment($scope.siteCondition.collectionTime).startOf('minute').toDate();
-    $scope.waterConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.waterConditions &&
-      $scope.siteCondition.waterConditions.waterConditionPhoto) ?
-      $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
-    $scope.landConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.landConditions &&
-      $scope.siteCondition.landConditions.landConditionPhoto) ?
-      $scope.siteCondition.landConditions.landConditionPhoto.path : '';
-    if ($scope.siteCondition.tideConditions === undefined) {
-      $scope.siteCondition.tideConditions = {
-        closestHighTide: moment().startOf('minute').toDate(),
-        closestLowTide: moment().startOf('minute').toDate()
-      };
-    } else {
-      $scope.siteCondition.tideConditions.closestHighTide = ($scope.siteCondition.tideConditions.closestHighTide) ?
-        moment($scope.siteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
-      $scope.siteCondition.tideConditions.closestLowTide = ($scope.siteCondition.tideConditions.closestLowTide) ?
-        moment($scope.siteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
-    }
-    if (!$scope.siteCondition.landConditions) {
-      $scope.siteCondition.landConditions = {
-        shorelineSurfaceCoverEstPer: {
-          imperviousSurfacePer: 0,
-          perviousSurfacePer: 0,
-          vegetatedSurfacePer: 0
-        }
-      };
+    if ($scope.siteCondition) {
+      // Set up initial values
+      $scope.siteCondition.collectionTime = moment($scope.siteCondition.collectionTime).startOf('minute').toDate();
+      $scope.waterConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.waterConditions &&
+        $scope.siteCondition.waterConditions.waterConditionPhoto) ?
+        $scope.siteCondition.waterConditions.waterConditionPhoto.path : '';
+      $scope.landConditionPhotoURL = ($scope.siteCondition && $scope.siteCondition.landConditions &&
+        $scope.siteCondition.landConditions.landConditionPhoto) ?
+        $scope.siteCondition.landConditions.landConditionPhoto.path : '';
+      if ($scope.siteCondition.tideConditions === undefined) {
+        $scope.siteCondition.tideConditions = {
+          closestHighTide: moment().startOf('minute').toDate(),
+          closestLowTide: moment().startOf('minute').toDate()
+        };
+      } else {
+        $scope.siteCondition.tideConditions.closestHighTide = ($scope.siteCondition.tideConditions.closestHighTide) ?
+          moment($scope.siteCondition.tideConditions.closestHighTide).toDate() : moment().startOf('minute').toDate();
+        $scope.siteCondition.tideConditions.closestLowTide = ($scope.siteCondition.tideConditions.closestLowTide) ?
+          moment($scope.siteCondition.tideConditions.closestLowTide).toDate() : moment().startOf('minute').toDate();
+      }
+      if (!$scope.siteCondition.landConditions) {
+        $scope.siteCondition.landConditions = {
+          shorelineSurfaceCoverEstPer: {
+            imperviousSurfacePer: 0,
+            perviousSurfacePer: 0,
+            vegetatedSurfacePer: 0
+          }
+        };
+      }
     }
 
     $scope.weatherConditions = ExpeditionViewHelper.getAllWeatherConditions();

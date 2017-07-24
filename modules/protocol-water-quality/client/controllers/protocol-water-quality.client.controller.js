@@ -176,16 +176,18 @@
       $scope.waterQuality.samples.splice(index, 1);
     };
 
-    // Set up initial values
-    if (!$scope.waterQuality.samples || $scope.waterQuality.samples.length === 0) {
-      $scope.waterQuality.samples = [];
-      $scope.addSampleForm();
+    if ($scope.waterQuality) {
+      // Set up initial values
+      if (!$scope.waterQuality.samples || $scope.waterQuality.samples.length === 0) {
+        $scope.waterQuality.samples = [];
+        $scope.addSampleForm();
+      }
+      $scope.waterQuality.collectionTime = moment($scope.waterQuality.collectionTime).startOf('minute').toDate();
     }
-    $scope.waterQuality.collectionTime = moment($scope.waterQuality.collectionTime).startOf('minute').toDate();
 
     $scope.saveWaterQuality = function(saveSuccessCallback, saveErrorCallback) {
       if (!$scope.form.waterQualityForm.$valid) {
-        $scope.$broadcast('show-errors-check-validity', '$scope.form.waterQualityForm.$valid');
+        $scope.$broadcast('show-errors-check-validity', '$scope.form.waterQualityForm');
       }
 
       $http.put('/api/protocol-water-quality/' + $scope.waterQuality._id,
@@ -218,7 +220,7 @@
 
     $scope.validateWaterQuality = function(validateSuccessCallback, validateErrorCallback) {
       if ($scope.waterQuality && $scope.waterQuality._id) {
-        $http.post('/api/protocol-water-quality/' + $scope.waterQuality._id + '/incremental-save',
+        $http.post('/api/protocol-water-quality/' + $scope.waterQuality._id + '/validate',
           $scope.waterQuality)
           .success(function (data, status, headers, config) {
             if (data.errors) {

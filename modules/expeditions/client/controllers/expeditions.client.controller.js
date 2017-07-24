@@ -13,6 +13,7 @@
     var vm = this;
 
     vm.expedition = expedition;
+    if (!vm.expedition.protocols) vm.expedition.protocols = {};
     vm.teamId = '';
     vm.authentication = Authentication;
     vm.user = vm.authentication.user;
@@ -20,8 +21,6 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
-
-    console.log('expedition', vm.expedition);
 
     vm.protocolsPresent = {};
     vm.protocolsPresent.siteCondition = (vm.expedition.protocols.siteCondition) ? true : false;
@@ -147,25 +146,48 @@
 
     // Save Expedition
     function save(isValid) {
-      console.log('save');
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }
 
       // check protocol team lists
-      console.log('siteCondition', vm.expedition.teamLists.siteCondition);
-      console.log('oysterMeasurement', vm.expedition.teamLists.oysterMeasurement);
-      console.log('mobileTrap', vm.expedition.teamLists.mobileTrap);
-      console.log('settlementTiles', vm.expedition.teamLists.settlementTiles);
-      console.log('waterQuality', vm.expedition.teamLists.waterQuality);
       if (!protocolListsValid()) {
         vm.form.expeditionForm.$setValidity('lists', false);
         $scope.$broadcast('show-errors-check-validity', 'vm.form.expeditionForm');
         return false;
       }
 
-
+      if (vm.protocolsPresent.siteCondition && !vm.expedition.protocols.siteCondition) {
+        vm.expedition.protocols.siteCondition = {};
+      } else if (!vm.protocolsPresent.siteCondition && vm.expedition.protocols.siteCondition) {
+        delete(vm.expedition.protocols.siteCondition);
+        delete(vm.expedition.teamLists.siteCondition);
+      }
+      if (vm.protocolsPresent.oysterMeasurement && !vm.expedition.protocols.oysterMeasurement) {
+        vm.expedition.protocols.oysterMeasurement = {};
+      } else if (!vm.protocolsPresent.oysterMeasurement && vm.expedition.protocols.oysterMeasurement) {
+        delete(vm.expedition.protocols.oysterMeasurement);
+        delete(vm.expedition.teamLists.oysterMeasurement);
+      }
+      if (vm.protocolsPresent.mobileTrap && !vm.expedition.protocols.mobileTrap) {
+        vm.expedition.protocols.mobileTrap = {};
+      } else if (!vm.protocolsPresent.mobileTrap && vm.expedition.protocols.mobileTrap) {
+        delete(vm.expedition.protocols.mobileTrap);
+        delete(vm.expedition.teamLists.mobileTrap);
+      }
+      if (vm.protocolsPresent.settlementTiles && !vm.expedition.protocols.settlementTiles) {
+        vm.expedition.protocols.settlementTiles = {};
+      } else if (!vm.protocolsPresent.settlementTiles && vm.expedition.protocols.settlementTiles) {
+        delete(vm.expedition.protocols.settlementTiles);
+        delete(vm.expedition.teamLists.settlementTiles);
+      }
+      if (vm.protocolsPresent.waterQuality && !vm.expedition.protocols.waterQuality) {
+        vm.expedition.protocols.waterQuality = {};
+      } else if (!vm.protocolsPresent.waterQuality && vm.expedition.protocols.waterQuality) {
+        delete(vm.expedition.protocols.waterQuality);
+        delete(vm.expedition.teamLists.waterQuality);
+      }
 
       // set team
       var teamIndex = lodash.findIndex(vm.teams, function(t) {
@@ -222,20 +244,15 @@
       return true;
     };
 
-    vm.changeProtocol = function($event, protocol) {
-      console.log('changing protocol', protocol);
-      var newValue = vm.protocolsPresent[protocol];
-      if (newValue === false) {
-        vm.protocolsPresent[protocol] = !vm.protocolsPresent[protocol];
-        // $event.stopPropagation();
-        // $event.preventDefault();
-
-        //vm.setTeamLists();
+    vm.changeProtocol = function(protocol) {
+      if (vm.protocolsPresent[protocol]) {
+        vm.expedition.teamLists[protocol] = [];
+      } else {
+        vm.expedition.teamLists[protocol] = undefined;
       }
     };
 
     vm.setTeamLists = function() {
-      console.log('set team lists');
       if (!vm.expedition.teamLists || vm.expedition.teamLists === undefined) vm.expedition.teamLists = {};
       angular.forEach(vm.protocolsPresent, function(value, key) {
         if (value) {

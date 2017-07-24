@@ -6,6 +6,7 @@
 var path = require('path'),
   fs = require('fs'),
   mongoose = require('mongoose'),
+  Expedition = mongoose.model('Expedition'),
   ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   UploadRemote = require(path.resolve('./modules/forms/server/controllers/upload-remote.server.controller')),
@@ -97,49 +98,6 @@ var validate = function(settlementTiles, successCallback, errorCallback) {
   }
 };
 
-// var convertOrganisms = function(settlementTiles) {
-//   console.log('settlementTiles', settlementTiles);
-//   for (var i = 0; i < settlementTiles.length; i++) {
-//     for (var j = 0; j < settlementTiles[i].grids.length; j++) {
-//       console.log('settlementTiles[i].grids[j]', settlementTiles[i].grids[j]);
-//       console.log('settlementTiles[i].grids[j].organism', settlementTiles[i].grids[j].organism);
-//       var organism = (settlementTiles[i].grids[j] &&
-//         settlementTiles[i].grids[j].organism && settlementTiles[i].grids[j].organism._id) ?
-//         settlementTiles[i].grids[j].organism._id : settlementTiles[i].grids[j].organism;
-//       settlementTiles[i].grids[j].organism = organism;
-//       console.log('organism', organism);
-//     }
-//   }
-//   return settlementTiles;
-// };
-
-// /**
-//  * Create a protocol settlement tiles
-//  */
-// exports.create = function (req, res) {
-//   validateSettlementTiles(req.body,
-//   function(settlementTilesJSON) {
-//     //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
-//     var settlementTiles = new ProtocolSettlementTile(settlementTilesJSON);
-//     settlementTiles.collectionTime = moment(req.body.collectionTime).startOf('minute').toDate();
-//     settlementTiles.scribeMember = req.user;
-//
-//     settlementTiles.save(function (err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         res.json(settlementTiles);
-//       }
-//     });
-//   }, function(errorMessages) {
-//     return res.status(400).send({
-//       message: errorMessages
-//     });
-//   });
-// };
-
 /**
  * Show the current protocol settlement tiles
  */
@@ -150,36 +108,9 @@ exports.read = function (req, res) {
   res.json(settlementTiles);
 };
 
-// var removeFiles = function(existingSt, updatedSt, successCallback, errorCallback) {
-//   var filesToDelete = [];
-//   if (updatedSt) {
-//     if (updatedSt.settlementTiles && updatedSt.settlementTiles.length > 0) {
-//       for (var i = 0; i < updatedSt.settlementTiles.length; i++) {
-//         if (existingSt.settlementTiles[i].tilePhoto.path !== '' &&
-//           updatedSt.settlementTiles[i].tilePhoto.path === '') {
-//           filesToDelete.push(existingSt.settlementTiles[i].tilePhoto.path);
-//         }
-//       }
-//     }
-//   }
-//
-//   if (filesToDelete && filesToDelete.length > 0) {
-//     var uploadRemote = new UploadRemote();
-//     uploadRemote.deleteRemote(filesToDelete,
-//     function() {
-//       successCallback();
-//     }, function(err) {
-//       errorCallback(err);
-//     });
-//   } else {
-//     successCallback();
-//   }
-// };
-
 exports.validate = function (req, res) {
   var settlementTiles = req.body;
-  validate(settlementTiles,
-  function(settlementTilesJSON) {
+  validate(settlementTiles, function(settlementTilesJSON) {
     res.json({
       settlementTiles: settlementTiles,
       successful: true
@@ -191,53 +122,6 @@ exports.validate = function (req, res) {
     });
   });
 };
-
-// exports.incrementalSave = function (req, res) {
-//   var settlementTiles = req.settlementTiles;
-//
-//   if (settlementTiles) {
-//     settlementTiles = _.extend(settlementTiles, req.body);
-//     settlementTiles.collectionTime = moment(req.body.collectionTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').startOf('minute').toDate();
-//     settlementTiles.scribeMember = req.user;
-//
-//     // remove base64 text
-//     var pattern = /^data:image\/[a-z]*;base64,/i;
-//     if (settlementTiles.settlementTiles && settlementTiles.settlementTiles.length > 0) {
-//       for (var j = 0; j < settlementTiles.settlementTiles.length; j++) {
-//         if (settlementTiles.settlementTiles[j].tilePhoto &&
-//         settlementTiles.settlementTiles[j].tilePhoto.path &&
-//         pattern.test(settlementTiles.settlementTiles[j].tilePhoto.path)) {
-//           settlementTiles.settlementTiles[j].tilePhoto.path = '';
-//         }
-//       }
-//     }
-//
-//     settlementTiles.save(function (err) {
-//       if (err) {
-//         return res.status(400).send({
-//           message: errorHandler.getErrorMessage(err)
-//         });
-//       } else {
-//         validateSettlementTiles(settlementTiles,
-//         function(settlementTilesJSON) {
-//           res.json({
-//             settlementTiles: settlementTiles,
-//             successful: true
-//           });
-//         }, function(errorMessages) {
-//           res.json({
-//             settlementTiles: settlementTiles,
-//             errors: errorMessages
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     return res.status(400).send({
-//       message: 'Protocol settlement tiles not found'
-//     });
-//   }
-// };
 
 exports.createInternal = function(collectionTime, latitude, longitude, teamList, callback) {
   if (teamList && teamList.length > 0) {
@@ -262,16 +146,16 @@ exports.createInternal = function(collectionTime, latitude, longitude, teamList,
 /**
  * Update a protocol settlement tiles
  */
-exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, validate, callback) {
-  var save = function(settlementTilesJSON) {
+exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user, shouldValidate, callback) {
+  var save = function(settlementTilesJSON, errorMessages) {
     var settlementTiles = settlementTilesReq;
 
     if (settlementTiles) {
       //settlementTilesJSON.settlementTiles = convertOrganisms(req.body.settlementTiles);
       settlementTiles = _.extend(settlementTiles, settlementTilesJSON);
       settlementTiles.collectionTime = moment(settlementTilesBody.collectionTime).startOf('minute').toDate();
-      settlementTiles.scribeMember = user;
-      settlementTiles.submitted = new Date();
+      if (user) settlementTiles.scribeMember = user;
+      if (settlementTiles.status === 'submitted') settlementTiles.submitted = new Date();
 
       // remove base64 text
       var pattern = /^data:image\/[a-z]*;base64,/i;
@@ -287,60 +171,53 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
 
       settlementTiles.save(function (err) {
         if (err) {
-          callback(errorHandler.getErrorMessage(err));
+          callback(errorHandler.getErrorMessage(err), settlementTiles, errorMessages);
         } else {
-          callback(null, settlementTiles);
+          callback(null, settlementTiles, errorMessages);
         }
       });
     } else {
-      callback('Protocol settlement tiles not found');
+      callback('Protocol settlement tiles not found', settlementTiles, errorMessages);
     }
   };
 
-  if (validate) {
-    validate(settlementTilesBody,
-    function(settlementTilesJSON) {
-      save(settlementTilesJSON);
+  if (shouldValidate) {
+    validate(settlementTilesBody, function(settlementTilesJSON) {
+      save(settlementTilesJSON, null);
     }, function(errorMessages) {
-      callback(null, null, errorMessages);
+      save(settlementTilesBody, errorMessages);
     });
   } else {
-    save(settlementTilesBody);
+    save(settlementTilesBody, null);
   }
 };
 
 exports.update = function (req, res) {
   var settlementTilesBody = req.body;
-  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
-  function(err, settlementTiles, errorMessages) {
-    if (err) {
-      return res.status(400).send({
-        message: err
+  Expedition.findOne({ 'protocols.settlementTiles': req.settlementTiles }).exec(function(err, expedition) {
+    expedition.teamLists.settlementTiles = req.body.teamMembers;
+    expedition.save(function(err) {
+      exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
+      function(err, settlementTiles, errorMessages) {
+        if (err) {
+          return res.status(400).send({
+            message: err
+          });
+        } else {
+          var result = {
+            settlementTiles: settlementTiles
+          };
+          if (errorMessages) {
+            result.errors = errorMessages;
+          } else {
+            result.successful = true;
+          }
+          res.json(result);
+        }
       });
-    } else {
-      var result = {
-        settlementTiles: settlementTiles
-      };
-      if (errorMessages) {
-        result.errors = errorMessages;
-      } else {
-        result.successful = true;
-      }
-      res.json(result);
-    }
+    });
   });
 };
-
-// exports.updateTeamMembers = function(settlementTiles, list, successCallback, errorCallback) {
-//   settlementTiles.teamMembers = list;
-//   settlementTiles.save(function (err) {
-//     if (err) {
-//       errorCallback(errorHandler.getErrorMessage(err));
-//     } else {
-//       successCallback(settlementTiles);
-//     }
-//   });
-// };
 
 /**
  * Delete a protocol settlement tiles
@@ -373,41 +250,32 @@ exports.deleteInternal = function(settlementTiles, callback) {
 };
 
 exports.updateFromExpedition = function(existing, updated, user, callback) {
-  if (!existing.protocols.waterQuality && updated.protocols.waterQuality) {
+  var existingST = existing.protocols.settlementTiles;
+  var updatedST = updated.protocols.settlementTiles;
+  if (!existingST && updatedST) {
     exports.createInternal(updated.monitoringStartDate, updated.station.latitude, updated.station.longitude,
-      updated.teamLists.waterQuality, function(err, waterQuality) {
-        callback(err, waterQuality);
+      updated.teamLists.settlementTiles, function(err, settlementTiles) {
+        callback(err, settlementTiles);
       });
-  } else if (existing.protocols.waterQuality && !updated.protocols.waterQuality) {
-    exports.deleteInternal(existing.protocols.waterQuality, function(err, waterQuality) {
-      callback(err, waterQuality);
+  } else if (existingST && !updatedST) {
+    exports.deleteInternal(existingST, function(err, settlementTiles) {
+      callback(err, null);
     });
-  } else if (existing.protocols.waterQuality && updated.protocols.waterQuality) {
-    existing.protocols.waterQuality.teamMembers = existing.teamLists.waterQuality;
-    exports.updateInternal(existing, updated, user, false, function(err, waterQuality, errorMessages) {
-      if (errorMessages) {
-        callback(errorMessages, waterQuality);
-      } else {
-        callback(err, waterQuality);
-      }
+  } else if (existingST && updatedST) {
+    ProtocolSettlementTile.findOne({ _id: existingST._id }).exec(function(err, databaseST) {
+      updatedST.teamMembers = updated.teamLists.settlementTiles;
+      exports.updateInternal(databaseST, updatedST, user, false, function(err, settlementTiles, errorMessages) {
+        if (errorMessages) {
+          callback(errorMessages, settlementTiles);
+        } else {
+          callback(err, settlementTiles);
+        }
+      });
     });
   } else {
-    callback(null, existing.protocols.waterQuality);
+    callback(null, existingST);
   }
 };
-
-// exports.delete = function (req, res) {
-//   var settlementTiles = req.settlementTiles;
-//
-//   deleteInternal(settlementTiles,
-//   function(settlementTiles) {
-//     res.json(settlementTiles);
-//   }, function (err) {
-//     return res.status(400).send({
-//       message: errorHandler.getErrorMessage(err)
-//     });
-//   });
-// };
 
 var uploadFileSuccess = function(settlementTiles, res) {
   settlementTiles.save(function (saveError) {
@@ -465,21 +333,6 @@ exports.uploadSettlementTilePicture = function (req, res) {
     });
   }
 };
-
-/**
- * List of protocol settlement tiles
- */
-// exports.list = function(req, res) {
-//   ProtocolSettlementTile.find().sort('-created').exec(function(err, settlementTiles) {
-//     if (err) {
-//       return res.status(400).send({
-//         message: errorHandler.getErrorMessage(err)
-//       });
-//     } else {
-//       res.json(settlementTiles);
-//     }
-//   });
-// };
 
 /**
  * Protocol Settlement Tiles middleware

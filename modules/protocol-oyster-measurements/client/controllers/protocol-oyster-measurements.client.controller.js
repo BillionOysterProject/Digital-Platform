@@ -125,18 +125,20 @@
       }
     };
 
-    // Set up initial values
-    $scope.oysterMeasurement.collectionTime = moment($scope.oysterMeasurement.collectionTime).startOf('minute').toDate();
-    $scope.cageConditionPhotoURL = ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
-      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
-      $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
+    if ($scope.oysterMeasurement) {
+      // Set up initial values
+      $scope.oysterMeasurement.collectionTime = moment($scope.oysterMeasurement.collectionTime).startOf('minute').toDate();
+      $scope.cageConditionPhotoURL = ($scope.oysterMeasurement && $scope.oysterMeasurement.conditionOfOysterCage &&
+        $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) ?
+        $scope.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path : '';
 
-    if (!$scope.oysterMeasurement.measuringOysterGrowth ||
-      !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
-      $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
-      setupSubstrateShells(findPreviousValues());
-    } else {
-      findPreviousValues();
+      if (!$scope.oysterMeasurement.measuringOysterGrowth ||
+        !$scope.oysterMeasurement.measuringOysterGrowth.substrateShells ||
+        $scope.oysterMeasurement.measuringOysterGrowth.substrateShells.length < $scope.substrateCount) {
+        setupSubstrateShells(findPreviousValues());
+      } else {
+        findPreviousValues();
+      }
     }
 
     // Get the values for the dropdowns
@@ -446,7 +448,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Oyster Measurement';
-        $http.post('/api/protocol-oyster-measurements/' + oysterMeasurementId + '/incremental-save',
+        $http.put('/api/protocol-oyster-measurements/' + oysterMeasurementId,
           $scope.oysterMeasurement)
           .success(function (data, status, headers, config) {
             if (data.errors) {

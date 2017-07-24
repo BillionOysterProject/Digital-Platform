@@ -98,14 +98,16 @@
         });
     };
 
-    // Set up initial values
-    if (!$scope.settlementTiles.settlementTiles || $scope.settlementTiles.settlementTiles.length < $scope.tileCount) {
-      setupSettlementTileGrid();
-    }
-    $scope.settlementTiles.collectionTime = moment($scope.settlementTiles.collectionTime).startOf('minute').toDate();
-    for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
-      var tile = $scope.settlementTiles.settlementTiles[i];
-      tile.imageUrl = (tile.tilePhoto && tile.tilePhoto.path) ? tile.tilePhoto.path : '';
+    if ($scope.settlementTiles) {
+      // Set up initial values
+      if (!$scope.settlementTiles.settlementTiles || $scope.settlementTiles.settlementTiles.length < $scope.tileCount) {
+        setupSettlementTileGrid();
+      }
+      $scope.settlementTiles.collectionTime = moment($scope.settlementTiles.collectionTime).startOf('minute').toDate();
+      for (var i = 0; i < $scope.settlementTiles.settlementTiles.length; i++) {
+        var tile = $scope.settlementTiles.settlementTiles[i];
+        tile.imageUrl = (tile.tilePhoto && tile.tilePhoto.path) ? tile.tilePhoto.path : '';
+      }
     }
 
     // Get the values for the dropdowns
@@ -260,7 +262,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Settlement Tiles';
-        $http.post('/api/protocol-settlement-tiles/' + settlementTileId + '/incremental-save',
+        $http.put('/api/protocol-settlement-tiles/' + settlementTileId,
           $scope.settlementTiles)
           .success(function (data, status, headers, config) {
             if (data.errors) {
