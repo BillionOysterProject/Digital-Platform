@@ -630,109 +630,121 @@ var getExtentCode = function(value, callback) {
 };
 
 var addGarbageExtent = function(rows, garbage, type, callback) {
-  async.parallel([
-    // Add Garbage
-    function (done) {
-      rows['garbage'+type].push((garbage.garbagePresent) ? 1 : 0);
-      done(garbage.garbagePresent, null);
-    },
-    // Add Hard Plastic
-    function (done) {
-      if (garbage.hardPlastic) {
-        getExtentCode(garbage.hardPlastic, function(err, code) {
-          if (err) done(err);
-          rows['hardPlastic'+type].push(code);
+  if (garbage) {
+    async.parallel([
+      // Add Garbage
+      function (done) {
+        rows['garbage'+type].push((garbage.garbagePresent) ? 1 : 0);
+        done(garbage.garbagePresent, null);
+      },
+      // Add Hard Plastic
+      function (done) {
+        if (garbage.hardPlastic) {
+          getExtentCode(garbage.hardPlastic, function(err, code) {
+            if (err) done(err);
+            rows['hardPlastic'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['hardPlastic'+type].push('');
           done(null);
-        });
-      } else {
-        rows['hardPlastic'+type].push('');
-        done(null);
-      }
-    },
-    // Add Soft Plastic
-    function (done) {
-      if (garbage.softPlastic) {
-        getExtentCode(garbage.softPlastic, function(err, code) {
-          if (err) done(err);
-          rows['softPlastic'+type].push(code);
+        }
+      },
+      // Add Soft Plastic
+      function (done) {
+        if (garbage.softPlastic) {
+          getExtentCode(garbage.softPlastic, function(err, code) {
+            if (err) done(err);
+            rows['softPlastic'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['softPlastic'+type].push('');
           done(null);
-        });
-      } else {
-        rows['softPlastic'+type].push('');
-        done(null);
-      }
-    },
-    // Add Metal
-    function (done) {
-      if (garbage.metal) {
-        getExtentCode(garbage.metal, function(err, code) {
-          if (err) done(err);
-          rows['metal'+type].push(code);
+        }
+      },
+      // Add Metal
+      function (done) {
+        if (garbage.metal) {
+          getExtentCode(garbage.metal, function(err, code) {
+            if (err) done(err);
+            rows['metal'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['metal'+type].push('');
           done(null);
-        });
-      } else {
-        rows['metal'+type].push('');
-        done(null);
-      }
-    },
-    // Add Paper
-    function (done) {
-      if (garbage.paper) {
-        getExtentCode(garbage.paper, function(err, code) {
-          if (err) done(err);
-          rows['paper'+type].push(code);
+        }
+      },
+      // Add Paper
+      function (done) {
+        if (garbage.paper) {
+          getExtentCode(garbage.paper, function(err, code) {
+            if (err) done(err);
+            rows['paper'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['paper'+type].push('');
           done(null);
-        });
-      } else {
-        rows['paper'+type].push('');
-        done(null);
-      }
-    },
-    // Add Glass
-    function (done) {
-      if (garbage.glass) {
-        getExtentCode(garbage.glass, function(err, code) {
-          if (err) done(err);
-          rows['glass'+type].push(code);
+        }
+      },
+      // Add Glass
+      function (done) {
+        if (garbage.glass) {
+          getExtentCode(garbage.glass, function(err, code) {
+            if (err) done(err);
+            rows['glass'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['glass'+type].push('');
           done(null);
-        });
-      } else {
-        rows['glass'+type].push('');
-        done(null);
-      }
-    },
-    // Add Organic
-    function (done) {
-      if (garbage.organic) {
-        getExtentCode(garbage.organic, function(err, code) {
-          if (err) done(err);
-          rows['organic'+type].push(code);
+        }
+      },
+      // Add Organic
+      function (done) {
+        if (garbage.organic) {
+          getExtentCode(garbage.organic, function(err, code) {
+            if (err) done(err);
+            rows['organic'+type].push(code);
+            done(null);
+          });
+        } else {
+          rows['organic'+type].push('');
           done(null);
-        });
-      } else {
-        rows['organic'+type].push('');
-        done(null);
-      }
-    },
-    // Add Other
-    function (done) {
-      if (garbage.other && garbage.other.description && garbage.other.extent) {
-        getExtentCode(garbage.other.extent, function(err, code) {
-          rows['other'+type].push(garbage.other.description+' - '+code);
+        }
+      },
+      // Add Other
+      function (done) {
+        if (garbage.other && garbage.other.description && garbage.other.extent) {
+          getExtentCode(garbage.other.extent, function(err, code) {
+            rows['other'+type].push(garbage.other.description+' - '+code);
+            done(null);
+          });
+        } else {
+          rows['other'+type].push('');
           done(null);
-        });
+        }
+      },
+    ], function(err) {
+      if (err) {
+        callback(err);
       } else {
-        rows['other'+type].push('');
-        done(null);
+        callback();
       }
-    },
-  ], function(err) {
-    if (err) {
-      callback(err);
-    } else {
-      callback();
-    }
-  });
+    });
+  } else {
+    rows['garbage'+type].push('');
+    rows['hardPlastic'+type].push('');
+    rows['softPlastic'+type].push('');
+    rows['metal'+type].push('');
+    rows['paper'+type].push('');
+    rows['glass'+type].push('');
+    rows['organic'+type].push('');
+    rows['other'+type].push('');
+    callback();
+  }
 };
 
 var getMobileOrganismNameAndImage = function(id, callback) {
@@ -781,16 +793,27 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Weather/Temperature
     function (done) {
       if (req.body.protocol1.weatherTemperature === 'YES') {
-        rows.airTemperatureC.push(expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC);
-        WeatherCondition.findOne({ value: expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions })
-        .exec(function(err, obj) {
-          if (err) {
-            done(err);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.meteorologicalConditions) {
+          rows.airTemperatureC.push(expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC);
+          if (expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions) {
+            WeatherCondition.findOne({ value: expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions })
+            .exec(function(err, obj) {
+              if (err) {
+                done(err);
+              } else {
+                rows.weatherConditions.push((obj) ? obj.order : '');
+                done(null);
+              }
+            });
           } else {
-            rows.weatherConditions.push((obj) ? obj.order : '');
+            rows.weatherConditions.push('');
             done(null);
           }
-        });
+        } else {
+          rows.airTemperatureC.push('');
+          rows.weatherConditions.push('');
+          done(null);
+        }
       } else {
         done(null);
       }
@@ -798,16 +821,27 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Wind Speed/Direction
     function (done) {
       if (req.body.protocol1.windSpeedDirection === 'YES') {
-        rows.windSpeedMPH.push(expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH);
-        WindDirection.findOne({ value: expedition.protocols.siteCondition.meteorologicalConditions.windDirection })
-        .exec(function(err, dir) {
-          if (err) {
-            done(err);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.meteorologicalConditions) {
+          rows.windSpeedMPH.push(expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH);
+          if (expedition.protocols.siteCondition.meteorologicalConditions.windDirection) {
+            WindDirection.findOne({ value: expedition.protocols.siteCondition.meteorologicalConditions.windDirection })
+            .exec(function(err, dir) {
+              if (err) {
+                done(err);
+              } else {
+                rows.windDirection.push((dir) ? dir.abbreviation : '');
+                done(null);
+              }
+            });
           } else {
-            rows.windDirection.push((dir) ? dir.abbreviation : '');
+            rows.windDirection.push('');
             done(null);
           }
-        });
+        } else {
+          rows.windSpeedMPH.push('');
+          rows.windDirection.push('');
+          done(null);
+        }
       } else {
         done(null);
       }
@@ -816,38 +850,59 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     function (done) {
       if (req.body.protocol1.recentRainfall === 'YES') {
         rows.recentRainfallHeader.push('');
-        rows.rainfall24hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours) ? 1 : 0);
-        rows.rainfall72hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) ? 1 : 0);
-        rows.rainfall7days.push((expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) ? 1 : 0);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.recentRainfall) {
+          rows.rainfall24hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours) ? 1 : 0);
+          rows.rainfall72hrs.push((expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) ? 1 : 0);
+          rows.rainfall7days.push((expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) ? 1 : 0);
+        } else {
+          rows.rainfall24hrs.push('');
+          rows.rainfall72hrs.push('');
+          rows.rainfall7days.push('');
+        }
       }
       done(null);
     },
     function (done) {
       if (req.body.protocol1.tide === 'YES') {
         rows.tideConditionsHeader.push('');
-        rows.closestHighTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestHighTide));
-        rows.closestHighTideHeight.push(expedition.protocols.siteCondition.tideConditions.closestHighTideHeight);
-        rows.closestLowTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestLowTide));
-        rows.closestLowTideHeight.push(expedition.protocols.siteCondition.tideConditions.closestLowTideHeight);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions) {
+          rows.closestHighTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestHighTide));
+          rows.closestHighTideHeight.push(expedition.protocols.siteCondition.tideConditions.closestHighTideHeight);
+          rows.closestLowTide.push(getDateTime(expedition.protocols.siteCondition.tideConditions.closestLowTide));
+          rows.closestLowTideHeight.push(expedition.protocols.siteCondition.tideConditions.closestLowTideHeight);
+        } else {
+          rows.closestHighTide.push('');
+          rows.closestHighTideHeight.push('');
+          rows.closestLowTide.push('');
+          rows.closestLowTideHeight.push('');
+        }
       }
       done(null);
     },
     // Add Reference Point
     function (done) {
       if (req.body.protocol1.referencePoint === 'YES') {
-        rows.referencePoint.push(expedition.protocols.siteCondition.tideConditions.referencePoint);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions) {
+          rows.referencePoint.push(expedition.protocols.siteCondition.tideConditions.referencePoint);
+        } else {
+          rows.referencePoint.push('');
+        }
       }
       done(null);
     },
     // Add Tidal Current
     function (done) {
       if (req.body.protocol1.tidalCurrent === 'YES') {
-        if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'flood-current') {
-          rows.tidalCurrent.push('Flood current (incoming tide)');
-        } else if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'slack-water') {
-          rows.tidalCurrent.push('Slack water');
-        } else if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'ebb-current') {
-          rows.tidalCurrent.push('Ebb current (outgoing tide)');
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions && expedition.protocols.siteCondition.tideConditions.tidalCurrent) {
+          if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'flood-current') {
+            rows.tidalCurrent.push('Flood current (incoming tide)');
+          } else if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'slack-water') {
+            rows.tidalCurrent.push('Slack water');
+          } else if (expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'ebb-current') {
+            rows.tidalCurrent.push('Ebb current (outgoing tide)');
+          }
+        } else {
+          rows.tidalCurrent.push('');
         }
       }
       done(null);
@@ -855,25 +910,38 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Water condition photo
     function (done) {
       if (req.body.protocol1.waterConditionPhoto === 'YES') {
-        rows.waterConditionPhoto.push(expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions && expedition.protocols.siteCondition.waterConditions.waterConditionPhoto) {
+          rows.waterConditionPhoto.push(expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path);
+        } else {
+          rows.waterConditionPhoto.push('');
+        }
       }
       done(null);
     },
     // Add Surface Current Speed
     function (done) {
       if (req.body.protocol1.surfaceCurrentSpeed === 'YES') {
-        rows.currentSpeed.push(expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions) {
+          rows.currentSpeed.push(expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS);
+        } else {
+          rows.currentSpeed.push('');
+        }
       }
       done(null);
     },
     // Add Water Color
     function (done) {
       if (req.body.protocol1.waterColor === 'YES') {
-        WaterColor.findOne({ value: expedition.protocols.siteCondition.waterConditions.waterColor })
-        .exec(function(err, color) {
-          rows.waterColor.push((color) ? color.order : '');
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions && expedition.protocols.siteCondition.waterConditions.waterColor) {
+          WaterColor.findOne({ value: expedition.protocols.siteCondition.waterConditions.waterColor })
+          .exec(function(err, color) {
+            rows.waterColor.push((color) ? color.order : '');
+            done(null);
+          });
+        } else {
+          rows.waterColor.push('');
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -881,16 +949,32 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Oil Sheen
     function (done) {
       if (req.body.protocol1.oilSheen === 'YES') {
-        rows.oilSheen.push((expedition.protocols.siteCondition.waterConditions.oilSheen) ? 1 : 0);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions) {
+          rows.oilSheen.push((expedition.protocols.siteCondition.waterConditions.oilSheen) ? 1 : 0);
+        } else {
+          rows.oilSheen.push('');
+        }
       }
       done(null);
     },
     // Add Garbage Extent (water)
     function (done) {
       if (req.body.protocol1.garbageWater === 'YES') {
-        addGarbageExtent(rows, expedition.protocols.siteCondition.waterConditions.garbage, 'Water', function() {
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions) {
+          addGarbageExtent(rows, expedition.protocols.siteCondition.waterConditions.garbage, 'Water', function() {
+            done(null);
+          });
+        } else {
+          rows.garbageWater.push('');
+          rows.hardPlasticWater.push('');
+          rows.softPlasticWater.push('');
+          rows.metalWater.push('');
+          rows.paperWater.push('');
+          rows.glassWater.push('');
+          rows.organicWater.push('');
+          rows.otherWater.push('');
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -898,18 +982,36 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Marked Pipes
     function (done) {
       if (req.body.protocol1.pipes === 'YES') {
-        rows.markedCSOPipes.push((expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) ? 1 : 0);
-        if (expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) {
-          rows.markedCSOLocation.push(expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude+', '+
-            expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude);
-          rows.markedCSOFlow.push((expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent) ? 1 : 0);
-          WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough })
-          .exec(function(err, flow) {
-            if (err) done(err);
-            rows.markedCSOVolume.push((flow) ? flow.order : '');
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+          expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes) {
+          rows.markedCSOPipes.push((expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) ? 1 : 0);
+          if (expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent) {
+            if (expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location) {
+              rows.markedCSOLocation.push(expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude+', '+
+                expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude);
+            } else {
+              rows.markedCSOLocation.push('');
+            }
+            rows.markedCSOFlow.push((expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent) ? 1 : 0);
+            if (expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough) {
+              WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough })
+              .exec(function(err, flow) {
+                if (err) done(err);
+                rows.markedCSOVolume.push((flow) ? flow.order : '');
+                done(null);
+              });
+            } else {
+              rows.markedCSOVolume.push('');
+              done(null);
+            }
+          } else {
+            rows.markedCSOLocation.push('');
+            rows.markedCSOFlow.push('');
+            rows.markedCSOVolume.push('');
             done(null);
-          });
+          }
         } else {
+          rows.markedCSOPipes.push('');
           rows.markedCSOLocation.push('');
           rows.markedCSOFlow.push('');
           rows.markedCSOVolume.push('');
@@ -922,19 +1024,37 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Unmarked Pipes
     function (done) {
       if (req.body.protocol1.pipes === 'YES') {
-        rows.unmarkedPipes.push((expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) ? 1 : 0);
-        if (expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) {
-          rows.unmarkedPipesLocation.push(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude+', '+
-            expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude);
-          rows.unmarkedPipesDiameter.push(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM);
-          rows.unmarkedPipesFlow.push((expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent) ? 1 : 0);
-          WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough })
-          .exec(function(err, flow) {
-            if (err) done(err);
-            rows.unmarkedPipesVolume.push((flow) ? flow.order : '');
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions && expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes) {
+          rows.unmarkedPipes.push((expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) ? 1 : 0);
+          if (expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent) {
+            if (expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location) {
+              rows.unmarkedPipesLocation.push(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude+', '+
+                expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude);
+            } else {
+              rows.unmarkedPipesLocation.push('');
+            }
+            rows.unmarkedPipesDiameter.push(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM);
+            rows.unmarkedPipesFlow.push((expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent) ? 1 : 0);
+            if (expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough) {
+              WaterFlow.findOne({ value: expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough })
+              .exec(function(err, flow) {
+                if (err) done(err);
+                rows.unmarkedPipesVolume.push((flow) ? flow.order : '');
+                done(null);
+              });
+            } else {
+              rows.unmarkedPipesVolume.push('');
+              done(null);
+            }
+          } else {
+            rows.unmarkedPipesLocation.push('');
+            rows.unmarkedPipesDiameter.push('');
+            rows.unmarkedPipesFlow.push('');
+            rows.unmarkedPipesVolume.push('');
             done(null);
-          });
+          }
         } else {
+          rows.unmarkedPipes.push('');
           rows.unmarkedPipesLocation.push('');
           rows.unmarkedPipesDiameter.push('');
           rows.unmarkedPipesFlow.push('');
@@ -948,19 +1068,28 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Land condition photo
     function (done) {
       if (req.body.protocol1.landConditionPhoto === 'YES') {
-        rows.landConditionPhoto.push(expedition.protocols.siteCondition.landConditions.landConditionPhoto.path);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions && expedition.protocols.siteCondition.landConditions.landConditionPhoto) {
+          rows.landConditionPhoto.push(expedition.protocols.siteCondition.landConditions.landConditionPhoto.path);
+        } else {
+          rows.landConditionPhoto.push('');
+        }
       }
       done(null);
     },
     // Add Shoreline Type
     function (done) {
       if (req.body.protocol1.shorelineType === 'YES') {
-        ShorelineType.findOne({ value: expedition.protocols.siteCondition.landConditions.shoreLineType })
-        .exec(function (err, type) {
-          if (err) done(err);
-          rows.shoreLineType.push((type) ? type.order : '');
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions && expedition.protocols.siteCondition.landConditions.shoreLineType) {
+          ShorelineType.findOne({ value: expedition.protocols.siteCondition.landConditions.shoreLineType })
+          .exec(function (err, type) {
+            if (err) done(err);
+            rows.shoreLineType.push((type) ? type.order : '');
+            done(null);
+          });
+        } else {
+          rows.shoreLineType.push('');
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -968,9 +1097,21 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Garbage Extent (land)
     function (done) {
       if (req.body.protocol1.garbageLand === 'YES') {
-        addGarbageExtent(rows, expedition.protocols.siteCondition.landConditions.garbage, 'Land', function() {
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions) {
+          addGarbageExtent(rows, expedition.protocols.siteCondition.landConditions.garbage, 'Land', function() {
+            done(null);
+          });
+        } else {
+          rows.garbageLand.push('');
+          rows.hardPlasticLand.push('');
+          rows.softPlasticLand.push('');
+          rows.metalLand.push('');
+          rows.paperLand.push('');
+          rows.glassLand.push('');
+          rows.organicLand.push('');
+          rows.otherLand.push('');
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -978,34 +1119,53 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Shoreline Surface Cover Est Per
     function (done) {
       if (req.body.protocol1.surfaceCover === 'YES') {
-        rows.imperviousSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
-        rows.perviousSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
-        rows.vegetatedSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
+        if (expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions && expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer) {
+          rows.imperviousSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer);
+          rows.perviousSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer);
+          rows.vegetatedSurfacePer.push(expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer);
+        } else {
+          rows.imperviousSurfacePer.push('');
+          rows.perviousSurfacePer.push('');
+          rows.vegetatedSurfacePer.push('');
+        }
       }
       done(null);
     },
     // Add Submerged Depth of Cage
     function (done) {
       if (req.body.protocol2.submergedDepth === 'YES') {
-        rows.submergedDepth.push(expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM);
+        if (expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.depthOfOysterCage) {
+          rows.submergedDepth.push(expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM);
+        } else {
+          rows.submergedDepth.push('');
+        }
       }
       done(null);
     },
     function (done) {
       if (req.body.protocol2.oysterCagePhoto === 'YES') {
-        rows.oysterCagePhoto.push(expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
+        if (expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage && expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto) {
+          rows.oysterCagePhoto.push(expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path);
+        } else {
+          rows.oysterCagePhoto.push('');
+        }
       }
       done(null);
     },
     // Add Bioaccumulation on Cage
     function (done) {
       if (req.body.protocol2.bioaccumulationOnCage === 'YES') {
-        Bioaccumulation.findOne({ value: expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage })
-          .exec(function(err, bio) {
-            if (err) done(err);
-            rows.bioaccumulationOnCage.push((bio) ? bio.order : '');
-            done(null);
-          });
+        if (expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage && expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage) {
+          Bioaccumulation.findOne({ value: expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage })
+            .exec(function(err, bio) {
+              if (err) done(err);
+              rows.bioaccumulationOnCage.push((bio) ? bio.order : '');
+              done(null);
+            });
+        } else {
+          rows.bioaccumulationOnCage.push('');
+          done(null);
+        }
       } else {
         done(null);
       }
@@ -1013,7 +1173,11 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Damage to Cage
     function (done) {
       if (req.body.protocol2.cageDamage === 'YES') {
-        rows.cageDamage.push(expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage);
+        if (expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage) {
+          rows.cageDamage.push(expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage);
+        } else {
+          rows.cageDamage.push('');
+        }
       }
       done(null);
     },
@@ -1021,34 +1185,57 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     function (done) {
       if (req.body.protocol2.oysterMeasurements === 'YES') {
         rows.oysterMeasurementsHeader.push('');
-        rows.minSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters);
-        rows.maxSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters);
-        rows.avgSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters);
-        rows.totalOfAllOysters.push(expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters);
-        for (var n = 0; n < expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells.length; n++) {
-          var substrateShell = expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells[n];
-          var shellIndex = substrateShell.substrateShellNumber-1;
-          var baselineArray = expedition.station.baselines['substrateShell'+(n+1)];
-          var baseline = baselineArray[baselineArray.length-1];
-          rows.substrateShells[shellIndex].substrateShellNumberHeader.push('');
-          rows.substrateShells[shellIndex].outerSidePhoto.push(substrateShell.outerSidePhoto.path);
-          rows.substrateShells[shellIndex].innerSidePhoto.push(substrateShell.innerSidePhoto.path);
-          rows.substrateShells[shellIndex].setDate.push(getShortDate((baseline) ? baseline.setDate : ''));
-          rows.substrateShells[shellIndex].source.push((baseline) ? ((baseline.otherSource) ? baseline.otherSource : baseline.source) : '');
-          rows.substrateShells[shellIndex].liveAtBaseline.push((baseline) ? baseline.totalNumberOfLiveOystersAtBaseline : '');
-          rows.substrateShells[shellIndex].massAtBaseline.push((baseline) ? baseline.totalMassOfLiveOystersAtBaselineG : '');
-          rows.substrateShells[shellIndex].liveOnShell.push(substrateShell.totalNumberOfLiveOystersOnShell);
-          rows.substrateShells[shellIndex].mass.push(substrateShell.totalMassOfScrubbedSubstrateShellOystersTagG);
-          rows.substrateShells[shellIndex].minSize.push(substrateShell.minimumSizeOfLiveOysters);
-          rows.substrateShells[shellIndex].maxSize.push(substrateShell.maximumSizeOfLiveOysters);
-          rows.substrateShells[shellIndex].avgSize.push(substrateShell.averageSizeOfLiveOysters);
-          var measurements = [];
-          for (var o = 0; o < substrateShell.measurements.length; o++) {
-            if (substrateShell.measurements[o].sizeOfLiveOysterMM) {
-              measurements.push(substrateShell.measurements[o].sizeOfLiveOysterMM);
+        if (expedition.protocols && expedition.protocols.oysterMeasurement) {
+          rows.minSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters);
+          rows.maxSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters);
+          rows.avgSizeOfAllOysters.push(expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters);
+          rows.totalOfAllOysters.push(expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters);
+          if (expedition.protocols.oysterMeasurement.measuringOysterGrowth && expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells) {
+            for (var n = 0; n < expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells.length; n++) {
+              var substrateShell = expedition.protocols.oysterMeasurement.measuringOysterGrowth.substrateShells[n];
+              var shellIndex = substrateShell.substrateShellNumber-1;
+              var baselineArray = expedition.station.baselines['substrateShell'+(n+1)];
+              var baseline = baselineArray[baselineArray.length-1];
+              rows.substrateShells[shellIndex].substrateShellNumberHeader.push('');
+              if (substrateShell) {
+                if (substrateShell.outerSidePhoto) {
+                  rows.substrateShells[shellIndex].outerSidePhoto.push(substrateShell.outerSidePhoto.path);
+                } else {
+                  rows.substrateShells[shellIndex].outerSidePhoto.push('');
+                }
+                if (substrateShell.innerSidePhoto) {
+                  rows.substrateShells[shellIndex].innerSidePhoto.push(substrateShell.innerSidePhoto.path);
+                } else {
+                  rows.substrateShells[shellIndex].innerSidePhoto.push('');
+                }
+                rows.substrateShells[shellIndex].setDate.push(getShortDate((baseline) ? baseline.setDate : ''));
+                rows.substrateShells[shellIndex].source.push((baseline) ? ((baseline.otherSource) ? baseline.otherSource : baseline.source) : '');
+                rows.substrateShells[shellIndex].liveAtBaseline.push((baseline) ? baseline.totalNumberOfLiveOystersAtBaseline : '');
+                rows.substrateShells[shellIndex].massAtBaseline.push((baseline) ? baseline.totalMassOfLiveOystersAtBaselineG : '');
+                rows.substrateShells[shellIndex].liveOnShell.push(substrateShell.totalNumberOfLiveOystersOnShell);
+                rows.substrateShells[shellIndex].mass.push(substrateShell.totalMassOfScrubbedSubstrateShellOystersTagG);
+                rows.substrateShells[shellIndex].minSize.push(substrateShell.minimumSizeOfLiveOysters);
+                rows.substrateShells[shellIndex].maxSize.push(substrateShell.maximumSizeOfLiveOysters);
+                rows.substrateShells[shellIndex].avgSize.push(substrateShell.averageSizeOfLiveOysters);
+                var measurements = [];
+                if (substrateShell.measurements) {
+                  for (var o = 0; o < substrateShell.measurements.length; o++) {
+                    if (substrateShell.measurements[o].sizeOfLiveOysterMM) {
+                      measurements.push(substrateShell.measurements[o].sizeOfLiveOysterMM);
+                    }
+                  }
+                  rows.substrateShells[shellIndex].measurements.push(measurements.join(','));
+                } else {
+                  rows.substrateShells[shellIndex].measurements.push('');
+                }
+              }
             }
           }
-          rows.substrateShells[shellIndex].measurements.push(measurements.join(','));
+        } else {
+          rows.minSizeOfAllOysters.push('');
+          rows.maxSizeOfAllOysters.push('');
+          rows.avgSizeOfAllOysters.push('');
+          rows.totalOfAllOysters.push('');
         }
       }
       done(null);
@@ -1069,23 +1256,18 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             callback(organisms);
           }
         };
-        addMobileOrganism(0, expedition.protocols.mobileTrap.mobileOrganisms, [], function(organisms) {
-          rows.mobileOrganisms.push(organisms.join(',\r\n\r\n'));
+        if (expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganisms) {
+          addMobileOrganism(0, expedition.protocols.mobileTrap.mobileOrganisms, [], function(organisms) {
+            rows.mobileOrganisms.push(organisms.join(',\r\n\r\n'));
+            done(null);
+          });
+        } else {
+          rows.mobileOrganisms.push('');
           done(null);
-        });
+        }
       } else {
         done(null);
       }
-    },
-    // Add Settlement Tile Description
-    function (done) {
-      if (req.body.protocol4.description === 'YES') {
-        for (var i = 0; i < expedition.protocols.settlementTiles.settlementTiles.length; i++) {
-          rows.settlementTiles[i].tilePhoto.push(expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto.path);
-          rows.settlementTiles[i].description.push(expedition.protocols.settlementTiles.settlementTiles[i].description);
-        }
-      }
-      done(null);
     },
     // Add Settlement Tile Organisms
     function (done) {
@@ -1104,26 +1286,53 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
             callback();
           }
         };
-        addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[0], 0, function() {
-          rows.settlementTiles[0].settlementTileNumberHeader.push('');
-          rows.settlementTiles[0].organismsHeader.push('');
-          addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[1], 1, function() {
-            rows.settlementTiles[1].settlementTileNumberHeader.push('');
-            rows.settlementTiles[1].organismsHeader.push('');
-            addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[2], 2, function() {
-              rows.settlementTiles[2].settlementTileNumberHeader.push('');
-              rows.settlementTiles[2].organismsHeader.push('');
-              addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[3], 3, function() {
-                rows.settlementTiles[3].settlementTileNumberHeader.push('');
-                rows.settlementTiles[3].organismsHeader.push('');
-                done(null);
+        if (expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles) {
+          addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[0], 0, function() {
+            rows.settlementTiles[0].settlementTileNumberHeader.push('');
+            rows.settlementTiles[0].organismsHeader.push('');
+            addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[1], 1, function() {
+              rows.settlementTiles[1].settlementTileNumberHeader.push('');
+              rows.settlementTiles[1].organismsHeader.push('');
+              addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[2], 2, function() {
+                rows.settlementTiles[2].settlementTileNumberHeader.push('');
+                rows.settlementTiles[2].organismsHeader.push('');
+                addSessileOrganism(1, expedition.protocols.settlementTiles.settlementTiles[3], 3, function() {
+                  rows.settlementTiles[3].settlementTileNumberHeader.push('');
+                  rows.settlementTiles[3].organismsHeader.push('');
+                  done(null);
+                });
               });
             });
           });
-        });
+        } else {
+          done(null);
+        }
       } else {
         done(null);
       }
+    },
+    // Add Settlement Tile Description
+    function (done) {
+      if (req.body.protocol4.description === 'YES') {
+        if (expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles) {
+          for (var i = 0; i < expedition.protocols.settlementTiles.settlementTiles.length; i++) {
+            if (expedition.protocols.settlementTiles.settlementTiles[i]) {
+
+              console.log('tile', rows.settlementTiles[i]);
+              if (expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto) {
+                rows.settlementTiles[i].tilePhoto.push(expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto.path);
+              } else {
+                rows.settlementTiles[i].tilePhoto.push('');
+              }
+              rows.settlementTiles[i].description.push(expedition.protocols.settlementTiles.settlementTiles[i].description);
+            } else {
+              rows.settlementTiles[i].tilePhoto.push('');
+              rows.settlementTiles[i].description.push('');
+            }
+          }
+        }
+      }
+      done(null);
     },
     // Add Water Sample #
     function (done) {
@@ -1132,8 +1341,10 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       req.body.protocol5.pH === 'YES' || req.body.protocol5.turbidity === 'YES' ||
       req.body.protocol5.ammonia === 'YES' || req.body.protocol5.nitrates === 'YES' ||
       req.body.protocol5.other === 'YES') {
-        for (var i = 0; i < expedition.protocols.waterQuality.samples.length; i++) {
-          rows.waterSamples[i].sampleNumberHeader.push('');
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          for (var i = 0; i < expedition.protocols.waterQuality.samples.length; i++) {
+            rows.waterSamples[i].sampleNumberHeader.push('');
+          }
         }
       }
       done(null);
@@ -1141,14 +1352,20 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
     // Add Depth of Water Sample
     function (done) {
       if (req.body.protocol5.depth === 'YES') {
-        for (var i = 0; i < maxSamples; i++) {
-          if (expedition.protocols.waterQuality.samples[i]) {
-            rows.waterSamples[i].depth.push(expedition.protocols.waterQuality.samples[i].depthOfWaterSampleM);
-            rows.waterSamples[i].location.push(expedition.protocols.waterQuality.samples[i].locationOfWaterSample.latitude + ', ' +
-              expedition.protocols.waterQuality.samples[i].locationOfWaterSample.longitude);
-          } else {
-            rows.waterSamples[i].depth.push('');
-            rows.waterSamples[i].location.push('');
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          for (var i = 0; i < maxSamples; i++) {
+            if (expedition.protocols.waterQuality.samples[i]) {
+              rows.waterSamples[i].depth.push(expedition.protocols.waterQuality.samples[i].depthOfWaterSampleM);
+              if (expedition.protocols.waterQuality.samples[i].locationOfWaterSample) {
+                rows.waterSamples[i].location.push(expedition.protocols.waterQuality.samples[i].locationOfWaterSample.latitude + ', ' +
+                  expedition.protocols.waterQuality.samples[i].locationOfWaterSample.longitude);
+              } else {
+                rows.waterSamples[i].location.push('');
+              }
+            } else {
+              rows.waterSamples[i].depth.push('');
+              rows.waterSamples[i].location.push('');
+            }
           }
         }
       }
@@ -1184,9 +1401,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addWaterTemperature(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addWaterTemperature(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1221,9 +1442,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addDissolvedOxygen(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addDissolvedOxygen(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1258,9 +1483,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addSalinity(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addSalinity(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1295,9 +1524,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addPh(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addPh(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1341,9 +1574,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addTurbidity(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addTurbidity(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1387,9 +1624,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addAmmonia(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addAmmonia(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1433,9 +1674,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addNitrate(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addNitrate(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1477,9 +1722,13 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
           }
         };
 
-        addOther(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+        if (expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.samples) {
+          addOther(0, expedition.protocols.waterQuality.samples, maxSamples, function() {
+            done(null);
+          });
+        } else {
           done(null);
-        });
+        }
       } else {
         done(null);
       }
@@ -1592,7 +1841,7 @@ var createCsv = function(req, expeditions, callback) {
     waterSamples: []
   };
 
-  if (expeditions[0].protocols.oysterMeasurement) {
+  if (req.body.protocol2.oysterMeasurements === 'YES') {
     for (var i = 1; i < 11; i++) {
       rows.substrateShells.push({
         substrateShellNumberHeader: ['Substrate Shell #'+i],
@@ -1612,7 +1861,7 @@ var createCsv = function(req, expeditions, callback) {
     }
   }
 
-  if (expeditions[0].protocols.settlementTiles) {
+  if (req.body.protocol4.organism === 'YES') {
     for (var j = 1; j < 5; j++) {
       var tile = {
         settlementTileNumberHeader: ['Settlement Tile #'+j],
@@ -1631,9 +1880,14 @@ var createCsv = function(req, expeditions, callback) {
   }
 
   var maxSamples = 0;
-  if (expeditions[0].protocols.waterQuality) {
+  if (req.body.protocol5.depth === 'YES' || req.body.protocol5.temperature === 'YES' ||
+  req.body.protocol5.dissolvedOxygen === 'YES' || req.body.protocol5.salinity === 'YES' ||
+  req.body.protocol5.pH === 'YES' || req.body.protocol5.turbidity === 'YES' ||
+  req.body.protocol5.ammonia === 'YES' || req.body.protocol5.nitrates === 'YES' ||
+  req.body.protocol5.other === 'YES') {
     for (var k = 0; k < expeditions.length; k++) {
-      if (expeditions[k].protocols.waterQuality.samples.length > maxSamples) {
+      if (expeditions[k] && expeditions[k].protocols && expeditions[k].protocols.waterQuality &&
+        expeditions[k].protocols.waterQuality.samples && expeditions[k].protocols.waterQuality.samples.length > maxSamples) {
         maxSamples = expeditions[k].protocols.waterQuality.samples.length;
       }
     }
