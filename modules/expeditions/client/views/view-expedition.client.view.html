@@ -201,23 +201,23 @@
     <section class="container">
         <ul class="nav nav-tabs nav-justified" role="tablist">
             <!-- class="active" should be placed on the first protocol <li> shown if protocol #1 isn't displaying -->
-            <li role="presentation" class="active" ng-if="vm.expedition.protocols.siteCondition">
+            <li role="presentation" ng-class="{'active': vm.active === 'siteCondition'}" ng-if="vm.expedition.protocols.siteCondition">
               <a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">
               <span class="hidden-xs">Protocol </span>1<span class="hidden-xs">:<br/>Site Conditions</span></a>
             </li>
-            <li role="presentation" ng-if="vm.expedition.protocols.oysterMeasurement">
+            <li role="presentation" ng-class="{'active': vm.active === 'oysterMeasurement'}" ng-if="vm.expedition.protocols.oysterMeasurement">
               <a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">
               <span class="hidden-xs">Protocol </span>2<span class="hidden-xs">:<br/>Oyster Measurements</span></a>
             </li>
-            <li role="presentation" ng-if="vm.expedition.protocols.mobileTrap">
+            <li role="presentation" ng-class="{'active': vm.active === 'mobileTrap'}" ng-if="vm.expedition.protocols.mobileTrap">
               <a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">
               <span class="hidden-xs">Protocol </span>3<span class="hidden-xs">:<br/>Mobile Trap</span></a>
             </li>
-            <li role="presentation" ng-if="vm.expedition.protocols.settlementTiles">
+            <li role="presentation" ng-class="{'active': vm.active === 'settlementTiles'}" ng-if="vm.expedition.protocols.settlementTiles">
               <a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">
               <span class="hidden-xs">Protocol </span>4<span class="hidden-xs">:<br/>Settlement Tiles</span></a>
             </li>
-            <li role="presentation" ng-if="vm.expedition.protocols.waterQuality">
+            <li role="presentation" ng-class="{'active': vm.active === 'waterQuality'}" ng-if="vm.expedition.protocols.waterQuality">
               <a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">
               <span class="hidden-xs">Protocol </span>5<span class="hidden-xs">:<br/>Water Quality</span></a>
             </li>
@@ -230,19 +230,19 @@
     <section class="container">
         <div class="tab-content">
           <!-- class="active" should be placed on the first protocol <div> shown if protocol #1 isn't displaying -->
-          <div role="tabpanel" class="tab-pane active" id="protocol1" ng-if="vm.expedition.protocols.siteCondition">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'siteCondition'}" id="protocol1" ng-if="vm.expedition.protocols.siteCondition">
             <view-protocol-site-condition></view-protocol-site-condition>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol2" ng-if="vm.expedition.protocols.oysterMeasurement">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'oysterMeasurement'}" id="protocol2" ng-if="vm.expedition.protocols.oysterMeasurement">
             <view-protocol-oyster-measurement></view-protocol-oyster-measurement>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol3" ng-if="vm.expedition.protocols.mobileTrap">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'mobileTrap'}" id="protocol3" ng-if="vm.expedition.protocols.mobileTrap">
             <view-protocol-mobile-trap></view-protocol-mobile-trap>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol4" ng-if="vm.expedition.protocols.settlementTiles">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'settlementTiles'}" id="protocol4" ng-if="vm.expedition.protocols.settlementTiles">
             <view-protocol-settlement-tiles></view-protocol-settlement-tiles>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol5" ng-if="vm.expedition.protocols.waterQuality">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'waterQuality'}" id="protocol5" ng-if="vm.expedition.protocols.waterQuality">
             <view-protocol-water-quality></view-protocol-water-quality>
           </div>
         </div>

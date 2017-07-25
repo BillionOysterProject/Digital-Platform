@@ -13,7 +13,23 @@
     var vm = this;
 
     vm.expedition = expedition;
-    if (!vm.expedition.protocols) vm.expedition.protocols = {};
+    if (!vm.expedition.protocols) {
+      vm.expedition.protocols = {};
+      vm.protocolsPresent = {
+        siteCondition: true,
+        oysterMeasurement: true,
+        mobileTrap: true,
+        settlementTiles: true,
+        waterQuality: true
+      };
+    } else {
+      vm.protocolsPresent = {};
+      vm.protocolsPresent.siteCondition = (vm.expedition.protocols.siteCondition) ? true : false;
+      vm.protocolsPresent.oysterMeasurement = (vm.expedition.protocols.oysterMeasurement) ? true : false;
+      vm.protocolsPresent.mobileTrap = (vm.expedition.protocols.mobileTrap) ? true : false;
+      vm.protocolsPresent.settlementTiles = (vm.expedition.protocols.settlementTiles) ? true : false;
+      vm.protocolsPresent.waterQuality = (vm.expedition.protocols.waterQuality) ? true : false;
+    }
     vm.teamId = '';
     vm.authentication = Authentication;
     vm.user = vm.authentication.user;
@@ -21,13 +37,6 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
-
-    vm.protocolsPresent = {};
-    vm.protocolsPresent.siteCondition = (vm.expedition.protocols.siteCondition) ? true : false;
-    vm.protocolsPresent.oysterMeasurement = (vm.expedition.protocols.oysterMeasurement) ? true : false;
-    vm.protocolsPresent.mobileTrap = (vm.expedition.protocols.mobileTrap) ? true : false;
-    vm.protocolsPresent.settlementTiles = (vm.expedition.protocols.settlementTiles) ? true : false;
-    vm.protocolsPresent.waterQuality = (vm.expedition.protocols.waterQuality) ? true : false;
 
     vm.memberLists = {
       'selected': null,

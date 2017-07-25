@@ -24,6 +24,19 @@
     $scope.waterQualityErrors = '';
     $scope.userToView = {};
 
+    vm.active = '';
+    if (vm.expedition.protocols.siteCondition) {
+      vm.active = 'siteCondition';
+    } else if (vm.expedition.protocols.oysterMeasurement) {
+      vm.active = 'oysterMeasurement';
+    } else if (vm.expedition.protocols.mobileTrap) {
+      vm.active = 'mobileTrap';
+    } else if (vm.expedition.protocols.settlementTiles) {
+      vm.active = 'settlementTiles';
+    } else if (vm.expedition.protocols.waterQuality) {
+      vm.active = 'waterQuality';
+    }
+
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
