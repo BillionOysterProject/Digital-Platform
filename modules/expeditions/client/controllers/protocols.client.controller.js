@@ -322,6 +322,10 @@
       return ExpeditionViewHelper.checkStatusReturned(vm.expedition);
     };
 
+    vm.checkStatusUnpublished = function() {
+      return ExpeditionViewHelper.checkStatusUnpublished(vm.expedition);
+    };
+
     vm.checkAllSubmitted = function(status) {
       if ((!$scope.siteCondition || (vm.viewSiteCondition && $scope.siteCondition.status === 'submitted')) &&
           (!$scope.oysterMeasurement || (vm.viewOysterMeasurement && $scope.oysterMeasurement.status === 'submitted')) &&
@@ -862,8 +866,7 @@
       options: function(searchText) {
         return TeamMembersService.query({
           searchString: searchText,
-          teamId: teamId,
-          includeLeads: true
+          teamId: teamId
         });
       }
     };

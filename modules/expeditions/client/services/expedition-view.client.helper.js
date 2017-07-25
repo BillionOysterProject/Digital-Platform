@@ -104,22 +104,47 @@
         expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.status === 'incomplete') protocolsComplete = false;
       if (checkWrite(expedition.teamLists.waterQuality) &&
         expedition.protocols.waterQuality && expedition.protocols.waterQuality.status === 'incomplete') protocolsComplete = false;
-      return expedition.status === 'incomplete' && !protocolsComplete;
+      return (expedition.status === 'incomplete' || expedition.status === 'pending') && !protocolsComplete;
     };
 
     var checkStatusReturned = function(expedition) {
       var protocolsComplete = true;
       if (checkWrite(expedition.teamLists.siteCondition) &&
-        expedition.protocols.siteCondition && expedition.protocols.siteCondition.status === 'returned') protocolsComplete = false;
+        expedition.protocols.siteCondition && (expedition.protocols.siteCondition.status === 'returned' ||
+        expedition.protocols.siteCondition.status === 'incomplete')) protocolsComplete = false;
       if (checkWrite(expedition.teamLists.oysterMeasurement) &&
-        expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.status === 'returned') protocolsComplete = false;
+        expedition.protocols.oysterMeasurement && (expedition.protocols.oysterMeasurement.status === 'returned' ||
+        expedition.protocols.oysterMeasurement.status === 'incomplete')) protocolsComplete = false;
       if (checkWrite(expedition.teamLists.mobileTrap) &&
-        expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.status === 'returned') protocolsComplete = false;
+        expedition.protocols.mobileTrap && (expedition.protocols.mobileTrap.status === 'returned' ||
+        expedition.protocols.mobileTrap.status === 'incomplete')) protocolsComplete = false;
       if (checkWrite(expedition.teamLists.settlementTiles) &&
-        expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.status === 'returned') protocolsComplete = false;
+        expedition.protocols.settlementTiles && (expedition.protocols.settlementTiles.status === 'returned' ||
+        expedition.protocols.settlementTiles.status === 'incomplete')) protocolsComplete = false;
       if (checkWrite(expedition.teamLists.waterQuality) &&
-        expedition.protocols.waterQuality && expedition.protocols.waterQuality.status === 'returned') protocolsComplete = false;
+        expedition.protocols.waterQuality && (expedition.protocols.waterQuality.status === 'returned' ||
+        expedition.protocols.waterQuality.status === 'incomplete')) protocolsComplete = false;
       return expedition.status === 'returned' && !protocolsComplete;
+    };
+
+    var checkStatusUnpublished = function(expedition) {
+      var protocolsComplete = true;
+      if (checkWrite(expedition.teamLists.siteCondition) &&
+        expedition.protocols.siteCondition && (expedition.protocols.siteCondition.status === 'unpublished' ||
+        expedition.protocols.siteCondition.status === 'incomplete')) protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.oysterMeasurement) &&
+        expedition.protocols.oysterMeasurement && (expedition.protocols.oysterMeasurement.status === 'unpublished' ||
+        expedition.protocols.oysterMeasurement.status === 'incomplete')) protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.mobileTrap) &&
+        expedition.protocols.mobileTrap && (expedition.protocols.mobileTrap.status === 'unpublished' ||
+        expedition.protocols.mobileTrap.status === 'incomplete')) protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.settlementTiles) &&
+        expedition.protocols.settlementTiles && (expedition.protocols.settlementTiles.status === 'unpublished' ||
+        expedition.protocols.settlementTiles.status === 'incomplete')) protocolsComplete = false;
+      if (checkWrite(expedition.teamLists.waterQuality) &&
+        expedition.protocols.waterQuality && (expedition.protocols.waterQuality.status === 'unpublished' ||
+        expedition.protocols.waterQuality.status === 'incomplete')) protocolsComplete = false;
+      return expedition.status === 'unpublished' && !protocolsComplete;
     };
 
     var displayAssignedProtocols = function(expedition) {
@@ -386,6 +411,7 @@
       checkStatusPending: checkStatusPending,
       checkStatusIncomplete: checkStatusIncomplete,
       checkStatusReturned: checkStatusReturned,
+      checkStatusUnpublished: checkStatusUnpublished,
       displayAssignedProtocols: displayAssignedProtocols,
       expeditionLink: expeditionLink
     };
