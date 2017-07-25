@@ -149,28 +149,23 @@ exports.updateInternal = function (mobileTrapReq, mobileTrapBody, user, shouldVa
 
 exports.update = function (req, res) {
   var mobileTrapBody = req.body;
-  Expedition.findOne({ 'protocols.mobileTrap': req.mobileTrap }).exec(function(err, expedition) {
-    expedition.teamLists.mobileTrap = req.body.teamMembers;
-    expedition.save(function(err) {
-      exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user, true,
-      function(err, mobileTrap, errorMessages) {
-        if (err) {
-          return res.status(400).send({
-            message: err
-          });
-        } else {
-          var result = {
-            mobileTrap: mobileTrap
-          };
-          if (errorMessages) {
-            result.errors = errorMessages;
-          } else {
-            result.successful = true;
-          }
-          res.json(result);
-        }
+  exports.updateInternal(req.mobileTrap, mobileTrapBody, req.user, true,
+  function(err, mobileTrap, errorMessages) {
+    if (err) {
+      return res.status(400).send({
+        message: err
       });
-    });
+    } else {
+      var result = {
+        mobileTrap: mobileTrap
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
+    }
   });
 };
 

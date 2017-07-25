@@ -194,28 +194,23 @@ exports.updateInternal = function(settlementTilesReq, settlementTilesBody, user,
 
 exports.update = function (req, res) {
   var settlementTilesBody = req.body;
-  Expedition.findOne({ 'protocols.settlementTiles': req.settlementTiles }).exec(function(err, expedition) {
-    expedition.teamLists.settlementTiles = req.body.teamMembers;
-    expedition.save(function(err) {
-      exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
-      function(err, settlementTiles, errorMessages) {
-        if (err) {
-          return res.status(400).send({
-            message: err
-          });
-        } else {
-          var result = {
-            settlementTiles: settlementTiles
-          };
-          if (errorMessages) {
-            result.errors = errorMessages;
-          } else {
-            result.successful = true;
-          }
-          res.json(result);
-        }
+  exports.updateInternal(req.settlementTiles, settlementTilesBody, req.user, true,
+  function(err, settlementTiles, errorMessages) {
+    if (err) {
+      return res.status(400).send({
+        message: err
       });
-    });
+    } else {
+      var result = {
+        settlementTiles: settlementTiles
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
+    }
   });
 };
 
