@@ -109,7 +109,7 @@
             <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
 
             <div class="row">
-              <div class="col-md-2" dnd-list="vm.memberLists.members"
+              <div class="col-md-2 scroll" dnd-list="vm.memberLists.members"
               dnd-drop="vm.onDrop(vm.memberLists.members, item)">
                 <a ng-repeat="item in vm.memberLists.members" class="draggable" dnd-draggable="item"
                  dnd-moved="" dnd-effect-allowed="move"

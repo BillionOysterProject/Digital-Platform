@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <h6>Team</h6>
-                <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="profile-image pull-left">
+                <img ng-src="{{vm.team.teamLead.profileImageURL}}" ng-show="vm.team.teamLead.profileImageURL" class="profile-image pull-left">
                 <p>
                     <a ui-sref="profiles.team-view({ teamId: vm.team._id })">
                       <b>{{vm.team.name}}</b>
@@ -45,7 +45,7 @@
             <div class="col-sm-3" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
                 <h6>{{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
                 <p ng-repeat="teamLead in vm.team.teamLeads">
-                    <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                    <img ng-src="{{teamLead.profileImageURL}}" ng-show="teamLead.profileImageURL" alt="{{teamLead.displayName}}"
                         class="pull-left header-profile-image" />
                     <a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a>
                 </p>
@@ -200,6 +200,7 @@
   ng-show="(vm.expedition.status === 'published' && vm.checkAllStatus('published'))">
     <section class="container">
         <ul class="nav nav-tabs nav-justified" role="tablist">
+            <!-- class="active" should be placed on the first protocol <li> shown if protocol #1 isn't displaying -->
             <li role="presentation" class="active" ng-if="vm.expedition.protocols.siteCondition">
               <a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">
               <span class="hidden-xs">Protocol </span>1<span class="hidden-xs">:<br/>Site Conditions</span></a>
@@ -228,6 +229,7 @@
   ng-show="(vm.expedition.status === 'published' && vm.checkAllStatus('published'))">
     <section class="container">
         <div class="tab-content">
+          <!-- class="active" should be placed on the first protocol <div> shown if protocol #1 isn't displaying -->
           <div role="tabpanel" class="tab-pane active" id="protocol1" ng-if="vm.expedition.protocols.siteCondition">
             <view-protocol-site-condition></view-protocol-site-condition>
           </div>
