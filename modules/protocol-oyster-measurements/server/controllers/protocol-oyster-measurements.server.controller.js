@@ -227,28 +227,23 @@ exports.updateInternal = function (oysterMeasurmentReq, oysterMeasurementBody, u
 
 exports.update = function (req, res) {
   var oysterMeasurementBody = req.body;
-  Expedition.findOne({ 'protocols.oysterMeasurement': req.oysterMeasurement }).exec(function(err, expedition) {
-    expedition.teamLists.oysterMeasurement = req.body.teamMembers;
-    expedition.save(function(err) {
-      exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user, true,
-      function(err, oysterMeasurement, errorMessages) {
-        if (err) {
-          return res.status(400).send({
-            message: err
-          });
-        } else {
-          var result = {
-            oysterMeasurement: oysterMeasurement
-          };
-          if (errorMessages) {
-            result.errors = errorMessages;
-          } else {
-            result.successful = true;
-          }
-          res.json(result);
-        }
+  exports.updateInternal(req.oysterMeasurement, oysterMeasurementBody, req.user, true,
+  function(err, oysterMeasurement, errorMessages) {
+    if (err) {
+      return res.status(400).send({
+        message: err
       });
-    });
+    } else {
+      var result = {
+        oysterMeasurement: oysterMeasurement
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
+    }
   });
 };
 

@@ -367,28 +367,23 @@ exports.updateInternal = function(siteConditionReq, siteConditionBody, user, sho
 
 exports.update = function (req, res) {
   var siteConditionBody = req.body;
-  Expedition.findOne({ 'protocols.siteCondition': req.siteCondition }).exec(function(err, expedition) {
-    expedition.teamLists.siteCondition = req.body.teamMembers;
-    expedition.save(function(err) {
-      exports.updateInternal(req.siteCondition, siteConditionBody, req.user, true,
-      function(err, siteCondition, errorMessages) {
-        if (err) {
-          return res.status(400).send({
-            message: err
-          });
-        } else {
-          var result = {
-            siteCondition: siteCondition,
-          };
-          if (errorMessages) {
-            result.errors = errorMessages;
-          } else {
-            result.successful = true;
-          }
-          res.json(result);
-        }
+  exports.updateInternal(req.siteCondition, siteConditionBody, req.user, true,
+  function(err, siteCondition, errorMessages) {
+    if (err) {
+      return res.status(400).send({
+        message: err
       });
-    });
+    } else {
+      var result = {
+        siteCondition: siteCondition,
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
+    }
   });
 };
 

@@ -149,7 +149,7 @@
       var getTeamMember = function(index, done) {
         if (index < list.length) {
           TeamMembersService.get({
-            memberId: (list[index]._id) ? list[index]._id : list[index]
+            memberId: (list[index] && list[index]._id) ? list[index]._id : list[index]
           }, function(data) {
             list[index] = data;
             getTeamMember(index+1, done);

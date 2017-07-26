@@ -145,28 +145,23 @@ exports.updateInternal = function(waterQualityReq, waterQualityBody, user, shoul
 
 exports.update = function (req, res) {
   var waterQualityBody = req.body;
-  Expedition.findOne({ 'protocols.waterQuality': req.waterQuality }).exec(function(err, expedition) {
-    expedition.teamLists.waterQuality = req.body.teamMembers;
-    expedition.save(function(err) {
-      exports.updateInternal(req.waterQuality, waterQualityBody, req.user, true,
-      function(err, waterQuality, errorMessages) {
-        if (err) {
-          return res.status(400).send({
-            message: err
-          });
-        } else {
-          var result = {
-            waterQuality: waterQuality
-          };
-          if (errorMessages) {
-            result.errors = errorMessages;
-          } else {
-            result.successful = true;
-          }
-          res.json(result);
-        }
+  exports.updateInternal(req.waterQuality, waterQualityBody, req.user, true,
+  function(err, waterQuality, errorMessages) {
+    if (err) {
+      return res.status(400).send({
+        message: err
       });
-    });
+    } else {
+      var result = {
+        waterQuality: waterQuality
+      };
+      if (errorMessages) {
+        result.errors = errorMessages;
+      } else {
+        result.successful = true;
+      }
+      res.json(result);
+    }
   });
 };
 
