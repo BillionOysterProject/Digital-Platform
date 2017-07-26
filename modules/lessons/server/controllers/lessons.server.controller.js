@@ -108,7 +108,7 @@ var setPdfToDownload = function(host, cookies, lesson, callback) {
   var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
   var filename = _.replace(lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
   filename = _.replace(filename + '.pdf', /\s/g, '_');
-  console.log('filename', filename);
+  
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
@@ -1306,7 +1306,6 @@ exports.downloadZip = function(req, res) {
 
   //set the archive name
   res.attachment(req.query.filename);
-  console.log('filename', req.query.filename);
   res.setHeader('Content-Type', 'application/zip, application/octet-stream');
 
   //this is the streaming magic
