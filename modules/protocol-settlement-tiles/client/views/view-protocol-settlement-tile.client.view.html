@@ -27,7 +27,7 @@
       <div class="col-sm-3">
           <h3>Settlement Tile {{$index+1}}</h3>
           <img id="settlementTileImage{{$index}}" class="img-rounded img-responsive" ng-src="{{tile.imageUrl}}"/>
-          <p id="settlementTileDescription{{$index}}" ng-show="tile.description"><b>Description:</b> {{tile.description}}</p>
+          <p id="settlementTileDescription{{$index}}" ng-show="tile.description"><b>Description:</b> {{tile.description | limitTo:200}}</p>
       </div>
       <div class="col-sm-9">
           <h6>Sessile Organisms Observed</h6>

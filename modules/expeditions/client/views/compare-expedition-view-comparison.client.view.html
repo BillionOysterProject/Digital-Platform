@@ -395,7 +395,8 @@
         <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
             <td><b>Organisms observed</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms" ng-show="organism.organism">
+              <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganisms"
+              ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms">
                 <img id="organism-photo{{$index}}" class="img-rounded img-thumbnail"
                   ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"
                   ng-show="organism.sketchPhoto"/><br/>
@@ -406,12 +407,12 @@
         <tr ng-show="vm.parameters.protocol4.description === 'YES'" id="settlement-tile-description-compare">
             <td><b>Settlement tile description</b></td>
             <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles"
-              ng-show="tile.description">
+              <span ng-show="expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles"
+              ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles">
                 Settlement Tile {{$index+1}}: <br/>
                 <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
                   ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto"/><br/>
-                {{tile.description}}<br/><br/>
+                {{tile.description | limitTo:200}}<br/><br/>
               </span>&nbsp;
             </td>
         </tr>

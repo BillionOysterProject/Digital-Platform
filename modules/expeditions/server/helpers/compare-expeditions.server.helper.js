@@ -1269,6 +1269,29 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
         done(null);
       }
     },
+    // Add Settlement Tile Description
+    function (done) {
+      if (req.body.protocol4.description === 'YES') {
+        if (expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles) {
+          for (var i = 0; i < expedition.protocols.settlementTiles.settlementTiles.length; i++) {
+            if (expedition.protocols.settlementTiles.settlementTiles[i]) {
+
+              console.log('tile', rows.settlementTiles[i]);
+              if (expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto) {
+                rows.settlementTiles[i].tilePhoto.push(expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto.path);
+              } else {
+                rows.settlementTiles[i].tilePhoto.push('');
+              }
+              rows.settlementTiles[i].description.push(expedition.protocols.settlementTiles.settlementTiles[i].description);
+            } else {
+              rows.settlementTiles[i].tilePhoto.push('');
+              rows.settlementTiles[i].description.push('');
+            }
+          }
+        }
+      }
+      done(null);
+    },
     // Add Settlement Tile Organisms
     function (done) {
       if (req.body.protocol4.organism === 'YES') {
@@ -1310,29 +1333,6 @@ var addExpeditionToColumn = function(expedition, headers, rows, req, maxSamples,
       } else {
         done(null);
       }
-    },
-    // Add Settlement Tile Description
-    function (done) {
-      if (req.body.protocol4.description === 'YES') {
-        if (expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles) {
-          for (var i = 0; i < expedition.protocols.settlementTiles.settlementTiles.length; i++) {
-            if (expedition.protocols.settlementTiles.settlementTiles[i]) {
-
-              console.log('tile', rows.settlementTiles[i]);
-              if (expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto) {
-                rows.settlementTiles[i].tilePhoto.push(expedition.protocols.settlementTiles.settlementTiles[i].tilePhoto.path);
-              } else {
-                rows.settlementTiles[i].tilePhoto.push('');
-              }
-              rows.settlementTiles[i].description.push(expedition.protocols.settlementTiles.settlementTiles[i].description);
-            } else {
-              rows.settlementTiles[i].tilePhoto.push('');
-              rows.settlementTiles[i].description.push('');
-            }
-          }
-        }
-      }
-      done(null);
     },
     // Add Water Sample #
     function (done) {
