@@ -633,7 +633,9 @@
       vm.download = {
         content: 'YES'
       };
-      vm.lesson.filename = lodash.replace(vm.lesson.title + '.zip', /\s/g, '_');
+
+      vm.lesson.filename = lodash.replace(vm.lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
+      vm.lesson.filename = lodash.replace(vm.lesson.filename + '.zip', /\s/g, '_');
       angular.element('#modal-download-lesson').modal('show');
     };
 
