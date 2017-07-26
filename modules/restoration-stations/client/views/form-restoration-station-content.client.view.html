@@ -50,13 +50,13 @@
         </div>
         <hr/>
         <div class="row">
-            <div class="col-sm-6">
+            <div ng-class="{'col-sm-6': isAdmin, 'col-sm-12': !isAdmin}">
               <map-select-content modal-id="modal-ors-map" latitude="station.latitude"
               longitude="station.longitude" address="station.addressString"
               can-geocode="true" can-click-map-to-add-marker="true"
               can-move-marker="true" show-marker="true" lat-long-required="true"></map-select-content>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" ng-show="isAdmin">
 
                 <!--TODO wire up -- choose from site coordinator list (a type of Team Lead chosen at signup),
                 if none give option to add name and email -->
