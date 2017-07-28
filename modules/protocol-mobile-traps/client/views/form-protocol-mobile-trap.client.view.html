@@ -70,9 +70,9 @@
                 </ul>
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
-                <!--TODO: 
+                <!--TODO:
                 1) Remove "Other/Unknown" tile listing
-                2) Show this tile instead for users to add new Other/Unknown organisms 
+                2) Show this tile instead for users to add new Other/Unknown organisms
                 3) When "Identify new organism" is clicked, show modified modal (see comments inside modal)
                 4) When saved, show "Other/Unknown" tile listing as a regular tile with it's own name/picture, reset/keep this "Other/Unknown" tile for users to add more
 
@@ -94,10 +94,12 @@
                     </div>
                 </div>
                 -->
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id">
+                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id" ng-show="organism.show">
                     <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
-                        <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
-                        <h4 class="text-center" ng-bind="organism.commonName"></h4>
+                        <img ng-src="{{foundOrganisms[organism._id].sketchPhoto.path}}" class="img-responsive" ng-show="foundOrganisms[organism._id].sketchPhoto && foundOrganisms[organism._id].sketchPhoto.path"/>
+                        <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image && !foundOrganisms[organism._id].sketchPhoto.path"/>
+                        <h4 class="text-center" ng-bind="foundOrganisms[organism._id].alternateName" ng-show="foundOrganisms[organism._id].alternateName"></h4>
+                        <h4 class="text-center" ng-bind="organism.commonName" ng-hide="foundOrganisms[organism._id].alternateName"></h4>
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>

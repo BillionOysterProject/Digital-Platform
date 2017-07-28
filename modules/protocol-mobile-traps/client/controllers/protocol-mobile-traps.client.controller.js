@@ -32,12 +32,33 @@
       $scope.findOrganisms();
     };
 
+    var hideAllButOneBlank = function(organisms) {
+      var blankShown = false;
+      for (var i = 0; i < organisms.length; i++) {
+        var organismId = organisms[i]._id;
+        if (organisms[i].commonName === 'Other/Unknown' && $scope.foundOrganisms[organismId] &&
+        $scope.foundOrganisms[organismId].alternateName) {
+          organisms[i].show = true;
+        } else if (organisms[i].commonName === 'Other/Unknown' &&
+        (!$scope.foundOrganisms[organismId] || !$scope.foundOrganisms[organismId].alternateName)) {
+          if (!blankShown) {
+            organisms[i].show = true;
+            blankShown = true;
+          } else {
+            organisms[i].show = false;
+          }
+        } else {
+          organisms[i].show = true;
+        }
+      }
+      return organisms;
+    };
+
     $scope.findOrganisms = function(callback) {
       MobileOrganismsService.query({
         category: $scope.filter.category
       }, function(data) {
-        $scope.mobileOrganisms = data;
-        $rootScope.$broadcast('iso-method', { name:null, params:null });
+        $scope.mobileOrganisms = hideAllButOneBlank(data);
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
           if (callback) callback();
@@ -183,12 +204,19 @@
         angular.element('#modal-organism-details-'+organismId).modal('hide');
         $timeout(function() {
           $scope.foundOrganisms[organismDetails.organism._id] = organismDetails;
+          $scope.foundOrganisms[organismDetails.organism._id].sketchPhoto = {
+            path: $scope.foundOrganisms[organismDetails.organism._id].imageUrl
+          };
 
           $scope.organismDetails = {};
           $scope.sketchPhotoUrl = '';
 
           var imageErrorMessage = '';
           var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
+          $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+          $timeout(function() {
+            $rootScope.$broadcast('iso-method', { name:null, params:null });
+          }, 500);
         });
       }
     };
@@ -384,6 +412,12 @@
         validateErrorCallback();
       }
     };
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      }, 500);
+    });
 
     $scope.openViewUserModal = function() {
       angular.element('#modal-profile-user').modal('show');
