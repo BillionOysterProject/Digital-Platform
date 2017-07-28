@@ -149,7 +149,6 @@ exports.list = function(req, res) {
           sortedMobileOrganisms.push(m);
         }
       });
-      console.log('sortedMobileOrganisms', sortedMobileOrganisms);
       var findUnknownIndex = function() {
         var index = _.findIndex(mobileOrganisms, function(m) {
           return m.commonName === 'Other/Unknown';
@@ -160,7 +159,6 @@ exports.list = function(req, res) {
         mobileOrganisms.splice(findUnknownIndex(), 1);
       }
       mobileOrganisms = sortedMobileOrganisms.concat(mobileOrganisms);
-      console.log('mobileOrganisms', mobileOrganisms);
       res.json(mobileOrganisms);
     }
   });
@@ -230,7 +228,6 @@ exports.mobileOrganismByID = function(req, res, next, id) {
   }
 
   MobileOrganism.findById(id).exec(function(err, mobileOrganism) {
-    console.log('id', id);
     if (err) {
       return next(err);
     } else if (!mobileOrganism) {
