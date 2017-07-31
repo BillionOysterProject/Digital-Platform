@@ -84,7 +84,7 @@
                                 <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
-                        <p class="text-center" ng-hide="organism.commonName === 'Other/Unknown'">
+                        <p class="text-center" ng-show="organism.commonName === 'Other/Unknown'">
                             <span ng-bind="foundOrganisms[organism._id].notes"></span>
                         </p>
                         <p class="text-center" ng-hide="organism.commonName === 'Other/Unknown'">
