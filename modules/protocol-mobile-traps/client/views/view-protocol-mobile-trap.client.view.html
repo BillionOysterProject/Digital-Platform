@@ -10,7 +10,8 @@
             <small>{{mobileTrap.latitude}}, {{mobileTrap.longitude}}</small>
         </h4>
     </div>
-    <div class="col-sm-3" ng-repeat="member in oysterMeasurement.teamMembers"><!--TODO: hide if no members-->
+    <div class="col-sm-3" ng-repeat="member in oysterMeasurement.teamMembers"
+      ng-show="oysterMeasurement.teamMembers && oysterMeasurement.teamMembers.length > 0">
         <h5>
             <a ng-click="vm.openViewUserModal(member)">
                 <img class="header-profile-image" ng-src="{{member.profileImageURL}}"> {{member.displayName}}
@@ -24,19 +25,18 @@
 <hr/>
 <div class="row">
     <div class="col-sm-3" ng-repeat="organism in foundOrganisms" ng-show="{{organism.count > 0}}">
-        <h3 id="mobileOrganismCount{{$index}}">{{organism.count}} <small>{{organism.organism.commonName}}</small></h3>
-        <!--TODO: Wire up:
-        <img ng-src="{{organismDetails.organism.image.path}}" class="img-thumbnail img-responsive" ng-show="organismDetails.organism.image" />
-        <p>
-            <em class="text-muted" ng-bind="organismDetails.organism.latinName"></em><br />
-            <span ng-bind="organismDetails.organism.description"></span><br />
-            <span class="label label-default" ng-bind="organismDetails.organism.category"></span><br />
-            <span ng-bind="organismDetails.organism.nativeIntroduced"></span><br />
-            <span><b>Habitat:</b> {{organismDetails.organism.habitat}}</span><br />
-            <span><b>Diet:</b> {{organismDetails.organism.diet}}</span><br />
-            <span><b>Morphology notes:</b> {{organismDetails.organism.morphologyNotes}}
+        <h3 id="mobileOrganismCount{{$index}}">{{organism.count}}
+          <small>{{organism.organism.commonName === 'Other/Unknown' ? organism.organism.commonName : organism.alternateName}}</small></h3>
+        <img ng-src="{{organism.organism.image.path}}" class="img-thumbnail img-responsive" ng-show="organism.organism.image" />
+        <p ng-hide="organism.organism.commonName === 'Other/Unknown'">
+            <em class="text-muted" ng-bind="organism.organism.latinName"></em><br />
+            <span ng-bind="organism.description"></span><br />
+            <span class="label label-default" ng-bind="organism.organism.category"></span><br />
+            <span ng-bind="organism.organism.nativeIntroduced"></span><br />
+            <span><b>Habitat:</b> {{organism.organism.habitat}}</span><br />
+            <span><b>Diet:</b> {{organism.organism.diet}}</span><br />
+            <span><b>Morphology notes:</b> {{organism.organism.morphologyNotes}}
         </p>
-        -->
         <img id="organismSketchPhoto{{$index}}" class="img-rounded img-responsive"
         ng-src="{{(organism.sketchPhoto.path) ? organism.sketchPhoto.path : organismDetails.organism.image.path}}"/>
         <p id="mobileOrganismNotes{{$index}}" ng-show="organism.notes"><b>Notes:</b> {{organism.notes}}</p>

@@ -13,25 +13,6 @@
 
     $scope.foundOrganisms = {};
 
-    // Set up Organisms
-    $scope.filter = {
-      category: ''
-    };
-
-    $scope.clearFilters = function() {
-      $scope.filter = {
-        category: ''
-      };
-      $scope.findOrganisms();
-    };
-
-    $scope.clickFilter = function(category) {
-      $scope.filter = {
-        category: category
-      };
-      $scope.findOrganisms();
-    };
-
     var hideAllButOneBlank = function(organisms) {
       var blankShown = false;
       for (var i = 0; i < organisms.length; i++) {
@@ -55,11 +36,34 @@
       return organisms;
     };
 
+    // Set up Organisms
+    $scope.filter = {
+      category: ''
+    };
+
+    $scope.clearFilters = function() {
+      $scope.filter = {
+        category: ''
+      };
+      $scope.findOrganisms(function() {
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+      });
+    };
+
+    $scope.clickFilter = function(category) {
+      $scope.filter = {
+        category: category
+      };
+      $scope.findOrganisms(function() {
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+      });
+    };
+
     $scope.findOrganisms = function(callback) {
       MobileOrganismsService.query({
         category: $scope.filter.category
       }, function(data) {
-        $scope.mobileOrganisms = hideAllButOneBlank(data);
+        $scope.mobileOrganisms = data;
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
           if (callback) callback();
@@ -127,6 +131,7 @@
         } else {
           setupMobileOrganisms(true);
         }
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
       }
     });
 
