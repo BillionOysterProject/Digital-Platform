@@ -70,30 +70,6 @@
                 </ul>
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
-                <!--TODO:
-                1) Remove "Other/Unknown" tile listing
-                2) Show this tile instead for users to add new Other/Unknown organisms
-                3) When "Identify new organism" is clicked, show modified modal (see comments inside modal)
-                4) When saved, show "Other/Unknown" tile listing as a regular tile with it's own name/picture, reset/keep this "Other/Unknown" tile for users to add more
-
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap">
-                    <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
-                        <h1 class="text-center"><i class="fa fa-2x fa-question text-muted"></i></h1>
-                        <h4 class="text-center">Other/Unknown</h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left" ng-show="foundOrganisms[organism._id]" id="mobile-organism-count">&nbsp;{{foundOrganisms[organism._id].count}}&nbsp;</b>
-                                <b class="pull-left" ng-show="!foundOrganisms[organism._id]" id="empty-mobile-organism-count">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-default btn-block" ng-click="openOrganismDetails(organism)"
-                        ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]">
-                        Identify new organism {{(organism.commonName === 'Other/Unknown') ? '*' : ''}}</a>
-                    </div>
-                </div>
-                -->
                 <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id" ng-show="organism.show">
                     <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
                         <img ng-src="{{foundOrganisms[organism._id].sketchPhoto.path}}" class="img-responsive" ng-show="foundOrganisms[organism._id].sketchPhoto && foundOrganisms[organism._id].sketchPhoto.path"/>
@@ -108,7 +84,7 @@
                                 <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
-                        <p class="text-center" show-hide="organism.commonName === 'Other/Unknown'">
+                        <p class="text-center" ng-hide="organism.commonName === 'Other/Unknown'">
                             <span ng-bind="foundOrganisms[organism._id].notes"></span>
                         </p>
                         <p class="text-center" ng-hide="organism.commonName === 'Other/Unknown'">
