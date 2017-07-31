@@ -18,7 +18,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-hide="organismDetails.organism.commonName === 'Other/Unknown'">
                         <div class="col-sm-4">
                             <p>
                                 <em class="text-muted" ng-bind="organismDetails.organism.latinName"></em><br />

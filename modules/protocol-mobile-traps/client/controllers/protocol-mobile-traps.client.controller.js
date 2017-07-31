@@ -37,10 +37,11 @@
       for (var i = 0; i < organisms.length; i++) {
         var organismId = organisms[i]._id;
         if (organisms[i].commonName === 'Other/Unknown' && $scope.foundOrganisms[organismId] &&
-        $scope.foundOrganisms[organismId].alternateName) {
+        $scope.foundOrganisms[organismId].sketchPhoto && $scope.foundOrganisms[organismId].sketchPhoto.path) {
           organisms[i].show = true;
         } else if (organisms[i].commonName === 'Other/Unknown' &&
-        (!$scope.foundOrganisms[organismId] || !$scope.foundOrganisms[organismId].alternateName)) {
+        (!$scope.foundOrganisms[organismId] || !$scope.foundOrganisms[organismId].sketchPhoto ||
+        !$scope.foundOrganisms[organismId].sketchPhoto.path)) {
           if (!blankShown) {
             organisms[i].show = true;
             blankShown = true;
