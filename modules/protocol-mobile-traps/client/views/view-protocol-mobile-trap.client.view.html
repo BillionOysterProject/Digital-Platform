@@ -26,8 +26,9 @@
 <div class="row">
     <div class="col-sm-3" ng-repeat="organism in foundOrganisms" ng-show="{{organism.count > 0}}">
         <h3 id="mobileOrganismCount{{$index}}">{{organism.count}}
-          <small>{{organism.organism.commonName === 'Other/Unknown' ? organism.organism.commonName : organism.alternateName}}</small></h3>
-        <img ng-src="{{organism.organism.image.path}}" class="img-thumbnail img-responsive" ng-show="organism.organism.image" />
+          <small>{{(organism.organism.commonName === 'Other/Unknown' && organism.alternateName) ? organism.alternateName : organism.organism.commonName}}</small></h3>
+        <img id="organismSketchPhoto{{$index}}" class="img-thumbnail img-responsive"
+        ng-src="{{(organism.sketchPhoto && organism.sketchPhoto.path) ? organism.sketchPhoto.path : organism.organism.image.path}}"/>
         <p ng-hide="organism.organism.commonName === 'Other/Unknown'">
             <em class="text-muted" ng-bind="organism.organism.latinName"></em><br />
             <span ng-bind="organism.description"></span><br />
@@ -37,8 +38,6 @@
             <span><b>Diet:</b> {{organism.organism.diet}}</span><br />
             <span><b>Morphology notes:</b> {{organism.organism.morphologyNotes}}
         </p>
-        <img id="organismSketchPhoto{{$index}}" class="img-rounded img-responsive"
-        ng-src="{{(organism.sketchPhoto.path) ? organism.sketchPhoto.path : organismDetails.organism.image.path}}"/>
         <p id="mobileOrganismNotes{{$index}}" ng-show="organism.notes"><b>Notes:</b> {{organism.notes}}</p>
     </div>
 </div>
