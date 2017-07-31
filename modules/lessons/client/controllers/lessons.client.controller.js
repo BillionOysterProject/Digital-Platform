@@ -374,11 +374,11 @@
       if (vm.handoutFilesUploader.queue.length > 0) {
         vm.handoutFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
           vm.handoutFilesUploader.removeFromQueue(fileItem);
-          handoutFileCallback();
+          if (vm.handoutFilesUploader.queue.length === 0) handoutFileCallback();
         };
 
         vm.handoutFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-          handoutFileCallback(response.message);
+          if (vm.handoutFilesUploader.queue.length === 0) handoutFileCallback(response.message);
         };
 
         vm.handoutFilesUploader.onBeforeUploadItem = function(item) {
@@ -393,12 +393,12 @@
     var uploadResourceFiles = function (lessonId, resourceFileCallback) {
       if (vm.teacherResourceFilesUploader.queue.length > 0) {
         vm.teacherResourceFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
-          vm.teacherResourceFilesUploader.removeFromQueue(fileItem);
+          if (vm.teacherResourceFilesUploader.queue.length === 0) vm.teacherResourceFilesUploader.removeFromQueue(fileItem);
           resourceFileCallback();
         };
 
         vm.teacherResourceFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-          resourceFileCallback(response.message);
+          if (vm.teacherResourceFilesUploader.queue.length === 0) resourceFileCallback(response.message);
         };
 
         vm.teacherResourceFilesUploader.onBeforeUploadItem = function(item) {
@@ -414,11 +414,11 @@
       if (vm.lessonMaterialFilesUploader.queue.length > 0) {
         vm.lessonMaterialFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
           vm.lessonMaterialFilesUploader.removeFromQueue(fileItem);
-          materialFileCallback();
+          if (vm.lessonMaterialFilesUploader.queue.length === 0) materialFileCallback();
         };
 
         vm.lessonMaterialFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-          materialFileCallback(response.message);
+          if (vm.lessonMaterialFilesUploader.queue.length === 0) materialFileCallback(response.message);
         };
 
         vm.lessonMaterialFilesUploader.onBeforeUploadItem = function(item) {
@@ -435,11 +435,11 @@
       if (vm.stateTestQuestionsFilesUploader.queue.length > 0) {
         vm.stateTestQuestionsFilesUploader.onSuccessItem = function (fileItem, response, status, headers) {
           vm.stateTestQuestionsFilesUploader.removeFromQueue(fileItem);
-          questionFileCallback();
+          if (vm.stateTestQuestionsFilesUploader.queue.length === 0) questionFileCallback();
         };
 
         vm.stateTestQuestionsFilesUploader.onErrorItem = function (fileItem, response, status, headers) {
-          questionFileCallback(response.message);
+          if (vm.stateTestQuestionsFilesUploader.queue.length ===0) questionFileCallback(response.message);
         };
 
         vm.stateTestQuestionsFilesUploader.onBeforeUploadItem = function(item) {
@@ -633,7 +633,9 @@
       vm.download = {
         content: 'YES'
       };
-      vm.lesson.filename = lodash.replace(vm.lesson.title + '.zip', /\s/g, '_');
+
+      vm.lesson.filename = lodash.replace(vm.lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
+      vm.lesson.filename = lodash.replace(vm.lesson.filename + '.zip', /\s/g, '_');
       angular.element('#modal-download-lesson').modal('show');
     };
 

@@ -28,7 +28,12 @@
                         <!-- If returned by team lead (Status: Returned) -->
                         <!-- Show if team member: -->
                         <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
-                        ng-show="vm.checkStatusReturned() && (vm.isTeamMember || vm.isTeamLead)" id="submit-exp-returned">Submit Protocols</button>
+                        ng-show="vm.checkStatusReturned() && (vm.isTeamMember || vm.isTeamLead || vm.isAdmin)" id="submit-exp-returned">Submit Protocols</button>
+
+                        <!-- If unpublished by team lead (Status: Unpublished) -->
+                        <!-- Show if team member: -->
+                        <button class="btn btn-success navbar-btn" ng-click="vm.submitTeamMember()"
+                        ng-show="vm.checkStatusUnpublished() && (vm.isTeamMember || vm.isTeamLead || vm.isAdmin)" id="submit-exp-unpublished">Submit Protocols</button>
 
                         <!-- If published by team lead (Status: Published) -->
                         <!-- Show if team lead: -->
@@ -54,6 +59,8 @@
                         <h6 class="navbar-text" ng-show="vm.checkStatusIncomplete()">Incomplete</h6>
                         <!-- Show if team member: -->
                         <h6 class="navbar-text" ng-show="vm.checkStatusReturned()">Returned</h6>
+                        <!-- Show it team member: -->
+                        <h6 class="navbar-text" ng-show="vm.checkStatusUnpublished()">Unpublished</h6>
 
                         <!-- If published by team lead -->
                         <h6 class="navbar-text" ng-show="vm.checkAllStatus('published')">Published</h6>
@@ -154,6 +161,6 @@
 
 <!-- modals -->
 <remove-protocol-tab-modal changes="vm.disableProtocolChanges"></remove-protocol-tab-modal>
-<save-draft-progress-bar value="finishedSaving" status="savingStatus"></save-draft-progress-bar>
+<save-draft-progress-bar value="finishedSaving" status="savingStatus" show-close="true"></save-draft-progress-bar>
 <return-expedition-modal save-function="vm.submitReturnModal" cancel-function="vm.cancelReturnModal">
   </return-expedition-modal>

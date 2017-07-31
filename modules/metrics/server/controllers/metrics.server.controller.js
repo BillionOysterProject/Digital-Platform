@@ -40,14 +40,14 @@ var userCountQuery = User.count({
 
 var teamLeadCountQuery = User.count({
   $and: [
-    { roles: 'team lead' },
+    { roles: 'team lead' }, { roles: { $nin: ['admin', 'team lead pending'] } },
     { $or: [ { pending: false }, { pending: { $exists: false } } ] }
   ]
 });
 
 var teamMemberCountQuery = User.count({
   $and: [
-    { roles: 'team member' },
+    { roles: 'team member' }, { roles: { $nin: ['team member pending'] } },
     { $or: [ { pending: false }, { pending: { $exists: false } } ] }
   ]
 });
@@ -206,10 +206,10 @@ exports.getMostActiveUsers = function(req, res) {
   var userRoleMatch = { $match: { 'user.roles': 'admin' } };
   var teamLookup = null;
   if(req.query.userRole === 'team member') {
-    userRoleMatch = { $match: { 'user.roles': 'team member' } };
+    userRoleMatch = { $match: { $and: [{ 'user.roles': 'team member' }, { 'user.roles': { $nin: ['team member pending'] } }] } };
     teamLookup = { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamMembers', as: 'teams' } };
   } else if(req.query.userRole === 'team lead') {
-    userRoleMatch = { $match: { 'user.roles': 'team lead' } };
+    userRoleMatch = { $match: { $and: [{ 'user.roles': 'team lead' }, { 'user.roles': { $nin: ['admin', 'team lead pending'] } }] } };
     teamLookup = { $lookup: { from: 'teams', localField: 'user._id', foreignField: 'teamLeads', as: 'teams' } };
   }
 

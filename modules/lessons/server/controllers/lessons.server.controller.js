@@ -106,7 +106,9 @@ var removeLessonFromUnits = function(lesson, callback) {
 var setPdfToDownload = function(host, cookies, lesson, callback) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
   var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
-  var filename = _.replace(lesson.title + '.pdf', /\s/g, '_');
+  var filename = _.replace(lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
+  filename = _.replace(filename + '.pdf', /\s/g, '_');
+
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
@@ -228,6 +230,7 @@ exports.read = function(req, res) {
     delete lesson.updated;
     delete lesson.status;
     delete lesson.returnedNotes;
+    console.log('lesson', lesson);
   }
 
   if (!lesson.isCurrentUserOwner) {

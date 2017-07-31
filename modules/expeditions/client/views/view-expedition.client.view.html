@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <h6>Team</h6>
-                <img ng-src="{{vm.team.teamLead.profileImageURL}}" class="profile-image pull-left">
+                <img ng-src="{{vm.team.teamLead.profileImageURL}}" ng-show="vm.team.teamLead.profileImageURL" class="profile-image pull-left">
                 <p>
                     <a ui-sref="profiles.team-view({ teamId: vm.team._id })">
                       <b>{{vm.team.name}}</b>
@@ -45,7 +45,7 @@
             <div class="col-sm-3" ng-show="vm.team.teamLeads && vm.team.teamLeads.length > 0">
                 <h6>{{(vm.team.teamLeads.length > 1) ? 'Team Leads' : 'Team Lead'}}</h6>
                 <p ng-repeat="teamLead in vm.team.teamLeads">
-                    <img ng-src="{{teamLead.profileImageURL}}" alt="{{teamLead.displayName}}"
+                    <img ng-src="{{teamLead.profileImageURL}}" ng-show="teamLead.profileImageURL" alt="{{teamLead.displayName}}"
                         class="pull-left header-profile-image" />
                     <a ng-click="vm.openViewUserModal(teamLead)">{{teamLead.displayName}}</a>
                 </p>
@@ -77,106 +77,117 @@
           (vm.isTeamMember && (vm.expedition.status === 'incomplete' || vm.expedition.status === 'returned')))}">
             <tbody>
               <tr id="protocol1Link" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })"
-              ng-show="((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
+              ng-if="(vm.expedition.protocols.siteCondition && ((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
                 (vm.isTeamLead && vm.expedition.protocols.siteCondition.status !== 'incomplete' &&
                 vm.expedition.protocols.siteCondition.status !== 'returned') ||
                 ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.siteCondition.status === 'incomplete' ||
                 vm.expedition.protocols.siteCondition.status === 'returned') &&
-                vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition)))">
+                vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition))))">
                   <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
                   <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
-                  <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
+                  <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}"
+                    isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
               </tr>
-              <tr id="protocol1View" ng-show="((vm.isTeamLead && (vm.expedition.protocols.siteCondition.status === 'incomplete' ||
-              vm.expedition.protocols.siteCondition.status === 'returned') &&
-              !vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition)) ||
+              <tr id="protocol1View"
+              ng-if="(vm.expedition.protocols.siteCondition && ((vm.isTeamLead &&
+                (vm.expedition.protocols.siteCondition.status === 'incomplete' ||
+                vm.expedition.protocols.siteCondition.status === 'returned') &&
+                !vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition)) ||
                 (vm.isTeamMember && (vm.expedition.protocols.siteCondition.status === 'submitted' ||
                 vm.expedition.protocols.siteCondition.status === 'published') &&
-                !vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition)))" class="nohover">
+                !vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition))))" class="nohover">
                   <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
                   <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
                   <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
               </tr>
                 <tr id="protocol2Link" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })"
-                ng-show="((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
+                ng-if="(vm.expedition.protocols.oysterMeasurement && ((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
                   (vm.isTeamLead && vm.expedition.protocols.oysterMeasurement.status !== 'incomplete' &&
                   vm.expedition.protocols.oysterMeasurement.status !== 'returned') ||
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.oysterMeasurement.status === 'incomplete' ||
                   vm.expedition.protocols.oysterMeasurement.status === 'returned') &&
-                  vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement)))">
+                  vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement))))">
                     <td><h6>Protocol 2</h6><br/><h4 class="blue">Oyster Measurements</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.oysterMeasurement"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.oysterMeasurement.status}}"></view-protocol-status></td>
                 </tr>
-                <tr id="protocol2View" ng-show="((vm.isTeamLead && (vm.expedition.protocols.oysterMeasurement.status === 'incomplete' ||
-                vm.expedition.protocols.oysterMeasurement.status === 'returned') &&
-                !vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement)) ||
-                (vm.isTeamMember && (vm.expedition.protocols.oysterMeasurement.status === 'submitted' ||
+                <tr id="protocol2View"
+                ng-if="(vm.expedition.protocols.oysterMeasurement && ((vm.isTeamLead &&
+                  (vm.expedition.protocols.oysterMeasurement.status === 'incomplete' ||
+                  vm.expedition.protocols.oysterMeasurement.status === 'returned') &&
+                  !vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement)) ||
+                  (vm.isTeamMember && (vm.expedition.protocols.oysterMeasurement.status === 'submitted' ||
                   vm.expedition.protocols.oysterMeasurement.status === 'published') &&
-                  !vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement)))" class="nohover">
+                  !vm.checkWrite(vm.expedition.teamLists.oysterMeasurement, vm.expedition.protocols.oysterMeasurement))))" class="nohover">
                     <td><h6>Protocol 2</h6><br/><h4 class="blue">Oyster Measurements</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.oysterMeasurement"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}"  status="{{vm.expedition.protocols.oysterMeasurement.status}}"></view-protocol-status></td>
                 </tr>
                 <tr id="protocol3Link" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })"
-                ng-show="((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
+                ng-if="(vm.expedition.protocols.mobileTrap && ((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
                   (vm.isTeamLead && vm.expedition.protocols.mobileTrap.status !== 'incomplete' &&
                   vm.expedition.protocols.mobileTrap.status !== 'returned') ||
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.mobileTrap.status === 'incomplete' ||
                   vm.expedition.protocols.mobileTrap.status === 'returned') &&
-                  vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap)))">
+                  vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap))))">
                     <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
                 </tr>
-                <tr id="protocol3View" ng-show="((vm.isTeamLead && (vm.expedition.protocols.mobileTrap.status === 'incomplete' ||
-                vm.expedition.protocols.mobileTrap.status === 'returned') &&
-                !vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap)) ||
-                (vm.isTeamMember && (vm.expedition.protocols.mobileTrap.status === 'submitted' ||
+                <tr id="protocol3View"
+                ng-if="(vm.expedition.protocols.mobileTrap && ((vm.isTeamLead &&
+                  (vm.expedition.protocols.mobileTrap.status === 'incomplete' ||
+                  vm.expedition.protocols.mobileTrap.status === 'returned') &&
+                  !vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap)) ||
+                  (vm.isTeamMember && (vm.expedition.protocols.mobileTrap.status === 'submitted' ||
                   vm.expedition.protocols.mobileTrap.status === 'published') &&
-                  !vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap)))" class="nohover">
+                  !vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap))))" class="nohover">
                     <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status  isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
                 </tr>
                 <tr id="protocol4Link" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })"
-                ng-show="((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
+                ng-if="(vm.expedition.protocols.settlementTiles && ((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
                   (vm.isTeamLead && vm.expedition.protocols.settlementTiles.status !== 'incomplete' &&
                   vm.expedition.protocols.settlementTiles.status !== 'returned') ||
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.settlementTiles.status === 'incomplete' ||
                   vm.expedition.protocols.settlementTiles.status === 'returned') &&
-                  vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles)))">
+                  vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles))))">
                     <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
                 </tr>
-                <tr id="protocol4View" ng-show="((vm.isTeamLead && (vm.expedition.protocols.settlementTiles.status === 'incomplete' ||
-                vm.expedition.protocols.settlementTiles.status === 'returned') &&
-                !vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles)) ||
-                (vm.isTeamMember && (vm.expedition.protocols.settlementTiles.status === 'submitted' ||
-                vm.expedition.protocols.settlementTiles.status === 'published') &&
-                !vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles)))" class="nohover">
+                <tr id="protocol4View"
+                ng-if="(vm.expedition.protocols.settlementTiles && ((vm.isTeamLead &&
+                  (vm.expedition.protocols.settlementTiles.status === 'incomplete' ||
+                  vm.expedition.protocols.settlementTiles.status === 'returned') &&
+                  !vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles)) ||
+                  (vm.isTeamMember && (vm.expedition.protocols.settlementTiles.status === 'submitted' ||
+                  vm.expedition.protocols.settlementTiles.status === 'published') &&
+                  !vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles))))" class="nohover">
                     <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}"  status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
                 </tr>
                 <tr id="protocol5Link" ui-sref="expeditions.protocols({ expeditionId: vm.expedition._id })"
-                ng-show="((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
+                ng-if="(vm.expedition.protocols.waterQuality && ((vm.isAdmin && !vm.isTeamLead && !vm.isTeamMember) ||
                   (vm.isTeamLead && vm.expedition.protocols.waterQuality.status !== 'incomplete' &&
                   vm.expedition.protocols.waterQuality.status !== 'returned') ||
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.waterQuality.status === 'incomplete' ||
                   vm.expedition.protocols.waterQuality.status === 'returned') &&
-                  vm.checkWrite(vm.expedition.teamLists.waterQuality, vm.expedition.protocols.waterQuality)))">
+                  vm.checkWrite(vm.expedition.teamLists.waterQuality, vm.expedition.protocols.waterQuality))))">
                     <td><h6>Protocol 5</h6><br/><h4 class="blue">Water Quality</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.waterQuality"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.waterQuality.status}}"></view-protocol-status></td>
                 </tr>
-                <tr id="protocol5View" ng-show="((vm.isTeamLead && (vm.expedition.protocols.waterQuality.status === 'incomplete' ||
+                <tr id="protocol5View"
+                ng-if="(vm.expedition.protocols.waterQuality && ((vm.isTeamLead &&
+                  (vm.expedition.protocols.waterQuality.status === 'incomplete' ||
                   vm.expedition.protocols.waterQuality.status === 'returned') &&
                   !vm.checkWrite(vm.expedition.teamLists.waterQuality, vm.expedition.protocols.waterQuality)) ||
                   (vm.isTeamMember && (vm.expedition.protocols.waterQuality.status === 'submitted' ||
                   vm.expedition.protocols.waterQuality.status === 'published') &&
-                  !vm.checkWrite(vm.expedition.teamLists.waterQuality, vm.expedition.protocols.waterQuality)))" class="nohover">
+                  !vm.checkWrite(vm.expedition.teamLists.waterQuality, vm.expedition.protocols.waterQuality))))" class="nohover">
                     <td><h6>Protocol 5</h6><br/><h4 class="blue">Water Quality</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.waterQuality"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.waterQuality.status}}"></view-protocol-status></td>
@@ -189,23 +200,24 @@
   ng-show="(vm.expedition.status === 'published' && vm.checkAllStatus('published'))">
     <section class="container">
         <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li role="presentation" class="active">
+            <!-- class="active" should be placed on the first protocol <li> shown if protocol #1 isn't displaying -->
+            <li role="presentation" ng-class="{'active': vm.active === 'siteCondition'}" ng-if="vm.expedition.protocols.siteCondition">
               <a href="#protocol1" data-toggle="tab" aria-controls="protocol1" role="tab">
               <span class="hidden-xs">Protocol </span>1<span class="hidden-xs">:<br/>Site Conditions</span></a>
             </li>
-            <li role="presentation">
+            <li role="presentation" ng-class="{'active': vm.active === 'oysterMeasurement'}" ng-if="vm.expedition.protocols.oysterMeasurement">
               <a href="#protocol2" data-toggle="tab" aria-controls="protocol2" role="tab">
               <span class="hidden-xs">Protocol </span>2<span class="hidden-xs">:<br/>Oyster Measurements</span></a>
             </li>
-            <li role="presentation">
+            <li role="presentation" ng-class="{'active': vm.active === 'mobileTrap'}" ng-if="vm.expedition.protocols.mobileTrap">
               <a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">
               <span class="hidden-xs">Protocol </span>3<span class="hidden-xs">:<br/>Mobile Trap</span></a>
             </li>
-            <li role="presentation">
+            <li role="presentation" ng-class="{'active': vm.active === 'settlementTiles'}" ng-if="vm.expedition.protocols.settlementTiles">
               <a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">
               <span class="hidden-xs">Protocol </span>4<span class="hidden-xs">:<br/>Settlement Tiles</span></a>
             </li>
-            <li role="presentation">
+            <li role="presentation" ng-class="{'active': vm.active === 'waterQuality'}" ng-if="vm.expedition.protocols.waterQuality">
               <a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">
               <span class="hidden-xs">Protocol </span>5<span class="hidden-xs">:<br/>Water Quality</span></a>
             </li>
@@ -217,19 +229,20 @@
   ng-show="(vm.expedition.status === 'published' && vm.checkAllStatus('published'))">
     <section class="container">
         <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="protocol1">
+          <!-- class="active" should be placed on the first protocol <div> shown if protocol #1 isn't displaying -->
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'siteCondition'}" id="protocol1" ng-if="vm.expedition.protocols.siteCondition">
             <view-protocol-site-condition></view-protocol-site-condition>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol2">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'oysterMeasurement'}" id="protocol2" ng-if="vm.expedition.protocols.oysterMeasurement">
             <view-protocol-oyster-measurement></view-protocol-oyster-measurement>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol3">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'mobileTrap'}" id="protocol3" ng-if="vm.expedition.protocols.mobileTrap">
             <view-protocol-mobile-trap></view-protocol-mobile-trap>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol4">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'settlementTiles'}" id="protocol4" ng-if="vm.expedition.protocols.settlementTiles">
             <view-protocol-settlement-tiles></view-protocol-settlement-tiles>
           </div>
-          <div role="tabpanel" class="tab-pane" id="protocol5">
+          <div role="tabpanel" class="tab-pane" ng-class="{'active': vm.active === 'waterQuality'}" id="protocol5" ng-if="vm.expedition.protocols.waterQuality">
             <view-protocol-water-quality></view-protocol-water-quality>
           </div>
         </div>

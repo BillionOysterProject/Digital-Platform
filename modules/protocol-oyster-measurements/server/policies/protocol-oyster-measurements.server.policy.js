@@ -26,9 +26,6 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/upload-oyster-cage-condition',
       permissions: '*'
     }, {
-      resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/incremental-save',
-      permissions: '*'
-    }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId/validate',
       permissions: '*'
     }, {
@@ -36,9 +33,6 @@ exports.invokeRolesPolicies = function () {
       permissions: '*'
     }, {
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-oyster-measurements',
       permissions: '*'
     }]
   }, {
