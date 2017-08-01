@@ -257,7 +257,7 @@
     vm.openMap = function() {
       angular.element('#modal-event-map').modal('show');
       $timeout(function() {
-        vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
+        if (vm.event.location) vm.mapControls.panTo({ lat: vm.event.location.latitude, lng: vm.event.location.longitude });
       }, 300);
     };
 
