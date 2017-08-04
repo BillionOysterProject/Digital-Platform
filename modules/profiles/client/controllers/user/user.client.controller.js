@@ -145,10 +145,14 @@
           allTeamLeads = allTeamLeads.concat($scope.userTeams[i].teamLeads);
         }
 
-        var leadIndex = lodash.findIndex(allTeamLeads, function(l) {
-          return l.username === $scope.currentUser.username;
-        });
-        return (leadIndex > -1) ? true : false;
+        if ($scope.currentUser) {
+          var leadIndex = lodash.findIndex(allTeamLeads, function(l) {
+            return l.username === $scope.currentUser.username;
+          });
+          return (leadIndex > -1) ? true : false;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
@@ -163,10 +167,14 @@
           allTeamMembers = allTeamMembers.concat($scope.userTeams[i].teamMembers);
         }
 
-        var memberIndex = lodash.findIndex(allTeamMembers, function(m) {
-          return m.username === $scope.currentUser.username;
-        });
-        return (memberIndex > -1) ? true : false;
+        if ($scope.currentUser) {
+          var memberIndex = lodash.findIndex(allTeamMembers, function(m) {
+            return m.username === $scope.currentUser.username;
+          });
+          return (memberIndex > -1) ? true : false;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
