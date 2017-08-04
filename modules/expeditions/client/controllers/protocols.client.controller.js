@@ -862,7 +862,8 @@
       mode: 'tags-id',
       id: '_id',
       text: 'displayName',
-      textLookup: function(id) {
+      textLookup: function(obj) {
+        var id = (obj && obj._id) ? obj._id : obj;
         return TeamMembersService.get({ memberId: id }).$promise;
       },
       options: function(searchText) {

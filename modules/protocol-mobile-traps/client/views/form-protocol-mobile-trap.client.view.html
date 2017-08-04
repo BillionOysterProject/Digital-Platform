@@ -104,11 +104,9 @@
 </form>
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-mobile-trap-map" latitude="mobileTrap.latitude"
-    longitude="mobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
-</div>
+<map-select modal-id="modal-mobile-trap-map" latitude="mobileTrap.latitude"
+  longitude="mobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 
 <form-organism-details ng-repeat="organismDetails in foundOrganisms" organism-details="organismDetails"
 sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl"

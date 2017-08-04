@@ -151,10 +151,8 @@ outer-substrate-uploader="outerUploaders[$index]" inner-substrate-uploader="inne
 outer-substrate-url="outerSubstrateURL" inner-substrate-url="innerSubstrateURL"
 save-function="saveSubstrateForm" cancel-function="cancelSubstrateForm" index="{{$index}}"></form-substrate-shell>
 
-<div class="modal fade" id="modal-oyster-measurement-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-oyster-measurement-map" latitude="oysterMeasurement.latitude"
-    longitude="oysterMeasurement.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
-</div>
+<map-select modal-id="modal-oyster-measurement-map" latitude="oysterMeasurement.latitude"
+  longitude="oysterMeasurement.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 
 <form-restoration-station-status-popup station="station" close-function="closeORSStatusForm"></form-restoration-station-status-popup>
