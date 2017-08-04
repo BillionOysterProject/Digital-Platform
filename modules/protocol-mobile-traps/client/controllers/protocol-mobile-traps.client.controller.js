@@ -13,6 +13,29 @@
 
     $scope.foundOrganisms = {};
 
+    var hideAllButOneBlank = function(organisms) {
+      var blankShown = false;
+      for (var i = 0; i < organisms.length; i++) {
+        var organismId = organisms[i]._id;
+        if (organisms[i].commonName === 'Other/Unknown' && $scope.foundOrganisms[organismId] &&
+        $scope.foundOrganisms[organismId].sketchPhoto && $scope.foundOrganisms[organismId].sketchPhoto.path) {
+          organisms[i].show = true;
+        } else if (organisms[i].commonName === 'Other/Unknown' &&
+        (!$scope.foundOrganisms[organismId] || !$scope.foundOrganisms[organismId].sketchPhoto ||
+        !$scope.foundOrganisms[organismId].sketchPhoto.path)) {
+          if (!blankShown) {
+            organisms[i].show = true;
+            blankShown = true;
+          } else {
+            organisms[i].show = false;
+          }
+        } else {
+          organisms[i].show = true;
+        }
+      }
+      return organisms;
+    };
+
     // Set up Organisms
     $scope.filter = {
       category: ''
@@ -22,14 +45,18 @@
       $scope.filter = {
         category: ''
       };
-      $scope.findOrganisms();
+      $scope.findOrganisms(function() {
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+      });
     };
 
     $scope.clickFilter = function(category) {
       $scope.filter = {
         category: category
       };
-      $scope.findOrganisms();
+      $scope.findOrganisms(function() {
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+      });
     };
 
     $scope.findOrganisms = function(callback) {
@@ -37,7 +64,6 @@
         category: $scope.filter.category
       }, function(data) {
         $scope.mobileOrganisms = data;
-        $rootScope.$broadcast('iso-method', { name:null, params:null });
         $timeout(function() {
           $rootScope.$broadcast('iso-method', { name:null, params:null });
           if (callback) callback();
@@ -76,7 +102,7 @@
         $scope.foundOrganisms[organismId].notes = organismDetails.notesQuestions;
       }
       if (save) {
-        $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (callback) callback();
@@ -89,18 +115,23 @@
       }
     };
 
-    // Set up initial values
-    $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    if ($scope.mobileTrap) {
+      // Set up initial values
+      $scope.mobileTrap.collectionTime = moment($scope.mobileTrap.collectionTime).startOf('minute').toDate();
+    }
 
     $scope.mobileOrganisms = $scope.findOrganisms(function() {
-      for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
-        $scope.getFoundOrganism($scope.mobileOrganisms[o]);
-      }
+      if ($scope.mobileTrap) {
+        for (var o = 0; o < $scope.mobileOrganisms.length; o++) {
+          $scope.getFoundOrganism($scope.mobileOrganisms[o]);
+        }
 
-      if (!$scope.mobileTrap.mobileOrganisms) {
-        $scope.mobileTrap.mobileOrganisms = [];
-      } else {
-        setupMobileOrganisms(true);
+        if (!$scope.mobileTrap.mobileOrganisms) {
+          $scope.mobileTrap.mobileOrganisms = [];
+        } else {
+          setupMobileOrganisms(true);
+        }
+        $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
       }
     });
 
@@ -179,12 +210,19 @@
         angular.element('#modal-organism-details-'+organismId).modal('hide');
         $timeout(function() {
           $scope.foundOrganisms[organismDetails.organism._id] = organismDetails;
+          $scope.foundOrganisms[organismDetails.organism._id].sketchPhoto = {
+            path: $scope.foundOrganisms[organismDetails.organism._id].imageUrl
+          };
 
           $scope.organismDetails = {};
           $scope.sketchPhotoUrl = '';
 
           var imageErrorMessage = '';
           var foundIds = foundOrganismsToMobileOrganisms(imageErrorMessage);
+          $scope.mobileOrganisms = hideAllButOneBlank($scope.mobileOrganisms);
+          $timeout(function() {
+            $rootScope.$broadcast('iso-method', { name:null, params:null });
+          }, 500);
         });
       }
     };
@@ -239,7 +277,7 @@
 
       var mobileTrapId = $scope.mobileTrap._id;
 
-      $http.post('/api/protocol-mobile-traps/' + $scope.mobileTrap._id + '/incremental-save',
+      $http.put('/api/protocol-mobile-traps/' + $scope.mobileTrap._id,
         $scope.mobileTrap)
         .success(function (data, status, headers, config) {
           saveImages(function() {
@@ -320,7 +358,7 @@
 
       function save() {
         $scope.savingStatus = 'Saving Mobile Trap';
-        $http.post('/api/protocol-mobile-traps/' + mobileTrapId + '/incremental-save',
+        $http.put('/api/protocol-mobile-traps/' + mobileTrapId,
           $scope.mobileTrap)
           .success(function (data, status, headers, config) {
             if (data.errors) {
@@ -380,6 +418,12 @@
         validateErrorCallback();
       }
     };
+
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function() {
+        $rootScope.$broadcast('iso-method', { name:null, params:null });
+      }, 500);
+    });
 
     $scope.openViewUserModal = function() {
       angular.element('#modal-profile-user').modal('show');

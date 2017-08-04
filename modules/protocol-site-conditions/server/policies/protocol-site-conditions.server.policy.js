@@ -23,16 +23,10 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
       permissions: '*'
     }, {
-      resources: '/api/protocol-site-conditions/:siteConditionId/incremental-save',
-      permissions: '*'
-    }, {
       resources: '/api/protocol-site-conditions/:siteConditionId/validate',
       permissions: '*'
     }, {
       resources: '/api/protocol-site-conditions/:siteConditionId',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-site-conditions',
       permissions: '*'
     }]
   }, {

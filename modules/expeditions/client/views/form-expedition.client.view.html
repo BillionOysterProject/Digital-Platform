@@ -70,38 +70,37 @@
               - Published Expedition View
               - Compare Expedition View (only display protocols available even if protocols are checked as parameters?)
               ... anywhere else all 5 protocols are listed
-
+            -->
 
             <h4>Select protocols to include:</h4>
             <div class="row">
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label><input type="checkbox" checked> <b>Protocol 1:</b> Site Conditions</label>
+                        <label><input type="checkbox" ng-model="vm.protocolsPresent.siteCondition" ng-click="vm.changeProtocol('siteCondition')"> <b>Protocol 1:</b> Site Conditions</label>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label><input type="checkbox" checked> <b>Protocol 2:</b> Oyster Measurements</label>
+                        <label><input type="checkbox" ng-model="vm.protocolsPresent.oysterMeasurement" ng-click="vm.changeProtocol('oysterMeasurement')"> <b>Protocol 2:</b> Oyster Measurements</label>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label><input type="checkbox" checked> <b>Protocol 3:</b> Mobile Trap</label>
+                        <label><input type="checkbox" ng-model="vm.protocolsPresent.mobileTrap" ng-click="vm.changeProtocol('mobileTrap')"> <b>Protocol 3:</b> Mobile Trap</label>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label><input type="checkbox" checked> <b>Protocol 4:</b> Settlement Tiles</label>
+                        <label><input type="checkbox" ng-model="vm.protocolsPresent.settlementTiles" ng-click="vm.changeProtocol('settlementTiles')"> <b>Protocol 4:</b> Settlement Tiles</label>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label><input type="checkbox" checked> <b>Protocol 5:</b> Water Quality</label>
+                        <label><input type="checkbox" ng-model="vm.protocolsPresent.waterQuality" ng-click="vm.changeProtocol('waterQuality')"> <b>Protocol 5:</b> Water Quality</label>
                     </div>
                 </div>
             </div>
             <hr/>
-            -->
 
             <h4>Assign members to protocols *
                 <!--TODO: Doesn't seem like this button should be distributing the team lead's name.. -->
@@ -110,7 +109,7 @@
             <span class="help-block">Note: Students assigned to the same protocol will share the same data entry form. To prevent duplicates or overwriting, they should select one person to input their group data.</span>
 
             <div class="row">
-              <div class="col-md-2" dnd-list="vm.memberLists.members"
+              <div class="col-md-2 scroll" dnd-list="vm.memberLists.members"
               dnd-drop="vm.onDrop(vm.memberLists.members, item)">
                 <a ng-repeat="item in vm.memberLists.members" class="draggable" dnd-draggable="item"
                  dnd-moved="" dnd-effect-allowed="move"
@@ -121,14 +120,14 @@
                 <div class="panel panel-default">
                   <table class="table">
                     <tr>
-                      <td><h6>Protocol 1</h6><br /> Site Conditions</td>
-                      <td><h6>Protocol 2</h6><br /> Oyster Measurements</td>
-                      <td><h6>Protocol 3</h6><br /> Mobile Trap</td>
-                      <td><h6>Protocol 4</h6><br /> Settlement Tiles</td>
-                      <td><h6>Protocol 5</h6><br /> Water Quality</td>
+                      <td ng-show="vm.protocolsPresent.siteCondition"><h6>Protocol 1</h6><br /> Site Conditions</td>
+                      <td ng-show="vm.protocolsPresent.oysterMeasurement"><h6>Protocol 2</h6><br /> Oyster Measurements</td>
+                      <td ng-show="vm.protocolsPresent.mobileTrap"><h6>Protocol 3</h6><br /> Mobile Trap</td>
+                      <td ng-show="vm.protocolsPresent.settlementTiles"><h6>Protocol 4</h6><br /> Settlement Tiles</td>
+                      <td ng-show="vm.protocolsPresent.waterQuality"><h6>Protocol 5</h6><br /> Water Quality</td>
                     </tr>
                     <tr>
-                      <td class="dragdrop">
+                      <td class="dragdrop" ng-show="vm.protocolsPresent.siteCondition">
                         <div class="droppable" dnd-list="vm.expedition.teamLists.siteCondition"
                         dnd-drop="vm.onDrop(vm.expedition.teamLists.siteCondition, item)">
                           <a ng-repeat="item in vm.expedition.teamLists.siteCondition" class="draggable" dnd-draggable="item"
@@ -139,7 +138,7 @@
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
-                      <td class="dragdrop">
+                      <td class="dragdrop" ng-show="vm.protocolsPresent.oysterMeasurement">
                         <div class="droppable" dnd-list="vm.expedition.teamLists.oysterMeasurement"
                         dnd-drop="vm.onDrop(vm.expedition.teamLists.oysterMeasurement, item)">
                           <a ng-repeat="item in vm.expedition.teamLists.oysterMeasurement" class="draggable" dnd-draggable="item"
@@ -150,7 +149,7 @@
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
-                      <td class="dragdrop">
+                      <td class="dragdrop" ng-show="vm.protocolsPresent.mobileTrap">
                         <div class="droppable" dnd-list="vm.expedition.teamLists.mobileTrap"
                         dnd-drop="vm.onDrop(vm.expedition.teamLists.mobileTrap, item)">
                           <a ng-repeat="item in vm.expedition.teamLists.mobileTrap" class="draggable" dnd-draggable="item"
@@ -161,7 +160,7 @@
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
-                      <td class="dragdrop">
+                      <td class="dragdrop" ng-show="vm.protocolsPresent.settlementTiles">
                         <div class="droppable" dnd-list="vm.expedition.teamLists.settlementTiles"
                         dnd-drop="vm.onDrop(vm.expedition.teamLists.settlementTiles, item)">
                           <a ng-repeat="item in vm.expedition.teamLists.settlementTiles" class="draggable" dnd-draggable="item"
@@ -172,7 +171,7 @@
                             <img ng-src="{{item.profileImageURL}}" class="header-profile-image"> {{item.displayName}}</a>
                         </div>
                       </td>
-                      <td class="dragdrop">
+                      <td class="dragdrop" ng-show="vm.protocolsPresent.waterQuality">
                         <div class="droppable" dnd-list="vm.expedition.teamLists.waterQuality"
                         dnd-drop="vm.onDrop(vm.expedition.teamLists.waterQuality, item)">
                           <a ng-repeat="item in vm.expedition.teamLists.waterQuality" class="draggable" dnd-draggable="item"
@@ -211,10 +210,7 @@
     </section>
 </form>
 
-<delete-expedition-modal callback-function="vm.confirmDeleteExpedition"></delete-expedition-modal>
-
 <!-- MODALS -->
-<form-restoration-station-modal station="vm.station" mapPoints="[]"
-save-function="vm.saveFormRestorationStation"
-cancel-function="vm.cancelFormRestorationStation"></form-restoration-station-modal>
+<delete-expedition-modal callback-function="vm.confirmDeleteExpedition"></delete-expedition-modal>
+<view-restoration-station-popup station="vm.station" initial="vm.initial" close-function="vm.closeFormRestorationStation"></view-restoration-station-popup>
 <!--END MODALS-->

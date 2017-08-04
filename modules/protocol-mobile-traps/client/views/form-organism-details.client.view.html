@@ -9,17 +9,16 @@
                 <div class="modal-body">
                     <!--TODO:
                     1) Hide below row and show this commented out row instead, if an Other/Unknown
-
-                    <div class="row">
+                    -->
+                    <div class="row" ng-show="organismDetails.organism.commonName === 'Other/Unknown'">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" />
+                                <label for="alt-name">Name</label>
+                                <input type="text" class="form-control" id="alt-name" name="alt-name" ng-model="organismDetails.alternateName" />
                             </div>
                         </div>
                     </div>
-                    -->
-                    <div class="row">
+                    <div class="row" ng-hide="organismDetails.organism.commonName === 'Other/Unknown'">
                         <div class="col-sm-4">
                             <p>
                                 <em class="text-muted" ng-bind="organismDetails.organism.latinName"></em><br />

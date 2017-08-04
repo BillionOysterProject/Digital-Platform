@@ -85,7 +85,7 @@
         vm.expeditions = data.expeditions;
         if (vm.filtered) vm.compare();
         vm.error = null;
-        callback();
+        if (callback) callback();
       }, function(error) {
         vm.error = error.data.message;
       });

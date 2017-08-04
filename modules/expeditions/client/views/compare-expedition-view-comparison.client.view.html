@@ -14,446 +14,525 @@
 </section>
 <section class="content" ng-show="vm.expeditions && vm.expeditions.length > 0 && vm.dataPointCount() > 0">
   <section class="container-fluid">
-    <table class="table table-responsive">
-        <!-- <tr>
-            <td></td>
-            <td ng-show="vm.dataPointProtocol1Count() > 0" colspan="{{vm.protocol1paramCount}}" class="text-center">
-              <h6>Site Conditions</h6></td>
-            <td ng-show="vm.dataPointProtocol2Count() > 0" colspan="{{vm.protocol2paramCount}}" class="text-center">
-              <h6>Oyster Measurements</h6></td>
-            <td ng-show="vm.dataPointProtocol3Count() > 0" colspan="{{vm.protocol3paramCount}}" class="text-center">
-              <h6>Mobile Trap</h6></td>
-            <td ng-show="vm.dataPointProtocol4Count() > 0" colspan="{{vm.protocol4paramCount}}" class="text-center">
-              <h6>Settlement Tiles</h6</td>
-            <td ng-show="vm.dataPointProtocol5Count() > 0" colspan="{{vm.protocol5paramCount}}" class="text-center">
-              <h6>Water Quality</h6></td>
-        </tr> -->
-        <thead>
-        <tr id="expedition-compare-header">
-            <th width="10%"></th>
-            <th ng-repeat="expedition in vm.compareExpeditions" width="{{90/vm.compareExpeditions.length}}%">
-              <a ui-sref="expedition.view({ expeditionId: expedition.id })"><h4>{{expedition.name}}</h4></a><br/>
-              <p class="text-muted"><i class="fa fa-map-marker"></i> {{expedition.station.name}},
-                {{vm.getExpeditionDate(expedition.monitoringStartDate)}}</p>
-            </th>
-        </tr>
-        </thead>
-        <tr ng-show="vm.parameters.protocol1.weatherTemperature === 'YES'" id="weather-temperature-compare">
-            <td><b>Weather/temperature</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC">
-                {{vm.getWeatherCondition(expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions)}}<br/>
-                {{expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC}}&#8451;
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.windSpeedDirection === 'YES'" id="wind-speed-direction-compare">
-            <td><b>Wind speed/direction</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH">
-                {{expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH}}mph
-                {{vm.getWindDirection(expedition.protocols.siteCondition.meteorologicalConditions.windDirection)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.humidity === 'YES'" id="humidity-compare">
-            <td><b>Humidity</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.meteorologicalConditions.humidityPer">
-                {{expedition.protocols.siteCondition.meteorologicalConditions.humidityPer}}%
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.recentRainfall === 'YES'" id="recent-rainfall-compare">
-            <td><b>Recent rainfall</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="rainedIn24Hours" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
-                expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
-                expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === true">past 24 hours</span>
-              <span id="rainedIn72Hours" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
-                expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
-                (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">past 72 hours</span>
-              <span id="rainedIn7Days" ng-show="expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
-                (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
-                (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">past 7 days</span>
-              <span id="noRain" ng-show="(expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) &&
-                (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
-                (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
-                !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">None in the past 7 days</span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.tide === 'YES'" id="tide-compare">
-            <td><b>Tide</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-                Closest high tide:
-                  {{expedition.protocols.siteCondition.tideConditions.closestHighTideHeight}}ft
-                at
-                  {{vm.getTime(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}
-                  {{vm.getShortDate(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}
-                <br/>Closest low tide:
-                  {{expedition.protocols.siteCondition.tideConditions.closestLowTideHeight}}ft
-                at
-                  {{vm.getTime(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}
-                  {{vm.getShortDate(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.referencePoint === 'YES'" id="reference-point-compare">
-            <td><b>Reference Point</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.siteCondition.tideConditions.referencePoint}}&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.tidalCurrent === 'YES'" id="tidal-current-compare">
-            <td><b>Tidal current</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent">
-                <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'flood-current'">
-                  Flood current
-                </span>
-                <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'slack-water'">
-                  Slack water
-                </span>
-                <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'ebb-current'">
-                  Ebb current
-                </span>
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.surfaceCurrentSpeed === 'YES'" id="surface-current-speed-compare">
-            <td><b>Surface current speed</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS">
-                {{expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS}} meters/sec
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.waterConditionPhoto === 'YES'" id="water-condition-photo-compare">
-            <td><b>Water condition photo</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <img id="waterConditionPhoto" class="img-rounded img-responsive"
-              ng-src="{{expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path}}"
-              ng-show="expedition.protocols.siteCondition.waterConditions.waterConditionPhoto"/>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.waterColor === 'YES'" id="water-color-compare">
-            <td><b>Water color</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{vm.getWaterColors(expedition.protocols.siteCondition.waterConditions.waterColor)}}&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.oilSheen === 'YES'" id="oil-sheen-compare">
-            <td><b>Oil sheen</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="noOilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === false ||
-                !expedition.protocols.siteCondition.waterConditions.oilSheen">No</span>
-              <span id="oilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === true">Yes</span>
-              &nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.garbageWater === 'YES'" id="garbage-water-compare">
-            <td><b>Garbage in water</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="noGarbagePresentWater"
-              ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === false ||
-                !expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent">
-                No</span>
-              <span id="garbagePresentWater"
-              ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === true">
-                Yes:<br/>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.softPlastic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.metal !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.metal)}} amount of metal,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.paper !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.paper)}} amount of paper,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.glass !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.glass)}} amount of glass,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.organic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.organic)}} amount of organic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.other.description">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.other.extent)}} amount of
-                  {{expedition.protocols.siteCondition.waterConditions.garbage.other.description}}<br/></span>
-              </span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.pipes === 'YES'" id="pipes-compare">
-            <td><b>Pipes</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="noMarkedCSO"
-              ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === false ||
-                !expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent">
-                No CSO pipes</span>
-              <span id="markedCSO"
-              ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
-                  CSO pipes present:<br/>
-                  Location at {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}},
-                  {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}<br/>
-                  Flow: {{vm.getWaterFlows(expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough)}}
-              </span>
-              <br/>
-              <span id="noUnmarkedPipe"
-              ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === false ||
-                !expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent">
-                No unmarked or other outfall pipes</span>
-              <span id="unmarkedPipe"
-              ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
-                  Unmarked or other outfall pipes present:<br/>
-                  Location at {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}},
-                  {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}<br/>
-                  Flow: {{vm.getWaterFlows(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough)}}<br/>
-                  <b>{{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM}}cm</b> approximate diameter
-              </span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.landConditionPhoto === 'YES'" id="land-condition-photo-compare">
-            <td><b>Land condition photo</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <img id="landConditionPhoto" class="img-rounded img-responsive"
-              ng-src="{{expedition.protocols.siteCondition.landConditions.landConditionPhoto.path}}"
-              ng-show="expedition.protocols.siteCondition.landConditions.landConditionPhoto"/>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.shorelineType === 'YES'" id="shoreline-type-compare">
-            <td><b>Shoreline type</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{vm.getShorelineTypes(expedition.protocols.siteCondition.landConditions.shoreLineType)}}&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.garbageLand === 'YES'" id="garbage-land-compare">
-            <td><b>Garbage on land</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="noGarbagePresentLand"
-              ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === false ||
-                !expedition.protocols.siteCondition.landConditions.garbage.garbagePresent">No</span>
-              <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === true">
-                Yes:<br/>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.hardPlastic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.softPlastic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.metal !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.metal)}} amount of metal,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.paper !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.paper)}} amount of paper,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.glass !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.glass)}} amount of glass,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.organic !== 'none'">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.organic)}} amount of organic,<br/></span>
-                <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.other.description">
-                  {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.other.extent)}} amount of
-                  {{expedition.protocols.siteCondition.landConditions.garbage.other.description}}<br/></span>
-              </span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol1.surfaceCover === 'YES'" id="surface-cover-compare">
-            <td><b>Surface cover</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer">
-                {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer}}%
-                Impervious Surface</span><br/>
-              <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer">
-                {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer}}%
-                Pervious Surface</span><br/>
-              <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer">
-                {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer}}%
-                Vegetated Surface</span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.submergedDepth === 'YES'" id="submerged-depth-compare">
-            <td><b>Submerged depth of cage</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM">
-                {{expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM}} meters</span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.oysterCagePhoto === 'YES'" id="oyster-cage-photo-compare">
-            <td><b>Oyster cage photo</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <img id="oysterCagePhoto" class="img-rounded img-responsive"
-              ng-src="{{expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path}}"
-              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto"/>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.bioaccumulationOnCage === 'YES'" id="bioaccumulation-on-cage-compare">
-            <td><b>Bioaccumulation on cage</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span id="bioaccumulationHeavy"
-              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'heavy'">
-                Heavy</span>
-              <span id="bioaccumulationMedium"
-              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'medium'">
-                Medium</span>
-              <span id="bioaccumulationLight"
-              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'light'">
-                Light</span>
-              <span id="noBioaccumulation"
-              ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'none'">
-                None/clean</span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.cageDamage === 'YES'" id="cage-damage-compare">
-            <td><b>Cage damage</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-live-compare">
-            <td><b>Population live</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters}}&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-avg-size-compare">
-            <td><b>Population avg size</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}mm&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-min-size-compare">
-            <td><b>Population min size</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}mm&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-max-size-compare">
-            <td><b>Population max size</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}mm&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
-            <td><b>Organisms observed</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms">
-                <img id="organism-photo{{$index}}" class="img-rounded img-thumbnail"
-                  ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"/><br/>
-                {{organism.count}} {{vm.getMobileOrganismName(organism.organism)}}<br/><br/>
-              </span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol4.description === 'YES'" id="settlement-tile-description-compare">
-            <td><b>Settlement tile description</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles"
-              ng-show="tile.description">
-                Settlement Tile {{$index+1}}: <br/>
-                <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
-                  ng-src="{{tile.tilePhoto.path}}"/><br/>
-                {{tile.description}}<br/><br/>
-              </span>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol4.organism === 'YES'" id="sessile-organisms-observed-compare">
-            <td><b>Sessile organisms observed</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions" id="sessile-organisms-table-{{$index}}">
-                <table class="table-condensed">
-                    <tr>
-                      <td ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism"
-                        style="vertical-align: top;" width="25%">
-                        <h6>Settlement Tile #{{h+1}}</h6><br/>
-                        <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
-                          <span>
-                            <h4 class="text-muted">{{i}}</h4>:
-                            {{vm.getSessileOrganismName(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}
-                            <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
-                              ng-src="{{vm.getSessileOrganismPhoto(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}"/><br/>
-                            <em>{{expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].notes}}</em><br/>
-                          </span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.depth === 'YES'" id="depth-of-water-sample-compare">
-            <td><b>Depth</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.depthOfWaterSampleM">
-                {{expedition.protocols.waterQuality.avgSample.depthOfWaterSampleM}} meters</span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.temperature === 'YES'" id="water-temperature-compare">
-            <td><b>Temperature</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.waterTemperatureC">
-                  {{expedition.protocols.waterQuality.avgSample.waterTemperatureF | number:2}}&#8457; /
-                  {{expedition.protocols.waterQuality.avgSample.waterTemperatureC | number:2}}&#8451;</span>
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.dissolvedOxygen === 'YES'" id="dissolved-oxygen-compare">
-            <td><b>Dissolved Oxygen</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.dissolvedOxygen">
-                {{expedition.protocols.waterQuality.avgSample.dissolvedOxygen | number:2}}
-                {{vm.getDissolvedOxygenUnit(expedition.protocols.waterQuality.samples[0].dissolvedOxygen.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.salinity === 'YES'" id="salinity-compare">
-            <td><b>Salinity</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.salinity">
-                {{expedition.protocols.waterQuality.avgSample.salinity | number:2}}
-                {{vm.getSalinityUnit(expedition.protocols.waterQuality.samples[0].salinity.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.pH === 'YES'" id="pH-compare">
-            <td><b>pH</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.pH">
-                {{expedition.protocols.waterQuality.avgSample.pH | number:2}}
-                {{vm.getPHUnits(expedition.protocols.waterQuality.samples[0].pH.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.turbidity === 'YES'" id="turbidity-compare">
-            <td><b>Turbidity</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.turbidity">
-                {{expedition.protocols.waterQuality.avgSample.turbidity | number:2}}
-                {{vm.getTurbidityUnit(expedition.protocols.waterQuality.samples[0].turbidity.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.ammonia === 'YES'" id="ammonia-compare">
-            <td><b>Ammonia</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.ammonia">
-                {{expedition.protocols.waterQuality.avgSample.ammonia | number:2}}
-                {{vm.getAmmoniaUnit(expedition.protocols.waterQuality.samples[0].ammonia.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.nitrates === 'YES'" id="nitrates-compare">
-            <td><b>Nitrates</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <span ng-show="expedition.protocols.waterQuality.avgSample.nitrates">
-                {{expedition.protocols.waterQuality.avgSample.nitrates | number:2}}
-                {{vm.getNitratesUnit(expedition.protocols.waterQuality.samples[0].nitrates.units)}}
-              </span>&nbsp;
-            </td>
-        </tr>
-        <tr ng-show="vm.parameters.protocol5.other === 'YES'" id="water-quality-other-compare">
-            <td><b>Other</b></td>
-            <td ng-repeat="expedition in vm.compareExpeditions">
-              <!-- {{expedition.protocols.waterQuality.avgSample.avgOthers}} -->
-              <span ng-repeat="(key, value) in expedition.protocols.waterQuality.avgSample.avgOthers">
-                {{expedition.protocols.waterQuality.avgSample.avgOthers[key].label}}:
-                {{expedition.protocols.waterQuality.avgSample.avgOthers[key].average | number:2}}
-                {{expedition.protocols.waterQuality.avgSample.avgOthers[key].units}}<br/>
-              </span>&nbsp;
-            </td>
-        </tr>
-    </table>
+    <div class="table-responsive">
+        <table class="table">
+            <!-- <tr>
+                <td></td>
+                <td ng-show="vm.dataPointProtocol1Count() > 0" colspan="{{vm.protocol1paramCount}}" class="text-center">
+                  <h6>Site Conditions</h6></td>
+                <td ng-show="vm.dataPointProtocol2Count() > 0" colspan="{{vm.protocol2paramCount}}" class="text-center">
+                  <h6>Oyster Measurements</h6></td>
+                <td ng-show="vm.dataPointProtocol3Count() > 0" colspan="{{vm.protocol3paramCount}}" class="text-center">
+                  <h6>Mobile Trap</h6></td>
+                <td ng-show="vm.dataPointProtocol4Count() > 0" colspan="{{vm.protocol4paramCount}}" class="text-center">
+                  <h6>Settlement Tiles</h6</td>
+                <td ng-show="vm.dataPointProtocol5Count() > 0" colspan="{{vm.protocol5paramCount}}" class="text-center">
+                  <h6>Water Quality</h6></td>
+            </tr> -->
+            <thead>
+            <tr id="expedition-compare-header">
+                <th width="10%"></th>
+                <th ng-repeat="expedition in vm.compareExpeditions" width="{{90/vm.compareExpeditions.length}}%">
+                  <a ui-sref="expeditions.view({ expeditionId: expedition._id })"><h4>{{expedition.name}}</h4></a><br/>
+                  <p class="text-muted"><i class="fa fa-map-marker"></i> {{expedition.station.name}},
+                    {{vm.getExpeditionDate(expedition.monitoringStartDate)}}</p>
+                </th>
+            </tr>
+            </thead>
+            <tr ng-show="vm.parameters.protocol1.weatherTemperature === 'YES'" id="weather-temperature-compare">
+                <td><b>Weather/temperature</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.meteorologicalConditions &&
+                    expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC">
+                    {{vm.getWeatherCondition(expedition.protocols.siteCondition.meteorologicalConditions.weatherConditions)}}<br/>
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.airTemperatureC}}&#8451;
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.windSpeedDirection === 'YES'" id="wind-speed-direction-compare">
+                <td><b>Wind speed/direction</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.meteorologicalConditions &&
+                    expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH">
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.windSpeedMPH}}mph
+                    {{vm.getWindDirection(expedition.protocols.siteCondition.meteorologicalConditions.windDirection)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.humidity === 'YES'" id="humidity-compare">
+                <td><b>Humidity</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.meteorologicalConditions &&
+                    expedition.protocols.siteCondition.meteorologicalConditions.humidityPer">
+                    {{expedition.protocols.siteCondition.meteorologicalConditions.humidityPer}}%
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.recentRainfall === 'YES'" id="recent-rainfall-compare">
+                <td><b>Recent rainfall</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span id="rainedIn24Hours" ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.recentRainfall &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === true">past 24 hours</span>
+                  <span id="rainedIn72Hours" ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.recentRainfall &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === true &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">past 72 hours</span>
+                  <span id="rainedIn7Days" ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.recentRainfall &&
+                    expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === true &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">past 7 days</span>
+                  <span id="noRain" ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.recentRainfall &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn7Days === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn7Days) &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn72Hours) &&
+                    (expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours === false ||
+                    !expedition.protocols.siteCondition.recentRainfall.rainedIn24Hours)">None in the past 7 days</span>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.tide === 'YES'" id="tide-compare">
+                <td><b>Tide</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions">
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.closestHighTideHeight">
+                      Closest high tide: {{expedition.protocols.siteCondition.tideConditions.closestHighTideHeight}}ft
+                      <span ng-show="expedition.protocols.siteCondition.tideConditions.closestHighTide">
+                        at
+                        {{vm.getTime(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}
+                        {{vm.getShortDate(expedition.protocols.siteCondition.tideConditions.closestHighTide)}}
+                      </span>
+                      <br/>
+                    </span>
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.closestLowTideHeight">
+                      Closest low tide: {{expedition.protocols.siteCondition.tideConditions.closestLowTideHeight}}ft
+                      <span ng-show="expedition.protocols.siteCondition.tideConditions.closestLowTide">
+                        at
+                        {{vm.getTime(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}
+                        {{vm.getShortDate(expedition.protocols.siteCondition.tideConditions.closestLowTide)}}
+                      </span>
+                    </span>
+                  </span>
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.referencePoint === 'YES'" id="reference-point-compare">
+                <td><b>Reference Point</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions &&
+                  expedition.protocols.siteCondition.tideConditions.referencePoint">
+                    {{expedition.protocols.siteCondition.tideConditions.referencePoint}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.tidalCurrent === 'YES'" id="tidal-current-compare">
+                <td><b>Tidal current</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.tideConditions &&
+                  expedition.protocols.siteCondition.tideConditions.tidalCurrent">
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'flood-current'">
+                      Flood current
+                    </span>
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'slack-water'">
+                      Slack water
+                    </span>
+                    <span ng-show="expedition.protocols.siteCondition.tideConditions.tidalCurrent === 'ebb-current'">
+                      Ebb current
+                    </span>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.surfaceCurrentSpeed === 'YES'" id="surface-current-speed-compare">
+                <td><b>Surface current speed</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+                  expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS">
+                    {{expedition.protocols.siteCondition.waterConditions.surfaceCurrentSpeedMPS}} meters/sec
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.waterConditionPhoto === 'YES'" id="water-condition-photo-compare">
+                <td><b>Water condition photo</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <img id="waterConditionPhoto" class="img-rounded img-responsive"
+                  ng-src="{{expedition.protocols.siteCondition.waterConditions.waterConditionPhoto.path}}"
+                  ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+                  expedition.protocols.siteCondition.waterConditions.waterConditionPhoto"/>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.waterColor === 'YES'" id="water-color-compare">
+                <td><b>Water color</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+                  expedition.protocols.siteCondition.waterConditions.waterColor">
+                    {{vm.getWaterColors(expedition.protocols.siteCondition.waterConditions.waterColor)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.oilSheen === 'YES'" id="oil-sheen-compare">
+                <td><b>Oil sheen</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+                  expedition.protocols.siteCondition.waterConditions.oilSheen">
+                    <span id="noOilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === false ||
+                      !expedition.protocols.siteCondition.waterConditions.oilSheen">No</span>
+                    <span id="oilSheen" ng-show="expedition.protocols.siteCondition.waterConditions.oilSheen === true">Yes</span>
+                  </span>
+                  &nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.garbageWater === 'YES'" id="garbage-water-compare">
+                <td><b>Garbage in water</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions &&
+                  expedition.protocols.siteCondition.waterConditions.garbage">
+                    <span id="noGarbagePresentWater"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === false ||
+                      !expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent">
+                      No</span>
+                    <span id="garbagePresentWater"
+                    ng-show="expedition.protocols.siteCondition.waterConditions.garbage.garbagePresent === true">
+                      Yes:<br/>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.softPlastic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.metal !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.metal)}} amount of metal,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.paper !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.paper)}} amount of paper,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.glass !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.glass)}} amount of glass,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.organic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.organic)}} amount of organic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.waterConditions.garbage.other.description">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.waterConditions.garbage.other.extent)}} amount of
+                        {{expedition.protocols.siteCondition.waterConditions.garbage.other.description}}<br/></span>
+                    </span>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.pipes === 'YES'" id="pipes-compare">
+                <td><b>Pipes</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.waterConditions">
+                    <span ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes">
+                      <span id="noMarkedCSO"
+                      ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === false ||
+                        !expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent">
+                        No CSO pipes</span>
+                      <span id="markedCSO"
+                      ng-show="expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                          CSO pipes present:<br/>
+                          Location at {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}},
+                          {{expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}<br/>
+                          Flow: {{vm.getWaterFlows(expedition.protocols.siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough)}}
+                      </span>
+                    </span>
+                    <br/>
+                    <span ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes">
+                      <span id="noUnmarkedPipe"
+                      ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === false ||
+                        !expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent">
+                        No unmarked or other outfall pipes</span>
+                      <span id="unmarkedPipe"
+                      ng-show="expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
+                          Unmarked or other outfall pipes present:<br/>
+                          Location at {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}},
+                          {{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}<br/>
+                          Flow: {{vm.getWaterFlows(expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough)}}<br/>
+                          <b>{{expedition.protocols.siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM}}cm</b> approximate diameter
+                      </span>
+                    </span>
+                </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.landConditionPhoto === 'YES'" id="land-condition-photo-compare">
+                <td><b>Land condition photo</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <img id="landConditionPhoto" class="img-rounded img-responsive"
+                  ng-src="{{expedition.protocols.siteCondition.landConditions.landConditionPhoto.path}}"
+                  ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions &&
+                  expedition.protocols.siteCondition.landConditions.landConditionPhoto"/>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.shorelineType === 'YES'" id="shoreline-type-compare">
+                <td><b>Shoreline type</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions &&
+                  expedition.protocols.siteCondition.landConditions.shoreLineType">
+                    {{vm.getShorelineTypes(expedition.protocols.siteCondition.landConditions.shoreLineType)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.garbageLand === 'YES'" id="garbage-land-compare">
+                <td><b>Garbage on land</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions &&
+                  expedition.protocols.siteCondition.landConditions.garbage">
+                    <span id="noGarbagePresentLand"
+                    ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === false ||
+                      !expedition.protocols.siteCondition.landConditions.garbage.garbagePresent">No</span>
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.garbagePresent === true">
+                      Yes:<br/>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.hardPlastic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.hardPlastic)}} amount of hard plastic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.softPlastic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.softPlastic)}} amount of soft plastic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.metal !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.metal)}} amount of metal,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.paper !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.paper)}} amount of paper,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.glass !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.glass)}} amount of glass,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.organic !== 'none'">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.organic)}} amount of organic,<br/></span>
+                      <span ng-show="expedition.protocols.siteCondition.landConditions.garbage.other.description">
+                        {{vm.getGarbageExtent(expedition.protocols.siteCondition.landConditions.garbage.other.extent)}} amount of
+                        {{expedition.protocols.siteCondition.landConditions.garbage.other.description}}<br/></span>
+                    </span>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol1.surfaceCover === 'YES'" id="surface-cover-compare">
+                <td><b>Surface cover</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.siteCondition && expedition.protocols.siteCondition.landConditions &&
+                  expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer">
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer}}%
+                      Impervious Surface</span><br/>
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer}}%
+                      Pervious Surface</span><br/>
+                    <span ng-show="expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer">
+                      {{expedition.protocols.siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer}}%
+                      Vegetated Surface</span>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.submergedDepth === 'YES'" id="submerged-depth-compare">
+                <td><b>Submerged depth of cage</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.depthOfOysterCage &&
+                  expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM">
+                    {{expedition.protocols.oysterMeasurement.depthOfOysterCage.submergedDepthofCageM}} meters</span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.oysterCagePhoto === 'YES'" id="oyster-cage-photo-compare">
+                <td><b>Oyster cage photo</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <img id="oysterCagePhoto" class="img-rounded img-responsive"
+                  ng-src="{{expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path}}"
+                  ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage &&
+                  expedition.protocols.oysterMeasurement.conditionOfOysterCage.oysterCagePhoto"/>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.bioaccumulationOnCage === 'YES'" id="bioaccumulation-on-cage-compare">
+                <td><b>Bioaccumulation on cage</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage &&
+                  expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage">
+                    <span id="bioaccumulationHeavy"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'heavy'">
+                      Heavy</span>
+                    <span id="bioaccumulationMedium"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'medium'">
+                      Medium</span>
+                    <span id="bioaccumulationLight"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'light'">
+                      Light</span>
+                    <span id="noBioaccumulation"
+                    ng-show="expedition.protocols.oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === 'none'">
+                      None/clean</span>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.cageDamage === 'YES'" id="cage-damage-compare">
+                <td><b>Cage damage</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.conditionOfOysterCage &&
+                  expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage">
+                    {{expedition.protocols.oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-live-compare">
+                <td><b>Population live</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters">
+                    {{expedition.protocols.oysterMeasurement.totalNumberOfAllLiveOysters}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-avg-size-compare">
+                <td><b>Population avg size</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters">
+                    {{expedition.protocols.oysterMeasurement.averageSizeOfAllLiveOysters | number:2}}mm
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-min-size-compare">
+                <td><b>Population min size</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters">
+                    {{expedition.protocols.oysterMeasurement.minimumSizeOfAllLiveOysters | number:2}}mm
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol2.oysterMeasurements === 'YES'" id="oyster-population-max-size-compare">
+                <td><b>Population max size</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.oysterMeasurement && expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters">
+                    {{expedition.protocols.oysterMeasurement.maximumSizeOfAllLiveOysters | number:2}}mm
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
+                <td><b>Organisms observed</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                    <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganisms"
+                  ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms" class="col-sm-3">
+                    <img id="organism-photo{{$index}}" class="img-rounded img-thumbnail"
+                      ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"
+                      ng-show="organism.sketchPhoto"/><br/>
+                        <b>{{organism.count}}</b> {{vm.getMobileOrganismName(organism.organism)}}<br/><br/>
+                    </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol4.description === 'YES'" id="settlement-tile-description-compare">
+                <td><b>Settlement tile description</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles"
+                  ng-repeat="tile in expedition.protocols.settlementTiles.settlementTiles">
+                    Settlement Tile {{$index+1}}: <br/>
+                    <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
+                      ng-src="{{tile.tilePhoto.path}}" ng-show="tile.tilePhoto"/><br/>
+                    {{tile.description | limitTo:200}}<br/><br/>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol4.organism === 'YES'" id="sessile-organisms-observed-compare">
+                <td><b>Sessile organisms observed</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions" id="sessile-organisms-table-{{$index}}">
+                  <span ng-show="expedition.protocols && expedition.protocols.settlementTiles && expedition.protocols.settlementTiles.settlementTiles">
+                    <table class="table-condensed">
+                        <tr>
+                          <td ng-repeat="h in [0, 1, 2, 3]" ng-show="expedition.protocols.settlementTiles.settlementTiles[h].grid1.organism"
+                            style="vertical-align: top;" width="25%">
+                            <h6>Settlement Tile #{{h+1}}</h6><br/>
+                            <span ng-repeat="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+                            14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]">
+                              <span>
+                                <b class="text-muted">{{i}}:</b>
+                                {{vm.getSessileOrganismName(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}
+                                <img id="tile-photo-{{$index}}" class="img-rounded img-thumbnail"
+                                  ng-src="{{vm.getSessileOrganismPhoto(expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].organism)}}"/><br/>
+                                <em>{{expedition.protocols.settlementTiles.settlementTiles[h]['grid'+i].notes}}</em><br/>
+                              </span>
+                            </td>
+                        </tr>
+                    </table>
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.depth === 'YES'" id="depth-of-water-sample-compare">
+                <td><b>Depth</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.depthOfWaterSampleM">
+                    {{expedition.protocols.waterQuality.avgSample.depthOfWaterSampleM}} meters</span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.temperature === 'YES'" id="water-temperature-compare">
+                <td><b>Temperature</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample">
+                      {{expedition.protocols.waterQuality.avgSample.waterTemperatureF | number:2}}&#8457; /
+                      {{expedition.protocols.waterQuality.avgSample.waterTemperatureC | number:2}}&#8451;
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.dissolvedOxygen === 'YES'" id="dissolved-oxygen-compare">
+                <td><b>Dissolved Oxygen</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.dissolvedOxygen">
+                    {{expedition.protocols.waterQuality.avgSample.dissolvedOxygen | number:2}}
+                    {{vm.getDissolvedOxygenUnit(expedition.protocols.waterQuality.samples[0].dissolvedOxygen.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.salinity === 'YES'" id="salinity-compare">
+                <td><b>Salinity</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.salinity">
+                    {{expedition.protocols.waterQuality.avgSample.salinity | number:2}}
+                    {{vm.getSalinityUnit(expedition.protocols.waterQuality.samples[0].salinity.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.pH === 'YES'" id="pH-compare">
+                <td><b>pH</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.pH">
+                    {{expedition.protocols.waterQuality.avgSample.pH | number:2}}
+                    {{vm.getPHUnits(expedition.protocols.waterQuality.samples[0].pH.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.turbidity === 'YES'" id="turbidity-compare">
+                <td><b>Turbidity</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.turbidity">
+                    {{expedition.protocols.waterQuality.avgSample.turbidity | number:2}}
+                    {{vm.getTurbidityUnit(expedition.protocols.waterQuality.samples[0].turbidity.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.ammonia === 'YES'" id="ammonia-compare">
+                <td><b>Ammonia</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.ammonia">
+                    {{expedition.protocols.waterQuality.avgSample.ammonia | number:2}}
+                    {{vm.getAmmoniaUnit(expedition.protocols.waterQuality.samples[0].ammonia.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.nitrates === 'YES'" id="nitrates-compare">
+                <td><b>Nitrates</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <span ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.nitrates">
+                    {{expedition.protocols.waterQuality.avgSample.nitrates | number:2}}
+                    {{vm.getNitratesUnit(expedition.protocols.waterQuality.samples[0].nitrates.units)}}
+                  </span>&nbsp;
+                </td>
+            </tr>
+            <tr ng-show="vm.parameters.protocol5.other === 'YES'" id="water-quality-other-compare">
+                <td><b>Other</b></td>
+                <td ng-repeat="expedition in vm.compareExpeditions">
+                  <!-- {{expedition.protocols.waterQuality.avgSample.avgOthers}} -->
+                  <span ng-repeat="(key, value) in expedition.protocols.waterQuality.avgSample.avgOthers"
+                  ng-show="expedition.protocols && expedition.protocols.waterQuality && expedition.protocols.waterQuality.avgSample &&
+                  expedition.protocols.waterQuality.avgSample.avgOthers">
+                    {{expedition.protocols.waterQuality.avgSample.avgOthers[key].label}}:
+                    {{expedition.protocols.waterQuality.avgSample.avgOthers[key].average | number:2}}
+                    {{expedition.protocols.waterQuality.avgSample.avgOthers[key].units}}<br/>
+                  </span>&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
   </section>
 </section>
 </div>

@@ -17,16 +17,10 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['team member', 'team lead', 'admin'],
     allows: [{
-      resources: '/api/protocol-water-quality/:waterQualityId/incremental-save',
-      permissions: '*'
-    }, {
       resources: '/api/protocol-water-quality/:waterQualityId/validate',
       permissions: '*'
     }, {
       resources: '/api/protocol-water-quality/:waterQualityId',
-      permissions: '*'
-    }, {
-      resources: '/api/protocol-water-quality',
       permissions: '*'
     }]
   }, {

@@ -106,12 +106,13 @@ var removeLessonFromUnits = function(lesson, callback) {
 var setPdfToDownload = function(host, cookies, lesson, callback) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
   var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
-  var filename = _.replace(lesson.title + '.pdf', /\s/g, '_');
+  var filename = _.replace(lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
+  filename = _.replace(filename + '.pdf', /\s/g, '_');
+
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
   var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' --page-width 800px --page-height 1200px --viewport-size \'800x1200\' ' + input + ' ' + output;
-  console.log('command', command);
   exec(command, function(error, stdout, stderr) {
     if (error) {
       console.log('wkhtmltopdf error: ', error);
@@ -138,6 +139,70 @@ var setPdfToDownload = function(host, cookies, lesson, callback) {
   });
 };
 
+var updateHandouts = function(lesson) {
+  var existingHandouts = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.handoutsFileInput) {
+    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
+      var handout = lesson.materialsResources.handoutsFileInput[i];
+      if (handout.path !== undefined && handout.path !== '' &&
+        handout.originalname !== undefined && handout.originalname !== '' &&
+        handout.filename !== undefined && handout.filename !== '' &&
+        handout.mimetype !== undefined && handout.mimetype !== '') {
+        existingHandouts.push(handout);
+      }
+    }
+  }
+  return existingHandouts;
+};
+
+var updateResources = function(lesson) {
+  var existingResources = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.teacherResourcesFiles) {
+    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
+      var resource = lesson.materialsResources.teacherResourcesFiles[j];
+      if (resource.path !== undefined && resource.path !== '' &&
+        resource.originalname !== undefined && resource.originalname !== '' &&
+        resource.filename !== undefined && resource.filename !== '' &&
+        resource.mimetype !== undefined && resource.mimetype !== '') {
+        existingResources.push(resource);
+      }
+    }
+  }
+  return existingResources;
+};
+
+var updateMaterials = function(lesson) {
+  var existingMaterials = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.lessonMaterialFiles) {
+    for (var j = 0; j < lesson.materialsResources.lessonMaterialFiles.length; j++) {
+      var resource = lesson.materialsResources.lessonMaterialFiles[j];
+      if (resource.path !== undefined && resource.path !== '' &&
+        resource.originalname !== undefined && resource.originalname !== '' &&
+        resource.filename !== undefined && resource.filename !== '' &&
+        resource.mimetype !== undefined && resource.mimetype !== '') {
+        existingMaterials.push(resource);
+      }
+    }
+  }
+  return existingMaterials;
+};
+
+var updateQuestions = function(lesson) {
+  var existingQuestions = [];
+  if (lesson && lesson.materialsResources && lesson.materialsResources.stateTestQuestions) {
+    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
+      var question = lesson.materialsResources.stateTestQuestions[k];
+      if (question.path !== undefined && question.path !== '' &&
+        question.originalname !== undefined && question.originalname !== '' &&
+        question.filename !== undefined && question.filename !== '' &&
+        question.mimetype !== undefined && question.mimetype !== '') {
+        existingQuestions.push(question);
+      }
+    }
+  }
+  return existingQuestions;
+};
+
 /**
  * Create a Lesson
  */
@@ -147,10 +212,10 @@ exports.create = function(req, res) {
     var lesson = new Lesson(lessonJSON);
 
     lesson.user = req.user;
-    lesson.materialsResources.handoutsFileInput = [];
-    lesson.materialsResources.teacherResourcesFiles = [];
-    lesson.materialsResources.lessonMaterialFiles = [];
-    lesson.materialsResources.stateTestQuestions = [];
+    lesson.materialsResources.handoutsFileInput = updateHandouts(req.body);
+    lesson.materialsResources.teacherResourcesFiles = updateResources(req.body);
+    lesson.materialsResources.lessonMaterialFiles = updateMaterials(req.body);
+    lesson.materialsResources.stateTestQuestions = updateQuestions(req.body);
 
     var pattern = /^data:image\/[a-z]*;base64,/i;
     if (lesson.featuredImage && lesson.featuredImage.path && pattern.test(lesson.featuredImage.path)) {
@@ -243,70 +308,6 @@ exports.read = function(req, res) {
   } else {
     res.json(lesson);
   }
-};
-
-var updateHandouts = function(lesson) {
-  var existingHandouts = [];
-  if (lesson && lesson.materialsResources && lesson.materialsResources.handoutsFileInput) {
-    for (var i = 0; i < lesson.materialsResources.handoutsFileInput.length; i++) {
-      var handout = lesson.materialsResources.handoutsFileInput[i];
-      if (handout.path !== undefined && handout.path !== '' &&
-        handout.originalname !== undefined && handout.originalname !== '' &&
-        handout.filename !== undefined && handout.filename !== '' &&
-        handout.mimetype !== undefined && handout.mimetype !== '') {
-        existingHandouts.push(handout);
-      }
-    }
-  }
-  return existingHandouts;
-};
-
-var updateResources = function(lesson) {
-  var existingResources = [];
-  if (lesson && lesson.materialsResources && lesson.materialsResources.teacherResourcesFiles) {
-    for (var j = 0; j < lesson.materialsResources.teacherResourcesFiles.length; j++) {
-      var resource = lesson.materialsResources.teacherResourcesFiles[j];
-      if (resource.path !== undefined && resource.path !== '' &&
-        resource.originalname !== undefined && resource.originalname !== '' &&
-        resource.filename !== undefined && resource.filename !== '' &&
-        resource.mimetype !== undefined && resource.mimetype !== '') {
-        existingResources.push(resource);
-      }
-    }
-  }
-  return existingResources;
-};
-
-var updateMaterials = function(lesson) {
-  var existingMaterials = [];
-  if (lesson && lesson.materialsResources && lesson.materialsResources.lessonMaterialFiles) {
-    for (var j = 0; j < lesson.materialsResources.lessonMaterialFiles.length; j++) {
-      var resource = lesson.materialsResources.lessonMaterialFiles[j];
-      if (resource.path !== undefined && resource.path !== '' &&
-        resource.originalname !== undefined && resource.originalname !== '' &&
-        resource.filename !== undefined && resource.filename !== '' &&
-        resource.mimetype !== undefined && resource.mimetype !== '') {
-        existingMaterials.push(resource);
-      }
-    }
-  }
-  return existingMaterials;
-};
-
-var updateQuestions = function(lesson) {
-  var existingQuestions = [];
-  if (lesson && lesson.materialsResources && lesson.materialsResources.stateTestQuestions) {
-    for (var k = 0; k < lesson.materialsResources.stateTestQuestions.length; k++) {
-      var question = lesson.materialsResources.stateTestQuestions[k];
-      if (question.path !== undefined && question.path !== '' &&
-        question.originalname !== undefined && question.originalname !== '' &&
-        question.filename !== undefined && question.filename !== '' &&
-        question.mimetype !== undefined && question.mimetype !== '') {
-        existingQuestions.push(question);
-      }
-    }
-  }
-  return existingQuestions;
 };
 
 /**

@@ -9,7 +9,8 @@
         templateUrl: 'modules/expeditions/client/views/save-draft-progress-bar.client.view.html',
         scope: {
           value: '=',
-          status: '='
+          status: '=',
+          showClose: '=?'
         }
       };
     });

@@ -65,7 +65,7 @@
     $scope.$on('$viewContentLoaded', function(){
       $timeout(function() {
         $rootScope.$broadcast('iso-method', { name:null, params:null });
-      });
+      }, 500);
     });
 
     if ($rootScope.vocabulary) {
