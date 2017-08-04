@@ -380,31 +380,31 @@
       },
       getExpeditionDate: function(date) {
         return (date === '1970-01-01T00:00:00.000Z') ? '' :
-         moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
+         moment(date).format('MMMM D, YYYY');
       },
       getExpeditionTimeRange: function(startDate, endDate) {
         return (startDate === '1970-01-01T00:00:00.000Z' || endDate === '1970-01-01T00:00:00.000Z') ? '' :
-        moment(startDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm')+'-'+
-          moment(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('HH:mm');
+        moment(startDate).format('HH:mm')+'-'+
+          moment(endDate).format('HH:mm');
       },
       getDate: function(date) {
         if(date) {
-          return moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMMM D, YYYY');
+          return moment(date).format('MMMM D, YYYY');
         } else {
           return '';
         }
       },
       getShortDate: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('M/D/YY');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('M/D/YY');
       },
       getTime: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('h:mma');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('h:mma');
       },
       getDateTime: function(date) {
-        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM D, YYYY, h:mma');
+        return (date === '1970-01-01T00:00:00.000Z') ? '' : moment(date).format('MMM D, YYYY, h:mma');
       },
       isUpcoming: function(expedition) {
-        return (moment(expedition.monitoringStartDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ').isAfter(moment())) ? true : false;
+        return (moment(expedition.monitoringStartDate).isAfter(moment())) ? true : false;
       },
       checkRole: checkRole,
       checkWrite: checkWrite,

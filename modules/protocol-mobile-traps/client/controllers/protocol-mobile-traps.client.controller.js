@@ -304,6 +304,9 @@
                 };
 
                 uploader.onErrorItem = function (fileItem, response, status, headers) {
+                  console.log('mobileTrap', $scope.mobileTrap);
+                  console.log('index', index);
+                  console.log('mobileOrganisms', $scope.mobileTrap.mobileOrganisms[index]);
                   $scope.mobileTrap.mobileOrganisms[index].sketchPhoto.error = response.message;
                   errorCount++;
                   $scope.finishedSaving += Math.floor((1/foundIds.length)*15);
