@@ -38,6 +38,9 @@ var ProtocolMobileTrapSchema = new Schema({
       type: Number,
       default: 0
     },
+    alternateName: {
+      type: String
+    },
     sketchPhoto: {
       originalname: String,
       mimetype: String,

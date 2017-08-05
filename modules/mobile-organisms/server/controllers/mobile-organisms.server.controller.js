@@ -143,13 +143,22 @@ exports.list = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var moIndex = _.findIndex(mobileOrganisms, function(m) {
-        return m.commonName === 'Other/Unknown';
+      var sortedMobileOrganisms = [];
+      _.forEach(mobileOrganisms, function(m) {
+        if (m && m.commonName === 'Other/Unknown') {
+          sortedMobileOrganisms.push(m);
+        }
       });
-      if (moIndex > -1) {
-        var other = mobileOrganisms.splice(moIndex, 1);
-        mobileOrganisms = other.concat(mobileOrganisms);
+      var findUnknownIndex = function() {
+        var index = _.findIndex(mobileOrganisms, function(m) {
+          return m.commonName === 'Other/Unknown';
+        });
+        return index;
+      };
+      while (findUnknownIndex() > -1) {
+        mobileOrganisms.splice(findUnknownIndex(), 1);
       }
+      mobileOrganisms = sortedMobileOrganisms.concat(mobileOrganisms);
       res.json(mobileOrganisms);
     }
   });
@@ -219,7 +228,6 @@ exports.mobileOrganismByID = function(req, res, next, id) {
   }
 
   MobileOrganism.findById(id).exec(function(err, mobileOrganism) {
-    console.log('id', id);
     if (err) {
       return next(err);
     } else if (!mobileOrganism) {

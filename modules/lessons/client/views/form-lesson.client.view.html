@@ -23,7 +23,7 @@
                 <div class="col-md-8">
                   <div class="form-group" show-errors>
                     <label for="lessonTitle" class="control-label required">Lesson Title *</label>
-                    <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title"
+                    <input class="form-control" name="lessonTitle" id="lessonTitle" ng-model="vm.lesson.title" 
                     required/>
                     <div ng-messages="vm.form.lessonForm.lessonTitle.$error" role="alert">
                       <p class="help-block error-text" ng-message="required">Lesson title is required.</p>
@@ -75,8 +75,7 @@
                     <div class="col-md-4">
                       <div class="form-group" show-errors>
                         <label for="classPeriods" class="control-label">Class Periods</label>
-                        <input class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods"
-                        required/>
+                        <input class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods"/>
                         <!-- <select class="form-control" name="classPeriods" id="classPeriods" ng-model="vm.lesson.lessonOverview.classPeriods">
                           <option>1</option>
                           <option>2</option>
@@ -341,9 +340,9 @@
             </div>
           </div>
 
-          <button class="btn btn-default" ng-click="vm.cancel()">Cancel</button>
+          <a class="btn btn-default" ng-click="vm.cancel()">Cancel</a>
 
-          <button class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</button>
+          <a class="btn btn-default" ng-click="vm.save(vm.form.lessonForm.$valid, true)">{{vm.lesson.status === 'published' ? 'Revert to draft' : 'Save draft' }}</a>
 
           <button class="btn btn-primary" type="submit" ng-disabled="!vm.form.lessonForm.$valid">
           {{vm.lesson.status === 'published' ? 'Unpublish and resubmit lesson update' : 'Submit lesson' }}</button>

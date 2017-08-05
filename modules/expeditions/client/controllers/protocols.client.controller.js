@@ -6,12 +6,12 @@
     .controller('ExpeditionProtocolsController', ExpeditionProtocolsController);
 
   ExpeditionProtocolsController.$inject = ['$scope', '$rootScope', '$state', '$stateParams', '$http', 'moment', 'lodash',
-    '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService',
+    '$timeout', '$interval', 'expeditionResolve', 'Authentication', 'TeamsService', 'TeamMembersService', 'Admin',
     'ExpeditionsService', 'ExpeditionActivitiesService', 'FileUploader', 'ExpeditionViewHelper', 'RestorationStationsService'];
 
   function ExpeditionProtocolsController($scope, $rootScope, $state, $stateParams, $http, moment, lodash,
-    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, ExpeditionsService,
-    ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
+    $timeout, $interval, expedition, Authentication, TeamsService, TeamMembersService, Admin,
+    ExpeditionsService, ExpeditionActivitiesService, FileUploader, ExpeditionViewHelper, RestorationStationsService) {
     var vm = this;
     var stopListeningForStateChangeStart;
     vm.expedition = expedition;
@@ -23,6 +23,21 @@
     $scope.settlementTilesErrors = '';
     $scope.waterQualityErrors = '';
     $scope.userToView = {};
+
+    vm.active = '';
+    if (vm.expedition && vm.expedition.protocols) {
+      if (vm.expedition.protocols.siteCondition) {
+        vm.active = 'siteCondition';
+      } else if (vm.expedition.protocols.oysterMeasurement) {
+        vm.active = 'oysterMeasurement';
+      } else if (vm.expedition.protocols.mobileTrap) {
+        vm.active = 'mobileTrap';
+      } else if (vm.expedition.protocols.settlementTiles) {
+        vm.active = 'settlementTiles';
+      } else if (vm.expedition.protocols.waterQuality) {
+        vm.active = 'waterQuality';
+      }
+    }
 
     // Compare the passed in role to the user's roles
     var checkRole = function(role) {
@@ -94,26 +109,39 @@
 
     // Check if the user is allows to write to the given protocol
     vm.checkWrite = function(teamList, protocol) {
-      if (checkRole('admin')) {
-        return true;
-      } else {
-        if (checkRole('team lead') && (protocol.status !== 'incomplete' && protocol.status !== 'returned')) {
+      if (protocol) {
+        if (checkRole('admin')) {
           return true;
         } else {
-          var teamListIndex = lodash.findIndex(teamList, function(m) {
-            return m.username === vm.user.username;
-          });
-          return (teamListIndex > -1) ? true : false;
+
+          if (checkRole('team lead') && (protocol.status !== 'incomplete' && protocol.status !== 'returned')) {
+            return true;
+          } else {
+            if (teamList && teamList.length > 0) {
+              var teamListIndex = lodash.findIndex(teamList, function(m) {
+                return m.username === vm.user.username;
+              });
+              return (teamListIndex > -1) ? true : false;
+            } else {
+              return false;
+            }
+          }
         }
+      } else {
+        return false;
       }
     };
 
     // Check to see if the protocol tab should be disabled
     vm.checkDisabled = function(protocol) {
-      if (checkRole('team lead') || checkRole('admin')) {
-        return false;
+      if (protocol) {
+        if (checkRole('team lead') || checkRole('admin')) {
+          return false;
+        } else {
+          return !(protocol.status === 'incomplete' || protocol.status === 'returned');
+        }
       } else {
-        return !(protocol.status === 'incomplete' || protocol.status === 'returned');
+        return true;
       }
     };
 
@@ -121,7 +149,7 @@
       var getTeamMember = function(index, done) {
         if (index < list.length) {
           TeamMembersService.get({
-            memberId: (list[index]._id) ? list[index]._id : list[index]
+            memberId: (list[index] && list[index]._id) ? list[index]._id : list[index]
           }, function(data) {
             list[index] = data;
             getTeamMember(index+1, done);
@@ -136,32 +164,61 @@
     };
 
     if (vm.expedition.status === 'published' &&
-    vm.expedition.protocols.siteCondition.status === 'published' &&
-    vm.expedition.protocols.oysterMeasurement.status === 'published' &&
-    vm.expedition.protocols.mobileTrap.status === 'published' &&
-    vm.expedition.protocols.settlementTiles.status === 'published' &&
-    vm.expedition.protocols.waterQuality.status === 'published') {
-      $scope.siteCondition = vm.expedition.protocols.siteCondition;
-      vm.viewSiteCondition = true;
-      vm.disabledSiteCondition = false;
-      $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-      vm.viewOysterMeasurement = true;
-      vm.disabledOysterMeasurement = false;
-      $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-      vm.viewMobileTrap = true;
-      vm.disabledMobileTrap = false;
-      $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-      vm.viewSettlementTiles = true;
-      vm.disabledSettlementTiles = false;
-      $scope.waterQuality = vm.expedition.protocols.waterQuality;
-      vm.viewWaterQuality = true;
-      vm.disabledWaterQuality = false;
-
-      populateTeamMembers($scope.siteCondition.teamMembers);
-      populateTeamMembers($scope.oysterMeasurement.teamMembers);
-      populateTeamMembers($scope.mobileTrap.teamMembers);
-      populateTeamMembers($scope.settlementTiles.teamMembers);
-      populateTeamMembers($scope.waterQuality.teamMembers);
+    (!vm.expedition.protocols.siteCondition || vm.expedition.protocols.siteCondition.status === 'published') &&
+    (!vm.expedition.protocols.oysterMeasurement || vm.expedition.protocols.oysterMeasurement.status === 'published') &&
+    (!vm.expedition.protocols.mobileTrap || vm.expedition.protocols.mobileTrap.status === 'published') &&
+    (!vm.expedition.protocols.settlementTiles || vm.expedition.protocols.settlementTiles.status === 'published') &&
+    (!vm.expedition.protocols.waterQuality || vm.expedition.protocols.waterQuality.status === 'published')) {
+      if (vm.expedition.protocols.siteCondition) {
+        $scope.siteCondition = vm.expedition.protocols.siteCondition;
+        vm.viewSiteCondition = true;
+        vm.disabledSiteCondition = false;
+        populateTeamMembers($scope.siteCondition.teamMembers);
+      } else {
+        $scope.siteCondition = null;
+        vm.viewSiteCondition = false;
+        vm.disabledSiteCondition = true;
+      }
+      if (vm.expedition.protocols.oysterMeasurement) {
+        $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+        vm.viewOysterMeasurement = true;
+        vm.disabledOysterMeasurement = false;
+        populateTeamMembers($scope.oysterMeasurement.teamMembers);
+      } else {
+        $scope.oysterMeasurement = null;
+        vm.viewOysterMeasurement = false;
+        vm.disabledOysterMeasurement = true;
+      }
+      if (vm.expedition.protocols.mobileTrap) {
+        $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+        vm.viewMobileTrap = true;
+        vm.disabledMobileTrap = false;
+        populateTeamMembers($scope.mobileTrap.teamMembers);
+      } else {
+        $scope.mobileTrap = null;
+        vm.viewMobileTrap = false;
+        vm.disabledMobileTrap = true;
+      }
+      if (vm.expedition.protocols.settlementTiles) {
+        $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+        vm.viewSettlementTiles = true;
+        vm.disabledSettlementTiles = false;
+        populateTeamMembers($scope.settlementTiles.teamMembers);
+      } else {
+        $scope.settlementTiles = null;
+        vm.viewSettlementTiles = false;
+        vm.disabledSettlementTiles = true;
+      }
+      if (vm.expedition.protocols.waterQuality) {
+        $scope.waterQuality = vm.expedition.protocols.waterQuality;
+        vm.viewWaterQuality = true;
+        vm.disabledWaterQuality = false;
+        populateTeamMembers($scope.waterQuality.teamMembers);
+      } else {
+        $scope.waterQuality = null;
+        vm.viewWaterQuality = false;
+        vm.disabledWaterQuality = true;
+      }
     } else {
       // Set up Site Condition protocol variables
       if (!vm.checkDisabled(vm.expedition.protocols.siteCondition)) {
@@ -267,37 +324,47 @@
       return ExpeditionViewHelper.checkStatusReturned(vm.expedition);
     };
 
+    vm.checkStatusUnpublished = function() {
+      return ExpeditionViewHelper.checkStatusUnpublished(vm.expedition);
+    };
+
     vm.checkAllSubmitted = function(status) {
-      if (vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === 'submitted' &&
-          vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status === 'submitted' &&
-          vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status === 'submitted' &&
-          vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status === 'submitted' &&
-          vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status === 'submitted') {
+      if ((!$scope.siteCondition || (vm.viewSiteCondition && $scope.siteCondition.status === 'submitted')) &&
+          (!$scope.oysterMeasurement || (vm.viewOysterMeasurement && $scope.oysterMeasurement.status === 'submitted')) &&
+          (!$scope.mobileTrap || (vm.viewMobileTrap && $scope.mobileTrap.status === 'submitted')) &&
+          (!$scope.settlementTiles || (vm.viewSettlementTiles && $scope.settlementTiles.status === 'submitted')) &&
+          (!$scope.waterQuality || (vm.viewWaterQuality && $scope.waterQuality.status === 'submitted'))) {
         return true;
       } else {
         var submitted = 0;
         var published = 0;
+        var skipped = 0;
         if (vm.viewSiteCondition && $scope.siteCondition) {
           if ($scope.siteCondition.status === 'submitted') submitted++;
           if ($scope.siteCondition.status === 'published') published++;
         }
+        if (!vm.viewSiteCondition && !$scope.siteCondition) skipped++;
         if (vm.viewOysterMeasurement && $scope.oysterMeasurement) {
           if ($scope.oysterMeasurement.status === 'submitted') submitted++;
           if ($scope.oysterMeasurement.status === 'published') published++;
         }
+        if (!vm.viewOysterMeasurement && !$scope.oysterMeasurement) skipped++;
         if (vm.viewMobileTrap && $scope.mobileTrap) {
           if ($scope.mobileTrap.status === 'submitted') submitted++;
           if ($scope.mobileTrap.status === 'published') published++;
         }
+        if (!vm.viewMobileTrap && !$scope.mobileTrap) skipped++;
         if (vm.viewSettlementTiles && $scope.settlementTiles) {
           if ($scope.settlementTiles.status === 'submitted') submitted++;
           if ($scope.settlementTiles.status === 'published') published++;
         }
+        if (!vm.viewSettlementTiles && !$scope.settlementTiles) skipped++;
         if (vm.viewWaterQuality && $scope.waterQuality) {
           if ($scope.waterQuality.status === 'submitted') submitted++;
           if ($scope.waterQuality.status === 'published') published++;
         }
-        if (submitted > 0 && submitted + published === 5) {
+        if (!vm.viewWaterQuality && !$scope.waterQuality) skipped++;
+        if (submitted > 0 && (submitted + published + skipped === 5)) {
           return true;
         } else {
           return false;
@@ -306,11 +373,11 @@
     };
 
     vm.checkAllStatus = function(status) {
-      if ((vm.viewSiteCondition && $scope.siteCondition && $scope.siteCondition.status === status) &&
-          vm.viewOysterMeasurement && $scope.oysterMeasurement && $scope.oysterMeasurement.status === status &&
-          vm.viewMobileTrap && $scope.mobileTrap && $scope.mobileTrap.status === status &&
-          vm.viewSettlementTiles && $scope.settlementTiles && $scope.settlementTiles.status === status &&
-          vm.viewWaterQuality && $scope.waterQuality && $scope.waterQuality.status === status) {
+      if ((!$scope.siteCondition || (vm.viewSiteCondition && $scope.siteCondition.status === status)) &&
+          (!$scope.oysterMeasurement || (vm.viewOysterMeasurement && $scope.oysterMeasurement.status === status)) &&
+          (!$scope.mobileTrap || (vm.viewMobileTrap && $scope.mobileTrap.status === status)) &&
+          (!$scope.settlementTiles || (vm.viewSettlementTiles && $scope.settlementTiles.status === status)) &&
+          (!$scope.waterQuality || (vm.viewWaterQuality && $scope.waterQuality.status === status))) {
         return true;
       } else {
         return false;
@@ -611,11 +678,27 @@
           }).
           success(function(data, status, headers, config) {
             vm.expedition = data;
-            if(vm.viewSiteCondition) $scope.siteCondition.status = 'published';
-            if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'published';
-            if(vm.viewMobileTrap) $scope.mobileTrap.status = 'published';
-            if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'published';
-            if(vm.viewWaterQuality) $scope.waterQuality.status = 'published';
+            if(vm.viewSiteCondition) {
+              $scope.siteCondition = vm.expedition.protocols.siteCondition;
+              $scope.siteCondition.status = 'published';
+            }
+            if(vm.viewOysterMeasurement) {
+              $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+              $scope.oysterMeasurement.status = 'published';
+            }
+            if(vm.viewMobileTrap) {
+              $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+              $scope.mobileTrap.status = 'published';
+            }
+            if(vm.viewSettlementTiles) {
+              $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+              $scope.settlementTiles.status = 'published';
+            }
+            if(vm.viewWaterQuality) {
+              $scope.waterQuality = vm.expedition.protocols.waterQuality;
+              $scope.waterQuality.status = 'published';
+            }
+
             vm.publishing = false;
             $state.go('expeditions.view', {
               expeditionId: vm.expedition._id
@@ -655,17 +738,27 @@
       }).
       success(function(data, status, headers, config) {
         vm.expedition = data;
-        $scope.siteCondition = vm.expedition.protocols.siteCondition;
-        $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
-        $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
-        $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
-        $scope.waterQuality = vm.expedition.protocols.waterQuality;
 
-        if(vm.viewSiteCondition) $scope.siteCondition.status = 'returned';
-        if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'returned';
-        if(vm.viewMobileTrap) $scope.mobileTrap.status = 'returned';
-        if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'returned';
-        if(vm.viewWaterQuality) $scope.waterQuality.status = 'returned';
+        if(vm.viewSiteCondition) {
+          $scope.siteCondition = vm.expedition.protocols.siteCondition;
+          $scope.siteCondition.status = 'returned';
+        }
+        if(vm.viewOysterMeasurement) {
+          $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+          $scope.oysterMeasurement.status = 'returned';
+        }
+        if(vm.viewMobileTrap) {
+          $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+          $scope.mobileTrap.status = 'returned';
+        }
+        if(vm.viewSettlementTiles) {
+          $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+          $scope.settlementTiles.status = 'returned';
+        }
+        if(vm.viewWaterQuality) {
+          $scope.waterQuality = vm.expedition.protocols.waterQuality;
+          $scope.waterQuality.status = 'returned';
+        }
         vm.returning = false;
         $state.go('expeditions.view', {
           expeditionId: vm.expedition._id
@@ -712,11 +805,27 @@
       }).
       success(function(data, status, headers, config) {
         vm.expedition = data;
-        if(vm.viewSiteCondition) $scope.siteCondition.status = 'unpublished';
-        if(vm.viewOysterMeasurement) $scope.oysterMeasurement.status = 'unpublished';
-        if(vm.viewMobileTrap) $scope.mobileTrap.status = 'unpublished';
-        if(vm.viewSettlementTiles) $scope.settlementTiles.status = 'unpublished';
-        if(vm.viewWaterQuality) $scope.waterQuality.status = 'unpublished';
+        if(vm.viewSiteCondition) {
+          $scope.siteCondition = vm.expedition.protocols.siteCondition;
+          $scope.siteCondition.status = 'unpublished';
+        }
+        if(vm.viewOysterMeasurement) {
+          $scope.oysterMeasurement = vm.expedition.protocols.oysterMeasurement;
+          $scope.oysterMeasurement.status = 'unpublished';
+        }
+        if(vm.viewMobileTrap) {
+          $scope.mobileTrap = vm.expedition.protocols.mobileTrap;
+          $scope.mobileTrap.status = 'unpublished';
+        }
+        if(vm.viewSettlementTiles) {
+          $scope.settlementTiles = vm.expedition.protocols.settlementTiles;
+          $scope.settlementTiles.status = 'unpublished';
+        }
+        if(vm.viewWaterQuality) {
+          $scope.waterQuality = vm.expedition.protocols.waterQuality;
+          $scope.waterQuality.status = 'unpublished';
+        }
+
         vm.unpublishing = false;
         $state.go('expeditions.view', {
           expeditionId: vm.expedition._id
@@ -746,17 +855,22 @@
     //============================
     $scope.authentication = Authentication;
     $scope.form = {};
+    var teamId = (vm.expedition.team && vm.expedition.team._id) ? vm.expedition.team._id : vm.expedition.team;
 
     // Team member select set up
     $scope.teamMemberSelectConfig = {
       mode: 'tags-id',
       id: '_id',
       text: 'displayName',
-      textLookup: function(id) {
+      textLookup: function(obj) {
+        var id = (obj && obj._id) ? obj._id : obj;
         return TeamMembersService.get({ memberId: id }).$promise;
       },
       options: function(searchText) {
-        return TeamMembersService.query();
+        return TeamMembersService.query({
+          searchString: searchText,
+          teamId: teamId
+        });
       }
     };
 

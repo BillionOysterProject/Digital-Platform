@@ -35,6 +35,7 @@
     vm.checkStatusPending = ExpeditionViewHelper.checkStatusPending;
     vm.checkStatusIncomplete = ExpeditionViewHelper.checkStatusIncomplete;
     vm.checkStatusReturned = ExpeditionViewHelper.checkStatusReturned;
+    vm.checkStatusUnpublished = ExpeditionViewHelper.checkStatusUnpublished;
     vm.isUpcoming = ExpeditionViewHelper.isUpcoming;
     vm.displayAssignedProtocols = ExpeditionViewHelper.displayAssignedProtocols;
     vm.expeditionLink = ExpeditionViewHelper.expeditionLink;

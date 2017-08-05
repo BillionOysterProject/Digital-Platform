@@ -84,11 +84,9 @@
                                 <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}"
                                 ng-click="openMap()">Mark the location on a map</a>
                             </div>
-                            <div class="modal fade" id="modal-map-sample{{$index}}" tabindex="-1" role="dialog">
-                                <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
-                                can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
-                                longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
-                            </div>
+                            <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
+                              can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
+                              longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
                         </div>
                     </div>
                 </div>
@@ -410,8 +408,6 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-water-quality-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-water-quality-map" latitude="waterQuality.latitude"
-    longitude="waterQuality.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
-</div>
+<map-select modal-id="modal-water-quality-map" latitude="waterQuality.latitude"
+  longitude="waterQuality.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>

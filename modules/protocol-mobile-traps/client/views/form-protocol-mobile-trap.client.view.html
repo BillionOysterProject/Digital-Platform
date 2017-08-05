@@ -70,16 +70,12 @@
                 </ul>
             </nav>
             <div class="row" isotope-container="isotope-container-mobile-trap" id="isotope-container-mobile-trap">
-                <!--TODO: 
-                1) Remove "Other/Unknown" tile listing
-                2) Show this tile instead for users to add new Other/Unknown organisms 
-                3) When "Identify new organism" is clicked, show modified modal (see comments inside modal)
-                4) When saved, show "Other/Unknown" tile listing as a regular tile with it's own name/picture, reset/keep this "Other/Unknown" tile for users to add more
-
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap">
+                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id" ng-show="organism.show">
                     <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
-                        <h1 class="text-center"><i class="fa fa-2x fa-question text-muted"></i></h1>
-                        <h4 class="text-center">Other/Unknown</h4>
+                        <img ng-src="{{foundOrganisms[organism._id].sketchPhoto.path}}" class="img-responsive" ng-show="foundOrganisms[organism._id].sketchPhoto && foundOrganisms[organism._id].sketchPhoto.path"/>
+                        <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image && !foundOrganisms[organism._id].sketchPhoto.path"/>
+                        <h4 class="text-center" ng-bind="foundOrganisms[organism._id].alternateName" ng-show="foundOrganisms[organism._id].alternateName"></h4>
+                        <h4 class="text-center" ng-bind="organism.commonName" ng-hide="foundOrganisms[organism._id].alternateName"></h4>
                         <div class="text-center">
                             <div class="btn-group btn-group-xs">
                                 <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
@@ -88,25 +84,10 @@
                                 <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-default btn-block" ng-click="openOrganismDetails(organism)"
-                        ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]">
-                        Identify new organism {{(organism.commonName === 'Other/Unknown') ? '*' : ''}}</a>
-                    </div>
-                </div>
-                -->
-                <div class="col-md-3 col-sm-4" isotope-item="isotope-item-mobile-trap" ng-repeat="organism in mobileOrganisms track by organism._id">
-                    <div class="thumbnail" id="mobileOrganismForm-{{$index}}">
-                        <img ng-src="{{organism.image.path}}" class="img-responsive" ng-show="organism.image" />
-                        <h4 class="text-center" ng-bind="organism.commonName"></h4>
-                        <div class="text-center">
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-default" ng-disabled="foundOrganisms[organism._id].count <= 0 || !foundOrganisms[organism._id]" ng-click="removeOrganism(organism)"><i class="glyphicon glyphicon-minus"></i></button>
-                                <b class="pull-left" ng-show="foundOrganisms[organism._id]" id="mobile-organism-count">&nbsp;{{foundOrganisms[organism._id].count}}&nbsp;</b>
-                                <b class="pull-left" ng-show="!foundOrganisms[organism._id]" id="empty-mobile-organism-count">&nbsp;0&nbsp;</b>
-                                <button type="button" class="btn btn-default" ng-click="addOrganism(organism)" organism-id="{{organism._id}}"><i class="glyphicon glyphicon-plus"></i></button>
-                            </div>
-                        </div>
-                        <p class="text-center">
+                        <p class="text-center" ng-show="organism.commonName === 'Other/Unknown'">
+                            <span ng-bind="foundOrganisms[organism._id].notes"></span>
+                        </p>
+                        <p class="text-center" ng-hide="organism.commonName === 'Other/Unknown'">
                             <em class="text-muted" ng-bind="organism.latinName"></em><br />
                             <span ng-bind="organism.description"></span>
                         </p>
@@ -123,11 +104,9 @@
 </form>
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-mobile-trap-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-mobile-trap-map" latitude="mobileTrap.latitude"
-    longitude="mobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
-</div>
+<map-select modal-id="modal-mobile-trap-map" latitude="mobileTrap.latitude"
+  longitude="mobileTrap.longitude" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true" dismiss-function="closeMap"></map-select>
 
 <form-organism-details ng-repeat="organismDetails in foundOrganisms" organism-details="organismDetails"
 sketch-photo-uploader="organismDetails.uploader" sketch-photo-url="organismDetails.imageUrl"

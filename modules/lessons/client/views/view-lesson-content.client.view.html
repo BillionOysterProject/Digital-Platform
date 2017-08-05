@@ -1,6 +1,6 @@
 <div>
-  <div class="row">
-    <div class="col-sm-4">
+  <div class="row" ng-if="!fullPage">
+    <div class="col-md-4">
       <h2 id="lesson-title">{{lesson.title}}
         <small ng-if="!fullPage && favoriteLesson && unfavoriteLesson">
           <a ng-click="favoriteLesson()" ng-if="!lesson.saved">
@@ -12,10 +12,7 @@
         </small>
       </h2>
     </div>
-    <!-- <div class="col-sm-4 pull-right text-right" ng-if="fullPage">
-        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
-    </div> -->
-    <div class="col-sm-8 text-right" ng-if="!fullPage">
+    <div class="col-md-8 text-right">
       <h6 id="status-draft" ng-if="lesson.status === 'draft'">Draft</h6>
       <h6 id="status-pending" ng-if="lesson.status === 'pending'" class="blue">Awaiting Approval</h6>
       <h6 id="status-returned" ng-if="lesson.status === 'returned'" class="red">Returned</h6>
@@ -36,6 +33,9 @@
 
   <div class="row text-muted">
     <div class="col-sm-12">
+      <img ng-if="fullPage" class="pull-right" alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" style="width: 100px; height: 128px" />
+      <h2 ng-if="fullPage" class="blue"><b>{{lesson.title}}</b></h2>
+      
       <h5 id="lesson-author-info" ng-if="lesson.user">
         <img ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3" ng-if="!fullPage">
         <b><a ng-click="openViewUserModal()">{{lesson.user.displayName}}</a></b><br>
@@ -227,32 +227,35 @@
 
     <div ng-class="{ 'col-sm-9': showSidebar, 'col-sm-12': !showSidebar }">
 
-      <h4 ng-if="lesson.lessonOverview.lessonSummary">Summary</h4>
+      <h4 class="blue" ng-if="lesson.lessonOverview.lessonSummary">Summary</h4>
       <div ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></div><br/>
 
-      <h4 ng-if="lesson.lessonObjectives">Objectives</h4>
+      <h4 class="blue" ng-if="lesson.lessonObjectives">Objectives</h4>
       <div ng-bind-html="lesson.lessonObjectives | sanitize"></div>
 
       <hr ng-if="lesson.materialsResources.teacherTips || lesson.preparation || lesson.background" />
 
       <div class="row">
         <div class="col-sm-12">
-          <h3 class="blue" ng-if="lesson.materialsResources.teacherTips || lesson.preparation || lesson.background">Before you get started</h3>
-          <div class="col-sm-12" ng-if="lesson.materialsResources.teacherTips">
-              <h4>Tips for Teachers</h4>
+          <h3 class="text-muted" ng-if="lesson.materialsResources.teacherTips || lesson.preparation || lesson.background">Before you get started</h3>
+          <div ng-if="lesson.materialsResources.teacherTips">
+              <h4 class="blue">Tips for Teachers</h4>
               <div ng-bind-html="lesson.materialsResources.teacherTips | sanitize"></div><br/>
           </div>
-          <div class="col-sm-12" ng-if="lesson.preparation">
-              <h4>Preparation</h4>
+          <div ng-if="lesson.preparation">
+              <h4 class="blue">Preparation</h4>
               <div ng-bind-html="lesson.preparation | sanitize"></div><br/>
           </div>
-          <div class="col-sm-12" ng-if="lesson.background">
-              <h4>Background</h4>
+          <div ng-if="lesson.background">
+              <h4 class="blue">Background</h4>
               <div ng-bind-html="lesson.background | sanitize"></div><br/>
           </div>
         </div>
       </div>
-
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
       <hr ng-if="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
               lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
               lesson.instructionPlan.evaluate || lesson.instructionPlan.extend" />
@@ -263,30 +266,30 @@
         ng-if="lesson.instructionPlan.engage || lesson.instructionPlan.explore ||
                 lesson.instructionPlan.explain || lesson.instructionPlan.elaborate ||
                 lesson.instructionPlan.evaluate || lesson.instructionPlan.extend">
-          <h3 class="blue">Instruction Plan</h3>
+          <h3 class="text-muted">Instruction Plan</h3>
           <div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.engage">
-              <h4>Engage</h4>
+            <div ng-if="lesson.instructionPlan.engage">
+              <h4 class="blue">Engage</h4>
               <div ng-bind-html="lesson.instructionPlan.engage | sanitize"></div><br/>
             </div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.explore">
-              <h4>Explore</h4>
+            <div ng-if="lesson.instructionPlan.explore">
+              <h4 class="blue">Explore</h4>
               <div ng-bind-html="lesson.instructionPlan.explore | sanitize"></div><br/>
             </div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.explain">
-              <h4>Explain</h4>
+            <div ng-if="lesson.instructionPlan.explain">
+              <h4 class="blue">Explain</h4>
               <div ng-bind-html="lesson.instructionPlan.explain | sanitize"></div><br/>
             </div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.elaborate">
-              <h4>Elaborate</h4>
+            <div ng-if="lesson.instructionPlan.elaborate">
+              <h4 class="blue">Elaborate</h4>
               <div ng-bind-html="lesson.instructionPlan.elaborate | sanitize"></div><br/>
             </div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.evaluate">
-              <h4>Evaluate</h4>
+            <div ng-if="lesson.instructionPlan.evaluate">
+              <h4 class="blue">Evaluate</h4>
               <div ng-bind-html="lesson.instructionPlan.evaluate | sanitize"></div><br/>
             </div>
-            <div class="col-sm-12" ng-if="lesson.instructionPlan.extend">
-              <h4>Extend</h4>
+            <div ng-if="lesson.instructionPlan.extend">
+              <h4 class="blue">Extend</h4>
               <div ng-bind-html="lesson.instructionPlan.extend | sanitize"></div><br/>
             </div>
           </div>

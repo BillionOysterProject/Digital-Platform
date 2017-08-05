@@ -310,7 +310,7 @@
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked"
                         ng-hide="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
                         siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
-                        ng-click="openMap()">Mark the location on a map</a>
+                        ng-click="openMap()">Mark location on a map</a>
                         <input class="form-control" type="text" name="csoLocation"
                         value="{{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}"
                         data-toggle="modal" data-target="#modal-map-marked" ng-click="openMap()"
@@ -343,7 +343,7 @@
                           What is the location?</label>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
                         ng-hide="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
-                        ng-click="openMap()">Mark the location on a map</a>
+                        ng-click="openMap()">Mark location on a map</a>
                         <input class="form-control" type="text" name="unmarkedLocation"
                         value="{{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
                         data-toggle="modal" data-target="#modal-map-unmarked" ng-click="openMap()"
@@ -518,23 +518,17 @@
 
 
 <!-- MODALS -->
-<div class="modal fade" id="modal-map-marked" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-map-marked" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true"
-    latitude="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"
-    longitude="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
-</div>
+<map-select modal-id="modal-map-marked" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true"
+  latitude="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude"
+  longitude="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"></map-select>
 
-<div class="modal fade" id="modal-map-unmarked" tabindex="1" role="dialog">
-    <map-select modal-id="modal-map-unmarked" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true"
-    latitude="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"
-    longitude="siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
-</div>
+<map-select modal-id="modal-map-unmarked" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true"
+  latitude="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude"
+  longitude="siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"></map-select>
 
-<div class="modal fade" id="modal-site-condition-map" tabindex="-1" role="dialog">
-    <map-select modal-id="modal-site-condition-map" can-geocode="true" can-click-map-to-add-marker="true"
-    can-move-marker="true" show-marker="true"
-    latitude="siteCondition.latitude"
-    longitude="siteCondition.longitude"></map-select>
-</div>
+<map-select modal-id="modal-site-condition-map" can-geocode="true" can-click-map-to-add-marker="true"
+  can-move-marker="true" show-marker="true"
+  latitude="siteCondition.latitude"
+  longitude="siteCondition.longitude"></map-select>
