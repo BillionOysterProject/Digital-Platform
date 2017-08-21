@@ -25,6 +25,7 @@ var path = require('path'),
   CalendarEvent = mongoose.model('CalendarEvent'),
   MetaEventType = mongoose.model('MetaEventType'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  statsHandler = require(path.resolve('./modules/metrics/server/helpers/metrics.server.helper')),
   archiver = require('archiver'),
   _ = require('lodash'),
   request = require('request'),
@@ -1181,6 +1182,12 @@ exports.downloadZip = function(req, res) {
 
   try {
     fs.mkdirSync(csvFilepath, '0755');
+    statsHandler.teamLeadStats(function(data, fields) {
+      var teamLeadCsvData = json2csv({ data: data, fields: fields });
+      var teamLeadFile = path.join(csvFilepath, 'team-leads.csv');
+      fs.writeFileSync(teamLeadFile, teamLeadCsvData);
+      archive.file(teamLeadFile, { name: 'team-leads.csv' });
+    });
   } catch(e) {
     if(e.code !== 'EEXIST') {
       return res.status(500).send({
