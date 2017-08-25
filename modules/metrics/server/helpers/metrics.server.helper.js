@@ -45,41 +45,77 @@ exports.teamLeadStats = function(callback) {
       label: 'log-ins',
       value: 'loginCount'
     }, {
-      label: 'Expeditions created',
-      value: 'expeditionsCreateCount'
+      label: 'Expeditions created count',
+      value: 'expeditionsCreatedCount'
     }, {
-      label: 'Expeditions published',
+      label: 'Expeditions created',
+      value: 'expeditionsCreated'
+    }, {
+      label: 'Expeditions published count',
       value: 'expeditionsPublishedCount'
     }, {
-      label: 'Lessons viewed',
+      label: 'Expeditions published',
+      value: 'expeditionsPublished'
+    }, {
+      label: 'Lessons viewed count',
       value: 'lessonsViewedCount'
     }, {
-      label: 'Lessons logged',
+      label: 'Lessons viewed',
+      value: 'lessonsViewed'
+    }, {
+      label: 'Lessons logged count',
       value: 'lessonsLoggedCount'
     }, {
-      label: 'Lessons reviewed',
-      value: 'lessonFeedbackCount'
+      label: 'Lessons logged',
+      value: 'lessonsLogged'
     }, {
-      label: 'Lessons created (forked or new)',
+      label: 'Lessons reviewed count',
+      value: 'lessonsFeedbackCount'
+    }, {
+      label: 'Lessons reviewed',
+      value: 'lessonsFeedback'
+    }, {
+      label: 'Lessons created (forked or new) count',
       value: 'lessonsCreatedCount'
     }, {
-      label: 'teams',
+      label: 'Lessons created (forked or new)',
+      value: 'lessonsCreated'
+    }, {
+      label: 'teams count',
       value: 'teamCount'
+    }, {
+      label: 'teams',
+      value: 'teams'
     }, {
       label: 'total team members',
       value: 'totalTeamMemberCount'
     }, {
+      label: 'team members',
+      value: 'teamMembers'
+    }, {
       label: 'total research posters published by team members',
       value: 'totalPostersByTeamMembers'
     }, {
-      label: 'research posters published by self',
+      label: 'research posters published by team members',
+      value: 'postersByTeamMembers'
+    }, {
+      label: 'research posters published by self count',
       value: 'totalPostersBySelf'
     }, {
-      label: 'Events registered',
+      label: 'research posters published by self',
+      value: 'postersBySelf'
+    }, {
+      label: 'Events registered count',
       value: 'eventsRegisteredCount'
     }, {
-      label: 'Events attended',
+      label: 'Events registered',
+      value: 'eventsRegistered'
+    }, {
+      label: 'Events attended count',
       value: 'eventsAttendedCount'
+    }, {
+      label: 'Events attended',
+      value: 'eventsAttended'
     }
   ];
 
@@ -99,104 +135,125 @@ exports.teamLeadStats = function(callback) {
       }
       UserActivity.count({ 'user': user._id, 'activity': 'login' }).exec(function(err, loginCount) {
         userValues.loginCount = (loginCount) ? loginCount : 0;
-        Expedition.aggregate([
-          { $match: { 'teamLead': user._id } },
-          { $group: {
-            _id: null,
-            createdCount: { $sum: 1 },
-            publishedCount: { $sum: { $cond: [ { $eq: ['$status', 'published'] }, 1, 0 ] } }
-          } }
-        ], function(err1, expeditionResults) {
-          if (expeditionResults && expeditionResults.length === 1) {
-            userValues.expeditionsCreateCount = expeditionResults[0].createdCount;
-            userValues.expeditionsPublishedCount = expeditionResults[0].publishedCount;
+        Expedition.find({ 'teamLead': user._id }).select('name').exec(function(err, createdExpeditions) {
+          if (createdExpeditions) {
+            userValues.expeditionsCreatedCount = createdExpeditions.length;
+            userValues.expeditionsCreated = _.join(_.map(createdExpeditions, 'name'), ', ');
           } else {
-            userValues.expeditionsCreateCount = 0;
-            userValues.expeditionsPublishedCount = 0;
+            userValues.expeditionsCreatedCount = 0;
+            userValues.expeditionsCreated = '';
           }
-          Lesson.count({ 'user': user._id }).exec(function(err2, lessonsCreatedCount) {
-            userValues.lessonsCreatedCount = (lessonsCreatedCount) ? lessonsCreatedCount : 0;
-            LessonActivity.aggregate([
-              { $match: { 'user': user._id } },
-              { $group: {
-                _id: null,
-                lessonsViewedCount: { $sum: { $cond: [ { $eq: ['$activity', 'viewed'] }, 1, 0 ] } },
-                lessonsLoggedCount: { $sum: { $cond: [ { $eq: ['$activity', 'taught'] }, 1, 0 ] } },
-                lessonFeedbackCount: { $sum: { $cond: [ { $eq: ['$activity', 'feedback'] }, 1, 0 ] } }
-              } }
-            ], function(err3, lessonActivityResults) {
-              if (lessonActivityResults && lessonActivityResults.length === 1) {
-                userValues.lessonsViewedCount = lessonActivityResults[0].lessonsViewedCount;
-                userValues.lessonsLoggedCount = lessonActivityResults[0].lessonsLoggedCount;
-                userValues.lessonFeedbackCount = lessonActivityResults[0].lessonFeedbackCount;
+          Expedition.find({ 'teamLead': user._id, 'status': 'published' }).select('name').exec(function(err2, publishedExpeditions) {
+            if (publishedExpeditions) {
+              userValues.expeditionsPublishedCount = publishedExpeditions.length;
+              userValues.expeditionsPublished = _.join(_.map(publishedExpeditions, 'name'), ', ');
+            } else {
+              userValues.expeditionsPublishedCount = 0;
+              userValues.expeditionsPublished = '';
+            }
+            Lesson.find({ 'user': user._id }).select('title').exec(function(err3, lessonsCreated) {
+              if (lessonsCreated) {
+                userValues.lessonsCreatedCount = lessonsCreated.length;
+                userValues.lessonsCreated = _.join(_.map(lessonsCreated, 'title'), ', ');
               } else {
-                userValues.lessonsViewedCount = 0;
-                userValues.lessonsLoggedCount = 0;
-                userValues.lessonFeedbackCount = 0;
+                userValues.lessonsCreatedCount = 0;
+                userValues.lessonsCreated = '';
               }
-              Team.find({ 'teamLeads': user._id }).exec(function(err4, teams) {
-                var teamMembers = [];
-                if (teams && teams.length > 0) {
-                  userValues.teamCount = teams.length;
-                  for(var i = 0; i < teams.length; i++) {
-                    teamMembers = teamMembers.concat(teams[i].teamMembers);
-                  }
-                  teamMembers = _.uniq(teamMembers);
-                  userValues.totalTeamMemberCount = teamMembers.length;
+              LessonActivity.find({ 'user': user._id, 'activity': 'viewed' }).select('lesson').populate('lesson', 'title')
+              .exec(function(err4, lessonsViewed) {
+                if (lessonsViewed) {
+                  userValues.lessonsViewedCount = lessonsViewed.length;
+                  userValues.lessonsViewed = _.join(_.map(lessonsViewed, 'lesson.title'), ', ');
                 } else {
-                  userValues.teamCount = 0;
-                  userValues.totalTeamMemberCount = 0;
+                  userValues.lessonsViewedCount = 0;
+                  userValues.lessonsViewed = '';
                 }
-                Research.count({ 'user': { $in: teamMembers } }).exec(function(err5, teamPosterCount) {
-                  if (teamPosterCount) {
-                    userValues.totalPostersByTeamMembers = teamPosterCount;
+                LessonActivity.find({ 'user': user._id, 'activity': 'taught' }).select('lesson').populate('lesson', 'title')
+                .exec(function(err5, lessonsLogged) {
+                  if (lessonsLogged) {
+                    userValues.lessonsLoggedCount = lessonsLogged.length;
+                    userValues.lessonsLogged = _.join(_.map(lessonsLogged, 'lesson.title'), ', ');
                   } else {
-                    userValues.totalPostersByTeamMembers = 0;
+                    userValues.lessonsLoggedCount = 0;
+                    userValues.lessonsLogged = '';
                   }
-                  Research.count({ 'user': user._id }).exec(function(err6, selfPosterCount) {
-                    if (selfPosterCount) {
-                      userValues.totalPostersBySelf = selfPosterCount;
+                  LessonActivity.find({ 'user': user._id, 'activity': 'feedback' }).select('lesson').populate('lesson', 'title')
+                  .exec(function(err6, lessonsFeedback) {
+                    if (lessonsFeedback) {
+                      userValues.lessonsFeedbackCount = lessonsFeedback.length;
+                      userValues.lessonsFeedback = _.join(_.map(lessonsFeedback, 'lesson.title'), ', ');
                     } else {
-                      userValues.totalPostersBySelf = 0;
+                      userValues.lessonsFeedbackCount = 0;
+                      userValues.lessonsFeedback = '';
                     }
-                    CalendarEvent.aggregate([
-                      { $match: { 'registrants.user': user._id } },
-                      { $group: {
-                        _id: null,
-                        eventsRegisteredCount: { $sum: 1 }
-                      } }
-                    ], function(err7, eventsRegistered) {
-                      if (eventsRegistered && eventsRegistered.length === 1) {
-                        userValues.eventsRegisteredCount = eventsRegistered[0].eventsRegisteredCount;
-                      } else {
-                        userValues.eventsRegisteredCount = 0;
-                      }
-                      CalendarEvent.aggregate([
-                        { '$match': {
-                          'registrants': {
-                            '$elemMatch': {
-                              'user': user._id,
-                              'attended': true
-                            }
-                          }
-                        } },
-                        { '$unwind': '$registrants' },
-                        { '$match': {
-                          'registrants.user': user._id,
-                          'registrants.attended': true
-                        } },
-                        { '$group': {
-                          _id: null,
-                          eventsAttendedCount: { $sum: 1 }
-                        } }
-                      ], function(err8, eventsAttended) {
-                        if (eventsAttended && eventsAttended.length === 1) {
-                          userValues.eventsAttendedCount = eventsAttended[0].eventsAttendedCount;
-                        } else {
-                          userValues.eventsAttendedCount = 0;
+                    Team.find({ 'teamLeads': user._id }).select('name teamMembers').populate('teamMembers', 'displayName')
+                    .exec(function(err7, teams) {
+                      var teamMembers = [];
+                      var teamMemberIds = [];
+                      var teamMemberNames = [];
+                      if (teams && teams.length > 0) {
+                        userValues.teamCount = teams.length;
+                        userValues.teams = _.join(_.map(teams, 'name'), ', ');
+                        for(var i = 0; i < teams.length; i++) {
+                          teamMembers = teamMembers.concat(teams[i].teamMembers);
                         }
-                        rows.push(userValues);
-                        eachCallback();
+                        teamMembers = _.uniqBy(teamMembers, '_id');
+                        teamMemberIds = _.map(teamMembers, '_id');
+                        teamMemberNames = _.map(teamMembers, 'displayName');
+                        userValues.totalTeamMemberCount = teamMembers.length;
+                        userValues.teamMembers = _.join(teamMemberNames, ', ');
+                      } else {
+                        userValues.teamCount = 0;
+                        userValues.teams = '';
+                        userValues.totalTeamMemberCount = 0;
+                        userValues.teamMembers = '';
+                      }
+                      Research.find({ 'user': { $in: teamMemberIds } }).select('title').exec(function(err8, teamPosters) {
+                        if (teamPosters) {
+                          userValues.totalPostersByTeamMembers = teamPosters.length;
+                          userValues.postersByTeamMembers = _.join(_.map(teamPosters, 'title'), ', ');
+                        } else {
+                          userValues.totalPostersByTeamMembers = 0;
+                          userValues.postersByTeamMembers = '';
+                        }
+                        Research.find({ 'user': user._id }).select('title').exec(function(err9, selfPosters) {
+                          if (selfPosters) {
+                            userValues.totalPostersBySelf = selfPosters.length;
+                            userValues.postersBySelf = _.join(_.map(selfPosters, 'title'), ', ');
+                          } else {
+                            userValues.totalPostersBySelf = 0;
+                            userValues.postersBySelf = '';
+                          }
+                          CalendarEvent.find({ 'registrants.user': user._id }).select('title')
+                          .exec(function(err10, registeredEvents) {
+                            if (registeredEvents) {
+                              userValues.eventsRegisteredCount = registeredEvents.length;
+                              userValues.eventsRegistered = _.join(_.map(registeredEvents, 'title'), ', ');
+                            } else {
+                              userValues.eventsRegisteredCount = 0;
+                              userValues.eventsRegistered = '';
+                            }
+                            CalendarEvent.find({
+                              'registrants': {
+                                '$elemMatch': {
+                                  'user': user._id,
+                                  'attended': true
+                                }
+                              }
+                            }).select('title').exec(function(err11, attendedEvents) {
+                              if (attendedEvents) {
+                                userValues.eventsAttendedCount = attendedEvents.length;
+                                userValues.eventsAttended = _.join(_.map(attendedEvents, 'title'), ', ');
+                              } else {
+                                userValues.eventsAttendedCount = 0;
+                                userValues.eventsAttended = '';
+                              }
+                              console.log('userValues', userValues);
+                              rows.push(userValues);
+                              eachCallback();
+                            });
+                          });
+                        });
                       });
                     });
                   });
@@ -213,8 +270,110 @@ exports.teamLeadStats = function(callback) {
 };
 
 exports.teamMemberStats = function(callback) {
-  // Team member,	email,	team,	org,	expeditions invited,	protocols submitted,	protocols published,
-  // research published,	research reviewed
+  //Team member, email, team, org, expeditions invited,	protocols submitted, protocols published,
+  //research published, research reviewed
+  var csvFields = [
+    {
+      label: 'Team member',
+      value: 'name'
+    }, {
+      label: 'Email',
+      value: 'email'
+    }, {
+      label: 'Team count',
+      value: 'teamsCount'
+    }, {
+      label: 'Teams',
+      value: 'teams'
+    }, {
+      label: 'Org count',
+      value: 'schoolOrgsCount'
+    }, {
+      label: 'Orgs',
+      value: 'schoolOrgs'
+    }, {
+      label: 'date account created',
+      value: 'created'
+    }, {
+      label: 'log-ins',
+      value: 'loginCount'
+    }, {
+      label: 'expeditions invited count',
+      value: 'expeditionsInvitedCount'
+    }, {
+      label: 'expeditions invited',
+      value: 'expeditionsInvited'
+    }, {
+      label: 'protocols submitted count',
+      value: 'protocolsSubmittedCount'
+    }, {
+      label: 'protocols submitted',
+      value: 'protocolsSubmitted'
+    }, {
+      label: 'protocols published count',
+      value: 'protocolsPublishedCount'
+    }, {
+      label: 'protocols published',
+      value: 'protocolsPublished'
+    }, {
+      label: 'research published count',
+      value: 'researchPublishedCount'
+    }, {
+      label: 'research published',
+      value: 'researchPublished'
+    }, {
+      label: 'research reviewed count',
+      value: 'researchReviewedCount'
+    }, {
+      label: 'research reviewed',
+      value: 'researchReviewed'
+    }
+  ];
+
+  var rows = [];
+  User.find({ 'roles': 'team member' }).select('displayName email schoolOrg created')
+  .populate('schoolOrg', 'name').exec(function(err, users) {
+    async.forEach(users, function(user, eachCallback) {
+      var userValues = {
+        name: (user.displayName) ? user.displayName : '',
+        email: (user.email) ? user.email : '',
+        created: moment(user.created).format('YYYY-MM-DD HH:mm')
+      };
+      var orgs = [];
+      if (user.schoolOrg && user.schoolOrg.name) {
+        orgs = [user.schoolOrg.name];
+      }
+      UserActivity.count({ 'user': user._id, 'activity': 'login' }).exec(function(err1, loginCount) {
+        userValues.loginCount = (loginCount) ? loginCount : 0;
+        Team.find({ 'teamMembers': user._id}).select('name schoolOrg').populate('schoolOrg', 'name').exec(function(err2, teams) {
+          if (teams) {
+            userValues.teams = _.join(_.map(teams, 'name'), ', ');
+            userValues.teamsCount = teams.length;
+            userValues.schoolOrgs = _.join(_.uniq(orgs.concat(_.map(teams, 'schoolOrg.name'))), ', ');
+            userValues.schoolOrgsCount = userValues.schoolOrgs.length;
+          } else {
+            userValues.teams = '';
+            userValues.teamsCount = 0;
+            userValues.schoolOrgs = '';
+            userValues.schoolOrgsCount = 0;
+          }
+          Expedition.find({ $or: [{ 'teamLists.siteCondition': user._id  },{ 'teamLists.oysterMeasurement': user._id },
+          { 'teamLists.mobileTrap': user._id },{ 'teamLists.settlementTiles': user._id },
+          { 'teamLists.waterQuality': user._id }] }).select('name').exec(function(err3, invitedExpeditions) {
+            if (invitedExpeditions) {
+              userValues.expeditionsInvitedCount = invitedExpeditions.length;
+            } else {
+              userValues.expeditionsInvitedCount = 0;
+            }
+            rows.push(userValues);
+            eachCallback();
+          });
+        });
+      });
+    }, function(err) {
+      callback(rows, csvFields);
+    });
+  });
 };
 
 exports.organizationStats = function(callback) {
@@ -225,7 +384,7 @@ exports.organizationStats = function(callback) {
 };
 
 exports.eventStats = function(callback) {
-  // Events,	start date,	location,	capacity,	page views,	registered,	attended,	waitlisted,	unregistered
+  // Events, start date, location,	capacity,	page views,	registered,	attended,	waitlisted,	unregistered
 };
 
 exports.lessonStats = function(callback) {
