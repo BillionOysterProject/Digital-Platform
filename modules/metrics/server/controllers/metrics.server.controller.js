@@ -1355,18 +1355,14 @@ exports.downloadZip = function(req, res) {
         fs.writeFileSync(userLoginsFile, userLoginsCsvData);
         archive.file(userLoginsFile, { name: 'people-activity.csv' });
       }
-      lessonActivityQuery.exec(function(err, lessonActivityData) {
+      unitActivityQuery.exec(function(err, unitActivityData) {
         if(!err) {
           var csvFields = [
             {
-              label: 'Lesson',
-              value: 'lesson.title',
-              default: 'Unknown Lesson'
-            }, {
               label: 'Unit',
               value: 'unit.title',
               default: 'Unknown Unit'
-            },{
+            }, {
               label: 'Activity',
               value: 'activity',
               default: 'Unknown Activity'
@@ -1378,91 +1374,80 @@ exports.downloadZip = function(req, res) {
               default: ''
             }
           ];
-          var lessonActivityCsvData = json2csv({ data: lessonActivityData, fields: csvFields });
-          var lessonActivityFile = path.join(csvFilepath, 'curriculum-lesson-activity.csv');
-          fs.writeFileSync(lessonActivityFile, lessonActivityCsvData);
-          archive.file(lessonActivityFile, { name: 'curriculum-lesson-activity.csv' });
+          var unitActivityCsvData = json2csv({ data: unitActivityData, fields: csvFields });
+          var unitActivityFile = path.join(csvFilepath, 'curriculum-unit-activity.csv');
+          fs.writeFileSync(unitActivityFile, unitActivityCsvData);
+          archive.file(unitActivityFile, { name: 'curriculum-unit-activity.csv' });
         }
-        unitActivityQuery.exec(function(err, unitActivityData) {
+        stationExpeditionsQuery.exec(function(err, stationExpeditionsData) {
           if(!err) {
             var csvFields = [
               {
-                label: 'Unit',
-                value: 'unit.title',
-                default: 'Unknown Unit'
-              }, {
-                label: 'Activity',
-                value: 'activity',
-                default: 'Unknown Activity'
+                label: 'Station',
+                value: 'station.name',
+                default: 'Unknown Station'
               },{
-                label: 'Activity Date',
+                label: 'Expedition',
+                value: 'name',
+                default: ''
+              },{
+                label: 'Team',
+                value: 'team.name',
+                default: ''
+              },{
+                label: 'Team Lead',
+                value: 'teamLead.displayName',
+                default: ''
+              },{
+                label: 'Start Date',
                 value: function(row, field, data) {
-                  return moment(row.created).format('YYYY-MM-DD HH:mm');
+                  return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
+                },
+                default: ''
+              },{
+                label: 'End Date',
+                value: function(row, field, data) {
+                  return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
                 },
                 default: ''
               }
             ];
-            var unitActivityCsvData = json2csv({ data: unitActivityData, fields: csvFields });
-            var unitActivityFile = path.join(csvFilepath, 'curriculum-unit-activity.csv');
-            fs.writeFileSync(unitActivityFile, unitActivityCsvData);
-            archive.file(unitActivityFile, { name: 'curriculum-unit-activity.csv' });
+            var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });
+            var stationExpeditionsFile = path.join(csvFilepath, 'stations.csv');
+            fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
+            archive.file(stationExpeditionsFile, { name: 'stations.csv' });
           }
-          stationExpeditionsQuery.exec(function(err, stationExpeditionsData) {
-            if(!err) {
-              var csvFields = [
-                {
-                  label: 'Station',
-                  value: 'station.name',
-                  default: 'Unknown Station'
-                },{
-                  label: 'Expedition',
-                  value: 'name',
-                  default: ''
-                },{
-                  label: 'Team',
-                  value: 'team.name',
-                  default: ''
-                },{
-                  label: 'Team Lead',
-                  value: 'teamLead.displayName',
-                  default: ''
-                },{
-                  label: 'Start Date',
-                  value: function(row, field, data) {
-                    return moment(row.monitoringStartDate).format('YYYY-MM-DD HH:mm');
-                  },
-                  default: ''
-                },{
-                  label: 'End Date',
-                  value: function(row, field, data) {
-                    return moment(row.monitoringEndDate).format('YYYY-MM-DD HH:mm');
-                  },
-                  default: ''
-                }
-              ];
-              var stationExpeditionsCsvData = json2csv({ data: stationExpeditionsData, fields: csvFields });
-              var stationExpeditionsFile = path.join(csvFilepath, 'stations.csv');
-              fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
-              archive.file(stationExpeditionsFile, { name: 'stations.csv' });
-            }
-            //eventsQuery.exec(function(err, eventsData) {
-              //if(!err) {
-            statsHandler.eventStats(function(eventData, eventFields) {
-              json2csv({ data: eventData, fields: eventFields }, function(err, eventCsvData) {
-                var eventCsvFile = path.join(csvFilepath, 'events.csv');
-                fs.writeFileSync(eventCsvFile, eventCsvData);
-                archive.file(eventCsvFile, { name: 'events.csv' });
-                statsHandler.teamLeadStats(function(teamLeadData, teamLeadFields) {
-                  json2csv({ data: teamLeadData, fields: teamLeadFields }, function(err, teamLeadCsvData) {
-                    var teamLeadFile = path.join(csvFilepath, 'team-leads.csv');
-                    fs.writeFileSync(teamLeadFile, teamLeadCsvData);
-                    archive.file(teamLeadFile, { name: 'team-leads.csv' });
-                    statsHandler.teamMemberStats(function(teamMemberData, teamMemberFields) {
-                      json2csv({ data: teamMemberData, fields: teamMemberFields }, function(err, teamMemberCsvData) {
-                        var teamMemberFile = path.join(csvFilepath, 'team-members.csv');
-                        fs.writeFileSync(teamMemberFile, teamMemberCsvData);
-                        archive.file(teamMemberFile, { name: 'team-members.csv' });
-                        archive.finalize();
+          //eventsQuery.exec(function(err, eventsData) {
+            //if(!err) {
+          statsHandler.eventStats(function(eventData, eventFields) {
+            json2csv({ data: eventData, fields: eventFields }, function(err, eventCsvData) {
+              var eventCsvFile = path.join(csvFilepath, 'events.csv');
+              fs.writeFileSync(eventCsvFile, eventCsvData);
+              archive.file(eventCsvFile, { name: 'events.csv' });
+              statsHandler.teamLeadStats(function(teamLeadData, teamLeadFields) {
+                json2csv({ data: teamLeadData, fields: teamLeadFields }, function(err, teamLeadCsvData) {
+                  var teamLeadFile = path.join(csvFilepath, 'team-leads.csv');
+                  fs.writeFileSync(teamLeadFile, teamLeadCsvData);
+                  archive.file(teamLeadFile, { name: 'team-leads.csv' });
+                  statsHandler.teamMemberStats(function(teamMemberData, teamMemberFields) {
+                    json2csv({ data: teamMemberData, fields: teamMemberFields }, function(err, teamMemberCsvData) {
+                      var teamMemberFile = path.join(csvFilepath, 'team-members.csv');
+                      fs.writeFileSync(teamMemberFile, teamMemberCsvData);
+                      archive.file(teamMemberFile, { name: 'team-members.csv' });
+                      statsHandler.expeditionStats(function(expeditionData, expeditionFields) {
+                        json2csv({ data: expeditionData, fields: expeditionFields }, function(err, expeditionCsvData) {
+                          var expeditionFile = path.join(csvFilepath, 'expeditions.csv');
+                          fs.writeFileSync(expeditionFile, expeditionCsvData);
+                          archive.file(expeditionFile, { name: 'expeditions.csv' });
+                          statsHandler.lessonStats(function(lessonData, lessonFields) {
+                            json2csv({ data: lessonData, fields: lessonFields }, function(err, lessonCsvData) {
+                              var lessonFile = path.join(csvFilepath, 'lessons.csv');
+                              fs.writeFileSync(lessonFile, lessonCsvData);
+                              archive.file(lessonFile, { name: 'lessons.csv' });
+                              archive.finalize();
+                            });
+                          });
+                        });
                       });
                     });
                   });

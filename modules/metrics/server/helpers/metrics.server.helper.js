@@ -13,6 +13,7 @@ var path = require('path'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
   LessonFeedback = mongoose.model('LessonFeedback'),
+  LessonTracker = mongoose.model('LessonTracker'),
   Team = mongoose.model('Team'),
   Research = mongoose.model('Research'),
   ResearchFeedback = mongoose.model('ResearchFeedback'),
@@ -575,4 +576,199 @@ exports.eventStats = function(callback) {
 exports.lessonStats = function(callback) {
   // Lesson,	units,	views,	downloads,	reviews,	rating - overall,	rating - standards,
   // rating - inquiry, rating - restoration,	total classes taught,	total students taught
+  var csvFields = [
+    {
+      label: 'Lesson',
+      value: 'title'
+    }, {
+      label: 'Units',
+      value: 'units'
+    }, {
+      label: 'Views',
+      value: 'views'
+    }, {
+      label: 'Downloads',
+      value: 'downloads'
+    }, {
+      label: 'Reviews',
+      value: 'reviews'
+    }, {
+      label: 'Rating - Overall',
+      value: 'ratingOverall'
+    }, {
+      label: 'Rating - Effectiveness',
+      value: 'ratingEffectiveness'
+    }, {
+      label: 'Rating - Inquiry',
+      value: 'ratingInquiry'
+    }, {
+      label: 'Rating - Align',
+      value: 'ratingAlign'
+    }, {
+      label: 'Rating - Restoration',
+      value: 'ratingRestoration'
+    }, {
+      label: 'Total Classes Taught',
+      value: 'totalClassesTaught'
+    }, {
+      label: 'Total Students Taught',
+      value: 'totalStudentsTaught'
+    }
+  ];
+
+  var rows = [];
+  Lesson.find().select('title units').populate('units', 'title').exec(function(err, lessons) {
+    async.forEach(lessons, function(lesson, eachCallback) {
+      var lessonValues = {
+        title: (lesson.title) ? lesson.title : '',
+        units: (lesson.units) ? _.join(_.map(lesson.units, 'title'), ', ') : ''
+      };
+      LessonActivity.aggregate([
+        { $match: { lesson: lesson._id } },
+        { $group: { _id: null,
+          views: { $sum: { $cond: [{ $eq: ['$activity', 'viewed'] }, 1, 0] } },
+          downloads: { $sum: { $cond: [{ $eq: ['$activity', 'downloaded'] }, 1, 0] } }
+        } }
+      ]).exec(function(err2, activityResults) {
+        if (!activityResults || activityResults.length === 0) {
+          activityResults = [{ views: 0, downloads: 0 }];
+        }
+        lessonValues.views = activityResults[0].views;
+        lessonValues.downloads = activityResults[0].downloads;
+        LessonFeedback.aggregate([
+          { $match: { lesson: lesson._id } },
+          { $group: { _id: null,
+            reviews: { $sum: 1 },
+            ratingEffectiveness: { $avg: '$lessonEffective' },
+            ratingInquiry: { $avg: '$lessonSupportScientificPractice' },
+            ratingAlign: { $avg: '$lessonAlignWithCurriculumn' },
+            ratingRestoration: { $avg: '$lessonPreparesStudents' }
+          } }
+        ]).exec(function(err3, feedbackResults) {
+          if (!feedbackResults || feedbackResults.length === 0) {
+            feedbackResults = [{ reviews: 0, ratingEffectiveness: 0, ratingInquiry: 0, ratingAlign: 0, ratingRestoration: 0 }];
+          }
+          var totalAvgs = (feedbackResults[0].ratingEffectiveness + feedbackResults[0].ratingInquiry +
+            feedbackResults[0].ratingAlign + feedbackResults[0].ratingRestoration);
+          var ratingOverall = (totalAvgs > 0) ? (totalAvgs/4) : 0;
+          lessonValues.reviews = feedbackResults[0].reviews;
+          lessonValues.ratingEffectiveness = _.round(feedbackResults[0].ratingEffectiveness, 2);
+          lessonValues.ratingInquiry = _.round(feedbackResults[0].ratingInquiry, 2);
+          lessonValues.ratingAlign = _.round(feedbackResults[0].ratingAlign, 2);
+          lessonValues.ratingRestoration = _.round(feedbackResults[0].ratingRestoration, 2);
+          lessonValues.ratingOverall = _.round(ratingOverall, 2);
+          LessonTracker.aggregate([
+            { $match: { lesson: lesson._id } },
+            { $group: { _id: null,
+              totalStudentsTaught: { $sum: '$totalNumberOfStudents' },
+              totalClassesTaught: { $sum: '$totalNumberOfClassesOrSections' }
+            } }
+          ]).exec(function(err4, trackerResults) {
+            if (!trackerResults || trackerResults.length === 0) {
+              trackerResults = [{ totalStudentsTaught: 0, totalClassesTaught: 0 }];
+            }
+            lessonValues.totalStudentsTaught = trackerResults[0].totalStudentsTaught;
+            lessonValues.totalClassesTaught = trackerResults[0].totalClassesTaught;
+            rows.push(lessonValues);
+            eachCallback();
+          });
+        });
+      });
+    }, function(err) {
+      callback(rows, csvFields);
+    });
+  });
+};
+
+exports.expeditionStats = function(callback) {
+  // Expeditions, date, station, notes, team lead(s), team members
+  var csvFields = [
+    {
+      label: 'Expedition',
+      value: 'name'
+    }, {
+      label: 'Start Date',
+      value: 'monitoringStartDate'
+    }, {
+      label: 'End Date',
+      value: 'monitoringEndDate'
+    }, {
+      label: 'Station',
+      value: 'stationName'
+    }, {
+      label: 'Notes',
+      value: 'notes'
+    }, {
+      label: 'Team Lead',
+      value: 'teamLead'
+    }, {
+      label: 'Team Member Count',
+      value: 'teamMemberCount'
+    }, {
+      label: 'Team Members',
+      value: 'teamMembers'
+    }, {
+      label: 'Site Condition Members',
+      value: 'siteConditionMembers'
+    }, {
+      label: 'Oyster Measurement Members',
+      value: 'oysterMeasurementMembers'
+    }, {
+      label: 'Mobile Trap Members',
+      value: 'mobileTrapMembers'
+    }, {
+      label: 'Settlement Tiles Members',
+      value: 'settlementTilesMembers'
+    }, {
+      label: 'Water Quality Members',
+      value: 'waterQualityMembers'
+    }
+  ];
+
+  var rows = [];
+  Expedition.find().select('name monitoringStartDate monitoringEndDate station notes teamLead teamLists')
+  .populate('station', 'name').populate('teamLead', 'displayName').populate('teamLists.siteCondition', 'displayName')
+  .populate('teamLists.oysterMeasurement', 'displayName').populate('teamLists.mobileTrap', 'displayName')
+  .populate('teamLists.settlementTiles', 'displayName').populate('teamLists.waterQuality', 'displayName')
+  .sort('-monitoringStartDate').exec(function(err, expeditions) {
+    async.forEach(expeditions, function(expedition, eachCallback) {
+      var expValues = {
+        name: (expedition.name) ? expedition.name : '',
+        monitoringStartDate: (expedition.monitoringStartDate) ?
+          moment(expedition.monitoringStartDate).format('YYYY-MM-DD HH:mm') : '',
+        monitoringEndDate: (expedition.monitoringEndDate) ?
+          moment(expedition.monitoringEndDate).format('YYYY-MM-DD HH:mm') : '',
+        stationName: (expedition.station && expedition.station.name) ? expedition.station.name : '',
+        notes: (expedition.notes) ? expedition.notes : '',
+        teamLead: (expedition.teamLead && expedition.teamLead.displayName) ?
+          expedition.teamLead.displayName : ''
+      };
+      var siteConditionMembers = (expedition.teamLists.siteCondition) ?
+        _.map(expedition.teamLists.siteCondition, 'displayName') : [];
+      var oysterMeasurementMembers = (expedition.teamLists.oysterMeasurement) ?
+        _.map(expedition.teamLists.oysterMeasurement, 'displayName') : [];
+      var mobileTrapMembers = (expedition.teamLists.mobileTrap) ?
+        _.map(expedition.teamLists.mobileTrap, 'displayName') : [];
+      var settlementTilesMembers = (expedition.teamLists.settlementTiles) ?
+        _.map(expedition.teamLists.settlementTiles, 'displayName') : [];
+      var waterQualityMembers = (expedition.teamLists.waterQuality) ?
+        _.map(expedition.teamLists.waterQuality, 'displayName') : [];
+      var teamMembers = _.uniq(_.concat(siteConditionMembers, oysterMeasurementMembers,
+        mobileTrapMembers, settlementTilesMembers, waterQualityMembers));
+
+      expValues.siteConditionMembers = _.join(siteConditionMembers, ', ');
+      expValues.oysterMeasurementMembers = _.join(oysterMeasurementMembers, ', ');
+      expValues.mobileTrapMembers = _.join(mobileTrapMembers, ', ');
+      expValues.settlementTilesMembers = _.join(settlementTilesMembers, ', ');
+      expValues.waterQualityMembers = _.join(waterQualityMembers, ', ');
+
+      expValues.teamMemberCount = teamMembers.length;
+      expValues.teamMembers = _.join(teamMembers, ', ');
+
+      rows.push(expValues);
+      eachCallback();
+    }, function(err) {
+      callback(rows, csvFields);
+    });
+  });
 };
