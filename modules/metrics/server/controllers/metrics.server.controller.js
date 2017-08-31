@@ -1445,72 +1445,25 @@ exports.downloadZip = function(req, res) {
               fs.writeFileSync(stationExpeditionsFile, stationExpeditionsCsvData);
               archive.file(stationExpeditionsFile, { name: 'stations.csv' });
             }
-            eventsQuery.exec(function(err, eventsData) {
-              if(!err) {
-                var csvFields = [
-                  {
-                    label: 'Title',
-                    value: 'title',
-                    default: 'No Title'
-                  },{
-                    label: 'Description',
-                    value: 'description',
-                    default: ''
-                  },{
-                    label: 'Created By',
-                    value: 'user',
-                    default: ''
-                  },{
-                    label: 'Start Date',
-                    value: function(row, field, data) {
-                      return moment(row.startDate).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'End Date',
-                    value: function(row, field, data) {
-                      return moment(row.endDate).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'Registration Deadline',
-                    value: function(row, field, data) {
-                      if(row.deadlineToRegister === undefined || row.deadlineToRegister === null) {
-                        return '';
-                      }
-                      return moment(row.deadlineToRegister).format('YYYY-MM-DD HH:mm');
-                    },
-                    default: ''
-                  },{
-                    label: 'Capacity',
-                    value: 'maximumCapacity',
-                    default: ''
-                  },{
-                    label: '# Registered',
-                    value: 'registrantCount',
-                    default: ''
-                  },{
-                    label: '# Attended',
-                    value: 'attendedCount',
-                    default: ''
-                  }
-                ];
-                var eventCsvData = json2csv({ data: eventsData, fields: csvFields });
+            //eventsQuery.exec(function(err, eventsData) {
+              //if(!err) {
+            statsHandler.eventStats(function(eventData, eventFields) {
+              json2csv({ data: eventData, fields: eventFields }, function(err, eventCsvData) {
                 var eventCsvFile = path.join(csvFilepath, 'events.csv');
                 fs.writeFileSync(eventCsvFile, eventCsvData);
                 archive.file(eventCsvFile, { name: 'events.csv' });
-              }
-              statsHandler.teamLeadStats(function(teamLeadData, teamLeadFields) {
-                json2csv({ data: teamLeadData, fields: teamLeadFields }, function(err, teamLeadCsvData) {
-                  var teamLeadFile = path.join(csvFilepath, 'team-leads.csv');
-                  fs.writeFileSync(teamLeadFile, teamLeadCsvData);
-                  archive.file(teamLeadFile, { name: 'team-leads.csv' });
-                  statsHandler.teamMemberStats(function(teamMemberData, teamMemberFields) {
-                    json2csv({ data: teamMemberData, fields: teamMemberFields }, function(err, teamMemberCsvData) {
-                      var teamMemberFile = path.join(csvFilepath, 'team-members.csv');
-                      fs.writeFileSync(teamMemberFile, teamMemberCsvData);
-                      archive.file(teamMemberFile, { name: 'team-members.csv' });
-                      archive.finalize();
+                statsHandler.teamLeadStats(function(teamLeadData, teamLeadFields) {
+                  json2csv({ data: teamLeadData, fields: teamLeadFields }, function(err, teamLeadCsvData) {
+                    var teamLeadFile = path.join(csvFilepath, 'team-leads.csv');
+                    fs.writeFileSync(teamLeadFile, teamLeadCsvData);
+                    archive.file(teamLeadFile, { name: 'team-leads.csv' });
+                    statsHandler.teamMemberStats(function(teamMemberData, teamMemberFields) {
+                      json2csv({ data: teamMemberData, fields: teamMemberFields }, function(err, teamMemberCsvData) {
+                        var teamMemberFile = path.join(csvFilepath, 'team-members.csv');
+                        fs.writeFileSync(teamMemberFile, teamMemberCsvData);
+                        archive.file(teamMemberFile, { name: 'team-members.csv' });
+                        archive.finalize();
+                      });
                     });
                   });
                 });

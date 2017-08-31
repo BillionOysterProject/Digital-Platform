@@ -12,10 +12,16 @@ var path = require('path'),
   Expedition = mongoose.model('Expedition'),
   Lesson = mongoose.model('Lesson'),
   LessonActivity = mongoose.model('LessonActivity'),
+  LessonFeedback = mongoose.model('LessonFeedback'),
   Team = mongoose.model('Team'),
   Research = mongoose.model('Research'),
-  ResearchActivity = mongoose.model('ResearchActivity'),
-  CalendarEvent = mongoose.model('CalendarEvent');
+  ResearchFeedback = mongoose.model('ResearchFeedback'),
+  CalendarEvent = mongoose.model('CalendarEvent'),
+  ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
+  ProtocolOysterMeasurement = mongoose.model('ProtocolOysterMeasurement'),
+  ProtocolMobileTrap = mongoose.model('ProtocolMobileTrap'),
+  ProtocolSettlementTile = mongoose.model('ProtocolSettlementTile'),
+  ProtocolWaterQuality = mongoose.model('ProtocolWaterQuality');
 
 exports.teamLeadStats = function(callback) {
   // Team lead,	Email,	Team Lead Type,	Org,	Org Type,	date account created,	log-ins,
@@ -177,11 +183,11 @@ exports.teamLeadStats = function(callback) {
                     userValues.lessonsLoggedCount = 0;
                     userValues.lessonsLogged = '';
                   }
-                  LessonActivity.find({ 'user': user._id, 'activity': 'feedback' }).select('lesson').populate('lesson', 'title')
-                  .exec(function(err6, lessonsFeedback) {
-                    if (lessonsFeedback) {
-                      userValues.lessonsFeedbackCount = lessonsFeedback.length;
-                      userValues.lessonsFeedback = _.join(_.map(lessonsFeedback, 'lesson.title'), ', ');
+                  LessonFeedback.find({ 'user': user._id }).select('lesson').populate('lesson', 'title')
+                  .exec(function(err6, lessonsReviewed) {
+                    if (lessonsReviewed) {
+                      userValues.lessonsFeedbackCount = lessonsReviewed.length;
+                      userValues.lessonsFeedback = _.join(_.map(lessonsReviewed, 'lesson.title'), ', ');
                     } else {
                       userValues.lessonsFeedbackCount = 0;
                       userValues.lessonsFeedback = '';
@@ -248,7 +254,6 @@ exports.teamLeadStats = function(callback) {
                                 userValues.eventsAttendedCount = 0;
                                 userValues.eventsAttended = '';
                               }
-                              console.log('userValues', userValues);
                               rows.push(userValues);
                               eachCallback();
                             });
@@ -304,17 +309,35 @@ exports.teamMemberStats = function(callback) {
       label: 'expeditions invited',
       value: 'expeditionsInvited'
     }, {
-      label: 'protocols submitted count',
-      value: 'protocolsSubmittedCount'
+      label: 'Submitted Site Condition Protocols',
+      value: 'p1submittedCount'
     }, {
-      label: 'protocols submitted',
-      value: 'protocolsSubmitted'
+      label: 'Submitted Oyster Measurement Protocols',
+      value: 'p2submittedCount'
     }, {
-      label: 'protocols published count',
-      value: 'protocolsPublishedCount'
+      label: 'Submitted Mobile Trap Protocols',
+      value: 'p3submittedCount'
     }, {
-      label: 'protocols published',
-      value: 'protocolsPublished'
+      label: 'Submitted Settlement Tile Protocols',
+      value: 'p4submittedCount'
+    }, {
+      label: 'Submitted Water Quality Protocols',
+      value: 'p5submittedCount'
+    }, {
+      label: 'Published Site Condition Protocols',
+      value: 'p1publishedCount'
+    }, {
+      label: 'Published Oyster Measurement Protocols',
+      value: 'p2publishedCount'
+    }, {
+      label: 'Published Mobile Trap Protocols',
+      value: 'p3publishedCount'
+    }, {
+      label: 'Published Settlement Tile Protocols',
+      value: 'p4publishedCount'
+    }, {
+      label: 'Published Water Quality Protocols',
+      value: 'p5publishedCount'
     }, {
       label: 'research published count',
       value: 'researchPublishedCount'
@@ -323,10 +346,10 @@ exports.teamMemberStats = function(callback) {
       value: 'researchPublished'
     }, {
       label: 'research reviewed count',
-      value: 'researchReviewedCount'
+      value: 'researchFeedbackCount'
     }, {
       label: 'research reviewed',
-      value: 'researchReviewed'
+      value: 'researchFeedback'
     }
   ];
 
@@ -345,7 +368,7 @@ exports.teamMemberStats = function(callback) {
       }
       UserActivity.count({ 'user': user._id, 'activity': 'login' }).exec(function(err1, loginCount) {
         userValues.loginCount = (loginCount) ? loginCount : 0;
-        Team.find({ 'teamMembers': user._id}).select('name schoolOrg').populate('schoolOrg', 'name').exec(function(err2, teams) {
+        Team.find({ 'teamMembers': user._id }).select('name schoolOrg').populate('schoolOrg', 'name').exec(function(err2, teams) {
           if (teams) {
             userValues.teams = _.join(_.map(teams, 'name'), ', ');
             userValues.teamsCount = teams.length;
@@ -357,16 +380,121 @@ exports.teamMemberStats = function(callback) {
             userValues.schoolOrgs = '';
             userValues.schoolOrgsCount = 0;
           }
-          Expedition.find({ $or: [{ 'teamLists.siteCondition': user._id  },{ 'teamLists.oysterMeasurement': user._id },
+          Expedition.find({ $or: [{ 'teamLists.siteCondition': user._id },{ 'teamLists.oysterMeasurement': user._id },
           { 'teamLists.mobileTrap': user._id },{ 'teamLists.settlementTiles': user._id },
           { 'teamLists.waterQuality': user._id }] }).select('name').exec(function(err3, invitedExpeditions) {
             if (invitedExpeditions) {
               userValues.expeditionsInvitedCount = invitedExpeditions.length;
+              userValues.expeditionsInvited = _.join(_.map(invitedExpeditions, 'name'), ', ');
             } else {
               userValues.expeditionsInvitedCount = 0;
+              userValues.expeditionsInvited = '';
             }
-            rows.push(userValues);
-            eachCallback();
+            var countProtocols = [
+              { $unwind: '$teamLists.siteCondition' },
+              { $unwind: '$teamLists.oysterMeasurement' },
+              { $unwind: '$teamLists.mobileTrap' },
+              { $unwind: '$teamLists.settlementTiles' },
+              { $unwind: '$teamLists.waterQuality' },
+              { $group: { _id: null,
+                site: { $sum: { $cond: [{ $eq: ['$teamLists.siteCondition', user._id] }, 1, 0] } },
+                oyster: { $sum: { $cond: [{ $eq: ['$teamLists.oysterMeasurement', user._id] }, 1, 0] } },
+                mobile: { $sum: { $cond: [{ $eq: ['$teamLists.mobileTrap', user._id] }, 1, 0] } },
+                tiles: { $sum: { $cond: [{ $eq: ['$teamLists.settlementTiles', user._id] }, 1, 0] } },
+                water: { $sum: { $cond: [{ $eq: ['$teamLists.waterQuality', user._id] }, 1, 0] } }
+              } }
+            ];
+            var pubCountQuery = _.concat([{ $match: { 'status': 'published' } }], countProtocols);
+            var subCountQuery = _.concat([{ $match: { 'status': { $ne: 'incomplete' } } }], countProtocols);
+            Expedition.aggregate(pubCountQuery).exec(function(err4, pubProResult) {
+              Expedition.aggregate(subCountQuery).exec(function(err5, subProResult) {
+                ProtocolSiteCondition.aggregate([{ $match: { teamMembers: user._id } },
+                { $group: { _id: null,
+                  pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                  sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
+                } }]).exec(function(err6, siteResults) {
+                  ProtocolOysterMeasurement.aggregate([{ $match: { teamMembers: user._id } },
+                  { $group: { _id: null,
+                    pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                    sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
+                  } }]).exec(function(err7, oysterResults) {
+                    ProtocolMobileTrap.aggregate([{ $match: { teamMembers: user._id } },
+                    { $group: { _id: null,
+                      pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                      sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
+                    } }]).exec(function(err8, mobileResults) {
+                      ProtocolSettlementTile.aggregate([{ $match: { teamMembers: user._id } },
+                      { $group: { _id: null,
+                        pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                        sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
+                      } }]).exec(function(err9, tilesResults) {
+                        ProtocolWaterQuality.aggregate([{ $match: { teamMembers: user._id } },
+                        { $group: { _id: null,
+                          pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                          sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
+                        } }]).exec(function(err10, waterResults) {
+                          if (!pubProResult || pubProResult.length === 0) {
+                            pubProResult = [{ site: 0, oyster: 0, mobile: 0, tiles: 0, water: 0 }];
+                          }
+                          if (!subProResult || subProResult.length === 0) {
+                            subProResult = [{ site: 0, oyster: 0, mobile: 0, tiles: 0, water: 0 }];
+                          }
+                          if (!siteResults || siteResults.length === 0) {
+                            siteResults = [{ pub: 0, sub: 0 }];
+                          }
+                          if (!oysterResults || oysterResults.length === 0) {
+                            oysterResults = [{ pub: 0, sub: 0 }];
+                          }
+                          if (!mobileResults || mobileResults.length === 0) {
+                            mobileResults = [{ pub: 0, sub: 0 }];
+                          }
+                          if (!tilesResults || tilesResults.length === 0) {
+                            tilesResults = [{ pub: 0, sub: 0 }];
+                          }
+                          if (!waterResults || waterResults.length === 0) {
+                            waterResults = [{ pub: 0, sub: 0 }];
+                          }
+                          userValues.p1submittedCount = subProResult[0].site + siteResults[0].sub;
+                          userValues.p2submittedCount = subProResult[0].oyster + oysterResults[0].sub;
+                          userValues.p3submittedCount = subProResult[0].mobile + mobileResults[0].sub;
+                          userValues.p4submittedCount = subProResult[0].tiles + tilesResults[0].sub;
+                          userValues.p5submittedCount = subProResult[0].water + waterResults[0].sub;
+
+                          userValues.p1publishedCount = pubProResult[0].site + siteResults[0].pub;
+                          userValues.p2publishedCount = pubProResult[0].oyster + oysterResults[0].pub;
+                          userValues.p3publishedCount = pubProResult[0].mobile + mobileResults[0].pub;
+                          userValues.p4publishedCount = pubProResult[0].tiles + tilesResults[0].pub;
+                          userValues.p5publishedCount = pubProResult[0].water + waterResults[0].pub;
+
+                          Research.find({ user: user._id, status: 'published' }).select('title')
+                          .exec(function(err11, researchCreated) {
+                            if (researchCreated) {
+                              userValues.researchPublished = _.join(_.map(researchCreated, 'title'), ', ');
+                              userValues.researchPublishedCount = researchCreated.length;
+                            } else {
+                              userValues.researchPublished = '';
+                              userValues.researchPublishedCount = 0;
+                            }
+                            ResearchFeedback.find({ user: user._id }).select('research')
+                            .populate('research', 'title').exec(function(err12, researchReviewed) {
+                              if (researchReviewed) {
+                                userValues.researchFeedback = _.join(_.map(researchReviewed, 'research.title'), ', ');
+                                userValues.researchFeedbackCount = researchReviewed.length;
+                              } else {
+                                userValues.researchFeedback = '';
+                                userValues.researchFeedbackCount = 0;
+                              }
+                              rows.push(userValues);
+                              eachCallback();
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
           });
         });
       });
@@ -377,17 +505,74 @@ exports.teamMemberStats = function(callback) {
 };
 
 exports.organizationStats = function(callback) {
-  // Org,	Address,	City,	State,	Zip,	org type,	Expeditions created,	Expeditions published,	Lessons viewed,
-  // Lessons logged,	Lessons reviewed,	 Lessons created (forked or new),	teams,	total team members,
-  // total research posters published by all team members,	research posters published by team leads,	events registered,
-  // events attended
+  // Org, Address, City, State, Zip, org type, Expeditions created, Expeditions published,
+  // Lessons viewed, Lessons logged, Lessons reviewed, Lessons created (forked or new), teams,
+  // total team members, total research posters published by all team members,
+  // research posters published by team leads, events registered, events attended
 };
 
 exports.eventStats = function(callback) {
-  // Events, start date, location,	capacity,	page views,	registered,	attended,	waitlisted,	unregistered
+  // Events, start date, location,	capacity,	registered,	attended, --page views,	--waitlisted,	--unregistered
+  var csvFields = [
+    {
+      label: 'Events',
+      value: 'title'
+    }, {
+      label: 'Start Date',
+      value: 'startDate'
+    }, {
+      label: 'Location',
+      value: 'addressString'
+    }, {
+      label: 'Capacity',
+      value: 'maximumCapacity'
+    }, {
+      label: 'Registered Count',
+      value: 'registeredCount'
+    }, {
+      label: 'Registered',
+      value: 'registered'
+    }, {
+      label: 'Attended Count',
+      value: 'attendedCount'
+    }, {
+      label: 'Attended',
+      value: 'attended'
+    }
+  ];
+
+  var rows = [];
+  CalendarEvent.find().select('title dates location maximumCapacity registrants').populate('registrants.user', 'displayName')
+  .exec(function(err, events) {
+    async.forEach(events, function(event, eachCallback) {
+      var eventValues = {
+        title: (event.title) ? event.title : '',
+        startDate: (event.dates && event.dates.length > 0 && event.dates[0].startDateTime) ?
+          moment(event.dates[0].startDateTime).format('YYYY-MM-DD HH:mm') : '',
+        addressString: (event.location && event.location.addressString) ? event.location.addressString : '',
+        maximumCapacity: (event.maximumCapacity) ? event.maximumCapacity : ''
+      };
+      var registered = [];
+      var attended = [];
+      _.forEach(event.registrants, function(registrant) {
+        if (registrant && registrant.user) {
+          registered.push(registrant.user.displayName);
+          if (registrant.attended) attended.push(registrant.user.displayName);
+        }
+      });
+      eventValues.registeredCount = registered.length;
+      eventValues.registered = _.join(registered, ', ');
+      eventValues.attendedCount = attended.length;
+      eventValues.attended = _.join(attended, ', ');
+      rows.push(eventValues);
+      eachCallback();
+    }, function(err) {
+      callback(rows, csvFields);
+    });
+  });
 };
 
 exports.lessonStats = function(callback) {
-  // Lesson,	units,	views,	downloads,	reviews,	rating - overall,	rating - standards,	rating - inquiry,
-  // rating - restoration,	total classes taught,	total students taught
+  // Lesson,	units,	views,	downloads,	reviews,	rating - overall,	rating - standards,
+  // rating - inquiry, rating - restoration,	total classes taught,	total students taught
 };
