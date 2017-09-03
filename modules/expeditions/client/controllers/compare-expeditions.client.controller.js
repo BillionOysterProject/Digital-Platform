@@ -60,9 +60,7 @@
       teamLeadName: 'All',
       startDate: '',
       endDate: '',
-      searchString: '',
-      limit: 15,
-      page: 1
+      searchString: ''
     };
 
     vm.findCompareExpeditions = function(callback) {
