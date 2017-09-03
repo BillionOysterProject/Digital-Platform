@@ -53,10 +53,10 @@ var addTeamPermissionsForCurrentUser = function(req, team) {
   team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id &&
     team.teamLead._id.toString() === req.user._id.toString() ? true : false;
 
-  if (!team.isCurrentUserTeamLead) {
+  if (!team.isCurrentUserTeamLead && team.teamLeads && team.teamLeads.length > 0) {
     var indexL = _.findIndex(team.teamLeads, function(l) {
       var leadId = (l && l._id) ? l._id : l;
-      return leadId.toString() === req.user._id.toString();
+      return (leadId && req.user && req.user._id && leadId.toString() === req.user._id.toString());
     });
     team.isCurrentUserTeamLead = (indexL > -1) ? true : false;
   }
