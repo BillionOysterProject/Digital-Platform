@@ -1444,7 +1444,14 @@ exports.downloadZip = function(req, res) {
                               var lessonFile = path.join(csvFilepath, 'lessons.csv');
                               fs.writeFileSync(lessonFile, lessonCsvData);
                               archive.file(lessonFile, { name: 'lessons.csv' });
-                              archive.finalize();
+                              statsHandler.organizationStats(function(orgData, orgFields) {
+                                json2csv({ data: orgData, fields: orgFields }, function(err, orgCsvData) {
+                                  var orgFile = path.join(csvFilepath, 'organizations.csv');
+                                  fs.writeFileSync(orgFile, orgCsvData);
+                                  archive.file(orgFile, { name : 'organizations.csv' });
+                                  archive.finalize();
+                                });
+                              });
                             });
                           });
                         });

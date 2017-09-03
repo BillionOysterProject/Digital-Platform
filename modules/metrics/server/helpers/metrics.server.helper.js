@@ -373,8 +373,9 @@ exports.teamMemberStats = function(callback) {
           if (teams) {
             userValues.teams = _.join(_.map(teams, 'name'), ', ');
             userValues.teamsCount = teams.length;
-            userValues.schoolOrgs = _.join(_.uniq(orgs.concat(_.map(teams, 'schoolOrg.name'))), ', ');
-            userValues.schoolOrgsCount = userValues.schoolOrgs.length;
+            orgs = _.uniq(orgs.concat(_.map(teams, 'schoolOrg.name')));
+            userValues.schoolOrgs = _.join(orgs, ', ');
+            userValues.schoolOrgsCount = orgs.length;
           } else {
             userValues.teams = '';
             userValues.teamsCount = 0;
@@ -506,10 +507,144 @@ exports.teamMemberStats = function(callback) {
 };
 
 exports.organizationStats = function(callback) {
-  // Org, Address, City, State, Zip, org type, Expeditions created, Expeditions published,
+  // Org, Address, City, State, org type, Expeditions created, Expeditions published,
   // Lessons viewed, Lessons logged, Lessons reviewed, Lessons created (forked or new), teams,
   // total team members, total research posters published by all team members,
   // research posters published by team leads, events registered, events attended
+  var csvFields = [
+    {
+      label: 'Organization',
+      value: 'name'
+    }, {
+      label: 'Street',
+      value: 'streetAddress'
+    }, {
+      label: 'City',
+      value: 'city'
+    }, {
+      label: 'State',
+      value: 'state'
+    }, {
+      label: 'Teams',
+      value: 'teamCount'
+    }, {
+      label: 'Total team leads',
+      value: 'totalTeamLeadCount'
+    }, {
+      label: 'Total team members',
+      value: 'totalTeamMemberCount'
+    }, {
+      label: 'Expeditions created',
+      value: 'expCreated'
+    }, {
+      label: 'Expeditions published',
+      value: 'expPublished'
+    }, {
+      label: 'Lessons viewed',
+      value: 'lessonsViewed'
+    }, {
+      label: 'Lessons logged',
+      value: 'lessonsLogged'
+    }, {
+      label: 'Lessons reviewed',
+      value: 'lessonsReviewed'
+    }, {
+      label: 'Lessons created (forked or new)',
+      value: 'lessonsCreated'
+    }, {
+      label: 'Total research posters published by all team members',
+      value: 'researchTeamMembers'
+    }, {
+      label: 'Total research posters published by all team leads',
+      value: 'researchTotalLeads'
+    }, {
+      label: 'Events registered',
+      value: 'eventsRegistered'
+    }, {
+      label: 'Events attended',
+      value: 'eventsAttended'
+    }
+  ];
+
+  var rows = [];
+  SchoolOrg.find().select('name streetAddress city state').exec(function(err, orgs) {
+    async.forEach(orgs, function(org, eachCallback) {
+      var orgValues = {
+        name: (org.name) ? org.name : '',
+        streetAddress: (org.streetAddress) ? org.streetAddress : '',
+        city: (org.city) ? org.city : '',
+        state: (org.state) ? org.state: ''
+      };
+      Team.find({ schoolOrg: org._id }).select('name').exec(function(err1, teams) {
+        orgValues.teamCount = (teams) ? teams.length : 0;
+        Team.distinct('teamLeads', { schoolOrg: org._id }).exec(function(err2, teamTeamLeads) {
+          User.distinct('_id', { roles: 'team lead', schoolOrg: org._id }).exec(function(err3, userTeamLeads) {
+            var teamLeads = _.uniq(_.concat(teamTeamLeads, userTeamLeads));
+            orgValues.totalTeamLeadCount = (teamLeads) ? teamLeads.length : 0;
+            Team.distinct('teamMembers', { schoolOrg: org._id }).exec(function(err4, teamTeamMembers) {
+              User.distinct('_id', { roles: 'team members', schoolOrg: org._id }).exec(function(err5, userTeamMembers) {
+                var teamMembers = _.uniq(_.concat(teamTeamMembers, userTeamMembers));
+                orgValues.totalTeamMemberCount = (teamMembers) ? teamMembers.length : 0;
+                Expedition.aggregate([
+                  { $match: { teamLead: { $in: teamLeads } } },
+                  { $group: { _id: null,
+                    created: { $sum: 1 },
+                    published: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
+                  } }
+                ]).exec(function(err6, expResults) {
+                  if (!expResults || expResults.length === 0) {
+                    expResults = [{ _id: null, created: 0, published: 0 }];
+                  }
+                  orgValues.expCreated = expResults[0].created;
+                  orgValues.expPublished = expResults[0].published;
+                  Lesson.count({ user: { $in: teamLeads } }).exec(function(err7, lessonCount) {
+                    orgValues.lessonsCreated = (lessonCount) ? lessonCount : 0;
+                    LessonActivity.aggregate([
+                      { $match: { user: { $in: teamLeads } } },
+                      { $group: { _id: null,
+                        viewed: { $sum: { $cond: [{ $eq: ['$activity', 'viewed'] }, 1, 0] } },
+                        taught: { $sum: { $cond: [{ $eq: ['$activity', 'taught'] }, 1, 0] } },
+                        reviewed: { $sum: { $cond: [{ $eq: ['$activity', 'feedback'] }, 1, 0] } },
+                      } }
+                    ]).exec(function(err8, lessonResults) {
+                      if (!lessonResults || lessonResults.length === 0) {
+                        lessonResults = [{ _id: null, viewed: 0, taught: 0, reviewed: 0 }];
+                      }
+                      orgValues.lessonsViewed = lessonResults[0].viewed;
+                      orgValues.lessonsLogged = lessonResults[0].taught;
+                      orgValues.lessonsReviewed = lessonResults[0].reviewed;
+                      Research.count({ user: { $in: teamMembers } }).exec(function(err9, researchTeamMemberCount) {
+                        orgValues.researchTeamMembers = (researchTeamMemberCount) ? researchTeamMemberCount : 0;
+                        Research.count({ user: { $in: teamLeads } }).exec(function(err10, researchTotalLeadCount) {
+                          orgValues.researchTotalLeads = (researchTotalLeadCount) ? researchTotalLeadCount: 0;
+                          CalendarEvent.count({ 'registrants.user': { $in: teamLeads } })
+                          .exec(function(err11, eventRegCount) {
+                            orgValues.eventsRegistered = (eventRegCount) ? eventRegCount : 0;
+                            CalendarEvent.count({ 'registrants': {
+                              '$elemMatch': {
+                                'user': { $in: teamLeads },
+                                'attended': true
+                              }
+                            } }).exec(function(err12, eventAttCount) {
+                              orgValues.eventsAttended = (eventAttCount) ? eventAttCount : 0;
+                              rows.push(orgValues);
+                              eachCallback();
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    }, function(err) {
+      callback(rows, csvFields);
+    });
+  });
 };
 
 exports.eventStats = function(callback) {
@@ -696,6 +831,9 @@ exports.expeditionStats = function(callback) {
       label: 'Station',
       value: 'stationName'
     }, {
+      label: 'Status',
+      value: 'status'
+    }, {
       label: 'Notes',
       value: 'notes'
     }, {
@@ -726,7 +864,7 @@ exports.expeditionStats = function(callback) {
   ];
 
   var rows = [];
-  Expedition.find().select('name monitoringStartDate monitoringEndDate station notes teamLead teamLists')
+  Expedition.find().select('name monitoringStartDate monitoringEndDate station status notes teamLead teamLists')
   .populate('station', 'name').populate('teamLead', 'displayName').populate('teamLists.siteCondition', 'displayName')
   .populate('teamLists.oysterMeasurement', 'displayName').populate('teamLists.mobileTrap', 'displayName')
   .populate('teamLists.settlementTiles', 'displayName').populate('teamLists.waterQuality', 'displayName')
@@ -739,6 +877,7 @@ exports.expeditionStats = function(callback) {
         monitoringEndDate: (expedition.monitoringEndDate) ?
           moment(expedition.monitoringEndDate).format('YYYY-MM-DD HH:mm') : '',
         stationName: (expedition.station && expedition.station.name) ? expedition.station.name : '',
+        status: (expedition.status) ? expedition.status : '',
         notes: (expedition.notes) ? expedition.notes : '',
         teamLead: (expedition.teamLead && expedition.teamLead.displayName) ?
           expedition.teamLead.displayName : ''
