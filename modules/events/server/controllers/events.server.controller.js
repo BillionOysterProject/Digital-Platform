@@ -172,20 +172,25 @@ var fillInRegistrantsData = function(registrants, callback) {
   var getOrgTeamValues = function(index, registrantsList, callbackInternal) {
     if (index < registrantsList.length) {
       var registrant = registrantsList[index];
-      SchoolOrg.findById(registrant.user.schoolOrg).select('name').exec(function(err, schoolOrg) {
-        registrant.user.schoolOrg = schoolOrg;
-        Team.find({ $or: [{ 'teamLead': registrant.user._id },
-          { 'teamMembers': registrant.user._id }] }, { 'name': 1 }).exec(function(err, teams) {
-            if (teams && teams.length > 0) {
-              var teamNames = [];
-              for (var i = 0; i < teams.length; i++) {
-                teamNames.push(teams[i].name);
-              }
-              registrant.user.teams = teamNames.join(', ');
-            }
+      Team.find({ $or: [{ 'teamLead': registrant.user._id },
+      { 'teamMembers': registrant.user._id }] }, { 'name': 1 }).exec(function(err, teams) {
+        if (teams && teams.length > 0) {
+          var teamNames = [];
+          for (var i = 0; i < teams.length; i++) {
+            teamNames.push(teams[i].name);
+          }
+          registrant.user.teams = teamNames.join(', ');
+        }
+        if (registrant.user && registrant.user.schoolOrg) {
+          SchoolOrg.findById(registrant.user.schoolOrg).select('name').exec(function(err, schoolOrg) {
+            registrant.user.schoolOrg = schoolOrg;
             registrantsList[index] = registrant;
             getOrgTeamValues(index+1, registrantsList, callbackInternal);
           });
+        } else {
+          registrantsList[index] = registrant;
+          getOrgTeamValues(index+1, registrantsList, callbackInternal);
+        }
       });
     } else {
       callbackInternal(registrantsList);
