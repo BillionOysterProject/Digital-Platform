@@ -172,8 +172,9 @@ var fillInRegistrantsData = function(registrants, callback) {
   var getOrgTeamValues = function(index, registrantsList, callbackInternal) {
     if (index < registrantsList.length) {
       var registrant = registrantsList[index];
-      Team.find({ $or: [{ 'teamLead': registrant.user._id },
-      { 'teamMembers': registrant.user._id }] }, { 'name': 1 }).exec(function(err, teams) {
+      var registrantId = (registrant && registrant.user && registrant.user._id) ? registrant.user._id : registrant.user;
+      Team.find({ $or: [{ 'teamLead': registrantId },
+      { 'teamMembers': registrantId }] }, { 'name': 1 }).exec(function(err, teams) {
         if (teams && teams.length > 0) {
           var teamNames = [];
           for (var i = 0; i < teams.length; i++) {
@@ -182,7 +183,8 @@ var fillInRegistrantsData = function(registrants, callback) {
           registrant.user.teams = teamNames.join(', ');
         }
         if (registrant.user && registrant.user.schoolOrg) {
-          SchoolOrg.findById(registrant.user.schoolOrg).select('name').exec(function(err, schoolOrg) {
+          var schoolOrgId = (registrant.user.schoolOrg._id) ? registrant.user.schoolOrg._id : registrant.user.schoolOrg;
+          SchoolOrg.findById(schoolOrgId).select('name').exec(function(err, schoolOrg) {
             registrant.user.schoolOrg = schoolOrg;
             registrantsList[index] = registrant;
             getOrgTeamValues(index+1, registrantsList, callbackInternal);
