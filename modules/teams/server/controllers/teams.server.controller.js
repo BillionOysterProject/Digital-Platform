@@ -50,22 +50,34 @@ exports.create = function (req, res) {
 // Add a custom field to the Team, for determining if the current User is the "lead".
 // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Team model.
 var addTeamPermissionsForCurrentUser = function(req, team) {
-  team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id &&
-    team.teamLead._id.toString() === req.user._id.toString() ? true : false;
+  if (team) {
+    team.isCurrentUserTeamLead = req.user && team.teamLead && team.teamLead._id &&
+      team.teamLead._id.toString() === req.user._id.toString() ? true : false;
 
-  if (!team.isCurrentUserTeamLead) {
-    var indexL = _.findIndex(team.teamLeads, function(l) {
-      var leadId = (l && l._id) ? l._id : l;
-      return leadId.toString() === req.user._id.toString();
+    if (!team.isCurrentUserTeamLead && team.teamLeads && team.teamLeads.length > 0) {
+      var indexL = _.findIndex(team.teamLeads, function(l) {
+        var leadId = (l && l._id) ? l._id : l;
+        console.log('leadId', leadId);
+        console.log('userId', req.user._id);
+        if (leadId && req.user && req.user._id) {
+          return leadId.toString() === req.user._id.toString();
+        } else {
+          return false;
+        }
+      });
+      team.isCurrentUserTeamLead = (indexL > -1) ? true : false;
+    }
+
+    var indexM = _.findIndex(team.teamMembers, function(m) {
+      var memberId = (m && m._id) ? m._id : m;
+      if (memberId && req.user && req.user._id) {
+        return memberId.toString() === req.user._id.toString();
+      } else {
+        return false;
+      }
     });
-    team.isCurrentUserTeamLead = (indexL > -1) ? true : false;
+    team.isCurrentUserTeamMember = (indexM > -1) ? true : false;
   }
-
-  var indexM = _.findIndex(team.teamMembers, function(m) {
-    var memberId = (m && m._id) ? m._id : m;
-    return memberId.toString() === req.user._id.toString();
-  });
-  team.isCurrentUserTeamMember = (indexM > -1) ? true : false;
 };
 
 /**
@@ -329,29 +341,27 @@ exports.list = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        if(teams === null || teams === undefined) {
+        if(teams === null || teams === undefined || teams.length < 1) {
           res.json([]);
-        }
-
-        for(var i = 0; i < teams.length; i++) {
-          var team = teams[i] ? teams[i].toJSON() : {};
-          addTeamPermissionsForCurrentUser(req, team);
-          teams[i] = team;
-        }
-
-        if (req.query.full) {
-          async.forEach(teams, function(team, callback) {
-            // Get published expedition count
-            Expedition.count({ team: team, status: 'published' }).exec(function(err, expeditionCount) {
-              team.expeditionCount = expeditionCount || 0;
-              callback();
-            });
-          }, function(err) {
-            res.json(teams);
-          });
         } else {
-
-          res.json(teams);
+          var updatedTeams = [];
+          async.forEach(teams, function(team, teamCallback) {
+            var updatedTeam = team ? team.toJSON() : {};
+            addTeamPermissionsForCurrentUser(req, updatedTeam);
+            if (req.query.full) {
+              Expedition.count({ team: team, status: 'published' }).exec(function(err, expeditionCount) {
+                updatedTeam.expeditionCount = expeditionCount || 0;
+                updatedTeams.push(updatedTeam);
+                teamCallback();
+              });
+            } else {
+              updatedTeams.push(updatedTeam);
+              teamCallback();
+            }
+          }, function(err) {
+            console.log('err', err);
+            res.json(updatedTeams);
+          });
         }
       }
     });
