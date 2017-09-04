@@ -181,7 +181,7 @@ var fillInRegistrantsData = function(registrants, callback) {
             for (var i = 0; i < teams.length; i++) {
               teamNames.push(teams[i].name);
             }
-            if (registrant.user._id) {
+            if (registrant.user && registrant.user._id) {
               registrant.user.teams = teamNames.join(', ');
             } else {
               registrant.user = {
