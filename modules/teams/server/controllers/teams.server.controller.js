@@ -346,6 +346,7 @@ exports.list = function (req, res) {
         async.forEach(teams, function(team, eachCallback) {
           addTeamPermissionsForCurrentUser(req, team);
         }, function(err) {
+          console.log('err', err);
           if (req.query.full) {
             async.forEach(teams, function(team, callback) {
               // Get published expedition count
