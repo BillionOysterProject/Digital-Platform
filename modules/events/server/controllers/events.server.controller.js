@@ -181,7 +181,14 @@ var fillInRegistrantsData = function(registrants, callback) {
             for (var i = 0; i < teams.length; i++) {
               teamNames.push(teams[i].name);
             }
-            registrant.user.teams = teamNames.join(', ');
+            if (registrant.user._id) {
+              registrant.user.teams = teamNames.join(', ');
+            } else {
+              registrant.user = {
+                _id: registrantId,
+                teams: teamNames.join(', ')
+              };
+            }
           }
           if (registrant.user.schoolOrg) {
             var schoolOrgId = (registrant.user.schoolOrg._id) ? registrant.user.schoolOrg._id : registrant.user.schoolOrg;
