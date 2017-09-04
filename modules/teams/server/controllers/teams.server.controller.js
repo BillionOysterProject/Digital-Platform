@@ -56,6 +56,8 @@ var addTeamPermissionsForCurrentUser = function(req, team) {
   if (!team.isCurrentUserTeamLead && team.teamLeads && team.teamLeads.length > 0) {
     var indexL = _.findIndex(team.teamLeads, function(l) {
       var leadId = (l && l._id) ? l._id : l;
+      console.log('leadId', leadId);
+      console.log('userId', req.user._id);
       if (leadId && req.user && req.user._id) {
         return leadId.toString() === req.user._id.toString();
       } else {
@@ -67,7 +69,11 @@ var addTeamPermissionsForCurrentUser = function(req, team) {
 
   var indexM = _.findIndex(team.teamMembers, function(m) {
     var memberId = (m && m._id) ? m._id : m;
-    return memberId.toString() === req.user._id.toString();
+    if (memberId && req.user && req.user._id) {
+      return memberId.toString() === req.user._id.toString();
+    } else {
+      return false;
+    }
   });
   team.isCurrentUserTeamMember = (indexM > -1) ? true : false;
 };
@@ -337,26 +343,23 @@ exports.list = function (req, res) {
           res.json([]);
         }
 
-        for(var i = 0; i < teams.length; i++) {
-          var team = teams[i] ? teams[i].toJSON() : {};
+        async.forEeach(teams, function(team, eachCallback) {
           addTeamPermissionsForCurrentUser(req, team);
-          teams[i] = team;
-        }
-
-        if (req.query.full) {
-          async.forEach(teams, function(team, callback) {
-            // Get published expedition count
-            Expedition.count({ team: team, status: 'published' }).exec(function(err, expeditionCount) {
-              team.expeditionCount = expeditionCount || 0;
-              callback();
+        }, function(err) {
+          if (req.query.full) {
+            async.forEach(teams, function(team, callback) {
+              // Get published expedition count
+              Expedition.count({ team: team, status: 'published' }).exec(function(err, expeditionCount) {
+                team.expeditionCount = expeditionCount || 0;
+                callback();
+              });
+            }, function(err) {
+              res.json(teams);
             });
-          }, function(err) {
+          } else {
             res.json(teams);
-          });
-        } else {
-
-          res.json(teams);
-        }
+          }
+        });
       }
     });
   };
