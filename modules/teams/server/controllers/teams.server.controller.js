@@ -343,7 +343,7 @@ exports.list = function (req, res) {
           res.json([]);
         }
 
-        async.forEeach(teams, function(team, eachCallback) {
+        async.forEach(teams, function(team, eachCallback) {
           addTeamPermissionsForCurrentUser(req, team);
         }, function(err) {
           if (req.query.full) {
