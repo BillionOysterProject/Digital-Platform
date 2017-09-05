@@ -781,7 +781,8 @@ exports.getEventMetrics = function(req, res) {
   var avgRegistrationRateQuery = CalendarEvent.aggregate([
     { $match: { 'dates.startDateTime': { '$lte': new Date() } } }, //only past events
     { $project: { _id: false, registrants: 1, maximumCapacity: 1, registrationCount: { $size: '$registrants' } } },
-    { $project: { registrationRate: { $divide: [ '$registrationCount', '$maximumCapacity' ] } } },
+    { $match: { 'maximumCapacity': { '$gt': 0 } } },
+    { $project: { registrationRate: { $divide: [ '$registrationCount', '$maximumCapacity'] } } },
     { $group: { _id: true, avgRegistrationRate: { $avg: '$registrationRate' } } }
   ]);
 
