@@ -439,7 +439,11 @@ exports.downloadFile = function(req, res) {
 
 var findUserInRegistrants = function(user, registrants) {
   var index = _.findIndex(registrants, function(r) {
-    return r.user._id.toString() === user._id.toString();
+    if (r && r.user && r.user._id && user && user._id) {
+      return r.user._id.toString() === user._id.toString();
+    } else {
+      return false;
+    }
   });
   return index;
 };
