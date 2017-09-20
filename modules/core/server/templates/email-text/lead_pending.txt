@@ -1,9 +1,23 @@
 Hi <%= FirstName %>,
 
-Thanks for joining the Billion Oyster Project as a Team Lead! Currently, your account is pending admin approval. Until then, you can still log in at <%= LinkLogin %> but won't be able to add content. We'll let you know as soon as your account is fully active!
+Thanks for joining the Billion Oyster Project as a Team Lead! You can now log in at <%= LinkLogin %> and...
+
+*View Oyster Research Station locations: http://platform.bop.nyc/restoration/stations
+*View and download data: https://platform.bop.nyc/expeditions/data
+*View lessons: http://platform.bop.nyc/lessons
+*View units: http://platform.bop.nyc/units
+*View research created by students, teachers, and community scientists: http://platform.bop.nyc/research
+*View participating organizations: https://platform.bop.nyc/profiles/organization
+*Sign up for events: https://platform.bop.nyc/events
+           
+Currently, your account is pending admin approval.  You'll get full access to the platform once you've attended an Oyster Research Station Basic Training.  Learn more here: https://billionoysterproject.org/training/
+
+We'll send you a confirmation as soon as your account is fully active.  In the interim, check out the BOP Digital Platform User Guide: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+
+And please feel free to reply to this email with any questions- our staff will be in touch right away!
 
 We're glad to have you!
 The Billion Oyster Project
 
 You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
-Need help? Just respond to this email and we'll get back to you.
+
