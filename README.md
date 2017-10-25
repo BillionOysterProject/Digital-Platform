@@ -8,7 +8,7 @@ This project is based off the <a href="http://meanjs.org/">MEAN.js stack</a>
 
 ### Before starting, have the following installed on your system
 * *Node.js* -  <a href="http://nodejs.org/download/">Download</a> and Install Node.js or use the packages within brew or macports.
-* *MongoDB* - Follow the tutorial here - <a href="https://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/">Install mongodb on OSX</a>
+* *MongoDB* - Follow the tutorial here - <a href="https://www.mongodb.com/download-center?jmp=nav#community">Install mongoDB</a>
 * *git* - Get git <a href="http://git-scm.com/download/mac">from here</a>.
 * *java* - <a href="https://www.java.com/en/download/">Download</a> and install or use the package within brew (brew cask install java)
 * *ruby* - <a href="https://www.ruby-lang.org/en/downloads/">Download</a> and install or use the package within brew (brew install ruby)
