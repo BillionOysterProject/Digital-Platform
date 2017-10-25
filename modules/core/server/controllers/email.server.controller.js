@@ -8,7 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   ses = require('nodemailer-ses-transport');
 
-var defaultFrom = process.env.MAILER_FROM || 'Billion Oyster Project <bop@fearless.tech>';
+var defaultFrom = process.env.MAILER_FROM || 'Billion Oyster Project <bop.digital.platform@nyharbor.org>';
 var httpTransport = (config.secure && config.secure.ssl === true) ? 'https://' : 'http://';
 
 var transporter = nodemailer.createTransport(ses(config.mailer.options.ses));

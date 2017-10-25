@@ -18,7 +18,9 @@ var config = require('../config'),
   flash = require('connect-flash'),
   consolidate = require('consolidate'),
   path = require('path'),
-  lusca = require('lusca');
+  lusca = require('lusca'),
+  mongoose = require('mongoose'),
+  docs = require('express-mongoose-docs');
 
 /**
  * Initialize local variables
@@ -96,6 +98,7 @@ module.exports.initMiddleware = function (app) {
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
   app.use(flash());
+  docs(app, mongoose);
 };
 
 /**
