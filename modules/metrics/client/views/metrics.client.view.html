@@ -6,7 +6,7 @@
 <section class="content shaded content-unpadded" ng-controller="SettingsController">
     <section class="container-fluid">
       <div>
-        <div class="pull-right">
+        <div class="pull-right" ng-show="vm.isAdmin">
           <span uib-dropdown is-open="vm.status.isopen">
             <a class="btn btn-lg btn-success dropdown-toggle" href="#" id="simple-dropdown" uib-dropdown-toggle>
               Download Metrics
