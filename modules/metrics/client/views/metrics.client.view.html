@@ -5,7 +5,25 @@
 </section>
 <section class="content shaded content-unpadded" ng-controller="SettingsController">
     <section class="container-fluid">
-        <a class="btn btn-default pull-right" ng-href="api/metrics/download" target="_blank" ng-show="vm.isAdmin"><i class="fa fa-download"></i> Download all</a>
+      <div>
+        <div class="pull-right">
+          <span uib-dropdown is-open="vm.status.isopen">
+            <a class="btn btn-lg btn-success dropdown-toggle" href="#" id="simple-dropdown" uib-dropdown-toggle>
+              Download Metrics
+            </a>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+              <li><a ng-href="api/metrics/download/events" target="_blank">Events</a></li>
+              <li><a ng-href="api/metrics/download/expeditions" target="_blank">Expeditions</a></li>
+              <li><a ng-href="api/metrics/download/lessons" target="_blank">Lessons</a></li>
+              <li><a ng-href="api/metrics/download/organizations" target="_blank">Organizations</a></li>
+              <li><a ng-href="api/metrics/download/team-leads" target="_blank">Team Leads</a></li>
+              <li><a ng-href="api/metrics/download/team-members" target="_blank">Team Members</a></li>
+              <li><a ng-href="api/metrics/download/misc" target="_blank">Miscellaneous</a></li>
+            </ul>
+          </span>
+        </div>
+        <br/>
+      </div>
         <ul class="nav nav-tabs">
             <li role="presentation" class="active">
                 <a href="#people" data-toggle="tab" aria-controls="people" role="tab">Community</a>
