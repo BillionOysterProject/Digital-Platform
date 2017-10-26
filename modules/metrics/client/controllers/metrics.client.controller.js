@@ -22,6 +22,10 @@
     vm.authentication = Authentication;
     vm.user = Authentication.user;
 
+    vm.status = {
+      isopen: false
+    };
+
     var checkRole = function(role) {
       var roleIndex = lodash.findIndex(vm.user.roles, function(o) {
         return o === role;

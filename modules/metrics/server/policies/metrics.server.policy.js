@@ -17,7 +17,25 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/metrics/download',
+      resources: '/api/metrics/download/misc',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/team-leads',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/events',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/team-members',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/organizations',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/lessons',
+      permissions: ['*']
+    },{
+      resources: '/api/metrics/download/expeditions',
       permissions: ['*']
     },{
       resources: '/api/metrics/people-with-admin',
