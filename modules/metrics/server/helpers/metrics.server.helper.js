@@ -310,36 +310,6 @@ exports.teamMemberStats = function(callback) {
       label: 'expeditions invited',
       value: 'expeditionsInvited'
     }, {
-      label: 'Submitted Site Condition Protocols',
-      value: 'p1submittedCount'
-    }, {
-      label: 'Submitted Oyster Measurement Protocols',
-      value: 'p2submittedCount'
-    }, {
-      label: 'Submitted Mobile Trap Protocols',
-      value: 'p3submittedCount'
-    }, {
-      label: 'Submitted Settlement Tile Protocols',
-      value: 'p4submittedCount'
-    }, {
-      label: 'Submitted Water Quality Protocols',
-      value: 'p5submittedCount'
-    }, {
-      label: 'Published Site Condition Protocols',
-      value: 'p1publishedCount'
-    }, {
-      label: 'Published Oyster Measurement Protocols',
-      value: 'p2publishedCount'
-    }, {
-      label: 'Published Mobile Trap Protocols',
-      value: 'p3publishedCount'
-    }, {
-      label: 'Published Settlement Tile Protocols',
-      value: 'p4publishedCount'
-    }, {
-      label: 'Published Water Quality Protocols',
-      value: 'p5publishedCount'
-    }, {
       label: 'research published count',
       value: 'researchPublishedCount'
     }, {
@@ -392,109 +362,26 @@ exports.teamMemberStats = function(callback) {
               userValues.expeditionsInvitedCount = 0;
               userValues.expeditionsInvited = '';
             }
-            var countProtocols = [
-              { $unwind: '$teamLists.siteCondition' },
-              { $unwind: '$teamLists.oysterMeasurement' },
-              { $unwind: '$teamLists.mobileTrap' },
-              { $unwind: '$teamLists.settlementTiles' },
-              { $unwind: '$teamLists.waterQuality' },
-              { $group: { _id: null,
-                site: { $sum: { $cond: [{ $eq: ['$teamLists.siteCondition', user._id] }, 1, 0] } },
-                oyster: { $sum: { $cond: [{ $eq: ['$teamLists.oysterMeasurement', user._id] }, 1, 0] } },
-                mobile: { $sum: { $cond: [{ $eq: ['$teamLists.mobileTrap', user._id] }, 1, 0] } },
-                tiles: { $sum: { $cond: [{ $eq: ['$teamLists.settlementTiles', user._id] }, 1, 0] } },
-                water: { $sum: { $cond: [{ $eq: ['$teamLists.waterQuality', user._id] }, 1, 0] } }
-              } }
-            ];
-            var pubCountQuery = _.concat([{ $match: { 'status': 'published' } }], countProtocols);
-            var subCountQuery = _.concat([{ $match: { 'status': { $ne: 'incomplete' } } }], countProtocols);
-            Expedition.aggregate(pubCountQuery).exec(function(err4, pubProResult) {
-              Expedition.aggregate(subCountQuery).exec(function(err5, subProResult) {
-                ProtocolSiteCondition.aggregate([{ $match: { teamMembers: user._id } },
-                { $group: { _id: null,
-                  pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
-                  sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
-                } }]).exec(function(err6, siteResults) {
-                  ProtocolOysterMeasurement.aggregate([{ $match: { teamMembers: user._id } },
-                  { $group: { _id: null,
-                    pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
-                    sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
-                  } }]).exec(function(err7, oysterResults) {
-                    ProtocolMobileTrap.aggregate([{ $match: { teamMembers: user._id } },
-                    { $group: { _id: null,
-                      pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
-                      sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
-                    } }]).exec(function(err8, mobileResults) {
-                      ProtocolSettlementTile.aggregate([{ $match: { teamMembers: user._id } },
-                      { $group: { _id: null,
-                        pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
-                        sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
-                      } }]).exec(function(err9, tilesResults) {
-                        ProtocolWaterQuality.aggregate([{ $match: { teamMembers: user._id } },
-                        { $group: { _id: null,
-                          pub: { $sum: { $cond: [{ $eq: ['$status', 'published'] }, 1, 0] } },
-                          sub: { $sum: { $cond: [{ $ne: ['$status', 'published'] }, 1, 0] } }
-                        } }]).exec(function(err10, waterResults) {
-                          if (!pubProResult || pubProResult.length === 0) {
-                            pubProResult = [{ site: 0, oyster: 0, mobile: 0, tiles: 0, water: 0 }];
-                          }
-                          if (!subProResult || subProResult.length === 0) {
-                            subProResult = [{ site: 0, oyster: 0, mobile: 0, tiles: 0, water: 0 }];
-                          }
-                          if (!siteResults || siteResults.length === 0) {
-                            siteResults = [{ pub: 0, sub: 0 }];
-                          }
-                          if (!oysterResults || oysterResults.length === 0) {
-                            oysterResults = [{ pub: 0, sub: 0 }];
-                          }
-                          if (!mobileResults || mobileResults.length === 0) {
-                            mobileResults = [{ pub: 0, sub: 0 }];
-                          }
-                          if (!tilesResults || tilesResults.length === 0) {
-                            tilesResults = [{ pub: 0, sub: 0 }];
-                          }
-                          if (!waterResults || waterResults.length === 0) {
-                            waterResults = [{ pub: 0, sub: 0 }];
-                          }
-                          userValues.p1submittedCount = subProResult[0].site + siteResults[0].sub;
-                          userValues.p2submittedCount = subProResult[0].oyster + oysterResults[0].sub;
-                          userValues.p3submittedCount = subProResult[0].mobile + mobileResults[0].sub;
-                          userValues.p4submittedCount = subProResult[0].tiles + tilesResults[0].sub;
-                          userValues.p5submittedCount = subProResult[0].water + waterResults[0].sub;
-
-                          userValues.p1publishedCount = pubProResult[0].site + siteResults[0].pub;
-                          userValues.p2publishedCount = pubProResult[0].oyster + oysterResults[0].pub;
-                          userValues.p3publishedCount = pubProResult[0].mobile + mobileResults[0].pub;
-                          userValues.p4publishedCount = pubProResult[0].tiles + tilesResults[0].pub;
-                          userValues.p5publishedCount = pubProResult[0].water + waterResults[0].pub;
-
-                          Research.find({ user: user._id, status: 'published' }).select('title')
-                          .exec(function(err11, researchCreated) {
-                            if (researchCreated) {
-                              userValues.researchPublished = _.join(_.map(researchCreated, 'title'), ', ');
-                              userValues.researchPublishedCount = researchCreated.length;
-                            } else {
-                              userValues.researchPublished = '';
-                              userValues.researchPublishedCount = 0;
-                            }
-                            ResearchFeedback.find({ user: user._id }).select('research')
-                            .populate('research', 'title').exec(function(err12, researchReviewed) {
-                              if (researchReviewed) {
-                                userValues.researchFeedback = _.join(_.map(researchReviewed, 'research.title'), ', ');
-                                userValues.researchFeedbackCount = researchReviewed.length;
-                              } else {
-                                userValues.researchFeedback = '';
-                                userValues.researchFeedbackCount = 0;
-                              }
-                              rows.push(userValues);
-                              eachCallback();
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
+            Research.find({ user: user._id, status: 'published' }).select('title')
+            .exec(function(err11, researchCreated) {
+              if (researchCreated) {
+                userValues.researchPublished = _.join(_.map(researchCreated, 'title'), ', ');
+                userValues.researchPublishedCount = researchCreated.length;
+              } else {
+                userValues.researchPublished = '';
+                userValues.researchPublishedCount = 0;
+              }
+              ResearchFeedback.find({ user: user._id }).select('research')
+              .populate('research', 'title').exec(function(err12, researchReviewed) {
+                if (researchReviewed) {
+                  userValues.researchFeedback = _.join(_.map(researchReviewed, 'research.title'), ', ');
+                  userValues.researchFeedbackCount = researchReviewed.length;
+                } else {
+                  userValues.researchFeedback = '';
+                  userValues.researchFeedbackCount = 0;
+                }
+                rows.push(userValues);
+                eachCallback();
               });
             });
           });

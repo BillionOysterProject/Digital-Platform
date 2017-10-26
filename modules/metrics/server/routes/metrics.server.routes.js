@@ -11,8 +11,26 @@ module.exports = function(app) {
   // Metrics Routes
   app.route('/api/metrics/basic').get(basicMetrics.getBasicMetrics);
 
-  app.route('/api/metrics/download').all(metricsPolicy.isAllowed)
+  app.route('/api/metrics/download/misc').all(metricsPolicy.isAllowed)
     .get(metrics.downloadZip);
+
+  app.route('/api/metrics/download/events').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadEvents);
+
+  app.route('/api/metrics/download/team-leads').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadTeamLeads);
+
+  app.route('/api/metrics/download/team-members').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadTeamMembers);
+
+  app.route('/api/metrics/download/expeditions').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadExpeditions);
+
+  app.route('/api/metrics/download/organizations').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadOrganizations);
+
+  app.route('/api/metrics/download/lessons').all(metricsPolicy.isAllowed)
+    .get(metrics.downloadLessons);
 
   app.route('/api/metrics/people').all(metricsPolicy.isAllowed)
     .get(metrics.getPeopleMetrics);
