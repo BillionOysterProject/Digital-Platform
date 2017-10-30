@@ -169,7 +169,7 @@
 
         if ($scope.currentUser) {
           var memberIndex = lodash.findIndex(allTeamMembers, function(m) {
-            return m.username === $scope.currentUser.username;
+            return m && (m.username === $scope.currentUser.username);
           });
           return (memberIndex > -1) ? true : false;
         } else {
