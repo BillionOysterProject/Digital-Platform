@@ -395,14 +395,21 @@
             </tr>
             <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
                 <td><b>Organisms observed</b></td>
-                <td ng-repeat="expedition in vm.compareExpeditions">
-                    <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganisms"
-                  ng-repeat="organism in expedition.protocols.mobileTrap.mobileOrganisms" class="col-sm-3">
-                    <img id="organism-photo{{$index}}" class="img-rounded img-thumbnail"
-                      ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"
-                      ng-show="organism.sketchPhoto"/><br/>
-                        <b>{{organism.count}}</b> {{vm.getMobileOrganismName(organism.organism)}}<br/><br/>
-                    </span>&nbsp;
+                <td ng-repeat="expedition in vm.compareExpeditions" id="mobile-organisms-table-{{$index}}">
+                  <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganismsChunked">
+                    <table class="table-condensed">
+                      <tr ng-repeat="mobileOrganismRow in expedition.protocols.mobileTrap.mobileOrganismsChunked"
+                        ng-init="rowIndex = $index">
+                        <td ng-repeat="organism in mobileOrganismRow">
+                          <img id="organism-photo-{{rowIndex}}-{{$index}}" class="img-rounded img-thumbnail"
+                            ng-src="{{vm.getMobileOrganismPhoto(organism.sketchPhoto, organism.organism)}}"
+                            ng-show="organism.sketchPhoto"/>
+                            <br/>
+                            <b>{{organism.count}}</b> {{vm.getMobileOrganismName(organism.organism)}}
+                        </td>
+                      </tr>
+                    </table>
+                  </span>
                 </td>
             </tr>
             <tr ng-show="vm.parameters.protocol4.description === 'YES'" id="settlement-tile-description-compare">
