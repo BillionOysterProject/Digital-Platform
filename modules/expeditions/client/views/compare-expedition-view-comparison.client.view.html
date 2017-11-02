@@ -396,7 +396,7 @@
             <tr ng-show="vm.parameters.protocol3.organism === 'YES'" id="mobile-organisms-observed-compare">
                 <td><b>Organisms observed</b></td>
                 <td ng-repeat="expedition in vm.compareExpeditions" id="mobile-organisms-table-{{$index}}">
-                  <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganisms">
+                  <span ng-show="expedition.protocols && expedition.protocols.mobileTrap && expedition.protocols.mobileTrap.mobileOrganismsChunked">
                     <table class="table-condensed">
                       <tr ng-repeat="mobileOrganismRow in expedition.protocols.mobileTrap.mobileOrganismsChunked"
                         ng-init="rowIndex = $index">
