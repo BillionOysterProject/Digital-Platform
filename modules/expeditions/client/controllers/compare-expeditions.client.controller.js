@@ -535,11 +535,11 @@
           if(vm.compareExpeditions[i] && vm.compareExpeditions[i].protocols &&
             vm.compareExpeditions[i].protocols.mobileTrap &&
             vm.compareExpeditions[i].protocols.mobileTrap.mobileOrganisms) {
-              var mobileOrganisms = vm.compareExpeditions[i].protocols.mobileTrap.mobileOrganisms;
-              if(mobileOrganisms.length > 0) {
-                mobileOrganisms = lodash.chunk(mobileOrganisms, 4);
-                vm.compareExpeditions[i].protocols.mobileTrap.mobileOrganismsChunked = mobileOrganisms;
-              }
+            var mobileOrganisms = vm.compareExpeditions[i].protocols.mobileTrap.mobileOrganisms;
+            if(mobileOrganisms.length > 0) {
+              mobileOrganisms = lodash.chunk(mobileOrganisms, 4);
+              vm.compareExpeditions[i].protocols.mobileTrap.mobileOrganismsChunked = mobileOrganisms;
+            }
           }
 
           if (vm.compareExpeditions[i] && vm.compareExpeditions[i].protocols &&
