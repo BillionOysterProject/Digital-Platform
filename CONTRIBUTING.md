@@ -23,10 +23,10 @@ If you think there's something interesting you could do, or a bug you could fix,
 
 ## Creating an Issue
 
-Before you create a new issue:
+__Before you create a new issue:__
 * Check the [issues](https://github.com/BillionOysterProject/Digital-Platform/issues) in Github to ensure one doesn't already exist.
 
-In your issue request:
+__In your issue request:__
 * Clearly describe the issue.  
   - If it's a bug, include the steps you took to reproduce the issue.
   - If it's a new feature, enhancement, or restructure, explain why you think it should be added.
