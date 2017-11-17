@@ -24,16 +24,49 @@ If you think there's something interesting you could do, or a bug you could fix,
 ## Creating an Issue
 
 Before you create a new issue:
-* Check the [issues](https://github.com/BillionOysterProject/Digital-Platform/issues) on Github to ensure one doesn't already exist.
-* Clearly describe the issue, including the steps to reproduce the issue.
-* If it's a new feature, enhancement, or restructure, explain why you think it should be added, as well as a particular use case.
-* Include your BOP Digital Platform username in the issue (if you have one).
+* Check the [issues](https://github.com/BillionOysterProject/Digital-Platform/issues) in Github to ensure one doesn't already exist.
+
+In your issue request:
+* Clearly describe the issue.  
+  - If it's a bug, include the steps you took to reproduce the issue.
+  - If it's a new feature, enhancement, or restructure, explain why you think it should be added.
+* Include your BOP Digital Platform username.
+* Include the __type__ and __scope__.
+  - Issue types: 
+    - feat - features, enhancements, and overall improvements
+    - fix - fixes, bugs, HotFixs, etc...
+    - doc - changes to the documentation that don't touch any code.
+  - Issue scopes:
+    - The scope should be where proposed changes will take place.
+    - Examples: Expeditions, Data, Curriculum, Events
 * Label your issue with the site feature it relates to:
     - Expeditions
     - Data
     - Curriculum
     - Research
     - Events
+  
+__Issue format guidelines:__
+ ```
+Header
+Blank Line
+Body
+Blank Line
+BOP Digital Platform username
+
+The header should look like this:
+<type>(<scope>): <subject>
+
+The body should have any necessary detailed info about the issue (described above).
+
+So a commit should look like:
+feat(Expeditions): Include wild oyster recruitment data in Protocol 2: Oyster Measurements.
+
+We'd like a way to collect information about potential wild oyster recruitment at an ORS site.
+
+UN: bop-admin
+
+```   
 
 Someone from BOP will get back to you within a week with feedback on your issue.
 
@@ -83,7 +116,7 @@ Fixes #82
   * doc - Changes to the documentation and doesn't actually touch any code.
 * Scope:
   * The scope should be where the change took place.
-  * Examples: users, core, config, articles
+  * Examples: Expeditions, Data, Curriculum, Events
 * Subject:
   * The subject line should be clear and concise as to what is being accomplished in the commit.
 * General Rules:
