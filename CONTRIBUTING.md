@@ -35,6 +35,8 @@ Before you create a new issue:
     - Research
     - Events
 
+Someone from BOP will get back to you within a week with feedback on your issue.
+
 ## Making Changes
 
 * Create a topic branch from the master branch.
