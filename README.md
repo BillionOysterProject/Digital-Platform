@@ -4,7 +4,7 @@ The [Billion Oyster Project](bop.nyc) is an ecosystem restoration and education 
 
 For a quick scroll-through of the platform's features, check out the [BOP Digital Platform Quick Guide](https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f). For more detailed documentation, the BOP Digital Platform User Guide lives [here](https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents).
 
-In light of our goals, we're strongly committed to making the Billion Oyster Project Digital Platform an inclusive, welcoming open source community.  Before contributing to the project, please read our [Code of Conduct](https://github.com/BillionOysterProject/docs/blob/master/CODE_OF_CONDUCT.md).
+In light of our goals, we're strongly committed to making the Billion Oyster Project Digital Platform an inclusive, welcoming open source community.  Before contributing to the project, please read our [Code of Conduct](https://github.com/BillionOysterProject/docs/blob/master/CODE_OF_CONDUCT.md) and our [Contributing Guide](https://github.com/BillionOysterProject/Digital-Platform/blob/master/CONTRIBUTING.md).
 
 This project is based off the <a href="http://meanjs.org/">MEAN.js stack</a>
 
