@@ -113,7 +113,7 @@ Fixes #82
 * Types: 
   * feat - features, enhancements, and overall improvements
   * fix - fixes, bugs, HotFixs, etc...
-  * doc - Changes to the documentation and doesn't actually touch any code.
+  * doc - changes to the documentation that don't actually touch any code.
 * Scope:
   * The scope should be where the change took place.
   * Examples: Expeditions, Data, Curriculum, Events
