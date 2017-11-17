@@ -24,7 +24,7 @@ If you think there's something interesting you could do, or a bug you could fix,
 ## Creating an Issue
 
 __Before you create a new issue:__
-* Check the [issues](https://github.com/BillionOysterProject/Digital-Platform/issues) in Github to ensure one doesn't already exist.
+* Check the [issues](https://github.com/BillionOysterProject/Digital-Platform/issues) in Github to ensure a similar issue doesn't already exist.
 
 __In your issue request:__
 * Clearly describe the issue.  
@@ -68,7 +68,7 @@ UN: bop-admin
 
 ```   
 
-Someone from BOP will get back to you within a week with feedback on your issue.
+Someone from BOP will get back to you within a week with feedback on your issue!
 
 ## Making Changes
 
