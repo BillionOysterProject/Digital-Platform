@@ -1,37 +1,28 @@
 
-Billion Oyster Project is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor by 2035 while educating all one million of NYC's public school students.  But if we're going to restore one billion oysters to New York Harbor, we need lots of New Yorkers' help with all the different types of work that goes into restoration, including software development!  
-One thing that sets Billion Oyster Project apart from other environmental organizations is that we are equal parts restoration AND education.  We believe that open source software projects are the perfect opportunity for people of a wide range of ages and ability levels to use their technical skills for good while learning new skills and building community.  Whether you're a developer, DBA, UX designer, QA tester, or just a passionate user, we'd love for you to join us as a contributor!  
+Billion Oyster Project is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor by 2035 while educating all one million of NYC's public school students.  But if we're going to restore one billion oysters to New York Harbor, we need lots of New Yorkers' help with all the different types of work that goes into restoration, including software development!  Environmental restoration includes activities like data analysis and scientific communications, and the BOP Digital Platform is a key tool for this aspect of our work.  
 
-Get started by taking a look through the information below 
+One thing that sets Billion Oyster Project apart from other environmental organizations is that we are equal parts restoration AND education.  So we believe that open source software projects are the perfect opportunity for people of a wide range of ages and ability levels to use their technical skills for good while learning new skills and building community.  Whether you're a developer, DBA, UX designer, QA tester, or just a passionate user, we'd love for you to join us as a contributor!  
 
-and get an idea for something you'd like to take on, don't feel limited by the csv direction and feel free to suggest something you think would make the platform better!  Here is some information to get you started:  
-Check out the BOP Digital Platform Quick Guide.  This is a doc you can quickly scroll through to get a sense of the platform's core features, and it includes links to all the help documentation in our wiki.
+Take a look through the information below to get started!  
 
-Sign up for an account on the BOP Digital Platform to get a sense of the user experience- make sure to choose the "team lead" role.  
+* Check out the BOP Digital Platform Quick Guide.  This is a doc you can quickly scroll through to get a sense of the platform's core features, and it includes links to all the help documentation in our wiki.
 
-Read our code of conduct.  Since our project engages community members of all abilities, especially NYC school students, it's crucial that everyone in the Digital Platform community is kind, assumes a good faith effort/best intentions on the part of other participants, and goes out of their way to be welcoming to people who are new to coding and technology.  (One negative social interaction can be really discouraging for students/people who are just getting involved with open source, so we really try to go out of our way to be patient and friendly!)  
+* Sign up for an account on the BOP Digital Platform to get a sense of the user experience- make sure to choose the "team lead" role.  
 
-We want to more fully flesh out our API documentation, but our current API and data model documentation lives here.  The front end makes extensive use of the API.
+* Read our code of conduct.  Since our project engages community members of all abilities, especially NYC school students, it's crucial that everyone in the Digital Platform community is kind, assumes a good faith effort/best intentions on the part of other participants, and goes out of their way to be welcoming to people who are new to coding and technology.  (One negative social interaction can be really discouraging for students/people who are just getting involved with open source, so we really try to go out of our way to be patient and friendly!)  
 
-The platform was originally built by contractors based off the MEAN.JS stack (MongoDB, Express, Angular, Node.js).  They forked it from the main project in Github in February 2016.  I've reviewed every MEAN.JS commit since 2/2016, and there are two features we're likely to implement (sign-on with email address, and forgot password with email address).  Other than that, I don't think there's anything newer from the project we want to include, but if you know of a cool MEAN.JS implementation let me know!
+* We want to more fully flesh out our API documentation, but our current API and data model documentation lives here.  The front end makes extensive use of the API.
 
-Check out our list of Github issues.  At the moment, I'm using Github issues to showcase the project's most pressing software development requests.  We have a much larger internal backlog that we keep in Trello, and I manage our development contractors' work in Jira (which is how the platform's original development was managed), but the Github issues are my way of highlighting what I've found is important to our community members through feedback and user testing.
+* The platform was originally built by contractors based off the MEAN.JS stack (MongoDB, Express, Angular, Node.js).  They forked it from the main project in Github in February 2016.  We've reviewed every MEAN.JS commit since 2/2016, and there are two features we're likely to implement (sign-on with email address, and forgot password with email address).  Other than that, we're not expecting to add anything newer from the project, but if you know of a cool MEAN.JS implementation let us know!
 
-If you think there's something interesting you could do, or a bug you could fix, and it's not an existing issue in Github, open up an issue.  We don't have a standard issue format or standard pull request format yet, but we'll post it as soon as we do!
-I'm very happy to talk further- please let me know if you have any questions or ideas you'd like to share!
+* Check out our list of Github issues.  At the moment, we're using Github issues to showcase the project's most pressing software development requests.  (We have a much larger internal backlog, but the Github issues are our way of highlighting issues that are important to our community members through feedback and user testing.)
 
+* If you think there's something interesting you could do, or a bug you could fix, and it's not an existing issue in Github, open up an issue.  We don't have a standard issue format or standard pull request format yet, but we'll post it as soon as we do!
 
-
+Please let us know if you have any questions or ideas you'd like to share!  You can get in touch with Heather Flanagan, the BOP Digital Platform's product owner, at <hflanagan@nyharbor.org>.
 
 
 
-
-# How to contribute
-
-Support and contributions from the open source community are essential for keeping
-MEAN.js up to date and always improving! There are a few guidelines that we need
-contributors to follow to keep the project consistent, as well as allow us to keep
-maintaining MEAN.js in a reasonable amount of time.
 
 ## Creating an Issue
 
@@ -102,12 +93,8 @@ Fixes #82
 * Small changes are usually accepted and merged in within a week (provided that 2 collaborators give the okay)
 * Larger changes usually spark further discussion and possible changes prior to being merged in.
 
-## Documentation (meanjs.org)
+## Documentation 
 
 The code for the documentation and the website are located in the meanjs/mean repo on the gh-pages branch. The website is hosted by github pages and generated using jekyll. See the README in the gh-pages branch for more information on how to get your dev enviorment set-up.
 
-## Generating a new Release
 
-For those who will be generating releases:
-* Don't forget to update the changelog!
-  * `conventional-changelog -r 1 | cat - CHANGELOG.md | tee CHANGELOG.md`
