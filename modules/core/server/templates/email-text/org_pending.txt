@@ -1,6 +1,6 @@
 Hi <%= FirstName %>,
 
-Thanks for joining the Billion Oyster Project! Currently, your new organization request for <%= OrgName %> is pending admin approval. Until then, you can still log in at <%= LinkLogin %> but won't be able to add content. We'll let you know as soon as your account is fully active!
+Thanks for joining the Billion Oyster Project! Currently, your new organization request for <%= OrgName %> is pending admin approval. We'll send you a confirmation as soon as your organization is approved!
 
 We're glad to have you!
 The Billion Oyster Project

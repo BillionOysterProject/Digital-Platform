@@ -1,14 +1,16 @@
 # Billion Oyster Project Digital Platform
 
-The [Billion Oyster Project](bop.nyc) is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor.  Our BOP Schools and Community Science program seeks to increase the skills, content knowledge, and confidence of underrepresented groups in STEM (Science, Technology, Engineering, Math) fields through hands on, authentic restoration and research activities.  The [BOP Digital Platform](https://platform.bop.nyc) is the online dashboard for our program.  Through the Platform, students and teachers collect and publish data, develop field research, and create the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools.  You can check out the BOP Digital Platform User Guide [here](https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents).
+The [Billion Oyster Project](bop.nyc) is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor.  Our BOP Schools and Community Science program seeks to increase the skills, content knowledge, and confidence of underrepresented groups in STEM (Science, Technology, Engineering, Math) fields through hands on, authentic restoration and research activities.  The [BOP Digital Platform](https://platform.bop.nyc) is the online dashboard for our program.  Through the Platform, students and teachers collect and publish data, develop field research, and create the STEM curriculum that links keystone species restoration in New York Harbor to teaching and learning in New York City Schools.  
 
-In light of our goals, we're strongly committed to making the Billion Oyster Project Digital Platform an inclusive, welcoming open source community.  Before contributing to the project, please read our [Code of Conduct](https://github.com/BillionOysterProject/docs/blob/master/CODE_OF_CONDUCT.md).
+For a quick scroll-through of the platform's features, check out the [BOP Digital Platform Quick Guide](https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f). For more detailed documentation, the BOP Digital Platform User Guide lives [here](https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents).
+
+In light of our goals, we're strongly committed to making the Billion Oyster Project Digital Platform an inclusive, welcoming open source community.  Before contributing to the project, please read our [Code of Conduct](https://github.com/BillionOysterProject/docs/blob/master/CODE_OF_CONDUCT.md) and our [Contributing Guide](https://github.com/BillionOysterProject/Digital-Platform/blob/master/CONTRIBUTING.md).
 
 This project is based off the <a href="http://meanjs.org/">MEAN.js stack</a>
 
 ### Before starting, have the following installed on your system
 * *Node.js* -  <a href="http://nodejs.org/download/">Download</a> and Install Node.js or use the packages within brew or macports.
-* *MongoDB* - Follow the tutorial here - <a href="https://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/">Install mongodb on OSX</a>
+* *MongoDB* - Follow the tutorial here - <a href="https://www.mongodb.com/download-center?jmp=nav#community">Install mongoDB</a>
 * *git* - Get git <a href="http://git-scm.com/download/mac">from here</a>.
 * *java* - <a href="https://www.java.com/en/download/">Download</a> and install or use the package within brew (brew cask install java)
 * *ruby* - <a href="https://www.ruby-lang.org/en/downloads/">Download</a> and install or use the package within brew (brew install ruby)
