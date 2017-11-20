@@ -10,14 +10,18 @@ Thanks for joining the Billion Oyster Project as a Team Lead! You can now log in
 *View participating organizations: https://platform.bop.nyc/profiles/organization
 *Sign up for events: https://platform.bop.nyc/events
            
-Currently, your account is pending admin approval.  You'll get full access to the platform once you've attended an Oyster Research Station Basic Training.  Learn more here: https://billionoysterproject.org/training/
+You can explore these features and more with a quick scroll through the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f   
 
-We'll send you a confirmation as soon as your account is fully active.  In the interim, check out the BOP Digital Platform User Guide: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+For extra help, visit our wiki: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
 
-And please feel free to reply to this email with any questions- our staff will be in touch right away!
+Currently, your account is pending admin approval.  You'll get full access to the platform once you've attended an Oyster Research Station Basic Training.  (After your training, you'll be able to enter monitoring data, create and share your own lessons, create research posters, and more.)  Learn more here: https://billionoysterproject.org/training/
+ 
+But you don't need to wait for a Basic Training to get involved with BOP!  Come join us at one of our professional developments- most of them are free!  For educators, get started with our curriculum- the Oyster Tank Investigation is a great intro unit you can teach before you get your own Oyster Research Station: https://platform.bop.nyc/units/58a111ed911363392a0a3fc6
+
+And we'd love to help you figure out how to integrate BOP into your classroom or afterschool program- you can reply to this email and someone from our Education team will get back to you soon.
 
 We're glad to have you!
 The Billion Oyster Project
 
-You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
+You are receiving this email because of you signed up for a Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
 
