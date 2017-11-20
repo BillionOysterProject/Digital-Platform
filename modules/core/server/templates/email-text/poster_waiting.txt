@@ -2,6 +2,10 @@ Hi <%=FirstName%>,
 
 <%= TeamMemberName %> just requested publishing approval for the poster <%= PosterName %>. You can view and respond to the request at <%= LinkPosterRequest %>
 
+And don't forget- you can always get help with the platform via the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f
+
+...or our wiki: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+
 Thanks,
 The Billion Oyster Project
 

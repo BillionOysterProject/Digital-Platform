@@ -6,6 +6,10 @@ Hi,
 You are currently registered for <%= EventName %> on <%= EventDate %>. No longer able to attend? Visit <%= LinkEvent %> to unregister and give your spot to somebody else.
 <% } %>
 
+And don't forget- you can always get help with the platform via the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f
+
+...or our wiki: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+
 Thanks!
 The Billion Oyster Project
 

@@ -7,5 +7,9 @@ Visit <%= LinkExpedition %> to view the expedition.
 Thanks!
 The Billion Oyster Project
 
+And don't forget- you can always get help with the platform via the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f
+
+...or our wiki: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+
 You are receiving this email because of your Billion Oyster Project account. Visit <%= LinkProfile %> to change your email account.
 Need help? Just respond to this email and we'll get back to you.
