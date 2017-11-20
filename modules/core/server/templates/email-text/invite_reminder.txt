@@ -6,6 +6,10 @@ Your initial username is <%= Username %>, but it can be changed when you claim y
 
 Visit <%= LinkCreateAccount %> to join the <%= TeamOrOrg %>.
 
+Want to learn more about the platform or need some extra help? Check out the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f
+
+...or our wiki: https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents
+
 So glad to have you on board!
 
 The Billion Oyster Project

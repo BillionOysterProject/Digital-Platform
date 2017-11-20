@@ -23,14 +23,15 @@
     <tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
     <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Hi,</p>
+        <p>Hi,</p>
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;"><%= EventEmailMessage %></p>
+        <p><%= EventEmailMessage %></p>
 
         <!-- IF ADMIN CHECKED YES TO THIS OPTIONAL PARAGRAPH: -->
         <% if(Footer === true) { %>
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 30px 10px; padding: 0; color: #555;">You are currently registered for <b style="color: #ea6158;"><%= EventName %></b> on <b style="color: #ea6158;"><%= EventDate %></b>. No longer able to attend? <a style="color: #ea6158;" href="<%= LinkEvent %>">Unregister here</a> to give your spot to somebody else.</p>
+        <p>You are currently registered for <b style="color: #ea6158;"><%= EventName %></b> on <b style="color: #ea6158;"><%= EventDate %></b>. No longer able to attend? <a style="color: #ea6158;" href="<%= LinkEvent %>">Unregister here</a> to give your spot to somebody else.</p>
         <% } %>
+        <p>And don't forget- you can always get help with the platform via the <a href="https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f">BOP Digital Platform Quick Guide</a> or our <a href="https://github.com/BillionOysterProject/docs/wiki/Digital-Platform-User-Guide-Table-of-Contents">wiki</a>.</p>
 
         <br/>
         <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;">Thanks,</p>
@@ -58,7 +59,7 @@
     <tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
     <td align="center" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
 
-        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6em; color: #666666; font-weight: normal; margin: 0 0 10px; padding: 0;">You are receiving this email because of your Billion Oyster Project account. <a href="<%= LinkProfile %>" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #999999; margin: 0; padding: 0;"><unsubscribe style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">Change email account</unsubscribe></a>. Need help? Just respond to this email and we'll get back to you.</p>
+        <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6em; color: #666666; font-weight: normal; margin: 0 0 10px; padding: 0;">You are receiving this email because of you signed up for a Billion Oyster Project event.. <a href="<%= LinkProfile %>" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #999999; margin: 0; padding: 0;"><unsubscribe style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">Change email account</unsubscribe></a>. Need help? Just respond to this email and we'll get back to you.</p>
 
     </td>
     </tr>
