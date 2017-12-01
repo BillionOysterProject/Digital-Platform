@@ -33,26 +33,30 @@ var checkRole = function(role, user) {
 var validate = function(oysterMeasurement, successCallback, errorCallback) {
   var errorMessages = [];
 
-  if(!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === undefined ||
-    oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === null) {
-    errorMessages.push('Submerged depth of oyster cage is required and must be greater than 0');
-  } else if(oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
-    errorMessages.push('Submerged depth of oyster cage must be greater than 0');
-  }
+  // TODO: clean up this code later- remove depth of cage requirement.
+  // if(!oysterMeasurement.depthOfOysterCage || oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === undefined ||
+  //   oysterMeasurement.depthOfOysterCage.submergedDepthofCageM === null) {
+  //   errorMessages.push('Submerged depth of oyster cage is required and must be greater than 0');
+  // } else if(oysterMeasurement.depthOfOysterCage.submergedDepthofCageM < 0) {
+  //   errorMessages.push('Submerged depth of oyster cage must be greater than 0');
+  // }
+ 
+  // TODO: clean up this code later- removing requirements to upload a photo of the cage
+  // and removing requirement to describe bioaccumulation.
+  // if (!oysterMeasurement.conditionOfOysterCage) {
+  //   errorMessages.push('Cage Condition photo is required');
+  //   errorMessages.push('Bioaccumulation on cage is required');
+  // } else {
 
-  if (!oysterMeasurement.conditionOfOysterCage) {
-    errorMessages.push('Cage Condition photo is required');
-    errorMessages.push('Bioaccumulation on cage is required');
-  } else {
-    if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
-      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
-      oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === '') {
-      errorMessages.push('Photo of oyster cage is required');
-    }
-    if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
-      errorMessages.push('Bioaccumulation on cage is required');
-    }
-  }
+  //   if (!oysterMeasurement.conditionOfOysterCage.oysterCagePhoto ||
+  //     oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === undefined ||
+  //     oysterMeasurement.conditionOfOysterCage.oysterCagePhoto.path === '') {
+  //     errorMessages.push('Photo of oyster cage is required');
+  //   }
+  //   if (emptyString(oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage)) {
+  //     errorMessages.push('Bioaccumulation on cage is required');
+  //   }
+  // }
 
   if (!oysterMeasurement.measuringOysterGrowth || !oysterMeasurement.measuringOysterGrowth.substrateShells ||
     oysterMeasurement.measuringOysterGrowth.substrateShells.length < 0) {
