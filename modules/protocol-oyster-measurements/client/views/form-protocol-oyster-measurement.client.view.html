@@ -53,30 +53,25 @@
                     <p class="lead blue">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
-                        <label for="submergedDepth" class="control-label required">Submerged depth of cage (meters) *</label>
-                        <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()" required/>
+                        <label for="submergedDepth" class="control-label">Submerged depth of cage (meters)</label>
+                        <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()"/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h6>Condition of oyster cage</h6>
                     <div class="form-group">
-                        <label>Take a photograph of the oyster cage *</label>
+                        <label>Take a photograph of the oyster cage.</label>
                         <single-image-drop-zone uploader="cageConditionUploader" image-url="cageConditionPhotoURL"
                         image-alt="Oyster Cage Condition" id="oyster-cage-condition-image-dropzone"></single-image-drop-zone>
-                        <div ng-show="form.oysterMeasurementForm.$invalid && form.oysterMeasurementForm.$submitted && !cageConditionPhotoURL">
-                            <p class="red">Oyster cage condition image is required.</p>
-                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="bioaccumulation" class="control-label required">Bioaccumulation on cage *</label>
-                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation" required></select>
+                        <label for="bioaccumulation" class="control-label">Bioaccumulation on cage</label>
+                        <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation"></select>
                     </div>
                     <div class="form-group">
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
-
-                        <!--TODO: Wire up link to open status report modal (currently at the bottom of RS Dashboard until it and ORS profiles are wired up)-->
                         <span class="help-block">Was the cage lost, destroyed or significantly damaged? <a class="btn btn-sm btn-danger pull-right" ng-click="openORSStatusForm()">Submit status update</a></span>
                     </div>
 

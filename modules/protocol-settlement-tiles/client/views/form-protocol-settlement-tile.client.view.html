@@ -73,7 +73,7 @@
                         <textarea rows="5" class="form-control" ng-model="tile.description" ></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Tile photograph *</label>
+                        <label>Tile photograph <span ng-if="$index==0">*</span></label>
                         <single-image-drop-zone uploader="settlementTilePhotoUploaders[$index]"
                         image-url="tile.imageUrl" image-alt="Settlement Tile #{{$index+1}} Photo"
                         remove-function="removeImage" id="settlement-tile-image-dropzone-{{$index}}"></single-image-drop-zone>
