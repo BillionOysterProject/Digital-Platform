@@ -69,6 +69,7 @@
     "passport-local": "~1.0.0",
     "passport-paypal-openidconnect": "~0.1.1",
     "passport-twitter": "~1.0.4",
+    "passport-unique-token": "^0.1.4",
     "phantomjs": "~1.9.19",
     "query-string": "^4.3.4",
     "request": "^2.69.0",
