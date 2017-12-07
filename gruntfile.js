@@ -101,6 +101,7 @@ module.exports = function (grunt) {
       all: {
         src: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
         options: {
+          reporter: require('jshint-stylish'),
           jshintrc: true,
           node: true,
           mocha: true,
