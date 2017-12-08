@@ -42,7 +42,8 @@ var validate = function(waterQuality, successCallback, errorCallback) {
         !sample.waterTemperature.average) {
         errorMessages.push('Water temperature measurements are required');
       
-      // TODO: delete this code eventually!}
+      }
+      // TODO: delete this code eventually!
       //if (!sample.dissolvedOxygen.results[0] || !sample.dissolvedOxygen.results[1] ||
       //  !sample.dissolvedOxygen.average) {
       //  errorMessages.push('Dissolved oxygen measurements are required');

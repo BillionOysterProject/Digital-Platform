@@ -270,7 +270,7 @@ var validate = function(siteCondition, successCallback, errorCallback) {
   //      errorMessages.push('Land Condition - Other garbage extent is required.');
   //    }
   //  }
-  }
+  //}
 
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
