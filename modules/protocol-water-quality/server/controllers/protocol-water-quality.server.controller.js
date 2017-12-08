@@ -41,17 +41,19 @@ var validate = function(waterQuality, successCallback, errorCallback) {
       if (!sample.waterTemperature.results[0] || !sample.waterTemperature.results[1] ||
         !sample.waterTemperature.average) {
         errorMessages.push('Water temperature measurements are required');
+      
       }
-      if (!sample.dissolvedOxygen.results[0] || !sample.dissolvedOxygen.results[1] ||
-        !sample.dissolvedOxygen.average) {
-        errorMessages.push('Dissolved oxygen measurements are required');
-      }
-      if (!sample.salinity.results[0] || !sample.salinity.results[1] || !sample.salinity.average) {
-        errorMessages.push('Salinity measurements are required');
-      }
-      if (!sample.pH.results[0] || !sample.pH.results[1] || !sample.pH.average) {
-        errorMessages.push('pH measurements are required');
-      }
+      // TODO: delete this code eventually!
+      //if (!sample.dissolvedOxygen.results[0] || !sample.dissolvedOxygen.results[1] ||
+      //  !sample.dissolvedOxygen.average) {
+      //  errorMessages.push('Dissolved oxygen measurements are required');
+      //}
+      //if (!sample.salinity.results[0] || !sample.salinity.results[1] || !sample.salinity.average) {
+      //  errorMessages.push('Salinity measurements are required');
+      //}
+      //if (!sample.pH.results[0] || !sample.pH.results[1] || !sample.pH.average) {
+      //  errorMessages.push('pH measurements are required');
+      //}
     }
   }
 
