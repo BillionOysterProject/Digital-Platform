@@ -1,3 +1,177 @@
 ---
 ---
-hello world
+<div class="sidebar navbar navbar-fixed-top navbar-inverse" ng-controller="HeaderController">
+    <div class="navbar-header">
+        <div class="navbar-brand">
+            <a href="#" ui-sref="home">
+                <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" />
+            </a>
+        </div>
+    </div>
+    <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+        <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
+            <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }">{{::item.title}}&nbsp;<span class="caret"></span></span></a>
+            <ul ng-switch-when="dropdown" class="dropdown-menu">
+                <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
+                    <a ui-sref="{{subitem.state}}"><i class="{{subitem.icon}}" ng-show="subitem.icon"></i>{{subitem.title}}</span></a>
+                </li>
+            </ul>
+            <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
+        </li>
+    </ul>
+    <div class="navbar-footer">
+        <a href="http://www.stemccers.com" target="_blank">
+            <img alt="Billion Oyster Project" src="modules/core/client/img/brand/ccers_whiteout.png" />
+        </a>
+    </div>
+</div>
+
+<div class="navbar navbar-fixed-top navbar-default" ng-controller="HeaderController">
+    <div class="container-fluid">
+        <!-- REMOVE MOBILE COLLAPSING MENU
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
+        -->
+        <nav role="navigation">
+            <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
+                <li class="hidden-xs" ui-sref-active="active">
+                  <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                </li>
+                <li class="hidden-xs">
+                    <a href="http://bop-ccers.tumblr.com" class="icon" target="_blank"><i class="fa fa-tumblr-square"></i></a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signup">Sign Up</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signin">Sign In</a>
+                </li>
+                <li class="visible-xs">
+                    <a ng-click="openFeedback()">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+                <li class="loading-dialog" data-http-loading>
+                    <i class="fa fa-spin fa-circle-o-notch red icon"></i>
+                </li>
+                <li class="hidden-xs" ui-sref-active="active">
+                  <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                </li>
+                <li class="hidden-xs">
+                    <a href="http://bop-ccers.tumblr.com" class="icon" target="_blank"><i class="fa fa-tumblr-square"></i></a>
+                </li>
+                <li class="dropdown" uib-dropdown>
+                    <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
+                        <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
+                        <span ng-bind="authentication.user.displayName"></span><b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ui-sref-active="active" ng-repeat="item in accountMenu.items" ng-if="item.shouldRender(authentication.user);">
+                            <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
+                        <li><a href="https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f">Quick Guide</a></li>
+                        <li><a href="https://github.com/BillionOysterProject/docs/wiki">Wiki</a></li>
+                        <!--<li><a href="#" data-toggle="modal" data-target="#modal-guide">User Guide</a></li>-->
+                        <li class="divider"></li>
+                        <li class="visible-xs">
+                            <a href="#" ng-click="openFeedback()">
+                                <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                            </a>
+                        </li>
+                        <li class="visible-xs">
+                            <a href="http://bop-ccers.tumblr.com" target="_blank">
+                                <i class="fa fa-tumblr-square"></i> Tumblr
+                            </a>
+                        </li>
+                        <li class="divider visible-xs"></li>
+                        <li><a href="/api/auth/signout" target="_self">Signout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- MODALS -->
+
+<!--NOT BEING USED-->
+<div class="modal fade" id="modal-guide" tabindex="-1" role="dialog" aria-labelledby="modal-guide">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">User Guide</h4>
+            </div>
+            <div class="modal-body">
+                <iframe src="https://docs.google.com/document/d/1QSf1aGG_Vfhhft9gtD0onftOAHPrjqqdzPe622DBtkU/pub?embedded=true" width="100%" height="600px"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<site-feedback></site-feedback>
+<div class="modal fade" id="modal-about" tabindex="-1" role="dialog" aria-labelledby="modal-about">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">About the project</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <p>The Billion Oyster Project Curriculum and Community Enterprise for Restoration Science (BOP-CCERS) aims to improve STEM education in public schools by linking teaching and learning to ecosystem restoration and engaging students in hands-on environmental field science during their regular school day. The project also strongly emphasizes the use of computer science and digital tools for environmental monitoring, citizen science, stewardship, and advocacy. BOP-CCERS is a research-based partnership initiative between
+                        <a href="https://www.newyorkharborschool.org/crew/new-york-harbor-foundation/" target="_blank">New York Harbor Foundation</a>,
+                        <a href="http://www.pace.edu/" target="_blank">Pace University</a>,
+                        <a href="http://schools.nyc.gov/default.htm" target="_blank">New York City Department of Education</a>,
+                        <a href="http://www.ldeo.columbia.edu/" target="_blank">Columbia University Lamont-Doherty Earth Observatory</a>,
+                        <a href="http://www.nyas.org/" target="_blank">New York Academy of Sciences</a>,
+                        <a href="http://www.umces.edu/" target="_blank">University of Maryland Center for Environmental Science</a>,
+                        <a href="http://www.wcs.org/" target="_blank">New York Aquarium</a>,
+                        <a href="http://www.riverprojectnyc.org/" target="_blank">The River Project</a>, and
+                        <a href="http://goodshepherds.org/" target="_blank">Good Shepherd Services</a>.
+                        We are a diverse community of students and teachers, professional scientists and citizen scientist volunteers, schools, universities, businesses, and community organizations, all working together to conduct oyster restoration-based scientific research in New York Harbor.</p>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="CCERS" src="modules/core/client/img/brand/ccers.png" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <img alt="Partners" src="modules/core/client/img/brand/partners.png" class="img-responsive" />
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <img alt="National Science Foundation" src="modules/core/client/img/brand/nsf.jpg" class="img-responsive" />
+                    </div>
+                    <div class="col-xs-10">
+                        <p>Our work is supported by the <a href="http://www.nsf.gov/" target="_blank">National Science Foundation</a> through NSF DRL1440869.</p>
+                        <p>Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
