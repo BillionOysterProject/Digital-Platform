@@ -1,146 +1,153 @@
-<nav class="navbar navbar-toggleable-sm navbar-inverse site-navbar">
-    <div class="navbar-brand">
-        <a href="https://platform.bop.nyc/">
-            <img alt="Billion Oyster Project" src="/Digital-Platform/assets/img/brand/logo.svg">
-        </a>
+<div class="sidebar navbar navbar-fixed-top navbar-inverse ng-scope" ng-controller="HeaderController">
+    <div class="navbar-header">
+        <div class="navbar-brand">
+            <a href="/" ui-sref="home">
+                <img alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg">
+            </a>
+        </div>
     </div>
-
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                    <i class="fa fa-fw fa-map-marker"></i>
-                    <span class="text">
-                        Restoration
-                    </span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="https://platform.bop.nyc/restoration">
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://platform.bop.nyc/expeditions">
-                            My Expeditions
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://platform.bop.nyc/restoration/stations">ORS</a>
-                    </li>
-                    <li>
-                        <a href="https://platform.bop.nyc/expeditions/data">Data</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                    <i class="fa fa-fw fa-book"></i>
-                    <span class="text">
-                        Curriculum
-                    </span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a ui-sref="library.user" href="https://platform.bop.nyc/library/user">
-                            My Library
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="lessons.list" href="https://platform.bop.nyc/lessons">
-                            Lessons
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="units.list" href="https://platform.bop.nyc/units">
-                            Units
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="glossary.main" href="https://platform.bop.nyc/glossary">
-                            Glossary
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                    <i class="fa fa-fw fa-file-text"></i>
-                    <span class="text">
-                        Research
-                    </span>
-                </a>
-
-                <ul class="dropdown-menu">
-                    <li>
-                        <a ui-sref="researches.user" href="https://platform.bop.nyc/research/user">
-                            My Posters
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="researches.list" href="https://platform.bop.nyc/research">
-                            Publications
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                    <i class="fa fa-fw fa-users"></i>
-                    <span class="text">
-                        Community
-                    </span>
-                </a>
-
-                <ul class="dropdown-menu">
-                    <li>
-                        <a ui-sref="profiles.main" href="https://platform.bop.nyc/profiles">
-                            My Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="profiles.team" href="https://platform.bop.nyc/profiles/team">
-                            Teams
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="profiles.organization" href="https://platform.bop.nyc/profiles/organization">
-                            Organizations
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="profiles.admin-users" href="https://platform.bop.nyc/profiles/users">
-                            People
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="https://platform.bop.nyc/events">
-                    <i class="fa fa-fw fa-calendar"></i>
-                    <span class="text">
-                        Events
-                    </span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="https://platform.bop.nyc/metrics">
-                    <i class="fa fa-fw fa-bar-chart"></i>
-                    <span class="text">
-                        Metrics
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
+    <!-- ngIf: menu.shouldRender(authentication.user); --><ul class="nav navbar-nav ng-scope" ng-if="menu.shouldRender(authentication.user);">
+        <!-- ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="dropdown" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown --><a ng-switch-when="dropdown" class="dropdown-toggle ng-scope" uib-dropdown-toggle="" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-map-marker"></i><span ng-class="{ text: item.icon }" class="ng-binding text">Restoration&nbsp;<span class="caret"></span></span></a><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchWhen: dropdown --><ul ng-switch-when="dropdown" class="dropdown-menu ng-scope">
+                <!-- ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="restoration-stations.dashboard" class="ng-binding" href="/restoration"><i class="ng-hide" ng-show="subitem.icon"></i>Dashboard</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="expeditions.list" class="ng-binding" href="/expeditions"><i class="ng-hide" ng-show="subitem.icon"></i>My Expeditions</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="restoration-stations.list" class="ng-binding" href="/restoration/stations"><i class="ng-hide" ng-show="subitem.icon"></i>ORS</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="expeditions.data" class="ng-binding" href="/expeditions/data"><i class="ng-hide" ng-show="subitem.icon"></i>Data</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' -->
+            </ul><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchDefault:  -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="dropdown" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown --><a ng-switch-when="dropdown" class="dropdown-toggle ng-scope" uib-dropdown-toggle="" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-book"></i><span ng-class="{ text: item.icon }" class="ng-binding text">Curriculum&nbsp;<span class="caret"></span></span></a><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchWhen: dropdown --><ul ng-switch-when="dropdown" class="dropdown-menu ng-scope">
+                <!-- ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="library.user" class="ng-binding" href="/library/user"><i class="ng-hide" ng-show="subitem.icon"></i>My Library</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope active">
+                    <a ui-sref="lessons.list" class="ng-binding" href="/lessons"><i class="ng-hide" ng-show="subitem.icon"></i>Lessons</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="units.list" class="ng-binding" href="/units"><i class="ng-hide" ng-show="subitem.icon"></i>Units</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="glossary.main" class="ng-binding" href="/glossary"><i class="ng-hide" ng-show="subitem.icon"></i>Glossary</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' -->
+            </ul><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchDefault:  -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="dropdown" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown --><a ng-switch-when="dropdown" class="dropdown-toggle ng-scope" uib-dropdown-toggle="" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-text"></i><span ng-class="{ text: item.icon }" class="ng-binding text">Research&nbsp;<span class="caret"></span></span></a><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchWhen: dropdown --><ul ng-switch-when="dropdown" class="dropdown-menu ng-scope">
+                <!-- ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="researches.user" class="ng-binding" href="/research/user"><i class="ng-hide" ng-show="subitem.icon"></i>My Posters</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="researches.list" class="ng-binding" href="/research"><i class="ng-hide" ng-show="subitem.icon"></i>Publications</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' -->
+            </ul><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchDefault:  -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="dropdown" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown --><a ng-switch-when="dropdown" class="dropdown-toggle ng-scope" uib-dropdown-toggle="" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i><span ng-class="{ text: item.icon }" class="ng-binding text">Community&nbsp;<span class="caret"></span></span></a><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchWhen: dropdown --><ul ng-switch-when="dropdown" class="dropdown-menu ng-scope">
+                <!-- ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="profiles.main" class="ng-binding" href="/profiles"><i class="ng-hide" ng-show="subitem.icon"></i>My Profile</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="profiles.team" class="ng-binding" href="/profiles/team"><i class="ng-hide" ng-show="subitem.icon"></i>Teams</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="profiles.organization" class="ng-binding" href="/profiles/organization"><i class="ng-hide" ng-show="subitem.icon"></i>Organizations</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' --><!-- ngIf: subitem.shouldRender(authentication.user); --><li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active" class="ng-scope">
+                    <a ui-sref="profiles.admin-users" class="ng-binding" href="/profiles/users"><i class="ng-hide" ng-show="subitem.icon"></i>People</a>
+                </li><!-- end ngIf: subitem.shouldRender(authentication.user); --><!-- end ngRepeat: subitem in item.items | orderBy: 'position' -->
+            </ul><!-- end ngSwitchWhen: -->
+            <!-- ngSwitchDefault:  -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown -->
+            <!-- ngSwitchWhen: dropdown -->
+            <!-- ngSwitchDefault:  --><a ng-switch-default="" ui-sref="events.list" class="ng-scope" href="/events"><i class="glyphicon glyphicon-calendar"></i><span ng-class="{ text: item.icon }" ng-bind="item.title" class="ng-binding text">Events</span></a><!-- end ngSwitchWhen: -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' --><!-- ngIf: item.shouldRender(authentication.user); --><li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="" uib-dropdown="item.type === 'dropdown'">
+            <!-- ngSwitchWhen: dropdown -->
+            <!-- ngSwitchWhen: dropdown -->
+            <!-- ngSwitchDefault:  --><a ng-switch-default="" ui-sref="metrics.dashboard" class="ng-scope" href="/metrics"><i class="glyphicon glyphicon-equalizer"></i><span ng-class="{ text: item.icon }" ng-bind="item.title" class="ng-binding text">Metrics</span></a><!-- end ngSwitchWhen: -->
+        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in menu.items | orderBy: 'position' -->
+    </ul><!-- end ngIf: menu.shouldRender(authentication.user); -->
     <div class="navbar-footer">
-        <a href="https://platform.bop.nychttp://www.stemccers.com" target="_blank">
-            <img alt="Billion Oyster Project" src="/Digital-Platform/assets/img/brand/ccers_whiteout.png">
+        <a href="http://www.stemccers.com" target="_blank">
+            <img alt="Billion Oyster Project" src="modules/core/client/img/brand/ccers_whiteout.png">
         </a>
     </div>
-</nav>
+</div>
+
+<div class="navbar navbar-fixed-top navbar-default ng-scope" ng-controller="HeaderController">
+    <div class="container-fluid">
+        <!-- REMOVE MOBILE COLLAPSING MENU
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <nav class="collapse navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
+        -->
+        <nav role="navigation">
+            <ul class="nav navbar-nav navbar-right ng-hide" ng-hide="authentication.user">
+                <li class="hidden-xs" ui-sref-active="active">
+                  <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                </li>
+                <li class="hidden-xs">
+                    <a href="http://bop-ccers.tumblr.com" class="icon" target="_blank"><i class="fa fa-tumblr-square"></i></a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signup" href="/authentication/signup">Sign Up</a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="authentication.signin" href="/authentication/signin">Sign In</a>
+                </li>
+                <li class="visible-xs">
+                    <a ng-click="openFeedback()">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+                <li class="loading-dialog" data-http-loading="" style="display: none;">
+                    <i class="fa fa-spin fa-circle-o-notch red icon"></i>
+                </li>
+                <li class="hidden-xs" ui-sref-active="active">
+                  <a href="#" ng-click="openFeedback()" class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                </li>
+                <li class="hidden-xs">
+                    <a href="http://bop-ccers.tumblr.com" class="icon" target="_blank"><i class="fa fa-tumblr-square"></i></a>
+                </li>
+                <li class="dropdown" uib-dropdown="">
+                    <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle="" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img ng-src="http://s3-us-west-1.amazonaws.com/digital-platform-prod-files/uploads/users/img/profile/632d1c4a36273d7e475c17bd57ac600d.jpg" alt="BOP Admin" class="header-profile-image" src="http://s3-us-west-1.amazonaws.com/digital-platform-prod-files/uploads/users/img/profile/632d1c4a36273d7e475c17bd57ac600d.jpg">
+                        <span ng-bind="authentication.user.displayName" class="ng-binding">BOP Admin</span><b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <!-- ngRepeat: item in accountMenu.items --><!-- ngIf: item.shouldRender(authentication.user); --><li ui-sref-active="active" ng-repeat="item in accountMenu.items" ng-if="item.shouldRender(authentication.user);" class="ng-scope">
+                            <a ui-sref="profiles.main" ng-bind="item.title" class="ng-binding" href="/profiles">Profile</a>
+                        </li><!-- end ngIf: item.shouldRender(authentication.user); --><!-- end ngRepeat: item in accountMenu.items -->
+                        <li><a href="#" data-toggle="modal" data-target="#modal-about">About the project</a></li>
+                        <li><a href="https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f">Quick Guide</a></li>
+                        <li><a href="https://github.com/BillionOysterProject/docs/wiki">Wiki</a></li>
+                        <!--<li><a href="#" data-toggle="modal" data-target="#modal-guide">User Guide</a></li>-->
+                        <li class="divider"></li>
+                        <li class="visible-xs">
+                            <a href="#" ng-click="openFeedback()">
+                                <i class="fa fa-question-circle" aria-hidden="true"></i> Support
+                            </a>
+                        </li>
+                        <li class="visible-xs">
+                            <a href="http://bop-ccers.tumblr.com" target="_blank">
+                                <i class="fa fa-tumblr-square"></i> Tumblr
+                            </a>
+                        </li>
+                        <li class="divider visible-xs"></li>
+                        <li><a href="/api/auth/signout" target="_self">Signout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
