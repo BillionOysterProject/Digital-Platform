@@ -14,6 +14,10 @@ body > header {
     background:      #2C3C56;
 }
 
+.pre {
+    font-family:     monospace !important;
+}
+
 .site-navbar {
     background:      transparent;
 }
@@ -101,16 +105,17 @@ h6, .h6 {
         left:            0;
         top:             0;
         bottom:          0;
-        width:           180px;
+        width:           220px;
         display:         flex;
         flex-direction:  column;
         justify-content: flex-start;
         align-items:     stretch;
+        overflow:        auto;
     }
 
     #main {
-        width:           calc(100% - 180px);
-        margin-left:     180px;
+        width:           calc(100% - 220px);
+        margin-left:     220px;
     }
 
     .site-navbar {
@@ -121,9 +126,9 @@ h6, .h6 {
         padding:         0;
         flex:            1;
 
-        -webkit-box-shadow: inset -6px 0px 9px 0px rgba(0,0,0,0.65);
-        -moz-box-shadow:    inset -6px 0px 9px 0px rgba(0,0,0,0.65);
-        box-shadow:         inset -6px 0px 9px 0px rgba(0,0,0,0.65);
+        -webkit-box-shadow: inset -6px 0px 9px 0px rgba(0,0,0,0.33);
+        -moz-box-shadow:    inset -6px 0px 9px 0px rgba(0,0,0,0.33);
+        box-shadow:         inset -6px 0px 9px 0px rgba(0,0,0,0.33);
     }
 
     .site-navbar .navbar-nav {
@@ -134,7 +139,7 @@ h6, .h6 {
 
     .site-navbar .navbar-brand {
         padding:     0;
-        margin:      10px 0 20px 0;
+        margin:      10px 0 40px 0;
         height:      60px;
         width:       100%;
         text-align:  center;
@@ -147,44 +152,48 @@ h6, .h6 {
 
     .site-navbar .navbar-nav .nav-link {
         color:       #FFFFFF;
+        user-select: none;
+        padding:     10px 30px 10px 30px;
     }
 
-    .site-navbar .navbar-nav .dropdown-toggle {
-        background:  #1C2A40;
-        margin-top:  1rem;
-        -webkit-box-shadow: inset -6px 0px 9px 0px rgba(0,0,0,0.33);
-        -moz-box-shadow:    inset -6px 0px 9px 0px rgba(0,0,0,0.33);
-        box-shadow:         inset -6px 0px 9px 0px rgba(0,0,0,0.33);
+    .site-navbar .navbar-nav .nav-link:hover {
+        background:  #121B29;
     }
 
-    .site-navbar .navbar-nav .dropdown-toggle:after {
-        display:         none;
+    .site-navbar .navbar-nav .nav-item.show .nav-link {
+        background:  #121B29;
+        -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
+        -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5);
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, .5)
     }
 
-    .site-navbar .navbar-nav .dropdown-toggle:hover {
-        color:           #FFFFFF;
-        cursor:          default;
+    .site-navbar .navbar-nav .text {
+        display:     inline-block;
+        width:       50%;
+        margin-left: 0.25rem;
     }
 
     .site-navbar .navbar-nav .dropdown-menu {
-        display:     block;
         position:    relative;
         background:  transparent;
         border:      0;
         width:       100%;
-        padding:     0;
         margin:      0;
     }
 
     .site-navbar .navbar-nav .dropdown-menu a {
         color:       rgba(255,255,255, 0.75);
-        font-size:   85%;
-        padding:     4px 10px 4px 26px;
+        padding:     4px 20px 4px 56px;
     }
 
     .site-navbar .navbar-nav .dropdown-menu a:hover,
-    .site-navbar .navbar-nav .dropdown-menu a:active {
+    .site-navbar .navbar-nav .dropdown-menu a:active,
+    .site-navbar .navbar-nav .dropdown-menu a:focus {
         background:  #121B29;
+    }
+
+    .site-navbar .navbar-footer {
+        margin-top:  auto;
     }
 }
 
@@ -811,32 +820,37 @@ a.white:hover {
 
 .badge,
 .panel-default>.panel-heading .badge {
-    background: #ccc
+    background-color: #ccc;
 }
 
-.badge-success,
+.badge.badge-primary,
+.panel-default>.panel-heading .badge-primary {
+    background-color: #0275d8;
+}
+
+.badge.badge-success,
 .panel-default>.panel-heading .badge-success {
-    background: #4CAF50
+    background-color: #4CAF50;
 }
 
-.badge-info,
+.badge.badge-info,
 .panel-default>.panel-heading .badge-info {
-    background: #426ca9
+    background-color: #426ca9;
 }
 
-.badge-warning,
+.badge.badge-warning,
 .panel-default>.panel-heading .badge-warning {
-    background: #FF9501
+    background-color: #FF9501;
 }
 
-.badge-danger,
+.badge.badge-danger,
 .panel-default>.panel-heading .badge-danger {
-    background: #ea6158
+    background-color: #ea6158;
 }
 
 .btn .badge {
     background: #fff;
-    color: #426ca9
+    color: #426ca9;
 }
 
 .alert {
@@ -1314,7 +1328,7 @@ form.ng-submitted .ng-invalid {
 }
 
 .container-ribbon {
-    background: url('/assets/img/redribbon-bg.png') center top no-repeat;
+    background: url('../img/redribbon-bg.png') center top no-repeat;
     margin-top: -50px;
 }
 
