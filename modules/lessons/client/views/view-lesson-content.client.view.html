@@ -1,4 +1,4 @@
-<div>
+<div class="lesson-main">
   <div class="row" ng-if="!fullPage">
     <div class="col-md-4">
       <h2 id="lesson-title">{{lesson.title}}
@@ -441,13 +441,27 @@ HACK: Convert ALL links in the lesson body to target=_blank
 -->
 <script type="text/javascript">
   $(function(){
-    $('.lesson-body a').each(function(i, el){
-        var link = $(el);
+    var recheckLinks = function() {
+      $('.lesson-main a').each(function(i, el){
+          var link = $(el);
+          var href = link.attr('href');
 
-        if (link.attr('target') != '_blank') {
-            link.attr('target', '_blank');
-            console.debug('Added target=_blank to link', link.attr('href'));
-        }
+          // only modify links to http[s] URLs
+          if (href && href.match('^https?://')) {
+            if (link.attr('target') != '_blank') {
+                link.attr('target', '_blank');
+                console.debug('Added target=_blank to link', href);
+            }
+          }
+      });
+    };
+
+    // watch for DOM mutations on .lesson-main, and perform a recheck to mangle
+    // the links whenever one occurs.
+    new MutationObserver(function(mutations) {
+      recheckLinks();
+    }).observe($('.lesson-main').get(0), {
+      childList: true,
     });
   });
 </script>
