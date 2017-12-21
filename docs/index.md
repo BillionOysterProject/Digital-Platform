@@ -1,4 +1,7 @@
 ---
 
 ---
-Billion Oyster Project Updates
+Billion Oyster Project Schools and Community Science Resources
+
+
+
