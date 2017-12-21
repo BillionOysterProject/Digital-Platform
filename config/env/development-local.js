@@ -4,7 +4,7 @@ var defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: 'mongodb://localhost/bop-dev',
+    uri: (process.env.MONGOLAB_URI || 'mongodb://localhost/bop-dev'),
     options: {
       user: '',
       pass: ''
