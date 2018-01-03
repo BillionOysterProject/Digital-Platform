@@ -6,6 +6,12 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     $scope.$state = $state;
     $scope.authentication = Authentication;
 
+    // Google Analytics: if we're logged in and have a user object, send the
+    // user's ID to Google so we can track them across devices.
+    if (ga && $scope.authentication.user) {
+      ga('set', 'userId', $scope.authentication.user.username);
+    }
+
     // Get the topbar menu
     $scope.menu = Menus.getMenu('topbar');
 
