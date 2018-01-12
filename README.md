@@ -79,3 +79,4 @@ webdriver-manager start #this is the only command you'll need to start the serve
 #in a separate terminal
 grunt test:e2e
 ```
+
