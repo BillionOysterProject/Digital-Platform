@@ -6,52 +6,150 @@
       <form name="vm.userForm" ng-submit="vm.signup(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
         <fieldset>
           <div class="row">
-              <div class="form-group col-sm-6" show-errors>
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName"
-                  placeholder="First Name" required>
-                <div ng-messages="vm.userForm.firstName.$error" role="alert">
-                  <p class="help-block error-text" ng-message="required">First name is required.</p>
-                </div>
+            <div class="form-group col-sm-8" show-errors>
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName"
+                placeholder="First Name" required>
+              <div ng-messages="vm.userForm.firstName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">First name is required.</p>
               </div>
-              <div class="form-group col-sm-6" show-errors>
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName"
-                  placeholder="Last Name" required>
-                <div ng-messages="vm.userForm.lastName.$error" role="alert">
-                  <p class="help-block error-text" ng-message="required">Last name is required.</p>
-                </div>
-              </div>
-          </div>
-          <div class="form-group" show-errors>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email"
-            ng-pattern="/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/" placeholder="email@example.com" lowercase required>
-            <div ng-messages="vm.userForm.email.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">Email address is required.</p>
-              <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
             </div>
           </div>
+          <div class="row">    
+            <div class="form-group col-sm-8" show-errors>
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName"
+                placeholder="Last Name" required>
+              <div ng-messages="vm.userForm.lastName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Last name is required.</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-8" show-errors>
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email"
+              ng-pattern="/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/" placeholder="email@example.com" lowercase required>
+              <div ng-messages="vm.userForm.email.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Email address is required.</p>
+                <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+              </div>
+            </div>
+        </div>
+
         <div class="row">
-          <div class="form-group" show-errors
-          ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
+          <div class="form-group col-sm-4" show-errors>
             <label for="role" class="control-label required">Role</label>
-            <select name="role" class="form-control" ng-model="vm.credentials.userrole" required
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Adult - Team Lead
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Student - Team Member
+              </label>
+            </div>
+
+
+           <!--  <select name="role" class="form-group" ng-model="vm.credentials.userrole" required
             ng-change="vm.roleFieldSelected(vm.credentials.userrole)">
               <option value="team lead pending">Team Lead</option>
               <option value="team member pending">Team Member</option>
-            </select>
+            </select> -->
           </div>
+
+          <div class="form-group col-sm-8">
+             <span class="help-block">
+              The platform has two roles- “team lead” for adults and “team member” for students.  Team leads assign activities (like data collection protocols) to team members.  Team leads are also responsible for reviewing any data or content submitted by team members.
+            </span>
+          </div>
+
+          <div class="row">
+          <div class="form-group col-sm-4" show-errors>
+            <label for="role" class="control-label required">Team Lead Type</label>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Teacher
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Non-profit Partner/Informal Educator
+              </label>
+            </div>
+             <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Community Scientist
+              </label>
+            </div>
+             <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Professional Scientist
+              </label>
+            </div>
+             <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Other
+              </label>
+            </div>
+          </div>
+           <div class="form-group col-sm-8">
+             <span class="help-block">
+              Select the type that most closely describes what you do.  “Community scientist” is the term we use for a volunteer citizen scientist.
+             </span>
+            </div> 
+           <div class="row">
+          <div class="form-group col-sm-4" show-errors>
+            <label for="role" class="control-label required">School Type</label>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                NYC Public
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                NYC Charter
+              </label>
+            </div>
+             <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Private
+              </label>
+            </div>
+             <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                Other public
+              </label>
+            </div>
+            <div class="form-group col-sm-8">
+             <span class="help-block">
+              
+             </span>
+            </div> 
+          </div>  
           <div class="form-group" show-errors ng-show="vm.teamLeadSelected"
-          ng-class="{'col-sm-6': !vm.teamLeadSelected, 'col-sm-4': vm.teamLeadSelected}">
+          ng-class="{'col-sm-8': !vm.teamLeadSelected, 'col-sm-8': vm.teamLeadSelected}">
             <label for="teamLeadType" class="control-label" ng-class="{required: vm.teamLeadSelected}">Team Lead Type</label>
             <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="vm.credentials.teamLeadType"
               ng-required="vm.teamLeadSelected">
               <option ng-repeat="type in vm.teamLeadType" value="{{type.value}}">{{type.label}}</option>
             </select>
           </div>
-          <div class="form-group" show-errors
-          ng-class="{'col-sm-6': !vm.schoolOrgSelected && !vm.teamLeadSelected, 'col-sm-4': vm.schoolOrgSelected || vm.teamLeadSelected}">
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-12" show-errors>
             <label for="schoolOrg" class="control-label required">Organization
               <a href="#" ng-click="vm.openFormOrg()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
             </label>
@@ -131,16 +229,6 @@
           </div>
         </fieldset>
       </form>
-    </div>
-
-    <div class="col-md-4">
-      <br/><br/><br/>
-      <div class="well">
-        <h4 class="red">Not sure what your role is?</h4>
-        <p><b>If you're a student</b>, sign up with the role of Team Member. You can then select your Organization and Team Lead to request to join a team.</p>
-        <p><b>If you're over 18</b>, sign up with the role of Team Lead. This will allow you to create teams, register for an event, view curriculum, upload data, and more.</p>
-        <p>Questions? Click the <i class="fa fa-question-circle"></i> button on the top right of your screen.</p>
-      </div>
     </div>
 </div>
 
