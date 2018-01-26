@@ -1,9 +1,29 @@
 <div class="row">
     <div class="col-md-8">
-        <h2>Sign up</h2>
-        <p>Already have an account? <a ui-sref="authentication.signin" class="show-signup">Sign in</a></p>
+        <div style="margin: 19px"> 
+            <h2>Sign up</h2>
+            <p>Already have an account? <a ui-sref="authentication.signin" class="show-signup">Sign in</a></p>
+        </div>    
+        <div class="well">
+            <p>
+                At Billion Oyster Project, we believe that teamwork is fundamental to restoring New York Harbor!  That’s why we’ve designed the BOP Digital Platform to support <strong>teams</strong> managed by adult <strong>team leads</strong> and composed of student <strong>team members</strong>.  Each team belongs to an <strong>organization</strong> like a school, non-profit, or business.  
+            </p>
+            <p>
+                (If you’re a volunteer community scientist- our name for “citizen scientist”- who isn’t representing an organization, not to worry!  Just select “Unaffiliated/None” as your organization.)
+            </p>
+        </div>    
         <br/>
-        <form name="vm.userForm" ng-submit="vm.signup(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
+        <form
+            name="vm.userForm"
+            ng-submit="vm.signup(vm.userForm.$valid)"
+            class="signin"
+            novalidate
+            autocomplete="off"
+            style="
+                margin:     19px;
+                margin-top: -20px;
+            "
+        >
             <fieldset>
                 <!-- FIRST NAME -->
                 <!-- =============================================================================================== -->
@@ -75,10 +95,12 @@
                     </div>
                     <div class="form-group col-sm-8">
                         <span class="help-block">
-                            The platform has two roles- “team lead” for adults and “team member” for students.  Team leads assign activities (like data collection protocols) to team members.  Team leads are also responsible for reviewing any data or content submitted by team members.
+                            If you’re an adult, select “Team Lead.”  If you’re a student, select “Team Member.”
                         </span>
                     </div>
                 </div>
+
+                <!-- FOR TEAM LEADS: -->
 
                 <!-- TEAM LEAD TYPE (if role == team-lead) -->
                 <!-- =============================================================================================== -->
@@ -204,7 +226,7 @@
                                     value="other-public"
                                     required
                                 >
-                                Other public
+                                Other municipality public/charter
                             </label>
                         </div>
                         <div class="form-group col-sm-8">
@@ -212,23 +234,23 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-group" show-errors ng-show="vm.teamLeadSelected"
-                        ng-class="{'col-sm-8': !vm.teamLeadSelected, 'col-sm-8': vm.teamLeadSelected}">
-                        <label for="teamLeadType" class="control-label" ng-class="{required: vm.teamLeadSelected}">Team Lead Type</label>
-                        <select class="form-control" name="teamLeadType" id="teamLeadType" ng-model="vm.credentials.teamLeadType"
-                            ng-required="vm.teamLeadSelected">
-                            <option ng-repeat="type in vm.teamLeadType" value="{{type.value}}">{{type.label}}</option>
-                        </select>
+                    <div class="form-group col-sm-8">
+                        <span class="help-block">
+                            Select whether your school is a NYC public, NYC charter, private, or public/charter school from outside NYC.  (We use this field to automatically populate information about NYC public schools.)
+                        </span>
                     </div>
                 </div>
 
                 <!-- ORGANIZATION (NYC Public Schools) -->
                 <!-- =============================================================================================== -->
-                <div class="row" ng-show="vm.credentials.schoolOrgType=='nyc-public'">
+                <div class="row" ng-show="
+                    vm.credentials.schoolOrgType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
+                ">
                     <div class="form-group col-sm-12" show-errors>
-                        <label for="schoolOrg" class="control-label required">Organization
-                            <a href="#" ng-click="vm.openFormOrg()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
-                        </label>
+                        <label for="schoolOrg" class="control-label required">Organization</label>
+                        <span class="help-block">
+                            Start typing your school’s name, number, or ATS code in the field below, then select your school from the dropdown list.
+                        </span>
                         <select
                             class="form-control"
                             name="schoolOrg"
@@ -238,26 +260,55 @@
                             ng-disabled="!vm.credentials.teamLeadType || (vm.credentials.teamLeadType == 'teacher' && !vm.credentials.schoolOrgType)"
                             required
                         >
-                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
+                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">
+                                {{schoolOrg.name}}
+                            </option>
                         </select>
-                    </div>
-                    <div class="form-group" show-errors ng-show="vm.schoolOrgSelected"
-                        ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
-                        <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
-                        <select class="form-control" name="teamLead" id="teamLead" ng-model="vm.credentials.teamLead"
-                            ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads"
-                            ng-required="vm.schoolOrgSelected">
-                        </select>
+                        <span class="help-block">
+                            Note: If you work at a NYC public school, your school should already appear as an organization in this list.  If you don't see your NYC public school on the list, contact <a href="mailto:bop.digital.platform@nyharbor.org">bop.digital.platform@nyharbor.org</a>.
+                        </span>
                     </div>
                 </div>
 
-                <!-- ORGANIZATION (all others) -->
+                <!-- ORGANIZATION (all other team leads) -->
                 <!-- =============================================================================================== -->
                 <div class="row" ng-hide="vm.credentials.schoolOrgType=='nyc-public'">
                     <div class="form-group col-sm-12" show-errors>
+                        <label for="schoolOrg" class="control-label required">Organization</label>
+                        <span class="help-block">
+                            Start typing your organization's name in the field below, then select your organization from the dropdown list.  If you're a community scientist who isn't representing an organization, select "Unaffiliated/None."
+                        </span>
+                         <span class="help-block">
+                            If your organization is not listed above, you can <a href="#" ng-click="vm.openFormOrg()">add an organization</a>.
+                        </span>
+                        <select
+                            class="form-control"
+                            name="schoolOrg"
+                            id="schoolOrg"
+                            ng-model="vm.credentials.schoolOrg"
+                            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)"
+                            ng-disabled="!vm.credentials.teamLeadType || (vm.credentials.teamLeadType == 'teacher' && !vm.credentials.schoolOrgType)"
+                            required>
+                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
+                        </select>
+                         <span class="help-block">
+                            Note: only select "Billion Oyster Project" if you are a staff member at Billion Oyster Project.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- FOR TEAM MEMBERS -->
+
+                <!--ORGANIZATION (team members).  Hides "Add an org" text.-->
+                <!-- =============================================================================================== -->
+                <div class="row" ng-show="vm.credentials.userrole === 'team member pending'">
+                    <div class="form-group col-sm-12" show-errors>
                         <label for="schoolOrg" class="control-label required">Organization
-                            <a href="#" ng-click="vm.openFormOrg()" ng-show="vm.credentials.userrole === 'team lead pending'">(not listed?)</a>
+                            <a href="#" ng-click="vm.openFormOrg()"></a>
                         </label>
+                        <span class="help-block">
+                            Start typing your organization's name in the field below, then select your organization from the dropdown list."
+                        </span>
                         <select
                             class="form-control"
                             name="schoolOrg"
@@ -269,15 +320,10 @@
                             <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
                         </select>
                     </div>
-                    <div class="form-group" show-errors ng-show="vm.schoolOrgSelected"
-                        ng-class="{'col-sm-6': !vm.schoolOrgSelected, 'col-sm-4': vm.schoolOrgSelected}">
-                        <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
-                        <select class="form-control" name="teamLead" id="teamLead" ng-model="vm.credentials.teamLead"
-                            ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads"
-                            ng-required="vm.schoolOrgSelected">
-                        </select>
-                    </div>
                 </div>
+
+                <!-- SELECT YOUR TEAM LEAD (if role = team member). -->
+                <!-- =============================================================================================== -->
 
                 <!-- USERNAME -->
                 <!-- =============================================================================================== -->
