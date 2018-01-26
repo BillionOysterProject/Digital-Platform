@@ -26,6 +26,15 @@ var SchoolOrgSchema = new Schema({
     default: 'other',
     required: 'Organization type cannot be blank'
   },
+  schoolType: {
+    type: String,
+    enum: [
+      'nyc-public',
+      'nyc-charter',
+      'private',
+      'other-public',
+    ],
+  },
   description: {
     type: String,
     default: '',

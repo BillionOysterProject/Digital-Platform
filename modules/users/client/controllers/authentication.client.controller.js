@@ -28,11 +28,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
-
         return false;
       }
 
       vm.isSubmitting = true;
+
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
         vm.isSubmitting = false;
         // If successful we assign the response to the global user model
