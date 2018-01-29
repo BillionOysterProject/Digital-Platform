@@ -1,17 +1,17 @@
 <div class="row">
     <div class="col-md-8">
-        <div style="margin: 19px"> 
+        <div style="margin: 19px">
             <h2>Sign up</h2>
             <p>Already have an account? <a ui-sref="authentication.signin" class="show-signup">Sign in</a></p>
-        </div>    
+        </div>
         <div class="well">
             <p>
-                At Billion Oyster Project, we believe that teamwork is fundamental to restoring New York Harbor!  That’s why we’ve designed the BOP Digital Platform to support <strong>teams</strong> managed by adult <strong>team leads</strong> and composed of student <strong>team members</strong>.  Each team belongs to an <strong>organization</strong> like a school, non-profit, or business.  
+                At Billion Oyster Project, we believe that teamwork is fundamental to restoring New York Harbor!  That’s why we’ve designed the BOP Digital Platform to support <strong>teams</strong> managed by adult <strong>team leads</strong> and composed of student <strong>team members</strong>.  Each team belongs to an <strong>organization</strong> like a school, non-profit, or business.
             </p>
             <p>
                 (If you’re a volunteer community scientist- our name for “citizen scientist”- who isn’t representing an organization, not to worry!  Just select “Unaffiliated/None” as your organization.)
             </p>
-        </div>    
+        </div>
         <br/>
         <form
             name="vm.userForm"
@@ -241,16 +241,55 @@
                     </div>
                 </div>
 
-                <!-- ORGANIZATION (NYC Public Schools) -->
+                <!-- ORGANIZATION -->
                 <!-- =============================================================================================== -->
-                <div class="row" ng-show="
-                    vm.credentials.schoolOrgType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
-                ">
+                <div class="row" >
                     <div class="form-group col-sm-12" show-errors>
                         <label for="schoolOrg" class="control-label required">Organization</label>
-                        <span class="help-block">
-                            Start typing your school’s name, number, or ATS code in the field below, then select your school from the dropdown list.
+
+                        <!-- NYC Public School Teacher help text -->
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        <span
+                            class="help-block"
+                            ng-show="
+                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
+                            "
+                        >
+                            Start typing your school's name, number, or ATS code in the field below, then select your school from the dropdown list.
                         </span>
+
+                        <!-- All others help text -->
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        <span
+                            class="help-block"
+                            ng-hide="
+                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
+                            "
+                        >
+                            <p>
+                                Start typing your organization's name in the field below, then
+                                select your organization from the dropdown list.  If you're a
+                                community scientist who isn't representing an organization, select
+                                "Unaffiliated/None."
+                            </p>
+                            <p ng-hide="vm.credentials.userrole === 'team member pending'">
+                                If your organization is not listed above, you can
+                                <a href="#" ng-click="vm.openFormOrg()">add an organization</a>.
+                            </p>
+                        </span>
+
+                        <ui-select
+                            ng-model="vm.credentials.schoolOrg"
+                        >
+                            <ui-select-match>
+                                <span ng-bind="$select.selected.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in vm.schoolOrgs | orderBy:'name' | filter:$select.search">
+                                <span ng-bind="item.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+
+                        <!--
                         <select
                             class="form-control"
                             name="schoolOrg"
@@ -264,61 +303,30 @@
                                 {{schoolOrg.name}}
                             </option>
                         </select>
-                        <span class="help-block">
+                        -->
+
+                        <!-- NYC Public School Teacher help text -->
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        <span
+                            class="help-block"
+                            ng-show="
+                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
+                            "
+                        >
                             Note: If you work at a NYC public school, your school should already appear as an organization in this list.  If you don't see your NYC public school on the list, contact <a href="mailto:bop.digital.platform@nyharbor.org">bop.digital.platform@nyharbor.org</a>.
                         </span>
-                    </div>
-                </div>
 
-                <!-- ORGANIZATION (all other team leads) -->
-                <!-- =============================================================================================== -->
-                <div class="row" ng-hide="vm.credentials.schoolOrgType=='nyc-public'">
-                    <div class="form-group col-sm-12" show-errors>
-                        <label for="schoolOrg" class="control-label required">Organization</label>
-                        <span class="help-block">
-                            Start typing your organization's name in the field below, then select your organization from the dropdown list.  If you're a community scientist who isn't representing an organization, select "Unaffiliated/None."
-                        </span>
-                         <span class="help-block">
-                            If your organization is not listed above, you can <a href="#" ng-click="vm.openFormOrg()">add an organization</a>.
-                        </span>
-                        <select
-                            class="form-control"
-                            name="schoolOrg"
-                            id="schoolOrg"
-                            ng-model="vm.credentials.schoolOrg"
-                            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)"
-                            ng-disabled="!vm.credentials.teamLeadType || (vm.credentials.teamLeadType == 'teacher' && !vm.credentials.schoolOrgType)"
-                            required>
-                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
-                        </select>
-                         <span class="help-block">
+                        <!-- All others help text -->
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        <span
+                            class="help-block"
+                            ng-hide="
+                                (vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public') ||
+                                vm.credentials.userrole === 'team member pending'
+                            "
+                        >
                             Note: only select "Billion Oyster Project" if you are a staff member at Billion Oyster Project.
                         </span>
-                    </div>
-                </div>
-
-                <!-- FOR TEAM MEMBERS -->
-
-                <!--ORGANIZATION (team members).  Hides "Add an org" text.-->
-                <!-- =============================================================================================== -->
-                <div class="row" ng-show="vm.credentials.userrole === 'team member pending'">
-                    <div class="form-group col-sm-12" show-errors>
-                        <label for="schoolOrg" class="control-label required">Organization
-                            <a href="#" ng-click="vm.openFormOrg()"></a>
-                        </label>
-                        <span class="help-block">
-                            Start typing your organization's name in the field below, then select your organization from the dropdown list."
-                        </span>
-                        <select
-                            class="form-control"
-                            name="schoolOrg"
-                            id="schoolOrg"
-                            ng-model="vm.credentials.schoolOrg"
-                            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)"
-                            ng-disabled="!vm.credentials.teamLeadType || (vm.credentials.teamLeadType == 'teacher' && !vm.credentials.schoolOrgType)"
-                            required>
-                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">{{schoolOrg.name}}</option>
-                        </select>
                     </div>
                 </div>
 
@@ -451,3 +459,9 @@ cancel-function="vm.cancelSchoolOrgForm"></form-school-org-modal> -->
     </div>
 </div>
 <!--END MODALS-->
+
+<script type="text/javascript">
+    $(function(){
+
+    });
+</script>

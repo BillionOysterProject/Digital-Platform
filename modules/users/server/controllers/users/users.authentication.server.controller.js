@@ -9,7 +9,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  pivot = require('./modules/core/server/helpers/pivot.server.helper'),
+  pivot = require(path.resolve('./modules/core/server/helpers/pivot.server.helper')),
   User = mongoose.model('User'),
   UserActivity = mongoose.model('UserActivity'),
   SchoolOrg = mongoose.model('SchoolOrg'),
@@ -215,8 +215,8 @@ exports.signup = function (req, res) {
   };
 
   if (
-      req.body.userrole      === 'team lead pending' &&
-      req.body.teamLeadType  === 'teacher'           &&
+      req.body.userrole === 'team lead pending' &&
+      req.body.teamLeadType === 'teacher' &&
       req.body.schoolOrgType === 'nyc-public'
   ) {
     var existingOrg = SchoolOrg.findById(req.body.schoolOrg);

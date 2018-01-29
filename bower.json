@@ -43,7 +43,8 @@
     "angular-summernote": "~0.4.2",
     "raty-fa": "ratyfa#^0.1.2",
     "imagesloaded": "^4.1.1",
-    "angular-socialshare": "angularjs-socialshare#^2.3.8"
+    "angular-socialshare": "angularjs-socialshare#^2.3.8",
+    "angular-ui-select": "^0.19.8"
   },
   "resolutions": {
     "angular": "~1.3",
