@@ -25,7 +25,8 @@ var ApplicationConfiguration = (function () {
     'colorpicker.module',
     'angularMoment',
     'mwl.calendar',
-    '720kb.socialshare'];
+    '720kb.socialshare',
+    'ui.select'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

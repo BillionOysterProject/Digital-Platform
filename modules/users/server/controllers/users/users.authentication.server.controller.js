@@ -9,6 +9,7 @@ var path = require('path'),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  pivot = require(path.resolve('./modules/core/server/helpers/pivot.server.helper')),
   User = mongoose.model('User'),
   UserActivity = mongoose.model('UserActivity'),
   SchoolOrg = mongoose.model('SchoolOrg'),
@@ -213,8 +214,39 @@ exports.signup = function (req, res) {
     });
   };
 
-  if (req.body.schoolOrg === 'new') {
+  if (
+      req.body.userrole === 'team lead pending' &&
+      req.body.teamLeadType === 'teacher' &&
+      req.body.schoolOrgType === 'nyc-public'
+  ) {
+    var existingOrg = SchoolOrg.findById(req.body.schoolOrg);
+
+    if (existingOrg) {
+      // org exists, so lets use that
+      user.schoolOrg = existingOrg;
+      createUser();
+
+    } else {
+      // org does not exist, so check the prospective orgs table for the ID
+      var prospectiveOrg = pivot.collection('prospectiveorgs').get(req.body.schoolOrg, function(err, record){
+        if (err) {
+          res.status(400).send({
+            message: 'Given organization ID is not valid',
+          });
+        } else {
+          // TODO: take this prospective org and copy it into school orgs
+
+          // user.schoolOrg = SchoolOrg.findById(record.id);
+
+          createUser();
+        }
+      });
+    }
+
+
+  } else if (req.body.schoolOrg === 'new') {
     user.schoolOrg = null;
+
     createNewOrg(function() {
       createUser();
     });

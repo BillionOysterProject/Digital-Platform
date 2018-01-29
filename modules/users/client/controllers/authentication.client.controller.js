@@ -18,6 +18,25 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       $location.path('/');
     }
 
+    vm.schoolOrgs = [];
+    vm.prospectiveOrgs = [];
+
+    $http.get('/api/school-orgs').success(function(response) {
+      vm.schoolOrgs = response;
+    });
+
+    $http.get('https://platform-beta.bop.nyc/api/prospective-orgs/?limit=10000&fields=name&sort=name').success(function(response) {
+      vm.prospectiveOrgs = response;
+    });
+
+    $scope.$watch('credentials.schoolOrg', function() {
+      console.debug(arguments);
+    });
+
+    vm.updateAutocompleteList = function(){
+      console.debug(arguments);
+    };
+
     vm.signup = function (isValid) {
       if(!vm.hasAcceptedTermsOfUse) {
         vm.error = 'Please read and agree to the Terms of Use before completing sign up.';
@@ -28,11 +47,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
-
         return false;
       }
 
       vm.isSubmitting = true;
+
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
         vm.isSubmitting = false;
         // If successful we assign the response to the global user model

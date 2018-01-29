@@ -132,7 +132,7 @@ exports.sendBugReport = function(req, res) {
     Issue: req.body.issue
   };
   var email = (req.user) ? req.user.email : defaultFrom;
-  exports.sendFeedback('jira@fearless.jira.com', email, req.body.subject, data, 'bug_report', req, res);
+  exports.sendFeedback('bop.digital.platform@nyharbor.org', email, req.body.subject, data, 'bug_report', req, res);
 };
 
 exports.sendGeneralFeedback = function(req, res) {
