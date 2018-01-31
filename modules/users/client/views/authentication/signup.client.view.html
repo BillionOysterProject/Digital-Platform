@@ -6,10 +6,10 @@
         </div>
         <div class="well">
             <p>
-                At Billion Oyster Project, we believe that teamwork is fundamental to restoring New York Harbor!  That’s why we’ve designed the BOP Digital Platform to support <strong>teams</strong> managed by adult <strong>team leads</strong> and composed of student <strong>team members</strong>.  Each team belongs to an <strong>organization</strong> like a school, non-profit, or business.
+                At Billion Oyster Project, we believe that teamwork is fundamental to restoring New York Harbor!  That's why we've designed the BOP Digital Platform to support <strong>teams</strong> managed by adult <strong>team leads</strong> and composed of student <strong>team members</strong>.  Each team belongs to an <strong>organization</strong> like a school, non-profit, or business.
             </p>
             <p>
-                (If you’re a volunteer community scientist- our name for “citizen scientist”- who isn’t representing an organization, not to worry!  Just select “Unaffiliated/None” as your organization.)
+                If you're a volunteer community scientist- our name for "citizen scientist"- who isn't representing an organization, not to worry!  Just select "Unaffiliated/None" as your organization.
             </p>
         </div>
         <br/>
@@ -95,7 +95,7 @@
                     </div>
                     <div class="form-group col-sm-8">
                         <span class="help-block">
-                            If you’re an adult, select “Team Lead.”  If you’re a student, select “Team Member.”
+                            If you're an adult, select "Team Lead."  If you're a student, select "Team Member."
                         </span>
                     </div>
                 </div>
@@ -171,14 +171,14 @@
                     </div>
                     <div class="form-group col-sm-8">
                         <span class="help-block">
-                            Select the type that most closely describes what you do.  “Community scientist” is the term we use for a volunteer citizen scientist.
+                            Select the type that most closely describes what you do.  "Community scientist" is the term we use for a volunteer citizen scientist.
                         </span>
                     </div>
                 </div>
 
                 <!-- SCHOOL TYPE (if team lead type == teacher) -->
                 <!-- =============================================================================================== -->
-                <div class="row" ng-show="vm.credentials.teamLeadType == 'teacher'">
+                <div class="row" ng-show="vm.credentials.userrole == 'team lead pending' && vm.credentials.teamLeadType == 'teacher'">
                     <div class="form-group col-sm-4" show-errors>
                         <label for="role" class="control-label required">School Type</label>
                         <div class="radio">
@@ -243,28 +243,61 @@
 
                 <!-- ORGANIZATION -->
                 <!-- =============================================================================================== -->
-                <div class="row" >
-                    <div class="form-group col-sm-12" show-errors>
-                        <label for="schoolOrg" class="control-label required">Organization</label>
 
-                        <!-- NYC Public School Teacher help text -->
-                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-                        <span
-                            class="help-block"
-                            ng-show="
-                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
-                            "
-                        >
+                <!-- NYC Public Schools: only shows for team leads who are NYC public school teachers -->
+                <div
+                    class="row"
+                    ng-if="
+                        vm.credentials.userrole == 'team lead pending' &&
+                        vm.credentials.teamLeadType == 'teacher' &&
+                        vm.credentials.schoolOrgType=='nyc-public'
+                    "
+                >
+                    <div class="form-group col-sm-12" show-errors>
+                        <label for="schoolOrg" class="control-label required">Organization (NYC Public School)</label>
+
+                        <span class="help-block">
                             Click the field below to start typing your school's name or ATS code, then select your school from the dropdown list.
                         </span>
 
-                        <!-- All others help text -->
-                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        <ui-select ng-model="vm.schoolOrgObj">
+                            <ui-select-match>
+                                <span ng-bind="$select.selected.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in vm.prospectiveOrgs | filter:{_search: vm.normalizeSearch($select.search) } | orderBy:'name' | limitTo:25">
+                                <span ng-bind="item.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+
                         <span
                             class="help-block"
-                            ng-hide="
-                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
+                            ng-show="
+                                vm.credentials.userrole == 'team lead pending' &&
+                                vm.credentials.teamLeadType == 'teacher' &&
+                                vm.credentials.schoolOrgType=='nyc-public'
                             "
+                        >
+                            Note: If you work at a NYC public school, your school should already appear as an organization in this list.  If you don't see your NYC public school on the list, contact <a href="mailto:bop.digital.platform@nyharbor.org">bop.digital.platform@nyharbor.org</a>.
+                        </span>
+                    </div>
+                </div>
+
+
+                <!-- Everyone Else -->
+                <div
+                    class="row"
+                    ng-hide="
+                        vm.credentials.userrole == 'team lead pending' &&
+                        vm.credentials.teamLeadType == 'teacher' &&
+                        vm.credentials.schoolOrgType=='nyc-public'
+                    "
+                >
+                    <div class="form-group col-sm-12" show-errors>
+                        <label for="schoolOrg" class="control-label required">Organization</label>
+
+                        <span
+                            class="help-block"
+                            ng-disabled="!vm.credentials.userrole.length || !vm.credentials.teamLeadType.length"
                         >
                             <p>
                                 Click the field below to start typing your organization's name, then
@@ -278,60 +311,43 @@
                             </p>
                         </span>
 
-                        <ui-select
-                            ng-model="vm.credentials.schoolOrg"
-                        >
+                        <ui-select ng-model="vm.schoolOrgObj">
                             <ui-select-match>
                                 <span ng-bind="$select.selected.name"></span>
                             </ui-select-match>
-                            <ui-select-choices repeat="item in vm.schoolOrgs | orderBy:'name' | filter:$select.search">
+                            <ui-select-choices repeat="item in vm.schoolOrgs | filter:{_search: vm.normalizeSearch($select.search) } | orderBy:'name' | limitTo:25">
                                 <span ng-bind="item.name"></span>
                             </ui-select-choices>
                         </ui-select>
 
-                        <!--
-                        <select
-                            class="form-control"
-                            name="schoolOrg"
-                            id="schoolOrg"
-                            ng-model="vm.credentials.schoolOrg"
-                            ng-change="vm.schoolOrgFieldSelected(vm.credentials.schoolOrg)"
-                            ng-disabled="!vm.credentials.teamLeadType || (vm.credentials.teamLeadType == 'teacher' && !vm.credentials.schoolOrgType)"
-                            required
-                        >
-                            <option ng-repeat="schoolOrg in vm.schoolOrgs" value="{{schoolOrg._id}}">
-                                {{schoolOrg.name}}
-                            </option>
-                        </select>
-                        -->
-
-                        <!-- NYC Public School Teacher help text -->
-                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-                        <span
-                            class="help-block"
-                            ng-show="
-                                vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public'
-                            "
-                        >
-                            Note: If you work at a NYC public school, your school should already appear as an organization in this list.  If you don't see your NYC public school on the list, contact <a href="mailto:bop.digital.platform@nyharbor.org">bop.digital.platform@nyharbor.org</a>.
-                        </span>
-
                         <!-- All others help text -->
                         <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-                        <span
-                            class="help-block"
-                            ng-hide="
-                                (vm.credentials.teamLeadType == 'teacher' && vm.credentials.schoolOrgType=='nyc-public') ||
-                                vm.credentials.userrole === 'team member pending'
-                            "
-                        >
+                        <span class="help-block">
                             Note: only select "Billion Oyster Project" if you are a staff member at Billion Oyster Project.
                         </span>
                     </div>
                 </div>
 
-                <!-- SELECT YOUR TEAM LEAD (if role = team member). -->
+                <!-- Team Lead Selection (only shows for team members) -->
                 <!-- =============================================================================================== -->
+                <div
+                    class="row"
+                    ng-if="vm.credentials.userrole == 'team member pending'"
+                >
+                    <div class="form-group col-sm-12" show-errors>
+                        <label for="teamLead" class="control-label" ng-class="{required: vm.schoolOrgSelected}">Team Lead</label>
+                        <select
+                            class="form-control"
+                            name="teamLead"
+                            id="teamLead"
+                            ng-model="vm.credentials.teamLead"
+                            ng-options="teamLead._id as teamLead.displayName for teamLead in vm.teamLeads | orderBy:'displayName'"
+                            ng-required="vm.schoolOrgSelected"
+                            ng-disabled="!vm.teamLeads.length"
+                        >
+                        </select>
+                    </div>
+                </div>
 
                 <!-- USERNAME -->
                 <!-- =============================================================================================== -->
