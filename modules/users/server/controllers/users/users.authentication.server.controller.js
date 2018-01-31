@@ -234,16 +234,48 @@ exports.signup = function (req, res) {
             message: 'Given organization ID is not valid',
           });
         } else {
-          // TODO: take this prospective org and copy it into school orgs
+          // try to find a SchoolOrg by the prospective org's sync_id
+          SchoolOrg.findOne({
+            sync_id: prospectiveOrg.sync_id,
+          }, function (err, existingOrgBySyncId) {
+            if (err) {
+              res.status(500).send({
+                message: 'Error finding school',
+              });
+            } else if (existingOrgBySyncId) {
+              user.schoolOrg = existingOrgBySyncId._id;
+              createUser();
+            } else {
+              createdOrg = new SchoolOrg({
+                name:             prospectiveOrg.name,
+                organizationType: 'school',
+                streetAddress:    prospectiveOrg.streetAddress,
+                neighborhood:     prospectiveOrg.neighborhood,
+                city:             prospectiveOrg.city,
+                state:            prospectiveOrg.state,
+                zip:              prospectiveOrg.zip,
+                creator:          user,
+                pending:          false,
+              });
 
-          // user.schoolOrg = SchoolOrg.findById(record.id);
+              createdOrg.save(function (err) {
+                if (err) {
+                  return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                  });
+                } else {
+                  // email.sendEmailTemplate(config.mailer.admin, 'A new NYC Public School has been promoted to a participating organization', 'org_promoted', {
+                  // });
 
-          createUser();
+                  user.schoolOrg = createdOrg._id;
+                  createUser();
+                }
+              });
+            }
+          });
         }
       });
     }
-
-
   } else if (req.body.schoolOrg === 'new') {
     user.schoolOrg = null;
 
