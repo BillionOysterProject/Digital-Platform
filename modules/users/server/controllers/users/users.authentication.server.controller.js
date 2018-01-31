@@ -219,81 +219,90 @@ exports.signup = function (req, res) {
       req.body.teamLeadType === 'teacher' &&
       req.body.schoolOrgType === 'nyc-public'
   ) {
-    var existingOrg = SchoolOrg.findById(req.body.schoolOrg);
+    SchoolOrg.findById(req.body.schoolOrg).exec(function(err, existingOrg){
+      if (err) {
+        res.status(500).send({
+          message: 'Error retrieving school.',
+        });
 
-    if (existingOrg) {
-      // org exists, so let's use that
-      user.schoolOrg = existingOrg;
-      createUser();
+        return;
+      }
 
-    } else {
-      // org does not exist, so check the prospective orgs table for the ID
-      requestlib('https://platform-beta.bop.nyc/api/prospective-orgs/' + req.body.schoolOrg, {
-        json: true,
-      }, function(err, betares, body) {
-        if (betares.statusCode >= 400) {
-          err = 'HTTP ' + betares.statusCode;
+      if (existingOrg) {
+        // org exists, so let's use that
+        user.schoolOrg = existingOrg;
+        createUser();
 
-          if (body.error) {
-            err += ': ' + body.error;
+      } else {
+        // org does not exist, so check the prospective orgs table for the ID
+        requestlib('https://platform-beta.bop.nyc/api/prospective-orgs/' + req.body.schoolOrg, {
+          json: true,
+        }, function(err, betares, body) {
+          if (betares.statusCode >= 400) {
+            err = 'HTTP ' + betares.statusCode;
+
+            if (body.error) {
+              err += ': ' + body.error;
+            }
           }
-        }
 
-        if (err) {
-          res.status(400).send({
-            message: 'Given organization ID is not valid',
-          });
-        } else {
-          var prospectiveOrg = body;
-
-          if (prospectiveOrg.sync_id && prospectiveOrg.sync_id.length) {
-            // try to find a SchoolOrg by the prospective org's sync_id
-            SchoolOrg.findOne({
-              sync_id: prospectiveOrg.sync_id,
-            }, function (err, existingOrgBySyncId) {
-              if (err) {
-                res.status(500).send({
-                  message: 'Error finding school',
-                });
-              } else if (existingOrgBySyncId) {
-                user.schoolOrg = existingOrgBySyncId._id;
-                createUser();
-              } else {
-                createdOrg = new SchoolOrg({
-                  name:             prospectiveOrg.name,
-                  organizationType: 'school',
-                  streetAddress:    prospectiveOrg.streetAddress,
-                  neighborhood:     prospectiveOrg.neighborhood,
-                  city:             prospectiveOrg.city,
-                  state:            prospectiveOrg.state,
-                  zip:              prospectiveOrg.zip,
-                  creator:          user,
-                  pending:          false,
-                });
-
-                createdOrg.save(function (err) {
-                  if (err) {
-                    return res.status(400).send({
-                      message: errorHandler.getErrorMessage(err)
-                    });
-                  } else {
-                    // email.sendEmailTemplate(config.mailer.admin, 'A new NYC Public School has been promoted to a participating organization', 'org_promoted', {
-                    // });
-
-                    user.schoolOrg = createdOrg._id;
-                    createUser();
-                  }
-                });
-              }
+          if (err) {
+            res.status(400).send({
+              message: 'Given organization ID is not valid',
             });
           } else {
-            res.status(400).send({
-              message: 'Unable to promote organization (' + prospectiveOrg._id + ') without an ATS code.',
-            });
+            var prospectiveOrg = body;
+
+            if (prospectiveOrg.sync_id && prospectiveOrg.sync_id.length) {
+              // try to find a SchoolOrg by the prospective org's sync_id
+              SchoolOrg.findOne({
+                sync_id: prospectiveOrg.sync_id,
+              }, function (err, existingOrgBySyncId) {
+                if (err) {
+                  res.status(500).send({
+                    message: 'Error finding school',
+                  });
+                } else if (existingOrgBySyncId) {
+                  user.schoolOrg = existingOrgBySyncId._id;
+                  createUser();
+                } else {
+                  createdOrg = new SchoolOrg({
+                    name:             prospectiveOrg.name,
+                    organizationType: 'school',
+                    streetAddress:    prospectiveOrg.streetAddress,
+                    neighborhood:     prospectiveOrg.neighborhood,
+                    city:             prospectiveOrg.city,
+                    state:            prospectiveOrg.state,
+                    zip:              prospectiveOrg.zip,
+                    creator:          user,
+                    pending:          false,
+                  });
+
+                  createdOrg.save(function (err) {
+                    if (err) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                      });
+                    } else {
+                      // email.sendEmailTemplate(config.mailer.admin, 'A new NYC Public School has been promoted to a participating organization', 'org_promoted', {
+                      // });
+
+                      user.schoolOrg = createdOrg._id;
+                      createUser();
+                    }
+                  });
+                }
+              });
+            } else {
+              res.status(400).send({
+                message: 'Unable to promote organization (' + prospectiveOrg._id + ') without an ATS code.',
+              });
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    });
+
   } else if (req.body.schoolOrg === 'new') {
     user.schoolOrg = null;
 
