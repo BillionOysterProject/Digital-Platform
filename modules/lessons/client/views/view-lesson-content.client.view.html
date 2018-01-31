@@ -1,4 +1,4 @@
-<div>
+<div class="lesson-main">
   <div class="row" ng-if="!fullPage">
     <div class="col-md-4">
       <h2 id="lesson-title">{{lesson.title}}
@@ -35,7 +35,7 @@
     <div class="col-sm-12">
       <img ng-if="fullPage" class="pull-right" alt="Billion Oyster Project" src="modules/core/client/img/brand/logo.svg" style="width: 100px; height: 128px" />
       <h2 ng-if="fullPage" class="blue"><b>{{lesson.title}}</b></h2>
-      
+
       <h5 id="lesson-author-info" ng-if="lesson.user">
         <img ng-src="{{lesson.user.profileImageURL}}" alt="{{lesson.user.displayName}}" class="img-circle pull-left col-sm-1 col-xs-3" ng-if="!fullPage">
         <b><a ng-click="openViewUserModal()">{{lesson.user.displayName}}</a></b><br>
@@ -121,7 +121,7 @@
       </div>
   </div>
 
-  <div class="row">
+  <div class="row lesson-body">
     <div class="col-sm-3" ng-if="showSidebar">
       <div ng-if="lesson.materialsResources.supplies">
           <b>Supplies</b><br/>
@@ -434,3 +434,34 @@
     </div>
   </div>
 </div>
+
+<!--
+HACK: Convert ALL links in the lesson body to target=_blank
+      regardless of what was set using the Summernote (WYSIWYG) editor.
+-->
+<script type="text/javascript">
+  $(function(){
+    var recheckLinks = function() {
+      $('.lesson-main a').each(function(i, el){
+          var link = $(el);
+          var href = link.attr('href');
+
+          // only modify links to http[s] URLs
+          if (href && href.match('^https?://')) {
+            if (link.attr('target') != '_blank') {
+                link.attr('target', '_blank');
+                console.debug('Added target=_blank to link', href);
+            }
+          }
+      });
+    };
+
+    // watch for DOM mutations on .lesson-main, and perform a recheck to mangle
+    // the links whenever one occurs.
+    new MutationObserver(function(mutations) {
+      recheckLinks();
+    }).observe($('.lesson-main').get(0), {
+      childList: true,
+    });
+  });
+</script>

@@ -257,7 +257,7 @@
                         <label for="schoolOrg" class="control-label required">Organization (NYC Public School)</label>
 
                         <span class="help-block">
-                            Start typing your school's name, number, or ATS code in the field below, then select your school from the dropdown list.
+                            Click the field below to start typing your school's name or ATS code, then select your school from the dropdown list.
                         </span>
 
                         <ui-select ng-model="vm.schoolOrgObj">
@@ -293,18 +293,20 @@
                     "
                 >
                     <div class="form-group col-sm-12" show-errors>
+                        <label for="schoolOrg" class="control-label required">Organization</label>
+
                         <span
                             class="help-block"
                             ng-disabled="!vm.credentials.userrole.length || !vm.credentials.teamLeadType.length"
                         >
                             <p>
-                                Start typing your organization's name in the field below, then
+                                Click the field below to start typing your organization's name, then
                                 select your organization from the dropdown list.  If you're a
                                 community scientist who isn't representing an organization, select
                                 "Unaffiliated/None."
                             </p>
                             <p ng-hide="vm.credentials.userrole === 'team member pending'">
-                                If your organization is not listed above, you can
+                                If your organization is not listed below, you can
                                 <a href="#" ng-click="vm.openFormOrg()">add an organization</a>.
                             </p>
                         </span>

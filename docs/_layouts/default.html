@@ -1,0 +1,79 @@
+---
+
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    <base href="/info/">
+
+    <title>BOP Digital Platform Updates</title>
+    <meta name="description" content="The latest from Billion Oyster Project's open data platform.">
+    <meta name="fragment" content="!">
+
+    <!-- Apple META -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Facebook META -->
+    <meta property="fb:app_id" content="1479260685437922">
+    <meta property="og:site_name" content="BOP Digital Platform Updates">
+    <meta property="og:title" content="BOP Digital Platform Updates">
+    <meta property="og:description" content="The latest from Billion Oyster Project's open data platform.">
+    <meta property="og:url" content="https://info.platform.bop.nyc">
+    <meta property="og:image" content="assets/img/brand/logo.png">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter META -->
+    <meta name="twitter:title" content="BOP Digital Platform Updates">
+    <meta name="twitter:description" content="The latest from Billion Oyster Project's open data platform.">
+    <meta name="twitter:url" content="https://info.platform.bop.nyc">
+    <meta name="twitter:image" content="assets/img/brand/logo.png">
+
+    <!-- Fav Icon -->
+    <link href="assets/img/brand/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Oswald" rel="stylesheet">
+
+    <!-- Application Javascript -->
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/tether.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap-notify.min.js"></script>
+
+    <!--Google Analytics-->
+    <!--
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-79306702-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+    -->
+
+    <!-- Application CSS Files -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/application.css">
+</head>
+
+<body>
+    <header>
+        {% include navbar.html %}
+    </header>
+
+    <section id="main">
+        {% include header.html %}
+        {{ content }}
+    </section>
+</body>
+
+</html>

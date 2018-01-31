@@ -1,6 +1,6 @@
 
 # Contribute to an important restoration and education effort in NYC!
-The [Billion Oyster Project](https://billionoysterproject.org/) is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor by 2035 while educating all one million of NYC's public school students.  But if we're going to restore one billion oysters to New York Harbor, we need lots of New Yorkers' help with all the work that goes into restoration, including software development!  Environmental restoration includes activities like data analysis and scientific communications, and the [BOP Digital Platform](https://platform.bop.nyc/) is a key tool for these aspects of our work.  
+The [Billion Oyster Project](https://billionoysterproject.org/) is an ecosystem restoration and education project designed to restore one billion live oysters to New York Harbor by 2035 while educating all one million of NYC's public school students.  But if we're going to restore one billion oysters to New York Harbor, we need lots of New Yorkers' help with all the work that goes into restoration, including software development!  Environmental restoration includes activities like data analysis and scientific communication, and the [BOP Digital Platform](https://platform.bop.nyc/) is a key tool for these aspects of our work.  
 
 One thing that sets Billion Oyster Project apart from other environmental organizations is that we are equal parts restoration AND education.  So we believe that open source software projects are the perfect opportunity for people of a wide range of ages and ability levels to use their technical skills for good while learning new skills and building community.  Whether you're a developer, DBA, UX designer, QA tester, or just a passionate user, we'd love for you to join us as a contributor!  
 
@@ -18,8 +18,7 @@ One thing that sets Billion Oyster Project apart from other environmental organi
 
 * __Github issues.__ Check out our list of [Github issues](https://github.com/BillionOysterProject/Digital-Platform/issues).  At the moment, we're using Github issues to showcase the project's most pressing software development requests.  (We have a much larger internal backlog, but the Github issues are our way of highlighting issues that we've learned are important to our community members through site feedback and user testing.)
 
-If you think there's something interesting you could do, or a bug you could fix, and it's not an existing issue in Github, [open up an issue](https://github.com/BillionOysterProject/Digital-Platform/issues).  We've included specific guidelines for creating issues and pull requests below.  And please let us know if you have any questions or ideas you'd like to discuss!  You can get in touch with Heather Flanagan, the BOP Digital Platform's product owner, at <hflanagan@nyharbor.org>.
-
+If you think there's something interesting you could do, or a bug you could fix, and it's not an existing issue in Github, [open up an issue](https://github.com/BillionOysterProject/Digital-Platform/issues).  We've included specific guidelines for creating issues and pull requests below.  And please let us know if you have any questions or ideas you'd like to discuss!  You can get in touch with Heather Flanagan, the BOP Digital Platform's product owner, at <bop.digital.platform@nyharbor.org>
 
 ## Creating an Issue
 
