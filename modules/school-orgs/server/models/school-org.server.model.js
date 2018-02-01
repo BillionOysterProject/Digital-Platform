@@ -82,7 +82,10 @@ var SchoolOrgSchema = new Schema({
   orgLeads: [{
     type: Schema.ObjectId,
     ref: 'User'
-  }]
+  }],
+  sync_id: {
+    type: Number
+  },
 });
 
 mongoose.model('SchoolOrg', SchoolOrgSchema);

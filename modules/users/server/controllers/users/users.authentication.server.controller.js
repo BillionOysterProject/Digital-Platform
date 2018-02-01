@@ -269,6 +269,7 @@ exports.signup = function (req, res) {
                   createdOrg = new SchoolOrg({
                     name:             prospectiveOrg.name,
                     organizationType: 'school',
+                    schoolType:       prospectiveOrg.type,
                     description:      prospectiveOrg.name,
                     streetAddress:    prospectiveOrg.streetAddress,
                     neighborhood:     prospectiveOrg.neighborhood,
@@ -277,6 +278,7 @@ exports.signup = function (req, res) {
                     zip:              prospectiveOrg.zip,
                     creator:          user,
                     pending:          false,
+                    sync_id:          prospectiveOrg.sync_id,
                   });
 
                   createdOrg.save(function (err) {
