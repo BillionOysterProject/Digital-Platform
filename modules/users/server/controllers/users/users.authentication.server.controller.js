@@ -269,6 +269,7 @@ exports.signup = function (req, res) {
                   createdOrg = new SchoolOrg({
                     name:             prospectiveOrg.name,
                     organizationType: 'school',
+                    description:      prospectiveOrg.name,
                     streetAddress:    prospectiveOrg.streetAddress,
                     neighborhood:     prospectiveOrg.neighborhood,
                     city:             prospectiveOrg.city,
