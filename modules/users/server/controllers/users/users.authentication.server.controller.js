@@ -253,10 +253,10 @@ exports.signup = function (req, res) {
           } else {
             var prospectiveOrg = body;
 
-            if (prospectiveOrg.sync_id && prospectiveOrg.sync_id.length) {
-              // try to find a SchoolOrg by the prospective org's sync_id
+            if (prospectiveOrg.syncId && prospectiveOrg.syncId.length) {
+              // try to find a SchoolOrg by the prospective org's syncId
               SchoolOrg.findOne({
-                sync_id: prospectiveOrg.sync_id,
+                syncId: prospectiveOrg.syncId,
               }, function (err, existingOrgBySyncId) {
                 if (err) {
                   res.status(500).send({
@@ -268,17 +268,24 @@ exports.signup = function (req, res) {
                 } else {
                   createdOrg = new SchoolOrg({
                     name:             prospectiveOrg.name,
-                    organizationType: 'school',
-                    schoolType:       prospectiveOrg.type,
-                    description:      prospectiveOrg.name,
-                    streetAddress:    prospectiveOrg.streetAddress,
-                    neighborhood:     prospectiveOrg.neighborhood,
                     city:             prospectiveOrg.city,
-                    state:            prospectiveOrg.state,
-                    zip:              prospectiveOrg.zip,
+                    communityBoard:   prospectiveOrg.communityBoard,
                     creator:          user,
+                    district:         prospectiveOrg.district,
+                    gradeLevels:      prospectiveOrg.gradeLevels,
+                    latitude:         prospectiveOrg.latitude,
+                    locationType:     prospectiveOrg.locationType,
+                    longitude:        prospectiveOrg.longitude,
+                    neighborhood:     prospectiveOrg.neighborhood,
+                    organizationType: 'school',
                     pending:          false,
-                    sync_id:          prospectiveOrg.sync_id,
+                    principal:        prospectiveOrg.principal,
+                    principalPhone:   prospectiveOrg.principalPhone,
+                    schoolType:       prospectiveOrg.type,
+                    state:            prospectiveOrg.state,
+                    streetAddress:    prospectiveOrg.streetAddress,
+                    syncId:           prospectiveOrg.syncId,
+                    zip:              prospectiveOrg.zip,
                   });
 
                   createdOrg.save(function (err) {

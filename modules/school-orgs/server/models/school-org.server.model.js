@@ -38,8 +38,7 @@ var SchoolOrgSchema = new Schema({
   description: {
     type: String,
     default: '',
-    trim: true,
-    required: 'Description cannot be blank'
+    trim: true
   },
   photo: {
     originalname: String,
@@ -83,8 +82,29 @@ var SchoolOrgSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }],
-  sync_id: {
+  syncId: {
     type: Number
+  },
+  principal: {
+    type: String,
+  },
+  principalPhone: {
+    type: String,
+  },
+  communityBoard: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  gradesTaught: [{
+    type: Schema.Types.Mixed,
+  }],
+  gradeLevels: {
+    type: String,
+  },
+  locationType: {
+    type: String,
   },
 });
 
