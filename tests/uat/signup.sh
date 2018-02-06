@@ -1,6 +1,4 @@
-#!/bin/bash
-. ~/lib/bash/util
-safemode
+#!/usr/bin/env bash
 trap exit INT TERM
 
 for role in 'team lead pending' 'team member pending'; do
@@ -13,8 +11,12 @@ for role in 'team lead pending' 'team member pending'; do
 
             if [[ "${teamLeadType}" == 'teacher' ]]; then
                 for teacherType in 'nyc-public' 'nyc-charter' 'private' 'other-public'; do
+                    if [[ "${teacherType}" == 'nyc-public' ]]; then
+                        export ORG='Central Park East II'
+                    fi
+
                     export TEACHER_TYPE="${teacherType}"
-                    export ORG='Central Park East II'
+
                     webfriend -D signup.fs
                 done
             else

@@ -1,3 +1,7 @@
+env 'URL' {
+    fallback: 'http://127.0.0.1:8081'
+}                  -> $url
+
 env 'ROLE'         -> $role
 env 'LEAD_TYPE'    -> $teamLeadType
 env 'TEACHER_TYPE' -> $teacherType
@@ -20,7 +24,7 @@ if not $role {
 }
 
 
-go 'http://127.0.0.1:8081/authentication/signup'
+go "{url}/authentication/signup"
 
 # User Details
 # --------------------------------------------------------------------------------------------------
