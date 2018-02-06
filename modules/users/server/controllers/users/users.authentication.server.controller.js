@@ -7,6 +7,7 @@ var path = require('path'),
   config = require(path.resolve('./config/config')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   email = require(path.resolve('./modules/core/server/controllers/email.server.controller')),
+  requestlib = require('request'),
   mongoose = require('mongoose'),
   passport = require('passport'),
   User = mongoose.model('User'),
@@ -213,8 +214,96 @@ exports.signup = function (req, res) {
     });
   };
 
-  if (req.body.schoolOrg === 'new') {
+  if (
+      req.body.userrole === 'team lead pending' &&
+      req.body.teamLeadType === 'teacher' &&
+      req.body.schoolOrgType === 'nyc-public'
+  ) {
+    SchoolOrg.findById(req.body.schoolOrg).exec(function(err, existingOrg){
+      if (existingOrg) {
+        // org exists, so let's use that
+        user.schoolOrg = existingOrg;
+        createUser();
+
+      } else {
+        // org does not exist, so check the prospective orgs table for the ID
+        requestlib('https://platform-beta.bop.nyc/api/prospective-orgs/' + req.body.schoolOrg, {
+          json: true,
+        }, function(err, betares, body) {
+          if (betares.statusCode >= 400) {
+            err = 'HTTP ' + betares.statusCode;
+
+            if (body.error) {
+              err += ': ' + body.error;
+            }
+          }
+
+          if (err) {
+            res.status(400).send({
+              message: 'Given organization ID is not valid',
+            });
+          } else {
+            var prospectiveOrg = body;
+
+            if (prospectiveOrg.syncId && prospectiveOrg.syncId.length) {
+              // try to find a SchoolOrg by the prospective org's syncId
+              SchoolOrg.findOne({
+                syncId: prospectiveOrg.syncId,
+              }, function (err, existingOrgBySyncId) {
+                if (existingOrgBySyncId) {
+                  user.schoolOrg = existingOrgBySyncId._id;
+                  createUser();
+                } else {
+                  createdOrg = new SchoolOrg({
+                    name:             prospectiveOrg.name,
+                    city:             prospectiveOrg.city,
+                    communityBoard:   prospectiveOrg.communityBoard,
+                    creator:          user,
+                    district:         prospectiveOrg.district,
+                    gradeLevels:      prospectiveOrg.gradeLevels,
+                    latitude:         prospectiveOrg.latitude,
+                    locationType:     prospectiveOrg.locationType,
+                    longitude:        prospectiveOrg.longitude,
+                    neighborhood:     prospectiveOrg.neighborhood,
+                    organizationType: 'school',
+                    pending:          false,
+                    principal:        prospectiveOrg.principal,
+                    principalPhone:   prospectiveOrg.principalPhone,
+                    schoolType:       prospectiveOrg.type,
+                    state:            prospectiveOrg.state,
+                    streetAddress:    prospectiveOrg.streetAddress,
+                    syncId:           prospectiveOrg.syncId,
+                    zip:              prospectiveOrg.zip,
+                  });
+
+                  createdOrg.save(function (err) {
+                    if (err) {
+                      return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                      });
+                    } else {
+                      // email.sendEmailTemplate(config.mailer.admin, 'A new NYC Public School has been promoted to a participating organization', 'org_promoted', {
+                      // });
+
+                      user.schoolOrg = createdOrg._id;
+                      createUser();
+                    }
+                  });
+                }
+              });
+            } else {
+              res.status(400).send({
+                message: 'Unable to promote organization (' + prospectiveOrg._id + ') without an ATS code.',
+              });
+            }
+          }
+        });
+      }
+    });
+
+  } else if (req.body.schoolOrg === 'new') {
     user.schoolOrg = null;
+
     createNewOrg(function() {
       createUser();
     });
