@@ -220,14 +220,6 @@ exports.signup = function (req, res) {
       req.body.schoolOrgType === 'nyc-public'
   ) {
     SchoolOrg.findById(req.body.schoolOrg).exec(function(err, existingOrg){
-      if (err) {
-        res.status(500).send({
-          message: 'Error retrieving school.',
-        });
-
-        return;
-      }
-
       if (existingOrg) {
         // org exists, so let's use that
         user.schoolOrg = existingOrg;
@@ -258,11 +250,7 @@ exports.signup = function (req, res) {
               SchoolOrg.findOne({
                 syncId: prospectiveOrg.syncId,
               }, function (err, existingOrgBySyncId) {
-                if (err) {
-                  res.status(500).send({
-                    message: 'Error finding school',
-                  });
-                } else if (existingOrgBySyncId) {
+                if (existingOrgBySyncId) {
                   user.schoolOrg = existingOrgBySyncId._id;
                   createUser();
                 } else {

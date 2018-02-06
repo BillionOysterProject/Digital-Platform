@@ -83,7 +83,7 @@ var SchoolOrgSchema = new Schema({
     ref: 'User'
   }],
   syncId: {
-    type: Number
+    type: String
   },
   principal: {
     type: String,

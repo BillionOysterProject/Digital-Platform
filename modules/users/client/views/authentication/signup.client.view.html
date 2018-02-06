@@ -260,7 +260,7 @@
                             Click the field below to start typing your school's name or ATS code, then select your school from the dropdown list.
                         </span>
 
-                        <ui-select ng-model="vm.schoolOrgObj">
+                        <ui-select ng-model="vm.schoolOrgObj" id="organization">
                             <ui-select-match>
                                 <span ng-bind="$select.selected.name"></span>
                             </ui-select-match>
@@ -311,7 +311,7 @@
                             </p>
                         </span>
 
-                        <ui-select ng-model="vm.schoolOrgObj">
+                        <ui-select ng-model="vm.schoolOrgObj" id="organization">
                             <ui-select-match>
                                 <span ng-bind="$select.selected.name"></span>
                             </ui-select-match>
@@ -408,11 +408,11 @@
                 <!-- =============================================================================================== -->
                 <div class="row">
                     <div class="col-sm-12 text-right form-group">
-                        <button type="submit" class="btn btn-primary pull-right" ng-show="!vm.isSubmitting">Sign up</button>
+                        <button id="signup" type="submit" class="btn btn-primary pull-right" ng-show="!vm.isSubmitting">Sign up</button>
                         <p class="info" ng-show="vm.isSubmitting"><i class="fa fa-spin fa-circle-o-notch blue"></i> Creating your account</p>
                     </div>
                     <div class="col-sm-12">
-                        <div ng-show="vm.error" class="alert alert-danger">
+                        <div ng-if="vm.error" class="alert alert-danger" id="errors">
                             <strong ng-bind="vm.error"></strong>
                         </div>
                     </div>
