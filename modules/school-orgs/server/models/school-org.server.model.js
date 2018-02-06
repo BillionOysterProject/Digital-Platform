@@ -26,11 +26,19 @@ var SchoolOrgSchema = new Schema({
     default: 'other',
     required: 'Organization type cannot be blank'
   },
+  schoolType: {
+    type: String,
+    enum: [
+      'nyc-public',
+      'nyc-charter',
+      'private',
+      'other-public',
+    ],
+  },
   description: {
     type: String,
     default: '',
-    trim: true,
-    required: 'Description cannot be blank'
+    trim: true
   },
   photo: {
     originalname: String,
@@ -73,7 +81,31 @@ var SchoolOrgSchema = new Schema({
   orgLeads: [{
     type: Schema.ObjectId,
     ref: 'User'
-  }]
+  }],
+  syncId: {
+    type: String
+  },
+  principal: {
+    type: String,
+  },
+  principalPhone: {
+    type: String,
+  },
+  communityBoard: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  gradesTaught: [{
+    type: Schema.Types.Mixed,
+  }],
+  gradeLevels: {
+    type: String,
+  },
+  locationType: {
+    type: String,
+  },
 });
 
 mongoose.model('SchoolOrg', SchoolOrgSchema);

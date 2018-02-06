@@ -5,18 +5,53 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
-    vm.isSubmitting = false;
+    vm.authentication        = Authentication;
+    vm.error                 = $location.search().err;
     vm.hasAcceptedTermsOfUse = false;
-    vm.authentication = Authentication;
-    vm.popoverMsg = PasswordValidator.getPopoverMsg();
-
-    // Get an eventual error defined in the URL query string:
-    vm.error = $location.search().err;
+    vm.isSubmitting          = false;
+    vm.newSchoolOrg          = new SchoolOrganizationsService();
+    vm.popoverMsg            = PasswordValidator.getPopoverMsg();
+    vm.prospectiveOrgs       = [];
+    vm.schoolOrgs            = [];
+    vm.schoolOrgSelected     = false;
+    vm.teamLeads             = [];
+    vm.teamLeadSelected      = false;
+    vm.teamMemberSelected    = false;
 
     // If user is signed in then redirect back home
     if (vm.authentication.user) {
       $location.path('/');
     }
+
+    var fuzzySearch = function(response) {
+      angular.forEach(response, function(v, k) {
+        if (v.type === 'nyc-public') {
+          if (v.sync_id) {
+            response[k].name = v.name + ' (' + v.sync_id + ')';
+          }
+        }
+
+        response[k]._search = response[k].name + ' ' + response[k].name.replace(/[\s\W]+/g, '').toLowerCase();
+        response[k]._search = response[k]._search.replace(/(ps|ms|is)(0+)(\d+)/, '$1$2$3 $1$3');
+        response[k]._search = response[k]._search.replace(/(jhs)(0+)(\d+)/, '$1$2$3 $1$3 ms$3');
+
+        if (v.sync_id) {
+          try {
+            response[k]._search += ' ' + v.sync_id + ' ' + v.sync_id.slice(3).replace(/^0/, '');
+          } catch(e) { }
+        }
+      });
+
+      return response;
+    };
+
+    vm.normalizeSearch = function(q) {
+      try {
+        return q.replace(/[\s\W]+/g, '').toLowerCase();
+      } catch(e) {
+        return q;
+      }
+    };
 
     vm.signup = function (isValid) {
       if(!vm.hasAcceptedTermsOfUse) {
@@ -28,11 +63,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'userForm');
-
         return false;
       }
 
       vm.isSubmitting = true;
+
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
         vm.isSubmitting = false;
         // If successful we assign the response to the global user model
@@ -99,90 +134,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       $window.location.href = url;
     };
 
-    // Team Member Request
-    vm.schoolOrgs = [];
-    vm.teamMemberSelected = false;
-    vm.teamLeads = [];
-    vm.schoolOrgSelected = false;
-    vm.teamLeadSelected = false;
-    vm.newSchoolOrg = new SchoolOrganizationsService();
-
-    vm.teamLeadType = [
-      { label: 'Teacher', value: 'teacher' },
-      { label: 'Citizen Scientist', value: 'citizen scientist' },
-      { label: 'Professional Scientist', value: 'professional scientist' },
-      { label: 'Site Coordinator', value: 'site coordinator' },
-      { label: 'Other', value: 'other' }
-    ];
-
-    vm.findOrganizations = function (newOrg) {
-      SchoolOrganizationsService.query({
-        approvedOnly: true,
-        sort: 'name'
-      }, function(data) {
-        vm.schoolOrgs = [];
-        if (vm.newSchoolOrg && vm.newSchoolOrg.name) {
-          vm.schoolOrgs.push({
-            '_id' : 'new',
-            'name' : vm.newSchoolOrg.name
-          });
-        }
-        for (var i = 0; i < data.length; i++) {
-          vm.schoolOrgs.push({
-            '_id' : data[i]._id,
-            'name' : data[i].name
-          });
-        }
-        if (vm.credentials && vm.credentials.userrole === 'team member pending') {
-          var orgIndex = lodash.findIndex(vm.schoolOrgs, function(o) {
-            return o.name === 'Unaffiliated/None';
-          });
-          if (orgIndex > -1) {
-            vm.schoolOrgs.splice(orgIndex, 1);
-          }
-        }
-      });
-    };
-    vm.findOrganizations();
-
-    vm.roleFieldSelected = function(role) {
-      if (role === 'team member pending') {
-        vm.findOrganizations();
-        vm.teamLeadSelected = false;
-        vm.credentials.teamLeadType = undefined;
-      } else if (role === 'team lead pending') {
-        vm.teamLeadSelected = true;
-        vm.schoolOrgSelected = false;
-        vm.credentials.teamLead = undefined;
-      }
-      vm.findOrganizations();
-    };
-
-    vm.schoolOrgFieldSelected = function(schoolOrgId) {
-      if (schoolOrgId && vm.credentials.userrole === 'team member pending') {
-        vm.schoolOrgSelected = true;
-        $http.get('/api/school-orgs/' + schoolOrgId + '/team-leads').success(function (response) {
-          vm.teamLeads = response;
-        }).error(function (response) {
-        });
-      } else {
-        vm.schoolOrgSelected = false;
-      }
-    };
-
-    // vm.openSchoolOrgForm = function() {
-    //   vm.newSchoolOrg = new SchoolOrganizationsService();
-    //   angular.element('#modal-org-editadd').modal('show');
-    // };
-    //
-    // vm.saveSchoolOrgForm = function(newSchoolOrg) {
-    //   vm.credentials.schoolOrg = 'new';
-    //   vm.newSchoolOrg = angular.copy(newSchoolOrg);
-    //   vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
-    //   vm.findOrganizations();
-    //   angular.element('#modal-org-editadd').modal('hide');
-    // };
-
     vm.openFormOrg = function() {
       vm.newSchoolOrg = new SchoolOrganizationsService();
       angular.element('#modal-org-edit').modal('show');
@@ -198,5 +149,44 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       }
     };
 
+    vm.schoolOrgFieldSelected = function(schoolOrg) {
+      if (vm.credentials.userrole === 'team member pending') {
+        vm.schoolOrgSelected = true;
+
+        $http.get('/api/school-orgs/' + schoolOrg + '/team-leads').success(function(data) {
+          vm.teamLeads = data;
+        });
+      } else {
+        vm.schoolOrgSelected = false;
+      }
+    };
+
+    $scope.$watch('vm.credentials.userrole', function() {
+      vm.schoolOrgObj = null;
+    });
+
+    $scope.$watch('vm.schoolOrgObj', function(value){
+      if (angular.isObject(vm.credentials)) {
+        if (angular.isObject(value)) {
+          vm.credentials.schoolOrg = value._id;
+          vm.schoolOrgFieldSelected(vm.credentials.schoolOrg);
+        } else {
+          vm.credentials.schoolOrg = null;
+        }
+
+        console.debug('schoolOrg is now', vm.credentials.schoolOrg, vm.schoolOrgObj);
+      }
+    });
+
+    // do things on load
+    $http.get('/api/school-orgs?approvedOnly=true&sort=name').success(function(response) {
+      response = fuzzySearch(response);
+      vm.schoolOrgs = response;
+    });
+
+    $http.get('https://platform-beta.bop.nyc/api/prospective-orgs/?limit=10000&fields=name,sync_id,type&sort=name').success(function(response) {
+      response = fuzzySearch(response);
+      vm.prospectiveOrgs = response;
+    });
   }
 ]);

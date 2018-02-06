@@ -16,7 +16,8 @@ module.exports = {
         'public/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
         'public/lib/bootstrap-iconpicker/bootstrap-iconpicker/css/bootstrap-iconpicker.min.css',
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css',
-        'public/lib/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.css'
+        'public/lib/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.css',
+        'public/lib/angular-ui-select/dist/select.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -58,7 +59,8 @@ module.exports = {
         'public/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js',
         'public/lib/angular-isotope/dist/angular-isotope.js',
         'public/lib/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.js',
-        'public/lib/angular-socialshare/dist/angular-socialshare.js'
+        'public/lib/angular-socialshare/dist/angular-socialshare.js',
+        'public/lib/angular-ui-select/dist/select.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
