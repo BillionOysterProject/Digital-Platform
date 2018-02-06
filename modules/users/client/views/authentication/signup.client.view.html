@@ -104,7 +104,7 @@
 
                 <!-- TEAM LEAD TYPE (if role == team-lead) -->
                 <!-- =============================================================================================== -->
-                <div class="row" ng-show="vm.credentials.userrole == 'team lead pending'">
+                <div class="row" ng-if="vm.credentials.userrole == 'team lead pending'">
                     <div class="form-group col-sm-4" show-errors>
                         <label for="role" class="control-label required">Team Lead Type</label>
 
@@ -178,7 +178,7 @@
 
                 <!-- SCHOOL TYPE (if team lead type == teacher) -->
                 <!-- =============================================================================================== -->
-                <div class="row" ng-show="vm.credentials.userrole == 'team lead pending' && vm.credentials.teamLeadType == 'teacher'">
+                <div class="row" ng-if="vm.credentials.userrole == 'team lead pending' && vm.credentials.teamLeadType == 'teacher'">
                     <div class="form-group col-sm-4" show-errors>
                         <label for="role" class="control-label required">School Type</label>
                         <div class="radio">
@@ -286,10 +286,10 @@
                 <!-- Everyone Else -->
                 <div
                     class="row"
-                    ng-hide="
-                        vm.credentials.userrole == 'team lead pending' &&
-                        vm.credentials.teamLeadType == 'teacher' &&
-                        vm.credentials.schoolOrgType=='nyc-public'
+                    ng-if="
+                        vm.credentials.userrole != 'team lead pending' ||
+                        vm.credentials.teamLeadType != 'teacher' ||
+                        vm.credentials.schoolOrgType !='nyc-public'
                     "
                 >
                     <div class="form-group col-sm-12" show-errors>
