@@ -22,7 +22,15 @@ var SchoolOrgSchema = new Schema({
   },
   organizationType: {
     type: String,
-    enum: ['school', 'business', 'government', 'property owner', 'community organization', 'other'],
+    enum: [
+      'school',
+      'business',
+      'government',
+      'property owner',
+      'community organization',
+      'college',
+      'other',
+    ],
     default: 'other',
     required: 'Organization type cannot be blank'
   },
@@ -104,6 +112,9 @@ var SchoolOrgSchema = new Schema({
     type: String,
   },
   locationType: {
+    type: String,
+  },
+  website: {
     type: String,
   },
 });
