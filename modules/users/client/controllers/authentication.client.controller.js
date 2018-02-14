@@ -5,6 +5,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
+
+    vm.credentials           = {};
     vm.authentication        = Authentication;
     vm.error                 = $location.search().err;
     vm.hasAcceptedTermsOfUse = false;
@@ -26,8 +28,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
     var fuzzySearch = function(response) {
       angular.forEach(response, function(v, k) {
         if (v.type === 'nyc-public') {
-          if (v.sync_id) {
-            response[k].name = v.name + ' (' + v.sync_id + ')';
+          if (v.syncId) {
+            response[k].name = v.name + ' (' + v.syncId + ')';
           }
         }
 
@@ -35,9 +37,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
         response[k]._search = response[k]._search.replace(/(ps|ms|is)(0+)(\d+)/, '$1$2$3 $1$3');
         response[k]._search = response[k]._search.replace(/(jhs)(0+)(\d+)/, '$1$2$3 $1$3 ms$3');
 
-        if (v.sync_id) {
+        if (v.syncId) {
           try {
-            response[k]._search += ' ' + v.sync_id + ' ' + v.sync_id.slice(3).replace(/^0/, '');
+            response[k]._search += ' ' + v.syncId + ' ' + v.syncId.slice(3).replace(/^0/, '');
           } catch(e) { }
         }
       });
@@ -141,11 +143,13 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
 
     vm.closeFormOrg = function(newSchoolOrg) {
       angular.element('#modal-org-edit').modal('hide');
+
       if (newSchoolOrg) {
         vm.credentials.schoolOrg = 'new';
         vm.newSchoolOrg = angular.copy(newSchoolOrg);
-        vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
-        vm.findOrganizations();
+
+        vm.schoolOrgs.push(vm.newSchoolOrg);
+        vm.schoolOrgObj = vm.newSchoolOrg;
       }
     };
 

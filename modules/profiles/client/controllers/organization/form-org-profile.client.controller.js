@@ -26,20 +26,31 @@
       name: 'School',
       value: 'school'
     }, {
+      name: 'Non-profit / Community Organization',
+      value: 'community organization'
+    }, {
+      name: 'College / University',
+      value: 'college'
+    }, {
+      name: 'Government Agency',
+      value: 'government'
+    }, {
       name: 'Business',
       value: 'business'
     }, {
-      name: 'Government',
-      value: 'government'
-    }, {
-      name: 'Property owner',
-      value: 'property owner'
-    }, {
-      name: 'Community organization',
-      value: 'community organization'
-    }, {
       name: 'Other',
       value: 'other'
+    }];
+
+    $scope.schoolTypes = [{
+      name: 'NYC Charter School',
+      value: 'nyc-charter',
+    }, {
+      name: 'Private School',
+      value: 'private',
+    }, {
+      name: 'Other Public / Charter School',
+      value: 'other-public',
     }];
 
     $scope.save = function(isValid) {
@@ -55,15 +66,11 @@
         }
       }
 
-      if (!Authentication.user || $scope.isGuest) {
-        $scope.closeFunction($scope.organization);
+
+      if ($scope.organization._id) {
+        $scope.organization.$update(successCallback, errorCallback);
       } else {
-        if ($scope.organization._id) {
-          $scope.organization.$update(successCallback, errorCallback);
-        } else {
-          //TODO: $save doesn't exist if the user is an admin and has no org
-          $scope.organization.$save(successCallback, errorCallback);
-        }
+        $scope.organization.$save(successCallback, errorCallback);
       }
 
       function successCallback(res) {
@@ -103,6 +110,7 @@
 
       function errorCallback(res) {
         $scope.error = res.data.message;
+        console.error(res);
       }
     };
 

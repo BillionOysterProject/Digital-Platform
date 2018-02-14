@@ -49,17 +49,34 @@
                   <p class="help-block error-text" ng-message="required">Organization type is required.</p>
                 </div>
               </div>
+
+              <div class="form-group">
+                <label for="schoolType" class="control-label">School Type</label>
+                <select
+                  class="form-control"
+                  name="type"
+                  id="type"
+                  ng-model="organization.schoolType"
+                  ng-disabled="organization.organizationType != 'school'"
+                >
+                  <option ng-repeat="type in schoolTypes" value="{{type.value}}">{{type.name}}</option>
+                </select>
+              </div>
+
               <div class="form-group">
                 <label for="description" class="control-label required">Organization Description *</label>
-                <textarea class="form-control" name="description" rows="5" ng-model="organization.description" required></textarea>
-                <div ng-messages="form.orgProfileForm.description.$error" role="alert">
-                  <p class="help-block error-text" ng-message="required">Description is required.</p>
-                </div>
+                <textarea class="form-control" name="description" rows="5" ng-model="organization.description"></textarea>
               </div>
+
               <div class="form-group" ng-show="isAdmin || organization._id">
                 <label for="image" class="control-label">Organization Photo</label>
                 <single-image-drop-zone uploader="orgPhotoUploader" image-url="orgPhotoUrl"
                 image-alt="Organization Photo" id="org-image-dropzone"></single-image-drop-zone>
+              </div>
+
+              <div class="form-group">
+                <label for="website" class="control-label">Website</label>
+                <input type="text" name="website" class="form-control" ng-model="organization.website" placeholder="https://" />
               </div>
             </div>
           </div>
