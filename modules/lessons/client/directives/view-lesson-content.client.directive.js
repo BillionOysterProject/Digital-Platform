@@ -39,6 +39,8 @@
             $scope.lesson.materialsResources.teacherResourcesLinks.length > 0) ||
             ($scope.lesson.materialsResources.handoutsFileInput &&
             $scope.lesson.materialsResources.handoutsFileInput.length > 0) ||
+            ($scope.lesson.materialsResources.supplies &&
+            $scope.lesson.materialsResources.supplies.length > 0) ||
             ($scope.lesson.materialsResources.stateTestQuestions &&
             $scope.lesson.materialsResources.stateTestQuestions.length > 0));
           };
