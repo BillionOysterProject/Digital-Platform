@@ -57,7 +57,7 @@
             icon: {
               icon: 'glyphicon-map-marker',
               prefix: 'glyphicon',
-              markerColor: (station.status === 'Active') ? 'green' : 'red'
+              markerColor: (station.status === 'active') ? 'green' : 'red'
             },
             info:{
               station: station,
@@ -145,7 +145,7 @@
       findTeamLeads();
     };
 
-    vm.statuses = ['All', 'Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'];
+    vm.statuses = ['All', 'active', 'inactive', 'damaged-destroyed', 'lost', 'retired'];
 
     vm.statusSelected = function() {
       vm.filtered = true;

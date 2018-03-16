@@ -64,15 +64,15 @@ var RestorationStationSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'],
-    default: ['Active'],
+    enum: ['active', 'inactive', 'damaged-destroyed', 'lost', 'retired'],
+    default: ['active'],
     required: true
   },
   statusHistory: [{
     status: {
       type: String,
-      enum: ['Active', 'Damaged', 'Destroyed', 'Lost', 'Unknown'],
-      default: ['Active']
+      enum: ['active', 'inactive', 'damaged-destroyed', 'lost', 'retired'],
+      default: ['active']
     },
     description: String,
     photo: {
