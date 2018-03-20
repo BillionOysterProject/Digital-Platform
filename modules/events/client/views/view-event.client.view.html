@@ -38,7 +38,7 @@
                               </span>
                               <span ng-hide="(!vm.event.maximumCapacity || vm.openSpots > 0) && vm.daysRemainingDeadline >= 0" id="noOpenSpotsLeft">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
-                                <h6>This event is closed or requires sign-up through another system.</h6>
+                                <h6>Registration is closed</h6>
                               </span>
                             </span>
 
@@ -99,7 +99,7 @@
                         </span>
                         <span ng-show="vm.daysRemainingDeadline < 0 || (vm.openSpots !== null && vm.openSpots <= 0)" id="registrationClosed">
                           <i class="fa fa-clock-o"></i>
-                          <b>This event is closed or requires sign-up through another system. Make sure to check the event description for details. For any questions contact bop.digital.platform@nyharbor.org</b>
+                          <b>Registration is closed</b>
                           <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                     </h4>
@@ -175,7 +175,7 @@
                             <th>Date Registered</th>
                             <th>Notes</th>
                             <th ng-show="vm.today || vm.past">Attended</th>
-                            <!--TIFF: Uncomment when you wire up the unregister button:
+                            <!--TIFF: Uncomment when you wire up the unregister button: 
                             <th>Unregister</th>-->
                         </tr>
                     </thead>
@@ -205,7 +205,7 @@
                                       ng-click="vm.attendedEvent(registrant)"><i class="fa fa-check"></i></a>
                                 </div>
                             </td>
-                            <!--TIFF: Wire up
+                            <!--TIFF: Wire up 
                             <td><a class="btn btn-danger" data-toggle="modal" data-target="#modal-event-adminunregister" title="Unregister"><i class="fa fa-trash"></i></a></td>-->
                         </tr>
                     </tbody>
