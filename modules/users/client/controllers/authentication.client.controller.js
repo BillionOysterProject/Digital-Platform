@@ -5,6 +5,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
   function ($scope, $rootScope, $state, $http,
     $location, $window, lodash, Authentication, PasswordValidator, SchoolOrganizationsService) {
     var vm = this;
+
     vm.credentials           = {};
     vm.authentication        = Authentication;
     vm.error                 = $location.search().err;
@@ -146,7 +147,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       if (newSchoolOrg) {
         vm.credentials.schoolOrg = 'new';
         vm.newSchoolOrg = angular.copy(newSchoolOrg);
-        // vm.credentials.addSchoolOrg = angular.copy(newSchoolOrg);
 
         vm.schoolOrgs.push(vm.newSchoolOrg);
         vm.schoolOrgObj = vm.newSchoolOrg;

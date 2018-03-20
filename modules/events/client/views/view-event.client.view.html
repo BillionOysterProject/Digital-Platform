@@ -38,7 +38,7 @@
                               </span>
                               <span ng-hide="(!vm.event.maximumCapacity || vm.openSpots > 0) && vm.daysRemainingDeadline >= 0" id="noOpenSpotsLeft">
                                 <h1><i class="gray fa fa-calendar-times-o"></i></h1>
-                                <h6>Registration is closed</h6>
+                                <h6>This event is closed or requires sign-up through another system.</h6>
                               </span>
                             </span>
 
@@ -99,7 +99,7 @@
                         </span>
                         <span ng-show="vm.daysRemainingDeadline < 0 || (vm.openSpots !== null && vm.openSpots <= 0)" id="registrationClosed">
                           <i class="fa fa-clock-o"></i>
-                          <b>Registration is closed</b>
+                          <b>This event is closed or requires sign-up through another system. Make sure to check the event description for details. For any questions contact bop.digital.platform@nyharbor.org</b>
                           <br/><small>Registration deadline {{vm.deadline}}</small>
                         </span>
                     </h4>

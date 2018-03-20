@@ -9,8 +9,8 @@ Congrats, your request to be a Team Lead was approved! You're on your way to con
 For step-by-step directions, visit our Get Started Guide: https://github.com/BillionOysterProject/docs/wiki/Get-Started-for-Team-Leads-(Teachers-and-Scientists)
 
 Now that your account has been approved, you can also:
-*Create and favorite lessons: http://platform.bop.nyc/lessons
-*Create units: http://platform.bop.nyc/units
+*Create lessons: http://platform.bop.nyc/lessons
+*Favorite, log, and give feedback on lessons: http://platform.bop.nyc/lessons
 *Create and favorite research posters: http://platform.bop.nyc/research
 
 You can explore these features and more with a quick scroll through the BOP Digital Platform Quick Guide: https://www.arcgis.com/apps/MapJournal/index.html?appid=64589a40aed54de69ea6ffab01a0868f   
