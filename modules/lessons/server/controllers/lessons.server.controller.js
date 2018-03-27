@@ -105,7 +105,8 @@ var removeLessonFromUnits = function(lesson, callback) {
 
 var setPdfToDownload = function(host, cookies, lesson, callback) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
-  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
+  var input = 'https://platform-beta.bop.nyc/lessons/' + lesson._id + '?layout=print';
+
   var filename = _.replace(lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
   filename = _.replace(filename + '.pdf', /\s/g, '_');
 
