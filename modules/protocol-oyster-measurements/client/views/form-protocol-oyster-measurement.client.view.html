@@ -23,6 +23,7 @@
                             <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-oyster-measurement-map"
                         ng-click="openMap()">Mark location on map</a>
@@ -31,6 +32,7 @@
                         ng-show="oysterMeasurement.latitude && oysterMeasurement.longitude"
                          readonly/>
                     </div>
+                    -->
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="oysterMeasurement.teamMembers"
@@ -49,7 +51,8 @@
     <section class="content shaded">
         <section class="container">
             <div class="row">
-                <div class="col-md-6">
+        <!--    <div class="col-md-6">
+                    
                     <p class="lead blue">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
                     <h6>Depth of oyster cage</h6>
                     <div class="form-group">
@@ -57,21 +60,25 @@
                         <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()"/>
                         <span class="help-block">Method: Record length of wet line from surface to cage.</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-6">
                     <h6>Condition of oyster cage</h6>
+                    <!--
                     <div class="form-group">
                         <label>Take a photograph of the oyster cage.</label>
                         <single-image-drop-zone uploader="cageConditionUploader" image-url="cageConditionPhotoURL"
                         image-alt="Oyster Cage Condition" id="oyster-cage-condition-image-dropzone"></single-image-drop-zone>
                     </div>
+                -->
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label">Bioaccumulation on cage</label>
                         <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation"></select>
                     </div>
                     <div class="form-group">
+                        <!--
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+                        -->
                         <span class="help-block">Was the cage lost, destroyed or significantly damaged? <a class="btn btn-sm btn-danger pull-right" ng-click="openORSStatusForm()">Submit status update</a></span>
                     </div>
 
@@ -79,6 +86,8 @@
             </div>
         </section>
     </section>
+    
+<!--
     <section class="content shaded">
         <section class="container">
             <div class="row">
@@ -90,6 +99,9 @@
             </div>
         </section>
     </section>
+-->
+
+
     <section class="content">
         <section class="container">
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
