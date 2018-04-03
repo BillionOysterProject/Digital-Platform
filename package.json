@@ -48,6 +48,8 @@
     "grunt-cli": "~0.1.13",
     "helmet": "~1.1.0",
     "html-to-text": "^2.1.0",
+    "http-proxy": "^1.16.2",
+    "http-proxy-middleware": "^0.17.4",
     "jasmine-core": "~2.4.1",
     "json2csv": "^3.7.3",
     "lodash": "~4.3.0",

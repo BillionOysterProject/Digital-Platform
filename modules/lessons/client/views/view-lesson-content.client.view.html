@@ -27,7 +27,12 @@
         ng-click="openLessonFeedbackView()">View feedback &nbsp;&nbsp;<span class="badge">{{feedback.feedbackCount}}</span></a>
       <a class="btn btn-default" view-permissions="team lead,admin" ng-if="openLessonLog" ng-click="openLessonLog()">Log teaching</a>
       <a class="btn btn-default" view-permissions="team lead,admin" ng-if="duplicateLesson" ng-click="duplicateLesson()">Duplicate</a>
-      <a class="btn btn-default" ng-if="openDownloadLesson" ng-click="openDownloadLesson()">Download</a>
+      <a
+        class="btn btn-default"
+        target="_blank"
+        href="/api/lessons/download-pdf/{{ lesson._id }}?layout=print&renderer=pdf"
+        download="{{ lesson.title }}.pdf"
+      >Download</a>
     </div>
   </div>
 
