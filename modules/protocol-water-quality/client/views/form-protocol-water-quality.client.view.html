@@ -24,6 +24,7 @@
                                 <p class="red">Collection time must not be more than a year in the future.</p>
                             </div>
                         </div>
+                        <!--
                         <div class="form-group">
                             <a class="btn btn-default btn-block" data-toggle="modal"
                             data-target="#modal-water-quality-map">Mark location on map</a>
@@ -31,6 +32,7 @@
                             data-toggle="modal" data-target="#modal-water-quality-map"
                             ng-show="waterQuality.latitude && waterQuality.longitude" readonly/>
                         </div>
+                    -->
                         <div class="form-group">
                             <select-tags outer-column="" name="teamMembers"
                             in-title="Names of team members" ng-model="waterQuality.teamMembers"
@@ -46,6 +48,7 @@
                 </div>
         </section>
     </section>
+   <!--
     <section class="content shaded">
         <section class="container">
                 <div class="row">
@@ -54,12 +57,13 @@
                     </div>
                     <div class="col-md-6">
                       <p>Using a bucket suspended from a rope, collect a sample of water from the area where your ORS is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first.  Water temperature is the only required parameter- try to collect as much other data as possible! 
-                        <!--If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.-->
+                        If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.
                         </p>
                     </div>
                 </div>
             </section>
         </section>
+    -->
         <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
             <div class="container">
                 <h3>Water Sample</h3>
@@ -72,6 +76,7 @@
                             
                         <span class="help-block">Type 0 if at surface</span>
                     </div>
+                    <!--
                     <div class="form-group col-md-6">
                         <label>Where was the water sample taken?</label>
                         <span class="help-block">Mark the coordinates on the map</span>
@@ -93,6 +98,7 @@
                               longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
                         </div>
                     </div>
+                -->
                 </div>
                 <hr/>
                 <div class="row">
