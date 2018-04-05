@@ -64,11 +64,11 @@
             </section>
         </section>
     -->
-        <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content shaded'" ng-class-even="'content'">
+        <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content'" ng-class-even="'content shaded'">
             <div class="container">
                 <h3>Water Sample</h3>
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6 shaded">
                         <h6>Water Quality Parameters</h6>
                         <label for="depthOfWaterSample" class="required">Depth of Water Sample (m)</label>
                         <input type="number" class="form-control" name="depthOfWaterSample"/> 
@@ -140,7 +140,7 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 shaded">
                         <h4>Dissolved Oxygen</h4>
                         <div class="row">
                             <div class="col-sm-4">
@@ -216,7 +216,7 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 shaded">
                         <h4>pH</h4>
                         <div class="row">
                             <div class="col-sm-4">
@@ -292,7 +292,7 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 shaded">
                         <h4>Ammonia</h4>
                         <div class="row">
                             <div class="col-sm-4">
@@ -368,7 +368,7 @@
                 </div>
                 <hr/>
                 <div class="row" ng-repeat="other in sample.others">
-                    <div class="col-md-12">
+                    <div class="col-md-12 shaded">
                         <h4>Other</h4>
                         <div class="form-group">
                             <label>Name</label>
@@ -409,8 +409,10 @@
                     </div>
                 </div>
                 <hr/>
+                
                 <a class="btn btn-default" ng-show="$last" ng-click="addSampleForm()">Add a new sample</a>
                 <a class="btn btn-danger" ng-show="waterQuality.samples.length > 1" ng-click="removeSampleForm($index)">Remove sample</a>
+
             </div>
         </div>
     </section>
