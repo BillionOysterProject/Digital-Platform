@@ -19,13 +19,16 @@
                     <option ng-repeat="type in statuses" value="{{type.value}}">{{type.label}}</option>
                 </select>
             </div>
+            <!--
             <div class="form-group col-sm-3">
                 <label for="shorelineType" class="required">Shoreline Type *</label>
                 <select class="form-control" name="shoreLineType"
                 ng-options="type.value as type.label for type in shorelineTypes"
                 ng-model="station.shoreLineType" required></select>
             </div>
+        -->
         </div>
+    <!--    
         <div class="row">
             <div class="form-group col-sm-6">
                 <label class="required" for="bodyOfWater">Body of Water *</label>
@@ -39,6 +42,7 @@
                 uib-typeahead="boroughCounty.name as boroughCounty.name for boroughCounty in boroughsCounties | filter:{name:$viewValue}"
                 class="form-control" typeahead-show-hint="true" typeahead-min-length="0" typeahead-select-on-exact="true" required>
             </div>
+        -->
             <div class="form-group col-sm-3">
               <label for="tagNumber">Tag #</label>
               <input type="text" class="form-control" ng-model="station.tagNumber" name="tagNumber" id="tagNumber"/>
@@ -48,18 +52,24 @@
             <label>Notes</label>
             <textarea class="form-control" rows="3" ng-model="station.notes"></textarea>
         </div>
+        
+        
+        <!--
         <hr/>
         <div class="row">
+            
             <div ng-class="{'col-sm-6': isAdmin, 'col-sm-12': !isAdmin}">
               <map-select-content modal-id="modal-ors-map" latitude="station.latitude"
               longitude="station.longitude" address="station.addressString"
               can-geocode="true" can-click-map-to-add-marker="true"
               can-move-marker="true" show-marker="true" lat-long-required="true"></map-select-content>
             </div>
+        -->
+            <!--
             <div class="col-sm-6" ng-show="isAdmin">
 
                 <!--TODO wire up -- choose from site coordinator list (a type of Team Lead chosen at signup),
-                if none give option to add name and email -->
+                if none give option to add name and email 
                 <div class="form-group">
                     <label for="siteCoordinator">Site Coordinator</label>
                     <select class="form-control" name="siteCoordinator" id="siteCoordinator" ng-model="station.siteCoordinator._id">
@@ -80,7 +90,7 @@
 
                 <hr/>
                 <!--TODO wire up -- choose from property owner list (a type of Team Lead chosen at signup),
-                if none give option to add name and email -->
+                if none give option to add name and email
                 <div class="form-group">
                     <label for="propertyOwner">Property Owner</label>
                     <select class="form-control" name="propertyOwner" id="propertyOwner" ng-model="station.propertyOwner._id">
@@ -106,8 +116,11 @@
                     image-alt="Station Photograph" id="ors-image-dropzone"></single-image-drop-zone>
                 </div>
             </div>
+        -->
         </div>
+   -->
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="closeFunction()" ng-disabled="disableCancel">Cancel</button>
         <button type="submit" class="btn btn-primary">{{station._id ? 'Update' : 'Register'}}</button>
