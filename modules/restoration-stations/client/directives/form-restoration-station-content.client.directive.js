@@ -3,7 +3,7 @@
 
   angular
     .module('restoration-stations')
-    .directive('formRestorationStationContent', function($timeout, lodash) {
+    .directive('formRestorationStationContent', function($timeout, lodash, $http) {
       return {
         restrict: 'AE',
         templateUrl: 'modules/restoration-stations/client/views/form-restoration-station-content.client.view.html',
@@ -16,6 +16,33 @@
         controller: 'RestorationStationsController',
         replace: true,
         link: function(scope, element, attrs) {
+          scope.sites = [];
+
+          var fuzzySearch = function(response) {
+            angular.forEach(response, function(v, k) {
+              if (v.bodyOfWater) {
+                response[k].name = v.name + ', ' + v.bodyOfWater;
+              }
+
+              response[k]._search = response[k].name + ' ' + response[k].name.replace(/[\s\W]+/g, '').toLowerCase();
+            });
+
+            return response;
+          };
+
+          scope.normalizeSearch = function(q) {
+            try {
+              return q.replace(/[\s\W]+/g, '').toLowerCase();
+            } catch(e) {
+              return q;
+            }
+          };
+
+          $http.get('https://platform-beta.bop.nyc/api/sites/?limit=false&fields=name,bodyOfWater&sort=name').success(function(response) {
+            response = fuzzySearch(response);
+            scope.sites = response;
+          });
+
           scope.$on('orsForm', function() {
             scope.$broadcast('displayMapSelectContent');
             scope.form.restorationStationForm.$setSubmitted(false);
