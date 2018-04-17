@@ -64,6 +64,7 @@
 -->
     <section class="content shaded">
         <section class="container">
+            
             <div class="row">
                 <div class="col-md-4">
                     <!-- TODO: Prefill with Weather API data -->
@@ -73,31 +74,47 @@
                         <select class="form-control" name="weatherConditions" ng-options="weather.value as weather.label for weather in weatherConditions"
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
+                </div>
+            </div>   
+
+            <div class="row"> 
+                <div class="col-md-4">    
                     <div class="form-group">
-                        <label for="temperature">Air temperature (C)</label>
+                        <label for="temperature">Air temperature (C) <em>optional</em></label>
                         <input class="form-control" name="temperature" type="number"
                         ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-4">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="windSpeed">Wind speed (mph)</label>
-                            <input class="form-control" type="number" min="0" name="windSpeed"
-                            ng-model="siteCondition.meteorologicalConditions.windSpeedMPH"/>
-                            <span class="help-block">Method: Anemometer</span>
-                            <div ng-show="form.siteConditionForm.windSpeed.$error.min">
-                                <p class="red">Wind speed must be a positive number.</p>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="windDirection">Wind direction</label>
-                            <select class="form-control" name="windDirection"
-                            ng-options="direction.value as direction.label for direction in windDirection"
-                            ng-model="siteCondition.meteorologicalConditions.windDirection"></select>
-                            <span class="help-block">Method: Compass</span>
+                    <div class="form-group">
+                        <label for="windSpeed">Wind speed (mph)</label>
+                        <input class="form-control" type="number" min="0" name="windSpeed"
+                        ng-model="siteCondition.meteorologicalConditions.windSpeedMPH"/>
+                        <span class="help-block">Method: Anemometer</span>
+                        <div ng-show="form.siteConditionForm.windSpeed.$error.min">
+                            <p class="red">Wind speed must be a positive number.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="windDirection">Wind direction</label>
+                        <select class="form-control" name="windDirection"
+                        ng-options="direction.value as direction.label for direction in windDirection"
+                        ng-model="siteCondition.meteorologicalConditions.windDirection"></select>
+                        <span class="help-block">Method: Compass</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="humidity">Humidity (%)</label>
                         <input class="form-control" type="number" min="0" name="humidity"
@@ -108,7 +125,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
                         <label>Has it rained in the past <span class="blue">7</span> days?</label>
@@ -133,6 +154,7 @@
             </div>
         </section>
     </section>
+    
     <!--
     <section class="content shaded">
         <section class="container">
