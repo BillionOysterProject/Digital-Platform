@@ -386,45 +386,48 @@
                 </div>
             </div>
 
+            <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
+                <p>Tell us more about the unmarked or other pipes. <em>(optional)</em></p>
                 
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
-                    <p>Tell us more about the unmarked or other pipes.</p>
-                    <div class="form-group">
-                        <label for="unmarkedLocation">What's the location?</label>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
-                        ng-hide="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
-                        ng-click="openMap()">Mark the location on the map</a>
-                        <input class="form-control" type="text" name="unmarkedLocation"
-                        value="{{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
-                        data-toggle="modal" data-target="#modal-map-unmarked" ng-click="openMap()"
-                        ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude &&
-                        siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly
-                        />
+                <!--
+                <div class="form-group">
+                    <label for="unmarkedLocation">What's the location?</label>
+                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
+                    ng-hide="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
+                    ng-click="openMap()">Mark the location on the map</a>
+                    <input class="form-control" type="text" name="unmarkedLocation"
+                    value="{{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
+                    data-toggle="modal" data-target="#modal-map-unmarked" ng-click="openMap()"
+                    ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude &&
+                    siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly
+                    />
+                </div>
+                -->
+
+                <div class="form-group row">
+                    <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
+                    <input class="form-control" type="text" name="unmarkedDiameter"
+                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
+                    />
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true,
+                    'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
+                        <label>Is there any flow through the pipe?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent" ></select>
                     </div>
-                    <div class="form-group">
-                        <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
-                        <input class="form-control" type="text" name="unmarkedDiameter"
-                        ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
-                        />
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true,
-                        'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
-                            <label>Is there any flow through the pipe?</label>
-                            <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent" ></select>
-                        </div>
-                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
-                            <label for="unmarkedFlowThroughAmount"><br/>How much?</label>
-                            <select class="form-control" name="unmarkedFlowThroughAmount"
-                            ng-options="flow.value as flow.label for flow in waterFlows"
-                            ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
-                            ></select>
-                        </div>
+                    <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true">
+                        <label for="unmarkedFlowThroughAmount"><br/>How much?</label>
+                        <select class="form-control" name="unmarkedFlowThroughAmount"
+                        ng-options="flow.value as flow.label for flow in waterFlows"
+                        ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
+                        ></select>
                     </div>
                 </div>
             </div>
         </section>
     </section>
+    
     <section class="content shaded">
         <section class="container">
             <h6>Land Conditions</h6>
