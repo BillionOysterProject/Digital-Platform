@@ -479,108 +479,122 @@
                 </div>
             </div>
 
+            <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="row">
+                    <p>How much garbage is on the adjacent shoreline?</p>
                 </div>
-                <div class="col-md-4">
-                    <p>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</p>
-                    <div role="alert" ng-show="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
-                        <p class="red">Percentages must add to 100%.</p>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landHardPlastic">Hard Plastic</label>
+                        <select class="form-control" name="landHardPlastic"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.hardPlastic"
+                        ></select>
                     </div>
-                    <div class="form-group">
-                        <label>Impervious Surface (concrete/asphalt paths, roads, buildings, etc.)</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">%</span>
-                            <input type="number" name="imperviousSurfacePer" min="0" class="form-control"
-                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer"/>
-                        </div>
-                        <div ng-show="form.siteConditionForm.imperviousSurfacePer.$error.min">
-                            <p class="red">Impervious surface percentage must be a positive number.</p>
-                        </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landSoftPlastic">Soft Plastic</label>
+                        <select class="form-control" name="landSoftPlastic"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.softPlastic"
+                        ></select>
                     </div>
-                    <div class="form-group">
-                        <label>Pervious Surface (dirt, gravel, wood chips, etc.)</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">%</span>
-                            <input type="number" name="perviousSurfacePer" min="0" class="form-control"
-                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer"/>
-                        </div>
-                        <div ng-show="form.siteConditionForm.perviousSurfacePer.$error.min">
-                            <p class="red">Pervious surface percentage must be a positive number.</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Vegetated surface (grass, shrubs, trees, etc.)</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">%</span>
-                            <input type="number" name="vegSurfacePer" min="0" class="form-control"
-                              ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer"/>
-                        </div>
-                        <div ng-show="form.siteConditionForm.vegSurfacePer.$error.min">
-                            <p class="red">Vegetated surface percentage must be a positive number.</p>
-                        </div>
-                    </div>
-                    <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
-                    <p>Record the extent of each type of garbage on the adjacent shoreline.</p>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="landHardPlastic">Hard Plastic</label>
-                            <select class="form-control" name="landHardPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.hardPlastic"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landSoftPlastic">Soft Plastic</label>
-                            <select class="form-control" name="landSoftPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.softPlastic"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landMetal">Metal</label>
-                            <select class="form-control" name="landMetal"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.metal"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landPaper">Paper</label>
-                            <select class="form-control" name="landPaper"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.paper"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landGlass">Glass</label>
-                            <select class="form-control" name="landGlass"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.glass"
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landOrganic">Organic</label>
-                            <select class="form-control" name="landOrganic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.organic"
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label for="landOther">Other</label>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="siteCondition.landConditions.garbage.other.description" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control" ng-options="extent.value as extent.label for extent in garbageExtent"
-                                    ng-model="siteCondition.landConditions.garbage.other.extent"
-                                    ></select>
-                                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landMetal">Metal</label>
+                        <select class="form-control" name="landMetal"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.metal"
+                        ></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landPaper">Paper</label>
+                        <select class="form-control" name="landPaper"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.paper"
+                        ></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landGlass">Glass</label>
+                        <select class="form-control" name="landGlass"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.glass">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="landOrganic">Organic</label>
+                        <select class="form-control" name="landOrganic"
+                        ng-options="extent.value as extent.label for extent in garbageExtent"
+                        ng-model="siteCondition.landConditions.garbage.organic">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="landOther">Other</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" placeholder="Type of trash" ng-model="siteCondition.landConditions.garbage.other.description" />
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-options="extent.value as extent.label for extent in garbageExtent"
+                                ng-model="siteCondition.landConditions.garbage.other.extent"
+                                ></select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+                
+            <div class="col-md-4">
+                <p>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</p>
+                <div role="alert" ng-show="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
+                    <p class="red">Percentages must add to 100%.</p>
+                </div>
+                <div class="form-group">
+                    <label>Impervious Surface (concrete/asphalt paths, roads, buildings, etc.)</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">%</span>
+                        <input type="number" name="imperviousSurfacePer" min="0" class="form-control"
+                          ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer"/>
+                    </div>
+                    <div ng-show="form.siteConditionForm.imperviousSurfacePer.$error.min">
+                        <p class="red">Impervious surface percentage must be a positive number.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pervious Surface (dirt, gravel, wood chips, etc.)</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">%</span>
+                        <input type="number" name="perviousSurfacePer" min="0" class="form-control"
+                          ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer"/>
+                    </div>
+                    <div ng-show="form.siteConditionForm.perviousSurfacePer.$error.min">
+                        <p class="red">Pervious surface percentage must be a positive number.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Vegetated surface (grass, shrubs, trees, etc.)</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">%</span>
+                        <input type="number" name="vegSurfacePer" min="0" class="form-control"
+                          ng-model="siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer"/>
+                    </div>
+                    <div ng-show="form.siteConditionForm.vegSurfacePer.$error.min">
+                        <p class="red">Vegetated surface percentage must be a positive number.</p>
+                    </div>
+                </div>
+                <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
+            </div>
+             
         </section>
     </section>
 </form>
