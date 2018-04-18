@@ -285,7 +285,7 @@
             <div class="row">
                 <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
                     <div class="row">
-                        <p>How much garbage is in the water? <em>(optional)</em></p>
+                        <p><strong>How much garbage is in the water?</strong> <em>(optional)</em></p>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-4">
@@ -426,11 +426,13 @@
                     </div>
                     -->
 
-                    <div class="form-group row">
-                        <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
-                        <input class="form-control" type="text" name="unmarkedDiameter"
-                        ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
-                        />
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
+                            <input class="form-control" type="text" name="unmarkedDiameter"
+                            ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
+                            />
+                        </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true,
@@ -488,7 +490,7 @@
             <div class="row">
                 <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                     <div class="row">
-                        <p>How much garbage is on the adjacent shoreline?</p>
+                        <p><strong>How much garbage is on the adjacent shoreline?</strong></p>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-4">
@@ -564,7 +566,7 @@
                 
             <div class="row">
                 <div class="col-md-4">
-                    <p>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</p>
+                    <p><strong>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</strong></p>
                     <div role="alert" ng-show="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
                         <p class="red">Percentages must add to 100%.</p>
                     </div>
