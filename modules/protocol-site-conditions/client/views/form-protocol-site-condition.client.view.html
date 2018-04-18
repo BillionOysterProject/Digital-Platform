@@ -282,76 +282,78 @@
                 </div> 
             </div>
 
-            <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
-                <div class="row">
-                    <p>How much garbage is in the water? <em>(optional)</em></p>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="waterHardPlastic">Hard Plastic</label>
-                        <select class="form-control" name="waterHardPlastic"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.hardPlastic"></select>
+            <div class="row">
+                <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                    <div class="row">
+                        <p>How much garbage is in the water? <em>(optional)</em></p>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="waterSoftPlastic">Soft Plastic</label>
-                        <select class="form-control" name="waterSoftPlastic"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.softPlastic"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="waterMetal">Metal</label>
-                        <select class="form-control" name="waterMetal"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.metal"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="waterPaper">Paper</label>
-                        <select class="form-control" name="waterPaper"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.paper"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <label for="waterGlass">Glass</label>
-                        <select class="form-control" name="waterGlass"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.glass"></select>
-                    </div>
-                </div>
-                <div class="row">    
-                    <div class="form-group col-sm-4">
-                        <label for="waterOrganic"">Organic</label>
-                        <select class="form-control" name="waterOrganic"
-                        ng-options="extent.value as extent.label for extent in garbageExtent"
-                        ng-model="siteCondition.waterConditions.garbage.organic"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-12">
-                        <label for="waterOther">Other</label>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <input class="form-control" type="text" placeholder="Type of trash"
-                                ng-model="siteCondition.waterConditions.garbage.other.description" />
-                            </div>
-                            <div class="col-sm-6">
-                                <select class="form-control"
-                                ng-options="extent.value as extent.label for extent in garbageExtent"
-                                ng-model="siteCondition.waterConditions.garbage.other.extent"
-                                ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
-                                siteCondition.waterConditions.garbage.other.description"></select>
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="waterHardPlastic">Hard Plastic</label>
+                            <select class="form-control" name="waterHardPlastic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.hardPlastic"></select>
                         </div>
                     </div>
-                </div>    
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="waterSoftPlastic">Soft Plastic</label>
+                            <select class="form-control" name="waterSoftPlastic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.softPlastic"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="waterMetal">Metal</label>
+                            <select class="form-control" name="waterMetal"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.metal"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="waterPaper">Paper</label>
+                            <select class="form-control" name="waterPaper"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.paper"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="waterGlass">Glass</label>
+                            <select class="form-control" name="waterGlass"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.glass"></select>
+                        </div>
+                    </div>
+                    <div class="row">    
+                        <div class="form-group col-sm-4">
+                            <label for="waterOrganic"">Organic</label>
+                            <select class="form-control" name="waterOrganic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.organic"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label for="waterOther">Other</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" placeholder="Type of trash"
+                                    ng-model="siteCondition.waterConditions.garbage.other.description" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control"
+                                    ng-options="extent.value as extent.label for extent in garbageExtent"
+                                    ng-model="siteCondition.waterConditions.garbage.other.extent"
+                                    ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
+                                    siteCondition.waterConditions.garbage.other.description"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
             </div>
             
             <div class="row">
@@ -363,34 +365,36 @@
                 </div>
             </div>
 
-            <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
-                <!--
-                <div class="form-group">
-                    <label for="csoLocation">What's the location?</label>
-                    <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked"
-                    ng-hide="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
-                    siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
-                    ng-click="openMap()">Mark the location on the map</a>
-                    <input class="form-control" type="text" name="csoLocation"
-                    value="{{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}"
-                    data-toggle="modal" data-target="#modal-map-marked" ng-click="openMap()"
-                    ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
-                    siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly
-                    />
-                </div>
-                -->
-                <div class="row">
-                    <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true,
-                    'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
-                        <label>Is there any flow through the pipe?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent"></select>
+            <div class="row">
+                <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                    <!--
+                    <div class="form-group">
+                        <label for="csoLocation">What's the location?</label>
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked"
+                        ng-hide="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
+                        siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude"
+                        ng-click="openMap()">Mark the location on the map</a>
+                        <input class="form-control" type="text" name="csoLocation"
+                        value="{{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude}}, {{siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude}}"
+                        data-toggle="modal" data-target="#modal-map-marked" ng-click="openMap()"
+                        ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.latitude &&
+                        siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly
+                        />
                     </div>
-                    <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true">
-                        <label for="combinedFlowThroughAmount">
-                        <br/>How much?</label>
-                        <select class="form-control" name="combinedFlowThroughAmount"
-                        ng-options="flow.value as flow.label for flow in waterFlows"
-                        ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
+                    -->
+                    <div class="row">
+                        <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true,
+                        'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
+                            <label>Is there any flow through the pipe?</label>
+                            <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent"></select>
+                        </div>
+                        <div class="form-group col-sm-6" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true">
+                            <label for="combinedFlowThroughAmount">
+                            <br/>How much?</label>
+                            <select class="form-control" name="combinedFlowThroughAmount"
+                            ng-options="flow.value as flow.label for flow in waterFlows"
+                            ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -479,6 +483,7 @@
                 </div>
             </div>
 
+            
             <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                 <div class="row">
                     <p>How much garbage is on the adjacent shoreline?</p>
