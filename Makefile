@@ -12,6 +12,7 @@ docker:
 	  --volume $(PWD)/run/npm:/root/.npm \
 	  --volume $(PWD):/project \
 	  --workdir /project \
+	  --init \
 	  node:9.11.1 \
 	  $(CMD)
 
