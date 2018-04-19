@@ -2,6 +2,12 @@
     <section class="content">
         <section class="container" id="site-condition-form">
             <h2 id="protocol-1-form">Protocol 1 <small>Site Conditions</small></h2>
+            <p>
+                Select the "Weather Conditions" in the first question, then try to fill in as many
+                other questions as you can.  Everything else is optional!  If you get stuck, you can refer to pages
+                25-34 in the
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.
+            </p>
             <hr />
             <div class="alert alert-danger" ng-show="siteConditionErrors">
                 <h4>We're still missing some information.</h4>
@@ -77,7 +83,7 @@
                     <!-- TODO: Prefill with Weather API data -->
                     <h6>Meteorological conditions</h6>
                     <div class="form-group">
-                        <label for="weatherConditions" class="required">Weather conditions *</label>
+                        <label for="weatherConditions" class="required">Select the weather conditions. (Remember- this is required, but everything else is optional!)</label>
                         <select class="form-control" name="weatherConditions" ng-options="weather.value as weather.label for weather in weatherConditions"
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
@@ -87,7 +93,7 @@
             <div class="row"> 
                 <div class="col-md-4">    
                     <div class="form-group">
-                        <label for="temperature">Air temperature (C) <em>(optional)</em></label>
+                        <label for="temperature">Air temperature (C)</label>
                         <input class="form-control" name="temperature" type="number"
                         ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
@@ -97,7 +103,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="windSpeed">Wind speed (mph) <em>(optional)</em></label>
+                        <label for="windSpeed">Wind speed (mph)</label>
                         <input class="form-control" type="number" min="0" name="windSpeed"
                         ng-model="siteCondition.meteorologicalConditions.windSpeedMPH"/>
                         <span class="help-block">Method: Anemometer</span>
@@ -111,7 +117,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="windDirection">Wind direction <em>(optional)</em></label>
+                        <label for="windDirection">Wind direction</label>
                         <select class="form-control" name="windDirection"
                         ng-options="direction.value as direction.label for direction in windDirection"
                         ng-model="siteCondition.meteorologicalConditions.windDirection"></select>
@@ -123,7 +129,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="humidity">Humidity (%) <em>(optional)</em></label>
+                        <label for="humidity">Humidity (%)</label>
                         <input class="form-control" type="number" min="0" name="humidity"
                         ng-model="siteCondition.meteorologicalConditions.humidityPer"/>
                         <span class="help-block">Method: Sling Psychrometer</span>
@@ -139,7 +145,7 @@
                 <div class="col-md-4">
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="blue">7</span> days? <em>(optional)</em></label>
+                        <label>Has it rained in the past <span class="blue">7</span> days? <em></em></label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.recentRainfall.rainedIn7Days"></select>
                     </div>
@@ -226,7 +232,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Take a photograph of the water with your camera <em>(optional)</em></label>
+                        <label>Take a photograph of the water with your camera</label>
                         <single-image-drop-zone uploader="waterConditionUploader"
                         image-url="waterConditionPhotoURL" image-alt="Water Condition"
                         id="water-condition-image-dropzone"></single-image-drop-zone>
@@ -240,7 +246,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                      <label for="surfaceCurrentSpeedMPS">Surface current speed (meters/second) <em>(optional)</em></label>
+                      <label for="surfaceCurrentSpeedMPS">Surface current speed (meters/second)</label>
                       <input class="form-control" type="number" min="0" name="surfaceCurrentSpeedMPS"
                       ng-model="siteCondition.waterConditions.surfaceCurrentSpeedMPS"/>
                       <div ng-show="form.siteConditionForm.surfaceCurrentSpeedMPS.$error.min">
@@ -253,7 +259,7 @@
             <div class="row">    
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="waterColor">Describe the water color <em>(optional)</em></label>
+                        <label for="waterColor">Describe the water color </label>
                         <select class="form-control" name="waterColor" ng-options="color.value as color.label for color in waterColors"
                         ng-model="siteCondition.waterConditions.waterColor"></select>
                     </div>
@@ -263,7 +269,7 @@
             <div class="row">    
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Is there an oil sheen present? <em>(optional)</em></label>
+                        <label>Is there an oil sheen present?</label>
                         <select class="form-control"
                         ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.waterConditions.oilSheen" ></select>
@@ -274,7 +280,7 @@
             <div class="row">    
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Is there any garbage in the water? <em>(optional)</em></label>
+                        <label>Is there any garbage in the water?</label>
                         <select class="form-control"
                         ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.waterConditions.garbage.garbagePresent" ></select>
@@ -284,7 +290,7 @@
 
             <div class="row">
                 <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
-                    <p><strong>How much garbage is in the water?</strong> <em>(optional)</em></p>
+                    <p><strong>How much garbage is in the water?</strong></p>
 
                     <div class="row">
                         <div class="form-group col-sm-4">
@@ -358,7 +364,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes? <em>(optional)</em></label>
+                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"></select>
                     </div>
                 </div>
