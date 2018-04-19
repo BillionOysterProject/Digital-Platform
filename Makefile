@@ -13,7 +13,7 @@ docker:
 	  --volume $(PWD):/project \
 	  --workdir /project \
 	  --init \
-	  node:9.11.1 \
+	  node:4.9.1 \
 	  $(CMD)
 
 install:
