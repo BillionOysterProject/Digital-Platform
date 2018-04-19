@@ -3,8 +3,7 @@
         <section class="container" id="site-condition-form">
             <h2 id="protocol-1-form">Protocol 1 <small>Site Conditions</small></h2>
             <p>
-                Select the "Weather Conditions" in the first question, then try to fill in as many
-                other questions as you can.  Everything else is optional!  If you get stuck, you can refer to pages
+                In this protocol, you're going to try to collect as much information as you can about the meteorlogical, water, and land conditions. The only required data is the weather conditions.  Everything else is optional!  If you get stuck, you can refer to pages
                 25-34 in the
                 <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.
             </p>
@@ -80,10 +79,9 @@
             
             <div class="row">
                 <div class="col-md-4">
-                    <!-- TODO: Prefill with Weather API data -->
                     <h6>Meteorological conditions</h6>
                     <div class="form-group">
-                        <label for="weatherConditions" class="required">Select the weather conditions. (Remember- this is required, but everything else is optional!)</label>
+                        <label for="weatherConditions" class="required">Weather Conditions *</label>
                         <select class="form-control" name="weatherConditions" ng-options="weather.value as weather.label for weather in weatherConditions"
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
