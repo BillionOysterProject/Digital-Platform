@@ -175,9 +175,19 @@
                 <div class="form-group">
                   <label for="windDirection">Wind direction</label>
                   <br/>
-                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-primary" ng-repeat="direction in windDirection">
-                      <input type="radio" name="windDirection" id="{{ direction.value }}" autocomplete="off">
+                  <div class="btn-group btn-group-toggle">
+                    <label
+                        class="btn btn-primary"
+                        ng-repeat="direction in windDirection"
+                        ng-class="{'active': (siteCondition.meteorologicalConditions.windDirection === direction.value) }"
+                    >
+                        <input
+                            type="radio"
+                            name="windDirection"
+                            id="{{ direction.value }}"
+                            value="{{ direction.value }}"
+                            ng-model="siteCondition.meteorologicalConditions.windDirection"
+                        >
                       {{ direction.label }}
                     </label>
                   </div>
@@ -206,22 +216,95 @@
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
                         <label>Has it rained in the past <span class="blue">7</span> days? <em></em></label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn7Days"></select>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn7Days)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn7Days"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn7Days"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn7Days)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn7Days"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn7Days"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn7Days === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn7Days === true}">
-                      Has it rained in the past <span class="blue">72</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn72Hours"
-                        ng-required="siteCondition.recentRainfall.rainedIn7Days"></select>
+
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="blue">72</span> hours?</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn72Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn72Hours"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn72Hours"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn72Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn72Hours"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn72Hours"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn72Hours === true}">
-                      Has it rained in the past <span class="blue">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn24Hours"
-                        ng-required="siteCondition.recentRainfall.rainedIn72Hours"></select>
+
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="blue">24</span> hours?</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn24Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn24Hours"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn24Hours"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn24Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn24Hours"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn24Hours"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
