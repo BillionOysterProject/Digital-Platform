@@ -2,6 +2,13 @@
     <section class="content">
         <section class="container">
             <h2 id="protocol-2-form">Protocol 2 <small>Oyster Measurements</small></h2>
+            <ul>
+                <li>To publish this protocol <strong>the first time you enter data</strong>, you'll need to enter a set of baselines for each of the 10 tagged substrate shells. You can find much of the baseline information on the tag of each substrate shell.</li>
+                <li>To publish this protocol <strong>every time after</strong>, you'll only need to count the # of live oysters and measure the length of each live oyster for AT LEAST ONE substrate shell.</li>
+                <li>For reference, check out pages
+                35-44 in the
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+            </ul>
             <hr />
             <div class="alert alert-danger" ng-show="oysterMeasurementErrors" ng-cloak>
                 <h4>We're still missing some information.</h4>
@@ -87,7 +94,7 @@
         </section>
     </section>
     
-
+    <!--
     <section class="content">
         <section class="container">
             <div class="row">
@@ -99,11 +106,12 @@
             </div>
         </section>
     </section>
-
+    -->
 
 
     <section class="content">
         <section class="container">
+            <h6>Oyster Measurements</h6>
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
                 <tr ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
                 ng-class="{red: form.oysterMeasurementForm.$submitted && !substratesValid &&

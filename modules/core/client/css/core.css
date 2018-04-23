@@ -865,6 +865,22 @@ blockquote {
         color: #aaa;
     }
 
+.btn-group-toggle .btn {
+  background: white;
+  border: 1px solid #888;
+  color: black;
+}
+
+.btn-group-toggle .btn.active {
+   background-color: #426ca9;
+   border-color: black !important;
+   color: white;
+}
+
+.btn-group-toggle .btn:active {
+   background-color: #2c3c56;
+   color: white;
+}
 
 /* SELECT2 PLUGIN */
 

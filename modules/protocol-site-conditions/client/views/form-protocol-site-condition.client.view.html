@@ -2,11 +2,12 @@
     <section class="content">
         <section class="container" id="site-condition-form">
             <h2 id="protocol-1-form">Protocol 1 <small>Site Conditions</small></h2>
-            <p>
-                In this protocol, you're going to try to collect as much information as you can about the meteorlogical, water, and land conditions. The only required data is the weather conditions.  Everything else is optional!  If you get stuck, you can refer to pages
+            <ul>
+                <li>To publish this protocol, the only required data is "Weather Conditions." Everything else is optional!</li>
+                <li>For reference, check out pages
                 25-34 in the
-                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.
-            </p>
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+            </ul>
             <hr />
             <div class="alert alert-danger" ng-show="siteConditionErrors">
                 <h4>We're still missing some information.</h4>
@@ -76,17 +77,30 @@
 -->
     <section class="content shaded">
         <section class="container">
-            
-            <div class="row">
-                <div class="col-md-4">
-                    <h6>Meteorological conditions</h6>
+            <h6>Meteorological conditions</h6>
+                    <!--
                     <div class="form-group">
                         <label for="weatherConditions" class="required">Weather Conditions *</label>
                         <select class="form-control" name="weatherConditions" ng-options="weather.value as weather.label for weather in weatherConditions"
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
                 </div>
-            </div>   
+            </div> 
+            -->  
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="weatherConditions">Weather Conditions</label>
+                    <br/>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-primary" ng-repeat="weather in weatherConditions">
+                            <input type="radio" name="weatherConditions" id="{{ weather.value }}" autocomplete="off">
+                            {{ weather.label }}
+                        </label>
+                    </div>
+                </div>
+            </div>
 
             <div class="row"> 
                 <div class="col-md-4">    
@@ -112,6 +126,7 @@
                 </div>
             </div>
 
+            <!--
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -122,6 +137,23 @@
                         <span class="help-block">Method: Compass</span>
                     </div>
                 </div>
+            </div>
+        -->
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="windDirection">Wind direction</label>
+                  <br/>
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary" ng-repeat="direction in windDirection">
+                      <input type="radio" name="windDirection" id="{{ direction.value }}" autocomplete="off">
+                      {{ direction.label }}
+                    </label>
+                  </div>
+                  <span class="help-block">Method: Compass</span>
+                </div>
+              </div>
             </div>
 
             <div class="row">
@@ -254,15 +286,33 @@
                 </div>
             </div>
             
-            <div class="row">    
-                <div class="col-md-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="waterColor">Describe the water color</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary" ng-repeat="color in waterColors">
+                            <input type="radio" name="waterColor" id="{{ color.value }}" autocomplete="off">
+                            {{ color.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    
+
+
+            <!--
                     <div class="form-group">
                         <label for="waterColor">Describe the water color </label>
+                        
                         <select class="form-control" name="waterColor" ng-options="color.value as color.label for color in waterColors"
                         ng-model="siteCondition.waterConditions.waterColor"></select>
                     </div>
                 </div>
             </div>
+        -->
 
             <div class="row">    
                 <div class="col-md-4">
