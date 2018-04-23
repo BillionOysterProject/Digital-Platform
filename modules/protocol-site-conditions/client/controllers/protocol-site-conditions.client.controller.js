@@ -81,6 +81,26 @@
       }
     };
 
+    $scope.waterGarbageTypes = [{
+      name: 'Hard Plastic',
+      id: 'hardPlastic',
+    }, {
+      name: 'Soft Plastic',
+      id: 'softPlastic',
+    }, {
+      name: 'Metal',
+      id: 'metal',
+    }, {
+      name: 'Paper',
+      id: 'paper',
+    }, {
+      name: 'Glass',
+      id: 'glass',
+    }, {
+      name: 'Organic',
+      id: 'organic',
+    }];
+
     $scope.saveSiteCondition = function(saveSuccessCallback, saveErrorCallback) {
       if (!$scope.form.siteConditionForm.$valid) {
         $scope.$broadcast('show-errors-check-validity', '$scope.form.siteConditionForm');

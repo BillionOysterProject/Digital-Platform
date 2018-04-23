@@ -438,7 +438,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row shaded">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there any garbage in the water?</label>
@@ -449,74 +449,89 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+            <div class="row shaded" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-4">
                     <p><strong>How much garbage is in the water?</strong></p>
+                </div>
+            </div>
 
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterHardPlastic">Hard Plastic</label>
-                            <select class="form-control" name="waterHardPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.hardPlastic"></select>
+            <div class="row shaded" ng-repeat="wg in waterGarbageTypes" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label>{{ wg.name }}</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 0)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
+                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
+                                    ng-value="0"
+                                >
+                                None
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 1)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
+                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
+                                    ng-value="1"
+                                >
+                                Sporadic
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 2)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
+                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
+                                    ng-value="2"
+                                >
+                                Common
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 3)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
+                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
+                                    ng-value="3"
+                                >
+                                Extensive
+                            </label>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row shaded" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="form-group col-sm-4">
+                    <label for="waterOther">Other</label>
                     <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterSoftPlastic">Soft Plastic</label>
-                            <select class="form-control" name="waterSoftPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.softPlastic"></select>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="Type of trash"
+                            ng-model="siteCondition.waterConditions.garbage.other.description" />
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterMetal">Metal</label>
-                            <select class="form-control" name="waterMetal"
+                        <div class="col-sm-6">
+                            <select class="form-control"
                             ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.metal"></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterPaper">Paper</label>
-                            <select class="form-control" name="waterPaper"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.paper"></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterGlass">Glass</label>
-                            <select class="form-control" name="waterGlass"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.glass"></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterOrganic"">Organic</label>
-                            <select class="form-control" name="waterOrganic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.organic"></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label for="waterOther">Other</label>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash"
-                                    ng-model="siteCondition.waterConditions.garbage.other.description" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control"
-                                    ng-options="extent.value as extent.label for extent in garbageExtent"
-                                    ng-model="siteCondition.waterConditions.garbage.other.extent"
-                                    ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
-                                    siteCondition.waterConditions.garbage.other.description"></select>
-                                </div>
-                            </div>
+                            ng-model="siteCondition.waterConditions.garbage.other.extent"
+                            ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
+                            siteCondition.waterConditions.garbage.other.description"></select>
                         </div>
                     </div>
                 </div>
@@ -781,7 +796,6 @@
 
 
 
-
 <!-- MODALS -->
 <map-select modal-id="modal-map-marked" can-geocode="true" can-click-map-to-add-marker="true"
   can-move-marker="true" show-marker="true"
@@ -797,3 +811,33 @@
   can-move-marker="true" show-marker="true"
   latitude="siteCondition.latitude"
   longitude="siteCondition.longitude"></map-select>
+
+
+<script type="text/javascript">
+$(function(){
+    $(window).on('click', function(e){
+        var el = $(e.target);
+
+        if (el.is('.radio-slider button')) {
+            el.find('input').click();
+
+        } else if (el.is('.radio-slider input')) {
+            console.debug(e)
+            var seen = false;
+            var parent = el.closest('.radio-slider');
+
+            $.each(parent.find('.slider-button'), function(i, col){
+                if (!seen) {
+                    $(col).addClass('active');
+                } else {
+                    $(col).removeClass('active');
+                }
+
+                if ($(col).find('input').is(el)) {
+                    seen = true;
+                }
+            });
+        }
+    });
+});
+</script>
