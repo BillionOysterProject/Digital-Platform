@@ -869,6 +869,7 @@ blockquote {
   background: white;
   border: 1px solid #888;
   color: black;
+  z-index: inherit !important;
 }
 
 .btn-group-toggle .btn.active {

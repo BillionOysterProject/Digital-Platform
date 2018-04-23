@@ -85,29 +85,39 @@
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
                 </div>
-            </div> 
-            -->  
+            </div>
+            -->
 
             <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="weatherConditions">Weather Conditions</label>
-                    <br/>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-primary" ng-repeat="weather in weatherConditions">
-                            <input type="radio" name="weatherConditions" id="{{ weather.value }}" autocomplete="off">
-                            {{ weather.label }}
-                        </label>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="weatherConditions">Weather Conditions</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="weather in weatherConditions"
+                                ng-class="{'active': (siteCondition.meteorologicalConditions.weatherConditions === weather.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="weatherConditions"
+                                    id="{{ weather.value }}"
+                                    value="{{ weather.value }}"
+                                    ng-model="siteCondition.meteorologicalConditions.weatherConditions"
+                                >
+                                {{ weather.label }}
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row"> 
-                <div class="col-md-4">    
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="temperature">Air temperature (C)</label>
-                        <input class="form-control" name="temperature" type="number"
-                        ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
+                        <input class="form-control" name="temperature" type="number" ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
                     </div>
                 </div>
             </div>
@@ -197,7 +207,7 @@
             </div>
         </section>
     </section>
-    
+
     <!--
     <section class="content shaded">
         <section class="container">
@@ -285,7 +295,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -300,13 +310,13 @@
                     </div>
                 </div>
             </div>
-                    
+
 
 
             <!--
                     <div class="form-group">
                         <label for="waterColor">Describe the water color </label>
-                        
+
                         <select class="form-control" name="waterColor" ng-options="color.value as color.label for color in waterColors"
                         ng-model="siteCondition.waterConditions.waterColor"></select>
                     </div>
@@ -314,7 +324,7 @@
             </div>
         -->
 
-            <div class="row">    
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
@@ -325,7 +335,7 @@
                 </div>
             </div>
 
-            <div class="row">    
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there any garbage in the water?</label>
@@ -333,7 +343,7 @@
                         ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.waterConditions.garbage.garbagePresent" ></select>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <div class="row">
@@ -380,7 +390,7 @@
                             ng-model="siteCondition.waterConditions.garbage.glass"></select>
                         </div>
                     </div>
-                    <div class="row">    
+                    <div class="row">
                         <div class="form-group col-sm-4">
                             <label for="waterOrganic"">Organic</label>
                             <select class="form-control" name="waterOrganic"
@@ -405,10 +415,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>    
+                    </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -463,7 +473,7 @@
 
             <div class="row">
                 <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
-                    
+
                     <!--
                     <div class="form-group">
                         <label for="unmarkedLocation">What's the location?</label>
@@ -616,7 +626,7 @@
                     </div>
                 </div>
             </div>
-                
+
             <div class="row">
                 <div class="col-md-4">
                     <p><strong>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</strong></p>
@@ -658,7 +668,7 @@
                     </div>
                     <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
-            </div> 
+            </div>
         </section>
     </section>
 </form>
