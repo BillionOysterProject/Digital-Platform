@@ -117,7 +117,27 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="temperature">Air temperature (C)</label>
-                        <input class="form-control" name="temperature" type="number" ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
+                        <input
+                            class="form-control"
+                            name="temperature"
+                            type="number"
+                            ng-model="siteCondition.meteorologicalConditions.airTemperatureC"
+                            step="0.1"
+                            min="-40"
+                            max="50"
+
+                        />
+                        <span class="help-block" ng-if="siteCondition.meteorologicalConditions.airTemperatureC !== undefined">
+                            <p>Fahrenheit: {{ (siteCondition.meteorologicalConditions.airTemperatureC * (9/5) + 32) | number:1 }}&deg;F</p>
+                        </span>
+
+                        <div ng-show="form.siteConditionForm.temperature.$error.min">
+                            <p class="red">Temperature must be above -40&deg;C.</p>
+                        </div>
+
+                        <div ng-show="form.siteConditionForm.temperature.$error.max">
+                            <p class="red">Temperature must be below 50&deg;C.</p>
+                        </div>
                     </div>
                 </div>
             </div>
