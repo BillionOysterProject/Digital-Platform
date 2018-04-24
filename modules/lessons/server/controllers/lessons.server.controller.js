@@ -105,14 +105,17 @@ var removeLessonFromUnits = function(lesson, callback) {
 
 var setPdfToDownload = function(host, cookies, lesson, callback) {
   var httpTransport = (process.env.NODE_ENV === 'development-local') ? 'http://' : 'https://';
-  var input = httpTransport + host + '/full-page/lessons/' + lesson._id;
+  var input = 'https://platform-beta.bop.nyc/lessons/' + lesson._id + '?layout=print';
+
   var filename = _.replace(lesson.title, /[^0-9a-zA-Z-.,_\s]/g, '');
   filename = _.replace(filename + '.pdf', /\s/g, '_');
 
   var output = path.resolve(config.uploads.lessonDownloadPdfUpload.dest) + '/' + filename;
   var mimetype = 'application/pdf';
 
-  var command = 'wkhtmltopdf --cookie sessionId ' + cookies.sessionId + ' --page-width 800px --page-height 1200px --viewport-size \'800x1200\' ' + input + ' ' + output;
+  var command = 'wkhtmltopdf --page-width 800px --page-height 1200px --viewport-size 800x1200 \'' + input + '\' \'' + output + '\'';
+  console.log('exec: ', command);
+
   exec(command, function(error, stdout, stderr) {
     if (error) {
       console.log('wkhtmltopdf error: ', error);

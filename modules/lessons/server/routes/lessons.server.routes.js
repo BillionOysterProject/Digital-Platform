@@ -6,7 +6,23 @@
 var lessonsPolicy = require('../policies/lessons.server.policy'),
   lessons = require('../controllers/lessons.server.controller');
 
+var proxy = require('http-proxy-middleware');
+
 module.exports = function (app) {
+  // Handle reverse proxying to Beta for lesson download
+  app.all([
+    '/api/lessons/download-pdf',
+    '/api/lessons/download-pdf/*',
+  ], proxy({
+    target:       'https://platform-beta.bop.nyc',
+    changeOrigin: true,
+    autoRewrite:  true,
+    pathRewrite: {
+      '^/api/lessons/download-pdf': '/lessons/',
+    },
+    logLevel: 'debug',
+  }));
+
   // Lessons collection routes
   app.route('/api/lessons').all(lessonsPolicy.isAllowed)
     .get(lessons.list)
