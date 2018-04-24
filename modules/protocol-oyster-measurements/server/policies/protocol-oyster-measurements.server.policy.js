@@ -40,6 +40,9 @@ exports.invokeRolesPolicies = function () {
     allows: [{
       resources: '/api/protocol-oyster-measurements/:oysterMeasurementId',
       permissions: ['get']
+    }, {
+      resources: '/api/protocol-oyster-measurements/:currentOysterMeasurementId/previous',
+      permissions: ['get']
     }]
   }]);
 };

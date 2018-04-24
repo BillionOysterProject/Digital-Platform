@@ -30,7 +30,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['partner', 'guest', 'user'],
     allows: [{
       resources: '/api/protocol-mobile-traps/:mobileTrapId',
-      permissions: ['get']
+      permissions: ['get', 'put']
     }]
   }]);
 };
