@@ -279,7 +279,7 @@
                     <div class="form-group">
                         <label>Has it rained in the past <span class="blue">24</span> hours?</label>
                         <br/>
-                        <div class ="btn-group btn-group-toggle">
+                        <div class="btn-group btn-group-toggle">
                             <label
                                 class="btn btn-primary"
                                 ng-class="{'active': (siteCondition.recentRainfall.rainedIn24Hours)}"
@@ -441,13 +441,80 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.oilSheen)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.oilSheen"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.oilSheen"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.oilSheen)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.oilSheen"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.oilSheen"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!--
                         <select class="form-control"
                         ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.waterConditions.oilSheen" ></select>
                     </div>
                 </div>
             </div>
-
+            -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Is there any garbage in the water?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.garbage.garbagePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.garbage.garbagePresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
             <div class="row shaded">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -458,7 +525,7 @@
                     </div>
                 </div>
             </div>
-
+-->
             <div class="row shaded" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
                 <div class="col-md-4">
                     <p><strong>How much garbage is in the water?</strong></p>
@@ -551,13 +618,48 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"></select>
                     </div>
                 </div>
             </div>
-
+-->
             <div class="row">
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                <div class="col-sm-12" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
                     <!--
                     <div class="form-group">
                         <label for="csoLocation">What's the location?</label>
@@ -573,6 +675,28 @@
                         />
                     </div>
                     -->
+                    <div class="form-group">
+                        <label for="combinedFlowThroughAmount">Is there any flow through the pipe?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="flow in waterFlows"
+                                ng-class="{'active': (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough === flow.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="combinedFlowThroughAmount"
+                                    id="{{ flow.value }}"
+                                    value="{{ flow.value }}"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"
+                                >
+                            {{ flow.label }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <!--
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true,
                         'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
@@ -587,9 +711,45 @@
                             ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any <em>unmarked</em> or other outfall pipes?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="unmarkedOutfallPipes.unmarkedPipePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="unmarkedOutfallPipes.unmarkedPipePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -598,34 +758,42 @@
                     </div>
                 </div>
             </div>
+-->
 
             <div class="row">
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
-
-                    <!--
+                <div class="col-sm-12" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
                     <div class="form-group">
-                        <label for="unmarkedLocation">What's the location?</label>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
-                        ng-hide="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
-                        ng-click="openMap()">Mark the location on the map</a>
-                        <input class="form-control" type="text" name="unmarkedLocation"
-                        value="{{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
-                        data-toggle="modal" data-target="#modal-map-unmarked" ng-click="openMap()"
-                        ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude &&
-                        siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly
-                        />
-                    </div>
-                    -->
-
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
+                        <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
                             <input class="form-control" type="text" name="unmarkedDiameter"
-                            ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
+                        ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
                             />
+                    </div>
+                    <div class="form-group">
+                        <label for="combinedFlowThroughAmount">Is there any flow through the pipe?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                            class="btn btn-primary"
+                            ng-repeat="flow in waterFlows"
+                            ng-class="{'active': (siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough === flow.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="howMuchFlowThrough"
+                                    id="{{ flow.value }}"
+                                    value="{{ flow.value }}"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
+                                >
+                                {{ flow.label }}
+                            </label>
                         </div>
                     </div>
-                    <div class="row">
+                </div>
+            </div>
+
+
+
+                    <!-- <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true,
                         'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
                             <label>Is there any flow through the pipe?</label>
@@ -638,9 +806,7 @@
                             ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
                             ></select>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </div> -->
         </section>
     </section>
 
