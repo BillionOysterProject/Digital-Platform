@@ -404,9 +404,19 @@
                     <div class="form-group">
                         <label for="waterColor">Describe the water color</label>
                         <br/>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-primary" ng-repeat="color in waterColors">
-                            <input type="radio" name="waterColor" id="{{ color.value }}" autocomplete="off">
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="color in waterColors"
+                                ng-class="{'active': (siteCondition.waterConditions.waterColor === color.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterColor"
+                                    id="{{ color.value }}"
+                                    value="{{ color.value }}"
+                                    ng-model="siteCondition.waterConditions.waterColor"
+                                >
                             {{ color.label }}
                             </label>
                         </div>
