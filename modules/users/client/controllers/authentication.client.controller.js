@@ -32,7 +32,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
           }
         }
 
-        response[k]._search = response[k].name + ' ' + response[k].name.replace(/[\s\W]+/g, '').toLowerCase();
+        response[k]._search = response[k].name + ' ' + vm.normalizeSearch(response[k].name);
         response[k]._search = response[k]._search.replace(/(ps|ms|is)(0+)(\d+)/, '$1$2$3 $1$3');
         response[k]._search = response[k]._search.replace(/(jhs)(0+)(\d+)/, '$1$2$3 $1$3 ms$3');
 
@@ -48,7 +48,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
 
     vm.normalizeSearch = function(q) {
       try {
-        return q.replace(/[\s\W]+/g, '').toLowerCase();
+        q = q.toLowerCase();
+        q = q.replace(/\s+and\s+/g, '');
+        q = q.replace(/[\s\W]+/g, '');
+
+        return q;
       } catch(e) {
         return q;
       }
@@ -188,7 +192,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$root
       vm.schoolOrgs = response;
     });
 
-    $http.get('https://platform-beta.bop.nyc/api/prospective-orgs/?limit=10000&fields=name,sync_id,type&sort=name').success(function(response) {
+    $http.get('https://platform-beta.bop.nyc/api/prospective-orgs/?limit=10000&fields=name,syncId,type&sort=name').success(function(response) {
       response = fuzzySearch(response);
       vm.prospectiveOrgs = response;
     });
