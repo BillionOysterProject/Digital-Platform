@@ -932,19 +932,19 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <input class="form-control" type="text" placeholder="Type of trash"
-                            ng-model="siteCondition.waterConditions.garbage.other.description" />
+                            ng-model="siteCondition.landConditions.garbage.other.description" />
                         </div>
                         <div class="col-sm-6">
                             <select class="form-control"
                             ng-options="extent.value as extent.label for extent in garbageExtent"
                             ng-model="siteCondition.landConditions.garbage.other.extent"
-                            ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
-                            siteCondition.waterConditions.garbage.other.description"></select>
+                            ng-required="siteCondition.landConditions.garbage.garbagePresent &&
+                            siteCondition.landConditions.garbage.other.description"></select>
                         </div>
                     </div>
                 </div>
             </div>
-
+<!--
             <div class="row">
                 <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                     <div class="row">
@@ -1021,6 +1021,7 @@
                     </div>
                 </div>
             </div>
+-->
 
             <div class="row">
                 <div class="col-md-4">
@@ -1069,7 +1070,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Take a photograph of the WATER with your camera,</label>
+                        <label>Take a photograph of the WATER with your camera.</label>
                         <single-image-drop-zone uploader="waterConditionUploader"
                         image-url="waterConditionPhotoURL" image-alt="Water Condition"
                         id="water-condition-image-dropzone"></single-image-drop-zone>
