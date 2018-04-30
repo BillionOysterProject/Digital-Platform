@@ -372,19 +372,6 @@
     <section class="content">
         <section class="container">
             <h6>Water Conditions</h6>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Take a photograph of the water with your camera</label>
-                        <single-image-drop-zone uploader="waterConditionUploader"
-                        image-url="waterConditionPhotoURL" image-alt="Water Condition"
-                        id="water-condition-image-dropzone"></single-image-drop-zone>
-                        <!--TODO <div ng-show="form.siteConditionForm.$invalid && form.siteConditionForm.$submitted &&
-                        !waterConditionPhotoURL">
-                        </div>-->
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-md-4">
@@ -813,17 +800,7 @@
     <section class="content shaded">
         <section class="container">
             <h6>Land Conditions</h6>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Take a photograph of the land with your camera</label>
-                        <single-image-drop-zone uploader="landConditionUploader"
-                        image-url="landConditionPhotoURL" image-alt="Land Condition"
-                        id="land-condition-image-dropzone"></single-image-drop-zone>
-                    </div>
-                </div>
-            </div>
-
+<!--
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -840,6 +817,130 @@
                     <div class="form-group">
                         <label>Is there any garbage on the adjacent shoreline?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.landConditions.garbage.garbagePresent" ></select>
+                    </div>
+                </div>
+            </div>
+-->
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Is there any garbage on the adjacent shoreline?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.landConditions.garbage.garbagePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.landConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.landConditions.garbage.garbagePresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row shaded" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-4">
+                    <p><strong>How much garbage is on the adjacent shoreline?</strong></p>
+                </div>
+            </div>
+
+            <div class="row shaded" ng-repeat="lg in landGarbageTypes" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label>{{ lg.name }}</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 0)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
+                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
+                                    ng-value="0"
+                                >
+                                None
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 1)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
+                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
+                                    ng-value="1"
+                                >
+                                Sporadic
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 2)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
+                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
+                                    ng-value="2"
+                                >
+                                Common
+                            </label>
+
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 3)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
+                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
+                                    ng-value="3"
+                                >
+                                Extensive
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row shaded" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="form-group col-sm-4">
+                    <label for="landOther">Other</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="Type of trash"
+                            ng-model="siteCondition.waterConditions.garbage.other.description" />
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.other.extent"
+                            ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
+                            siteCondition.waterConditions.garbage.other.description"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -963,6 +1064,33 @@
                     <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
             </div>
+
+            <h6>Photography</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Take a photograph of the WATER with your camera,</label>
+                        <single-image-drop-zone uploader="waterConditionUploader"
+                        image-url="waterConditionPhotoURL" image-alt="Water Condition"
+                        id="water-condition-image-dropzone"></single-image-drop-zone>
+                        <!--TODO <div ng-show="form.siteConditionForm.$invalid && form.siteConditionForm.$submitted &&
+                        !waterConditionPhotoURL">
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Take a photograph of the LAND with your camera.</label>
+                        <single-image-drop-zone uploader="landConditionUploader"
+                        image-url="landConditionPhotoURL" image-alt="Land Condition"
+                        id="land-condition-image-dropzone"></single-image-drop-zone>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </section>
 </form>
