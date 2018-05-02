@@ -48,6 +48,10 @@ module.exports.initLocalVariables = function (app) {
     app.locals.stagingEnv = true;
   }
 
+  if (process.env.NODE_ENV === 'production') {
+    app.locals.productionEnv = true;
+  }
+
   // Passing the request url to environment locals
   app.use(function (req, res, next) {
     res.locals.host = req.protocol + '://' + req.hostname;

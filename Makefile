@@ -1,4 +1,5 @@
 .PHONY: docker install run
+NODE_ENV := development-local
 
 docker:
 	docker run \
@@ -6,7 +7,7 @@ docker:
 	  --interactive \
 	  --tty \
 	  --publish 8081:8081 \
-	  --env NODE_ENV=development-local \
+	  --env NODE_ENV=$(NODE_ENV) \
 	  --env MONGOLAB_URI=$(MONGOLAB_URI) \
 	  --volume $(PWD)/run/node-gyp:/root/.node-gyp \
 	  --volume $(PWD)/run/npm:/root/.npm \
