@@ -73,6 +73,7 @@
     "passport-twitter": "~1.0.4",
     "phantomjs": "~1.9.19",
     "query-string": "^4.3.4",
+    "raven": "^2.6.0",
     "request": "^2.69.0",
     "s3": "^4.4.0",
     "serve-favicon": "~2.3.0",

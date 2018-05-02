@@ -147,7 +147,11 @@
 
         if ($scope.currentUser) {
           var leadIndex = lodash.findIndex(allTeamLeads, function(l) {
-            return l.username === $scope.currentUser.username;
+            try {
+              return l.username === $scope.currentUser.username;
+            } catch (e) {
+              return -1;
+            }
           });
           return (leadIndex > -1) ? true : false;
         } else {
