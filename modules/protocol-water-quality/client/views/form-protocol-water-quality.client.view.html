@@ -3,6 +3,12 @@
         <section class="content">
             <section class="container">
                 <h2 id="protocol-5-form">Protocol 5 <small>Water Quality</small></h2>
+                <ul>
+                    <li>To publish this protocol, the only required data is "Water Temperature." Everything else is optional!</li>
+                    <li>For reference, check out pages
+                    59-68 in the
+                    <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+                </ul>
                 <hr />
                 <div class="alert alert-danger" ng-show="waterQualityErrors">
                 <h4>We're still missing some information.</h4>
@@ -56,7 +62,7 @@
                       <p class="lead blue">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
                     </div>
                     <div class="col-md-6">
-                      <p>Using a bucket suspended from a rope, collect a sample of water from the area where your ORS is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first.  Water temperature is the only required parameter- try to collect as much other data as possible! 
+                      <p>Using a bucket suspended from a rope, collect a sample of water from the area where your ORS is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first.  Water temperature is the only required parameter- try to collect as much other data as possible!
                         If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.
                         </p>
                     </div>
@@ -71,9 +77,9 @@
                     <div class="form-group col-md-6 shaded">
                         <h6>Water Quality Parameters</h6>
                         <label for="depthOfWaterSample" class="required">Depth of Water Sample (m)</label>
-                        <input type="number" class="form-control" name="depthOfWaterSample"/> 
+                        <input type="number" class="form-control" name="depthOfWaterSample"/>
                         <!--TODO decide on this bit of code: ng-model="sample.depthOfWaterSampleM" required-->
-                            
+
                         <span class="help-block">Type 0 if at surface</span>
                     </div>
                     <!--
@@ -409,7 +415,7 @@
                     </div>
                 </div>
                 <hr/>
-                
+
                 <a class="btn btn-default" ng-show="$last" ng-click="addSampleForm()">Add a new sample</a>
                 <a class="btn btn-danger" ng-show="waterQuality.samples.length > 1" ng-click="removeSampleForm($index)">Remove sample</a>
 

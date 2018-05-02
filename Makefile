@@ -21,3 +21,6 @@ install:
 
 run:
 	make docker CMD='node server.js'
+
+test:
+	make docker CMD='./node_modules/grunt-cli/bin/grunt eslint:target'

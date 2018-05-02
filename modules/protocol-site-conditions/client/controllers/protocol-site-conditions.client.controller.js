@@ -101,7 +101,7 @@
       id: 'organic',
     }];
 
-        $scope.landGarbageTypes = [{
+    $scope.landGarbageTypes = [{
       name: 'Hard Plastic',
       id: 'hardPlastic',
     }, {
