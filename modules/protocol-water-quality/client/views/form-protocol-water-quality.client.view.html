@@ -1,112 +1,128 @@
 <form name="form.waterQualityForm" ng-submit="save(form.waterQualityForm.$valid)" novalidate ng-cloak>
-    <section>
-        <section class="content">
-            <section class="container">
-                <h2 id="protocol-5-form">Protocol 5 <small>Water Quality</small></h2>
-                <ul>
-                    <li>To publish this protocol, the only required data is "Water Temperature." Everything else is optional!</li>
-                    <li>For reference, check out pages
-                    59-68 in the
-                    <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+    <section class="content">
+        <section class="container">
+            <h2 id="protocol-5-form">Protocol 5 <small>Water Quality</small></h2>
+            <ul>
+                <li>To publish this protocol, the only required data is "Water Temperature." Everything else is optional!</li>
+                <li>To submit multiple water samples, click "Add a new sample" at the bottom of the form.</li>
+                <li>To submit water quality parameters that aren't listed, use the "Other" option at the bottom of the form.
+                    (You can submit more than one type of unlisted water quality parameter by adding a new water sample).
+                </li>
+                <li>For reference, check out pages
+                59-68 in the
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+            </ul>
+            <hr />
+            <div class="alert alert-danger" ng-show="waterQualityErrors">
+            <h4>We're still missing some information.</h4>
+                <ul class="list-unstyled" ng-repeat="error in waterQualityErrors">
+                    <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
                 </ul>
-                <hr />
-                <div class="alert alert-danger" ng-show="waterQualityErrors">
-                <h4>We're still missing some information.</h4>
-                    <ul class="list-unstyled" ng-repeat="error in waterQualityErrors">
-                        <li><i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}</li>
-                    </ul>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="collectionTime">Date and time of data collection</label>
-                            <input type="datetime-local" class="form-control" name="collectionTime"
-                            placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
-                            ng-model="waterQuality.collectionTime" />
-                            <div ng-show="form.waterQualityForm.collectionTime.$error.min">
-                                <p class="red">Collection time must not be more than a year in the past.</p>
-                            </div>
-                            <div ng-show="form.waterQualityForm.collectionTime.$error.max">
-                                <p class="red">Collection time must not be more than a year in the future.</p>
-                            </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="collectionTime">Date and time of data collection</label>
+                        <input type="datetime-local" class="form-control" name="collectionTime"
+                        placeholder="yyyy-MM-ddTHH:mm:ss" min="{{dateTime.min}}" max="{{dateTime.max}}"
+                        ng-model="waterQuality.collectionTime" />
+                        <div ng-show="form.waterQualityForm.collectionTime.$error.min">
+                            <p class="red">Collection time must not be more than a year in the past.</p>
                         </div>
-                        <!--
-                        <div class="form-group">
-                            <a class="btn btn-default btn-block" data-toggle="modal"
-                            data-target="#modal-water-quality-map">Mark location on map</a>
-                            <input class="form-control" type="text" value="{{waterQuality.latitude}}, {{waterQuality.longitude}}"
-                            data-toggle="modal" data-target="#modal-water-quality-map"
-                            ng-show="waterQuality.latitude && waterQuality.longitude" readonly/>
-                        </div>
-                    -->
-                        <div class="form-group">
-                            <select-tags outer-column="" name="teamMembers"
-                            in-title="Names of team members" ng-model="waterQuality.teamMembers"
-                            label-class="control-label" select-config="teamMemberSelectConfig"></select-tags>
+                        <div ng-show="form.waterQualityForm.collectionTime.$error.max">
+                            <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Notes or other observations</label>
-                            <textarea class="form-control" rows="7" ng-model="waterQuality.notes" ></textarea>
-                        </div>
+                    <!--
+                    <div class="form-group">
+                        <a class="btn btn-default btn-block" data-toggle="modal"
+                        data-target="#modal-water-quality-map">Mark location on map</a>
+                        <input class="form-control" type="text" value="{{waterQuality.latitude}}, {{waterQuality.longitude}}"
+                        data-toggle="modal" data-target="#modal-water-quality-map"
+                        ng-show="waterQuality.latitude && waterQuality.longitude" readonly/>
+                    </div>
+                -->
+                    <div class="form-group">
+                        <select-tags outer-column="" name="teamMembers"
+                        in-title="Names of team members" ng-model="waterQuality.teamMembers"
+                        label-class="control-label" select-config="teamMemberSelectConfig"></select-tags>
                     </div>
                 </div>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Notes or other observations</label>
+                        <textarea class="form-control" rows="7" ng-model="waterQuality.notes" ></textarea>
+                    </div>
+                </div>
+            </div>
         </section>
     </section>
-   <!--
-    <section class="content shaded">
-        <section class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                      <p class="lead blue">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
-                    </div>
-                    <div class="col-md-6">
-                      <p>Using a bucket suspended from a rope, collect a sample of water from the area where your ORS is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first.  Water temperature is the only required parameter- try to collect as much other data as possible!
-                        If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.
-                        </p>
-                    </div>
+<!--
+<section class="content shaded">
+    <section class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="lead blue">Your group is responsible for collecting water quality samples and measuring water quality parameters.</p>
                 </div>
-            </section>
+                <div class="col-md-6">
+                    <p>Using a bucket suspended from a rope, collect a sample of water from the area where your ORS is suspended. The same water sample should be used for all tests/all parameters in the set below. Always complete the temperature and Dissolved Oxygen tests first.  Water temperature is the only required parameter- try to collect as much other data as possible!
+                    If you are using a Van Dorn bottle to collect samples from lower depths, repeat all tests below for each additional sample. If you are collecting samples from different locations, repeat all tests for each additional sample.
+                    </p>
+                </div>
+            </div>
         </section>
+    </section>
+-->
+    <div ng-repeat="sample in waterQuality.samples">
+    <!--
+    <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content'" ng-class-even="'content shaded'">
     -->
-        <div ng-repeat="sample in waterQuality.samples" ng-class-odd="'content'" ng-class-even="'content shaded'">
+        <section class="content">
             <div class="container">
-                <h3>Water Sample</h3>
+                <h3>Water Sample {{ $index+1 }} </h3>
+            </div>
+        </section>
+
+        <section class="content shaded">
+            <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-6 shaded">
-                        <h6>Water Quality Parameters</h6>
+                    <div class="form-group col-md-6">
+                        <!--<h6>Water Quality Parameters</h6>-->
                         <label for="depthOfWaterSample" class="required">Depth of Water Sample (m)</label>
                         <input type="number" class="form-control" name="depthOfWaterSample"/>
                         <!--TODO decide on this bit of code: ng-model="sample.depthOfWaterSampleM" required-->
 
                         <span class="help-block">Type 0 if at surface</span>
                     </div>
-                    <!--
-                    <div class="form-group col-md-6">
-                        <label>Where was the water sample taken?</label>
-                        <span class="help-block">Mark the coordinates on the map</span>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}"
-                                data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-click="openMap()"
-                                ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
-                                <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly
-                                ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"
-                                ng-click="openMap()"/>
-                            </div>
-                            <div class="col-sm-6">
-                                <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}"
-                                ng-click="openMap()">Mark the location on a map</a>
-                            </div>
-                            <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
-                              can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
-                              longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
-                        </div>
-                    </div>
-                -->
                 </div>
-                <hr/>
+            </div>
+            <!--
+            <div class="form-group col-md-6">
+                <label>Where was the water sample taken?</label>
+                <span class="help-block">Mark the coordinates on the map</span>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input class="form-control" type="text" value="{{sample.locationOfWaterSample.latitude}}, {{sample.locationOfWaterSample.longitude}}"
+                        data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly ng-click="openMap()"
+                        ng-show="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"/>
+                        <input class="form-control" type="text" data-toggle="modal" data-target="#modal-map-sample{{$index}}" readonly
+                        ng-hide="sample.locationOfWaterSample.latitude && sample.locationOfWaterSample.longitude"
+                        ng-click="openMap()"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-sample{{$index}}"
+                        ng-click="openMap()">Mark the location on a map</a>
+                    </div>
+                    <map-select modal-id="modal-map-sample{{$index}}" can-geocode="true" can-click-map-to-add-marker="true"
+                        can-move-marker="true" show-marker="true" latitude="sample.locationOfWaterSample.latitude"
+                        longitude="sample.locationOfWaterSample.longitude" dismiss-function="closeMap"></map-select>
+                </div>
+            </div>
+        -->
+        </section>
+
+        <section class="content">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <h4>Water Temperature *</h4>
@@ -144,7 +160,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content shaded">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12 shaded">
                         <h4>Dissolved Oxygen</h4>
@@ -182,7 +202,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <h4>Salinity</h4>
@@ -220,7 +244,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content shaded">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12 shaded">
                         <h4>pH</h4>
@@ -258,7 +286,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <h4>Turbidity</h4>
@@ -296,7 +328,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content shaded">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12 shaded">
                         <h4>Ammonia</h4>
@@ -334,7 +370,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <h4>Nitrates</h4>
@@ -372,7 +412,11 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
+
+        <section class="content shaded">
+            <div class="container">
                 <div class="row" ng-repeat="other in sample.others">
                     <div class="col-md-12 shaded">
                         <h4>Other</h4>
@@ -414,14 +458,17 @@
                         </div>
                     </div>
                 </div>
-                <hr/>
+            </div>
+        </section>
 
+        <section class="content shaded">
+            <div class="container">
                 <a class="btn btn-default" ng-show="$last" ng-click="addSampleForm()">Add a new sample</a>
                 <a class="btn btn-danger" ng-show="waterQuality.samples.length > 1" ng-click="removeSampleForm($index)">Remove sample</a>
-
+                <hr/>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </form>
 
 
