@@ -153,17 +153,15 @@ var initGlobalConfigFiles = function (config, assets) {
   config.files.server.policies = getGlobbedPaths(assets.server.policies);
 
   // Setting Globbed js files (early load)
-  config.files.client.earlyJs = [
-    'lib/jquery/dist/jquery.js',
-    'lib/angular/angular.min.js',
-    'lib/bootstrap/dist/js/bootstrap.js',
+  config.files.client.lateJs = [
+    'dist/application.min.js',
   ];
 
   // Setting Globbed js files
   config.files.client.js = getGlobbedPaths(assets.client.lib.js, 'public/').concat(
     getGlobbedPaths(assets.client.js, ['public/'])
   ).filter(function(v){
-    return config.files.client.earlyJs.indexOf(v) < 0;
+    return config.files.client.lateJs.indexOf(v) < 0;
   });
 
   // Setting Globbed css files

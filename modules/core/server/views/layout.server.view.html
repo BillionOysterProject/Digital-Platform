@@ -69,20 +69,23 @@
     ga('send', 'pageview');
   </script>
 
-  <!--Application JavaScript Files (Early Load) -->
-  {%- for jsFile in jsFilesEarly %}
-  <script type="text/javascript" src="{{jsFile}}"></script>
-  {%- endfor %}
-  {% if productionEnv %}
-  <!-- Raven/Sentry reporting -->
-  <script src="https://cdn.ravenjs.com/3.24.2/angular/raven.min.js" crossorigin="anonymous"></script>
-  <script>Raven.config('https://62e9ab37cfb84e138d855dd05e7b4a50@sentry.io/1200033').install();</script>
-  {%- endif %}
-
   <!-- Application JavaScript Files -->
   {%- for jsFile in jsFiles %}
   <script type="text/javascript" src="{{jsFile}}"></script>
   {%- endfor %}
+
+  {% if productionEnv %}
+  <!-- Raven/Sentry reporting
+  <script src="https://cdn.ravenjs.com/3.24.2/angular/raven.min.js" crossorigin="anonymous"></script>
+  <script>Raven.config('https://62e9ab37cfb84e138d855dd05e7b4a50@sentry.io/1200033').install();</script>
+  -->
+  {%- endif %}
+
+  <!--Application JavaScript Files (Early Load) -->
+  {%- for jsFile in jsFilesLate %}
+  <script type="text/javascript" src="{{jsFile}}"></script>
+  {%- endfor %}
+
   {% if livereload %}
   <!--Livereload script rendered -->
   <script type="text/javascript" src="{{host}}:35729/livereload.js"></script>
