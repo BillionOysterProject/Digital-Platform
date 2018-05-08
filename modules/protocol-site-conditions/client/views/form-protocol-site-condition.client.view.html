@@ -470,6 +470,7 @@
                 </div>
             </div>
             -->
+            <hr/>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -566,6 +567,7 @@
                 </div>
             </div>
 
+            <hr/>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -822,13 +824,13 @@
                 </div>
             </div>
 
-            <div class="row shaded" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+            <div class="row" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                 <div class="col-md-4">
                     <p><strong>How much garbage is on the adjacent shoreline?</strong></p>
                 </div>
             </div>
 
-            <div class="row shaded" ng-repeat="lg in landGarbageTypes track by $index" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+            <div class="row" ng-repeat="lg in landGarbageTypes track by $index" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                 <div class="col-md-12">
 
                     <div class="form-group">
@@ -853,7 +855,7 @@
                 </div>
             </div>
 
-            <div class="row shaded" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+            <div class="row" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                 <div class="form-group col-sm-4">
                     <label for="landOther">Other</label>
                     <div class="row">
@@ -949,7 +951,7 @@
                 </div>
             </div>
 -->
-
+            <hr/>
             <div class="row">
                 <div class="col-md-4">
                     <p><strong>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</strong></p>
