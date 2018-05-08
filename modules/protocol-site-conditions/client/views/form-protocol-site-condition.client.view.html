@@ -522,7 +522,7 @@
                 </div>
             </div>
 
-            <div class="row shaded" ng-repeat="wg in waterGarbageTypes" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+            <div class="row shaded" ng-repeat="wg in waterGarbageTypes track by $index" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
                 <div class="col-md-12">
 
                     <div class="form-group">
@@ -531,54 +531,16 @@
                         <div class ="btn-group btn-group-toggle">
                             <label
                                 class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 0)}"
+                                ng-repeat="extent in garbageExtent"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == extent.value)}"
                             >
                                 <input
                                     type="radio"
                                     name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
                                     ng-model="siteCondition.waterConditions.garbage[wg.id]"
-                                    ng-value="0"
+                                    value="{{ extent.value }}"
                                 >
-                                None
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 1)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
-                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
-                                    ng-value="1"
-                                >
-                                Sporadic
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 2)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
-                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
-                                    ng-value="2"
-                                >
-                                Common
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == 3)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
-                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
-                                    ng-value="3"
-                                >
-                                Extensive
+                                {{ extent.label }}
                             </label>
                         </div>
                     </div>
@@ -866,7 +828,7 @@
                 </div>
             </div>
 
-            <div class="row shaded" ng-repeat="lg in landGarbageTypes" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+            <div class="row shaded" ng-repeat="lg in landGarbageTypes track by $index" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
                 <div class="col-md-12">
 
                     <div class="form-group">
@@ -875,54 +837,16 @@
                         <div class ="btn-group btn-group-toggle">
                             <label
                                 class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 0)}"
+                                ng-repeat="extent in garbageExtent"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == extent.value )}"
                             >
                                 <input
                                     type="radio"
                                     name="landConditions.garbage.garbagePresent.{{ lg.id }}"
                                     ng-model="siteCondition.landConditions.garbage[lg.id]"
-                                    ng-value="0"
+                                    value="{{ extent.value }}"
                                 >
-                                None
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 1)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
-                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
-                                    ng-value="1"
-                                >
-                                Sporadic
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 2)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
-                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
-                                    ng-value="2"
-                                >
-                                Common
-                            </label>
-
-                            <label
-                                class="btn btn-primary"
-                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == 3)}"
-                            >
-                                <input
-                                    type="radio"
-                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
-                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
-                                    ng-value="3"
-                                >
-                                Extensive
+                                {{ extent.label }}
                             </label>
                         </div>
                     </div>
