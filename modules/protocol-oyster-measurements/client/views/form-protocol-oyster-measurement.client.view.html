@@ -47,14 +47,41 @@
     <section class="content shaded">
         <section class="container">
             <div class="row">
+                <h6>Condition of oyster cage</h6>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="bioaccumulation">Bioaccumulation on cage</label>
+                        <br/>
+                        <div class="custom-control custom-radio" ng-repeat="bioaccumulation in bioaccumulations">
+                            <input
+                                class="custom-control-input"
+                                type="radio"
+                                name="bioaccumulation"
+                                id="{{ bioaccumulation.value }}"
+                                value="{{ bioaccumulation.value }}"
+                                ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"
+                            >
+                            <label
+                                class="custom-control-label"
+                                style="font-weight: normal !important"
+                                ng-class="{'active': (oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === bioaccumulation.value) }"
+                            >
+
+                            {{ bioaccumulation.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
-                    <h6>Condition of oyster cage</h6>
+<!--
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label">Bioaccumulation on cage</label>
                         <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation"></select>
                     </div>
                     <div class="form-group">
-                        <!--
+
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
                         -->
