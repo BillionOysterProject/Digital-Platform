@@ -245,7 +245,10 @@
         })
         .error(function (data, status, headers, config) {
           $scope.form.siteConditionForm.$setSubmitted(true);
-          errorCallback(data.message);
+
+          if (data) {
+            errorCallback(data.message);
+          }
         });
       }
 
@@ -278,7 +281,10 @@
         })
         .error(function (data, status, headers, config) {
           $scope.form.siteConditionForm.$setSubmitted(true);
-          errorCallback(data.message);
+
+          if (data) {
+            errorCallback(data.message);
+          }
         });
       }
 
