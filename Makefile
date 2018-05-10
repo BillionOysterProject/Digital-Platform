@@ -1,6 +1,8 @@
 .PHONY: docker install run
 NODE_ENV := development-local
 
+all: install
+
 docker:
 	docker run \
 	  --rm \
