@@ -162,7 +162,7 @@
     $scope.saveSubstrateForm = function(substrate, index, isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form.substrateForm');
-        console.error('DEBUG: substrate form was not valid', substrate, index)
+        console.error('DEBUG: substrate form was not valid', substrate, index);
         return false;
       } else {
         angular.element('#modal-substrateshell'+index).modal('hide');
