@@ -1,6 +1,8 @@
 .PHONY: docker install run
 NODE_ENV := development-local
 
+all: install
+
 docker:
 	docker run \
 	  --rm \
@@ -22,3 +24,6 @@ install:
 
 run:
 	make docker CMD='node server.js'
+
+test:
+	make docker CMD='./node_modules/grunt-cli/bin/grunt eslint:target jshint:all'

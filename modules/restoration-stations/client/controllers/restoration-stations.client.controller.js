@@ -293,6 +293,5 @@
       $scope.station.latitude = coords.lat;
       $scope.station.longitude = coords.lng;
     }
-
   }
 })();

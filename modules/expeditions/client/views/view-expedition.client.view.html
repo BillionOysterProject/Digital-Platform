@@ -83,7 +83,7 @@
                 ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.siteCondition.status === 'incomplete' ||
                 vm.expedition.protocols.siteCondition.status === 'returned') &&
                 vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition))))">
-                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
+                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Conditions</h4></td>
                   <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
                   <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}"
                     isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
@@ -96,7 +96,7 @@
                 (vm.isTeamMember && (vm.expedition.protocols.siteCondition.status === 'submitted' ||
                 vm.expedition.protocols.siteCondition.status === 'published') &&
                 !vm.checkWrite(vm.expedition.teamLists.siteCondition, vm.expedition.protocols.siteCondition))))" class="nohover">
-                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Condition</h4></td>
+                  <td><h6>Protocol 1</h6><br/><h4 class="blue">Site Conditions</h4></td>
                   <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.siteCondition"></view-protocol-team-list-summary></td>
                   <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.siteCondition.status}}"></view-protocol-status></td>
               </tr>
@@ -130,7 +130,7 @@
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.mobileTrap.status === 'incomplete' ||
                   vm.expedition.protocols.mobileTrap.status === 'returned') &&
                   vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap))))">
-                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
+                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Organisms</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
                 </tr>
@@ -142,7 +142,7 @@
                   (vm.isTeamMember && (vm.expedition.protocols.mobileTrap.status === 'submitted' ||
                   vm.expedition.protocols.mobileTrap.status === 'published') &&
                   !vm.checkWrite(vm.expedition.teamLists.mobileTrap, vm.expedition.protocols.mobileTrap))))" class="nohover">
-                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Trap</h4></td>
+                    <td><h6>Protocol 3</h6><br/><h4 class="blue">Mobile Organisms</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.mobileTrap"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status  isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}" status="{{vm.expedition.protocols.mobileTrap.status}}"></view-protocol-status></td>
                 </tr>
@@ -153,7 +153,7 @@
                   ((vm.isTeamLead || vm.isTeamMember) && (vm.expedition.protocols.settlementTiles.status === 'incomplete' ||
                   vm.expedition.protocols.settlementTiles.status === 'returned') &&
                   vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles))))">
-                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
+                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Sessile Organisms</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
                 </tr>
@@ -165,7 +165,7 @@
                   (vm.isTeamMember && (vm.expedition.protocols.settlementTiles.status === 'submitted' ||
                   vm.expedition.protocols.settlementTiles.status === 'published') &&
                   !vm.checkWrite(vm.expedition.teamLists.settlementTiles, vm.expedition.protocols.settlementTiles))))" class="nohover">
-                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Settlement Tiles</h4></td>
+                    <td><h6>Protocol 4</h6><br/><h4 class="blue">Sessile Organisms</h4></td>
                     <td><td><view-protocol-team-list-summary team="vm.expedition.teamLists.settlementTiles"></view-protocol-team-list-summary></td>
                     <td class="text-right"><view-protocol-status isTeamLead="{{vm.isTeamLead}}" isTeamMember="{{vm.isTeamMember}}" isAdmin="{{vm.isAdmin}}"  status="{{vm.expedition.protocols.settlementTiles.status}}"></view-protocol-status></td>
                 </tr>
@@ -211,11 +211,11 @@
             </li>
             <li role="presentation" ng-class="{'active': vm.active === 'mobileTrap'}" ng-if="vm.expedition.protocols.mobileTrap">
               <a href="#protocol3" data-toggle="tab" aria-controls="protocol3" role="tab">
-              <span class="hidden-xs">Protocol </span>3<span class="hidden-xs">:<br/>Mobile Trap</span></a>
+              <span class="hidden-xs">Protocol </span>3<span class="hidden-xs">:<br/>Mobile Organisms</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.active === 'settlementTiles'}" ng-if="vm.expedition.protocols.settlementTiles">
               <a href="#protocol4" data-toggle="tab" aria-controls="protocol4" role="tab">
-              <span class="hidden-xs">Protocol </span>4<span class="hidden-xs">:<br/>Settlement Tiles</span></a>
+              <span class="hidden-xs">Protocol </span>4<span class="hidden-xs">:<br/>Sessile Organisms</span></a>
             </li>
             <li role="presentation" ng-class="{'active': vm.active === 'waterQuality'}" ng-if="vm.expedition.protocols.waterQuality">
               <a href="#protocol5" data-toggle="tab" aria-controls="protocol5" role="tab">

@@ -2,7 +2,13 @@
   <section>
     <section class="content">
         <section class="container">
-            <h2 id="protocol-4-form">Protocol 4 <small>Settlement Tiles</small></h2>
+            <h2 id="protocol-4-form">Protocol 4 <small>Sessile Organisms</small></h2>
+            <ul>
+                <li>To publish this protocol, you must photograph at least ONE settlement tile. Everything else is optional!</li>
+                <li>For reference, check out pages
+                53-57 in the
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+            </ul>
             <hr />
             <div class="alert alert-danger" ng-show="settlementTilesErrors">
                 <h4>We're still missing some information.</h4>
@@ -24,6 +30,7 @@
                             <p class="red">Collection time must not be more than a year in the future.</p>
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-settlement-tile-map"
                         ng-click="openMap()">Mark location on map</a>
@@ -32,6 +39,7 @@
                         ng-show="settlementTiles.latitude && settlementTiles.longitude"
                          readonly/>
                     </div>
+                -->
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="settlementTiles.teamMembers"
@@ -47,6 +55,7 @@
             </div>
         </section>
     </section>
+    <!--
     <section class="content shaded">
         <section class="container">
             <div class="row">
@@ -60,6 +69,7 @@
             </div>
         </section>
     </section>
+-->
     <section class="content shaded">
         <section class="container">
             <div class="row">

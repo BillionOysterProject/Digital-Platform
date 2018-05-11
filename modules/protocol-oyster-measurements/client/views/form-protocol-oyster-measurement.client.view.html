@@ -2,6 +2,12 @@
     <section class="content">
         <section class="container">
             <h2 id="protocol-2-form">Protocol 2 <small>Oyster Measurements</small></h2>
+            <ul>
+                <li>To publish this protocol <strong>the first time you enter data</strong>, you'll need to enter a set of baselines for each of the 10 tagged substrate shells. You can find much of the baseline information on the tag of each substrate shell.</li>
+                <li>To publish this protocol <strong>every time after</strong>, you'll only need to count the # of live oysters and measure the length of each live oyster for AT LEAST ONE substrate shell.</li>
+                <li>For reference, check out the updated
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Oyster Measurement Protocol</a>.</li>
+            </ul>
             <hr />
             <div class="alert alert-danger" ng-show="oysterMeasurementErrors" ng-cloak>
                 <h4>We're still missing some information.</h4>
@@ -24,14 +30,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-oyster-measurement-map"
-                        ng-click="openMap()">Mark location on map</a>
-                        <input class="form-control" type="text" value="{{oysterMeasurement.latitude}}, {{oysterMeasurement.longitude}}"
-                        data-toggle="modal" data-target="#modal-oyster-measurement-map" ng-click="openMap()"
-                        ng-show="oysterMeasurement.latitude && oysterMeasurement.longitude"
-                         readonly/>
-                    </div>
-                    <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="oysterMeasurement.teamMembers"
                         label-class="control-label" select-config="teamMemberSelectConfig" ></select-tags>
@@ -49,37 +47,54 @@
     <section class="content shaded">
         <section class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <p class="lead blue">Your group is responsible for measuring growth and recording mortality of oysters in the main oyster cage.</p>
-                    <h6>Depth of oyster cage</h6>
+                <h6>Condition of oyster cage</h6>
+                <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="submergedDepth" class="control-label">Submerged depth of cage (meters)</label>
-                        <input type="number" class="form-control" min="0" name="submergedDepth" id="submergedDepth" ng-model="oysterMeasurement.depthOfOysterCage.submergedDepthofCageM" on-blur="saveOnBlur()"/>
-                        <span class="help-block">Method: Record length of wet line from surface to cage.</span>
+                        <label for="bioaccumulation">Bioaccumulation on cage</label>
+                        <br/>
+                        <div class="custom-control custom-radio" ng-repeat="bioaccumulation in bioaccumulations track by $index">
+                            <input
+                                class="custom-control-input"
+                                type="radio"
+                                name="bioaccumulation"
+                                id="{{ bioaccumulation.value }}"
+                                value="{{ bioaccumulation.value }}"
+                                ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"
+                            >
+                            <label
+                                class="custom-control-label w-100"
+                                for="{{ bioaccumulation.value }}"
+                                style="font-weight: normal !important"
+                                ng-class="{'active': (oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === bioaccumulation.value) }"
+                            >
+
+                            {{ bioaccumulation.label }}
+                            </label>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
-                    <h6>Condition of oyster cage</h6>
-                    <div class="form-group">
-                        <label>Take a photograph of the oyster cage.</label>
-                        <single-image-drop-zone uploader="cageConditionUploader" image-url="cageConditionPhotoURL"
-                        image-alt="Oyster Cage Condition" id="oyster-cage-condition-image-dropzone"></single-image-drop-zone>
-                    </div>
+<!--
                     <div class="form-group">
                         <label for="bioaccumulation" class="control-label">Bioaccumulation on cage</label>
                         <select class="form-control" ng-options="bioaccumulation.value as bioaccumulation.label for bioaccumulation in bioaccumulations" ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"  name="bioaccumulation" id="bioaccumulation"></select>
                     </div>
                     <div class="form-group">
+
                         <label for="damage" class="control-label">Describe any damage to the cage</label>
                         <textarea class="form-control" ng-model="oysterMeasurement.conditionOfOysterCage.notesOnDamageToCage" name="damage" id="damage"></textarea>
+                        -->
                         <span class="help-block">Was the cage lost, destroyed or significantly damaged? <a class="btn btn-sm btn-danger pull-right" ng-click="openORSStatusForm()">Submit status update</a></span>
                     </div>
-
                 </div>
             </div>
         </section>
     </section>
-    <section class="content shaded">
+
+    <!--
+    <section class="content">
         <section class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -90,8 +105,12 @@
             </div>
         </section>
     </section>
+    -->
+
+
     <section class="content">
         <section class="container">
+            <h6>Oyster Measurements</h6>
             <table class="table"><!-- TODO: Each opens its own modal. Once info is entered in the modal, min/max/avg/alive is calculated and displayed here -->
                 <tr ng-repeat="substrate in oysterMeasurement.measuringOysterGrowth.substrateShells"
                 ng-class="{red: form.oysterMeasurementForm.$submitted && !substratesValid &&

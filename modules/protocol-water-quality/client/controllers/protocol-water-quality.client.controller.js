@@ -203,7 +203,10 @@
         })
         .error(function (data, status, headers, config) {
           $scope.form.waterQualityForm.$setSubmitted(true);
-          errorCallback(data.message);
+
+          if (data) {
+            errorCallback(data.message);
+          }
         });
 
       function successCallback() {

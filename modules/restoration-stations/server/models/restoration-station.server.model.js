@@ -44,23 +44,23 @@ var RestorationStationSchema = new Schema({
   },
   latitude: {
     type: Number,
-    required: true
+    // required: true // moved to Sites
   },
   longitude: {
     type: Number,
-    required: true
+    // required: true // moved to Sites
   },
   bodyOfWater: {
     type: String,
-    required: true
+    // required: true // moved to Sites
   },
   boroughCounty: {
     type: String,
-    //required: true
+    // required: true // moved to Sites
   },
   shoreLineType: {
     type: String,
-    //required: true
+    // required: true // moved to Sites
   },
   status: {
     type: String,
@@ -84,6 +84,10 @@ var RestorationStationSchema = new Schema({
   }],
   notes: {
     type: String
+  },
+  siteId: {
+    type: Schema.Types.ObjectId,
+    required: true,
   },
   tagNumber: {
     type: String

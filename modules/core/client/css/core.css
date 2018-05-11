@@ -15,7 +15,7 @@ body {
 
 .content { padding: 15px 15px 15px 95px; }
 .content-unpadded { padding-bottom: 0; }
-.content-fixed { position: fixed; z-index: 1; width: 100% }
+.content-fixed { position: fixed; z-index: 10; width: 100% }
 .content-flush { padding: 0 0 0 80px; }
 /*.content-fixed { position: fixed; z-index: 1; }*/
 
@@ -865,6 +865,70 @@ blockquote {
         color: #aaa;
     }
 
+.btn-group-toggle .btn {
+  background: white;
+  border: 1px solid #888;
+  color: black;
+  z-index: inherit !important;
+}
+
+.btn-group-toggle .btn.active {
+   background-color: #426ca9;
+   border-color: black !important;
+   color: white;
+}
+
+.btn-group-toggle .btn:active {
+   background-color: #2c3c56;
+   color: white;
+}
+
+.radio-slider-control {
+    border: 1px solid #2c3c56;
+    padding: 2em;
+}
+
+.radio-slider {
+    margin: 1em 0;
+}
+
+.radio-slider .slider-button {
+    text-align: center;
+    position: relative;
+}
+
+.radio-slider .slider-button .connector {
+    position: absolute;
+    top: calc(50% - 4px);
+    left: -50%;
+    right: 50%;
+    height: 9px;
+    background-color: #CCCCCC;
+    display: block;
+    z-index: 0;
+}
+
+.radio-slider .slider-button button {
+    position: absolute;
+    top: calc(50% - 8px);
+    width: 17px;
+    height: 19px;
+    background-color: #CCCCCC;
+    border: 0px solid transparent;
+    border-radius: 8.5px;
+    z-index: 1;
+    padding: 0;
+}
+
+.radio-slider .slider-button.active button,
+.radio-slider .slider-button.active .connector {
+    background-color: #426CA9;
+}
+
+.radio-slider .slider-button:after {
+    content: ' ';
+    white-space: pre;
+}
 
 /* SELECT2 PLUGIN */
 
@@ -1226,7 +1290,6 @@ li.loading-dialog {
     margin-right: 30px;
 }
 
-
 .ui-select-toggle.form-control {
     display: block;
     width: 100%;
@@ -1244,4 +1307,19 @@ li.loading-dialog {
     -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.custom-radio .custom-control-label {
+    font-weight:     normal;
+    padding:         0 0.5em;
+    border-radius:   0.25em;
+}
+
+.custom-radio:hover .custom-control-label {
+    background:      #EEE;
+}
+
+.custom-radio .custom-control-label > span {
+    display:         inline-block;
+    width:           7em;
+    font-weight:     700;
 }

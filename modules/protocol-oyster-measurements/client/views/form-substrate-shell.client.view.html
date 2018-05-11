@@ -27,43 +27,13 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active" id="substrate-photos"><a href="#substrateshell-photos{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Photos</a></li>
-                                <li role="presentation" id="substrate-meta"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Baseline</a></li>
+                                <li role="presentation" class="active" id="substrate-meta"><a href="#substrateshell-meta{{index}}" data-toggle="tab" aria-controls="link" role="tab">Baseline</a></li>
                                 <li role="presentation" id="substrate-measurements"><a href="#substrateshell-measurements{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Measurements</a></li>
+                                <li role="presentation"  id="substrate-photos"><a href="#substrateshell-photos{{index}}" data-toggle="tab" aria-controls="upload" role="tab">Photos</a></li>
                             </ul>
                             <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="substrateshell-photos{{index}}">
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="lead blue">Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p>Make sure that the tag is visible in each photo. For each substrate shell, record the following before starting oyster counts and measurements.</p>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="outerImg" class="control-label required">Outer side</label>
-                                                <single-image-drop-zone uploader="outerSubstrateUploader"
-                                                image-url="outerSubstrateUrl" image-alt="Outer side"
-                                                id="outer-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="innerImg" class="control-label required">Inner side</label>
-                                                <single-image-drop-zone uploader="innerSubstrateUploader"
-                                                image-url="innerSubstrateUrl" image-alt="Inner side"
-                                                id="inner-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="substrateshell-meta{{index}}">
-                                    <br />
+                                <div role="tabpanel" class="tab-pane active" id="substrateshell-meta{{index}}">
+                                    <br/>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <p class="lead blue">On the first expedition to the ORS, enter the baseline data to measure future visits by.</p>
@@ -96,7 +66,7 @@
                                               </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="totalAtBaseline" class="control-label">Total number of live oysters on shell at baseline</label>
+                                                <label for="totalAtBaseline" class="control-label">Total number of live oysters on shell at baseline * </label>
                                                 <input type="number" class="form-control" ng-model="baseline.totalNumberOfLiveOystersAtBaseline"
                                                 name="totalAtBaseline" id="totalAtBaseline" min="0" max="{{maxLiveOysters}}" ng-readonly="readonlyBaseline"/>
                                             </div>
@@ -151,6 +121,36 @@
                                     </div>
                                     <!--TODO: Wire up mortality rate/growth rate, only show after data is entered -->
                                     <!-- <p class="red">Good job! Compared to your last expedition, your oyster population has experienced a mortality rate of <b>[]%</b> and a growth rate of <b>[]%</b>.</p> -->
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="substrateshell-photos{{index}}">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="lead blue">OPTIONAL: Photograph both sides of the shell, the outer (convex, rough) and inner (concave, smooth).</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>Make sure that the tag is visible in each photo.</p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="outerImg" class="control-label required">Outer side</label>
+                                                <single-image-drop-zone uploader="outerSubstrateUploader"
+                                                image-url="outerSubstrateUrl" image-alt="Outer side"
+                                                id="outer-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="innerImg" class="control-label required">Inner side</label>
+                                                <single-image-drop-zone uploader="innerSubstrateUploader"
+                                                image-url="innerSubstrateUrl" image-alt="Inner side"
+                                                id="inner-substrate-image-dropzone-{{index}}"></single-image-drop-zone>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -2,6 +2,12 @@
     <section class="content">
         <section class="container" id="site-condition-form">
             <h2 id="protocol-1-form">Protocol 1 <small>Site Conditions</small></h2>
+            <ul>
+                <li>To publish this protocol, the only required data is "Weather Conditions." Everything else is optional!</li>
+                <li>For reference, check out pages
+                25-34 in the
+                <a href="https://drive.google.com/drive/folders/0Bzf_STNcTtRmM2VubzJaM1dWZEU">Field Manual</a>.</li>
+            </ul>
             <hr />
             <div class="alert alert-danger" ng-show="siteConditionErrors">
                 <h4>We're still missing some information.</h4>
@@ -23,6 +29,9 @@
                           <p class="red">Collection time must not be more than a year in the future.</p>
                       </div>
                     </div>
+                </div>
+            </div>
+                    <!--
                     <div class="form-group">
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-site-condition-map"
                         ng-click="openMap()">Mark location on map</a>
@@ -31,12 +40,18 @@
                         ng-show="siteCondition.latitude && siteCondition.longitude"
                          readonly/>
                     </div>
+                -->
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <select-tags outer-column="" name="teamMembers"
                         in-title="Names of team members" ng-model="siteCondition.teamMembers"
                         label-class="control-label" select-config="teamMemberSelectConfig" ></select-tags>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Notes or other observations</label>
@@ -46,6 +61,7 @@
             </div>
         </section>
     </section>
+    <!--
     <section class="content shaded">
         <section class="container">
             <div class="row">
@@ -58,42 +74,130 @@
             </div>
         </section>
     </section>
-    <section class="content">
+-->
+    <section class="content shaded">
         <section class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <!-- TODO: Prefill with Weather API data -->
-                    <h6>Meteorological conditions</h6>
+            <h6>Meteorological conditions</h6>
+                    <!--
                     <div class="form-group">
-                        <label for="weatherConditions" class="required">Weather conditions *</label>
+                        <label for="weatherConditions" class="required">Weather Conditions *</label>
                         <select class="form-control" name="weatherConditions" ng-options="weather.value as weather.label for weather in weatherConditions"
                         ng-model="siteCondition.meteorologicalConditions.weatherConditions" required></select>
                     </div>
+                </div>
+            </div>
+            -->
+
+            <div class="row">
+                <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="temperature">Air temperature (C)</label>
-                        <input class="form-control" name="temperature" type="number"
-                        ng-model="siteCondition.meteorologicalConditions.airTemperatureC"/>
+                        <label for="weatherConditions">Weather Conditions</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="weather in weatherConditions"
+                                ng-class="{'active': (siteCondition.meteorologicalConditions.weatherConditions === weather.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="weatherConditions"
+                                    id="{{ weather.value }}"
+                                    value="{{ weather.value }}"
+                                    ng-model="siteCondition.meteorologicalConditions.weatherConditions"
+                                >
+                                {{ weather.label }}
+                            </label>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-4">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="windSpeed">Wind speed (mph)</label>
-                            <input class="form-control" type="number" min="0" name="windSpeed"
-                            ng-model="siteCondition.meteorologicalConditions.windSpeedMPH"/>
-                            <span class="help-block">Method: Anemometer</span>
-                            <div ng-show="form.siteConditionForm.windSpeed.$error.min">
-                                <p class="red">Wind speed must be a positive number.</p>
-                            </div>
+                    <div class="form-group">
+                        <label for="temperature">Air temperature (C)</label>
+                        <input
+                            class="form-control"
+                            name="temperature"
+                            type="number"
+                            ng-model="siteCondition.meteorologicalConditions.airTemperatureC"
+                            step="0.1"
+                            min="-40"
+                            max="50"
+
+                        />
+                        <span class="help-block" ng-if="siteCondition.meteorologicalConditions.airTemperatureC !== undefined">
+                            <p>Fahrenheit: {{ (siteCondition.meteorologicalConditions.airTemperatureC * (9/5) + 32) | number:1 }}&deg;F</p>
+                        </span>
+
+                        <div ng-show="form.siteConditionForm.temperature.$error.min">
+                            <p class="red">Temperature must be above -40&deg;C.</p>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="windDirection">Wind direction</label>
-                            <select class="form-control" name="windDirection"
-                            ng-options="direction.value as direction.label for direction in windDirection"
-                            ng-model="siteCondition.meteorologicalConditions.windDirection"></select>
-                            <span class="help-block">Method: Compass</span>
+
+                        <div ng-show="form.siteConditionForm.temperature.$error.max">
+                            <p class="red">Temperature must be below 50&deg;C.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="windSpeed">Wind speed (mph)</label>
+                        <input class="form-control" type="number" min="0" name="windSpeed"
+                        ng-model="siteCondition.meteorologicalConditions.windSpeedMPH"/>
+                        <span class="help-block">Method: Anemometer</span>
+                        <div ng-show="form.siteConditionForm.windSpeed.$error.min">
+                            <p class="red">Wind speed must be a positive number.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="windDirection">Wind direction</label>
+                        <select class="form-control" name="windDirection"
+                        ng-options="direction.value as direction.label for direction in windDirection"
+                        ng-model="siteCondition.meteorologicalConditions.windDirection"></select>
+                        <span class="help-block">Method: Compass</span>
+                    </div>
+                </div>
+            </div>
+        -->
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="windDirection">Wind direction</label>
+                  <br/>
+                  <div class="btn-group btn-group-toggle">
+                    <label
+                        class="btn btn-primary"
+                        ng-repeat="direction in windDirection"
+                        ng-class="{'active': (siteCondition.meteorologicalConditions.windDirection === direction.value) }"
+                    >
+                        <input
+                            type="radio"
+                            name="windDirection"
+                            id="{{ direction.value }}"
+                            value="{{ direction.value }}"
+                            ng-model="siteCondition.meteorologicalConditions.windDirection"
+                        >
+                      {{ direction.label }}
+                    </label>
+                  </div>
+                  <span class="help-block">Method: Compass</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="humidity">Humidity (%)</label>
                         <input class="form-control" type="number" min="0" name="humidity"
@@ -104,35 +208,117 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4"><!-- TODO: Prefill with Weather API data -->
+            </div>
+        </section>
+    </section>
+
+    <section class="content">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-4">
                     <h6>Recent Rainfall</h6>
                     <div class="form-group">
-                        <label>Has it rained in the past <span class="blue">7</span> days?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn7Days"></select>
+                        <label>Has it rained in the past <span class="blue">7</span> days? <em></em></label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn7Days)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn7Days"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn7Days"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn7Days)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn7Days"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn7Days"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn7Days === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn7Days === true}">
-                      Has it rained in the past <span class="blue">72</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn72Hours"
-                        ng-required="siteCondition.recentRainfall.rainedIn7Days"></select>
+
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="blue">72</span> hours?</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn72Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn72Hours"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn72Hours"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn72Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn72Hours"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn72Hours"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group" ng-show="siteCondition.recentRainfall.rainedIn72Hours === true">
-                        <label ng-class="{'required': siteCondition.recentRainfall.rainedIn72Hours === true}">
-                      Has it rained in the past <span class="blue">24</span> hours?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse"
-                        ng-model="siteCondition.recentRainfall.rainedIn24Hours"
-                        ng-required="siteCondition.recentRainfall.rainedIn72Hours"></select>
+
+                    <div class="form-group">
+                        <label>Has it rained in the past <span class="blue">24</span> hours?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.recentRainfall.rainedIn24Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn24Hours"
+                                    ng-value="true"
+                                    ng-model="siteCondition.recentRainfall.rainedIn24Hours"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.recentRainfall.rainedIn24Hours)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="recentRainfall.rainedIn24Hours"
+                                    ng-value="false"
+                                    ng-model="siteCondition.recentRainfall.rainedIn24Hours"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </section>
+
+    <!--
     <section class="content shaded">
         <section class="container">
             <div class="row">
-                <div class="col-md-6"><!-- TODO: Prefill with Weather API data -->
+                <div class="col-md-6">
                     <h6>Tide Conditions</h6>
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -184,20 +370,14 @@
             </div>
         </section>
     </section>
-    <section class="content">
+    -->
+
+    <section class="content shaded">
         <section class="container">
             <h6>Water Conditions</h6>
+
             <div class="row">
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Take a photograph of the water with your camera</label>
-                        <single-image-drop-zone uploader="waterConditionUploader"
-                        image-url="waterConditionPhotoURL" image-alt="Water Condition"
-                        id="water-condition-image-dropzone"></single-image-drop-zone>
-                        <!--TODO <div ng-show="form.siteConditionForm.$invalid && form.siteConditionForm.$submitted &&
-                        !waterConditionPhotoURL">
-                        </div>-->
-                    </div>
                     <div class="form-group">
                       <label for="surfaceCurrentSpeedMPS">Surface current speed (meters/second)</label>
                       <input class="form-control" type="number" min="0" name="surfaceCurrentSpeedMPS"
@@ -207,18 +387,127 @@
                       </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
                     <div class="form-group">
                         <label for="waterColor">Describe the water color</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="color in waterColors"
+                                ng-class="{'active': (siteCondition.waterConditions.waterColor === color.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterColor"
+                                    id="{{ color.value }}"
+                                    value="{{ color.value }}"
+                                    ng-model="siteCondition.waterConditions.waterColor"
+                                >
+                            {{ color.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--
+                    <div class="form-group">
+                        <label for="waterColor">Describe the water color </label>
+
                         <select class="form-control" name="waterColor" ng-options="color.value as color.label for color in waterColors"
                         ng-model="siteCondition.waterConditions.waterColor"></select>
                     </div>
+                </div>
+            </div>
+        -->
+
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there an oil sheen present?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.oilSheen)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.oilSheen"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.oilSheen"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.oilSheen)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.oilSheen"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.oilSheen"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!--
                         <select class="form-control"
                         ng-options="condition.value as condition.label for condition in trueFalse"
                         ng-model="siteCondition.waterConditions.oilSheen" ></select>
                     </div>
+                </div>
+            </div>
+            -->
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Is there any garbage in the water?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.garbage.garbagePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.garbage.garbagePresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="row shaded">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there any garbage in the water?</label>
                         <select class="form-control"
@@ -226,78 +515,106 @@
                         ng-model="siteCondition.waterConditions.garbage.garbagePresent" ></select>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
-                    <p>How much garbage is in the water?</p>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="waterHardPlastic">Hard Plastic</label>
-                            <select class="form-control" name="waterHardPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.hardPlastic"></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="waterSoftPlastic">Soft Plastic</label>
-                            <select class="form-control" name="waterSoftPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.softPlastic"></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="waterMetal">Metal</label>
-                            <select class="form-control" name="waterMetal"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.metal"></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="waterPaper">Paper</label>
-                            <select class="form-control" name="waterPaper"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.paper"></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="waterGlass>Glass</label>
-                            <select class="form-control" name="waterGlass"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.glass"></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="waterOrganic"">Organic</label>
-                            <select class="form-control" name="waterOrganic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.waterConditions.garbage.organic"></select>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label for="waterOther>Other</label>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash"
-                                    ng-model="siteCondition.waterConditions.garbage.other.description" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control"
-                                    ng-options="extent.value as extent.label for extent in garbageExtent"
-                                    ng-model="siteCondition.waterConditions.garbage.other.extent"
-                                    ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
-                                    siteCondition.waterConditions.garbage.other.description"></select>
-                                </div>
-                            </div>
+            </div>
+-->
+            <div class="row shaded" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-4">
+                    <p><strong>How much garbage is in the water?</strong></p>
+                </div>
+            </div>
+
+            <div class="row shaded" ng-repeat="wg in waterGarbageTypes track by $index" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label>{{ wg.name }}</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="extent in garbageExtent"
+                                ng-class="{'active': (siteCondition.waterConditions.garbage[wg.id] == extent.value)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="waterConditions.garbage.garbagePresent.{{ wg.id }}"
+                                    ng-model="siteCondition.waterConditions.garbage[wg.id]"
+                                    value="{{ extent.value }}"
+                                >
+                                {{ extent.label }}
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr />
+
+            <div class="row shaded" ng-show="siteCondition.waterConditions.garbage.garbagePresent === true">
+                <div class="form-group col-sm-4">
+                    <label for="waterOther">Other</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="Type of trash"
+                            ng-model="siteCondition.waterConditions.garbage.other.description" />
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.waterConditions.garbage.other.extent"
+                            ng-required="siteCondition.waterConditions.garbage.garbagePresent &&
+                            siteCondition.waterConditions.garbage.other.description"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent" ></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Are there any unmarked or other outfall pipes?</label>
-                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent" ></select>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
-                    <p>Tell us more about the CSO pipes.</p>
+            </div>
+<!--
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any marked Combined Sewer Overflow (CSO) pipes?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent"></select>
+                    </div>
+                </div>
+            </div>
+-->
+            <div class="row">
+                <div class="col-sm-12" ng-show="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.markedCSOPresent === true">
+                    <!--
                     <div class="form-group">
                         <label for="csoLocation">What's the location?</label>
                         <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-marked"
@@ -311,6 +628,29 @@
                         siteCondition.waterConditions.markedCombinedSewerOverflowPipes.location.longitude" readonly
                         />
                     </div>
+                    -->
+                    <div class="form-group">
+                        <label for="combinedFlowThroughAmount">Is there any flow through the pipe?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="flow in waterFlows"
+                                ng-class="{'active': (siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough === flow.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="combinedFlowThroughAmount"
+                                    id="{{ flow.value }}"
+                                    value="{{ flow.value }}"
+                                    ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"
+                                >
+                            {{ flow.label }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <!--
                     <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === true,
                         'col-sm-12': siteCondition.waterConditions.markedCombinedSewerOverflowPipes.flowThroughPresent === false}">
@@ -325,28 +665,89 @@
                             ng-model="siteCondition.waterConditions.markedCombinedSewerOverflowPipes.howMuchFlowThrough"></select>
                         </div>
                     </div>
+                    -->
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
-                    <p>Tell us more about the unmarked or other pipes.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="unmarkedLocation">What's the location?</label>
-                        <a class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-map-unmarked"
-                        ng-hide="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude && siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude"
-                        ng-click="openMap()">Mark the location on the map</a>
-                        <input class="form-control" type="text" name="unmarkedLocation"
-                        value="{{siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude}}, {{siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude}}"
-                        data-toggle="modal" data-target="#modal-map-unmarked" ng-click="openMap()"
-                        ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.location.latitude &&
-                        siteCondition.waterConditions.unmarkedOutfallPipes.location.longitude" readonly
-                        />
+                        <label>Are there any <em>unmarked</em> or other outfall pipes?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="unmarkedOutfallPipes.unmarkedPipePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="unmarkedOutfallPipes.unmarkedPipePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent"
+                                >
+                                No
+                            </label>
+                        </div>
                     </div>
+                </div>
+            </div>
+<!--
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Are there any unmarked or other outfall pipes?</label>
+                        <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent" ></select>
+                    </div>
+                </div>
+            </div>
+-->
+
+            <div class="row">
+                <div class="col-sm-12" ng-show="siteCondition.waterConditions.unmarkedOutfallPipes.unmarkedPipePresent === true">
                     <div class="form-group">
                         <label for="unmarkedDiameter">What's the approximate diameter of the pipe (cm)?</label>
-                        <input class="form-control" type="text" name="unmarkedDiameter"
+                            <input class="form-control" type="text" name="unmarkedDiameter"
                         ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.approximateDiameterCM"
-                        />
+                            />
                     </div>
-                    <div class="row">
+                    <div class="form-group">
+                        <label for="combinedFlowThroughAmount">Is there any flow through the pipe?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                            class="btn btn-primary"
+                            ng-repeat="flow in waterFlows"
+                            ng-class="{'active': (siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough === flow.value) }"
+                            >
+                                <input
+                                    type="radio"
+                                    name="howMuchFlowThrough"
+                                    id="{{ flow.value }}"
+                                    value="{{ flow.value }}"
+                                    ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
+                                >
+                                {{ flow.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+                    <!-- <div class="row">
                         <div class="form-group col-sm-12" ng-class="{'col-sm-6': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === true,
                         'col-sm-12': siteCondition.waterConditions.unmarkedOutfallPipes.flowThroughPresent === false}">
                             <label>Is there any flow through the pipe?</label>
@@ -359,35 +760,201 @@
                             ng-model="siteCondition.waterConditions.unmarkedOutfallPipes.howMuchFlowThrough"
                             ></select>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </div> -->
         </section>
     </section>
-    <section class="content shaded">
+
+    <section class="content">
         <section class="container">
             <h6>Land Conditions</h6>
+<!--
             <div class="row">
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Take a photograph of the land with your camera</label>
-                        <single-image-drop-zone uploader="landConditionUploader"
-                        image-url="landConditionPhotoURL" image-alt="Land Condition"
-                        id="land-condition-image-dropzone"></single-image-drop-zone>
-                    </div>
                     <div class="form-group">
                         <label for="shorelineType">Choose shoreline type</label>
                         <select class="form-control" name="shoreLineType"
                         ng-options="type.value as type.label for type in shorelineTypes"
                         ng-model="siteCondition.landConditions.shoreLineType"></select>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Is there any garbage on the adjacent shoreline?</label>
                         <select class="form-control" ng-options="condition.value as condition.label for condition in trueFalse" ng-model="siteCondition.landConditions.garbage.garbagePresent" ></select>
                     </div>
                 </div>
+            </div>
+-->
+
+            <div class="row">
                 <div class="col-md-4">
-                    <p>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</p>
+                    <div class="form-group">
+                        <label>Is there any garbage on the adjacent shoreline?</label>
+                        <br/>
+                        <div class="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (siteCondition.landConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="true"
+                                    ng-model="siteCondition.landConditions.garbage.garbagePresent"
+                                >
+                                Yes
+                            </label>
+                            <label
+                                class="btn btn-primary"
+                                ng-class="{'active': (!siteCondition.landConditions.garbage.garbagePresent)}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="garbage.garbagePresent"
+                                    ng-value="false"
+                                    ng-model="siteCondition.landConditions.garbage.garbagePresent"
+                                >
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-4">
+                    <p><strong>How much garbage is on the adjacent shoreline?</strong></p>
+                </div>
+            </div>
+
+            <div class="row" ng-repeat="lg in landGarbageTypes track by $index" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label>{{ lg.name }}</label>
+                        <br/>
+                        <div class ="btn-group btn-group-toggle">
+                            <label
+                                class="btn btn-primary"
+                                ng-repeat="extent in garbageExtent"
+                                ng-class="{'active': (siteCondition.landConditions.garbage[lg.id] == extent.value )}"
+                            >
+                                <input
+                                    type="radio"
+                                    name="landConditions.garbage.garbagePresent.{{ lg.id }}"
+                                    ng-model="siteCondition.landConditions.garbage[lg.id]"
+                                    value="{{ extent.value }}"
+                                >
+                                {{ extent.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                <div class="form-group col-sm-4">
+                    <label for="landOther">Other</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="Type of trash"
+                            ng-model="siteCondition.landConditions.garbage.other.description" />
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.other.extent"
+                            ng-required="siteCondition.landConditions.garbage.garbagePresent &&
+                            siteCondition.landConditions.garbage.other.description"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--
+            <div class="row">
+                <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
+                    <div class="row">
+                        <p><strong>How much garbage is on the adjacent shoreline?</strong></p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landHardPlastic">Hard Plastic</label>
+                            <select class="form-control" name="landHardPlastic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.hardPlastic"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landSoftPlastic">Soft Plastic</label>
+                            <select class="form-control" name="landSoftPlastic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.softPlastic"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landMetal">Metal</label>
+                            <select class="form-control" name="landMetal"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.metal"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landPaper">Paper</label>
+                            <select class="form-control" name="landPaper"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.paper"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landGlass">Glass</label>
+                            <select class="form-control" name="landGlass"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.glass">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="landOrganic">Organic</label>
+                            <select class="form-control" name="landOrganic"
+                            ng-options="extent.value as extent.label for extent in garbageExtent"
+                            ng-model="siteCondition.landConditions.garbage.organic">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label for="landOther">Other</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="siteCondition.landConditions.garbage.other.description" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" ng-options="extent.value as extent.label for extent in garbageExtent"
+                                    ng-model="siteCondition.landConditions.garbage.other.extent"
+                                    ></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+-->
+            <hr/>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>What kinds of surfaces are on the adjacent shoreline (about 100 x 100 feet)?  Estimate the percentage of each type of surface cover.</strong></p>
                     <div role="alert" ng-show="siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100">
                         <p class="red">Percentages must add to 100%.</p>
                     </div>
@@ -426,71 +993,40 @@
                     </div>
                     <h4 class="text-right" ng-class="{'red': siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer < 100 || siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer > 100}">= <b>{{ siteCondition.landConditions.shorelineSurfaceCoverEstPer.imperviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.perviousSurfacePer + siteCondition.landConditions.shorelineSurfaceCoverEstPer.vegetatedSurfacePer }}</b>%</h4>
                 </div>
-                <div class="col-md-4" ng-show="siteCondition.landConditions.garbage.garbagePresent === true">
-                    <p>Record the extent of each type of garbage on the adjacent shoreline.</p>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="landHardPlastic">Hard Plastic</label>
-                            <select class="form-control" name="landHardPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.hardPlastic"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landSoftPlastic">Soft Plastic</label>
-                            <select class="form-control" name="landSoftPlastic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.softPlastic"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landMetal">Metal</label>
-                            <select class="form-control" name="landMetal"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.metal"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landPaper">Paper</label>
-                            <select class="form-control" name="landPaper"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.paper"
-                            ></select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landGlass">Glass</label>
-                            <select class="form-control" name="landGlass"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.glass"
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label for="landOrganic">Organic</label>
-                            <select class="form-control" name="landOrganic"
-                            ng-options="extent.value as extent.label for extent in garbageExtent"
-                            ng-model="siteCondition.landConditions.garbage.organic"
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label for="landOther">Other</label>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="Type of trash" ng-model="siteCondition.landConditions.garbage.other.description" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <select class="form-control" ng-options="extent.value as extent.label for extent in garbageExtent"
-                                    ng-model="siteCondition.landConditions.garbage.other.extent"
-                                    ></select>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+        </section>
+    </section>
+
+    <section class="content shaded">
+        <section class="container">
+            <h6>Photography</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Take a photograph of the WATER with your camera.</label>
+                        <single-image-drop-zone uploader="waterConditionUploader"
+                        image-url="waterConditionPhotoURL" image-alt="Water Condition"
+                        id="water-condition-image-dropzone"></single-image-drop-zone>
+                        <!--TODO <div ng-show="form.siteConditionForm.$invalid && form.siteConditionForm.$submitted &&
+                        !waterConditionPhotoURL">
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Take a photograph of the LAND with your camera.</label>
+                        <single-image-drop-zone uploader="landConditionUploader"
+                        image-url="landConditionPhotoURL" image-alt="Land Condition"
+                        id="land-condition-image-dropzone"></single-image-drop-zone>
                     </div>
                 </div>
             </div>
         </section>
     </section>
 </form>
-
 
 
 
@@ -512,3 +1048,33 @@
   can-move-marker="true" show-marker="true"
   latitude="siteCondition.latitude"
   longitude="siteCondition.longitude"></map-select>
+
+
+<script type="text/javascript">
+$(function(){
+    $(window).on('click', function(e){
+        var el = $(e.target);
+
+        if (el.is('.radio-slider button')) {
+            el.find('input').click();
+
+        } else if (el.is('.radio-slider input')) {
+            console.debug(e)
+            var seen = false;
+            var parent = el.closest('.radio-slider');
+
+            $.each(parent.find('.slider-button'), function(i, col){
+                if (!seen) {
+                    $(col).addClass('active');
+                } else {
+                    $(col).removeClass('active');
+                }
+
+                if ($(col).find('input').is(el)) {
+                    seen = true;
+                }
+            });
+        }
+    });
+});
+</script>

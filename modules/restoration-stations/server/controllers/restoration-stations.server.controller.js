@@ -109,6 +109,7 @@ exports.create = function (req, res) {
   station.team = null;
   station.schoolOrg = req.user.schoolOrg;
   station.teamLead = req.user;
+  station.siteId = req.body.siteId;
 
   var pattern = /^data:image\/[a-z]*;base64,/i;
   if (station.photo && station.photo.path && pattern.test(station.photo.path)) {

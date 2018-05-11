@@ -24,6 +24,7 @@
         link: function (scope, element, attrs) {
           element.bind('show.bs.modal', function () {
             scope.form.substrateForm.$setPristine();
+            scope.editBaseline();
           });
 
           element.bind('hide.bs.modal', function () {
