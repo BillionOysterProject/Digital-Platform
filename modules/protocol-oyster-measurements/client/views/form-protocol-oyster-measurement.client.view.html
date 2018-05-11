@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label for="bioaccumulation">Bioaccumulation on cage</label>
                         <br/>
-                        <div class="custom-control custom-radio" ng-repeat="bioaccumulation in bioaccumulations">
+                        <div class="custom-control custom-radio" ng-repeat="bioaccumulation in bioaccumulations track by $index">
                             <input
                                 class="custom-control-input"
                                 type="radio"
@@ -62,7 +62,8 @@
                                 ng-model="oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage"
                             >
                             <label
-                                class="custom-control-label"
+                                class="custom-control-label w-100"
+                                for="{{ bioaccumulation.value }}"
                                 style="font-weight: normal !important"
                                 ng-class="{'active': (oysterMeasurement.conditionOfOysterCage.bioaccumulationOnCage === bioaccumulation.value) }"
                             >

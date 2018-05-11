@@ -1308,3 +1308,18 @@ li.loading-dialog {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+.custom-radio .custom-control-label {
+    font-weight:     normal;
+    padding:         0 0.5em;
+    border-radius:   0.25em;
+}
+
+.custom-radio:hover .custom-control-label {
+    background:      #EEE;
+}
+
+.custom-radio .custom-control-label > span {
+    display:         inline-block;
+    width:           7em;
+    font-weight:     700;
+}
