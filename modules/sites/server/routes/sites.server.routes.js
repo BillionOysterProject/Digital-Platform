@@ -13,11 +13,11 @@ module.exports = function (app) {
     .post(sites.create);
 
   // Single site routes
-  app.route('/api/sites/:siteId').all(sitesPolicy.isAllowed)
+  app.route('/api/sites/:site').all(sitesPolicy.isAllowed)
     .get(sites.read)
     .put(sites.update)
     .delete(sites.delete);
 
   // Finish by binding the site middleware
-  app.param('siteId', sites.siteByID);
+  app.param('site', sites.siteByID);
 };

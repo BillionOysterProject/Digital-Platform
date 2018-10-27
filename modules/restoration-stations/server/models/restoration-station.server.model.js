@@ -85,7 +85,7 @@ var RestorationStationSchema = new Schema({
   notes: {
     type: String
   },
-  siteId: {
+  site: {
     type: Schema.Types.ObjectId,
     required: true,
   },

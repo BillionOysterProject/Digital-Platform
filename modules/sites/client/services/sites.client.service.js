@@ -8,8 +8,8 @@
   SitesService.$inject = ['$resource'];
 
   function SitesService($resource) {
-    return $resource('api/sites/:siteId', {
-      siteId: '@_id'
+    return $resource('api/sites/:site', {
+      site: '@_id'
     }, {
       update: {
         method: 'PUT'

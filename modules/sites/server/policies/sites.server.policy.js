@@ -20,7 +20,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/sites',
       permissions: '*'
     }, {
-      resources: '/api/sites/:siteId',
+      resources: '/api/sites/:site',
       permissions: '*'
     }]
   }, {
@@ -29,7 +29,7 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/sites',
       permissions: ['get']
     }, {
-      resources: '/api/sites/:siteId',
+      resources: '/api/sites/:site',
       permissions: ['get']
     }]
   }]);
