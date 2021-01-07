@@ -9,8 +9,9 @@
 
   function menuConfig(Menus) {
     Menus.addMenuItem('topbar', {
-      title: 'Events',
-      state: 'events.list',
+      title: 'Events Events',
+      //state: 'events.list',
+      href: 'https://www.eventbrite.com/o/billion-oyster-project-9718066591',
       // state: 'events',
       // type: 'dropdown',
       roles: ['*'],

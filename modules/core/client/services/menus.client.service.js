@@ -93,6 +93,7 @@ angular.module('core').service('Menus', [
         roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
         icon: options.icon || '',
         position: options.position || 0,
+        href: options.href || null,
         items: [],
         shouldRender: shouldRender
       });

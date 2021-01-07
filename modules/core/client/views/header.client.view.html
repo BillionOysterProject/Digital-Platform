@@ -6,7 +6,7 @@
             </a>
         </div>
     </div>
-    <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+    <ul class="nav navbar-nav fearless2021" ng-if="menu.shouldRender(authentication.user);">
         <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
             <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }">{{::item.title}}&nbsp;<span class="caret"></span></span></a>
             <ul ng-switch-when="dropdown" class="dropdown-menu">
@@ -14,7 +14,9 @@
                     <a ui-sref="{{subitem.state}}"><i class="{{subitem.icon}}" ng-show="subitem.icon"></i>{{subitem.title}}</span></a>
                 </li>
             </ul>
-            <a ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
+            <a ng-if="item.state" ng-switch-default ui-sref="{{item.state}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
+            <a ng-if="item.href" ng-switch-default href="{{item.href}}"><i class="{{item.icon}}"></i><span ng-class="{ text: item.icon }" ng-bind="item.title"></span></a>
+        
         </li>
     </ul>
     <div class="navbar-footer">
@@ -169,6 +171,7 @@
                             Number <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1440869">NSF EHR DRL 1440869/PI Lauren Birney</a>. Any opinions, findings, and conclusions or
                             recommendations expressed in this material are those of the author(s) and do not necessarily reflect
                             the views of the National Science Foundation.</p>
+                        <p>Copyright 2021</p>
                     </div>
                 </div>
             </div>
