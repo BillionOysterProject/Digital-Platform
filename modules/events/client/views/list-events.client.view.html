@@ -2,6 +2,7 @@
     <section class="content">
         <section class="container-fluid">
           <h2>Events</h2>
+         
             <div class="input-group col-md-6 col-md-offset-3">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -50,7 +51,7 @@
                       <li><a ok-sel=".Upcoming" ng-click="vm.timeFrameSelected('Upcoming events')">Upcoming events</a></li>
                       <li><a ok-sel=".Past" ng-click="vm.timeFrameSelected('Past events')">Past events</a></li>
                     </ul>
-                </li>
+                </li> 
                 <!-- <li class="dropdown" id="availability">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Availability{{(vm.filter.availability) ? ': ' + vm.filter.availability : ''}}  <span class="caret"></span>
@@ -64,7 +65,7 @@
                 </li> -->
             </ul>
         </nav>
-        <div class="row" isotope-container="isotope-container">
+         <div class="row" isotope-container="isotope-container">
             <div isotope-item="isotope-item" ng-repeat="calendarEvent in vm.events" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 library-item"
               ng-init="openSpots = vm.getOpenSpots(calendarEvent.registrants, calendarEvent.maximumCapacity);
                 daysRemaining = vm.getDaysRemainingDeadline(calendarEvent.dates, calendarEvent.deadlineToRegister)">
